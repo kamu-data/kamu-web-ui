@@ -15,11 +15,9 @@ import { registerMatSvgIcons, setComponentInput } from "@common/helpers/base-tes
 
 import {
     mockMetadataDerivedUpdate,
-    mockOverviewDataUpdate,
     mockOverviewDataUpdateNullable,
 } from "src/app/dataset-view/additional-components/data-tabs.mock";
 import { MetadataSchemaTabComponent } from "src/app/dataset-view/additional-components/metadata-component/tabs/metadata-schema-tab/metadata-schema-tab.component";
-import { OverviewUpdate } from "src/app/dataset-view/dataset.subscriptions.interface";
 import { mockDatasetBasicsDerivedFragment, mockFullPowerDatasetPermissionsFragment } from "src/app/search/mock.data";
 
 describe("MetadataSchemaTabComponent", () => {
@@ -38,11 +36,9 @@ describe("MetadataSchemaTabComponent", () => {
             datasetBasics: mockDatasetBasicsDerivedFragment,
             datasetPermissions: mockFullPowerDatasetPermissionsFragment,
             overviewUpdate: {
+                ...structuredClone(mockOverviewDataUpdateNullable),
                 schema: mockMetadataDerivedUpdate.schema,
-                content: mockOverviewDataUpdate.content,
-                overview: structuredClone(mockOverviewDataUpdateNullable.overview),
-                size: mockOverviewDataUpdate.size,
-            } as OverviewUpdate,
+            },
         });
 
         fixture.detectChanges();

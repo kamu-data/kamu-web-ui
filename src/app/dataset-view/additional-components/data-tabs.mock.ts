@@ -14,6 +14,8 @@ import {
     DatasetKind,
     DatasetLineageBasicsFragment,
     DatasetMetadata,
+    DatasetOverviewFragment,
+    SetPollingSourceEventFragment,
 } from "@api/kamu.graphql.interface";
 import { TEST_AVATAR_URL } from "@api/mock/auth.mock";
 import { OdfTypes } from "@interface/dataset-schema.interface";
@@ -691,7 +693,52 @@ export const mockBuildGraphNodesResult: Node[] = [
     },
 ];
 
-export const mockOverviewDataUpdate = {
+export const mockSetPollingSourceEventFragment: SetPollingSourceEventFragment = {
+    __typename: "SetPollingSource",
+    fetch: {
+        __typename: "FetchStepUrl",
+        url: "https://www.alphavantage.co/query?function=TIME_SERIES_DAILY_ADJUSTED&symbol=SPY&outputsize=full&datatype=csv&apikey=${{ env.ALPHA_VANTAGE_API_KEY }}",
+        eventTime: null,
+        headers: null,
+        cache: null,
+    },
+    read: {
+        __typename: "ReadStepCsv",
+        schema: {
+            format: DataSchemaFormat.OdfJson,
+            content:
+                '{"fields":[{"name":"id","type":{"kind":"Option","inner":{"kind":"Int64"}}},{"name":"source","type":{"kind":"Option","inner":{"kind":"String"}}},{"name":"captures","type":{"kind":"Option","inner":{"kind":"Int32"}}},{"name":"capture_measure","type":{"kind":"Option","inner":{"kind":"String"}}},{"name":"taxon_name","type":{"kind":"Option","inner":{"kind":"String"}}},{"name":"scientific_name","type":{"kind":"Option","inner":{"kind":"String"}}},{"name":"parent_taxon","type":{"kind":"Option","inner":{"kind":"String"}}},{"name":"year","type":{"kind":"Option","inner":{"kind":"Int32"}}},{"name":"rfmo","type":{"kind":"Option","inner":{"kind":"String"}}},{"name":"gear_name","type":{"kind":"Option","inner":{"kind":"String"}}},{"name":"gear_code","type":{"kind":"Option","inner":{"kind":"String"}}},{"name":"flag","type":{"kind":"Option","inner":{"kind":"String"}}},{"name":"ocean","type":{"kind":"Option","inner":{"kind":"String"}}},{"name":"latitude","type":{"kind":"Option","inner":{"kind":"Float32"}}},{"name":"longitude","type":{"kind":"Option","inner":{"kind":"Float32"}}},{"name":"dataset_organisation","type":{"kind":"Option","inner":{"kind":"String"}}},{"name":"dataset_acknowledgement","type":{"kind":"Option","inner":{"kind":"String"}}},{"name":"dataset_url","type":{"kind":"Option","inner":{"kind":"String"}}},{"name":"dataset_date","type":{"kind":"Date"}}]}',
+            __typename: "DataSchema",
+        },
+        separator: null,
+        encoding: null,
+        quote: null,
+        escape: null,
+        dateFormat: null,
+        timestampFormat: null,
+    },
+    merge: {
+        __typename: "MergeStrategyLedger",
+        primaryKey: ["event_time"],
+    },
+    prepare: null,
+    preprocess: {
+        __typename: "TransformSql",
+        engine: "spark",
+        version: null,
+        queries: [
+            {
+                __typename: "SqlQueryStep",
+                query: 'select\n  timestamp as event_time,\n  "spy" as from_symbol,\n  "usd" as to_symbol,\n  open,\n  high,\n  low,\n  close\nfrom input\n',
+                alias: null,
+            },
+        ],
+        temporalTables: null,
+    },
+};
+
+export const mockOverviewDataUpdate: OverviewUpdate = {
+    schema: null,
     content: [
         {
             offset: {
@@ -746,15 +793,6 @@ export const mockOverviewDataUpdate = {
     ],
     overview: {
         __typename: "Dataset",
-        id: "did:odf:z4k88e8u3rDWqP6sq96Z7gfYdHXiuG9ZDGkdPxbtqFw8VCVJvEu",
-        kind: DatasetKind.Root,
-        name: "net.rocketpool.reth.mint-burn",
-        owner: {
-            __typename: "Account",
-            id: TEST_ACCOUNT_ID,
-            accountName: "kamu",
-        },
-        alias: "kamu/net.rocketpool.reth.mint-burn",
         data: {
             __typename: "DatasetData",
             numRecordsTotal: 6909,
@@ -771,57 +809,7 @@ export const mockOverviewDataUpdate = {
             currentWatermark: "2022-08-05T20:24:55+00:00",
             currentTransform: null,
             currentPushSources: [],
-            currentPollingSource: {
-                __typename: "SetPollingSource",
-                fetch: {
-                    __typename: "FetchStepUrl",
-                    url: "https://www.alphavantage.co/query?function=TIME_SERIES_DAILY_ADJUSTED&symbol=SPY&outputsize=full&datatype=csv&apikey=${{ env.ALPHA_VANTAGE_API_KEY }}",
-                    eventTime: null,
-                    headers: null,
-                    cache: null,
-                },
-                read: {
-                    __typename: "ReadStepCsv",
-                    schema: {
-                        format: DataSchemaFormat.OdfJson,
-                        content:
-                            '{"fields":[{"name":"id","type":{"kind":"Option","inner":{"kind":"Int64"}}},{"name":"source","type":{"kind":"Option","inner":{"kind":"String"}}},{"name":"captures","type":{"kind":"Option","inner":{"kind":"Int32"}}},{"name":"capture_measure","type":{"kind":"Option","inner":{"kind":"String"}}},{"name":"taxon_name","type":{"kind":"Option","inner":{"kind":"String"}}},{"name":"scientific_name","type":{"kind":"Option","inner":{"kind":"String"}}},{"name":"parent_taxon","type":{"kind":"Option","inner":{"kind":"String"}}},{"name":"year","type":{"kind":"Option","inner":{"kind":"Int32"}}},{"name":"rfmo","type":{"kind":"Option","inner":{"kind":"String"}}},{"name":"gear_name","type":{"kind":"Option","inner":{"kind":"String"}}},{"name":"gear_code","type":{"kind":"Option","inner":{"kind":"String"}}},{"name":"flag","type":{"kind":"Option","inner":{"kind":"String"}}},{"name":"ocean","type":{"kind":"Option","inner":{"kind":"String"}}},{"name":"latitude","type":{"kind":"Option","inner":{"kind":"Float32"}}},{"name":"longitude","type":{"kind":"Option","inner":{"kind":"Float32"}}},{"name":"dataset_organisation","type":{"kind":"Option","inner":{"kind":"String"}}},{"name":"dataset_acknowledgement","type":{"kind":"Option","inner":{"kind":"String"}}},{"name":"dataset_url","type":{"kind":"Option","inner":{"kind":"String"}}},{"name":"dataset_date","type":{"kind":"Date"}}]}',
-                        __typename: "DataSchema",
-                    },
-                    separator: null,
-                    encoding: null,
-                    quote: null,
-                    escape: null,
-                    dateFormat: null,
-                    timestampFormat: null,
-                },
-                merge: {
-                    __typename: "MergeStrategyLedger",
-                    primaryKey: ["event_time"],
-                },
-                prepare: null,
-                preprocess: {
-                    __typename: "TransformSql",
-                    engine: "spark",
-                    version: null,
-                    queries: [
-                        {
-                            __typename: "SqlQueryStep",
-                            query: 'select\n  timestamp as event_time,\n  "spy" as from_symbol,\n  "usd" as to_symbol,\n  open,\n  high,\n  low,\n  close\nfrom input\n',
-                            alias: null,
-                        },
-                    ],
-                    temporalTables: null,
-                },
-            },
-            currentSchema: {
-                __typename: "DataSchema",
-                format: "PARQUET_JSON",
-                content:
-                    '{"name": "spark_schema", "type": "struct", "fields": [{"name": "offset", "repetition": "OPTIONAL", "type": "INT64"}, {"name": "system_time", "repetition": "REQUIRED", "type": "INT96"}, {"name": "block_time", "repetition": "OPTIONAL", "type": "INT96"}, {"name": "token_symbol", "repetition": "REQUIRED", "type": "BYTE_ARRAY", "logicalType": "UTF8"}, {"name": "event_name", "repetition": "OPTIONAL", "type": "BYTE_ARRAY", "logicalType": "UTF8"}, {"name": "amount", "repetition": "OPTIONAL", "type": "DOUBLE"}, {"name": "eth_amount", "repetition": "OPTIONAL", "type": "DOUBLE"}, {"name": "block_number", "repetition": "OPTIONAL", "type": "INT64"}, {"name": "block_hash", "repetition": "OPTIONAL", "type": "BYTE_ARRAY", "logicalType": "UTF8"}, {"name": "transaction_index", "repetition": "OPTIONAL", "type": "INT32"}, {"name": "transaction_hash", "repetition": "OPTIONAL", "type": "BYTE_ARRAY", "logicalType": "UTF8"}, {"name": "log_index", "repetition": "OPTIONAL", "type": "INT32"}]}',
-            },
-            currentUpstreamDependencies: [],
-            currentDownstreamDependencies: [],
+            currentPollingSource: { __typename: "SetPollingSource" },
             currentReadme: null,
             chain: {
                 __typename: "MetadataChain",
@@ -840,15 +828,16 @@ export const mockOverviewDataUpdate = {
                             },
                             event: {
                                 __typename: "AddData",
-                                addedOutputData: {
+                                newData: {
                                     __typename: "DataSlice",
-                                    interval: {
+                                    offsetInterval: {
                                         __typename: "OffsetInterval",
                                         start: 0,
                                         end: 6908,
                                     },
                                     logicalHash: "z63ZND5BE6FyKyd9Wa2avVDuJXJWs79CrhCpu51J8v6vEPDZs7dW",
                                     physicalHash: "zW1ZWFc65JcCqbCWCqqaWVnwcoY13t1MdHZ5fNifD94pv8w",
+                                    size: 1102418,
                                 },
                             },
                         },
@@ -874,34 +863,11 @@ export const mockOverviewDataUpdate = {
     },
 };
 
-export const mockOverviewDataUpdateNullable = {
-    content: [
-        {
-            offset: 6908,
-            system_time: "2022-08-05 21:15:03.947",
-            block_time: "2022-08-05 20:24:55",
-            token_symbol: "rETH",
-            event_name: "TokensMinted",
-            amount: 0.009679238156255232,
-            eth_amount: 0.010000000272564223,
-            block_number: 15284454,
-            block_hash: "0x887569ff02456b8cde2ade8e0ee5b48d441800c8c6d92d1414a9648902807558",
-            transaction_index: 224,
-            transaction_hash: "0xa88698d288550d09653e6cec3038ea30fe8f74eb40941eba93b05024037426d7",
-            log_index: 355,
-        },
-    ],
+export const mockOverviewDataUpdateNullable: OverviewUpdate = {
+    schema: null,
+    content: mockOverviewDataUpdate.content,
     overview: {
         __typename: "Dataset",
-        id: "did:odf:z4k88e8u3rDWqP6sq96Z7gfYdHXiuG9ZDGkdPxbtqFw8VCVJvEu",
-        kind: DatasetKind.Root,
-        name: "net.rocketpool.reth.mint-burn",
-        owner: {
-            __typename: "Account",
-            id: TEST_ACCOUNT_ID,
-            accountName: "kamu",
-        },
-        alias: "kamu/net.rocketpool.reth.mint-burn",
         data: {
             __typename: "DatasetData",
             numRecordsTotal: 6909,
@@ -919,14 +885,6 @@ export const mockOverviewDataUpdateNullable = {
             currentTransform: null,
             currentPushSources: [],
             currentPollingSource: null,
-            currentSchema: {
-                __typename: "DataSchema",
-                format: "PARQUET_JSON",
-                content:
-                    '{"name": "spark_schema", "type": "struct", "fields": [{"name": "offset", "repetition": "OPTIONAL", "type": "INT64"}, {"name": "system_time", "repetition": "REQUIRED", "type": "INT96"}, {"name": "block_time", "repetition": "OPTIONAL", "type": "INT96"}, {"name": "token_symbol", "repetition": "REQUIRED", "type": "BYTE_ARRAY", "logicalType": "UTF8"}, {"name": "event_name", "repetition": "OPTIONAL", "type": "BYTE_ARRAY", "logicalType": "UTF8"}, {"name": "amount", "repetition": "OPTIONAL", "type": "DOUBLE"}, {"name": "eth_amount", "repetition": "OPTIONAL", "type": "DOUBLE"}, {"name": "block_number", "repetition": "OPTIONAL", "type": "INT64"}, {"name": "block_hash", "repetition": "OPTIONAL", "type": "BYTE_ARRAY", "logicalType": "UTF8"}, {"name": "transaction_index", "repetition": "OPTIONAL", "type": "INT32"}, {"name": "transaction_hash", "repetition": "OPTIONAL", "type": "BYTE_ARRAY", "logicalType": "UTF8"}, {"name": "log_index", "repetition": "OPTIONAL", "type": "INT32"}]}',
-            },
-            currentUpstreamDependencies: [],
-            currentDownstreamDependencies: [],
             currentReadme: null,
             chain: {
                 __typename: "MetadataChain",
@@ -945,15 +903,16 @@ export const mockOverviewDataUpdateNullable = {
                             },
                             event: {
                                 __typename: "AddData",
-                                addedOutputData: {
+                                newData: {
                                     __typename: "DataSlice",
-                                    interval: {
+                                    offsetInterval: {
                                         __typename: "OffsetInterval",
                                         start: 0,
                                         end: 6908,
                                     },
                                     logicalHash: "z63ZND5BE6FyKyd9Wa2avVDuJXJWs79CrhCpu51J8v6vEPDZs7dW",
                                     physicalHash: "zW1ZWFc65JcCqbCWCqqaWVnwcoY13t1MdHZ5fNifD94pv8w",
+                                    size: 1102418,
                                 },
                             },
                         },
@@ -1586,17 +1545,8 @@ export const mockMetadataDerivedUpdate: MetadataSchemaUpdate = {
     },
 };
 
-export const mockOverviewWithSetInfo = {
+export const mockOverviewWithSetInfo: DatasetOverviewFragment = {
     __typename: "Dataset",
-    id: "did:odf:z4k88e8u3rDWqP6sq96Z7gfYdHXiuG9ZDGkdPxbtqFw8VCVJvEu",
-    kind: DatasetKind.Root,
-    name: "net.rocketpool.reth.mint-burn",
-    owner: {
-        __typename: "Account",
-        id: TEST_ACCOUNT_ID,
-        accountName: "kamu",
-    },
-    alias: "kamu/net.rocketpool.reth.mint-burn",
     data: {
         __typename: "DatasetData",
         numRecordsTotal: 6909,
@@ -1613,62 +1563,7 @@ export const mockOverviewWithSetInfo = {
         currentWatermark: "2022-08-05T20:24:55+00:00",
         currentTransform: null,
         currentPushSources: [],
-        currentPollingSource: {
-            __typename: "SetPollingSource",
-            fetch: {
-                __typename: "FetchStepUrl",
-                url: "https://www.alphavantage.co/query?function=TIME_SERIES_DAILY_ADJUSTED&symbol=SPY&outputsize=full&datatype=csv&apikey=${{ env.ALPHA_VANTAGE_API_KEY }}",
-                eventTime: null,
-                headers: null,
-                cache: null,
-            },
-            read: {
-                __typename: "ReadStepCsv",
-                schema: [
-                    "timestamp TIMESTAMP",
-                    "open FLOAT",
-                    "high FLOAT",
-                    "low FLOAT",
-                    "close FLOAT",
-                    "adjusted_close FLOAT",
-                    "volume FLOAT",
-                    "dividend_amount FLOAT",
-                    "split_coefficient FLOAT",
-                ],
-                separator: null,
-                encoding: null,
-                quote: null,
-                escape: null,
-                dateFormat: null,
-                timestampFormat: null,
-            },
-            merge: {
-                __typename: "MergeStrategyLedger",
-                primaryKey: ["event_time"],
-            },
-            prepare: null,
-            preprocess: {
-                __typename: "TransformSql",
-                engine: "spark",
-                version: null,
-                queries: [
-                    {
-                        __typename: "SqlQueryStep",
-                        query: 'select\n  timestamp as event_time,\n  "spy" as from_symbol,\n  "usd" as to_symbol,\n  open,\n  high,\n  low,\n  close\nfrom input\n',
-                        alias: null,
-                    },
-                ],
-                temporalTables: null,
-            },
-        },
-        currentSchema: {
-            __typename: "DataSchema",
-            format: "PARQUET_JSON",
-            content:
-                '{"name": "spark_schema", "type": "struct", "fields": [{"name": "offset", "repetition": "OPTIONAL", "type": "INT64"}, {"name": "system_time", "repetition": "REQUIRED", "type": "INT96"}, {"name": "block_time", "repetition": "OPTIONAL", "type": "INT96"}, {"name": "token_symbol", "repetition": "REQUIRED", "type": "BYTE_ARRAY", "logicalType": "UTF8"}, {"name": "event_name", "repetition": "OPTIONAL", "type": "BYTE_ARRAY", "logicalType": "UTF8"}, {"name": "amount", "repetition": "OPTIONAL", "type": "DOUBLE"}, {"name": "eth_amount", "repetition": "OPTIONAL", "type": "DOUBLE"}, {"name": "block_number", "repetition": "OPTIONAL", "type": "INT64"}, {"name": "block_hash", "repetition": "OPTIONAL", "type": "BYTE_ARRAY", "logicalType": "UTF8"}, {"name": "transaction_index", "repetition": "OPTIONAL", "type": "INT32"}, {"name": "transaction_hash", "repetition": "OPTIONAL", "type": "BYTE_ARRAY", "logicalType": "UTF8"}, {"name": "log_index", "repetition": "OPTIONAL", "type": "INT32"}]}',
-        },
-        currentUpstreamDependencies: [],
-        currentDownstreamDependencies: [],
+        currentPollingSource: { __typename: "SetPollingSource" },
         currentReadme: null,
         chain: {
             __typename: "MetadataChain",
@@ -1687,15 +1582,16 @@ export const mockOverviewWithSetInfo = {
                         },
                         event: {
                             __typename: "AddData",
-                            addedOutputData: {
+                            newData: {
                                 __typename: "DataSlice",
-                                interval: {
+                                offsetInterval: {
                                     __typename: "OffsetInterval",
                                     start: 0,
                                     end: 6908,
                                 },
                                 logicalHash: "z63ZND5BE6FyKyd9Wa2avVDuJXJWs79CrhCpu51J8v6vEPDZs7dW",
                                 physicalHash: "zW1ZWFc65JcCqbCWCqqaWVnwcoY13t1MdHZ5fNifD94pv8w",
+                                size: 1102418,
                             },
                         },
                     },
@@ -1715,17 +1611,8 @@ export const mockOverviewWithSetInfo = {
     lastUpdatedAt: "2022-08-05T21:15:03.947245004+00:00",
 };
 
-export const mockOverviewWithSetLicense = {
+export const mockOverviewWithSetLicense: DatasetOverviewFragment = {
     __typename: "Dataset",
-    id: "did:odf:z4k88e8u3rDWqP6sq96Z7gfYdHXiuG9ZDGkdPxbtqFw8VCVJvEu",
-    kind: DatasetKind.Root,
-    name: "net.rocketpool.reth.mint-burn",
-    owner: {
-        __typename: "Account",
-        id: TEST_ACCOUNT_ID,
-        accountName: "kamu",
-    },
-    alias: "kamu/net.rocketpool.reth.mint-burn",
     data: {
         __typename: "DatasetData",
         numRecordsTotal: 6909,
@@ -1748,62 +1635,7 @@ export const mockOverviewWithSetLicense = {
         currentWatermark: "2022-08-05T20:24:55+00:00",
         currentTransform: null,
         currentPushSources: [],
-        currentPollingSource: {
-            __typename: "SetPollingSource",
-            fetch: {
-                __typename: "FetchStepUrl",
-                url: "https://www.alphavantage.co/query?function=TIME_SERIES_DAILY_ADJUSTED&symbol=SPY&outputsize=full&datatype=csv&apikey=${{ env.ALPHA_VANTAGE_API_KEY }}",
-                eventTime: null,
-                headers: null,
-                cache: null,
-            },
-            read: {
-                __typename: "ReadStepCsv",
-                schema: [
-                    "timestamp TIMESTAMP",
-                    "open FLOAT",
-                    "high FLOAT",
-                    "low FLOAT",
-                    "close FLOAT",
-                    "adjusted_close FLOAT",
-                    "volume FLOAT",
-                    "dividend_amount FLOAT",
-                    "split_coefficient FLOAT",
-                ],
-                separator: null,
-                encoding: null,
-                quote: null,
-                escape: null,
-                dateFormat: null,
-                timestampFormat: null,
-            },
-            merge: {
-                __typename: "MergeStrategyLedger",
-                primaryKey: ["event_time"],
-            },
-            prepare: null,
-            preprocess: {
-                __typename: "TransformSql",
-                engine: "spark",
-                version: null,
-                queries: [
-                    {
-                        __typename: "SqlQueryStep",
-                        query: 'select\n  timestamp as event_time,\n  "spy" as from_symbol,\n  "usd" as to_symbol,\n  open,\n  high,\n  low,\n  close\nfrom input\n',
-                        alias: null,
-                    },
-                ],
-                temporalTables: null,
-            },
-        },
-        currentSchema: {
-            __typename: "DataSchema",
-            format: "PARQUET_JSON",
-            content:
-                '{"name": "spark_schema", "type": "struct", "fields": [{"name": "offset", "repetition": "OPTIONAL", "type": "INT64"}, {"name": "system_time", "repetition": "REQUIRED", "type": "INT96"}, {"name": "block_time", "repetition": "OPTIONAL", "type": "INT96"}, {"name": "token_symbol", "repetition": "REQUIRED", "type": "BYTE_ARRAY", "logicalType": "UTF8"}, {"name": "event_name", "repetition": "OPTIONAL", "type": "BYTE_ARRAY", "logicalType": "UTF8"}, {"name": "amount", "repetition": "OPTIONAL", "type": "DOUBLE"}, {"name": "eth_amount", "repetition": "OPTIONAL", "type": "DOUBLE"}, {"name": "block_number", "repetition": "OPTIONAL", "type": "INT64"}, {"name": "block_hash", "repetition": "OPTIONAL", "type": "BYTE_ARRAY", "logicalType": "UTF8"}, {"name": "transaction_index", "repetition": "OPTIONAL", "type": "INT32"}, {"name": "transaction_hash", "repetition": "OPTIONAL", "type": "BYTE_ARRAY", "logicalType": "UTF8"}, {"name": "log_index", "repetition": "OPTIONAL", "type": "INT32"}]}',
-        },
-        currentUpstreamDependencies: [],
-        currentDownstreamDependencies: [],
+        currentPollingSource: { __typename: "SetPollingSource" },
         currentReadme: null,
         chain: {
             __typename: "MetadataChain",
@@ -1822,15 +1654,16 @@ export const mockOverviewWithSetLicense = {
                         },
                         event: {
                             __typename: "AddData",
-                            addedOutputData: {
+                            newData: {
                                 __typename: "DataSlice",
-                                interval: {
+                                offsetInterval: {
                                     __typename: "OffsetInterval",
                                     start: 0,
                                     end: 6908,
                                 },
                                 logicalHash: "z63ZND5BE6FyKyd9Wa2avVDuJXJWs79CrhCpu51J8v6vEPDZs7dW",
                                 physicalHash: "zW1ZWFc65JcCqbCWCqqaWVnwcoY13t1MdHZ5fNifD94pv8w",
+                                size: 1102418,
                             },
                         },
                     },
@@ -2033,9 +1866,7 @@ export const datasetMetadataRootDataset: DatasetMetadata = {
     metadataProjection: [],
 };
 
-export const mockOverviewUpdate = {
+export const mockOverviewUpdate: OverviewUpdate = {
+    ...structuredClone(mockOverviewDataUpdate), // clone, as we modify this data in the tests
     schema: mockMetadataRootPushSourceUpdate.schema,
-    content: mockOverviewDataUpdate.content,
-    overview: structuredClone(mockOverviewDataUpdate.overview), // clone, as we modify this data in the tests
-    size: mockOverviewDataUpdate.size,
-} as OverviewUpdate;
+};

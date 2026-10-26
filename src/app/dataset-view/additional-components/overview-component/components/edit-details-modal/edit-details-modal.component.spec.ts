@@ -19,7 +19,6 @@ import {
     setComponentInput,
 } from "@common/helpers/base-test.helpers.spec";
 import { SharedTestModule } from "@common/modules/shared-test.module";
-import { DatasetDataSizeFragment, DatasetOverviewFragment } from "@api/kamu.graphql.interface";
 
 import {
     mockMetadataDerivedUpdate,
@@ -45,8 +44,8 @@ describe("EditDetailsModalComponent", () => {
         setComponentInput(fixture, "currentState", {
             schema: mockMetadataDerivedUpdate.schema,
             data: mockOverviewDataUpdate.content,
-            overview: mockOverviewDataUpdate.overview as DatasetOverviewFragment,
-            size: mockOverviewDataUpdate.size as DatasetDataSizeFragment,
+            overview: mockOverviewDataUpdate.overview,
+            size: mockOverviewDataUpdate.size,
         });
         fixture.detectChanges();
     });
@@ -59,8 +58,8 @@ describe("EditDetailsModalComponent", () => {
         setComponentInput(fixture, "currentState", {
             schema: mockMetadataDerivedUpdate.schema,
             data: mockOverviewDataUpdate.content,
-            overview: mockOverviewWithSetInfo as DatasetOverviewFragment,
-            size: mockOverviewDataUpdate.size as DatasetDataSizeFragment,
+            overview: mockOverviewWithSetInfo,
+            size: mockOverviewDataUpdate.size,
         });
         fixture.detectChanges();
         component.ngOnInit();

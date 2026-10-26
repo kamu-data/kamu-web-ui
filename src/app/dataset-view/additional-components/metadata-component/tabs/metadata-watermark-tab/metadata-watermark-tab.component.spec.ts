@@ -17,11 +17,9 @@ import { SharedTestModule } from "@common/modules/shared-test.module";
 
 import {
     mockMetadataDerivedUpdate,
-    mockOverviewDataUpdate,
     mockOverviewDataUpdateNullable,
 } from "src/app/dataset-view/additional-components/data-tabs.mock";
 import { MetadataWatermarkTabComponent } from "src/app/dataset-view/additional-components/metadata-component/tabs/metadata-watermark-tab/metadata-watermark-tab.component";
-import { OverviewUpdate } from "src/app/dataset-view/dataset.subscriptions.interface";
 import { mockDatasetBasicsDerivedFragment, mockFullPowerDatasetPermissionsFragment } from "src/app/search/mock.data";
 
 describe("MetadataWatermarkTabComponent", () => {
@@ -41,11 +39,9 @@ describe("MetadataWatermarkTabComponent", () => {
             datasetBasics: mockDatasetBasicsDerivedFragment,
             datasetPermissions: mockFullPowerDatasetPermissionsFragment,
             overviewUpdate: {
+                ...structuredClone(mockOverviewDataUpdateNullable),
                 schema: mockMetadataDerivedUpdate.schema,
-                content: mockOverviewDataUpdate.content,
-                overview: structuredClone(mockOverviewDataUpdateNullable.overview),
-                size: mockOverviewDataUpdate.size,
-            } as OverviewUpdate,
+            },
         });
         registerMatSvgIcons();
         fixture.detectChanges();

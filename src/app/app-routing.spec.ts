@@ -34,11 +34,9 @@ import { LoginMethodsService } from "src/app/auth/login-methods.service";
 import { LoginComponent } from "src/app/auth/login/login.component";
 import {
     mockMetadataDerivedUpdate,
-    mockOverviewDataUpdate,
     mockOverviewDataUpdateNullable,
 } from "src/app/dataset-view/additional-components/data-tabs.mock";
 import { datasetOverviewTabResolverFn } from "src/app/dataset-view/additional-components/overview-component/resolver/dataset-overview-tab.resolver";
-import { OverviewUpdate } from "src/app/dataset-view/dataset.subscriptions.interface";
 import { datasetViewResolverFn } from "src/app/dataset-view/resolvers/dataset-view.resolver";
 import ProjectLinks from "src/app/project-links";
 import {
@@ -109,11 +107,9 @@ describe("Router", () => {
                                 datasetBasics: mockDatasetBasicsDerivedFragment,
                                 datasetPermissions: mockFullPowerDatasetPermissionsFragment,
                                 overviewUpdate: {
+                                    ...structuredClone(mockOverviewDataUpdateNullable),
                                     schema: mockMetadataDerivedUpdate.schema,
-                                    content: mockOverviewDataUpdate.content,
-                                    overview: structuredClone(mockOverviewDataUpdateNullable.overview),
-                                    size: mockOverviewDataUpdate.size,
-                                } as OverviewUpdate,
+                                },
                             }),
                     },
                 },

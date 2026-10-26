@@ -28,7 +28,6 @@ import {
 } from "src/app/dataset-view/additional-components/data-tabs.mock";
 import { EngineService } from "src/app/dataset-view/additional-components/metadata-component/components/set-transform/components/engine-section/engine.service";
 import { mockEngines } from "src/app/dataset-view/additional-components/metadata-component/components/set-transform/mock.data";
-import { OverviewUpdate } from "src/app/dataset-view/dataset.subscriptions.interface";
 import ProjectLinks from "src/app/project-links";
 import {
     mockDatasetBasicsDerivedFragment,
@@ -100,11 +99,9 @@ describe("DataComponent", () => {
             datasetBasics: mockDatasetBasicsRootFragment,
             datasetPermissions: mockFullPowerDatasetPermissionsFragment,
             overviewUpdate: {
+                ...structuredClone(mockOverviewDataUpdate), // clone, as we modify this data in the tests
                 schema: mockMetadataRootUpdate.schema,
-                content: mockOverviewDataUpdate.content,
-                overview: structuredClone(mockOverviewDataUpdate.overview), // clone, as we modify this data in the tests
-                size: mockOverviewDataUpdate.size,
-            } as OverviewUpdate,
+            },
         });
         component.sqlLoading = false;
         requestDataSqlRunSpy = spyOn(sqlQueryService, "requestDataSqlRun").and.returnValue(of().pipe());
@@ -135,11 +132,9 @@ describe("DataComponent", () => {
         const ngbModalServiceSpy = spyOn(ngbModalService, "open").and.callThrough();
 
         component.addData({
+            ...structuredClone(mockOverviewDataUpdateNullable),
             schema: mockMetadataDerivedUpdate.schema,
-            content: mockOverviewDataUpdate.content,
-            overview: structuredClone(mockOverviewDataUpdateNullable.overview),
-            size: mockOverviewDataUpdate.size,
-        } as OverviewUpdate);
+        });
         expect(ngbModalServiceSpy).toHaveBeenCalledTimes(1);
     });
 

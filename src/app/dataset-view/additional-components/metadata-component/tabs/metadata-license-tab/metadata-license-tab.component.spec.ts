@@ -22,11 +22,9 @@ import { SharedTestModule } from "@common/modules/shared-test.module";
 
 import {
     mockMetadataDerivedUpdate,
-    mockOverviewDataUpdate,
     mockOverviewDataUpdateNullable,
 } from "src/app/dataset-view/additional-components/data-tabs.mock";
 import { MetadataLicenseTabComponent } from "src/app/dataset-view/additional-components/metadata-component/tabs/metadata-license-tab/metadata-license-tab.component";
-import { OverviewUpdate } from "src/app/dataset-view/dataset.subscriptions.interface";
 import {
     mockDatasetBasicsDerivedFragment,
     mockFullPowerDatasetPermissionsFragment,
@@ -53,11 +51,9 @@ describe("MetadataLicenseTabComponent", () => {
             datasetBasics: mockDatasetBasicsDerivedFragment,
             datasetPermissions: mockFullPowerDatasetPermissionsFragment,
             overviewUpdate: {
+                ...structuredClone(mockOverviewDataUpdateNullable),
                 schema: mockMetadataDerivedUpdate.schema,
-                content: mockOverviewDataUpdate.content,
-                overview: structuredClone(mockOverviewDataUpdateNullable.overview),
-                size: mockOverviewDataUpdate.size,
-            } as OverviewUpdate,
+            },
         });
 
         fixture.detectChanges();

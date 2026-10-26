@@ -26,12 +26,7 @@ import {
 } from "@common/helpers/base-test.helpers.spec";
 import { SharedTestModule } from "@common/modules/shared-test.module";
 import AppValues from "@common/values/app.values";
-import {
-    AccountProvider,
-    DatasetCurrentInfoFragment,
-    DatasetKind,
-    DatasetOverviewFragment,
-} from "@api/kamu.graphql.interface";
+import { DatasetCurrentInfoFragment, DatasetKind, DatasetOverviewFragment } from "@api/kamu.graphql.interface";
 
 import { LoggedUserService } from "src/app/auth/logged-user.service";
 import { mockSetLicense } from "src/app/dataset-block/metadata-block/components/event-details/mock.events";
@@ -42,12 +37,11 @@ import {
 import { DatasetCollaborationsService } from "src/app/dataset-view/additional-components/dataset-settings-component/tabs/access/dataset-settings-access-tab/dataset-collaborations.service";
 import { DatasetFlowsService } from "src/app/dataset-view/additional-components/flows-component/services/dataset-flows.service";
 import { OverviewComponent } from "src/app/dataset-view/additional-components/overview-component/overview.component";
-import { OverviewUpdate } from "src/app/dataset-view/dataset.subscriptions.interface";
 import { DatasetSubscriptionsService } from "src/app/dataset-view/dataset.subscriptions.service";
 import {
     mockDatasetBasicsDerivedFragment,
+    mockDatasetBasicsRootFragment,
     mockFullPowerDatasetPermissionsFragment,
-    mockPublicDatasetVisibility,
 } from "src/app/search/mock.data";
 import { NavigationService } from "src/app/services/navigation.service";
 
@@ -71,11 +65,9 @@ describe("OverviewComponent", () => {
 
         datasetSubsService = TestBed.inject(DatasetSubscriptionsService);
         datasetSubsService.emitOverviewChanged({
+            ...structuredClone(mockOverviewDataUpdate), // clone, as we modify this data in the tests
             schema: mockMetadataDerivedUpdate.schema,
-            content: mockOverviewDataUpdate.content,
-            overview: structuredClone(mockOverviewDataUpdate.overview), // clone, as we modify this data in the tests
-            size: mockOverviewDataUpdate.size,
-        } as OverviewUpdate);
+        });
 
         navigationService = TestBed.inject(NavigationService);
         datasetFlowsService = TestBed.inject(DatasetFlowsService);
@@ -87,26 +79,12 @@ describe("OverviewComponent", () => {
         component = fixture.componentInstance;
         spyOn(datasetCollaborationsService, "getRoleByDatasetId").and.returnValue(of(null));
         setComponentInput(fixture, "datasetOverviewTabData", {
-            datasetBasics: {
-                id: mockOverviewDataUpdate.overview.id,
-                kind: mockOverviewDataUpdate.overview.kind,
-                name: mockOverviewDataUpdate.overview.name,
-                alias: mockOverviewDataUpdate.overview.alias,
-                owner: {
-                    __typename: "Account",
-                    id: mockOverviewDataUpdate.overview.owner.id,
-                    accountName: mockOverviewDataUpdate.overview.owner.accountName,
-                    accountProvider: AccountProvider.Password,
-                },
-                visibility: mockPublicDatasetVisibility,
-            },
+            datasetBasics: structuredClone(mockDatasetBasicsRootFragment),
             datasetPermissions: structuredClone(mockFullPowerDatasetPermissionsFragment),
             overviewUpdate: {
+                ...structuredClone(mockOverviewDataUpdate),
                 schema: mockMetadataDerivedUpdate.schema,
-                content: mockOverviewDataUpdate.content,
-                overview: structuredClone(mockOverviewDataUpdate.overview),
-                size: mockOverviewDataUpdate.size,
-            } as OverviewUpdate,
+            },
         });
         fixture.detectChanges();
     });

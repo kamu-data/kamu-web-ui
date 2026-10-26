@@ -12,9 +12,8 @@ import { provideToastr } from "ngx-toastr";
 import { HIGHLIGHT_OPTIONS_PROVIDER } from "@common/helpers/app.helpers";
 import { setComponentInput } from "@common/helpers/base-test.helpers.spec";
 import { SharedTestModule } from "@common/modules/shared-test.module";
-import { SetPollingSourceEventFragment } from "@api/kamu.graphql.interface";
 
-import { mockOverviewDataUpdate } from "src/app/dataset-view/additional-components/data-tabs.mock";
+import { mockSetPollingSourceEventFragment } from "src/app/dataset-view/additional-components/data-tabs.mock";
 import { SourceEventCommonDataComponent } from "src/app/dataset-view/additional-components/metadata-component/tabs/common/source-event-common-data/source-event-common-data.component";
 
 describe("SourceEventCommonDataComponent", () => {
@@ -28,12 +27,7 @@ describe("SourceEventCommonDataComponent", () => {
         });
         fixture = TestBed.createComponent(SourceEventCommonDataComponent);
         component = fixture.componentInstance;
-        setComponentInput(
-            fixture,
-            "sourceEvent",
-            structuredClone(mockOverviewDataUpdate.overview).metadata
-                .currentPollingSource as SetPollingSourceEventFragment,
-        );
+        setComponentInput(fixture, "sourceEvent", structuredClone(mockSetPollingSourceEventFragment));
         fixture.detectChanges();
     });
 

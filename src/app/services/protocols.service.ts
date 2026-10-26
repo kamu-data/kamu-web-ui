@@ -9,7 +9,7 @@ import { inject, Injectable } from "@angular/core";
 
 import { map, Observable } from "rxjs";
 
-import { DatasetEndpoints, DatasetProtocolsQuery } from "@api/kamu.graphql.interface";
+import { DatasetEndpointsDataFragment, DatasetProtocolsQuery } from "@api/kamu.graphql.interface";
 import { ProtocolsApi } from "@api/protocols.api";
 import { MaybeUndefined } from "@interface/app.types";
 import { DatasetInfo } from "@interface/navigation.interface";
@@ -20,7 +20,7 @@ import { DatasetInfo } from "@interface/navigation.interface";
 export class ProtocolsService {
     private protocolsApi = inject(ProtocolsApi);
 
-    public getProtocols(datasetInfo: DatasetInfo): Observable<MaybeUndefined<DatasetEndpoints>> {
+    public getProtocols(datasetInfo: DatasetInfo): Observable<MaybeUndefined<DatasetEndpointsDataFragment>> {
         return this.protocolsApi.getProtocols(datasetInfo).pipe(
             map((data: DatasetProtocolsQuery) => {
                 return data.datasets.byOwnerAndName?.endpoints;

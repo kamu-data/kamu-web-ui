@@ -3,45 +3,7 @@ query datasetProtocols($accountName: AccountName!, $datasetName: DatasetName!) {
     byOwnerAndName(accountName: $accountName, datasetName: $datasetName) {
       ...DatasetBasics
       endpoints {
-        cli {
-          pullCommand
-          pushCommand
-        }
-
-        webLink {
-          url
-        }
-
-        rest {
-          tailUrl
-          queryUrl
-          pushUrl
-        }
-
-        flightsql {
-          url
-        }
-
-        jdbc {
-          url
-        }
-
-        postgresql {
-          url
-        }
-
-        kafka {
-          url
-        }
-
-        websocket {
-          url
-        }
-
-        odata {
-          serviceUrl
-          collectionUrl
-        }
+        ...DatasetEndpointsData
       }
     }
   }

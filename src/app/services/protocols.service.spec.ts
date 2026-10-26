@@ -11,7 +11,7 @@ import { of } from "rxjs";
 
 import { Apollo } from "apollo-angular";
 
-import { DatasetEndpoints } from "@api/kamu.graphql.interface";
+import { DatasetEndpointsDataFragment } from "@api/kamu.graphql.interface";
 import { ProtocolsApi } from "@api/protocols.api";
 import { MaybeUndefined } from "@interface/app.types";
 
@@ -40,7 +40,7 @@ describe("ProtocolsService", () => {
 
         const subscription$ = service
             .getProtocols(mockDatasetInfo)
-            .subscribe((result: MaybeUndefined<DatasetEndpoints>) => {
+            .subscribe((result: MaybeUndefined<DatasetEndpointsDataFragment>) => {
                 if (result) {
                     expect(result).toEqual(mockDatasetEndPoints);
                 }

@@ -9,7 +9,7 @@ import { ChangeDetectionStrategy, Component, Input } from "@angular/core";
 import { MatIconModule } from "@angular/material/icon";
 
 import { CopyToClipboardComponent } from "@common/components/copy-to-clipboard/copy-to-clipboard.component";
-import { KafkaProtocolDesc, WebSocketProtocolDesc } from "@api/kamu.graphql.interface";
+import { KafkaProtocolDescDataFragment, WebSocketProtocolDescDataFragment } from "@api/kamu.graphql.interface";
 
 @Component({
     selector: "app-data-access-stream-tab",
@@ -24,6 +24,6 @@ import { KafkaProtocolDesc, WebSocketProtocolDesc } from "@api/kamu.graphql.inte
     ],
 })
 export class DataAccessStreamTabComponent {
-    @Input({ required: true }) public kafka: KafkaProtocolDesc;
-    @Input({ required: true }) public websocket: WebSocketProtocolDesc;
+    @Input({ required: true }) public kafka: KafkaProtocolDescDataFragment;
+    @Input({ required: true }) public websocket: WebSocketProtocolDescDataFragment;
 }

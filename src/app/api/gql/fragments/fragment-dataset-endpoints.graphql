@@ -1,0 +1,77 @@
+fragment DatasetEndpointsData on DatasetEndpoints {
+  cli {
+    ...CliProtocolDescData
+  }
+
+  webLink {
+    ...LinkProtocolDescData
+  }
+
+  rest {
+    ...RestProtocolDescData
+  }
+
+  flightsql {
+    ...FlightSqlDescData
+  }
+
+  jdbc {
+    ...JdbcDescData
+  }
+
+  postgresql {
+    ...PostgreSqlDeslData
+  }
+
+  kafka {
+    ...KafkaProtocolDescData
+  }
+
+  websocket {
+    ...WebSocketProtocolDescData
+  }
+
+  odata {
+    ...OdataProtocolDescData
+  }
+}
+
+fragment CliProtocolDescData on CliProtocolDesc {
+  pullCommand
+  pushCommand
+}
+
+fragment LinkProtocolDescData on LinkProtocolDesc {
+  url
+}
+
+fragment RestProtocolDescData on RestProtocolDesc {
+  tailUrl
+  queryUrl
+  pushUrl
+}
+
+fragment FlightSqlDescData on FlightSqlDesc {
+  url
+}
+
+fragment JdbcDescData on JdbcDesc {
+  url
+}
+
+fragment PostgreSqlDeslData on PostgreSqlDesl {
+  url
+}
+
+fragment KafkaProtocolDescData on KafkaProtocolDesc {
+  url
+}
+
+fragment WebSocketProtocolDescData on WebSocketProtocolDesc {
+  url
+}
+
+fragment OdataProtocolDescData on OdataProtocolDesc {
+  serviceUrl
+  collectionUrl
+}

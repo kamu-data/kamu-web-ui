@@ -10,7 +10,7 @@ import { MatDividerModule } from "@angular/material/divider";
 import { MatIconModule } from "@angular/material/icon";
 
 import { CopyToClipboardComponent } from "@common/components/copy-to-clipboard/copy-to-clipboard.component";
-import { CliProtocolDesc } from "@api/kamu.graphql.interface";
+import { CliProtocolDescDataFragment } from "@api/kamu.graphql.interface";
 
 @Component({
     selector: "app-data-access-kamu-cli-tab",
@@ -25,5 +25,5 @@ import { CliProtocolDesc } from "@api/kamu.graphql.interface";
     ],
 })
 export class DataAccessKamuCliTabComponent {
-    @Input({ required: true }) public cli: CliProtocolDesc;
+    @Input({ required: true }) public cli: CliProtocolDescDataFragment;
 }

@@ -7996,7 +7996,10 @@ export type DatasetProtocolsQueryVariables = Exact<{
 
 
 export type DatasetProtocolsQuery = { __typename?: 'Query', datasets: { __typename?: 'Datasets', byOwnerAndName?: (
-      { __typename?: 'Dataset', endpoints: { __typename?: 'DatasetEndpoints', cli: { __typename?: 'CliProtocolDesc', pullCommand: string, pushCommand: string }, webLink: { __typename?: 'LinkProtocolDesc', url: string }, rest: { __typename?: 'RestProtocolDesc', tailUrl: string, queryUrl: string, pushUrl: string }, flightsql: { __typename?: 'FlightSqlDesc', url: string }, jdbc: { __typename?: 'JdbcDesc', url: string }, postgresql: { __typename?: 'PostgreSqlDesl', url: string }, kafka: { __typename?: 'KafkaProtocolDesc', url: string }, websocket: { __typename?: 'WebSocketProtocolDesc', url: string }, odata: { __typename?: 'OdataProtocolDesc', serviceUrl: string, collectionUrl: string } } }
+      { __typename?: 'Dataset', endpoints: (
+        { __typename?: 'DatasetEndpoints' }
+        & DatasetEndpointsDataFragment
+      ) }
       & DatasetBasicsFragment
     ) | null } };
 
@@ -9020,6 +9023,53 @@ export type DatasetDetailsFragment = { __typename?: 'Dataset', createdAt: string
       { __typename?: 'SetLicense' }
       & LicenseFragment
     ) | null } };
+
+export type DatasetEndpointsDataFragment = { __typename?: 'DatasetEndpoints', cli: (
+    { __typename?: 'CliProtocolDesc' }
+    & CliProtocolDescDataFragment
+  ), webLink: (
+    { __typename?: 'LinkProtocolDesc' }
+    & LinkProtocolDescDataFragment
+  ), rest: (
+    { __typename?: 'RestProtocolDesc' }
+    & RestProtocolDescDataFragment
+  ), flightsql: (
+    { __typename?: 'FlightSqlDesc' }
+    & FlightSqlDescDataFragment
+  ), jdbc: (
+    { __typename?: 'JdbcDesc' }
+    & JdbcDescDataFragment
+  ), postgresql: (
+    { __typename?: 'PostgreSqlDesl' }
+    & PostgreSqlDeslDataFragment
+  ), kafka: (
+    { __typename?: 'KafkaProtocolDesc' }
+    & KafkaProtocolDescDataFragment
+  ), websocket: (
+    { __typename?: 'WebSocketProtocolDesc' }
+    & WebSocketProtocolDescDataFragment
+  ), odata: (
+    { __typename?: 'OdataProtocolDesc' }
+    & OdataProtocolDescDataFragment
+  ) };
+
+export type CliProtocolDescDataFragment = { __typename?: 'CliProtocolDesc', pullCommand: string, pushCommand: string };
+
+export type LinkProtocolDescDataFragment = { __typename?: 'LinkProtocolDesc', url: string };
+
+export type RestProtocolDescDataFragment = { __typename?: 'RestProtocolDesc', tailUrl: string, queryUrl: string, pushUrl: string };
+
+export type FlightSqlDescDataFragment = { __typename?: 'FlightSqlDesc', url: string };
+
+export type JdbcDescDataFragment = { __typename?: 'JdbcDesc', url: string };
+
+export type PostgreSqlDeslDataFragment = { __typename?: 'PostgreSqlDesl', url: string };
+
+export type KafkaProtocolDescDataFragment = { __typename?: 'KafkaProtocolDesc', url: string };
+
+export type WebSocketProtocolDescDataFragment = { __typename?: 'WebSocketProtocolDesc', url: string };
+
+export type OdataProtocolDescDataFragment = { __typename?: 'OdataProtocolDesc', serviceUrl: string, collectionUrl: string };
 
 export type DatasetLastUpdateFragment = { __typename?: 'Dataset', metadata: { __typename?: 'DatasetMetadata', chain: { __typename?: 'MetadataChain', blocks: { __typename?: 'MetadataBlockConnection', totalCount: number, nodes: Array<(
           { __typename?: 'MetadataBlockExtended' }
@@ -10401,6 +10451,94 @@ export const DatasetDataFragmentDoc = gql`
 }
     ${DatasetDataSizeFragmentDoc}
 ${DataQueryResultSuccessViewFragmentDoc}`;
+export const CliProtocolDescDataFragmentDoc = gql`
+    fragment CliProtocolDescData on CliProtocolDesc {
+  pullCommand
+  pushCommand
+}
+    `;
+export const LinkProtocolDescDataFragmentDoc = gql`
+    fragment LinkProtocolDescData on LinkProtocolDesc {
+  url
+}
+    `;
+export const RestProtocolDescDataFragmentDoc = gql`
+    fragment RestProtocolDescData on RestProtocolDesc {
+  tailUrl
+  queryUrl
+  pushUrl
+}
+    `;
+export const FlightSqlDescDataFragmentDoc = gql`
+    fragment FlightSqlDescData on FlightSqlDesc {
+  url
+}
+    `;
+export const JdbcDescDataFragmentDoc = gql`
+    fragment JdbcDescData on JdbcDesc {
+  url
+}
+    `;
+export const PostgreSqlDeslDataFragmentDoc = gql`
+    fragment PostgreSqlDeslData on PostgreSqlDesl {
+  url
+}
+    `;
+export const KafkaProtocolDescDataFragmentDoc = gql`
+    fragment KafkaProtocolDescData on KafkaProtocolDesc {
+  url
+}
+    `;
+export const WebSocketProtocolDescDataFragmentDoc = gql`
+    fragment WebSocketProtocolDescData on WebSocketProtocolDesc {
+  url
+}
+    `;
+export const OdataProtocolDescDataFragmentDoc = gql`
+    fragment OdataProtocolDescData on OdataProtocolDesc {
+  serviceUrl
+  collectionUrl
+}
+    `;
+export const DatasetEndpointsDataFragmentDoc = gql`
+    fragment DatasetEndpointsData on DatasetEndpoints {
+  cli {
+    ...CliProtocolDescData
+  }
+  webLink {
+    ...LinkProtocolDescData
+  }
+  rest {
+    ...RestProtocolDescData
+  }
+  flightsql {
+    ...FlightSqlDescData
+  }
+  jdbc {
+    ...JdbcDescData
+  }
+  postgresql {
+    ...PostgreSqlDeslData
+  }
+  kafka {
+    ...KafkaProtocolDescData
+  }
+  websocket {
+    ...WebSocketProtocolDescData
+  }
+  odata {
+    ...OdataProtocolDescData
+  }
+}
+    ${CliProtocolDescDataFragmentDoc}
+${LinkProtocolDescDataFragmentDoc}
+${RestProtocolDescDataFragmentDoc}
+${FlightSqlDescDataFragmentDoc}
+${JdbcDescDataFragmentDoc}
+${PostgreSqlDeslDataFragmentDoc}
+${KafkaProtocolDescDataFragmentDoc}
+${WebSocketProtocolDescDataFragmentDoc}
+${OdataProtocolDescDataFragmentDoc}`;
 export const CurrentSourceFetchUrlFragmentDoc = gql`
     fragment CurrentSourceFetchUrl on DatasetMetadata {
   currentPollingSource {
@@ -12634,42 +12772,13 @@ export const DatasetProtocolsDocument = gql`
     byOwnerAndName(accountName: $accountName, datasetName: $datasetName) {
       ...DatasetBasics
       endpoints {
-        cli {
-          pullCommand
-          pushCommand
-        }
-        webLink {
-          url
-        }
-        rest {
-          tailUrl
-          queryUrl
-          pushUrl
-        }
-        flightsql {
-          url
-        }
-        jdbc {
-          url
-        }
-        postgresql {
-          url
-        }
-        kafka {
-          url
-        }
-        websocket {
-          url
-        }
-        odata {
-          serviceUrl
-          collectionUrl
-        }
+        ...DatasetEndpointsData
       }
     }
   }
 }
-    ${DatasetBasicsFragmentDoc}`;
+    ${DatasetBasicsFragmentDoc}
+${DatasetEndpointsDataFragmentDoc}`;
 
   @Injectable({
     providedIn: 'root'

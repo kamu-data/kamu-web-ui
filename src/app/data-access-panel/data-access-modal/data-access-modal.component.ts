@@ -17,7 +17,7 @@ import { NgbActiveModal } from "@ng-bootstrap/ng-bootstrap";
 
 import { FeatureFlagDirective } from "@common/directives/feature-flag.directive";
 import { DatasetLinkPipe } from "@common/pipes/dataset-link.pipe";
-import { DatasetBasicsFragment, DatasetEndpoints, DatasetKind } from "@api/kamu.graphql.interface";
+import { DatasetBasicsFragment, DatasetEndpointsDataFragment, DatasetKind } from "@api/kamu.graphql.interface";
 import { MaybeUndefined } from "@interface/app.types";
 
 import { AppConfigService } from "src/app/app-config.service";
@@ -72,7 +72,7 @@ export class DataAccessModalComponent implements OnInit {
     public activeModal = inject(NgbActiveModal);
     private protocolsService = inject(ProtocolsService);
 
-    public protocols$: Observable<MaybeUndefined<DatasetEndpoints>>;
+    public protocols$: Observable<MaybeUndefined<DatasetEndpointsDataFragment>>;
     public accessDataOptions: DataAccessMenuItem[] = dataAccessMenuOptions;
     public activeTab: DataAccessTabsEnum = DataAccessTabsEnum.LINK;
     public readonly dataAccessTabsEnum: typeof DataAccessTabsEnum = DataAccessTabsEnum;

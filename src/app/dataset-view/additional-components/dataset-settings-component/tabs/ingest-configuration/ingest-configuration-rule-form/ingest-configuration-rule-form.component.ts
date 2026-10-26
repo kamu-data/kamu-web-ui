@@ -10,7 +10,7 @@ import { FormControl, FormGroup, ReactiveFormsModule } from "@angular/forms";
 import { MatCheckboxModule } from "@angular/material/checkbox";
 
 import { BaseComponent } from "@common/components/base.component";
-import { FlowConfigRuleIngest } from "@api/kamu.graphql.interface";
+import { FlowConfigIngestInput, FlowConfigRuleIngestDataFragment } from "@api/kamu.graphql.interface";
 import { MaybeNull } from "@interface/app.types";
 
 import {
@@ -40,14 +40,16 @@ export class IngestConfigurationRuleFormComponent extends BaseComponent {
         });
     }
 
-    public static buildFormValue(ingestionRule: MaybeNull<FlowConfigRuleIngest>): IngestConfigurationRuleFormValue {
+    public static buildFormValue(
+        ingestionRule: MaybeNull<FlowConfigRuleIngestDataFragment>,
+    ): IngestConfigurationRuleFormValue {
         return {
             fetchUncacheable: ingestionRule?.fetchUncacheable ?? false,
             fetchNextIteration: ingestionRule?.fetchNextIteration ?? false,
         };
     }
 
-    public static buildFlowConfigIngestInput(formValue: IngestConfigurationRuleFormValue): FlowConfigRuleIngest {
+    public static buildFlowConfigIngestInput(formValue: IngestConfigurationRuleFormValue): FlowConfigIngestInput {
         return {
             fetchUncacheable: formValue.fetchUncacheable,
             fetchNextIteration: formValue.fetchNextIteration,

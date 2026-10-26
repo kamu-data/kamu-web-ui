@@ -16,7 +16,7 @@ import { isNil, promiseWithCatch } from "@common/helpers/app.helpers";
 import RoutingResolvers from "@common/resolvers/routing-resolvers";
 import { SetPollingSourceTooltipsTexts } from "@common/tooltips/set-polling-source-tooltips.text";
 import { SourcesTooltipsTexts } from "@common/tooltips/sources.text";
-import { DatasetKind, EnvVar, FetchStepUrl, SetPollingSourceEventFragment } from "@api/kamu.graphql.interface";
+import { DatasetKind, FetchStepUrlDataFragment, SetPollingSourceEventFragment } from "@api/kamu.graphql.interface";
 import { MaybeNullOrUndefined } from "@interface/app.types";
 
 import { CardsPropertyComponent } from "src/app/dataset-block/metadata-block/components/event-details/components/common/cards-property/cards-property.component";
@@ -65,9 +65,9 @@ export class MetadataPollingSourceTabComponent {
         return this.datasetMetadataTabData.metadataSummary.metadata.currentPollingSource;
     }
 
-    public get headers(): EnvVar[] {
-        return ((this.datasetMetadataTabData.metadataSummary.metadata.currentPollingSource?.fetch as FetchStepUrl)
-            .headers ?? []) as EnvVar[];
+    public get headers(): NonNullable<FetchStepUrlDataFragment["headers"]> {
+        const fetch = this.pollingSource?.fetch;
+        return fetch?.__typename === "FetchStepUrl" ? (fetch.headers ?? []) : [];
     }
 
     public get canEditSetPollingSource(): boolean {

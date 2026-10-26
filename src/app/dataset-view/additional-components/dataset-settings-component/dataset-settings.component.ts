@@ -15,11 +15,9 @@ import { FeatureFlagDirective } from "@common/directives/feature-flag.directive"
 import RoutingResolvers from "@common/resolvers/routing-resolvers";
 import {
     DatasetBasicsFragment,
-    DatasetMetadata,
     DatasetOverviewFragment,
     DatasetPermissionsFragment,
 } from "@api/kamu.graphql.interface";
-import { MaybeNull } from "@interface/app.types";
 
 import { AppConfigService } from "src/app/app-config.service";
 import { isSettingsTabAccessibleHelper } from "src/app/dataset-view/additional-components/dataset-settings-component/dataset-settings.helpers";
@@ -60,7 +58,7 @@ export class DatasetSettingsComponent extends BaseComponent {
         return this.datasetSettingsTabData.datasetPermissions;
     }
 
-    public get overview(): MaybeNull<DatasetOverviewFragment> {
+    public get overview(): DatasetOverviewFragment {
         return this.datasetSettingsTabData.overviewUpdate.overview;
     }
 
@@ -82,7 +80,7 @@ export class DatasetSettingsComponent extends BaseComponent {
             this.appConfigService.featureFlags,
             this.datasetBasics,
             this.datasetPermissions,
-            this.overview?.metadata as DatasetMetadata,
+            this.overview.metadata,
         );
     }
 }

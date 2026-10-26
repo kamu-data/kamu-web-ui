@@ -14,7 +14,6 @@ import {
     FlowProcessAutoStopReason,
     FlowProcessEffectiveState,
     FlowProcessSummaryDataFragment,
-    FlowTriggerStopPolicyAfterConsecutiveFailures,
 } from "@api/kamu.graphql.interface";
 
 import {
@@ -235,8 +234,8 @@ function additionalMessagesActiveStateHelper(summary: FlowProcessSummaryDataFrag
 }
 
 function additionalMessagesStoppedAutoHelper(summary: FlowProcessSummaryDataFragment): string {
-    if (summary.autoStoppedReason === FlowProcessAutoStopReason.StopPolicy) {
-        return `Reason: stop policy ${summary.consecutiveFailures} consecutive failures - ${summary.consecutiveFailures}/${(summary.stopPolicy as FlowTriggerStopPolicyAfterConsecutiveFailures).maxFailures} consecutive failures`;
+    if (summary.autoStoppedReason === FlowProcessAutoStopReason.StopPolicy && "maxFailures" in summary.stopPolicy) {
+        return `Reason: stop policy ${summary.consecutiveFailures} consecutive failures - ${summary.consecutiveFailures}/${summary.stopPolicy.maxFailures} consecutive failures`;
     }
     if (summary.autoStoppedReason === FlowProcessAutoStopReason.UnrecoverableFailure) {
         return `Reason: unrecoverable failure`;

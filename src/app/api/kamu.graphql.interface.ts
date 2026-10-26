@@ -8071,7 +8071,10 @@ export type GetEnabledLoginMethodsQuery = { __typename?: 'Query', auth: { __type
 export type EnginesQueryVariables = Exact<{ [key: string]: never; }>;
 
 
-export type EnginesQuery = { __typename?: 'Query', data: { __typename?: 'DataQueries', knownEngines: Array<{ __typename?: 'EngineDesc', name: string, dialect: QueryDialect, latestImage: string }> } };
+export type EnginesQuery = { __typename?: 'Query', data: { __typename?: 'DataQueries', knownEngines: Array<(
+      { __typename?: 'EngineDesc' }
+      & EngineDescDataFragment
+    )> } };
 
 export type DeleteEnvVariableMutationVariables = Exact<{
   datasetId: Scalars['DatasetID']['input'];
@@ -8148,15 +8151,18 @@ export type GetDatasetFlowConfigsQueryVariables = Exact<{
 export type GetDatasetFlowConfigsQuery = { __typename?: 'Query', datasets: { __typename?: 'Datasets', byId?: (
       { __typename?: 'Dataset', flows: { __typename?: 'DatasetFlows', configs: { __typename: 'DatasetFlowConfigs', byType?: { __typename: 'FlowConfiguration', rule:
               | { __typename?: 'FlowConfigRuleCompaction', maxSliceSize: number, maxSliceRecords: number }
-              | { __typename?: 'FlowConfigRuleIngest', fetchUncacheable: boolean, fetchNextIteration: boolean }
+              | (
+                { __typename?: 'FlowConfigRuleIngest' }
+                & FlowConfigRuleIngestDataFragment
+              )
               | { __typename?: 'FlowConfigRuleReset', oldHeadHash?: string | null, mode:
                   | { __typename?: 'FlowConfigResetPropagationModeCustom' }
                   | { __typename?: 'FlowConfigResetPropagationModeToSeed', dummy?: string | null }
                  }
-            , retryPolicy?: { __typename?: 'FlowRetryPolicy', maxAttempts: number, backoffType: FlowRetryBackoffType, minDelay: (
-                { __typename?: 'TimeDelta' }
-                & TimeDeltaDataFragment
-              ) } | null } | null } } }
+            , retryPolicy?: (
+              { __typename?: 'FlowRetryPolicy' }
+              & FlowRetryPolicyDataFragment
+            ) | null } | null } } }
       & DatasetBasicsFragment
     ) | null } };
 
@@ -8186,6 +8192,13 @@ export type SetIngestFlowConfigMutation = { __typename?: 'Mutation', datasets: {
             | { __typename?: 'FlowPreconditionsNotMet', message: string, preconditions: string }
             | { __typename?: 'SetFlowConfigSuccess', message: string }
            } } } | null } };
+
+export type FlowConfigRuleIngestDataFragment = { __typename?: 'FlowConfigRuleIngest', fetchUncacheable: boolean, fetchNextIteration: boolean };
+
+export type FlowRetryPolicyDataFragment = { __typename?: 'FlowRetryPolicy', maxAttempts: number, backoffType: FlowRetryBackoffType, minDelay: (
+    { __typename?: 'TimeDelta' }
+    & TimeDeltaDataFragment
+  ) };
 
 export type PauseDatasetFlowTriggerMutationVariables = Exact<{
   datasetId: Scalars['DatasetID']['input'];
@@ -9212,6 +9225,8 @@ export type DatasetTransformFragment = { __typename?: 'SetTransform', inputs: Ar
     & DatasetTransformContentFragment
   ) };
 
+export type EngineDescDataFragment = { __typename?: 'EngineDesc', name: string, dialect: QueryDialect, latestImage: string };
+
 export type FlowProcessGroupRollupDataFragment = { __typename?: 'FlowProcessGroupRollup', total: number, active: number, failing: number, paused: number, stopped: number, unconfigured: number, worstConsecutiveFailures: number };
 
 export type LicenseFragment = { __typename?: 'SetLicense', shortName: string, name: string, spdxId?: string | null, websiteUrl: string };
@@ -9270,6 +9285,8 @@ export type MetadataBlockFragment = { __typename?: 'MetadataBlockExtended', bloc
       & SetVocabEventFragment
     )
    };
+
+export type WebhookSubscriptionDataFragment = { __typename?: 'WebhookSubscription', id: string, label: string, datasetId?: string | null, targetUrl: string, eventTypes: Array<string>, status: WebhookSubscriptionStatus };
 
 export type GetMetadataBlockQueryVariables = Exact<{
   accountName: Scalars['AccountName']['input'];
@@ -9358,7 +9375,10 @@ export type DatasetWebhookByIdQueryVariables = Exact<{
 }>;
 
 
-export type DatasetWebhookByIdQuery = { __typename?: 'Query', datasets: { __typename?: 'Datasets', byId?: { __typename?: 'Dataset', webhooks: { __typename?: 'DatasetWebhooks', subscription?: { __typename?: 'WebhookSubscription', id: string, label: string, datasetId?: string | null, targetUrl: string, eventTypes: Array<string>, status: WebhookSubscriptionStatus } | null } } | null } };
+export type DatasetWebhookByIdQuery = { __typename?: 'Query', datasets: { __typename?: 'Datasets', byId?: { __typename?: 'Dataset', webhooks: { __typename?: 'DatasetWebhooks', subscription?: (
+          { __typename?: 'WebhookSubscription' }
+          & WebhookSubscriptionDataFragment
+        ) | null } } | null } };
 
 export type DatasetWebhookCreateSubscriptionMutationVariables = Exact<{
   datasetId: Scalars['DatasetID']['input'];
@@ -9427,7 +9447,10 @@ export type DatasetWebhookSubscriptionsQueryVariables = Exact<{
 }>;
 
 
-export type DatasetWebhookSubscriptionsQuery = { __typename?: 'Query', datasets: { __typename?: 'Datasets', byId?: { __typename?: 'Dataset', webhooks: { __typename?: 'DatasetWebhooks', subscriptions: Array<{ __typename?: 'WebhookSubscription', label: string, id: string, targetUrl: string, status: WebhookSubscriptionStatus, datasetId?: string | null, eventTypes: Array<string> }> } } | null } };
+export type DatasetWebhookSubscriptionsQuery = { __typename?: 'Query', datasets: { __typename?: 'Datasets', byId?: { __typename?: 'Dataset', webhooks: { __typename?: 'DatasetWebhooks', subscriptions: Array<(
+          { __typename?: 'WebhookSubscription' }
+          & WebhookSubscriptionDataFragment
+        )> } } | null } };
 
 export type DatasetWebhookUpdateSubscriptionMutationVariables = Exact<{
   datasetId: Scalars['DatasetID']['input'];
@@ -9778,6 +9801,27 @@ export const ViewDatasetEnvVarConnectionDataFragmentDoc = gql`
 }
     ${ViewDatasetEnvVarDataFragmentDoc}
 ${DatasetPageInfoFragmentDoc}`;
+export const FlowConfigRuleIngestDataFragmentDoc = gql`
+    fragment FlowConfigRuleIngestData on FlowConfigRuleIngest {
+  fetchUncacheable
+  fetchNextIteration
+}
+    `;
+export const TimeDeltaDataFragmentDoc = gql`
+    fragment TimeDeltaData on TimeDelta {
+  every
+  unit
+}
+    `;
+export const FlowRetryPolicyDataFragmentDoc = gql`
+    fragment FlowRetryPolicyData on FlowRetryPolicy {
+  maxAttempts
+  minDelay {
+    ...TimeDeltaData
+  }
+  backoffType
+}
+    ${TimeDeltaDataFragmentDoc}`;
 export const FlowOutcomeDataFragmentDoc = gql`
     fragment FlowOutcomeData on FlowOutcome {
   ... on FlowSuccessResult {
@@ -9806,12 +9850,6 @@ export const FlowOutcomeDataFragmentDoc = gql`
   }
 }
     ${DatasetBasicsFragmentDoc}`;
-export const TimeDeltaDataFragmentDoc = gql`
-    fragment TimeDeltaData on TimeDelta {
-  every
-  unit
-}
-    `;
 export const FlowSummaryDataFragmentDoc = gql`
     fragment FlowSummaryData on Flow {
   description {
@@ -11198,6 +11236,23 @@ export const DatasetSearchOverviewFragmentDoc = gql`
     ${DatasetBasicsFragmentDoc}
 ${DatasetCurrentInfoFragmentDoc}
 ${LicenseFragmentDoc}`;
+export const EngineDescDataFragmentDoc = gql`
+    fragment EngineDescData on EngineDesc {
+  name
+  dialect
+  latestImage
+}
+    `;
+export const WebhookSubscriptionDataFragmentDoc = gql`
+    fragment WebhookSubscriptionData on WebhookSubscription {
+  id
+  label
+  datasetId
+  targetUrl
+  eventTypes
+  status
+}
+    `;
 export const CreateAccessTokenDocument = gql`
     mutation createAccessToken($accountId: AccountID!, $tokenName: String!) {
   accounts {
@@ -12815,13 +12870,11 @@ export const EnginesDocument = gql`
     query engines {
   data {
     knownEngines {
-      name
-      dialect
-      latestImage
+      ...EngineDescData
     }
   }
 }
-    `;
+    ${EngineDescDataFragmentDoc}`;
 
   @Injectable({
     providedIn: 'root'
@@ -12961,10 +13014,7 @@ export const GetDatasetFlowConfigsDocument = gql`
           byType(datasetFlowType: $datasetFlowType) {
             __typename
             rule {
-              ... on FlowConfigRuleIngest {
-                fetchUncacheable
-                fetchNextIteration
-              }
+              ...FlowConfigRuleIngestData
               ... on FlowConfigRuleReset {
                 oldHeadHash
                 mode {
@@ -12979,11 +13029,7 @@ export const GetDatasetFlowConfigsDocument = gql`
               }
             }
             retryPolicy {
-              maxAttempts
-              minDelay {
-                ...TimeDeltaData
-              }
-              backoffType
+              ...FlowRetryPolicyData
             }
           }
         }
@@ -12992,7 +13038,8 @@ export const GetDatasetFlowConfigsDocument = gql`
   }
 }
     ${DatasetBasicsFragmentDoc}
-${TimeDeltaDataFragmentDoc}`;
+${FlowConfigRuleIngestDataFragmentDoc}
+${FlowRetryPolicyDataFragmentDoc}`;
 
   @Injectable({
     providedIn: 'root'
@@ -13803,18 +13850,13 @@ export const DatasetWebhookByIdDocument = gql`
     byId(datasetId: $datasetId) {
       webhooks {
         subscription(id: $id) {
-          id
-          label
-          datasetId
-          targetUrl
-          eventTypes
-          status
+          ...WebhookSubscriptionData
         }
       }
     }
   }
 }
-    `;
+    ${WebhookSubscriptionDataFragmentDoc}`;
 
   @Injectable({
     providedIn: 'root'
@@ -14026,18 +14068,13 @@ export const DatasetWebhookSubscriptionsDocument = gql`
     byId(datasetId: $datasetId) {
       webhooks {
         subscriptions {
-          label
-          id
-          targetUrl
-          status
-          datasetId
-          eventTypes
+          ...WebhookSubscriptionData
         }
       }
     }
   }
 }
-    `;
+    ${WebhookSubscriptionDataFragmentDoc}`;
 
   @Injectable({
     providedIn: 'root'

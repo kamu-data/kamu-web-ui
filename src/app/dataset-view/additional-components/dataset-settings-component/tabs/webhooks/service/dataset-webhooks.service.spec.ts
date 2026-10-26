@@ -12,7 +12,8 @@ import { firstValueFrom, of } from "rxjs";
 import { Apollo } from "apollo-angular";
 import { provideToastr, ToastrService } from "ngx-toastr";
 
-import { WebhookSubscription } from "@api/kamu.graphql.interface";
+import { requireValue } from "@common/helpers/app.helpers";
+import { WebhookSubscriptionDataFragment } from "@api/kamu.graphql.interface";
 import { TEST_DATASET_ID } from "@api/mock/dataset.mock";
 import {
     mockDatasetWebhookByIdNotFoundQuery,
@@ -65,9 +66,9 @@ describe("DatasetWebhooksService", () => {
             of(mockDatasetWebhookSubscriptionsQuery),
         );
 
-        service.datasetWebhookSubscriptions(DATASET_ID).subscribe((result: WebhookSubscription[]) => {
+        service.datasetWebhookSubscriptions(DATASET_ID).subscribe((result: WebhookSubscriptionDataFragment[]) => {
             expect(result.length).toEqual(
-                mockDatasetWebhookSubscriptionsQuery.datasets.byId?.webhooks.subscriptions.length as number,
+                requireValue(mockDatasetWebhookSubscriptionsQuery.datasets.byId?.webhooks.subscriptions.length ?? null),
             );
         });
         expect(datasetWebhookSubscriptionsSpy).toHaveBeenCalledTimes(1);
@@ -82,7 +83,7 @@ describe("DatasetWebhooksService", () => {
             service.datasetWebhookSubscriptionById({ datasetId: DATASET_ID, id: MOCK_SUBSCRIPTION_ID }),
         );
 
-        expect(result).toEqual(mockDatasetWebhookByIdQuery.datasets.byId?.webhooks.subscription as WebhookSubscription);
+        expect(result).toEqual(requireValue(mockDatasetWebhookByIdQuery.datasets.byId?.webhooks.subscription ?? null));
         expect(datasetWebhookSubscriptionByIdSpy).toHaveBeenCalledOnceWith({
             datasetId: DATASET_ID,
             id: MOCK_SUBSCRIPTION_ID,

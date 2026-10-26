@@ -19,8 +19,6 @@ import { parseDataRows } from "@common/helpers/data.helpers";
 import { DatasetNotFoundError, SqlExecutionError } from "@common/values/errors";
 import { DatasetApi } from "@api/dataset.api";
 import {
-    BlockRef,
-    CompareChainsResultStatus,
     CompareChainsStatus,
     DataQueryResultSuccessViewFragment,
     DatasetAccessResultNotAccessible,
@@ -119,7 +117,7 @@ export class DatasetService {
         );
     }
 
-    private setHeadBlockHash(refs: BlockRef[]): void {
+    private setHeadBlockHash(refs: DatasetMetadataSummaryFragment["metadata"]["chain"]["refs"]): void {
         const head = refs?.find((item) => item.name === "head");
         this.currentHeadBlockHash = head?.blockHash ?? "";
     }
@@ -244,8 +242,7 @@ export class DatasetService {
                 const statuses = data.datasets.byId?.metadata.pushSyncStatuses.statuses ?? [];
                 return statuses.some((status) => {
                     if (status.result.__typename === "CompareChainsResultStatus") {
-                        const result: CompareChainsResultStatus = status.result;
-                        if (result.message !== CompareChainsStatus.Equal) {
+                        if (status.result.message !== CompareChainsStatus.Equal) {
                             return true;
                         }
                     } else if (status.result.__typename === "CompareChainsResultError") {

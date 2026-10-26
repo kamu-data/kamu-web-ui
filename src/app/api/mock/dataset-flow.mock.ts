@@ -34,7 +34,6 @@ import {
     FlowStatus,
     FlowSummaryDataFragment,
     FlowTriggerBreakingChangeRule,
-    FlowTriggerReactiveRule,
     FlowTriggerScheduleRule,
     GetDatasetFlowConfigsQuery,
     GetDatasetFlowTriggerQuery,
@@ -303,20 +302,6 @@ export const mockGetDatasetFlowTriggersTimeDeltaQuery: GetDatasetFlowTriggerQuer
             },
         },
     },
-};
-
-export const mockBufferingBatchingReactiveRule: FlowTriggerReactiveRule = {
-    __typename: "FlowTriggerReactiveRule",
-    forNewData: {
-        __typename: "FlowTriggerBatchingRuleBuffering",
-        minRecordsToAwait: 100,
-        maxBatchingInterval: {
-            __typename: "TimeDelta",
-            every: 10,
-            unit: TimeUnit.Hours,
-        },
-    },
-    forBreakingChange: FlowTriggerBreakingChangeRule.Recover,
 };
 
 export const mockGetDatasetFlowTriggersBatchingQuery: GetDatasetFlowTriggerQuery = {

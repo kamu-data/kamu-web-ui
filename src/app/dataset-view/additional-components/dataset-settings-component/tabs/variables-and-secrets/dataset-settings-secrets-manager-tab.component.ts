@@ -24,8 +24,8 @@ import { promiseWithCatch } from "@common/helpers/app.helpers";
 import RoutingResolvers from "@common/resolvers/routing-resolvers";
 import {
     DatasetBasicsFragment,
+    DatasetPageInfoFragment,
     DatasetPermissionsFragment,
-    PageBasedInfo,
     ViewDatasetEnvVarConnectionDataFragment,
     ViewDatasetEnvVarDataFragment,
 } from "@api/kamu.graphql.interface";
@@ -68,7 +68,7 @@ export class DatasetSettingsSecretsManagerTabComponent extends BaseComponent imp
     public readonly DISPLAY_COLUMNS: string[] = ["key", "value", "actions"];
     public dataSource = new MatTableDataSource();
     @ViewChild(MatSort) private sort: MatSort;
-    public pageBasedInfo: PageBasedInfo;
+    public pageBasedInfo: DatasetPageInfoFragment;
     public readonly PER_PAGE = 15;
     public searchByKey = "";
     public currentPage: number = 1;

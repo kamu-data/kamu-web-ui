@@ -15,9 +15,10 @@ import { Apollo } from "apollo-angular";
 import { provideToastr } from "ngx-toastr";
 
 import { ModalService } from "@common/components/modal/modal.service";
+import { requireValue } from "@common/helpers/app.helpers";
 import { registerMatSvgIcons, setComponentInput } from "@common/helpers/base-test.helpers.spec";
 import { SharedTestModule } from "@common/modules/shared-test.module";
-import { WebhookSubscription, WebhookSubscriptionStatus } from "@api/kamu.graphql.interface";
+import { WebhookSubscriptionStatus } from "@api/kamu.graphql.interface";
 import { mockDatasetWebhookByIdQuery } from "@api/mock/webhooks.mock";
 import { ModalArgumentsInterface } from "@interface/modal.interface";
 
@@ -142,8 +143,9 @@ describe("ListWebhooksComponent", () => {
     });
 
     it("should check to edit subscription", () => {
-        const mockWebhookSubscription = mockDatasetWebhookByIdQuery.datasets.byId?.webhooks
-            .subscription as WebhookSubscription;
+        const mockWebhookSubscription = requireValue(
+            mockDatasetWebhookByIdQuery.datasets.byId?.webhooks.subscription ?? null,
+        );
         const navigateToWebhooksSpy = spyOn(navigationService, "navigateToWebhooks");
         component.editWebhook(mockWebhookSubscription);
         expect(navigateToWebhooksSpy).toHaveBeenCalledOnceWith({

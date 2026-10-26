@@ -10,10 +10,7 @@ query getDatasetFlowConfigs($datasetId: DatasetID!, $datasetFlowType: DatasetFlo
           byType(datasetFlowType: $datasetFlowType) {
             __typename
             rule {
-              ... on FlowConfigRuleIngest {
-                fetchUncacheable
-                fetchNextIteration
-              }
+              ...FlowConfigRuleIngestData
 
               ... on FlowConfigRuleReset {
                 oldHeadHash
@@ -30,11 +27,7 @@ query getDatasetFlowConfigs($datasetId: DatasetID!, $datasetFlowType: DatasetFlo
               }
             }
             retryPolicy {
-              maxAttempts
-              minDelay {
-                ...TimeDeltaData
-              }
-              backoffType
+              ...FlowRetryPolicyData
             }
           }
         }

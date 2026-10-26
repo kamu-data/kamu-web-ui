@@ -21,7 +21,7 @@ import {
     DatasetWebhookRotateSecretMutation,
     DatasetWebhookSubscriptionsQuery,
     DatasetWebhookUpdateSubscriptionMutation,
-    WebhookSubscription,
+    WebhookSubscriptionDataFragment,
     WebhookSubscriptionInput,
 } from "@api/kamu.graphql.interface";
 import { WebhooksApi } from "@api/webhooks.api";
@@ -36,10 +36,10 @@ export class DatasetWebhooksService {
     private webhooksApi = inject(WebhooksApi);
     private toastrService = inject(ToastrService);
 
-    public datasetWebhookSubscriptions(datasetId: string): Observable<WebhookSubscription[]> {
+    public datasetWebhookSubscriptions(datasetId: string): Observable<WebhookSubscriptionDataFragment[]> {
         return this.webhooksApi.datasetWebhookSubscriptions(datasetId).pipe(
             map((data: DatasetWebhookSubscriptionsQuery) => {
-                return data.datasets.byId?.webhooks.subscriptions as WebhookSubscription[];
+                return data.datasets.byId?.webhooks.subscriptions as WebhookSubscriptionDataFragment[];
             }),
         );
     }
@@ -172,7 +172,7 @@ export class DatasetWebhooksService {
     public datasetWebhookSubscriptionById(params: {
         datasetId: string;
         id: string;
-    }): Observable<MaybeNull<WebhookSubscription>> {
+    }): Observable<MaybeNull<WebhookSubscriptionDataFragment>> {
         return this.webhooksApi.datasetWebhookSubscriptionById(params).pipe(
             map((data: DatasetWebhookByIdQuery) => {
                 return data.datasets.byId?.webhooks.subscription ?? null;

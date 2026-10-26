@@ -18,9 +18,9 @@ import { FormValidationErrorsDirective } from "@common/directives/form-validatio
 import { FlowTooltipsTexts } from "@common/tooltips/flow-tooltips.text";
 import {
     FlowRetryBackoffType,
-    FlowRetryPolicy,
+    FlowRetryPolicyDataFragment,
     FlowRetryPolicyInput,
-    TimeDelta,
+    TimeDeltaInput,
     TimeUnit,
 } from "@api/kamu.graphql.interface";
 import { MaybeNull } from "@interface/app.types";
@@ -50,7 +50,7 @@ export class FlowRetryPolicyFormComponent extends BaseComponent implements OnIni
     @Input({ required: true }) public form: FormGroup<FlowRetryPolicyFormType>;
 
     public static readonly DEFAULT_MAX_ATTEMPTS: number = 3;
-    public static readonly DEFAULT_MIN_DELAY: TimeDelta = {
+    public static readonly DEFAULT_MIN_DELAY: TimeDeltaInput = {
         every: 15,
         unit: TimeUnit.Minutes,
     };
@@ -82,7 +82,7 @@ export class FlowRetryPolicyFormComponent extends BaseComponent implements OnIni
         return form;
     }
 
-    public static buildFormValue(retryPolicy: MaybeNull<FlowRetryPolicy>): FlowRetryPolicyFormValue {
+    public static buildFormValue(retryPolicy: MaybeNull<FlowRetryPolicyDataFragment>): FlowRetryPolicyFormValue {
         if (retryPolicy) {
             return {
                 retriesEnabled: true,

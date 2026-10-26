@@ -19,7 +19,6 @@ import {
     setComponentInput,
 } from "@common/helpers/base-test.helpers.spec";
 import { SharedTestModule } from "@common/modules/shared-test.module";
-import { FetchStepUrl } from "@api/kamu.graphql.interface";
 
 import { mockMetadataRootUpdate } from "src/app/dataset-view/additional-components/data-tabs.mock";
 import { MetadataPollingSourceTabComponent } from "src/app/dataset-view/additional-components/metadata-component/tabs/metadata-polling-source-tab/metadata-polling-source-tab.component";
@@ -60,9 +59,10 @@ describe("MetadataPollingSourceTabComponent", () => {
 
     it("should check to render data", () => {
         const url = findElementByDataTestId(fixture, "fetch-step-url");
-        const expectedUrl = (
-            mockMetadataRootUpdate.metadataSummary.metadata.currentPollingSource?.fetch as FetchStepUrl
-        ).url;
-        expect(url?.innerText.trim()).toEqual(expectedUrl);
+        const fetch = mockMetadataRootUpdate.metadataSummary.metadata.currentPollingSource?.fetch;
+        expect(fetch?.__typename).toEqual("FetchStepUrl");
+        if (fetch?.__typename === "FetchStepUrl") {
+            expect(url?.innerText.trim()).toEqual(fetch.url);
+        }
     });
 });

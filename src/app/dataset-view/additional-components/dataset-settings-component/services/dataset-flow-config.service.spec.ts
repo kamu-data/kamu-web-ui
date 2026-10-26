@@ -18,7 +18,6 @@ import {
     DatasetFlowType,
     FlowConfigCompactionInput,
     FlowConfigIngestInput,
-    FlowConfigRuleIngest,
     GetDatasetFlowConfigsQuery,
 } from "@api/kamu.graphql.interface";
 import {
@@ -139,11 +138,9 @@ describe("DatasetFlowConfigService", () => {
                     mockIngestGetDatasetFlowConfigsSuccess.datasets.byId?.flows.configs.byType?.rule?.__typename,
                 ).toEqual("FlowConfigRuleIngest");
 
-                const actualIngestRule = res.datasets.byId?.flows.configs.byType?.rule as FlowConfigRuleIngest;
-                const expectedIngestRule = mockIngestGetDatasetFlowConfigsSuccess.datasets.byId?.flows.configs.byType
-                    ?.rule as FlowConfigRuleIngest;
-                expect(actualIngestRule.fetchUncacheable).toEqual(expectedIngestRule.fetchUncacheable);
-                expect(actualIngestRule.fetchNextIteration).toEqual(expectedIngestRule.fetchNextIteration);
+                expect(res.datasets.byId?.flows.configs.byType?.rule).toEqual(
+                    mockIngestGetDatasetFlowConfigsSuccess.datasets.byId?.flows.configs.byType?.rule,
+                );
             });
 
         expect(subscription$.closed).toBeTrue();

@@ -14,7 +14,7 @@ import { Apollo } from "apollo-angular";
 import { findElementByDataTestId, setComponentInput } from "@common/helpers/base-test.helpers.spec";
 import { SharedTestModule } from "@common/modules/shared-test.module";
 import AppValues from "@common/values/app.values";
-import { EngineDesc } from "@api/kamu.graphql.interface";
+import { EngineDescDataFragment } from "@api/kamu.graphql.interface";
 
 import { EngineSectionComponent } from "src/app/dataset-view/additional-components/metadata-component/components/set-transform/components/engine-section/engine-section.component";
 import { EngineService } from "src/app/dataset-view/additional-components/metadata-component/components/set-transform/components/engine-section/engine.service";
@@ -48,7 +48,7 @@ describe("EngineSectionComponent", () => {
         { testCase: "flink", expected: mockEngines.data.knownEngines[1] },
         { testCase: "datafusion", expected: mockEngines.data.knownEngines[2] },
         { testCase: "risingwave", expected: mockEngines.data.knownEngines[3] },
-    ].forEach((item: { testCase: string; expected: EngineDesc }) => {
+    ].forEach((item: { testCase: string; expected: EngineDescDataFragment }) => {
         it(`should check init ${item.testCase} engine and image`, fakeAsync(() => {
             setComponentInput(fixture, "selectedEngine", item.testCase);
             fixture.detectChanges();

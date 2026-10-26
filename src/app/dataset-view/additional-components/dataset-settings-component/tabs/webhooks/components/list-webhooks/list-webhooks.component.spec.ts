@@ -66,9 +66,10 @@ describe("ListWebhooksComponent", () => {
     });
 
     it("should check to create webhook", () => {
-        const navigateToWebhooksSpy = spyOn(navigationService, "navigateToWebhooks");
+        const navigateToWebhooksSpy = vi.spyOn(navigationService, "navigateToWebhooks").mockImplementation(() => {});
         component.createWebhook();
-        expect(navigateToWebhooksSpy).toHaveBeenCalledOnceWith({
+        expect(navigateToWebhooksSpy).toHaveBeenCalledTimes(1);
+        expect(navigateToWebhooksSpy).toHaveBeenCalledWith({
             accountName: component.datasetBasics.owner.accountName,
             datasetName: component.datasetBasics.name,
             tab: ProjectLinks.URL_WEBHOOK_NEW,
@@ -76,59 +77,61 @@ describe("ListWebhooksComponent", () => {
     });
 
     it("should check to remove webhook subcription", () => {
-        const datasetWebhookRemoveSubscriptionSpy = spyOn(
-            datasetWebhooksService,
-            "datasetWebhookRemoveSubscription",
-        ).and.returnValue(of(true));
-        const modalWindowSpy = spyOn(modalService, "error").and.callFake((options: ModalArgumentsInterface) => {
-            options.handler?.call(undefined, true);
-            return Promise.resolve("");
-        });
+        const datasetWebhookRemoveSubscriptionSpy = vi
+            .spyOn(datasetWebhooksService, "datasetWebhookRemoveSubscription")
+            .mockReturnValue(of(true));
+        const modalWindowSpy = vi
+            .spyOn(modalService, "error")
+            .mockImplementation((options: ModalArgumentsInterface) => {
+                options.handler?.call(undefined, true);
+                return Promise.resolve("");
+            });
         component.removeWebhook(MOCK_SUBSCRIPTION_ID);
         expect(datasetWebhookRemoveSubscriptionSpy).toHaveBeenCalledTimes(1);
         expect(modalWindowSpy).toHaveBeenCalledTimes(1);
     });
 
     it("should check to rotate secret", () => {
-        const navigateToWebhooksSpy = spyOn(navigationService, "navigateToWebhooks").and.returnValue();
-        const modalWindowSpy = spyOn(modalService, "error").and.callFake((options: ModalArgumentsInterface) => {
-            options.handler?.call(undefined, true);
-            return Promise.resolve("");
-        });
+        const navigateToWebhooksSpy = vi.spyOn(navigationService, "navigateToWebhooks").mockReturnValue();
+        const modalWindowSpy = vi
+            .spyOn(modalService, "error")
+            .mockImplementation((options: ModalArgumentsInterface) => {
+                options.handler?.call(undefined, true);
+                return Promise.resolve("");
+            });
         component.rotateSecret(MOCK_SUBSCRIPTION_ID);
         expect(navigateToWebhooksSpy).toHaveBeenCalledTimes(1);
         expect(modalWindowSpy).toHaveBeenCalledTimes(1);
     });
 
     it("should check to pause webhook subcription", () => {
-        const datasetWebhookPauseSubscriptionSpy = spyOn(
-            datasetWebhooksService,
-            "datasetWebhookPauseSubscription",
-        ).and.returnValue(of(true));
+        const datasetWebhookPauseSubscriptionSpy = vi
+            .spyOn(datasetWebhooksService, "datasetWebhookPauseSubscription")
+            .mockReturnValue(of(true));
 
         component.pauseWebhook(MOCK_SUBSCRIPTION_ID);
         expect(datasetWebhookPauseSubscriptionSpy).toHaveBeenCalledTimes(1);
     });
 
     it("should check to resume webhook subcription", () => {
-        const datasetWebhookResumeSubscriptionSpy = spyOn(
-            datasetWebhooksService,
-            "datasetWebhookResumeSubscription",
-        ).and.returnValue(of(true));
+        const datasetWebhookResumeSubscriptionSpy = vi
+            .spyOn(datasetWebhooksService, "datasetWebhookResumeSubscription")
+            .mockReturnValue(of(true));
 
         component.resumeWebhook(MOCK_SUBSCRIPTION_ID);
         expect(datasetWebhookResumeSubscriptionSpy).toHaveBeenCalledTimes(1);
     });
 
     it("should check to reactivate webhook subcription", () => {
-        const datasetWebhookReactivateSubscriptionSpy = spyOn(
-            datasetWebhooksService,
-            "datasetWebhookReactivateSubscription",
-        ).and.returnValue(of(true));
-        const modalWindowSpy = spyOn(modalService, "warning").and.callFake((options: ModalArgumentsInterface) => {
-            options.handler?.call(undefined, true);
-            return Promise.resolve("");
-        });
+        const datasetWebhookReactivateSubscriptionSpy = vi
+            .spyOn(datasetWebhooksService, "datasetWebhookReactivateSubscription")
+            .mockReturnValue(of(true));
+        const modalWindowSpy = vi
+            .spyOn(modalService, "warning")
+            .mockImplementation((options: ModalArgumentsInterface) => {
+                options.handler?.call(undefined, true);
+                return Promise.resolve("");
+            });
 
         component.reactivateWebhook(MOCK_SUBSCRIPTION_ID);
         expect(datasetWebhookReactivateSubscriptionSpy).toHaveBeenCalledTimes(1);
@@ -146,9 +149,10 @@ describe("ListWebhooksComponent", () => {
         const mockWebhookSubscription = requireValue(
             mockDatasetWebhookByIdQuery.datasets.byId?.webhooks.subscription ?? null,
         );
-        const navigateToWebhooksSpy = spyOn(navigationService, "navigateToWebhooks");
+        const navigateToWebhooksSpy = vi.spyOn(navigationService, "navigateToWebhooks").mockImplementation(() => {});
         component.editWebhook(mockWebhookSubscription);
-        expect(navigateToWebhooksSpy).toHaveBeenCalledOnceWith({
+        expect(navigateToWebhooksSpy).toHaveBeenCalledTimes(1);
+        expect(navigateToWebhooksSpy).toHaveBeenCalledWith({
             accountName: component.datasetBasics.owner.accountName,
             datasetName: component.datasetBasics.name,
             tab: mockWebhookSubscription.id,

@@ -44,7 +44,9 @@ describe("PreprocessStepComponent", () => {
     });
 
     it("should check switch showPreprocess checkbox", () => {
-        const onCheckedPreprocessStepSpy = spyOn(component.showPreprocessStepEmitter, "emit");
+        const onCheckedPreprocessStepSpy = vi
+            .spyOn(component.showPreprocessStepEmitter, "emit")
+            .mockImplementation(() => {});
         emitClickOnElementByDataTestId(fixture, "showPreprocessStep");
         expect(onCheckedPreprocessStepSpy).toHaveBeenCalledTimes(1);
     });

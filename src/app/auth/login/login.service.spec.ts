@@ -15,6 +15,7 @@ import { Apollo } from "apollo-angular";
 import { ApolloTestingModule } from "apollo-angular/testing";
 
 import { promiseWithCatch, requireValue } from "@common/helpers/app.helpers";
+import { stubMethod } from "@common/helpers/base-test.helpers.spec";
 import { RedirectUrlTestModule } from "@common/modules/redirect-url-test.module";
 import { AuthenticationError } from "@common/values/errors";
 import { AuthApi } from "@api/auth.api";
@@ -75,13 +76,13 @@ describe("LoginService", () => {
     });
 
     it("successful Github login navigates to home", fakeAsync(() => {
-        const authApiSpy = spyOn(authApi, "fetchAccountAndTokenFromGithubCallbackCode").and.returnValue(
-            of(mockGithubLoginResponse.auth.login),
-        );
-        const fetchAccountFromAccessTokenSpy = spyOn(authApi, "fetchAccountFromAccessToken").and.returnValue(
-            of(mockAccountDetails),
-        );
-        const navigateSpy = spyOn(navigationService, "navigateToHome");
+        const authApiSpy = vi
+            .spyOn(authApi, "fetchAccountAndTokenFromGithubCallbackCode")
+            .mockReturnValue(of(mockGithubLoginResponse.auth.login));
+        const fetchAccountFromAccessTokenSpy = vi
+            .spyOn(authApi, "fetchAccountFromAccessToken")
+            .mockReturnValue(of(mockAccountDetails));
+        const navigateSpy = vi.spyOn(navigationService, "navigateToHome").mockImplementation(() => {});
 
         const tokenSubscription$ = service.accessTokenChanges.pipe(first()).subscribe();
         const accountSubscription$ = service.accountChanges.pipe(first()).subscribe();
@@ -90,12 +91,14 @@ describe("LoginService", () => {
         service.githubLogin(credentials, null);
         tick();
 
-        expect(authApiSpy).toHaveBeenCalledOnceWith(credentials, undefined);
+        expect(authApiSpy).toHaveBeenCalledTimes(1);
+
+        expect(authApiSpy).toHaveBeenCalledWith(credentials, undefined);
 
         expect(navigateSpy).toHaveBeenCalledTimes(1);
         expect(fetchAccountFromAccessTokenSpy).toHaveBeenCalledTimes(1);
-        expect(tokenSubscription$.closed).toBeTrue();
-        expect(accountSubscription$.closed).toBeTrue();
+        expect(tokenSubscription$.closed).toBe(true);
+        expect(accountSubscription$.closed).toBe(true);
         flush();
     }));
 
@@ -103,10 +106,10 @@ describe("LoginService", () => {
         const errorText = "Unsupported login method";
         const exception = new AuthenticationError([new Error(errorText)]);
 
-        const authApiSpy = spyOn(authApi, "fetchAccountAndTokenFromGithubCallbackCode").and.returnValue(
-            throwError(() => exception),
-        );
-        const navigateSpy = spyOn(navigationService, "navigateToHome");
+        const authApiSpy = vi
+            .spyOn(authApi, "fetchAccountAndTokenFromGithubCallbackCode")
+            .mockReturnValue(throwError(() => exception));
+        const navigateSpy = vi.spyOn(navigationService, "navigateToHome").mockImplementation(() => {});
 
         const tokenSubscription$ = service.accessTokenChanges.pipe(first()).subscribe();
         const accountSubscription$ = service.accountChanges.pipe(first()).subscribe();
@@ -118,23 +121,25 @@ describe("LoginService", () => {
             tick();
         }).toThrow(exception);
 
-        expect(authApiSpy).toHaveBeenCalledOnceWith(credentials, undefined);
+        expect(authApiSpy).toHaveBeenCalledTimes(1);
+
+        expect(authApiSpy).toHaveBeenCalledWith(credentials, undefined);
         expect(navigateSpy).toHaveBeenCalledTimes(1);
 
-        expect(tokenSubscription$.closed).toBeFalse();
-        expect(accountSubscription$.closed).toBeFalse();
+        expect(tokenSubscription$.closed).toBe(false);
+        expect(accountSubscription$.closed).toBe(false);
         tokenSubscription$.unsubscribe();
         accountSubscription$.unsubscribe();
     }));
 
     it("successful password login navigates to home", () => {
-        const authApiSpy = spyOn(authApi, "fetchAccountAndTokenFromPasswordLogin").and.returnValue(
-            of(mockPasswordLoginResponse.auth.login),
-        );
-        const fetchAccountFromAccessTokenSpy = spyOn(authApi, "fetchAccountFromAccessToken").and.returnValue(
-            of(mockAccountDetails),
-        );
-        const navigateSpy = spyOn(navigationService, "navigateToHome");
+        const authApiSpy = vi
+            .spyOn(authApi, "fetchAccountAndTokenFromPasswordLogin")
+            .mockReturnValue(of(mockPasswordLoginResponse.auth.login));
+        const fetchAccountFromAccessTokenSpy = vi
+            .spyOn(authApi, "fetchAccountFromAccessToken")
+            .mockReturnValue(of(mockAccountDetails));
+        const navigateSpy = vi.spyOn(navigationService, "navigateToHome").mockImplementation(() => {});
 
         const tokenSubscription$ = service.accessTokenChanges.pipe(first()).subscribe();
         const accountSubscription$ = service.accountChanges.pipe(first()).subscribe();
@@ -142,12 +147,14 @@ describe("LoginService", () => {
         const credentials: PasswordLoginCredentials = { login: TEST_LOGIN, password: TEST_PASSWORD };
         service.passwordLogin(credentials, null);
 
-        expect(authApiSpy).toHaveBeenCalledOnceWith(credentials, undefined);
+        expect(authApiSpy).toHaveBeenCalledTimes(1);
+
+        expect(authApiSpy).toHaveBeenCalledWith(credentials, undefined);
         expect(navigateSpy).toHaveBeenCalledTimes(1);
         expect(fetchAccountFromAccessTokenSpy).toHaveBeenCalledTimes(1);
 
-        expect(tokenSubscription$.closed).toBeTrue();
-        expect(accountSubscription$.closed).toBeTrue();
+        expect(tokenSubscription$.closed).toBe(true);
+        expect(accountSubscription$.closed).toBe(true);
     });
 
     it("resetting password login error emits empty error", () => {
@@ -159,7 +166,7 @@ describe("LoginService", () => {
 
         service.resetPasswordLoginError();
 
-        expect(errorSubscription$.closed).toBeTrue();
+        expect(errorSubscription$.closed).toBe(true);
     });
 
     it("custom login callback", () => {
@@ -169,10 +176,10 @@ describe("LoginService", () => {
             callbackLoginResponse = loginResponse;
         });
 
-        const authApiSpy = spyOn(authApi, "fetchAccountAndTokenFromPasswordLogin").and.returnValue(
-            of(mockPasswordLoginResponse.auth.login),
-        );
-        const navigateSpy = spyOn(navigationService, "navigateToHome");
+        const authApiSpy = vi
+            .spyOn(authApi, "fetchAccountAndTokenFromPasswordLogin")
+            .mockReturnValue(of(mockPasswordLoginResponse.auth.login));
+        const navigateSpy = vi.spyOn(navigationService, "navigateToHome").mockImplementation(() => {});
 
         const tokenSubscription$ = service.accessTokenChanges.pipe(first()).subscribe();
         const accountSubscription$ = service.accountChanges.pipe(first()).subscribe();
@@ -182,17 +189,19 @@ describe("LoginService", () => {
 
         expect(callbackLoginResponse).toEqual(mockPasswordLoginResponse.auth.login);
 
-        expect(authApiSpy).toHaveBeenCalledOnceWith(credentials, undefined);
+        expect(authApiSpy).toHaveBeenCalledTimes(1);
+
+        expect(authApiSpy).toHaveBeenCalledWith(credentials, undefined);
         expect(navigateSpy).not.toHaveBeenCalled();
 
-        expect(tokenSubscription$.closed).toBeFalse();
-        expect(accountSubscription$.closed).toBeFalse();
+        expect(tokenSubscription$.closed).toBe(false);
+        expect(accountSubscription$.closed).toBe(false);
         tokenSubscription$.unsubscribe();
         accountSubscription$.unsubscribe();
     });
 
     it("should start a GitHub sign-in with a random state stored together with the redirect URL", () => {
-        spyOnProperty(appConfigService, "githubClientId", "get").and.returnValue("mockId");
+        vi.spyOn(appConfigService, "githubClientId", "get").mockReturnValue("mockId");
         const deepLink = "/kamu/dataset?tab=flows&page=2";
 
         const githubUrl = new URL(service.startGithubLogin(deepLink));
@@ -203,12 +212,12 @@ describe("LoginService", () => {
         expect(githubUrl.searchParams.get(ProjectLinks.URL_QUERY_PARAM_STATE)).toMatch(/^[0-9a-f]{32}$/);
         expect(githubUrl.searchParams.get(ProjectLinks.URL_QUERY_PARAM_STATE)).toEqual(pendingLogin?.state ?? null);
         expect(pendingLogin?.redirectUrl).toEqual(deepLink);
-        expect(githubUrl.searchParams.has("redirect_uri")).toBeFalse();
-        expect(githubUrl.searchParams.has("page")).toBeFalse();
+        expect(githubUrl.searchParams.has("redirect_uri")).toBe(false);
+        expect(githubUrl.searchParams.has("page")).toBe(false);
     });
 
     it("should give every GitHub sign-in a new state", () => {
-        spyOnProperty(appConfigService, "githubClientId", "get").and.returnValue("mockId");
+        vi.spyOn(appConfigService, "githubClientId", "get").mockReturnValue("mockId");
 
         const firstState = new URL(service.startGithubLogin(null)).searchParams.get(ProjectLinks.URL_QUERY_PARAM_STATE);
         const secondState = new URL(service.startGithubLogin(null)).searchParams.get(
@@ -234,18 +243,22 @@ describe("LoginService", () => {
             interceptedLoginResponse = loginResponse;
         });
 
-        const fetchAuthNonceSpy = spyOn(authApi, "fetchAuthNonceFromWeb3Wallet").and.returnValue(of(mockNonce));
-        const fetchAccountAndTokenSpy = spyOn(authApi, "fetchAccountAndTokenFromWeb3Wallet").and.returnValue(
-            of(mockPasswordLoginResponse.auth.login),
-        );
+        const fetchAuthNonceSpy = vi.spyOn(authApi, "fetchAuthNonceFromWeb3Wallet").mockReturnValue(of(mockNonce));
+        const fetchAccountAndTokenSpy = vi
+            .spyOn(authApi, "fetchAccountAndTokenFromWeb3Wallet")
+            .mockReturnValue(of(mockPasswordLoginResponse.auth.login));
 
         // Act
         promiseWithCatch(service.web3WalletLogin(null));
         tick();
 
         // Assert
-        expect(fetchAuthNonceSpy).toHaveBeenCalledOnceWith(MockEthereumGateway.WALLET_ADDRESS);
-        expect(fetchAccountAndTokenSpy).toHaveBeenCalledOnceWith(expectedVerificationRequest, undefined);
+        expect(fetchAuthNonceSpy).toHaveBeenCalledTimes(1);
+
+        // Assert
+        expect(fetchAuthNonceSpy).toHaveBeenCalledWith(MockEthereumGateway.WALLET_ADDRESS);
+        expect(fetchAccountAndTokenSpy).toHaveBeenCalledTimes(1);
+        expect(fetchAccountAndTokenSpy).toHaveBeenCalledWith(expectedVerificationRequest, undefined);
         expect(interceptedLoginResponse).toEqual(mockPasswordLoginResponse.auth.login);
         flush();
     }));
@@ -263,19 +276,23 @@ describe("LoginService", () => {
             interceptedLoginResponse = loginResponse;
         });
 
-        spyOnProperty(localStorageService, "loginDeviceCode", "get").and.returnValue(mockDeviceCode);
-        const fetchAuthNonceSpy = spyOn(authApi, "fetchAuthNonceFromWeb3Wallet").and.returnValue(of(mockNonce));
-        const fetchAccountAndTokenSpy = spyOn(authApi, "fetchAccountAndTokenFromWeb3Wallet").and.returnValue(
-            of(mockPasswordLoginResponse.auth.login),
-        );
+        vi.spyOn(localStorageService, "loginDeviceCode", "get").mockReturnValue(mockDeviceCode);
+        const fetchAuthNonceSpy = vi.spyOn(authApi, "fetchAuthNonceFromWeb3Wallet").mockReturnValue(of(mockNonce));
+        const fetchAccountAndTokenSpy = vi
+            .spyOn(authApi, "fetchAccountAndTokenFromWeb3Wallet")
+            .mockReturnValue(of(mockPasswordLoginResponse.auth.login));
 
         // Act
         promiseWithCatch(service.web3WalletLogin(null));
         tick();
 
         // Assert
-        expect(fetchAuthNonceSpy).toHaveBeenCalledOnceWith(MockEthereumGateway.WALLET_ADDRESS);
-        expect(fetchAccountAndTokenSpy).toHaveBeenCalledOnceWith(expectedVerificationRequest, mockDeviceCode);
+        expect(fetchAuthNonceSpy).toHaveBeenCalledTimes(1);
+
+        // Assert
+        expect(fetchAuthNonceSpy).toHaveBeenCalledWith(MockEthereumGateway.WALLET_ADDRESS);
+        expect(fetchAccountAndTokenSpy).toHaveBeenCalledTimes(1);
+        expect(fetchAccountAndTokenSpy).toHaveBeenCalledWith(expectedVerificationRequest, mockDeviceCode);
         expect(interceptedLoginResponse).toEqual(mockPasswordLoginResponse.auth.login);
         flush();
     }));
@@ -291,9 +308,9 @@ describe("LoginService", () => {
             interceptedLoginResponse = loginResponse;
         });
 
-        spyOn(ethereumGatewayFactory, "create").and.resolveTo(mockGateway);
-        const fetchAuthNonceSpy = spyOn(authApi, "fetchAuthNonceFromWeb3Wallet");
-        const fetchAccountAndTokenSpy = spyOn(authApi, "fetchAccountAndTokenFromWeb3Wallet");
+        vi.spyOn(ethereumGatewayFactory, "create").mockResolvedValue(mockGateway);
+        const fetchAuthNonceSpy = stubMethod(authApi, "fetchAuthNonceFromWeb3Wallet");
+        const fetchAccountAndTokenSpy = stubMethod(authApi, "fetchAccountAndTokenFromWeb3Wallet");
 
         // Act
         promiseWithCatch(service.web3WalletLogin(null));
@@ -311,7 +328,7 @@ describe("LoginService", () => {
         const ethereumGatewayFactory = TestBed.inject(EthereumGatewayFactory);
         const mockGateway = new MockEthereumGateway();
         const mockNonce = "mock-nonce-12345";
-        const signInWithEthereumSpy = jasmine.createSpy("signInWithEthereum").and.resolveTo(null);
+        const signInWithEthereumSpy = vi.fn().mockResolvedValue(null);
         mockGateway.signInWithEthereum = signInWithEthereumSpy;
 
         let interceptedLoginResponse: MaybeUndefined<LoginResponseType>;
@@ -319,17 +336,21 @@ describe("LoginService", () => {
             interceptedLoginResponse = loginResponse;
         });
 
-        spyOn(ethereumGatewayFactory, "create").and.resolveTo(mockGateway);
-        const fetchAuthNonceSpy = spyOn(authApi, "fetchAuthNonceFromWeb3Wallet").and.returnValue(of(mockNonce));
-        const fetchAccountAndTokenSpy = spyOn(authApi, "fetchAccountAndTokenFromWeb3Wallet");
+        vi.spyOn(ethereumGatewayFactory, "create").mockResolvedValue(mockGateway);
+        const fetchAuthNonceSpy = vi.spyOn(authApi, "fetchAuthNonceFromWeb3Wallet").mockReturnValue(of(mockNonce));
+        const fetchAccountAndTokenSpy = stubMethod(authApi, "fetchAccountAndTokenFromWeb3Wallet");
 
         // Act
         promiseWithCatch(service.web3WalletLogin(null));
         tick();
 
         // Assert
-        expect(fetchAuthNonceSpy).toHaveBeenCalledOnceWith(MockEthereumGateway.WALLET_ADDRESS);
-        expect(signInWithEthereumSpy).toHaveBeenCalledOnceWith(mockNonce);
+        expect(fetchAuthNonceSpy).toHaveBeenCalledTimes(1);
+
+        // Assert
+        expect(fetchAuthNonceSpy).toHaveBeenCalledWith(MockEthereumGateway.WALLET_ADDRESS);
+        expect(signInWithEthereumSpy).toHaveBeenCalledTimes(1);
+        expect(signInWithEthereumSpy).toHaveBeenCalledWith(mockNonce);
         expect(fetchAccountAndTokenSpy).not.toHaveBeenCalled();
         expect(interceptedLoginResponse).toBeUndefined();
         flush();

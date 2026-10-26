@@ -13,7 +13,7 @@ import { of, throwError } from "rxjs";
 import { Apollo } from "apollo-angular";
 import { provideToastr } from "ngx-toastr";
 
-import { expectPageNotFoundRedirect, runResolver } from "@common/helpers/base-test.helpers.spec";
+import { expectPageNotFoundRedirect, runResolver, stubMethod } from "@common/helpers/base-test.helpers.spec";
 import AppValues from "@common/values/app.values";
 import { DatasetPermissionsFragment } from "@api/kamu.graphql.interface";
 
@@ -45,29 +45,30 @@ describe("datasetSettingsWebhooksResolverFn", () => {
         datasetSubService = TestBed.inject(DatasetSubscriptionsService);
         appConfigService = TestBed.inject(AppConfigService);
         datasetWebhooksService = TestBed.inject(DatasetWebhooksService);
-        spyOnProperty(appConfigService, "featureFlags", "get").and.returnValue(
+        vi.spyOn(appConfigService, "featureFlags", "get").mockReturnValue(
             AppValues.DEFAULT_UI_CONFIGURATION.featureFlags,
         );
-        spyOnProperty(datasetService, "datasetChanges", "get").and.returnValue(of(mockDatasetBasicsRootFragment));
-        spyOnProperty(datasetSubService, "overviewChanges", "get").and.returnValue(of(mockOverviewUpdate));
+        vi.spyOn(datasetService, "datasetChanges", "get").mockReturnValue(of(mockDatasetBasicsRootFragment));
+        vi.spyOn(datasetSubService, "overviewChanges", "get").mockReturnValue(of(mockOverviewUpdate));
     });
 
     function resolve(
         permissions: DatasetPermissionsFragment = mockFullPowerDatasetPermissionsFragment,
     ): Promise<DatasetSettingsWebhookTabData | RedirectCommand> {
-        spyOnProperty(datasetSubService, "permissionsChanges", "get").and.returnValue(of(permissions));
+        vi.spyOn(datasetSubService, "permissionsChanges", "get").mockReturnValue(of(permissions));
         return runResolver(datasetSettingsWebhooksResolverFn);
     }
 
     it("should resolve the dataset with its webhook subscriptions", async () => {
-        const datasetWebhookSubscriptionsSpy = spyOn(
-            datasetWebhooksService,
-            "datasetWebhookSubscriptions",
-        ).and.returnValue(of([]));
+        const datasetWebhookSubscriptionsSpy = vi
+            .spyOn(datasetWebhooksService, "datasetWebhookSubscriptions")
+            .mockReturnValue(of([]));
 
         const data = await resolve();
 
-        expect(datasetWebhookSubscriptionsSpy).toHaveBeenCalledOnceWith(mockDatasetBasicsRootFragment.id);
+        expect(datasetWebhookSubscriptionsSpy).toHaveBeenCalledTimes(1);
+
+        expect(datasetWebhookSubscriptionsSpy).toHaveBeenCalledWith(mockDatasetBasicsRootFragment.id);
         expect(data).toEqual({
             datasetBasics: mockDatasetBasicsRootFragment,
             datasetPermissions: mockFullPowerDatasetPermissionsFragment,
@@ -76,7 +77,7 @@ describe("datasetSettingsWebhooksResolverFn", () => {
     });
 
     it("should redirect to page not found without loading subscriptions when the user may not view webhooks", async () => {
-        const datasetWebhookSubscriptionsSpy = spyOn(datasetWebhooksService, "datasetWebhookSubscriptions").and.stub();
+        const datasetWebhookSubscriptionsSpy = stubMethod(datasetWebhooksService, "datasetWebhookSubscriptions");
 
         const data = await resolve(mockNoWebhooksDatasetPermissionsFragment);
 
@@ -85,10 +86,10 @@ describe("datasetSettingsWebhooksResolverFn", () => {
     });
 
     it("should fail when the webhook subscriptions cannot be loaded", async () => {
-        spyOn(datasetWebhooksService, "datasetWebhookSubscriptions").and.returnValue(
+        vi.spyOn(datasetWebhooksService, "datasetWebhookSubscriptions").mockReturnValue(
             throwError(() => new Error("failed")),
         );
 
-        await expectAsync(resolve()).toBeRejectedWithError("failed");
+        await expect(resolve()).rejects.toThrowError("failed");
     });
 });

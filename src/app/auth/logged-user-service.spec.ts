@@ -14,6 +14,7 @@ import { Apollo } from "apollo-angular";
 import { ApolloTestingController, ApolloTestingModule } from "apollo-angular/testing";
 import { provideToastr } from "ngx-toastr";
 
+import { stubMethod } from "@common/helpers/base-test.helpers.spec";
 import { AuthApi } from "@api/auth.api";
 import { AccountFragment, FetchAccountDetailsDocument, LoginDocument } from "@api/kamu.graphql.interface";
 import {
@@ -58,18 +59,18 @@ describe("LoggedUserService", () => {
             loginService = TestBed.inject(LoginService);
             authApi = TestBed.inject(AuthApi);
             controller = TestBed.inject(ApolloTestingController);
-            spyOn(authApi, "fetchAccountFromAccessToken").and.returnValue(of(mockAccountDetails));
+            vi.spyOn(authApi, "fetchAccountFromAccessToken").mockReturnValue(of(mockAccountDetails));
         });
 
         function checkUserIsLogged(user: AccountFragment): void {
-            expect(service.isAuthenticated).toBeTrue();
+            expect(service.isAuthenticated).toBe(true);
             expect(service.maybeCurrentlyLoggedInUser).toEqual(user);
         }
 
         function attemptSuccessfulLoginViaAccessToken(): void {
-            const localStorageAccessTokenSpy = spyOnProperty(localStorageService, "accessToken", "get").and.returnValue(
-                TEST_ACCESS_TOKEN_GITHUB,
-            );
+            const localStorageAccessTokenSpy = vi
+                .spyOn(localStorageService, "accessToken", "get")
+                .mockReturnValue(TEST_ACCESS_TOKEN_GITHUB);
 
             service.initializeCompletes().subscribe();
 
@@ -105,18 +106,18 @@ describe("LoggedUserService", () => {
         });
 
         it("should check user is initially non-authenticated", () => {
-            expect(service.isAuthenticated).toBeFalse();
+            expect(service.isAuthenticated).toBe(false);
             expect(service.maybeCurrentlyLoggedInUser).toBeNull();
         });
 
         it("should check user is non-authenticated if no access token exists", () => {
-            const localStorageAccessTokenSpy = spyOnProperty(localStorageService, "accessToken", "get").and.returnValue(
-                null,
-            );
+            const localStorageAccessTokenSpy = vi
+                .spyOn(localStorageService, "accessToken", "get")
+                .mockReturnValue(null);
             service.initializeCompletes().subscribe();
 
             controller.expectNone(FetchAccountDetailsDocument);
-            expect(service.isAuthenticated).toBeFalse();
+            expect(service.isAuthenticated).toBe(false);
             expect(localStorageAccessTokenSpy).toHaveBeenCalledTimes(1);
         });
 
@@ -130,15 +131,15 @@ describe("LoggedUserService", () => {
                     if (user) {
                         checkUserIsLogged(user);
                     } else {
-                        fail("User must not be null");
+                        throw new Error("User must not be null");
                     }
                 });
-            expect(userChanges$.closed).toBeTrue();
+            expect(userChanges$.closed).toBe(true);
             flush();
         }));
 
         it("should check user changes via full login Github", fakeAsync(() => {
-            const accessTokenSetSpy = spyOn(localStorageService, "setAccessToken");
+            const accessTokenSetSpy = vi.spyOn(localStorageService, "setAccessToken").mockImplementation(() => {});
 
             loginFullyViaGithub();
             tick();
@@ -149,18 +150,18 @@ describe("LoggedUserService", () => {
                     if (user) {
                         checkUserIsLogged(user);
                     } else {
-                        fail("User must not be null");
+                        throw new Error("User must not be null");
                     }
                 });
 
             expect(accessTokenSetSpy).toHaveBeenCalledWith(mockGithubLoginResponse.auth.login.accessToken);
 
-            expect(userChanges$.closed).toBeTrue();
+            expect(userChanges$.closed).toBe(true);
             flush();
         }));
 
         it("should check user changes via full login password", fakeAsync(() => {
-            const accessTokenSetSpy = spyOn(localStorageService, "setAccessToken");
+            const accessTokenSetSpy = vi.spyOn(localStorageService, "setAccessToken").mockImplementation(() => {});
 
             loginFullyViaPassword();
             tick();
@@ -171,19 +172,19 @@ describe("LoggedUserService", () => {
                     if (user) {
                         checkUserIsLogged(user);
                     } else {
-                        fail("User must not be null");
+                        throw new Error("User must not be null");
                     }
                 });
 
             expect(accessTokenSetSpy).toHaveBeenCalledWith(mockPasswordLoginResponse.auth.login.accessToken);
 
-            expect(userChanges$.closed).toBeTrue();
+            expect(userChanges$.closed).toBe(true);
             flush();
         }));
 
         it("should check user logout navigates to home page and clears GraphQL cache", fakeAsync(() => {
-            const navigationServiceSpy = spyOn(navigationService, "navigateToHome");
-            const apolloClientSpy = spyOn(apollo.client.cache, "restore").and.resolveTo();
+            const navigationServiceSpy = vi.spyOn(navigationService, "navigateToHome").mockImplementation(() => {});
+            const apolloClientSpy = stubMethod(apollo.client.cache, "restore");
 
             attemptSuccessfulLoginViaAccessToken();
             tick();
@@ -197,7 +198,7 @@ describe("LoggedUserService", () => {
         }));
 
         it("should check user terminate session does not navigate to home page", fakeAsync(() => {
-            const navigationServiceSpy = spyOn(navigationService, "navigateToHome");
+            const navigationServiceSpy = vi.spyOn(navigationService, "navigateToHome").mockImplementation(() => {});
 
             attemptSuccessfulLoginViaAccessToken();
             tick();

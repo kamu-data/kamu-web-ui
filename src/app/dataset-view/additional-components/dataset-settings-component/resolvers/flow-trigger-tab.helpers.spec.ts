@@ -11,8 +11,9 @@ import { firstValueFrom, of } from "rxjs";
 
 import { ApolloTestingModule } from "apollo-angular/testing";
 import { provideToastr } from "ngx-toastr";
+import type { Mock } from "vitest";
 
-import { expectPageNotFoundRedirect } from "@common/helpers/base-test.helpers.spec";
+import { expectPageNotFoundRedirect, stubMethod } from "@common/helpers/base-test.helpers.spec";
 import AppValues from "@common/values/app.values";
 import { DatasetFlowType } from "@api/kamu.graphql.interface";
 import { mockCronSchedule, mockGetDatasetFlowTriggerCronQuery } from "@api/mock/dataset-flow.mock";
@@ -32,24 +33,24 @@ import {
 
 describe("requestFlowTriggerTabData", () => {
     let datasetFlowTriggerService: DatasetFlowTriggerService;
-    let permissionsChangesSpy: jasmine.Spy;
+    let permissionsChangesSpy: Mock;
 
     beforeEach(() => {
         TestBed.configureTestingModule({
             imports: [ApolloTestingModule],
             providers: [provideToastr()],
         });
-        spyOnProperty(TestBed.inject(AppConfigService), "featureFlags", "get").and.returnValue(
+        vi.spyOn(TestBed.inject(AppConfigService), "featureFlags", "get").mockReturnValue(
             AppValues.DEFAULT_UI_CONFIGURATION.featureFlags,
         );
-        spyOnProperty(TestBed.inject(DatasetService), "datasetChanges", "get").and.returnValue(
+        vi.spyOn(TestBed.inject(DatasetService), "datasetChanges", "get").mockReturnValue(
             of(mockDatasetBasicsRootFragment),
         );
         const datasetSubsService = TestBed.inject(DatasetSubscriptionsService);
-        spyOnProperty(datasetSubsService, "overviewChanges", "get").and.returnValue(of(mockOverviewUpdate));
-        permissionsChangesSpy = spyOnProperty(datasetSubsService, "permissionsChanges", "get").and.returnValue(
-            of(mockFullPowerDatasetPermissionsFragment),
-        );
+        vi.spyOn(datasetSubsService, "overviewChanges", "get").mockReturnValue(of(mockOverviewUpdate));
+        permissionsChangesSpy = vi
+            .spyOn(datasetSubsService, "permissionsChanges", "get")
+            .mockReturnValue(of(mockFullPowerDatasetPermissionsFragment));
         datasetFlowTriggerService = TestBed.inject(DatasetFlowTriggerService);
     });
 
@@ -64,13 +65,15 @@ describe("requestFlowTriggerTabData", () => {
     }
 
     it("should emit the dataset with the trigger state and the picked rule", async () => {
-        const fetchDatasetFlowTriggerSpy = spyOn(datasetFlowTriggerService, "fetchDatasetFlowTrigger").and.returnValue(
-            of(mockGetDatasetFlowTriggerCronQuery),
-        );
+        const fetchDatasetFlowTriggerSpy = vi
+            .spyOn(datasetFlowTriggerService, "fetchDatasetFlowTrigger")
+            .mockReturnValue(of(mockGetDatasetFlowTriggerCronQuery));
 
         const data = await resolve();
 
-        expect(fetchDatasetFlowTriggerSpy).toHaveBeenCalledOnceWith(
+        expect(fetchDatasetFlowTriggerSpy).toHaveBeenCalledTimes(1);
+
+        expect(fetchDatasetFlowTriggerSpy).toHaveBeenCalledWith(
             mockDatasetBasicsRootFragment.id,
             DatasetFlowType.Ingest,
         );
@@ -84,8 +87,8 @@ describe("requestFlowTriggerTabData", () => {
     });
 
     it("should pass the redirect through without fetching the trigger when the tab is not accessible", async () => {
-        permissionsChangesSpy.and.returnValue(of(mockReadonlyDatasetPermissionsFragment));
-        const fetchDatasetFlowTriggerSpy = spyOn(datasetFlowTriggerService, "fetchDatasetFlowTrigger");
+        permissionsChangesSpy.mockReturnValue(of(mockReadonlyDatasetPermissionsFragment));
+        const fetchDatasetFlowTriggerSpy = stubMethod(datasetFlowTriggerService, "fetchDatasetFlowTrigger");
 
         const data = await resolve();
 

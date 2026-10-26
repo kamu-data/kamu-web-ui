@@ -38,14 +38,15 @@ describe("accountSettingsAccessTokensResolverFn", () => {
     });
 
     it("should check resolver ", async () => {
-        const listAccessTokensSpy = spyOn(accessTokenService, "listAccessTokens").and.returnValue(
-            of(mockAccessTokenConnectionData),
-        );
-        spyOnProperty(loggedUserService, "currentlyLoggedInUser", "get").and.returnValue(mockAccountDetails);
+        const listAccessTokensSpy = vi
+            .spyOn(accessTokenService, "listAccessTokens")
+            .mockReturnValue(of(mockAccessTokenConnectionData));
+        vi.spyOn(loggedUserService, "currentlyLoggedInUser", "get").mockReturnValue(mockAccountDetails);
 
         const result = await runResolver(accountSettingsAccessTokensResolverFn);
         expect(result).toEqual(mockAccessTokenConnectionData);
-        expect(listAccessTokensSpy).toHaveBeenCalledOnceWith({
+        expect(listAccessTokensSpy).toHaveBeenCalledTimes(1);
+        expect(listAccessTokensSpy).toHaveBeenCalledWith({
             accountId: mockAccountDetails.id,
             page: 0,
             perPage: 15,
@@ -55,13 +56,14 @@ describe("accountSettingsAccessTokensResolverFn", () => {
     it("should check resolver with query param 'page'", async () => {
         const PAGE = 2;
         const route = routeSnapshot({ queryParams: { [ProjectLinks.URL_QUERY_PARAM_PAGE]: PAGE } });
-        const listAccessTokensSpy = spyOn(accessTokenService, "listAccessTokens").and.returnValue(
-            of(mockAccessTokenConnectionData),
-        );
-        spyOnProperty(loggedUserService, "currentlyLoggedInUser", "get").and.returnValue(mockAccountDetails);
+        const listAccessTokensSpy = vi
+            .spyOn(accessTokenService, "listAccessTokens")
+            .mockReturnValue(of(mockAccessTokenConnectionData));
+        vi.spyOn(loggedUserService, "currentlyLoggedInUser", "get").mockReturnValue(mockAccountDetails);
 
         await runResolver(accountSettingsAccessTokensResolverFn, route);
-        expect(listAccessTokensSpy).toHaveBeenCalledOnceWith({
+        expect(listAccessTokensSpy).toHaveBeenCalledTimes(1);
+        expect(listAccessTokensSpy).toHaveBeenCalledWith({
             accountId: mockAccountDetails.id,
             page: PAGE - 1,
             perPage: 15,

@@ -58,14 +58,14 @@ describe("DatasetsTabComponent", () => {
 
     it("should check page changed", () => {
         const testPageNumber = 2;
-        const navigateToOwnerViewSpy = spyOn(navigationService, "navigateToOwnerView");
+        const navigateToOwnerViewSpy = vi.spyOn(navigationService, "navigateToOwnerView").mockImplementation(() => {});
         component.onPageChange(testPageNumber);
 
         expect(navigateToOwnerViewSpy).toHaveBeenCalledWith(TEST_ACCOUNT_NAME, AccountTabs.DATASETS, testPageNumber);
     });
 
     it("should check page changed without current page", () => {
-        const navigateToOwnerViewSpy = spyOn(navigationService, "navigateToOwnerView");
+        const navigateToOwnerViewSpy = vi.spyOn(navigationService, "navigateToOwnerView").mockImplementation(() => {});
         component.onPageChange();
         expect(navigateToOwnerViewSpy).toHaveBeenCalledWith(TEST_ACCOUNT_NAME, AccountTabs.DATASETS);
     });

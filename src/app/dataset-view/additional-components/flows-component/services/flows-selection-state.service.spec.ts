@@ -27,30 +27,30 @@ describe("FlowsSelectionStateService", () => {
 
     it("should check #setFlowsCategory", () => {
         service.setFlowsCategory("updates");
-        expect(service.snapshot).toEqual(jasmine.objectContaining({ flowsCategory: "updates" }));
+        expect(service.snapshot).toEqual(expect.objectContaining({ flowsCategory: "updates" }));
     });
 
     it("should check #clearFlowsCategory", () => {
         service.setFlowsCategory("updates");
         service.clearFlowsCategory();
-        expect(service.snapshot).toEqual(jasmine.objectContaining({ flowsCategory: undefined }));
+        expect(service.snapshot).toEqual(expect.objectContaining({ flowsCategory: undefined }));
     });
 
     it("should check #setWebhooksCategory", () => {
         service.setWebhooksCategory("webhooks");
-        expect(service.snapshot).toEqual(jasmine.objectContaining({ webhooksCategory: "webhooks" }));
+        expect(service.snapshot).toEqual(expect.objectContaining({ webhooksCategory: "webhooks" }));
     });
 
     it("should check #clearWebhooksCategory", () => {
         service.setWebhooksCategory("webhooks");
         service.clearWebhooksCategory();
-        expect(service.snapshot).toEqual(jasmine.objectContaining({ webhooksCategory: undefined }));
+        expect(service.snapshot).toEqual(expect.objectContaining({ webhooksCategory: undefined }));
     });
 
     it("should check #setWebhookFilterButtons", () => {
         const processStates = [FlowProcessEffectiveState.Active, FlowProcessEffectiveState.Failing];
         service.setWebhookFilterButtons(processStates);
-        expect(service.snapshot).toEqual(jasmine.objectContaining({ webhookFilterButtons: processStates }));
+        expect(service.snapshot).toEqual(expect.objectContaining({ webhookFilterButtons: processStates }));
     });
 
     it("should check #toggleWebhookFilterButton if state not exist", () => {
@@ -58,7 +58,7 @@ describe("FlowsSelectionStateService", () => {
         service.setWebhookFilterButtons(processStates);
         service.toggleWebhookFilterButton(FlowProcessEffectiveState.PausedManual);
         expect(service.snapshot).toEqual(
-            jasmine.objectContaining({
+            expect.objectContaining({
                 webhookFilterButtons: [...processStates, FlowProcessEffectiveState.PausedManual],
             }),
         );
@@ -69,7 +69,7 @@ describe("FlowsSelectionStateService", () => {
         service.setWebhookFilterButtons(processStates);
         service.toggleWebhookFilterButton(FlowProcessEffectiveState.Active);
         expect(service.snapshot).toEqual(
-            jasmine.objectContaining({
+            expect.objectContaining({
                 webhookFilterButtons: [FlowProcessEffectiveState.Failing],
             }),
         );
@@ -80,7 +80,7 @@ describe("FlowsSelectionStateService", () => {
         service.setWebhookFilterButtons(processStates);
         service.clearWebhookFilters();
         expect(service.snapshot).toEqual(
-            jasmine.objectContaining({
+            expect.objectContaining({
                 webhookFilterButtons: [],
                 webhooksCategory: undefined,
             }),
@@ -90,7 +90,7 @@ describe("FlowsSelectionStateService", () => {
     it("should check #addSubscription", () => {
         service.addSubscription("subscription-name");
         expect(service.snapshot).toEqual(
-            jasmine.objectContaining({
+            expect.objectContaining({
                 subscriptions: ["subscription-name"],
             }),
         );
@@ -100,7 +100,7 @@ describe("FlowsSelectionStateService", () => {
         service.addSubscription("subscription-name");
         service.removeSubscription("subscription-name");
         expect(service.snapshot).toEqual(
-            jasmine.objectContaining({
+            expect.objectContaining({
                 subscriptions: [],
             }),
         );
@@ -111,7 +111,7 @@ describe("FlowsSelectionStateService", () => {
         service.addSubscription("subscription-name2");
         service.clearSubscription();
         expect(service.snapshot).toEqual(
-            jasmine.objectContaining({
+            expect.objectContaining({
                 subscriptions: [],
             }),
         );
@@ -121,7 +121,7 @@ describe("FlowsSelectionStateService", () => {
         const mockId = "a9f33c51-aeda-4003-865f-8dc9712619d7";
         service.addWebhookId(mockId);
         expect(service.snapshot).toEqual(
-            jasmine.objectContaining({
+            expect.objectContaining({
                 webhooksIds: [mockId],
             }),
         );
@@ -132,7 +132,7 @@ describe("FlowsSelectionStateService", () => {
         service.addWebhookId(mockId);
         service.removeWebhookId(mockId);
         expect(service.snapshot).toEqual(
-            jasmine.objectContaining({
+            expect.objectContaining({
                 webhooksIds: [],
             }),
         );
@@ -143,7 +143,7 @@ describe("FlowsSelectionStateService", () => {
         service.addWebhookId(mockId);
         service.clearWebhookIds();
         expect(service.snapshot).toEqual(
-            jasmine.objectContaining({
+            expect.objectContaining({
                 webhooksIds: [],
             }),
         );
@@ -156,7 +156,7 @@ describe("FlowsSelectionStateService", () => {
         service.setWebhookFilterButtons(processStates);
         service.reset();
         expect(service.snapshot).toEqual(
-            jasmine.objectContaining({
+            expect.objectContaining({
                 webhooksIds: [],
                 flowsCategory: "all",
                 webhooksCategory: undefined,
@@ -171,7 +171,7 @@ describe("FlowsSelectionStateService", () => {
         const processes = requireValue(mockDatasetFlowsProcessesQuery.datasets.byId?.flows.processes ?? null);
         service.initFlowsSelectionState(processes);
         expect(service.snapshot).toEqual(
-            jasmine.objectContaining({
+            expect.objectContaining({
                 webhooksIds: [processes.webhooks.subprocesses[0].id],
             }),
         );
@@ -183,7 +183,7 @@ describe("FlowsSelectionStateService", () => {
         const processes = requireValue(mockDatasetFlowsProcessesQuery.datasets.byId?.flows.processes ?? null);
         service.initFlowsSelectionState(processes);
         expect(service.snapshot).toEqual(
-            jasmine.objectContaining({
+            expect.objectContaining({
                 subscriptions: [processes.webhooks.subprocesses[0].name],
             }),
         );
@@ -197,7 +197,7 @@ describe("FlowsSelectionStateService", () => {
         service.selectSubscription({ id: mockId, name: mockName });
 
         expect(service.snapshot).toEqual(
-            jasmine.objectContaining({
+            expect.objectContaining({
                 webhooksIds: [mockId],
                 flowsCategory: undefined,
                 webhookFilterButtons: [],
@@ -210,7 +210,7 @@ describe("FlowsSelectionStateService", () => {
         service.setWebhookFilterButtons([FlowProcessEffectiveState.Active]);
         service.selectWebhookChip("webhooks");
         expect(service.snapshot).toEqual(
-            jasmine.objectContaining({
+            expect.objectContaining({
                 webhookFilterButtons: [],
                 subscriptions: [],
             }),
@@ -220,7 +220,7 @@ describe("FlowsSelectionStateService", () => {
     it("should check #selectWebhookChip without category", () => {
         service.selectWebhookChip(undefined);
         expect(service.snapshot).toEqual(
-            jasmine.objectContaining({
+            expect.objectContaining({
                 webhooksIds: [],
                 webhooksCategory: undefined,
             }),

@@ -43,7 +43,7 @@ describe("DatasetViewHeaderComponent", () => {
         fixture = TestBed.createComponent(DatasetViewHeaderComponent);
         modalService = TestBed.inject(ModalService);
         datasetService = TestBed.inject(DatasetService);
-        spyOnProperty(datasetService, "downstreamsCountChanges", "get").and.returnValue(of(1));
+        vi.spyOn(datasetService, "downstreamsCountChanges", "get").mockReturnValue(of(1));
         component = fixture.componentInstance;
         setComponentInput(fixture, "datasetInfo", mockDatasetInfo);
         setComponentInput(fixture, "datasetBasics", mockDatasetBasicsRootFragment);
@@ -60,10 +60,12 @@ describe("DatasetViewHeaderComponent", () => {
         { method: SearchAdditionalButtonsEnum.DeriveFrom, calledTimes: 0 },
     ].forEach((item: { method: SearchAdditionalButtonsEnum; calledTimes: number }) => {
         it(`should check onClickSearchAdditionalButton for method=${item.method}`, () => {
-            const modalWarningSpy = spyOn(modalService, "warning").and.callFake((options: ModalArgumentsInterface) => {
-                options.handler?.call(undefined, true);
-                return Promise.resolve("");
-            });
+            const modalWarningSpy = vi
+                .spyOn(modalService, "warning")
+                .mockImplementation((options: ModalArgumentsInterface) => {
+                    options.handler?.call(undefined, true);
+                    return Promise.resolve("");
+                });
             component.onClickSearchAdditionalButton(item.method);
             expect(modalWarningSpy).toHaveBeenCalledTimes(item.calledTimes);
         });
@@ -75,9 +77,9 @@ describe("DatasetViewHeaderComponent", () => {
         SearchAdditionalButtonsEnum.DeriveFrom,
     ].forEach((item: SearchAdditionalButtonsEnum) => {
         it(`should check onClickSearchAdditionalButtonsMenuOpen for method=${item}`, () => {
-            const requestListDownstreamsSpy = spyOn(datasetService, "requestListDownstreams").and.returnValue(
-                of(["accountName/datasetName"]),
-            );
+            const requestListDownstreamsSpy = vi
+                .spyOn(datasetService, "requestListDownstreams")
+                .mockReturnValue(of(["accountName/datasetName"]));
             component.onClickSearchAdditionalButtonsMenuOpen(item);
             if (item === SearchAdditionalButtonsEnum.DeriveFrom) {
                 expect(requestListDownstreamsSpy).toHaveBeenCalledTimes(1);
@@ -95,7 +97,7 @@ describe("DatasetViewHeaderComponent", () => {
         });
 
         it("should show a footnote when the counter is higher than the accessible downstreams", async () => {
-            spyOn(datasetService, "requestListDownstreams").and.returnValue(of([]));
+            vi.spyOn(datasetService, "requestListDownstreams").mockReturnValue(of([]));
             await nav.openMenu(SearchAdditionalButtonsEnum.DeriveFrom);
 
             expect(await nav.getMenuFootnote()).toEqual("+1 private dataset you cannot view");
@@ -106,18 +108,20 @@ describe("DatasetViewHeaderComponent", () => {
         });
 
         it("should not show a footnote when all downstreams are accessible", async () => {
-            spyOn(datasetService, "requestListDownstreams").and.returnValue(of(["accountName/datasetName"]));
+            vi.spyOn(datasetService, "requestListDownstreams").mockReturnValue(of(["accountName/datasetName"]));
             await nav.openMenu(SearchAdditionalButtonsEnum.DeriveFrom);
 
             expect(await nav.getMenuFootnote()).toBeNull();
         });
 
         it("should drop the footnote when reopened after all downstreams became accessible", async () => {
-            const requestListDownstreamsSpy = spyOn(datasetService, "requestListDownstreams").and.returnValue(of([]));
+            const requestListDownstreamsSpy = vi
+                .spyOn(datasetService, "requestListDownstreams")
+                .mockReturnValue(of([]));
             await nav.openMenu(SearchAdditionalButtonsEnum.DeriveFrom);
             await nav.closeMenu(SearchAdditionalButtonsEnum.DeriveFrom);
 
-            requestListDownstreamsSpy.and.returnValue(of(["accountName/datasetName"]));
+            requestListDownstreamsSpy.mockReturnValue(of(["accountName/datasetName"]));
             await nav.openMenu(SearchAdditionalButtonsEnum.DeriveFrom);
 
             expect(await nav.getMenuFootnote()).toBeNull();

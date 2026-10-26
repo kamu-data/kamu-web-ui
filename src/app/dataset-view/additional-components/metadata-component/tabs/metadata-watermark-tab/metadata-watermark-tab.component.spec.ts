@@ -46,7 +46,7 @@ describe("MetadataWatermarkTabComponent", () => {
     });
 
     it("should check to open edit window", () => {
-        const openModalSpy = spyOn(modalService, "open").and.callThrough();
+        const openModalSpy = vi.spyOn(modalService, "open");
         component.onEditWatermark();
         expect(openModalSpy).toHaveBeenCalledTimes(1);
     });

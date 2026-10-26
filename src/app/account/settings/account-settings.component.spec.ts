@@ -45,8 +45,8 @@ describe("AccountSettingsComponent", () => {
         accountEmailService = TestBed.inject(AccountEmailService);
 
         loginService = TestBed.inject(LoginService);
-        spyOn(accountEmailService, "fetchAccountWithEmail").and.returnValue(of(mockAccountDetailsWithEmail));
-        spyOnProperty(loginService, "accountChanges", "get").and.returnValue(of(mockAccountDetails));
+        vi.spyOn(accountEmailService, "fetchAccountWithEmail").mockReturnValue(of(mockAccountDetailsWithEmail));
+        vi.spyOn(loginService, "accountChanges", "get").mockReturnValue(of(mockAccountDetails));
         loggedUserService = TestBed.inject(LoggedUserService);
 
         fixture = TestBed.createComponent(AccountSettingsComponent);

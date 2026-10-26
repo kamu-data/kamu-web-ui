@@ -1,7 +1,7 @@
 {
   "compileOnSave": false,
   "compilerOptions": {
-    "types": ["jasmine", "node"],
+    "types": ["vitest/globals", "node"],
     "paths": {
       "@common/*": ["./src/app/common/*"],
       "@api/*": ["./src/app/api/*"],

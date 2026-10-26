@@ -130,7 +130,7 @@ describe("AccountApi", () => {
 
             tick();
 
-            expect(subscription$.closed).toBeTrue();
+            expect(subscription$.closed).toBe(true);
 
             flush();
         }));
@@ -209,8 +209,8 @@ describe("AccountApi", () => {
 
     it("should check fetch account storage quota", () => {
         service.fetchAccountStorageQuota(ACCOUNT_NAME).subscribe((state: AccountStorageQuotaQuery) => {
-            expect(state.accounts.byName?.quotas.user.storage.limitTotalBytes).toEqual(1_000_000_000);
-            expect(state.accounts.byName?.usage.storage.totalSizeBytes).toEqual(640_000_000);
+            expect(state.accounts.byName?.quotas.user.storage.limitTotalBytes).toEqual(1000000000);
+            expect(state.accounts.byName?.usage.storage.totalSizeBytes).toEqual(640000000);
         });
         const op = controller.expectOne(AccountStorageQuotaDocument);
         expect(op.operation.variables.accountName).toEqual(ACCOUNT_NAME);
@@ -297,7 +297,7 @@ describe("AccountApi", () => {
                     mockAccountFlowsAsCardsQuery.accounts.byName?.flows.processes.allCards.nodes.length,
                 );
                 expect(result.accounts.byName?.flows.processes.allCards.nodes[0]).toEqual(
-                    jasmine.objectContaining({ flowType: DatasetFlowType.Ingest }),
+                    expect.objectContaining({ flowType: DatasetFlowType.Ingest }),
                 );
             });
         const op = controller.expectOne(AccountFlowsAsCardsDocument);

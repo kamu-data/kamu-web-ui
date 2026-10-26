@@ -42,7 +42,7 @@ describe("DatasetCreateComponent", () => {
         registerMatSvgIcons();
 
         loggedUserService = TestBed.inject(LoggedUserService);
-        spyOnProperty(loggedUserService, "maybeCurrentlyLoggedInUser", "get").and.returnValue(mockAccountDetails);
+        vi.spyOn(loggedUserService, "maybeCurrentlyLoggedInUser", "get").mockReturnValue(mockAccountDetails);
 
         fixture = TestBed.createComponent(DatasetCreateComponent);
         component = fixture.componentInstance;
@@ -71,11 +71,11 @@ describe("DatasetCreateComponent", () => {
     it("should check getter isFormValid()", () => {
         component.yamlTemplate = "testYaml";
         fixture.detectChanges();
-        expect(component.isFormValid).toBeTrue();
+        expect(component.isFormValid).toBe(true);
     });
 
     it("should check call createDatasetFromForm()", () => {
-        const createDatasetFromFormSpy = spyOn(datasetCreateService, "createEmptyDataset").and.returnValue(of());
+        const createDatasetFromFormSpy = vi.spyOn(datasetCreateService, "createEmptyDataset").mockReturnValue(of());
 
         component.onCreateDataset();
 
@@ -88,11 +88,13 @@ describe("DatasetCreateComponent", () => {
             datasetName: "my-collection",
             visibility: DatasetVisibility.Public,
         });
-        const createCollectionSpy = spyOn(datasetCreateService, "createCollection").and.returnValue(of());
+        const createCollectionSpy = vi.spyOn(datasetCreateService, "createCollection").mockReturnValue(of());
 
         component.onCreateDataset();
 
-        expect(createCollectionSpy).toHaveBeenCalledOnceWith({
+        expect(createCollectionSpy).toHaveBeenCalledTimes(1);
+
+        expect(createCollectionSpy).toHaveBeenCalledWith({
             datasetAlias: "my-collection",
             datasetVisibility: DatasetVisibility.Public,
         });
@@ -104,11 +106,13 @@ describe("DatasetCreateComponent", () => {
             datasetName: "my-versioned-file",
             visibility: DatasetVisibility.Private,
         });
-        const createVersionedFileSpy = spyOn(datasetCreateService, "createVersionedFile").and.returnValue(of());
+        const createVersionedFileSpy = vi.spyOn(datasetCreateService, "createVersionedFile").mockReturnValue(of());
 
         component.onCreateDataset();
 
-        expect(createVersionedFileSpy).toHaveBeenCalledOnceWith({
+        expect(createVersionedFileSpy).toHaveBeenCalledTimes(1);
+
+        expect(createVersionedFileSpy).toHaveBeenCalledWith({
             datasetAlias: "my-versioned-file",
             datasetVisibility: DatasetVisibility.Private,
         });
@@ -122,10 +126,10 @@ describe("DatasetCreateComponent", () => {
 
         component.onChangeArchetype(component.ARCHETYPE_LIST[2]);
 
-        expect(component.createDatasetForm.controls.datasetName.enabled).toBeTrue();
-        expect(component.createDatasetForm.controls.owner.enabled).toBeTrue();
-        expect(component.createDatasetForm.controls.kind.disabled).toBeTrue();
-        expect(component.showMonacoEditor).toBeFalse();
+        expect(component.createDatasetForm.controls.datasetName.enabled).toBe(true);
+        expect(component.createDatasetForm.controls.owner.enabled).toBe(true);
+        expect(component.createDatasetForm.controls.kind.disabled).toBe(true);
+        expect(component.showMonacoEditor).toBe(false);
         expect(component.yamlTemplate).toBe("");
     });
 
@@ -134,7 +138,7 @@ describe("DatasetCreateComponent", () => {
 
         component.onChangeArchetype(component.ARCHETYPE_LIST[0]);
 
-        expect(component.createDatasetForm.controls.kind.enabled).toBeTrue();
+        expect(component.createDatasetForm.controls.kind.enabled).toBe(true);
     });
 
     it("should disable snapshot initialization in the template for non-structured archetypes", fakeAsync(() => {
@@ -145,16 +149,16 @@ describe("DatasetCreateComponent", () => {
         fixture.detectChanges();
 
         const checkboxInput = getInputElementByDataTestId(fixture, "show-monaco-editor");
-        expect(checkboxInput.disabled).toBeTrue();
+        expect(checkboxInput.disabled).toBe(true);
         flush();
     }));
 
     it("should check call createDatasetFromSnapshot()", () => {
         component.showMonacoEditor = true;
         component.yamlTemplate = "test template";
-        const createDatasetFromSnapshotSpy = spyOn(datasetCreateService, "createDatasetFromSnapshot").and.returnValue(
-            of(),
-        );
+        const createDatasetFromSnapshotSpy = vi
+            .spyOn(datasetCreateService, "createDatasetFromSnapshot")
+            .mockReturnValue(of());
 
         component.onCreateDataset();
 
@@ -163,18 +167,18 @@ describe("DatasetCreateComponent", () => {
 
     it("should check switch checkbox `Initialize from YAML snapshot`)", () => {
         const checkboxInput = getInputElementByDataTestId(fixture, "show-monaco-editor");
-        expect(checkboxInput.checked).toBeFalse();
-        expect(component.showMonacoEditor).toBeFalse();
+        expect(checkboxInput.checked).toBe(false);
+        expect(component.showMonacoEditor).toBe(false);
 
         checkboxInput.click();
 
-        expect(checkboxInput.checked).toBeTrue();
-        expect(component.showMonacoEditor).toBeTrue();
+        expect(checkboxInput.checked).toBe(true);
+        expect(component.showMonacoEditor).toBe(true);
 
         checkboxInput.click();
 
-        expect(checkboxInput.checked).toBeFalse();
-        expect(component.showMonacoEditor).toBeFalse();
+        expect(checkboxInput.checked).toBe(false);
+        expect(component.showMonacoEditor).toBe(false);
     });
 
     it("should check call uploadFile when file picked)", async () => {
@@ -190,12 +194,11 @@ describe("DatasetCreateComponent", () => {
         const dataTransfer = new DataTransfer();
         dataTransfer.items.add(mockFile);
         fileInput.files = dataTransfer.files;
-        const onFileSelectedSpy = spyOn(component, "onFileSelected").and.callThrough();
+        const onFileSelectedSpy = vi.spyOn(component, "onFileSelected");
         fileInput.dispatchEvent(new Event("change"));
 
         expect(onFileSelectedSpy).toHaveBeenCalledTimes(1);
-        const result = await onFileSelectedSpy.calls.mostRecent().returnValue;
-        expect(result).toBe("# You can edit this file\ntest content");
+        await vi.waitFor(() => expect(onFileSelectedSpy).toHaveResolvedWith("# You can edit this file\ntest content"));
     });
 
     it("should check call uploadFile when file not picked)", async () => {
@@ -205,12 +208,11 @@ describe("DatasetCreateComponent", () => {
         fixture.detectChanges();
 
         const fileInput = getElementByDataTestId(fixture, "input-file", HTMLInputElement);
-        const onFileSelectedSpy = spyOn(component, "onFileSelected").and.callThrough();
+        const onFileSelectedSpy = vi.spyOn(component, "onFileSelected");
         fileInput.dispatchEvent(new Event("change"));
 
         expect(onFileSelectedSpy).toHaveBeenCalledTimes(1);
-        const result = await onFileSelectedSpy.calls.mostRecent().returnValue;
-        expect(result).toBe("");
+        await vi.waitFor(() => expect(onFileSelectedSpy).toHaveResolvedWith(""));
     });
 
     [

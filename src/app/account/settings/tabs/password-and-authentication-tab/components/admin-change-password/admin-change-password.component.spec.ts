@@ -39,8 +39,8 @@ describe("AdminChangePasswordComponent", () => {
     });
 
     it("should check to update password", () => {
-        const changeAdminPasswordSpy = spyOn(accountService, "changeAdminPassword").and.returnValue(of(true));
-        const resetSpy = spyOn(component.changeAdminAccountPasswordForm, "reset");
+        const changeAdminPasswordSpy = vi.spyOn(accountService, "changeAdminPassword").mockReturnValue(of(true));
+        const resetSpy = vi.spyOn(component.changeAdminAccountPasswordForm, "reset").mockImplementation(() => {});
         component.updateAdminPassword();
         expect(changeAdminPasswordSpy).toHaveBeenCalledTimes(1);
         expect(resetSpy).toHaveBeenCalledTimes(1);

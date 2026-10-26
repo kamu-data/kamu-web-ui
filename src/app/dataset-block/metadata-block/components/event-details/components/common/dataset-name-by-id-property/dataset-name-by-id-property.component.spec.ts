@@ -10,6 +10,7 @@ import { ComponentFixture, TestBed } from "@angular/core/testing";
 import { of, Subject } from "rxjs";
 
 import { ApolloTestingModule } from "apollo-angular/testing";
+import type { Mock } from "vitest";
 
 import {
     findElementByDataTestId,
@@ -26,7 +27,7 @@ import { mockDatasetMainDataResponse } from "src/app/search/mock.data";
 
 describe("DatasetNameByIdPropertyComponent", () => {
     let fixture: ComponentFixture<DatasetNameByIdPropertyComponent>;
-    let requestDatasetInfoByIdSpy: jasmine.Spy;
+    let requestDatasetInfoByIdSpy: Mock;
 
     const FIRST_DATASET_ID = "did:odf:first";
     const SECOND_DATASET_ID = "did:odf:second";
@@ -43,9 +44,9 @@ describe("DatasetNameByIdPropertyComponent", () => {
         }).compileComponents();
 
         fixture = TestBed.createComponent(DatasetNameByIdPropertyComponent);
-        requestDatasetInfoByIdSpy = spyOn(TestBed.inject(DatasetService), "requestDatasetInfoById").and.returnValue(
-            of(mockDatasetByIdQuery),
-        );
+        requestDatasetInfoByIdSpy = vi
+            .spyOn(TestBed.inject(DatasetService), "requestDatasetInfoById")
+            .mockReturnValue(of(mockDatasetByIdQuery));
         setComponentInput(fixture, "data", FIRST_DATASET_ID);
         fixture.detectChanges();
     });
@@ -55,12 +56,13 @@ describe("DatasetNameByIdPropertyComponent", () => {
     }
 
     it("should show the dataset loaded by its id", () => {
-        expect(requestDatasetInfoByIdSpy).toHaveBeenCalledOnceWith(FIRST_DATASET_ID);
+        expect(requestDatasetInfoByIdSpy).toHaveBeenCalledTimes(1);
+        expect(requestDatasetInfoByIdSpy).toHaveBeenCalledWith(FIRST_DATASET_ID);
         expect(datasetNameText()).toContain("/" + TEST_DATASET_NAME);
     });
 
     it("should load the dataset again when the id changes", () => {
-        requestDatasetInfoByIdSpy.and.returnValue(of(mockOtherDatasetByIdQuery));
+        requestDatasetInfoByIdSpy.mockReturnValue(of(mockOtherDatasetByIdQuery));
 
         setComponentInput(fixture, "data", SECOND_DATASET_ID);
         fixture.detectChanges();
@@ -72,7 +74,7 @@ describe("DatasetNameByIdPropertyComponent", () => {
     it("should ignore the response for an id that was replaced before it arrived", () => {
         const secondResponse$ = new Subject<DatasetByIdQuery>();
         const thirdResponse$ = new Subject<DatasetByIdQuery>();
-        requestDatasetInfoByIdSpy.and.callFake((datasetId: string) =>
+        requestDatasetInfoByIdSpy.mockImplementation((datasetId: string) =>
             datasetId === SECOND_DATASET_ID ? secondResponse$ : thirdResponse$,
         );
 
@@ -92,7 +94,7 @@ describe("DatasetNameByIdPropertyComponent", () => {
 
     it("should not show the previous dataset while the dataset for a new id loads", () => {
         const secondResponse$ = new Subject<DatasetByIdQuery>();
-        requestDatasetInfoByIdSpy.and.returnValue(secondResponse$);
+        requestDatasetInfoByIdSpy.mockReturnValue(secondResponse$);
 
         setComponentInput(fixture, "data", SECOND_DATASET_ID);
         fixture.detectChanges();
@@ -104,7 +106,7 @@ describe("DatasetNameByIdPropertyComponent", () => {
     });
 
     it("should show no dataset when the new id does not resolve to one", () => {
-        requestDatasetInfoByIdSpy.and.returnValue(of(mockMissingDatasetByIdQuery));
+        requestDatasetInfoByIdSpy.mockReturnValue(of(mockMissingDatasetByIdQuery));
 
         setComponentInput(fixture, "data", SECOND_DATASET_ID);
         fixture.detectChanges();

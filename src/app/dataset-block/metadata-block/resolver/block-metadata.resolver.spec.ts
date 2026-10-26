@@ -55,22 +55,31 @@ describe("blockMetadataResolverFn", () => {
     });
 
     it("should request the block from the route and publish its downstreams count", async () => {
-        const requestMetadataBlockSpy = spyOn(blockService, "requestMetadataBlock").and.returnValue(of(mockBlockInfo));
-        const emitDownstreamsCountChangedSpy = spyOn(datasetService, "emitDownstreamsCountChanged");
+        const requestMetadataBlockSpy = vi
+            .spyOn(blockService, "requestMetadataBlock")
+            .mockReturnValue(of(mockBlockInfo));
+        const emitDownstreamsCountChangedSpy = vi
+            .spyOn(datasetService, "emitDownstreamsCountChanged")
+            .mockImplementation(() => {});
 
         const data = await runResolver(blockMetadataResolverFn, route);
 
-        expect(requestMetadataBlockSpy).toHaveBeenCalledOnceWith(
+        expect(requestMetadataBlockSpy).toHaveBeenCalledTimes(1);
+
+        expect(requestMetadataBlockSpy).toHaveBeenCalledWith(
             { accountName: TEST_ACCOUNT_NAME, datasetName: TEST_DATASET_NAME },
             MOCK_HASH_BLOCK,
         );
-        expect(emitDownstreamsCountChangedSpy).toHaveBeenCalledOnceWith(mockBlockInfo.downstreamsCount);
+        expect(emitDownstreamsCountChangedSpy).toHaveBeenCalledTimes(1);
+        expect(emitDownstreamsCountChangedSpy).toHaveBeenCalledWith(mockBlockInfo.downstreamsCount);
         expect(data).toEqual(mockBlockInfo);
     });
 
     it("should redirect to page not found when the dataset or the block does not exist", async () => {
-        spyOn(blockService, "requestMetadataBlock").and.returnValue(of(undefined));
-        const emitDownstreamsCountChangedSpy = spyOn(datasetService, "emitDownstreamsCountChanged");
+        vi.spyOn(blockService, "requestMetadataBlock").mockReturnValue(of(undefined));
+        const emitDownstreamsCountChangedSpy = vi
+            .spyOn(datasetService, "emitDownstreamsCountChanged")
+            .mockImplementation(() => {});
 
         const data = await runResolver(blockMetadataResolverFn, route);
 
@@ -79,8 +88,10 @@ describe("blockMetadataResolverFn", () => {
     });
 
     it("should redirect to page not found when the block cannot be loaded", async () => {
-        spyOn(blockService, "requestMetadataBlock").and.returnValue(throwError(() => new Error("fail")));
-        const emitDownstreamsCountChangedSpy = spyOn(datasetService, "emitDownstreamsCountChanged");
+        vi.spyOn(blockService, "requestMetadataBlock").mockReturnValue(throwError(() => new Error("fail")));
+        const emitDownstreamsCountChangedSpy = vi
+            .spyOn(datasetService, "emitDownstreamsCountChanged")
+            .mockImplementation(() => {});
 
         const data = await runResolver(blockMetadataResolverFn, route);
 

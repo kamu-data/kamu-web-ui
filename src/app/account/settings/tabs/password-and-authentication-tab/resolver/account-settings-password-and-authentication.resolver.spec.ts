@@ -30,7 +30,7 @@ describe("accountSettingsPasswordAndAuthenticationResolver", () => {
     });
 
     it("should check to return correct data", async () => {
-        spyOnProperty(loggedUserService, "currentlyLoggedInUser", "get").and.returnValue(mockAccountDetails);
+        vi.spyOn(loggedUserService, "currentlyLoggedInUser", "get").mockReturnValue(mockAccountDetails);
         const result = await runResolver(accountSettingsPasswordAndAuthenticationResolverFn);
         expect(result).toEqual(mockAccountDetails);
     });

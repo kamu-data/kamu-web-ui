@@ -13,6 +13,7 @@ import { of } from "rxjs";
 
 import { Apollo } from "apollo-angular";
 
+import { stubMethod } from "@common/helpers/base-test.helpers.spec";
 import { DataSchemaField, OdfTypes } from "@interface/dataset-schema.interface";
 
 import { BlockService } from "src/app/dataset-block/metadata-block/block.service";
@@ -50,13 +51,13 @@ describe("EditAddPushSourceService", () => {
             { name: "id", type: { kind: OdfTypes.Int64 } },
             { name: "amount", type: { kind: OdfTypes.Float64 } },
         ];
-        const spy = spyOn(blockService, "getAddPushSourceSchemaFields").and.returnValue(of(expectedFields));
+        const spy = vi.spyOn(blockService, "getAddPushSourceSchemaFields").mockReturnValue(of(expectedFields));
 
         const readForm = new FormGroup({ schema: new FormControl<DataSchemaField[]>([]) });
         service.patchSchemaField(readForm, mockDatasetInfo, "my-source", destroyRef);
 
         expect(spy).toHaveBeenCalledWith(
-            jasmine.objectContaining({
+            expect.objectContaining({
                 accountName: mockDatasetInfo.accountName,
                 datasetName: mockDatasetInfo.datasetName,
                 sourceName: "my-source",
@@ -66,7 +67,7 @@ describe("EditAddPushSourceService", () => {
     });
 
     it("should not subscribe when schema control is absent in patchSchemaField", () => {
-        const spy = spyOn(blockService, "getAddPushSourceSchemaFields");
+        const spy = stubMethod(blockService, "getAddPushSourceSchemaFields");
         const readForm = new FormGroup({ otherControl: new FormControl("") });
         service.patchSchemaField(readForm, mockDatasetInfo, "my-source", destroyRef);
         expect(spy).not.toHaveBeenCalled();

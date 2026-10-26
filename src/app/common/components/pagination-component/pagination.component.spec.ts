@@ -34,10 +34,12 @@ describe("PaginationComponent", () => {
 
     it("should check emit changed page number", () => {
         const pageNumber = 2;
-        const pageChangeEventSpy = spyOn(component.pageChangeEvent, "emit");
+        const pageChangeEventSpy = vi.spyOn(component.pageChangeEvent, "emit").mockImplementation(() => {});
 
         component.onPageChange(2);
 
-        expect(pageChangeEventSpy).toHaveBeenCalledOnceWith(pageNumber);
+        expect(pageChangeEventSpy).toHaveBeenCalledTimes(1);
+
+        expect(pageChangeEventSpy).toHaveBeenCalledWith(pageNumber);
     });
 });

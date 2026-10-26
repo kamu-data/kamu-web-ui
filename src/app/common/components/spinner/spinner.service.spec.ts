@@ -33,7 +33,7 @@ describe("SpinnerService", () => {
             } else {
                 service.hide();
             }
-            expect(subscription$.closed).toBeTrue();
+            expect(subscription$.closed).toBe(true);
         });
     });
 });

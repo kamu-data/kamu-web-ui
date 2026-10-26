@@ -17,6 +17,7 @@ import {
     getElementByDataTestId,
     registerMatSvgIcons,
     setComponentInput,
+    stubMethod,
 } from "@common/helpers/base-test.helpers.spec";
 import { SharedTestModule } from "@common/modules/shared-test.module";
 import { TEST_BLOCK_HASH } from "@api/mock/dataset.mock";
@@ -57,7 +58,7 @@ describe("DisplayHashComponent", () => {
     });
 
     it("should check copyToClipboard button is work", () => {
-        const successToastServiceSpy = spyOn(toastService, "success");
+        const successToastServiceSpy = stubMethod(toastService, "success");
         setComponentInput(fixture, "showCopyButton", true);
         fixture.detectChanges();
         emitClickOnElementByDataTestId(fixture, "copyToClipboardButton");

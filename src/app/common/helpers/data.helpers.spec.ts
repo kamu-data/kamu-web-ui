@@ -12,29 +12,11 @@ import {
     setOperationColumnClass,
     sliceSizeMapperReverse,
 } from "@common/helpers/data.helpers";
+import { metadataBlockSetVocab } from "@common/helpers/data.helpers.mock";
 import { DataSchemaFormat, DatasetKind, MetadataBlockFragment } from "@api/kamu.graphql.interface";
 
 import { SliceUnit } from "src/app/dataset-view/additional-components/dataset-settings-component/tabs/compacting/dataset-settings-compacting-tab.types";
 import { mockOwnerFieldsWithAvatar, mockPublicDatasetVisibility } from "src/app/search/mock.data";
-
-export const metadataBlockSetVocab: MetadataBlockFragment = {
-    __typename: "MetadataBlockExtended",
-    blockHash: "zW1fzwrGZbrvqoXujua5oxj4j466tDwXySjpVMi8BvZ2mtj",
-    prevBlockHash: "zW1ioX6fdsM4so8MPw7wqF1uKsDC7n6FEkhahZKXNcgF5E1",
-    sequenceNumber: 14,
-    systemTime: "2022-08-05T21:19:28.817281255+00:00",
-    author: {
-        __typename: "Account",
-        ...mockOwnerFieldsWithAvatar,
-    },
-    event: {
-        __typename: "SetVocab",
-        systemTimeColumn: null,
-        eventTimeColumn: "case_reported_date",
-        offsetColumn: null,
-        operationTypeColumn: null,
-    },
-};
 
 it("should check description for SetVocab block", () => {
     expect(DataHelpers.descriptionForMetadataBlock(metadataBlockSetVocab)).toEqual(
@@ -389,11 +371,19 @@ it(`should propagate the name for unknown engines`, () => {
     { case: Math.pow(2, 10), expectation: { size: 1, unit: SliceUnit.KB } },
     { case: Math.pow(2, 20), expectation: { size: 1, unit: SliceUnit.MB } },
     { case: Math.pow(2, 30), expectation: { size: 1, unit: SliceUnit.GB } },
-].forEach((item: { case: number; expectation: { size: number; unit: SliceUnit } }) => {
-    it(`should check slice size mapper with ${item.case} bytes`, () => {
-        expect(sliceSizeMapperReverse(item.case)).toEqual(item.expectation);
-    });
-});
+].forEach(
+    (item: {
+        case: number;
+        expectation: {
+            size: number;
+            unit: SliceUnit;
+        };
+    }) => {
+        it(`should check slice size mapper with ${item.case} bytes`, () => {
+            expect(sliceSizeMapperReverse(item.case)).toEqual(item.expectation);
+        });
+    },
+);
 
 [
     { case: 0, expected: "+A" },

@@ -194,12 +194,12 @@ describe("schemaNameWarnings", () => {
 
     it("should warn for the 'op' system column", () => {
         const warnings = schemaNameWarnings("op");
-        expect(warnings.some((w) => w.code === SchemaWarningCode.SYSTEM_COLUMN_NAME)).toBeTrue();
+        expect(warnings.some((w) => w.code === SchemaWarningCode.SYSTEM_COLUMN_NAME)).toBe(true);
     });
 
     it("should warn for the 'system_time' system column", () => {
         const warnings = schemaNameWarnings("system_time");
-        expect(warnings.some((w) => w.code === SchemaWarningCode.SYSTEM_COLUMN_NAME)).toBeTrue();
+        expect(warnings.some((w) => w.code === SchemaWarningCode.SYSTEM_COLUMN_NAME)).toBe(true);
     });
 
     it("should warn for a SQL reserved keyword", () => {
@@ -210,7 +210,7 @@ describe("schemaNameWarnings", () => {
 
     it("should match SQL keywords case-insensitively", () => {
         const warnings = schemaNameWarnings("SELECT");
-        expect(warnings.some((w) => w.code === SchemaWarningCode.SQL_RESERVED_KEYWORD)).toBeTrue();
+        expect(warnings.some((w) => w.code === SchemaWarningCode.SQL_RESERVED_KEYWORD)).toBe(true);
     });
 
     it("should produce a warning but NOT an error — validateSchemaFields ignores these names", () => {

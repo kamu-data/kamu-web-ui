@@ -29,7 +29,7 @@ import {
     ORDER_SCHEMA_ODF_JSON,
     readSchemaOf,
     requireDatasetSchema,
-} from "@common/components/edit-schema-table/schema-editor.fixtures.spec";
+} from "@common/components/edit-schema-table/schema-editor.mock";
 import { registerMatSvgIcons, setComponentInput } from "@common/helpers/base-test.helpers.spec";
 import { SharedTestModule } from "@common/modules/shared-test.module";
 import { DatasetApi } from "@api/dataset.api";
@@ -170,9 +170,9 @@ describe("Schema editor round-trip (Load → Edit → Serialize)", () => {
         await setup();
 
         const datasetApi = TestBed.inject(DatasetApi);
-        const spy = spyOn(datasetApi, "getSchemaFieldsByEventType").and.returnValue(
-            of(mockGqlProjectionWithSchema(NESTED_SCHEMA_ODF_JSON)),
-        );
+        const spy = vi
+            .spyOn(datasetApi, "getSchemaFieldsByEventType")
+            .mockReturnValue(of(mockGqlProjectionWithSchema(NESTED_SCHEMA_ODF_JSON)));
 
         const editPollingSourceService = TestBed.inject(EditPollingSourceService);
         const readForm = new FormGroup({ schema: schemaControl });
@@ -188,9 +188,7 @@ describe("Schema editor round-trip (Load → Edit → Serialize)", () => {
             TestBed.inject(DestroyRef),
         );
 
-        expect(spy).toHaveBeenCalledWith(
-            jasmine.objectContaining({ eventTypes: [MetadataEventType.SetPollingSource] }),
-        );
+        expect(spy).toHaveBeenCalledWith(expect.objectContaining({ eventTypes: [MetadataEventType.SetPollingSource] }));
         expect(schemaControl.value).toEqual(NESTED_SCHEMA_FIELDS);
     });
 
@@ -274,7 +272,7 @@ describe("Schema editor round-trip (Load → Edit → Serialize)", () => {
         expect(addressChildrenInYaml.map((f) => f.name)).not.toContain("street");
 
         // Schema wire shape is { fields } object, not a bare array
-        expect(Array.isArray(schema)).toBeFalse();
+        expect(Array.isArray(schema)).toBe(false);
     });
 
     // -------------------------------------------------------------------------
@@ -325,7 +323,7 @@ describe("Schema editor round-trip (Load → Edit → Serialize)", () => {
         expect(shippingFields.map((f) => f.name)).toContain("tracking");
 
         // Wire shape is { fields } object
-        expect(Array.isArray(schema)).toBeFalse();
+        expect(Array.isArray(schema)).toBe(false);
     });
 
     // -------------------------------------------------------------------------
@@ -378,7 +376,7 @@ describe("Schema editor round-trip (Load → Edit → Serialize)", () => {
         await setup();
 
         const datasetApi = TestBed.inject(DatasetApi);
-        spyOn(datasetApi, "getSchemaFieldsByEventType").and.returnValue(
+        vi.spyOn(datasetApi, "getSchemaFieldsByEventType").mockReturnValue(
             of(mockGqlProjectionWithSchema(ORDER_SCHEMA_ODF_JSON)),
         );
 

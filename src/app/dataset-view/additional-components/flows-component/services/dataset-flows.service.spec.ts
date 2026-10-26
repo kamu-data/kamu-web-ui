@@ -15,6 +15,7 @@ import { Apollo } from "apollo-angular";
 import { provideToastr, ToastrService } from "ngx-toastr";
 
 import { requireValue } from "@common/helpers/app.helpers";
+import { stubMethod } from "@common/helpers/base-test.helpers.spec";
 import { DatasetFlowApi } from "@api/dataset-flow.api";
 import { AccountFragment, DatasetFlowProcessesDataFragment } from "@api/kamu.graphql.interface";
 import {
@@ -71,7 +72,7 @@ describe("DatasetFlowsService", () => {
     });
 
     it("should check get flows prcosses", () => {
-        spyOn(datasetFlowApi, "getDatasetFlowsProcesses").and.returnValue(of(mockDatasetFlowsProcessesQuery));
+        vi.spyOn(datasetFlowApi, "getDatasetFlowsProcesses").mockReturnValue(of(mockDatasetFlowsProcessesQuery));
         const subscription$ = service
             .datasetFlowsProcesses({
                 datasetId: MOCK_DATASET_ID,
@@ -82,11 +83,11 @@ describe("DatasetFlowsService", () => {
                 );
             });
 
-        expect(subscription$.closed).toBeTrue();
+        expect(subscription$.closed).toBe(true);
     });
 
     it("should check get dataset flows list", () => {
-        spyOn(datasetFlowApi, "getDatasetListFlows").and.returnValue(of(mockGetDatasetListFlowsQuery));
+        vi.spyOn(datasetFlowApi, "getDatasetListFlows").mockReturnValue(of(mockGetDatasetListFlowsQuery));
 
         const subscription$ = service
             .datasetFlowsList({
@@ -102,55 +103,55 @@ describe("DatasetFlowsService", () => {
                 );
             });
 
-        expect(subscription$.closed).toBeTrue();
+        expect(subscription$.closed).toBe(true);
     });
 
     it("should paused all flows with success", () => {
-        spyOn(datasetFlowApi, "datasetPauseFlows").and.returnValue(of(mockDatasetPauseFlowsMutationSuccess));
-        const toastrServiceSuccessSpy = spyOn(toastService, "success");
+        vi.spyOn(datasetFlowApi, "datasetPauseFlows").mockReturnValue(of(mockDatasetPauseFlowsMutationSuccess));
+        const toastrServiceSuccessSpy = stubMethod(toastService, "success");
 
         const subscription$ = service.datasetPauseFlows({ datasetId: MOCK_DATASET_ID }).subscribe(() => {
             expect(toastrServiceSuccessSpy).toHaveBeenCalledWith("Flows paused");
         });
 
-        expect(subscription$.closed).toBeTrue();
+        expect(subscription$.closed).toBe(true);
     });
 
     it("should paused all flows with error", () => {
-        spyOn(datasetFlowApi, "datasetPauseFlows").and.returnValue(of(mockDatasetPauseFlowsMutationError));
-        const toastrServiceErrorSpy = spyOn(toastService, "error");
+        vi.spyOn(datasetFlowApi, "datasetPauseFlows").mockReturnValue(of(mockDatasetPauseFlowsMutationError));
+        const toastrServiceErrorSpy = stubMethod(toastService, "error");
 
         const subscription$ = service.datasetPauseFlows({ datasetId: MOCK_DATASET_ID }).subscribe(() => {
             expect(toastrServiceErrorSpy).toHaveBeenCalledWith("Error, flows not paused");
         });
 
-        expect(subscription$.closed).toBeTrue();
+        expect(subscription$.closed).toBe(true);
     });
 
     it("should resumed all flows with success", () => {
-        spyOn(datasetFlowApi, "datasetResumeFlows").and.returnValue(of(mockDatasetResumeFlowsMutationSuccess));
-        const toastrServiceSuccessSpy = spyOn(toastService, "success");
+        vi.spyOn(datasetFlowApi, "datasetResumeFlows").mockReturnValue(of(mockDatasetResumeFlowsMutationSuccess));
+        const toastrServiceSuccessSpy = stubMethod(toastService, "success");
 
         const subscription$ = service.datasetResumeFlows({ datasetId: MOCK_DATASET_ID }).subscribe(() => {
             expect(toastrServiceSuccessSpy).toHaveBeenCalledWith("Flows resumed");
         });
 
-        expect(subscription$.closed).toBeTrue();
+        expect(subscription$.closed).toBe(true);
     });
 
     it("should resumed all flows with error", () => {
-        spyOn(datasetFlowApi, "datasetResumeFlows").and.returnValue(of(mockDatasetResumeFlowsMutationError));
-        const toastrServiceErrorSpy = spyOn(toastService, "error");
+        vi.spyOn(datasetFlowApi, "datasetResumeFlows").mockReturnValue(of(mockDatasetResumeFlowsMutationError));
+        const toastrServiceErrorSpy = stubMethod(toastService, "error");
 
         const subscription$ = service.datasetResumeFlows({ datasetId: MOCK_DATASET_ID }).subscribe(() => {
             expect(toastrServiceErrorSpy).toHaveBeenCalledWith("Error, flows not resumed");
         });
 
-        expect(subscription$.closed).toBeTrue();
+        expect(subscription$.closed).toBe(true);
     });
 
     it("should check trigger dataset ingest flow", () => {
-        spyOn(datasetFlowApi, "datasetTriggerIngestFlow").and.returnValue(of(mockDatasetTriggerIngestFlowMutation));
+        vi.spyOn(datasetFlowApi, "datasetTriggerIngestFlow").mockReturnValue(of(mockDatasetTriggerIngestFlowMutation));
 
         const subscription$ = service
             .datasetTriggerIngestFlow({ datasetId: MOCK_DATASET_ID })
@@ -158,24 +159,24 @@ describe("DatasetFlowsService", () => {
                 expect(result).toBe(true);
             });
 
-        expect(subscription$.closed).toBeTrue();
+        expect(subscription$.closed).toBe(true);
     });
 
     it("should check trigger dataset ingest flow with error", () => {
-        spyOn(datasetFlowApi, "datasetTriggerIngestFlow").and.returnValue(
+        vi.spyOn(datasetFlowApi, "datasetTriggerIngestFlow").mockReturnValue(
             of(mockDatasetTriggerIngestFlowMutationError),
         );
-        const toastrServiceErrorSpy = spyOn(toastService, "error");
+        const toastrServiceErrorSpy = stubMethod(toastService, "error");
 
         const subscription$ = service.datasetTriggerIngestFlow({ datasetId: MOCK_DATASET_ID }).subscribe(() => {
             expect(toastrServiceErrorSpy).toHaveBeenCalledWith("Error");
         });
 
-        expect(subscription$.closed).toBeTrue();
+        expect(subscription$.closed).toBe(true);
     });
 
     it("should check trigger dataset transform flow", () => {
-        spyOn(datasetFlowApi, "datasetTriggerTransformFlow").and.returnValue(
+        vi.spyOn(datasetFlowApi, "datasetTriggerTransformFlow").mockReturnValue(
             of(mockDatasetTriggerTransformFlowMutation),
         );
 
@@ -185,24 +186,24 @@ describe("DatasetFlowsService", () => {
                 expect(result).toBe(true);
             });
 
-        expect(subscription$.closed).toBeTrue();
+        expect(subscription$.closed).toBe(true);
     });
 
     it("should check trigger dataset transform flow with error", () => {
-        spyOn(datasetFlowApi, "datasetTriggerTransformFlow").and.returnValue(
+        vi.spyOn(datasetFlowApi, "datasetTriggerTransformFlow").mockReturnValue(
             of(mockDatasetTriggerTransformFlowMutationError),
         );
-        const toastrServiceErrorSpy = spyOn(toastService, "error");
+        const toastrServiceErrorSpy = stubMethod(toastService, "error");
 
         const subscription$ = service.datasetTriggerTransformFlow({ datasetId: MOCK_DATASET_ID }).subscribe(() => {
             expect(toastrServiceErrorSpy).toHaveBeenCalledWith("Error");
         });
 
-        expect(subscription$.closed).toBeTrue();
+        expect(subscription$.closed).toBe(true);
     });
 
     it("should check trigger dataset compaction flow", () => {
-        spyOn(datasetFlowApi, "datasetTriggerCompactionFlow").and.returnValue(
+        vi.spyOn(datasetFlowApi, "datasetTriggerCompactionFlow").mockReturnValue(
             of(mockDatasetTriggerCompactionFlowMutation),
         );
 
@@ -218,14 +219,14 @@ describe("DatasetFlowsService", () => {
                 expect(result).toBe(true);
             });
 
-        expect(subscription$.closed).toBeTrue();
+        expect(subscription$.closed).toBe(true);
     });
 
     it("should check trigger dataset compaction flow with error", () => {
-        spyOn(datasetFlowApi, "datasetTriggerCompactionFlow").and.returnValue(
+        vi.spyOn(datasetFlowApi, "datasetTriggerCompactionFlow").mockReturnValue(
             of(mockDatasetTriggerCompactionFlowMutationError),
         );
-        const toastrServiceErrorSpy = spyOn(toastService, "error");
+        const toastrServiceErrorSpy = stubMethod(toastService, "error");
 
         const subscription$ = service
             .datasetTriggerCompactionFlow({
@@ -236,11 +237,11 @@ describe("DatasetFlowsService", () => {
                 expect(toastrServiceErrorSpy).toHaveBeenCalledWith("Error");
             });
 
-        expect(subscription$.closed).toBeTrue();
+        expect(subscription$.closed).toBe(true);
     });
 
     it("should check trigger dataset reset flow", () => {
-        spyOn(datasetFlowApi, "datasetTriggerResetFlow").and.returnValue(of(mockDatasetTriggerResetFlowMutation));
+        vi.spyOn(datasetFlowApi, "datasetTriggerResetFlow").mockReturnValue(of(mockDatasetTriggerResetFlowMutation));
 
         const subscription$ = service
             .datasetTriggerResetFlow({
@@ -251,12 +252,14 @@ describe("DatasetFlowsService", () => {
                 expect(result).toBe(true);
             });
 
-        expect(subscription$.closed).toBeTrue();
+        expect(subscription$.closed).toBe(true);
     });
 
     it("should check trigger dataset reset flow with error", () => {
-        spyOn(datasetFlowApi, "datasetTriggerResetFlow").and.returnValue(of(mockDatasetTriggerResetFlowMutationError));
-        const toastrServiceErrorSpy = spyOn(toastService, "error");
+        vi.spyOn(datasetFlowApi, "datasetTriggerResetFlow").mockReturnValue(
+            of(mockDatasetTriggerResetFlowMutationError),
+        );
+        const toastrServiceErrorSpy = stubMethod(toastService, "error");
 
         const subscription$ = service
             .datasetTriggerResetFlow({
@@ -269,11 +272,11 @@ describe("DatasetFlowsService", () => {
                 expect(toastrServiceErrorSpy).toHaveBeenCalledWith("Error");
             });
 
-        expect(subscription$.closed).toBeTrue();
+        expect(subscription$.closed).toBe(true);
     });
 
     it("should check trigger dataset reset to metadata flow", () => {
-        spyOn(datasetFlowApi, "datasetTriggerResetToMetadataFlow").and.returnValue(
+        vi.spyOn(datasetFlowApi, "datasetTriggerResetToMetadataFlow").mockReturnValue(
             of(mockDatasetTriggerResetToMetadataFlowMutation),
         );
 
@@ -285,14 +288,14 @@ describe("DatasetFlowsService", () => {
                 expect(result).toBe(true);
             });
 
-        expect(subscription$.closed).toBeTrue();
+        expect(subscription$.closed).toBe(true);
     });
 
     it("should check trigger dataset reset to metadata flow with error", () => {
-        spyOn(datasetFlowApi, "datasetTriggerResetToMetadataFlow").and.returnValue(
+        vi.spyOn(datasetFlowApi, "datasetTriggerResetToMetadataFlow").mockReturnValue(
             of(mockDatasetTriggerResetToMetadataFlowMutationError),
         );
-        const toastrServiceErrorSpy = spyOn(toastService, "error");
+        const toastrServiceErrorSpy = stubMethod(toastService, "error");
 
         const subscription$ = service
             .datasetTriggerResetToMetadataFlow({
@@ -302,11 +305,11 @@ describe("DatasetFlowsService", () => {
                 expect(toastrServiceErrorSpy).toHaveBeenCalledWith("Error");
             });
 
-        expect(subscription$.closed).toBeTrue();
+        expect(subscription$.closed).toBe(true);
     });
 
     it("should check cancel flow", () => {
-        spyOn(datasetFlowApi, "cancelFlowRun").and.returnValue(of(mockCancelFlowRunMutationSuccess));
+        vi.spyOn(datasetFlowApi, "cancelFlowRun").mockReturnValue(of(mockCancelFlowRunMutationSuccess));
 
         const subscription$ = service
             .cancelFlowRun({ datasetId: MOCK_DATASET_ID, flowId: MOCK_FLOW_ID })
@@ -314,12 +317,12 @@ describe("DatasetFlowsService", () => {
                 expect(result).toEqual(true);
             });
 
-        expect(subscription$.closed).toBeTrue();
+        expect(subscription$.closed).toBe(true);
     });
 
     it("should check cancel flow with error", () => {
-        spyOn(datasetFlowApi, "cancelFlowRun").and.returnValue(of(mockCancelFlowRunMutationError));
-        const toastrServiceErrorSpy = spyOn(toastService, "error");
+        vi.spyOn(datasetFlowApi, "cancelFlowRun").mockReturnValue(of(mockCancelFlowRunMutationError));
+        const toastrServiceErrorSpy = stubMethod(toastService, "error");
 
         const subscription$ = service
             .cancelFlowRun({ datasetId: MOCK_DATASET_ID, flowId: MOCK_FLOW_ID })
@@ -330,11 +333,11 @@ describe("DatasetFlowsService", () => {
                 );
             });
 
-        expect(subscription$.closed).toBeTrue();
+        expect(subscription$.closed).toBe(true);
     });
 
     it("should check get flow by id with success", async () => {
-        spyOn(datasetFlowApi, "getFlowById").and.returnValue(of(mockGetFlowByIdQuerySuccess));
+        vi.spyOn(datasetFlowApi, "getFlowById").mockReturnValue(of(mockGetFlowByIdQuerySuccess));
 
         const result = await firstValueFrom(
             service.datasetFlowById({ datasetId: MOCK_DATASET_ID, flowId: MOCK_FLOW_ID }),
@@ -344,8 +347,8 @@ describe("DatasetFlowsService", () => {
     });
 
     it("should resolve an unknown flow to undefined without a toast", async () => {
-        spyOn(datasetFlowApi, "getFlowById").and.returnValue(of(mockGetFlowByIdQueryError));
-        const toastrServiceErrorSpy = spyOn(toastService, "error");
+        vi.spyOn(datasetFlowApi, "getFlowById").mockReturnValue(of(mockGetFlowByIdQueryError));
+        const toastrServiceErrorSpy = stubMethod(toastService, "error");
 
         const result = await firstValueFrom(
             service.datasetFlowById({ datasetId: MOCK_DATASET_ID, flowId: MOCK_FLOW_ID }),
@@ -356,7 +359,7 @@ describe("DatasetFlowsService", () => {
     });
 
     it("should check flows initiators", () => {
-        spyOn(datasetFlowApi, "getDatasetFlowsInitiators").and.returnValue(of(mockDatasetFlowsInitiatorsQuery));
+        vi.spyOn(datasetFlowApi, "getDatasetFlowsInitiators").mockReturnValue(of(mockDatasetFlowsInitiatorsQuery));
 
         const initiatorsBefore = [...mockDatasetFlowInitiators];
 
@@ -364,7 +367,7 @@ describe("DatasetFlowsService", () => {
             expect(data.map((initiator) => initiator.accountName)).toEqual(["bamu", "kamu", "kamu"]);
         });
 
-        expect(subscription$.closed).toBeTrue();
+        expect(subscription$.closed).toBe(true);
         expect(mockDatasetFlowInitiators).toEqual(initiatorsBefore);
     });
 });

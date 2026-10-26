@@ -13,6 +13,7 @@ import { of } from "rxjs";
 
 import { NgbActiveModal } from "@ng-bootstrap/ng-bootstrap";
 import { Apollo } from "apollo-angular";
+import type { Mock } from "vitest";
 
 import { registerMatSvgIcons, setComponentInput } from "@common/helpers/base-test.helpers.spec";
 
@@ -30,7 +31,7 @@ describe("DataAccessModalComponent", () => {
     let loggedUserService: LoggedUserService;
     let appConfigService: AppConfigService;
     let protocolsService: ProtocolsService;
-    let getProtocolsSpy: jasmine.Spy;
+    let getProtocolsSpy: Mock;
 
     beforeEach(() => {
         TestBed.configureTestingModule({
@@ -44,7 +45,7 @@ describe("DataAccessModalComponent", () => {
         loggedUserService = TestBed.inject(LoggedUserService);
         appConfigService = TestBed.inject(AppConfigService);
         protocolsService = TestBed.inject(ProtocolsService);
-        getProtocolsSpy = spyOn(protocolsService, "getProtocols").and.returnValue(of(mockDatasetEndPoints));
+        getProtocolsSpy = vi.spyOn(protocolsService, "getProtocols").mockReturnValue(of(mockDatasetEndPoints));
         component = fixture.componentInstance;
         setComponentInput(fixture, "datasetBasics", mockDatasetBasicsRootFragment);
         fixture.detectChanges();
@@ -57,7 +58,8 @@ describe("DataAccessModalComponent", () => {
     it("should check init protocols", () => {
         const accountName = component.datasetBasics.owner.accountName;
         const datasetName = component.datasetBasics.name;
-        expect(getProtocolsSpy).toHaveBeenCalledOnceWith({ accountName, datasetName });
+        expect(getProtocolsSpy).toHaveBeenCalledTimes(1);
+        expect(getProtocolsSpy).toHaveBeenCalledWith({ accountName, datasetName });
     });
 
     it("should check navigate to section", () => {
@@ -67,8 +69,8 @@ describe("DataAccessModalComponent", () => {
     });
 
     it("should check showApiTokensLink getter", () => {
-        spyOnProperty(loggedUserService, "isAuthenticated", "get").and.returnValue(true);
-        spyOnProperty(appConfigService, "featureFlags", "get").and.returnValue({
+        vi.spyOn(loggedUserService, "isAuthenticated", "get").mockReturnValue(true);
+        vi.spyOn(appConfigService, "featureFlags", "get").mockReturnValue({
             enableLogout: true,
             enableScheduling: true,
             enableDatasetEnvVarsManagement: true,

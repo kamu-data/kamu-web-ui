@@ -70,7 +70,7 @@ describe("SearchComponent", () => {
         const testCurrentPage = 2;
         setComponentInput(fixture, "search", testSearchValue);
         fixture.detectChanges();
-        const navigationServiceSpy = spyOn(navigationService, "navigateToSearch");
+        const navigationServiceSpy = vi.spyOn(navigationService, "navigateToSearch").mockImplementation(() => {});
         component.onPageChange(testCurrentPage);
         expect(component.currentPage).toBe(testCurrentPage);
         expect(navigationServiceSpy).toHaveBeenCalledWith(testSearchValue, testCurrentPage);
@@ -80,14 +80,14 @@ describe("SearchComponent", () => {
         const testSearchValue = "test";
         setComponentInput(fixture, "search", testSearchValue);
         fixture.detectChanges();
-        const navigationServiceSpy = spyOn(navigationService, "navigateToSearch");
+        const navigationServiceSpy = vi.spyOn(navigationService, "navigateToSearch").mockImplementation(() => {});
         component.onPageChange(1);
         expect(component.currentPage).toBe(1);
         expect(navigationServiceSpy).toHaveBeenCalledWith(testSearchValue);
     });
 
     it("should check search results update the dataset table", fakeAsync(() => {
-        spyOn(searchApi, "overviewDatasetSearch").and.returnValue(of(mockSearchOverviewResponse));
+        vi.spyOn(searchApi, "overviewDatasetSearch").mockReturnValue(of(mockSearchOverviewResponse));
         const testSearchQuery = "test";
         setComponentInput(fixture, "page", 1);
 

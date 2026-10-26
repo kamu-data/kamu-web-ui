@@ -15,14 +15,14 @@ import { ComponentFixture, TestBed } from "@angular/core/testing";
 
 import { NgSelectComponent } from "@ng-select/ng-select";
 
-import { findComponentInstance, registerMatSvgIcons } from "@common/helpers/base-test.helpers.spec";
+import { createSpyObj, findComponentInstance, registerMatSvgIcons } from "@common/helpers/base-test.helpers.spec";
 import { MaybeNull } from "@interface/app.types";
 import { DataSchemaField, OdfTypes } from "@interface/dataset-schema.interface";
 
 import { TypeEditorComponent } from "./components/type-editor/type-editor.component";
 import { EditSchemaTableComponent } from "./edit-schema-table.component";
 import { EditSchemaTableHarness } from "./edit-schema-table.harness";
-import { ORDER_SCHEMA, requireListField, selectNgSelectOption } from "./schema-editor.fixtures.spec";
+import { ORDER_SCHEMA, requireListField, selectNgSelectOption } from "./schema-editor.mock";
 
 // ---------------------------------------------------------------------------
 // TestHost
@@ -35,8 +35,10 @@ import { ORDER_SCHEMA, requireListField, selectNgSelectOption } from "./schema-e
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
 class TestHostComponent {
-    @Input() public fields: DataSchemaField[] = [];
-    @Output() public fieldsChange = new EventEmitter<DataSchemaField[]>();
+    @Input()
+    public fields: DataSchemaField[] = [];
+    @Output()
+    public fieldsChange = new EventEmitter<DataSchemaField[]>();
 
     public lastEmitted: MaybeNull<DataSchemaField[]> = null;
 
@@ -96,7 +98,7 @@ describe("EditSchemaTableComponent", () => {
             await setup();
             await table.addField("city");
             fixture.detectChanges();
-            expect(host.lastEmitted).toEqual([jasmine.objectContaining({ name: "city" })]);
+            expect(host.lastEmitted).toEqual([expect.objectContaining({ name: "city" })]);
         });
 
         it("empty-name save is a no-op — row count stays the same after cancel", async () => {
@@ -131,8 +133,8 @@ describe("EditSchemaTableComponent", () => {
             await table.startAddField();
             fixture.detectChanges();
 
-            expect(await table.isSaveDisabled()).toBeTrue();
-            expect(await table.isAddFieldDisabled()).toBeTrue();
+            expect(await table.isSaveDisabled()).toBe(true);
+            expect(await table.isAddFieldDisabled()).toBe(true);
         });
 
         it("clicking Add field while editing saves the current row and opens a new blank row", async () => {
@@ -150,12 +152,12 @@ describe("EditSchemaTableComponent", () => {
             editorComponent.typeChangeHandle({ kind: OdfTypes.Int64 });
             fixture.detectChanges();
 
-            expect(await table.isAddFieldDisabled()).toBeFalse();
+            expect(await table.isAddFieldDisabled()).toBe(false);
             await table.startAddField();
             fixture.detectChanges();
 
             expect(await table.getRowCount()).toBe(3);
-            expect(await table.isSaveDisabled()).toBeTrue();
+            expect(await table.isSaveDisabled()).toBe(true);
             expect(host.lastEmitted?.[0]).toEqual({ name: "identifier", type: { kind: OdfTypes.Int64 } });
             expect(host.lastEmitted?.[1]).toEqual(stringField("name"));
             expect(host.lastEmitted?.[2]).toEqual({ name: "", type: { kind: OdfTypes.String } });
@@ -190,7 +192,7 @@ describe("EditSchemaTableComponent", () => {
             fixture.detectChanges();
 
             expect(await table.getRowCount()).toBe(2);
-            expect(await table.hasDragHandle("id")).toBeFalse();
+            expect(await table.hasDragHandle("id")).toBe(false);
             expect(host.lastEmitted).toEqual([stringField("id"), stringField("name")]);
         });
 
@@ -205,7 +207,7 @@ describe("EditSchemaTableComponent", () => {
             fixture.detectChanges();
 
             expect(await table.getRowCount()).toBe(3);
-            expect(await table.hasDragHandle("id")).toBeFalse();
+            expect(await table.hasDragHandle("id")).toBe(false);
             expect(host.lastEmitted?.map((field) => field.name)).toEqual(["id", "name", "age"]);
         });
     });
@@ -285,7 +287,7 @@ describe("EditSchemaTableComponent", () => {
 
             await table.save();
             fixture.detectChanges();
-            expect(host.lastEmitted?.[0].type).toEqual(jasmine.objectContaining({ kind: OdfTypes.Int64 }));
+            expect(host.lastEmitted?.[0].type).toEqual(expect.objectContaining({ kind: OdfTypes.Int64 }));
         });
 
         it("loading a List<Struct> field, opening edit, and saving unchanged preserves the type shape", async () => {
@@ -482,7 +484,7 @@ describe("EditSchemaTableComponent", () => {
             fixture.detectChanges();
 
             // Row is no longer in edit mode (save-field button gone)
-            expect(await table.isSaveDisabled()).toBeTrue();
+            expect(await table.isSaveDisabled()).toBe(true);
             const names = await table.getFieldNames();
             expect(names).toContain("identifier");
             expect(names).not.toContain("id");
@@ -500,7 +502,7 @@ describe("EditSchemaTableComponent", () => {
 
             // Still in edit mode: provisional row still present
             expect(await table.getRowCount()).toBe(2);
-            expect(await table.isSaveDisabled()).toBeTrue();
+            expect(await table.isSaveDisabled()).toBe(true);
         });
 
         it("pressing Escape during add cancels and removes the provisional row", async () => {
@@ -569,15 +571,17 @@ describe("EditSchemaTableComponent", () => {
             previousIndex: number,
             currentIndex: number,
         ): CdkDragDrop<DataSchemaField[]> {
-            const dropList = jasmine.createSpyObj<CdkDropList<DataSchemaField[]>>("CdkDropList", ["getSortedItems"], {
-                data: component.fields,
-            });
+            const dropList = createSpyObj<CdkDropList<DataSchemaField[]>>(
+                { getSortedItems: undefined },
+                { data: component.fields },
+            );
             return {
                 previousIndex,
                 currentIndex,
-                item: jasmine.createSpyObj<CdkDrag<DataSchemaField>>("CdkDrag", ["reset"], {
-                    data: component.fields[previousIndex],
-                }),
+                item: createSpyObj<CdkDrag<DataSchemaField>>(
+                    { reset: undefined },
+                    { data: component.fields[previousIndex] },
+                ),
                 container: dropList,
                 previousContainer: dropList,
                 isPointerOverContainer: true,
@@ -635,23 +639,23 @@ describe("EditSchemaTableComponent", () => {
 
         it("drag handle is not rendered for a row currently being edited", async () => {
             await setup([stringField("id"), stringField("name")]);
-            expect(await table.hasDragHandle("id")).toBeTrue();
+            expect(await table.hasDragHandle("id")).toBe(true);
 
             await table.editField("id");
             fixture.detectChanges();
 
-            expect(await table.hasDragHandle("id")).toBeFalse();
+            expect(await table.hasDragHandle("id")).toBe(false);
         });
 
         it("dragDisabled is true while a row is being edited or added", async () => {
             await setup([stringField("id")]);
             const component = componentInstanceOf("root");
-            expect(component.dragDisabled).toBeFalse();
+            expect(component.dragDisabled).toBe(false);
 
             await table.startAddField();
             fixture.detectChanges();
 
-            expect(component.dragDisabled).toBeTrue();
+            expect(component.dragDisabled).toBe(true);
         });
 
         it("dragDisabled is true for parent and nested tables while a nested row is being edited", async () => {
@@ -660,20 +664,20 @@ describe("EditSchemaTableComponent", () => {
             const addressComponent = componentInstanceOf("root.address");
             const addressTable = await table.nestedTable("address");
 
-            expect(rootComponent.dragDisabled).toBeFalse();
-            expect(addressComponent.dragDisabled).toBeFalse();
+            expect(rootComponent.dragDisabled).toBe(false);
+            expect(addressComponent.dragDisabled).toBe(false);
 
             await addressTable.editField("street");
             fixture.detectChanges();
 
-            expect(rootComponent.dragDisabled).toBeTrue();
-            expect(addressComponent.dragDisabled).toBeTrue();
+            expect(rootComponent.dragDisabled).toBe(true);
+            expect(addressComponent.dragDisabled).toBe(true);
 
             await addressTable.save();
             fixture.detectChanges();
 
-            expect(rootComponent.dragDisabled).toBeFalse();
-            expect(addressComponent.dragDisabled).toBeFalse();
+            expect(rootComponent.dragDisabled).toBe(false);
+            expect(addressComponent.dragDisabled).toBe(false);
         });
 
         it("saves a nested Struct row before editing a root row", async () => {
@@ -688,7 +692,7 @@ describe("EditSchemaTableComponent", () => {
             await table.editField("id");
             fixture.detectChanges();
 
-            expect(await table.hasDragHandle("id")).toBeFalse();
+            expect(await table.hasDragHandle("id")).toBe(false);
             const emitted = host.lastEmitted ?? [];
             const addressFields = EditSchemaTableHarness.structFieldsOf(emitted, "address");
             expect(addressFields.map((field) => field.name)).toEqual(["road", "city"]);
@@ -710,7 +714,7 @@ describe("EditSchemaTableComponent", () => {
             await shippingTable.editField("carrier");
             fixture.detectChanges();
 
-            expect(await shippingTable.hasDragHandle("carrier")).toBeFalse();
+            expect(await shippingTable.hasDragHandle("carrier")).toBe(false);
             const emitted = host.lastEmitted ?? [];
             const addressFields = EditSchemaTableHarness.structFieldsOf(emitted, "address");
             expect(addressFields.map((field) => field.name)).toEqual(["road", "city"]);
@@ -729,9 +733,9 @@ describe("EditSchemaTableComponent", () => {
                 stringField("name"),
             ]);
 
-            expect(await table.hasEmptyStructIcon("empty")).toBeTrue();
-            expect(await table.hasEmptyStructIcon("address")).toBeFalse();
-            expect(await table.hasEmptyStructIcon("name")).toBeFalse();
+            expect(await table.hasEmptyStructIcon("empty")).toBe(true);
+            expect(await table.hasEmptyStructIcon("address")).toBe(false);
+            expect(await table.hasEmptyStructIcon("name")).toBe(false);
         });
 
         it("adding a field inside a nested Struct updates parent type.fields immutably", async () => {

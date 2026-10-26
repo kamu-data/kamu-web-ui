@@ -15,6 +15,7 @@ import { Apollo } from "apollo-angular";
 import { provideToastr, ToastrService } from "ngx-toastr";
 
 import { requireValue } from "@common/helpers/app.helpers";
+import { stubMethod } from "@common/helpers/base-test.helpers.spec";
 import { DatasetApi } from "@api/dataset.api";
 import { TEST_DATASET_ID } from "@api/mock/dataset.mock";
 
@@ -72,7 +73,7 @@ describe("DatasetAsVersionedFileService", () => {
     });
 
     it("should check #requestFileAsText with error", () => {
-        const toastrServiceErrorSpy = spyOn(toastService, "error");
+        const toastrServiceErrorSpy = stubMethod(toastService, "error");
         const testUrl = "/bad-file.txt";
 
         service.requestFileAsText(testUrl).subscribe({
@@ -99,7 +100,7 @@ describe("DatasetAsVersionedFileService", () => {
     });
 
     it("should check #requestFileAsJson with error", () => {
-        const toastrServiceErrorSpy = spyOn(toastService, "error");
+        const toastrServiceErrorSpy = stubMethod(toastService, "error");
         const testUrl = "/bad-file.json";
 
         service.requestFileAsJson(testUrl).subscribe({
@@ -118,9 +119,9 @@ describe("DatasetAsVersionedFileService", () => {
             fileInfo: mockVersionedFileEntryLatest,
             countVersions: mockDatasetAsVersionedFileQuery.datasets.byId?.asVersionedFile?.versions.totalCount,
         };
-        const getDatasetAsVersionedFileSpy = spyOn(datasetApi, "getDatasetAsVersionedFile").and.returnValue(
-            of(mockDatasetAsVersionedFileQuery),
-        );
+        const getDatasetAsVersionedFileSpy = vi
+            .spyOn(datasetApi, "getDatasetAsVersionedFile")
+            .mockReturnValue(of(mockDatasetAsVersionedFileQuery));
 
         service.requestDatasetAsVersionedFile(TEST_DATASET_ID).subscribe((data) => {
             expect(data).toEqual(mockVersionedFileView);
@@ -132,16 +133,17 @@ describe("DatasetAsVersionedFileService", () => {
     });
 
     it("should check #requestDatasetAsVersionedFileByVersion method", () => {
-        const emitLoadingFileDetailsChangedSpy = spyOn(service, "emitLoadingFileDetailsChanged");
+        const emitLoadingFileDetailsChangedSpy = vi
+            .spyOn(service, "emitLoadingFileDetailsChanged")
+            .mockImplementation(() => {});
         const mockVersionedFileView: VersionedFileView = {
             name: MOCK_VERSIONED_FILE_NAME,
             fileInfo: mockVersionedFileEntryByVersion,
             countVersions: mockDatasetAsVersionedFileByVersionQuery.datasets.byId?.asVersionedFile?.versions.totalCount,
         };
-        const getDatasetAsVersionedFileByVersionSpy = spyOn(
-            datasetApi,
-            "getDatasetAsVersionedFileByVersion",
-        ).and.returnValue(of(mockDatasetAsVersionedFileByVersionQuery));
+        const getDatasetAsVersionedFileByVersionSpy = vi
+            .spyOn(datasetApi, "getDatasetAsVersionedFileByVersion")
+            .mockReturnValue(of(mockDatasetAsVersionedFileByVersionQuery));
 
         service.requestDatasetAsVersionedFileByVersion(TEST_DATASET_ID, MOCK_VERSION).subscribe((data) => {
             expect(data).toEqual(mockVersionedFileView);
@@ -159,10 +161,9 @@ describe("DatasetAsVersionedFileService", () => {
             name: MOCK_VERSIONED_FILE_NAME,
             fileInfo: mockVersionedFileEntryByBlockHash,
         };
-        const getDatasetAsVersionedFileByBlockHashSpy = spyOn(
-            datasetApi,
-            "getDatasetAsVersionedFileByBlockHash",
-        ).and.returnValue(of(mockDatasetAsVersionedFileByBlockHashQuery));
+        const getDatasetAsVersionedFileByBlockHashSpy = vi
+            .spyOn(datasetApi, "getDatasetAsVersionedFileByBlockHash")
+            .mockReturnValue(of(mockDatasetAsVersionedFileByBlockHashQuery));
 
         service.requestDatasetAsVersionedFileByBlockHash(TEST_DATASET_ID, mockBlockHash).subscribe((data) => {
             expect(data).toEqual(mockVersionedFileView);
@@ -174,9 +175,9 @@ describe("DatasetAsVersionedFileService", () => {
         const mockResult = requireValue(
             mockVersionedFileContentUrlQuery.datasets.byId?.asVersionedFile?.asOf?.contentUrl.url ?? null,
         );
-        const getVersionedFileContentUrlSpy = spyOn(datasetApi, "getVersionedFileContentUrl").and.returnValue(
-            of(mockVersionedFileContentUrlQuery),
-        );
+        const getVersionedFileContentUrlSpy = vi
+            .spyOn(datasetApi, "getVersionedFileContentUrl")
+            .mockReturnValue(of(mockVersionedFileContentUrlQuery));
 
         service.getVersionedFileContentUrl(TEST_DATASET_ID, MOCK_VERSION).subscribe((data) => {
             expect(data).toEqual(mockResult);
@@ -185,7 +186,7 @@ describe("DatasetAsVersionedFileService", () => {
     });
 
     it("should check #downloadFile method", () => {
-        const toastrServiceErrorSpy = spyOn(toastService, "error");
+        const toastrServiceErrorSpy = stubMethod(toastService, "error");
         let mockVersionedFileView: VersionedFileView = {
             name: MOCK_VERSIONED_FILE_NAME,
             fileInfo: mockVersionedFileEntryByVersion,
@@ -197,7 +198,7 @@ describe("DatasetAsVersionedFileService", () => {
     });
 
     it("should check #downloadFile method when download file directly - URL is not expired", fakeAsync(() => {
-        spyOn(service, "isUrlExpired").and.returnValue(false);
+        vi.spyOn(service, "isUrlExpired").mockReturnValue(false);
         const mockVersionedFileView: VersionedFileView = {
             name: MOCK_VERSIONED_FILE_NAME,
             fileInfo: mockVersionedFileEntryByVersion,
@@ -215,15 +216,15 @@ describe("DatasetAsVersionedFileService", () => {
 
     it("should check #downloadFile method when download file directly - URL is  expired", () => {
         const contentUrl = mockVersionedFileEntryByVersion.contentUrl.url;
-        spyOn(service, "isUrlExpired").and.returnValue(true);
+        vi.spyOn(service, "isUrlExpired").mockReturnValue(true);
         const mockVersionedFileView: VersionedFileView = {
             name: MOCK_VERSIONED_FILE_NAME,
             fileInfo: mockVersionedFileEntryByVersion,
             countVersions: mockDatasetAsVersionedFileByVersionQuery.datasets.byId?.asVersionedFile?.versions.totalCount,
         };
-        const getVersionedFileContentUrlSpy = spyOn(service, "getVersionedFileContentUrl").and.returnValue(
-            of(contentUrl),
-        );
+        const getVersionedFileContentUrlSpy = vi
+            .spyOn(service, "getVersionedFileContentUrl")
+            .mockReturnValue(of(contentUrl));
         service.downloadFile(TEST_DATASET_ID, mockVersionedFileView);
 
         const req = httpMock.expectOne(contentUrl);

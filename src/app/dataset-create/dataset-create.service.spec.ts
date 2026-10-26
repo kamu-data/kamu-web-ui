@@ -62,9 +62,11 @@ describe("DatasetCreateService", () => {
                 },
             },
         };
-        spyOn(datasetApi, "createEmptyDataset").and.returnValue(of(mockResponseSuccess));
-        spyOnProperty(loggedUserService, "maybeCurrentlyLoggedInUser", "get").and.returnValue(mockAccountDetails);
-        const spyNavigateToDatasetView = spyOn(navigationService, "navigateToDatasetView");
+        vi.spyOn(datasetApi, "createEmptyDataset").mockReturnValue(of(mockResponseSuccess));
+        vi.spyOn(loggedUserService, "maybeCurrentlyLoggedInUser", "get").mockReturnValue(mockAccountDetails);
+        const spyNavigateToDatasetView = vi
+            .spyOn(navigationService, "navigateToDatasetView")
+            .mockImplementation(() => {});
 
         const datasetName = "my-test";
         service
@@ -83,7 +85,7 @@ describe("DatasetCreateService", () => {
     });
 
     it("should check creating empty dataset needs a logged user", () => {
-        spyOnProperty(loggedUserService, "maybeCurrentlyLoggedInUser", "get").and.returnValue(null);
+        vi.spyOn(loggedUserService, "maybeCurrentlyLoggedInUser", "get").mockReturnValue(null);
 
         const datasetName = "my-test";
         expect(() =>
@@ -106,9 +108,11 @@ describe("DatasetCreateService", () => {
                 },
             },
         };
-        spyOn(datasetApi, "createEmptyDataset").and.returnValue(of(mockResponseError));
-        spyOnProperty(loggedUserService, "maybeCurrentlyLoggedInUser", "get").and.returnValue(mockAccountDetails);
-        const spyNavigateToDatasetView = spyOn(navigationService, "navigateToDatasetView");
+        vi.spyOn(datasetApi, "createEmptyDataset").mockReturnValue(of(mockResponseError));
+        vi.spyOn(loggedUserService, "maybeCurrentlyLoggedInUser", "get").mockReturnValue(mockAccountDetails);
+        const spyNavigateToDatasetView = vi
+            .spyOn(navigationService, "navigateToDatasetView")
+            .mockImplementation(() => {});
 
         const datasetName = "my-test";
         service
@@ -137,9 +141,11 @@ describe("DatasetCreateService", () => {
                 },
             },
         };
-        spyOn(datasetApi, "createDatasetFromSnapshot").and.returnValue(of(mockResponseSuccess));
-        spyOnProperty(loggedUserService, "maybeCurrentlyLoggedInUser", "get").and.returnValue(mockAccountDetails);
-        const spyNavigateToDatasetView = spyOn(navigationService, "navigateToDatasetView");
+        vi.spyOn(datasetApi, "createDatasetFromSnapshot").mockReturnValue(of(mockResponseSuccess));
+        vi.spyOn(loggedUserService, "maybeCurrentlyLoggedInUser", "get").mockReturnValue(mockAccountDetails);
+        const spyNavigateToDatasetView = vi
+            .spyOn(navigationService, "navigateToDatasetView")
+            .mockImplementation(() => {});
 
         service
             .createDatasetFromSnapshot({ snapshot: "mockSnapshot", datasetVisibility: DatasetVisibility.Public })
@@ -153,7 +159,7 @@ describe("DatasetCreateService", () => {
     });
 
     it("should check creating dataset from snapshot needs a logged user", () => {
-        spyOnProperty(loggedUserService, "maybeCurrentlyLoggedInUser", "get").and.returnValue(null);
+        vi.spyOn(loggedUserService, "maybeCurrentlyLoggedInUser", "get").mockReturnValue(null);
 
         expect(() =>
             service.createDatasetFromSnapshot({
@@ -174,9 +180,11 @@ describe("DatasetCreateService", () => {
                 },
             },
         };
-        spyOn(datasetApi, "createDatasetFromSnapshot").and.returnValue(of(mockResponseError));
-        spyOnProperty(loggedUserService, "maybeCurrentlyLoggedInUser", "get").and.returnValue(mockAccountDetails);
-        const spyNavigateToDatasetView = spyOn(navigationService, "navigateToDatasetView");
+        vi.spyOn(datasetApi, "createDatasetFromSnapshot").mockReturnValue(of(mockResponseError));
+        vi.spyOn(loggedUserService, "maybeCurrentlyLoggedInUser", "get").mockReturnValue(mockAccountDetails);
+        const spyNavigateToDatasetView = vi
+            .spyOn(navigationService, "navigateToDatasetView")
+            .mockImplementation(() => {});
 
         service
             .createDatasetFromSnapshot({ snapshot: "mockSnapshot", datasetVisibility: DatasetVisibility.Public })
@@ -202,9 +210,11 @@ describe("DatasetCreateService", () => {
             datasetAlias: "my-collection",
             datasetVisibility: DatasetVisibility.Private,
         };
-        spyOn(datasetApi, "createDatasetAsCollection").and.returnValue(of(mockResponse));
-        spyOnProperty(loggedUserService, "maybeCurrentlyLoggedInUser", "get").and.returnValue(mockAccountDetails);
-        const navigateToDatasetViewSpy = spyOn(navigationService, "navigateToDatasetView");
+        vi.spyOn(datasetApi, "createDatasetAsCollection").mockReturnValue(of(mockResponse));
+        vi.spyOn(loggedUserService, "maybeCurrentlyLoggedInUser", "get").mockReturnValue(mockAccountDetails);
+        const navigateToDatasetViewSpy = vi
+            .spyOn(navigationService, "navigateToDatasetView")
+            .mockImplementation(() => {});
 
         service.createCollection(params).subscribe();
 
@@ -224,10 +234,12 @@ describe("DatasetCreateService", () => {
                 },
             },
         };
-        spyOn(datasetApi, "createDatasetAsCollection").and.returnValue(of(mockResponse));
-        spyOnProperty(loggedUserService, "maybeCurrentlyLoggedInUser", "get").and.returnValue(mockAccountDetails);
-        const emitErrorMessageChangedSpy = spyOn(service, "emitErrorMessageChanged");
-        const navigateToDatasetViewSpy = spyOn(navigationService, "navigateToDatasetView");
+        vi.spyOn(datasetApi, "createDatasetAsCollection").mockReturnValue(of(mockResponse));
+        vi.spyOn(loggedUserService, "maybeCurrentlyLoggedInUser", "get").mockReturnValue(mockAccountDetails);
+        const emitErrorMessageChangedSpy = vi.spyOn(service, "emitErrorMessageChanged").mockImplementation(() => {});
+        const navigateToDatasetViewSpy = vi
+            .spyOn(navigationService, "navigateToDatasetView")
+            .mockImplementation(() => {});
 
         service
             .createCollection({
@@ -236,12 +248,14 @@ describe("DatasetCreateService", () => {
             })
             .subscribe();
 
-        expect(emitErrorMessageChangedSpy).toHaveBeenCalledOnceWith("Collection already exists");
+        expect(emitErrorMessageChangedSpy).toHaveBeenCalledTimes(1);
+
+        expect(emitErrorMessageChangedSpy).toHaveBeenCalledWith("Collection already exists");
         expect(navigateToDatasetViewSpy).not.toHaveBeenCalled();
     });
 
     it("should require a logged user to create a collection", () => {
-        spyOnProperty(loggedUserService, "maybeCurrentlyLoggedInUser", "get").and.returnValue(null);
+        vi.spyOn(loggedUserService, "maybeCurrentlyLoggedInUser", "get").mockReturnValue(null);
 
         expect(() =>
             service.createCollection({
@@ -265,9 +279,11 @@ describe("DatasetCreateService", () => {
             datasetAlias: "my-versioned-file",
             datasetVisibility: DatasetVisibility.Private,
         };
-        spyOn(datasetApi, "createDatasetAsVersionedFile").and.returnValue(of(mockResponse));
-        spyOnProperty(loggedUserService, "maybeCurrentlyLoggedInUser", "get").and.returnValue(mockAccountDetails);
-        const navigateToDatasetViewSpy = spyOn(navigationService, "navigateToDatasetView");
+        vi.spyOn(datasetApi, "createDatasetAsVersionedFile").mockReturnValue(of(mockResponse));
+        vi.spyOn(loggedUserService, "maybeCurrentlyLoggedInUser", "get").mockReturnValue(mockAccountDetails);
+        const navigateToDatasetViewSpy = vi
+            .spyOn(navigationService, "navigateToDatasetView")
+            .mockImplementation(() => {});
 
         service.createVersionedFile(params).subscribe();
 
@@ -287,10 +303,12 @@ describe("DatasetCreateService", () => {
                 },
             },
         };
-        spyOn(datasetApi, "createDatasetAsVersionedFile").and.returnValue(of(mockResponse));
-        spyOnProperty(loggedUserService, "maybeCurrentlyLoggedInUser", "get").and.returnValue(mockAccountDetails);
-        const emitErrorMessageChangedSpy = spyOn(service, "emitErrorMessageChanged");
-        const navigateToDatasetViewSpy = spyOn(navigationService, "navigateToDatasetView");
+        vi.spyOn(datasetApi, "createDatasetAsVersionedFile").mockReturnValue(of(mockResponse));
+        vi.spyOn(loggedUserService, "maybeCurrentlyLoggedInUser", "get").mockReturnValue(mockAccountDetails);
+        const emitErrorMessageChangedSpy = vi.spyOn(service, "emitErrorMessageChanged").mockImplementation(() => {});
+        const navigateToDatasetViewSpy = vi
+            .spyOn(navigationService, "navigateToDatasetView")
+            .mockImplementation(() => {});
 
         service
             .createVersionedFile({
@@ -299,12 +317,14 @@ describe("DatasetCreateService", () => {
             })
             .subscribe();
 
-        expect(emitErrorMessageChangedSpy).toHaveBeenCalledOnceWith("Versioned file already exists");
+        expect(emitErrorMessageChangedSpy).toHaveBeenCalledTimes(1);
+
+        expect(emitErrorMessageChangedSpy).toHaveBeenCalledWith("Versioned file already exists");
         expect(navigateToDatasetViewSpy).not.toHaveBeenCalled();
     });
 
     it("should require a logged user to create a versioned file", () => {
-        spyOnProperty(loggedUserService, "maybeCurrentlyLoggedInUser", "get").and.returnValue(null);
+        vi.spyOn(loggedUserService, "maybeCurrentlyLoggedInUser", "get").mockReturnValue(null);
 
         expect(() =>
             service.createVersionedFile({

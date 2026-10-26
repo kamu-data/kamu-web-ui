@@ -17,14 +17,18 @@ import {
     findElementByDataTestId,
     registerMatSvgIcons,
     setComponentInput,
+    stubMethod,
 } from "@common/helpers/base-test.helpers.spec";
 import { DatasetApi } from "@api/dataset.api";
 
+import { DatasetViewTypeEnum } from "src/app/dataset-view/dataset-view.interface";
+import ProjectLinks from "src/app/project-links";
 import {
     mockCollectionEntryConnection,
     mockDatasetAsCollectionQuery,
     mockDatasetBasicsRootFragment,
 } from "src/app/search/mock.data";
+import { NavigationService } from "src/app/services/navigation.service";
 
 import { DatasetAsCollectionService } from "../../services/dataset-as-collection.service";
 import { DatasetService } from "./../../../../dataset.service";
@@ -47,7 +51,7 @@ describe("CollectionViewComponent", () => {
         registerMatSvgIcons();
 
         datasetAsCollectionService = TestBed.inject(DatasetAsCollectionService);
-        spyOn(datasetAsCollectionService, "loadCollectionInfo").and.returnValue(
+        vi.spyOn(datasetAsCollectionService, "loadCollectionInfo").mockReturnValue(
             of({ headChanged: false, connection: mockCollectionEntryConnection }),
         );
         datasetApi = TestBed.inject(DatasetApi);
@@ -65,7 +69,9 @@ describe("CollectionViewComponent", () => {
     });
 
     it("should check a collection loader", fakeAsync(() => {
-        spyOn(datasetApi, "getDatasetAsCollection").and.returnValue(of(mockDatasetAsCollectionQuery).pipe(delay(10)));
+        vi.spyOn(datasetApi, "getDatasetAsCollection").mockReturnValue(
+            of(mockDatasetAsCollectionQuery).pipe(delay(10)),
+        );
 
         tick(5);
         fixture.detectChanges();
@@ -100,12 +106,23 @@ describe("CollectionViewComponent", () => {
             extraData: {},
         };
         datasetAsCollectionService.cacheEntries.set(component.pathPrefix, [row]);
-        const isHeadHashBlockChangedSpy = spyOn(datasetService, "isHeadHashBlockChanged").and.returnValue(
-            of(true).pipe(),
-        );
+        const isHeadHashBlockChangedSpy = vi
+            .spyOn(datasetService, "isHeadHashBlockChanged")
+            .mockReturnValue(of(true).pipe());
+
+        const navigateToDatasetViewSpy = vi
+            .spyOn(TestBed.inject(NavigationService), "navigateToDatasetView")
+            .mockImplementation(() => {});
 
         component.dbClickTableRow(row);
         expect(isHeadHashBlockChangedSpy).toHaveBeenCalledTimes(1);
+        expect(navigateToDatasetViewSpy).toHaveBeenCalledTimes(1);
+        expect(navigateToDatasetViewSpy).toHaveBeenCalledWith({
+            accountName: mockDatasetBasicsRootFragment.owner.accountName,
+            datasetName: mockDatasetBasicsRootFragment.name,
+            tab: DatasetViewTypeEnum.Overview,
+            [ProjectLinks.URL_QUERY_PARAM_PATH_PREFIX]: component.pathPrefix,
+        });
     });
 
     it("should check double click on file row", () => {
@@ -122,14 +139,15 @@ describe("CollectionViewComponent", () => {
             contentType: "application/pdf",
             extraData: {},
         };
-        const isHeadHashBlockChangedSpy = spyOn(datasetService, "isHeadHashBlockChanged").and.returnValue(
-            of(true).pipe(),
-        );
-        const windowOpenSpy = spyOn(window, "open");
+        const isHeadHashBlockChangedSpy = vi
+            .spyOn(datasetService, "isHeadHashBlockChanged")
+            .mockReturnValue(of(true).pipe());
+        const windowOpenSpy = stubMethod(window, "open");
 
         component.dbClickTableRow(row);
         expect(isHeadHashBlockChangedSpy).toHaveBeenCalledTimes(0);
-        expect(windowOpenSpy).toHaveBeenCalledOnceWith("/account/test-file", "_blank");
+        expect(windowOpenSpy).toHaveBeenCalledTimes(1);
+        expect(windowOpenSpy).toHaveBeenCalledWith("/account/test-file", "_blank");
     });
 
     it("should check to select table row", () => {
@@ -154,12 +172,22 @@ describe("CollectionViewComponent", () => {
     });
 
     it("should check go up from folder", () => {
-        const isHeadHashBlockChangedSpy = spyOn(datasetService, "isHeadHashBlockChanged").and.returnValue(
-            of(true).pipe(),
-        );
+        const isHeadHashBlockChangedSpy = vi
+            .spyOn(datasetService, "isHeadHashBlockChanged")
+            .mockReturnValue(of(true).pipe());
+        const navigateToDatasetViewSpy = vi
+            .spyOn(TestBed.inject(NavigationService), "navigateToDatasetView")
+            .mockImplementation(() => {});
         component.currentPage = 2;
         component.goUp();
         expect(component.currentPage).toEqual(1);
         expect(isHeadHashBlockChangedSpy).toHaveBeenCalledTimes(1);
+        expect(navigateToDatasetViewSpy).toHaveBeenCalledTimes(1);
+        expect(navigateToDatasetViewSpy).toHaveBeenCalledWith({
+            accountName: mockDatasetBasicsRootFragment.owner.accountName,
+            datasetName: mockDatasetBasicsRootFragment.name,
+            tab: DatasetViewTypeEnum.Overview,
+            [ProjectLinks.URL_QUERY_PARAM_PATH_PREFIX]: "/",
+        });
     });
 });

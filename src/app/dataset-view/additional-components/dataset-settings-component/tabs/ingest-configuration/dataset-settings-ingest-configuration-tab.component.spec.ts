@@ -13,7 +13,7 @@ import { Apollo } from "apollo-angular";
 import { ApolloTestingModule } from "apollo-angular/testing";
 import { provideToastr } from "ngx-toastr";
 
-import { getElementByDataTestId, setComponentInput } from "@common/helpers/base-test.helpers.spec";
+import { getElementByDataTestId, setComponentInput, stubMethod } from "@common/helpers/base-test.helpers.spec";
 import { SharedTestModule } from "@common/modules/shared-test.module";
 import { FlowRetryBackoffType, TimeUnit } from "@api/kamu.graphql.interface";
 import { MaybeNull } from "@interface/app.types";
@@ -52,7 +52,10 @@ describe("DatasetSettingsIngestConfigurationTabComponent", () => {
     });
 
     async function createComponent(
-        ingestionRule: { fetchUncacheable: boolean; fetchNextIteration: boolean },
+        ingestionRule: {
+            fetchUncacheable: boolean;
+            fetchNextIteration: boolean;
+        },
         retryPolicy: MaybeNull<typeof MOCK_RETRY_POLICY>,
     ): Promise<void> {
         fixture = TestBed.createComponent(DatasetSettingsIngestConfigurationTabComponent);
@@ -81,11 +84,17 @@ describe("DatasetSettingsIngestConfigurationTabComponent", () => {
 
     // Helper function to validate form state consistency
     async function expectFormValueToEqual(expectedValue: {
-        ingestConfig: { fetchUncacheable: boolean; fetchNextIteration: boolean };
+        ingestConfig: {
+            fetchUncacheable: boolean;
+            fetchNextIteration: boolean;
+        };
         flowRetryPolicy: {
             retriesEnabled: boolean;
             maxAttempts: number;
-            minDelay: { every: number; unit: TimeUnit };
+            minDelay: {
+                every: number;
+                unit: TimeUnit;
+            };
             backoffType: FlowRetryBackoffType;
         };
     }): Promise<void> {
@@ -124,7 +133,7 @@ describe("DatasetSettingsIngestConfigurationTabComponent", () => {
         expect(component.form.status).toBe("VALID");
 
         const saveButton = getSaveButton();
-        expect(saveButton.disabled).toBeFalse();
+        expect(saveButton.disabled).toBe(false);
     });
 
     it("should check form is valid when loaded with ingestion rule enabled", async () => {
@@ -176,10 +185,7 @@ describe("DatasetSettingsIngestConfigurationTabComponent", () => {
     });
 
     it("should check 'Save' button works for ROOT dataset with ingest configuration", async () => {
-        const setDatasetIngestFlowConfigsSpy = spyOn(
-            datasetFlowConfigService,
-            "setDatasetIngestFlowConfigs",
-        ).and.callThrough();
+        const setDatasetIngestFlowConfigsSpy = vi.spyOn(datasetFlowConfigService, "setDatasetIngestFlowConfigs");
 
         await ingestConfigurationRuleFormHarness.enableFetchUncacheable();
         await ingestConfigurationRuleFormHarness.enableFetchNextIteration();
@@ -189,12 +195,12 @@ describe("DatasetSettingsIngestConfigurationTabComponent", () => {
         await flowRetryPolicyFormHarness.setBackoffType(FlowRetryBackoffType.Linear);
 
         const saveButton = getSaveButton();
-        expect(saveButton.disabled).toBeFalse();
+        expect(saveButton.disabled).toBe(false);
 
         saveButton.click();
 
         expect(setDatasetIngestFlowConfigsSpy).toHaveBeenCalledWith(
-            jasmine.objectContaining({
+            expect.objectContaining({
                 datasetId: mockDatasetBasicsRootFragment.id,
                 ingestConfigInput: { fetchUncacheable: true, fetchNextIteration: true },
                 retryPolicyInput: {
@@ -207,22 +213,19 @@ describe("DatasetSettingsIngestConfigurationTabComponent", () => {
     });
 
     it("should check 'Save' button works with only ingest configuration enabled", async () => {
-        const setDatasetIngestFlowConfigsSpy = spyOn(
-            datasetFlowConfigService,
-            "setDatasetIngestFlowConfigs",
-        ).and.callThrough();
+        const setDatasetIngestFlowConfigsSpy = vi.spyOn(datasetFlowConfigService, "setDatasetIngestFlowConfigs");
 
         await ingestConfigurationRuleFormHarness.enableFetchUncacheable();
         await ingestConfigurationRuleFormHarness.enableFetchNextIteration();
         // Keep retry policy disabled
 
         const saveButton = getSaveButton();
-        expect(saveButton.disabled).toBeFalse();
+        expect(saveButton.disabled).toBe(false);
 
         saveButton.click();
 
         expect(setDatasetIngestFlowConfigsSpy).toHaveBeenCalledWith(
-            jasmine.objectContaining({
+            expect.objectContaining({
                 datasetId: mockDatasetBasicsRootFragment.id,
                 ingestConfigInput: { fetchUncacheable: true, fetchNextIteration: true },
                 retryPolicyInput: null,
@@ -231,10 +234,7 @@ describe("DatasetSettingsIngestConfigurationTabComponent", () => {
     });
 
     it("should check 'Save' button works with only retry policy enabled", async () => {
-        const setDatasetIngestFlowConfigsSpy = spyOn(
-            datasetFlowConfigService,
-            "setDatasetIngestFlowConfigs",
-        ).and.callThrough();
+        const setDatasetIngestFlowConfigsSpy = vi.spyOn(datasetFlowConfigService, "setDatasetIngestFlowConfigs");
 
         // Keep ingest configuration disabled
         await flowRetryPolicyFormHarness.enableRetries();
@@ -243,12 +243,12 @@ describe("DatasetSettingsIngestConfigurationTabComponent", () => {
         await flowRetryPolicyFormHarness.setBackoffType(FlowRetryBackoffType.Fixed);
 
         const saveButton = getSaveButton();
-        expect(saveButton.disabled).toBeFalse();
+        expect(saveButton.disabled).toBe(false);
 
         saveButton.click();
 
         expect(setDatasetIngestFlowConfigsSpy).toHaveBeenCalledWith(
-            jasmine.objectContaining({
+            expect.objectContaining({
                 datasetId: mockDatasetBasicsRootFragment.id,
                 ingestConfigInput: { fetchUncacheable: false, fetchNextIteration: false },
                 retryPolicyInput: {
@@ -261,10 +261,7 @@ describe("DatasetSettingsIngestConfigurationTabComponent", () => {
     });
 
     it("should check 'Save' button is disabled when retry policy has invalid values", async () => {
-        const setDatasetIngestFlowConfigsSpy = spyOn(
-            datasetFlowConfigService,
-            "setDatasetIngestFlowConfigs",
-        ).and.stub();
+        const setDatasetIngestFlowConfigsSpy = stubMethod(datasetFlowConfigService, "setDatasetIngestFlowConfigs");
 
         await flowRetryPolicyFormHarness.enableRetries();
         await flowRetryPolicyFormHarness.setMaxAttempts(5);
@@ -276,7 +273,7 @@ describe("DatasetSettingsIngestConfigurationTabComponent", () => {
         await fixture.whenStable();
 
         const saveButton = getSaveButton();
-        expect(saveButton.disabled).toBeTrue();
+        expect(saveButton.disabled).toBe(true);
 
         saveButton.click(); // will be ignored
         expect(setDatasetIngestFlowConfigsSpy).not.toHaveBeenCalled();

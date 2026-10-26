@@ -23,7 +23,7 @@ LICENSE_EXEMPT = ["src/app/api/kamu.graphql.interface.ts", "src/app/editor/gener
 
 # Node tools run on the version `.nvmrc` pins, resolved through nvm
 NVMRC = ROOT / ".nvmrc"
-NODE_TOOLS = {"npm", "npx", "ng", "node", "eslint", "prettier", "stylelint", "tsc", "karma", "graphql-codegen"}
+NODE_TOOLS = {"npm", "npx", "ng", "node", "eslint", "prettier", "stylelint", "tsc", "vitest", "graphql-codegen"}
 SELECT_NODE = '. "$NVM_DIR/nvm.sh" && nvm use >/dev/null &&'
 
 # Same file set as `npm run prettier`; `.prettierignore` still applies to explicit paths
@@ -38,7 +38,7 @@ LINT_INPUTS = ["**/*.ts", "eslint.config.mjs", "tsconfig*.json", "package.json"]
 
 # Commands whose output is long and whose failures sit anywhere in it
 OUTPUT_HEAVY_NG = {"test", "t", "build", "b", "lint", "l", "e2e", "e"}
-OUTPUT_HEAVY_TOOLS = {"eslint", "stylelint", "prettier", "tsc", "karma", "graphql-codegen"}
+OUTPUT_HEAVY_TOOLS = {"eslint", "stylelint", "prettier", "tsc", "vitest", "graphql-codegen"}
 OUTPUT_HEAVY_NPM_SCRIPT = re.compile(r"^(test.*|lint.*|stylelint.*|build.*|prettier.*|gql-codegen)$")
 
 NPM_INSTALL = {"install", "i", "in", "add", "isntall"}
@@ -61,7 +61,7 @@ GUARD_OR_RESOLVER = ["src/app/**/*.guard.ts", "src/app/**/*.resolver.ts", "src/a
 
 RULES: list[tuple[re.Pattern[str], str, bool, list[str]]] = [
     # (pattern, message, applies to comment text only, files it applies to)
-    (re.compile(r"(?<![\w.$])(fdescribe|fit|xdescribe|xit)\s*\("), "focused or disabled tests never land; use `describe`/`it` (eslint `jasmine/no-focused-tests`, `jasmine/no-disabled-tests`)", False, SPEC),
+    (re.compile(r"(?<![\w.$])(describe|it|test|suite)\.(only|skip)\s*\("), "focused or disabled tests never land; use `describe`/`it` (eslint `vitest/no-focused-tests`, `vitest/no-disabled-tests`)", False, SPEC),
     (re.compile(r"\bconsole\.(log|debug|trace)\s*\("), "remove debugging output; report errors through the app's error handling (eslint `no-console`)", False, TS),
     (re.compile(r"eslint-disable"), "do not silence lints with `eslint-disable` — fix the cause, or ask the user first (AGENTS.md, 'Validation')", False, COMMENTED),
     (re.compile(r"\bstandalone\s*:\s*true\b"), "`standalone: true` is the Angular default; omit it (kamu-ui-angular-style)", False, TS),

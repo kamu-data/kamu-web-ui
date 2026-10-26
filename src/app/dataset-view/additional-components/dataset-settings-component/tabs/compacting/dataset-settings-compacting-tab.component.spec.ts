@@ -76,14 +76,18 @@ describe("DatasetSettingsCompactingTabComponent", () => {
     });
 
     it("should check run hard compacting", fakeAsync(() => {
-        const navigateToDatasetViewSpy = spyOn(navigationService, "navigateToDatasetView");
-        const runHardCompactionSpy = spyOn(datasetFlowsService, "datasetTriggerCompactionFlow").and.returnValue(
-            of(true),
-        );
-        const modalServiceSpy = spyOn(modalService, "error").and.callFake((options: ModalArgumentsInterface) => {
-            options.handler?.call(undefined, true);
-            return Promise.resolve("");
-        });
+        const navigateToDatasetViewSpy = vi
+            .spyOn(navigationService, "navigateToDatasetView")
+            .mockImplementation(() => {});
+        const runHardCompactionSpy = vi
+            .spyOn(datasetFlowsService, "datasetTriggerCompactionFlow")
+            .mockReturnValue(of(true));
+        const modalServiceSpy = vi
+            .spyOn(modalService, "error")
+            .mockImplementation((options: ModalArgumentsInterface) => {
+                options.handler?.call(undefined, true);
+                return Promise.resolve("");
+            });
         emitClickOnElementByDataTestId(fixture, "run-compaction-btn");
 
         expect(modalServiceSpy).toHaveBeenCalledTimes(1);
@@ -94,9 +98,11 @@ describe("DatasetSettingsCompactingTabComponent", () => {
     }));
 
     it("should navigate to flows after compaction only once the delay passes, and not after destroy", fakeAsync(() => {
-        const navigateToDatasetViewSpy = spyOn(navigationService, "navigateToDatasetView");
-        spyOn(datasetFlowsService, "datasetTriggerCompactionFlow").and.returnValue(of(true));
-        spyOn(modalService, "error").and.callFake((options: ModalArgumentsInterface) => {
+        const navigateToDatasetViewSpy = vi
+            .spyOn(navigationService, "navigateToDatasetView")
+            .mockImplementation(() => {});
+        vi.spyOn(datasetFlowsService, "datasetTriggerCompactionFlow").mockReturnValue(of(true));
+        vi.spyOn(modalService, "error").mockImplementation((options: ModalArgumentsInterface) => {
             options.handler?.call(undefined, true);
             return Promise.resolve("");
         });

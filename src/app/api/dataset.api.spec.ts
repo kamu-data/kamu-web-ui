@@ -183,7 +183,7 @@ describe("DatasetApi", () => {
                 ) {
                     expect(actualQuery.data.content).toEqual(expectedQuery.data.content);
                 } else {
-                    fail("expecting successful query");
+                    throw new Error("expecting successful query");
                 }
             });
 
@@ -370,7 +370,7 @@ describe("DatasetApi", () => {
 
         controller.expectOne(GetDatasetSchemaDocument).graphqlErrors([{ message: "Internal error" }]);
 
-        await expectAsync(result).toBeRejectedWithError("Internal error");
+        await expect(result).rejects.toThrowError("Internal error");
     });
 
     it("should fail reading a dataset schema on a network error", async () => {
@@ -378,7 +378,7 @@ describe("DatasetApi", () => {
 
         controller.expectOne(GetDatasetSchemaDocument).networkError(new Error("Server unreachable"));
 
-        await expectAsync(result).toBeRejectedWithError("Server unreachable");
+        await expect(result).rejects.toThrowError("Server unreachable");
     });
 
     it("should extract datasets by account name", fakeAsync(() => {
@@ -484,7 +484,7 @@ describe("DatasetApi", () => {
 
             tick();
 
-            expect(subscription$.closed).toBeTrue();
+            expect(subscription$.closed).toBe(true);
             flush();
         }));
     });
@@ -507,7 +507,7 @@ describe("DatasetApi", () => {
 
         tick();
 
-        expect(subscription.closed).toBeTrue();
+        expect(subscription.closed).toBe(true);
         flush();
     }));
 
@@ -538,7 +538,7 @@ describe("DatasetApi", () => {
 
         tick();
 
-        expect(subscription.closed).toBeTrue();
+        expect(subscription.closed).toBe(true);
         flush();
     }));
 
@@ -569,7 +569,7 @@ describe("DatasetApi", () => {
 
         tick();
 
-        expect(subscription.closed).toBeTrue();
+        expect(subscription.closed).toBe(true);
         flush();
     }));
 
@@ -789,7 +789,7 @@ describe("DatasetApi", () => {
                 .action()
                 .pipe(first())
                 .subscribe({
-                    next: () => fail("Unexpected success"),
+                    next: () => expect.fail("Unexpected success"),
                     error: (e: Error) => {
                         expect(CombinedGraphQLErrors.is(e)).toBe(true);
                         if (CombinedGraphQLErrors.is(e)) {
@@ -803,7 +803,7 @@ describe("DatasetApi", () => {
 
             tick();
 
-            expect(subscription$.closed).toBeTrue();
+            expect(subscription$.closed).toBe(true);
             flush();
         }));
     });

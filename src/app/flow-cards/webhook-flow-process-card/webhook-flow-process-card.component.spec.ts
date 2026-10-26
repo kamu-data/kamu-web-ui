@@ -54,11 +54,15 @@ describe("WebhookFlowProcessCardComponent", () => {
 
     it("should emit the subscription and its state when the state toggle is clicked", async () => {
         const card = await TestbedHarnessEnvironment.harnessForFixture(fixture, WebhookFlowProcessCardHarness);
-        const toggleWebhookCardStateEmitterSpy = spyOn(component.toggleWebhookCardStateEmitter, "emit");
+        const toggleWebhookCardStateEmitterSpy = vi
+            .spyOn(component.toggleWebhookCardStateEmitter, "emit")
+            .mockImplementation(() => {});
 
         await card.clickToggleState();
 
-        expect(toggleWebhookCardStateEmitterSpy).toHaveBeenCalledOnceWith({
+        expect(toggleWebhookCardStateEmitterSpy).toHaveBeenCalledTimes(1);
+
+        expect(toggleWebhookCardStateEmitterSpy).toHaveBeenCalledWith({
             datasetBasics: mockDatasetBasicsRootFragment,
             subscriptionId: MOCK_SUBSCRIPTION_ID,
             state: component.summary.effectiveState,
@@ -67,10 +71,10 @@ describe("WebhookFlowProcessCardComponent", () => {
 
     it("should disable the state toggle while an action is in progress", async () => {
         const card = await TestbedHarnessEnvironment.harnessForFixture(fixture, WebhookFlowProcessCardHarness);
-        expect(await card.isToggleStateDisabled()).toBeFalse();
+        expect(await card.isToggleStateDisabled()).toBe(false);
 
         setComponentInput(fixture, "actionInProgress", true);
 
-        expect(await card.isToggleStateDisabled()).toBeTrue();
+        expect(await card.isToggleStateDisabled()).toBe(true);
     });
 });

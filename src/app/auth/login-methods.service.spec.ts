@@ -39,35 +39,35 @@ describe("LoginMethodsService", () => {
 
     it("should start with no methods and no load failure", () => {
         expect(service.loginMethods).toEqual([]);
-        expect(service.loadFailed).toBeFalse();
+        expect(service.loadFailed).toBe(false);
     });
 
     it("should keep the loaded methods", async () => {
-        spyOn(authApi, "readEnabledLoginMethods").and.returnValue(
+        vi.spyOn(authApi, "readEnabledLoginMethods").mockReturnValue(
             of([AccountProvider.Password, AccountProvider.OauthGithub]),
         );
 
         await firstValueFrom(service.initialize());
 
         expect(service.loginMethods).toEqual([AccountProvider.Password, AccountProvider.OauthGithub]);
-        expect(service.loadFailed).toBeFalse();
+        expect(service.loadFailed).toBe(false);
     });
 
     it("should not report a failure when no method is enabled", async () => {
-        spyOn(authApi, "readEnabledLoginMethods").and.returnValue(of([]));
+        vi.spyOn(authApi, "readEnabledLoginMethods").mockReturnValue(of([]));
 
         await firstValueFrom(service.initialize());
 
         expect(service.loginMethods).toEqual([]);
-        expect(service.loadFailed).toBeFalse();
+        expect(service.loadFailed).toBe(false);
     });
 
     it("should report a failure and pass the error on when the methods cannot be loaded", async () => {
-        spyOn(authApi, "readEnabledLoginMethods").and.returnValue(throwError(() => new Error("Server unreachable")));
+        vi.spyOn(authApi, "readEnabledLoginMethods").mockReturnValue(throwError(() => new Error("Server unreachable")));
 
-        await expectAsync(firstValueFrom(service.initialize())).toBeRejectedWithError("Server unreachable");
+        await expect(firstValueFrom(service.initialize())).rejects.toThrowError("Server unreachable");
 
         expect(service.loginMethods).toEqual([]);
-        expect(service.loadFailed).toBeTrue();
+        expect(service.loadFailed).toBe(true);
     });
 });

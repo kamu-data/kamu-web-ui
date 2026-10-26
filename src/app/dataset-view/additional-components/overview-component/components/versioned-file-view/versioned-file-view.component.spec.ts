@@ -13,7 +13,7 @@ import { of } from "rxjs";
 import { Apollo } from "apollo-angular";
 import { provideToastr, ToastrService } from "ngx-toastr";
 
-import { setComponentInput } from "@common/helpers/base-test.helpers.spec";
+import { setComponentInput, stubMethod } from "@common/helpers/base-test.helpers.spec";
 import { SharedTestModule } from "@common/modules/shared-test.module";
 
 import { DatasetViewTypeEnum, VersionedFileView } from "src/app/dataset-view/dataset-view.interface";
@@ -70,11 +70,10 @@ describe("VersionedFileViewComponent", () => {
 
     it("should check ngOnInit", () => {
         const mockVersionedFileView: VersionedFileView = setMockObjectByContentType("text/plain");
-        const requestDatasetAsVersionedFileSpy = spyOn(
-            datasetAsVersionedFileService,
-            "requestDatasetAsVersionedFile",
-        ).and.returnValue(of(mockVersionedFileView));
-        spyOn(component, "setPreviewFileStrategy").and.returnValue(Promise.resolve());
+        const requestDatasetAsVersionedFileSpy = vi
+            .spyOn(datasetAsVersionedFileService, "requestDatasetAsVersionedFile")
+            .mockReturnValue(of(mockVersionedFileView));
+        vi.spyOn(component, "setPreviewFileStrategy").mockReturnValue(Promise.resolve());
 
         component.version$.next(0);
         fixture.detectChanges();
@@ -84,15 +83,13 @@ describe("VersionedFileViewComponent", () => {
 
     it("should check ngOnInit with version", () => {
         const mockVersionedFileView: VersionedFileView = setMockObjectByContentType("text/plain");
-        const requestDatasetAsVersionedFileSpy = spyOn(
-            datasetAsVersionedFileService,
-            "requestDatasetAsVersionedFile",
-        ).and.returnValue(of(mockVersionedFileView));
-        const requestDatasetAsVersionedFileByVersionSpy = spyOn(
-            datasetAsVersionedFileService,
-            "requestDatasetAsVersionedFileByVersion",
-        ).and.returnValue(of(mockVersionedFileView));
-        spyOn(component, "setPreviewFileStrategy").and.returnValue(Promise.resolve());
+        const requestDatasetAsVersionedFileSpy = vi
+            .spyOn(datasetAsVersionedFileService, "requestDatasetAsVersionedFile")
+            .mockReturnValue(of(mockVersionedFileView));
+        const requestDatasetAsVersionedFileByVersionSpy = vi
+            .spyOn(datasetAsVersionedFileService, "requestDatasetAsVersionedFileByVersion")
+            .mockReturnValue(of(mockVersionedFileView));
+        vi.spyOn(component, "setPreviewFileStrategy").mockReturnValue(Promise.resolve());
 
         component.version$.next(2);
         fixture.detectChanges();
@@ -109,7 +106,7 @@ describe("VersionedFileViewComponent", () => {
     });
 
     it("should check setPreviewFileStrategy method for text file", async () => {
-        const requestFileAsTextSpy = spyOn(datasetAsVersionedFileService, "requestFileAsText");
+        const requestFileAsTextSpy = stubMethod(datasetAsVersionedFileService, "requestFileAsText");
         const mockVersionedFileView: VersionedFileView = setMockObjectByContentType("text/plain");
         if (mockVersionedFileView.fileInfo) {
             await component.setPreviewFileStrategy(mockVersionedFileView);
@@ -128,7 +125,7 @@ describe("VersionedFileViewComponent", () => {
     });
 
     it("should check setPreviewFileStrategy method for json file", async () => {
-        const requestFileAsJsonSpy = spyOn(datasetAsVersionedFileService, "requestFileAsJson");
+        const requestFileAsJsonSpy = stubMethod(datasetAsVersionedFileService, "requestFileAsJson");
         const mockVersionedFileView: VersionedFileView = setMockObjectByContentType("application/json");
         if (mockVersionedFileView.fileInfo) {
             await component.setPreviewFileStrategy(mockVersionedFileView);
@@ -138,7 +135,7 @@ describe("VersionedFileViewComponent", () => {
     });
 
     it("should check setPreviewFileStrategy method for unspported file", async () => {
-        const toastrServiceInfoSpy = spyOn(toastrService, "info");
+        const toastrServiceInfoSpy = stubMethod(toastrService, "info");
         const mockVersionedFileView: VersionedFileView = setMockObjectByContentType("unsupported/type");
 
         if (mockVersionedFileView.fileInfo) {
@@ -149,10 +146,10 @@ describe("VersionedFileViewComponent", () => {
     });
 
     it("should check redirecr to latest version", () => {
-        const navigateToDatasetViewSpy = spyOn(navigationService, "navigateToDatasetView").and.returnValue();
+        const navigateToDatasetViewSpy = vi.spyOn(navigationService, "navigateToDatasetView").mockReturnValue();
         component.goToLatestVersionedFile();
         expect(navigateToDatasetViewSpy).toHaveBeenCalledWith(
-            jasmine.objectContaining({
+            expect.objectContaining({
                 tab: DatasetViewTypeEnum.Overview,
             }),
         );
@@ -164,7 +161,7 @@ describe("VersionedFileViewComponent", () => {
     });
 
     it("should check dowmload file", () => {
-        const downloadFileSpy = spyOn(datasetAsVersionedFileService, "downloadFile");
+        const downloadFileSpy = vi.spyOn(datasetAsVersionedFileService, "downloadFile").mockImplementation(() => {});
         component.downloadFile(MOCK_VERSIONED_VIEW_FILE);
         expect(downloadFileSpy).toHaveBeenCalledTimes(1);
     });

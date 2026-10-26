@@ -11,6 +11,7 @@ import { RedirectCommand, Router } from "@angular/router";
 import { firstValueFrom, Observable, of, throwError } from "rxjs";
 
 import { Apollo } from "apollo-angular";
+import type { Mock } from "vitest";
 
 import { expectPageNotFoundRedirect } from "@common/helpers/base-test.helpers.spec";
 
@@ -34,10 +35,10 @@ describe("dataset tab data helpers", () => {
         beforeEach(() => {
             datasetService = TestBed.inject(DatasetService);
             datasetSubsService = TestBed.inject(DatasetSubscriptionsService);
-            spyOnProperty(datasetSubsService, "permissionsChanges", "get").and.returnValue(
+            vi.spyOn(datasetSubsService, "permissionsChanges", "get").mockReturnValue(
                 of(mockFullPowerDatasetPermissionsFragment),
             );
-            spyOnProperty(datasetSubsService, "overviewChanges", "get").and.returnValue(of(mockOverviewUpdate));
+            vi.spyOn(datasetSubsService, "overviewChanges", "get").mockReturnValue(of(mockOverviewUpdate));
         });
 
         function resolve(): Promise<unknown> {
@@ -45,7 +46,7 @@ describe("dataset tab data helpers", () => {
         }
 
         it("should emit the dataset, its permissions and the overview", async () => {
-            spyOnProperty(datasetService, "datasetChanges", "get").and.returnValue(of(mockDatasetBasicsRootFragment));
+            vi.spyOn(datasetService, "datasetChanges", "get").mockReturnValue(of(mockDatasetBasicsRootFragment));
 
             const data = await resolve();
 
@@ -57,7 +58,7 @@ describe("dataset tab data helpers", () => {
         });
 
         it("should redirect to page not found when the dataset cannot be loaded", async () => {
-            spyOnProperty(datasetService, "datasetChanges", "get").and.returnValue(throwError(() => new Error("fail")));
+            vi.spyOn(datasetService, "datasetChanges", "get").mockReturnValue(throwError(() => new Error("fail")));
 
             const data = await resolve();
 
@@ -66,23 +67,24 @@ describe("dataset tab data helpers", () => {
     });
 
     describe("pageNotFoundIf", () => {
-        function apply(source: Observable<string | RedirectCommand>, isUnavailable: jasmine.Spy): Promise<unknown> {
+        function apply(source: Observable<string | RedirectCommand>, isUnavailable: Mock): Promise<unknown> {
             return firstValueFrom(
                 source.pipe(TestBed.runInInjectionContext(() => pageNotFoundIf<string>(isUnavailable))),
             );
         }
 
         it("should pass the value through when it is available", async () => {
-            const isUnavailable = jasmine.createSpy("isUnavailable").and.returnValue(false);
+            const isUnavailable = vi.fn().mockReturnValue(false);
 
             const data = await apply(of("value"), isUnavailable);
 
             expect(data).toEqual("value");
-            expect(isUnavailable).toHaveBeenCalledOnceWith("value");
+            expect(isUnavailable).toHaveBeenCalledTimes(1);
+            expect(isUnavailable).toHaveBeenCalledWith("value");
         });
 
         it("should redirect to page not found when the value is unavailable", async () => {
-            const isUnavailable = jasmine.createSpy("isUnavailable").and.returnValue(true);
+            const isUnavailable = vi.fn().mockReturnValue(true);
 
             const data = await apply(of("value"), isUnavailable);
 
@@ -90,7 +92,7 @@ describe("dataset tab data helpers", () => {
         });
 
         it("should pass a redirect from upstream through without checking it", async () => {
-            const isUnavailable = jasmine.createSpy("isUnavailable");
+            const isUnavailable = vi.fn();
             const upstreamRedirect = new RedirectCommand(TestBed.inject(Router).createUrlTree(["elsewhere"]));
 
             const data = await apply(of(upstreamRedirect), isUnavailable);

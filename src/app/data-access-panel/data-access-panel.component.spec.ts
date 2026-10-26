@@ -40,7 +40,7 @@ describe("DataAccessPanelComponent", () => {
     });
 
     it("should check open modal window", () => {
-        const ngbModalOpenSpy = spyOn(ngbModalService, "open").and.callThrough();
+        const ngbModalOpenSpy = vi.spyOn(ngbModalService, "open");
         component.openDataAccessModal();
         expect(ngbModalOpenSpy).toHaveBeenCalledTimes(1);
     });

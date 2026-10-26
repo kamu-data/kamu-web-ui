@@ -14,7 +14,11 @@ describe("MarkdownFormatPipe", () => {
         expect(pipe).toBeTruthy();
     });
 
-    const cases: { value: string; format: MarkdownSupportedFormats; expectedResult: string }[] = [
+    const cases: {
+        value: string;
+        format: MarkdownSupportedFormats;
+        expectedResult: string;
+    }[] = [
         {
             value: "version: 1",
             format: "yaml",

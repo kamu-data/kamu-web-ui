@@ -80,7 +80,7 @@ describe("AccessTokenApi", () => {
     it("should check create access token", () => {
         service.createAccessToken(TEST_ACCOUNT_ID, TOKEN_NAME).subscribe((data: CreateAccessTokenMutation) => {
             expect(data.accounts.byId?.accessTokens.createAccessToken).toEqual(
-                jasmine.objectContaining({
+                expect.objectContaining({
                     __typename: "CreateAccessTokenResultSuccess",
                     message: MOCK_CREATE_ACCESS_TOKEN_SUCCESS_MESSAGE,
                 }),
@@ -101,7 +101,7 @@ describe("AccessTokenApi", () => {
             .createAccessToken(TEST_ACCOUNT_ID, TOKEN_NAME)
             .pipe(first())
             .subscribe({
-                next: () => fail("Unexpected success"),
+                next: () => expect.fail("Unexpected success"),
                 error: (e: Error) => {
                     expect(CombinedGraphQLErrors.is(e)).toBe(true);
                 },
@@ -113,7 +113,7 @@ describe("AccessTokenApi", () => {
         op.graphqlErrors([mockLogin401Error]);
         tick();
 
-        expect(subscription$.closed).toBeTrue();
+        expect(subscription$.closed).toBe(true);
         flush();
     }));
 
@@ -137,7 +137,7 @@ describe("AccessTokenApi", () => {
             .revokeAccessToken(TEST_ACCOUNT_ID, TOKEN_ID)
             .pipe(first())
             .subscribe({
-                next: () => fail("Unexpected success"),
+                next: () => expect.fail("Unexpected success"),
                 error: (e: Error) => {
                     expect(CombinedGraphQLErrors.is(e)).toBe(true);
                 },
@@ -147,7 +147,7 @@ describe("AccessTokenApi", () => {
         op.graphqlErrors([mockLogin401Error]);
         tick();
 
-        expect(subscription$.closed).toBeTrue();
+        expect(subscription$.closed).toBe(true);
         flush();
     }));
 });

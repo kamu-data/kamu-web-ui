@@ -83,7 +83,7 @@ describe("MetadataBlockComponent", () => {
             MatSlideToggleHarness.with({ selector: '[data-test-id="yaml-toggle"]' }),
         );
 
-        const changeToggleSpy = spyOn(component, "toggleYamlView");
+        const changeToggleSpy = vi.spyOn(component, "toggleYamlView").mockImplementation(() => {});
 
         await matToggle.toggle();
 

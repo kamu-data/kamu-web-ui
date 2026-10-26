@@ -97,7 +97,7 @@ describe("DatasetFlowApi", () => {
                 const configType = res.datasets.byId?.flows.configs.byType;
                 const configRule = configType?.rule;
                 expect(configRule?.__typename).toEqual("FlowConfigRuleIngest");
-                expect(configRule).toEqual(jasmine.objectContaining({ fetchUncacheable: false }));
+                expect(configRule).toEqual(expect.objectContaining({ fetchUncacheable: false }));
             });
 
         const op = controller.expectOne(GetDatasetFlowConfigsDocument);

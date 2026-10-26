@@ -74,7 +74,9 @@ describe("AddPeopleModalComponent", () => {
     });
 
     it("should check search collaborator", fakeAsync(() => {
-        const searchCollaboratorSpy = spyOn(datasetCollaborationsService, "searchCollaborator").and.returnValue(of([]));
+        const searchCollaboratorSpy = vi
+            .spyOn(datasetCollaborationsService, "searchCollaborator")
+            .mockReturnValue(of([]));
         component.search(of("test")).subscribe();
         tick(AppValues.SHORT_DELAY_MS);
         expect(searchCollaboratorSpy).toHaveBeenCalledTimes(1);
@@ -84,10 +86,11 @@ describe("AddPeopleModalComponent", () => {
     it("should check save changes", () => {
         component.role = DatasetAccessRole.Editor;
         component.selectedCollaborator = mockDatasetSearchCollaboratorQuery.search.nameLookup.nodes[0];
-        const ngbActiveModalCloseSpy = spyOn(ngbActiveModal, "close");
+        const ngbActiveModalCloseSpy = vi.spyOn(ngbActiveModal, "close").mockImplementation(() => {});
         component.saveChanges();
-        expect(ngbActiveModalCloseSpy).toHaveBeenCalledOnceWith(
-            jasmine.objectContaining({ role: component.role, accountId: component.selectedCollaborator.id }),
+        expect(ngbActiveModalCloseSpy).toHaveBeenCalledTimes(1);
+        expect(ngbActiveModalCloseSpy).toHaveBeenCalledWith(
+            expect.objectContaining({ role: component.role, accountId: component.selectedCollaborator.id }),
         );
     });
 

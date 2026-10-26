@@ -50,9 +50,9 @@ describe("DatasetAsCollectionService", () => {
     it("should check #loadCollectionInfo method", () => {
         const PER_PAGE = 20;
         const PAGE = 0;
-        const getDatasetAsCollectionSpy = spyOn(datasetApi, "getDatasetAsCollection").and.returnValue(
-            of(mockDatasetAsCollectionQuery),
-        );
+        const getDatasetAsCollectionSpy = vi
+            .spyOn(datasetApi, "getDatasetAsCollection")
+            .mockReturnValue(of(mockDatasetAsCollectionQuery));
         service.loadCollectionDataChange({ path: "/", page: PAGE, headChanged: true });
 
         service.loadCollectionInfo(TEST_DATASET_ID, PER_PAGE).subscribe((data: CollectionEntriesResult) => {
@@ -64,9 +64,9 @@ describe("DatasetAsCollectionService", () => {
     it("should check #loadCollectionInfo method with scroll", () => {
         const PER_PAGE = 20;
         const PAGE = 0;
-        const getDatasetAsCollectionSpy = spyOn(datasetApi, "getDatasetAsCollection").and.returnValue(
-            of(mockDatasetAsCollectionQuery),
-        );
+        const getDatasetAsCollectionSpy = vi
+            .spyOn(datasetApi, "getDatasetAsCollection")
+            .mockReturnValue(of(mockDatasetAsCollectionQuery));
         service.loadCollectionDataChange({ path: "/", page: PAGE, scrollActivated: true, headChanged: false });
 
         service.loadCollectionInfo(TEST_DATASET_ID, PER_PAGE).subscribe((data: CollectionEntriesResult) => {

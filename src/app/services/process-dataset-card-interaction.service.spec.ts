@@ -11,8 +11,10 @@ import { lastValueFrom, Observable, of, toArray } from "rxjs";
 
 import { Apollo } from "apollo-angular";
 import { provideToastr } from "ngx-toastr";
+import type { Mock } from "vitest";
 
 import { ModalService } from "@common/components/modal/modal.service";
+import { stubMethod } from "@common/helpers/base-test.helpers.spec";
 import { FlowProcessEffectiveState } from "@api/kamu.graphql.interface";
 import { ModalArgumentsInterface } from "@interface/modal.interface";
 
@@ -34,8 +36,8 @@ describe("ProcessDatasetCardInteractionService", () => {
         modalService = TestBed.inject(ModalService);
     });
 
-    function answerConfirmModal(ok: boolean): jasmine.Spy {
-        return spyOn(modalService, "error").and.callFake((options: ModalArgumentsInterface) => {
+    function answerConfirmModal(ok: boolean): Mock {
+        return vi.spyOn(modalService, "error").mockImplementation((options: ModalArgumentsInterface) => {
             options.handler?.call(undefined, ok);
             return Promise.resolve("");
         });
@@ -51,25 +53,27 @@ describe("ProcessDatasetCardInteractionService", () => {
 
     describe("handleTrigger", () => {
         it("should trigger an ingest flow for a root dataset and emit its success", async () => {
-            const triggerIngestSpy = spyOn(flowsService, "datasetTriggerIngestFlow").and.returnValue(of(true));
-            const triggerTransformSpy = spyOn(flowsService, "datasetTriggerTransformFlow");
+            const triggerIngestSpy = vi.spyOn(flowsService, "datasetTriggerIngestFlow").mockReturnValue(of(true));
+            const triggerTransformSpy = stubMethod(flowsService, "datasetTriggerTransformFlow");
 
             expect(await emissions(service.handleTrigger(mockDatasetBasicsRootFragment))).toEqual([true]);
-            expect(triggerIngestSpy).toHaveBeenCalledOnceWith({ datasetId: mockDatasetBasicsRootFragment.id });
+            expect(triggerIngestSpy).toHaveBeenCalledTimes(1);
+            expect(triggerIngestSpy).toHaveBeenCalledWith({ datasetId: mockDatasetBasicsRootFragment.id });
             expect(triggerTransformSpy).not.toHaveBeenCalled();
         });
 
         it("should trigger a transform flow for a derivative dataset", async () => {
-            const triggerIngestSpy = spyOn(flowsService, "datasetTriggerIngestFlow");
-            const triggerTransformSpy = spyOn(flowsService, "datasetTriggerTransformFlow").and.returnValue(of(true));
+            const triggerIngestSpy = stubMethod(flowsService, "datasetTriggerIngestFlow");
+            const triggerTransformSpy = vi.spyOn(flowsService, "datasetTriggerTransformFlow").mockReturnValue(of(true));
 
             expect(await emissions(service.handleTrigger(mockDatasetBasicsDerivedFragment))).toEqual([true]);
-            expect(triggerTransformSpy).toHaveBeenCalledOnceWith({ datasetId: mockDatasetBasicsDerivedFragment.id });
+            expect(triggerTransformSpy).toHaveBeenCalledTimes(1);
+            expect(triggerTransformSpy).toHaveBeenCalledWith({ datasetId: mockDatasetBasicsDerivedFragment.id });
             expect(triggerIngestSpy).not.toHaveBeenCalled();
         });
 
         it("should emit `false` when the trigger fails", async () => {
-            spyOn(flowsService, "datasetTriggerIngestFlow").and.returnValue(of(false));
+            vi.spyOn(flowsService, "datasetTriggerIngestFlow").mockReturnValue(of(false));
 
             expect(await emissions(service.handleTrigger(mockDatasetBasicsRootFragment))).toEqual([false]);
         });
@@ -78,24 +82,25 @@ describe("ProcessDatasetCardInteractionService", () => {
     describe("handleToggleState", () => {
         [FlowProcessEffectiveState.Active, FlowProcessEffectiveState.Failing].forEach((state) => {
             it(`should pause the flows for state=${state} and emit once`, async () => {
-                const pauseSpy = spyOn(flowsService, "datasetPauseFlows").and.returnValue(of(void 0));
-                const resumeSpy = spyOn(flowsService, "datasetResumeFlows");
+                const pauseSpy = vi.spyOn(flowsService, "datasetPauseFlows").mockReturnValue(of(void 0));
+                const resumeSpy = stubMethod(flowsService, "datasetResumeFlows");
 
                 const toggled = await emissions(
                     service.handleToggleState({ state, datasetBasics: mockDatasetBasicsRootFragment }),
                 );
 
                 expect(toggled.length).toEqual(1);
-                expect(pauseSpy).toHaveBeenCalledOnceWith({ datasetId: mockDatasetBasicsRootFragment.id });
+                expect(pauseSpy).toHaveBeenCalledTimes(1);
+                expect(pauseSpy).toHaveBeenCalledWith({ datasetId: mockDatasetBasicsRootFragment.id });
                 expect(resumeSpy).not.toHaveBeenCalled();
             });
         });
 
         [FlowProcessEffectiveState.PausedManual, FlowProcessEffectiveState.StoppedAuto].forEach((state) => {
             it(`should resume the flows for state=${state} without asking, and emit once`, async () => {
-                const modalSpy = spyOn(modalService, "error");
-                const pauseSpy = spyOn(flowsService, "datasetPauseFlows");
-                const resumeSpy = spyOn(flowsService, "datasetResumeFlows").and.returnValue(of(void 0));
+                const modalSpy = stubMethod(modalService, "error");
+                const pauseSpy = stubMethod(flowsService, "datasetPauseFlows");
+                const resumeSpy = vi.spyOn(flowsService, "datasetResumeFlows").mockReturnValue(of(void 0));
 
                 const toggled = await emissions(
                     service.handleToggleState({ state, datasetBasics: mockDatasetBasicsRootFragment }),
@@ -103,7 +108,8 @@ describe("ProcessDatasetCardInteractionService", () => {
 
                 expect(toggled.length).toEqual(1);
                 expect(modalSpy).not.toHaveBeenCalled();
-                expect(resumeSpy).toHaveBeenCalledOnceWith({ datasetId: mockDatasetBasicsRootFragment.id });
+                expect(resumeSpy).toHaveBeenCalledTimes(1);
+                expect(resumeSpy).toHaveBeenCalledWith({ datasetId: mockDatasetBasicsRootFragment.id });
                 expect(pauseSpy).not.toHaveBeenCalled();
             });
         });
@@ -116,7 +122,7 @@ describe("ProcessDatasetCardInteractionService", () => {
             FlowProcessEffectiveState.PausedManual,
         ].forEach((state) => {
             it(`should let the toggle go ahead for state=${state} without asking`, async () => {
-                const modalSpy = spyOn(modalService, "error");
+                const modalSpy = stubMethod(modalService, "error");
 
                 expect((await emissions(service.confirmToggleState(state))).length).toEqual(1);
                 expect(modalSpy).not.toHaveBeenCalled();
@@ -139,9 +145,9 @@ describe("ProcessDatasetCardInteractionService", () => {
         });
 
         it("should neither emit nor complete while the confirmation stays unanswered", () => {
-            spyOn(modalService, "error").and.returnValue(Promise.resolve(""));
-            const next = jasmine.createSpy("next");
-            const complete = jasmine.createSpy("complete");
+            vi.spyOn(modalService, "error").mockReturnValue(Promise.resolve(""));
+            const next = vi.fn();
+            const complete = vi.fn();
 
             service.confirmToggleState(FlowProcessEffectiveState.StoppedAuto).subscribe({ next, complete });
 

@@ -58,7 +58,7 @@ describe("MetadataLicenseTabComponent", () => {
     });
 
     it("should check to open edit window", () => {
-        const openModalSpy = spyOn(modalService, "open").and.callThrough();
+        const openModalSpy = vi.spyOn(modalService, "open");
         component.onEditLicense();
         expect(openModalSpy).toHaveBeenCalledTimes(1);
     });

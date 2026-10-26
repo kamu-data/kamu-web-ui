@@ -12,6 +12,7 @@ import { TestBed } from "@angular/core/testing";
 import { Apollo } from "apollo-angular";
 import { provideToastr, ToastrService } from "ngx-toastr";
 
+import { stubMethod } from "@common/helpers/base-test.helpers.spec";
 import { ErrorTexts } from "@common/values/errors.text";
 
 import { AppConfigService } from "src/app/app-config.service";
@@ -58,14 +59,14 @@ describe("QueryExplainerService", () => {
 
     it("should proces query with proof with error", () => {
         const errorMessage = "Error";
-        const toastrServiceSpy = spyOn(toastrService, "error");
+        const toastrServiceSpy = stubMethod(toastrService, "error");
 
         const mockQuery = `select block_number,to from "kamu/net.rocketpool.reth.tokens-minted" order by offset limit 1`;
         service.processQueryWithProof(mockQuery).subscribe({
-            next: () => fail("should have failed with the 404 error"),
+            next: () => expect.fail("should have failed with the 404 error"),
             error: (error: HttpErrorResponse) => {
-                expect(error.status).withContext("status").toEqual(404);
-                expect(error.message).withContext("message").toEqual(errorMessage);
+                expect(error.status, "status").toEqual(404);
+                expect(error.message, "message").toEqual(errorMessage);
             },
         });
         const req = httpTestingController.expectOne(`${appConfigService.apiServerHttpUrl}/query`);
@@ -82,20 +83,20 @@ describe("QueryExplainerService", () => {
         const req = httpTestingController.expectOne(`${appConfigService.apiServerHttpUrl}/query`);
 
         expect(req.request.method).toEqual("POST");
-        expect(req.request.body).toEqual(jasmine.objectContaining({ include: ["Schema"], query: mockQuery }));
+        expect(req.request.body).toEqual(expect.objectContaining({ include: ["Schema"], query: mockQuery }));
         req.flush(mockResponse);
     });
 
     it("should return error when send query", () => {
         const mockQuery = `select block_number,to from "kamu/net.rocketpool.reth.tokens-minted" order by offset limit 1`;
         const errorMessage = "Error";
-        const toastrServiceSpy = spyOn(toastrService, "error");
+        const toastrServiceSpy = stubMethod(toastrService, "error");
 
         service.processQueryWithSchema(mockQuery).subscribe({
-            next: () => fail("should have failed with the 404 error"),
+            next: () => expect.fail("should have failed with the 404 error"),
             error: (error: HttpErrorResponse) => {
-                expect(error.status).withContext("status").toEqual(404);
-                expect(error.message).withContext("message").toEqual(errorMessage);
+                expect(error.status, "status").toEqual(404);
+                expect(error.message, "message").toEqual(errorMessage);
             },
         });
         const req = httpTestingController.expectOne(`${appConfigService.apiServerHttpUrl}/query`);
@@ -114,13 +115,13 @@ describe("QueryExplainerService", () => {
 
     it("should return unsupported error when verify query", () => {
         const errorMessage = "Error";
-        const toastrServiceSpy = spyOn(toastrService, "error");
+        const toastrServiceSpy = stubMethod(toastrService, "error");
 
         service.verifyQuery(mockQueryExplainerResponse).subscribe({
-            next: () => fail("should have failed with the 404 error"),
+            next: () => expect.fail("should have failed with the 404 error"),
             error: (error: HttpErrorResponse) => {
-                expect(error.status).withContext("status").toEqual(404);
-                expect(error.message).withContext("message").toEqual(errorMessage);
+                expect(error.status, "status").toEqual(404);
+                expect(error.message, "message").toEqual(errorMessage);
             },
         });
         const req = httpTestingController.expectOne(`${appConfigService.apiServerHttpUrl}/verify`);
@@ -130,48 +131,55 @@ describe("QueryExplainerService", () => {
 
     it("should show the plain-text body of a rejected verification", () => {
         const errorText = "Failed to deserialize the JSON body into the target type: output: unknown field";
-        const toastrServiceSpy = spyOn(toastrService, "error");
-        const nextSpy = jasmine.createSpy("next");
+        const toastrServiceSpy = stubMethod(toastrService, "error");
+        const nextSpy = vi.fn();
 
         service.verifyQuery(mockQueryExplainerResponse).subscribe(nextSpy);
         const req = httpTestingController.expectOne(`${appConfigService.apiServerHttpUrl}/verify`);
         req.flush(errorText, { status: 422, statusText: "Unprocessable Entity" });
 
         expect(nextSpy).not.toHaveBeenCalled();
-        expect(toastrServiceSpy).toHaveBeenCalledOnceWith("", errorText, { disableTimeOut: "timeOut" });
+        expect(toastrServiceSpy).toHaveBeenCalledTimes(1);
+        expect(toastrServiceSpy).toHaveBeenCalledWith("", errorText, { disableTimeOut: "timeOut" });
     });
 
     it("should show the JSON message of a failed verification", () => {
         const errorMessage = "Internal error";
-        const toastrServiceSpy = spyOn(toastrService, "error");
+        const toastrServiceSpy = stubMethod(toastrService, "error");
 
         service.verifyQuery(mockQueryExplainerResponse).subscribe();
         const req = httpTestingController.expectOne(`${appConfigService.apiServerHttpUrl}/verify`);
         req.flush({ message: errorMessage }, { status: 500, statusText: "Internal Server Error" });
 
-        expect(toastrServiceSpy).toHaveBeenCalledOnceWith("", errorMessage, { disableTimeOut: "timeOut" });
+        expect(toastrServiceSpy).toHaveBeenCalledTimes(1);
+
+        expect(toastrServiceSpy).toHaveBeenCalledWith("", errorMessage, { disableTimeOut: "timeOut" });
     });
 
     it("should show a generic text when a failed verification has no body", () => {
-        const toastrServiceSpy = spyOn(toastrService, "error");
+        const toastrServiceSpy = stubMethod(toastrService, "error");
 
         service.verifyQuery(mockQueryExplainerResponse).subscribe();
         const req = httpTestingController.expectOne(`${appConfigService.apiServerHttpUrl}/verify`);
         req.flush(null, { status: 502, statusText: "Bad Gateway" });
 
-        expect(toastrServiceSpy).toHaveBeenCalledOnceWith("", ErrorTexts.ERROR_TITLE_REQUEST_FAILED, {
+        expect(toastrServiceSpy).toHaveBeenCalledTimes(1);
+
+        expect(toastrServiceSpy).toHaveBeenCalledWith("", ErrorTexts.ERROR_TITLE_REQUEST_FAILED, {
             disableTimeOut: "timeOut",
         });
     });
 
     it("should show an error for a query with proof that has sub-queries", () => {
-        const toastrServiceSpy = spyOn(toastrService, "error");
+        const toastrServiceSpy = stubMethod(toastrService, "error");
 
         service.processQueryWithProof("select 1").subscribe();
         const req = httpTestingController.expectOne(`${appConfigService.apiServerHttpUrl}/query`);
         req.flush({ ...mockQueryExplainerResponse, subQueries: [mockQueryExplainerResponse] });
 
-        expect(toastrServiceSpy).toHaveBeenCalledOnceWith("", "Unsupported subQueries array", {
+        expect(toastrServiceSpy).toHaveBeenCalledTimes(1);
+
+        expect(toastrServiceSpy).toHaveBeenCalledWith("", "Unsupported subQueries array", {
             disableTimeOut: "timeOut",
         });
     });
@@ -191,14 +199,14 @@ describe("QueryExplainerService", () => {
 
     it("should return error when fetch commitment data by upload token", () => {
         const errorMessage = "Uploaded file not found on the server";
-        const toastrServiceSpy = spyOn(toastrService, "error");
+        const toastrServiceSpy = stubMethod(toastrService, "error");
         const uploadToken = "dfdflLKDsddfdddlfdsdsjkpbfopofoFDdfdf";
 
         service.fetchCommitmentDataByUploadToken(uploadToken).subscribe({
-            next: () => fail("should have failed with the 404 error"),
+            next: () => expect.fail("should have failed with the 404 error"),
             error: (error: HttpErrorResponse) => {
-                expect(error.status).withContext("status").toEqual(404);
-                expect(error.message).withContext("message").toEqual(errorMessage);
+                expect(error.status, "status").toEqual(404);
+                expect(error.message, "message").toEqual(errorMessage);
             },
         });
         const req = httpTestingController.expectOne(

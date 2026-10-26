@@ -25,6 +25,8 @@ import {
 
 import { firstValueFrom, isObservable } from "rxjs";
 
+import type { Mock, Mocked } from "vitest";
+
 import { MaybeNull, MaybeUndefined } from "@interface/app.types";
 
 import ProjectLinks from "src/app/project-links";
@@ -379,7 +381,7 @@ export function expectPageNotFoundRedirect(result: unknown): void {
     if (result instanceof RedirectCommand) {
         const redirectUrl = TestBed.inject(Router).serializeUrl(result.redirectTo);
         expect(redirectUrl).toEqual(`/${ProjectLinks.URL_PAGE_NOT_FOUND}`);
-        expect(result.navigationBehaviorOptions?.skipLocationChange).toBeTrue();
+        expect(result.navigationBehaviorOptions?.skipLocationChange).toBe(true);
     }
 }
 
@@ -457,4 +459,40 @@ export async function runResolver<T>(
 /** A `Uint64` value as the API sends it: a string, although codegen types the scalar as a number. */
 export function uint64FromApi(value: string): number {
     return value as unknown as number;
+}
+
+// Methods of `T`, without those every object inherits, which an object literal would otherwise have to match.
+type MethodKey<T> = Exclude<
+    { [K in keyof T]: T[K] extends (...args: never[]) => unknown ? K : never }[keyof T],
+    "toString" | "toLocaleString" | "valueOf"
+>;
+
+/**
+ * An object typed as `T` that has only the listed methods, each a `vi.fn()` returning the given
+ * value (`undefined` when none is given), and the given properties. Other members of `T` are
+ * absent, so the code under test must not reach them.
+ */
+export function createSpyObj<T extends object>(
+    returnValues: { [K in MethodKey<T>]?: T[K] extends (...args: never[]) => infer R ? R : never },
+    properties: Partial<T> = {},
+): Mocked<T> {
+    const spyObj: Record<string, unknown> = { ...properties };
+    for (const [name, value] of Object.entries(returnValues)) {
+        spyObj[name] = vi.fn().mockReturnValue(value);
+    }
+    return spyObj as unknown as Mocked<T>;
+}
+
+/**
+ * Replaces `object[method]` with a mock that does nothing and returns `undefined`, for a method
+ * whose result the code under test ignores. A plain `vi.spyOn` would call the real method.
+ */
+export function stubMethod<T extends object, K extends MethodKey<T>>(
+    object: T,
+    method: K,
+): Mock<T[K] extends (...args: infer A) => infer R ? (...args: A) => R : never> {
+    const spy = vi
+        .spyOn(object as unknown as Record<string, () => void>, method as string)
+        .mockImplementation(() => undefined);
+    return spy as unknown as Mock<T[K] extends (...args: infer A) => infer R ? (...args: A) => R : never>;
 }

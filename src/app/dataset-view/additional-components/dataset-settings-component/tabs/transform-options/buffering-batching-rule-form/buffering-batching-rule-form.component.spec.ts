@@ -72,7 +72,7 @@ describe("BufferingBatchingRuleFormComponent", () => {
             maxBatchingInterval: { every: 10, unit: TimeUnit.Minutes },
         });
         expect(component.form.getRawValue()).toEqual(domFormValue);
-        expect(component.form.valid).toBeTrue();
+        expect(component.form.valid).toBe(true);
     });
 
     it("should check min records required error", async () => {
@@ -80,10 +80,10 @@ describe("BufferingBatchingRuleFormComponent", () => {
         await bufferingBatchingRuleHarness.setMinRecordsToAwait("");
 
         // Ensure errors and status are set correctly
-        expect(component.form.invalid).toBeTrue();
+        expect(component.form.invalid).toBe(true);
         expect(component.form.errors).toBeNull();
 
-        expect(component.form.controls.minRecordsToAwait.invalid).toBeTrue();
+        expect(component.form.controls.minRecordsToAwait.invalid).toBe(true);
         expect(component.form.controls.minRecordsToAwait.errors).toEqual({
             required: true,
         });
@@ -97,10 +97,10 @@ describe("BufferingBatchingRuleFormComponent", () => {
         await bufferingBatchingRuleHarness.setMinRecordsToAwait(0);
 
         // Ensure errors and status are set correctly
-        expect(component.form.invalid).toBeTrue();
+        expect(component.form.invalid).toBe(true);
         expect(component.form.errors).toBeNull();
 
-        expect(component.form.controls.minRecordsToAwait.invalid).toBeTrue();
+        expect(component.form.controls.minRecordsToAwait.invalid).toBe(true);
         expect(component.form.controls.minRecordsToAwait.errors).toEqual({
             min: { min: 1, actual: 0 },
         });
@@ -115,13 +115,13 @@ describe("BufferingBatchingRuleFormComponent", () => {
         await bufferingBatchingRuleHarness.setMaxBatchingInterval({ every: 100, unit: TimeUnit.Minutes }); // Invalid value
 
         // Ensure errors and status are set correctly
-        expect(component.form.invalid).toBeTrue();
+        expect(component.form.invalid).toBe(true);
         expect(component.form.errors).toBeNull();
 
-        expect(component.form.controls.minRecordsToAwait.invalid).toBeFalse();
+        expect(component.form.controls.minRecordsToAwait.invalid).toBe(false);
         expect(component.form.controls.minRecordsToAwait.errors).toBeNull();
 
-        expect(component.form.controls.maxBatchingInterval.invalid).toBeTrue();
+        expect(component.form.controls.maxBatchingInterval.invalid).toBe(true);
         expect(component.form.controls.maxBatchingInterval.get("every")?.errors).toEqual({
             range: {
                 message: "Value should be between 1 to 60",

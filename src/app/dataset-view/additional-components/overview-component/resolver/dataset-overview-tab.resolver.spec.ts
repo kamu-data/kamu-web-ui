@@ -36,13 +36,13 @@ describe("datasetOverviewTabResolverFn", () => {
     }
 
     function mockStreams(failing?: "datasetChanges" | "permissionsChanges" | "overviewChanges"): void {
-        spyOnProperty(datasetService, "datasetChanges", "get").and.returnValue(
+        vi.spyOn(datasetService, "datasetChanges", "get").mockReturnValue(
             failing === "datasetChanges" ? failingStream() : of(mockDatasetBasicsRootFragment),
         );
-        spyOnProperty(datasetSubsService, "permissionsChanges", "get").and.returnValue(
+        vi.spyOn(datasetSubsService, "permissionsChanges", "get").mockReturnValue(
             failing === "permissionsChanges" ? failingStream() : of(mockFullPowerDatasetPermissionsFragment),
         );
-        spyOnProperty(datasetSubsService, "overviewChanges", "get").and.returnValue(
+        vi.spyOn(datasetSubsService, "overviewChanges", "get").mockReturnValue(
             failing === "overviewChanges" ? failingStream() : of(mockOverviewUpdate),
         );
     }

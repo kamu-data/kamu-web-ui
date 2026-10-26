@@ -12,6 +12,7 @@ import { of } from "rxjs";
 import { Apollo } from "apollo-angular";
 import { provideToastr, ToastrService } from "ngx-toastr";
 
+import { stubMethod } from "@common/helpers/base-test.helpers.spec";
 import { AccessTokenApi } from "@api/access-token.api";
 import { AccessTokenConnectionDataFragment, CreatedAccessTokenDataFragment } from "@api/kamu.graphql.interface";
 import {
@@ -50,9 +51,9 @@ describe("AccessTokenService", () => {
     });
 
     it("check list access tokens", () => {
-        const listAccessTokensSpy = spyOn(accessTokenApi, "listAccessTokens").and.returnValue(
-            of(mockListAccessTokensQuery),
-        );
+        const listAccessTokensSpy = vi
+            .spyOn(accessTokenApi, "listAccessTokens")
+            .mockReturnValue(of(mockListAccessTokensQuery));
         const subscription$ = service
             .listAccessTokens({ accountId: TEST_ACCOUNT_ID, page: PAGE, perPage: PER_PAGE })
             .subscribe((data: AccessTokenConnectionDataFragment) => {
@@ -60,15 +61,15 @@ describe("AccessTokenService", () => {
             });
 
         expect(listAccessTokensSpy).toHaveBeenCalledTimes(1);
-        expect(subscription$.closed).toBeTrue();
+        expect(subscription$.closed).toBe(true);
     });
 
     it("check create access token with success", () => {
         const result = "ka_A55WZV0WB12CXBQ8GST7FC80T95JKMSXHJ93Q08TJFRVE0N5Q2APVQVZM0";
-        const toastrServiceSuccessSpy = spyOn(toastrService, "success");
-        const createAccessTokensSpy = spyOn(accessTokenApi, "createAccessToken").and.returnValue(
-            of(mockCreateAccessTokenMutation),
-        );
+        const toastrServiceSuccessSpy = stubMethod(toastrService, "success");
+        const createAccessTokensSpy = vi
+            .spyOn(accessTokenApi, "createAccessToken")
+            .mockReturnValue(of(mockCreateAccessTokenMutation));
         const subscription$ = service
             .createAccessTokens(TEST_ACCOUNT_ID, TOKEN_NAME)
             .subscribe((data: MaybeNull<CreatedAccessTokenDataFragment>) => {
@@ -77,14 +78,14 @@ describe("AccessTokenService", () => {
 
         expect(toastrServiceSuccessSpy).toHaveBeenCalledTimes(1);
         expect(createAccessTokensSpy).toHaveBeenCalledTimes(1);
-        expect(subscription$.closed).toBeTrue();
+        expect(subscription$.closed).toBe(true);
     });
 
     it("check create access token with error", () => {
-        const toastrServiceErrorSpy = spyOn(toastrService, "error");
-        const createAccessTokensSpy = spyOn(accessTokenApi, "createAccessToken").and.returnValue(
-            of(mockCreateAccessTokenMutationError),
-        );
+        const toastrServiceErrorSpy = stubMethod(toastrService, "error");
+        const createAccessTokensSpy = vi
+            .spyOn(accessTokenApi, "createAccessToken")
+            .mockReturnValue(of(mockCreateAccessTokenMutationError));
         const subscription$ = service
             .createAccessTokens(TEST_ACCOUNT_ID, TOKEN_NAME)
             .subscribe((data: MaybeNull<CreatedAccessTokenDataFragment>) => {
@@ -93,30 +94,30 @@ describe("AccessTokenService", () => {
 
         expect(toastrServiceErrorSpy).toHaveBeenCalledTimes(1);
         expect(createAccessTokensSpy).toHaveBeenCalledTimes(1);
-        expect(subscription$.closed).toBeTrue();
+        expect(subscription$.closed).toBe(true);
     });
 
     it("check revoke access token with succes", () => {
-        const toastrServiceSuccessSpy = spyOn(toastrService, "success");
-        const revokeAccessTokenSpy = spyOn(accessTokenApi, "revokeAccessToken").and.returnValue(
-            of(mockRevokeAccessTokenMutation),
-        );
+        const toastrServiceSuccessSpy = stubMethod(toastrService, "success");
+        const revokeAccessTokenSpy = vi
+            .spyOn(accessTokenApi, "revokeAccessToken")
+            .mockReturnValue(of(mockRevokeAccessTokenMutation));
         const subscription$ = service.revokeAccessTokens(TEST_ACCOUNT_ID, TOKEN_ID).subscribe();
 
         expect(toastrServiceSuccessSpy).toHaveBeenCalledTimes(1);
         expect(revokeAccessTokenSpy).toHaveBeenCalledTimes(1);
-        expect(subscription$.closed).toBeTrue();
+        expect(subscription$.closed).toBe(true);
     });
 
     it("check revoke access token with error", () => {
-        const toastrServiceErrorSpy = spyOn(toastrService, "error");
-        const revokeAccessTokenSpy = spyOn(accessTokenApi, "revokeAccessToken").and.returnValue(
-            of(mockRevokeAccessTokenMutationError),
-        );
+        const toastrServiceErrorSpy = stubMethod(toastrService, "error");
+        const revokeAccessTokenSpy = vi
+            .spyOn(accessTokenApi, "revokeAccessToken")
+            .mockReturnValue(of(mockRevokeAccessTokenMutationError));
         const subscription$ = service.revokeAccessTokens(TEST_ACCOUNT_ID, TOKEN_ID).subscribe();
 
         expect(toastrServiceErrorSpy).toHaveBeenCalledTimes(1);
         expect(revokeAccessTokenSpy).toHaveBeenCalledTimes(1);
-        expect(subscription$.closed).toBeTrue();
+        expect(subscription$.closed).toBe(true);
     });
 });

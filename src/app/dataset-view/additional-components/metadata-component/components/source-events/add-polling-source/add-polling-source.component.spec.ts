@@ -121,7 +121,7 @@ describe("AddPollingSourceComponent", () => {
         setComponentInput(fixture, "datasetInfo", mockDatasetInfo);
 
         component.pollingSourceForm = buildPollingSourceForm();
-        spyOnProperty(loggedUserService, "currentlyLoggedInUser", "get").and.returnValue(mockAccountDetails);
+        vi.spyOn(loggedUserService, "currentlyLoggedInUser", "get").mockReturnValue(mockAccountDetails);
         fixture.detectChanges();
     });
 
@@ -130,7 +130,7 @@ describe("AddPollingSourceComponent", () => {
     });
 
     it("should check open edit modal", () => {
-        const openModalSpy = spyOn(modalService, "open").and.returnValue(modalRef);
+        const openModalSpy = vi.spyOn(modalService, "open").mockReturnValue(modalRef);
         component.onEditYaml();
         expect(openModalSpy).toHaveBeenCalledTimes(1);
     });
@@ -157,7 +157,7 @@ describe("AddPollingSourceComponent", () => {
     });
 
     it("should check submit yaml", () => {
-        const submitYamlSpy = spyOn(datasetCommitService, "commitEventToDataset").and.returnValue(of());
+        const submitYamlSpy = vi.spyOn(datasetCommitService, "commitEventToDataset").mockReturnValue(of());
         component.onSaveEvent();
         expect(submitYamlSpy).toHaveBeenCalledTimes(1);
     });
@@ -202,13 +202,13 @@ describe("AddPollingSourceComponent", () => {
         component.fetchForm.controls.url.setValidators(Validators.required);
         dispatchInputEvent(fixture, "fetch-url", "");
         const urlInput = getElementByDataTestId(fixture, "fetch-url");
-        const blurSpy = spyOn(HTMLInputElement.prototype, "blur").and.callThrough();
+        const blurSpy = vi.spyOn(HTMLInputElement.prototype, "blur");
 
         emitClickOnElementByDataTestId(fixture, "stepper-header-overlay-fetch");
         expect(blurSpy).not.toHaveBeenCalled();
 
         fixture.detectChanges();
         TestBed.inject(ApplicationRef).tick();
-        expect(blurSpy.calls.all().some((call) => call.object === urlInput)).toBeTrue();
+        expect(blurSpy.mock.contexts).toContain(urlInput);
     });
 });

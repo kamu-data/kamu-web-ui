@@ -41,10 +41,11 @@ describe("EditCollaboratorModalComponent", () => {
     });
 
     it("should check save changes", () => {
-        const ngbActiveModalCloseSpy = spyOn(ngbActiveModal, "close");
+        const ngbActiveModalCloseSpy = vi.spyOn(ngbActiveModal, "close").mockImplementation(() => {});
         component.saveChanges();
-        expect(ngbActiveModalCloseSpy).toHaveBeenCalledOnceWith(
-            jasmine.objectContaining({ role: component.role, accountId: component.collaborator.account.id }),
+        expect(ngbActiveModalCloseSpy).toHaveBeenCalledTimes(1);
+        expect(ngbActiveModalCloseSpy).toHaveBeenCalledWith(
+            expect.objectContaining({ role: component.role, accountId: component.collaborator.account.id }),
         );
     });
 });

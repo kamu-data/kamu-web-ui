@@ -22,14 +22,14 @@ describe("requestMetadataTabData", () => {
         TestBed.configureTestingModule({
             providers: [Apollo],
         });
-        spyOnProperty(TestBed.inject(DatasetService), "datasetChanges", "get").and.returnValue(
+        vi.spyOn(TestBed.inject(DatasetService), "datasetChanges", "get").mockReturnValue(
             of(mockDatasetBasicsRootFragment),
         );
         const datasetSubsService = TestBed.inject(DatasetSubscriptionsService);
-        spyOnProperty(datasetSubsService, "permissionsChanges", "get").and.returnValue(
+        vi.spyOn(datasetSubsService, "permissionsChanges", "get").mockReturnValue(
             of(mockFullPowerDatasetPermissionsFragment),
         );
-        spyOnProperty(datasetSubsService, "metadataSchemaChanges", "get").and.returnValue(of(mockMetadataRootUpdate));
+        vi.spyOn(datasetSubsService, "metadataSchemaChanges", "get").mockReturnValue(of(mockMetadataRootUpdate));
     });
 
     it("should emit the dataset, its permissions and the metadata summary", async () => {

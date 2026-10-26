@@ -42,7 +42,7 @@ describe("AddWebhookComponent", () => {
         datasetWebhooksService = TestBed.inject(DatasetWebhooksService);
         navigationService = TestBed.inject(NavigationService);
         component = fixture.componentInstance;
-        spyOn(webhooksService, "eventTypes").and.returnValue(of([]));
+        vi.spyOn(webhooksService, "eventTypes").mockReturnValue(of([]));
         setComponentInput(fixture, "datasetBasics", mockDatasetBasicsRootFragment);
         fixture.detectChanges();
     });
@@ -52,17 +52,16 @@ describe("AddWebhookComponent", () => {
     });
 
     it("should check to add webhook", () => {
-        const datasetWebhookCreateSubscriptionSpy = spyOn(
-            datasetWebhooksService,
-            "datasetWebhookCreateSubscription",
-        ).and.returnValue(of(mockCreateWebhookSubscriptionSuccess));
+        const datasetWebhookCreateSubscriptionSpy = vi
+            .spyOn(datasetWebhooksService, "datasetWebhookCreateSubscription")
+            .mockReturnValue(of(mockCreateWebhookSubscriptionSuccess));
 
         component.addWebhook();
         expect(datasetWebhookCreateSubscriptionSpy).toHaveBeenCalledTimes(1);
     });
 
     it("should check to navigate to webhooks list", () => {
-        const navigateToWebhooksSpy = spyOn(navigationService, "navigateToWebhooks");
+        const navigateToWebhooksSpy = vi.spyOn(navigationService, "navigateToWebhooks").mockImplementation(() => {});
         component.navigateToListWebhooks();
         expect(navigateToWebhooksSpy).toHaveBeenCalledTimes(1);
     });

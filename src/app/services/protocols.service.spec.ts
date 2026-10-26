@@ -36,7 +36,7 @@ describe("ProtocolsService", () => {
     });
 
     it("should check get protocols", () => {
-        const getProtocolsSpy = spyOn(protocolsApi, "getProtocols").and.returnValue(of(mockDatasetProtocolsQuery));
+        const getProtocolsSpy = vi.spyOn(protocolsApi, "getProtocols").mockReturnValue(of(mockDatasetProtocolsQuery));
 
         const subscription$ = service
             .getProtocols(mockDatasetInfo)
@@ -45,6 +45,6 @@ describe("ProtocolsService", () => {
             });
 
         expect(getProtocolsSpy).toHaveBeenCalledTimes(1);
-        expect(subscription$.closed).toBeTrue();
+        expect(subscription$.closed).toBe(true);
     });
 });

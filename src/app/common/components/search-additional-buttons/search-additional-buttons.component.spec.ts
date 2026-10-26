@@ -50,14 +50,14 @@ describe("SearchAdditionalButtonsComponent", () => {
     });
 
     it("should trigger onResize method when window is resized", () => {
-        const spyOnResize = spyOn(component, "checkWindowSize");
+        const spyOnResize = vi.spyOn(component, "checkWindowSize").mockImplementation(() => {});
         window.dispatchEvent(new Event("resize"));
         fixture.detectChanges();
         expect(spyOnResize).toHaveBeenCalledWith();
     });
 
     it("should pass on a menu opened from the minimized buttons", async () => {
-        const menuOpenSpy = spyOn(component.searchAdditionalButtonsMenuOpen, "emit");
+        const menuOpenSpy = vi.spyOn(component.searchAdditionalButtonsMenuOpen, "emit").mockImplementation(() => {});
         component.shouldMinimizeSearchAdditionalButtons = true;
         fixture.debugElement.injector.get(ChangeDetectorRef).markForCheck();
 
@@ -69,6 +69,8 @@ describe("SearchAdditionalButtonsComponent", () => {
         const nav = await rootLoader.getHarness(SearchAdditionalButtonsNavHarness);
         await nav.openMenu(SearchAdditionalButtonsEnum.DeriveFrom);
 
-        expect(menuOpenSpy).toHaveBeenCalledOnceWith(SearchAdditionalButtonsEnum.DeriveFrom);
+        expect(menuOpenSpy).toHaveBeenCalledTimes(1);
+
+        expect(menuOpenSpy).toHaveBeenCalledWith(SearchAdditionalButtonsEnum.DeriveFrom);
     });
 });

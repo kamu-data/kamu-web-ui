@@ -9,6 +9,8 @@ import { ComponentFixture, TestBed } from "@angular/core/testing";
 
 import { PDFDocumentProxy } from "ng2-pdf-viewer";
 
+import { createSpyObj } from "@common/helpers/base-test.helpers.spec";
+
 import { PdfViewerContentComponent } from "./pdf-viewer-content.component";
 
 describe("PdfViewerComponent", () => {
@@ -52,16 +54,12 @@ describe("PdfViewerComponent", () => {
         expect(component.zoom).toEqual(1);
         component.zoomOut();
         expect(component.zoom).toEqual(0.9);
-        const mockPdfDocument = jasmine.createSpyObj<PDFDocumentProxy>("PDFDocumentProxy", ["destroy"], {
-            numPages: 10,
-        });
+        const mockPdfDocument = createSpyObj<PDFDocumentProxy>({ destroy: undefined }, { numPages: 10 });
         component.afterLoadComplete(mockPdfDocument);
     });
 
     it("should check #afterLoadComplete", () => {
-        const mockPdfDocument = jasmine.createSpyObj<PDFDocumentProxy>("PDFDocumentProxy", ["destroy"], {
-            numPages: 10,
-        });
+        const mockPdfDocument = createSpyObj<PDFDocumentProxy>({ destroy: undefined }, { numPages: 10 });
         component.afterLoadComplete(mockPdfDocument);
         expect(component.totalPages).toEqual(10);
     });

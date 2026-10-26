@@ -86,7 +86,7 @@ describe("DatasetSettingsSecretsManagerTabComponent", () => {
             datasetPermissions: mockFullPowerDatasetPermissionsFragment,
         });
         setComponentInput(fixture, "datasetInfo", MOCK_DATASET_INFO);
-        spyOn(environmentVariablesService, "listEnvVariables").and.returnValue(
+        vi.spyOn(environmentVariablesService, "listEnvVariables").mockReturnValue(
             of(requireValue(mockListEnvVariablesQuery.datasets.byOwnerAndName?.envVars.listEnvVariables ?? null)),
         );
         fixture.detectChanges();
@@ -98,10 +98,12 @@ describe("DatasetSettingsSecretsManagerTabComponent", () => {
 
     it("should check change page", () => {
         expect(component.currentPage).toEqual(1);
-        const navigateToDatasetViewSpy = spyOn(navigationService, "navigateToDatasetView");
+        const navigateToDatasetViewSpy = vi
+            .spyOn(navigationService, "navigateToDatasetView")
+            .mockImplementation(() => {});
 
         component.onPageChange(3);
-        expect(navigateToDatasetViewSpy).toHaveBeenCalledWith(jasmine.objectContaining({ page: 3 }));
+        expect(navigateToDatasetViewSpy).toHaveBeenCalledWith(expect.objectContaining({ page: 3 }));
         expect(component.currentPage).toEqual(3);
     });
 
@@ -119,18 +121,20 @@ describe("DatasetSettingsSecretsManagerTabComponent", () => {
     });
 
     it("should check delete env variable", () => {
-        const modalWindowSpy = spyOn(modalService, "error").and.callFake((options: ModalArgumentsInterface) => {
-            options.handler?.call(undefined, true);
-            return Promise.resolve("");
-        });
-        const deleteEnvVariableSpy = spyOn(environmentVariablesService, "deleteEnvVariable").and.callThrough();
+        const modalWindowSpy = vi
+            .spyOn(modalService, "error")
+            .mockImplementation((options: ModalArgumentsInterface) => {
+                options.handler?.call(undefined, true);
+                return Promise.resolve("");
+            });
+        const deleteEnvVariableSpy = vi.spyOn(environmentVariablesService, "deleteEnvVariable");
         component.onDelete(MOCK_VAR_KEY);
         expect(modalWindowSpy).toHaveBeenCalledTimes(1);
         expect(deleteEnvVariableSpy).toHaveBeenCalledTimes(1);
     });
 
     it("should check add env variable", () => {
-        const ngbModalServiceOpenSpy = spyOn(ngbModalService, "open").and.callThrough();
+        const ngbModalServiceOpenSpy = vi.spyOn(ngbModalService, "open");
         component.onAddOrEditRow();
         expect(ngbModalServiceOpenSpy).toHaveBeenCalledTimes(1);
     });

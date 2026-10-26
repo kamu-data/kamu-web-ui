@@ -45,7 +45,7 @@ describe("FileInformationSectionComponent", () => {
         fixture = TestBed.createComponent(FileInformationSectionComponent);
         datasetAsVersionedFileService = TestBed.inject(DatasetAsVersionedFileService);
         component = fixture.componentInstance;
-        spyOnProperty(datasetAsVersionedFileService, "versionedFileDetailsChanges", "get").and.returnValue(
+        vi.spyOn(datasetAsVersionedFileService, "versionedFileDetailsChanges", "get").mockReturnValue(
             of(MOCK_VERSIONED_VIEW_FILE),
         );
         registerMatSvgIcons();
@@ -61,7 +61,7 @@ describe("FileInformationSectionComponent", () => {
         expect(versionElem?.innerText.trim()).toEqual(MOCK_VERSIONED_VIEW_FILE.fileInfo?.version.toString());
 
         const eventTimeElem = findElementByDataTestId(fixture, "file-event-time");
-        expect(eventTimeElem?.innerText.trim()).toEqual("2025-12-18, 3:09:34 PM");
+        expect(eventTimeElem?.innerText.trim()).toEqual("2025-12-18, 1:09:34 PM");
 
         const contentTypeElem = findElementByDataTestId(fixture, "file-content-type");
         expect(contentTypeElem?.innerText.trim()).toEqual("application/pdf");

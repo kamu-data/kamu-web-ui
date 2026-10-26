@@ -69,7 +69,7 @@ describe("AccountFlowsTabComponent", () => {
             flowGroup: [FlowStatus.Finished],
             datasetsFiltersMode: ProcessCardFilterMode.RECENT_ACTIVITY,
         });
-        spyOnProperty(loggedUserService, "currentlyLoggedInUser", "get").and.returnValue(mockAccountDetails);
+        vi.spyOn(loggedUserService, "currentlyLoggedInUser", "get").mockReturnValue(mockAccountDetails);
     });
 
     it("should create", () => {
@@ -77,7 +77,7 @@ describe("AccountFlowsTabComponent", () => {
     });
 
     it("should check to change navigation", () => {
-        const navigateToOwnerViewSpy = spyOn(navigationService, "navigateToOwnerView");
+        const navigateToOwnerViewSpy = vi.spyOn(navigationService, "navigateToOwnerView").mockImplementation(() => {});
         const event: NgbNavChangeEvent<AccountFlowsNav> = {
             activeId: AccountFlowsNav.ACTIVITY,
             nextId: AccountFlowsNav.PROCESSES,
@@ -92,7 +92,7 @@ describe("AccountFlowsTabComponent", () => {
         // A copy, since `mockFlowsTableData` shares its connections with other fixtures
         const flowsTableData = structuredClone(mockFlowsTableData);
         flowsTableData.connectionDataForWidget.nodes = [];
-        spyOn(accountService, "getAccountListFlows").and.returnValue(of(flowsTableData));
+        vi.spyOn(accountService, "getAccountListFlows").mockReturnValue(of(flowsTableData));
         tick();
         fixture.detectChanges();
 

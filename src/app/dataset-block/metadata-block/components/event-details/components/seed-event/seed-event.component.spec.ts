@@ -16,6 +16,7 @@ import {
     getElementByDataTestId,
     registerMatSvgIcons,
     setComponentInput,
+    stubMethod,
 } from "@common/helpers/base-test.helpers.spec";
 import { SharedTestModule } from "@common/modules/shared-test.module";
 
@@ -52,7 +53,7 @@ describe("SeedEventComponent", () => {
     });
 
     it("should check copyToClipboard button is work", () => {
-        const successToastServiceSpy = spyOn(toastService, "success");
+        const successToastServiceSpy = stubMethod(toastService, "success");
         emitClickOnElementByDataTestId(fixture, "copyToClipboardId");
         expect(successToastServiceSpy).toHaveBeenCalledWith("Copied");
     });

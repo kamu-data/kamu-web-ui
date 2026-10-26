@@ -46,7 +46,7 @@ describe("FinalYamlModalComponent", () => {
         component = fixture.componentInstance;
         setComponentInput(fixture, "yamlTemplate", "test yaml");
         setComponentInput(fixture, "datasetInfo", testDatasetInfo);
-        spyOnProperty(loggedUserService, "currentlyLoggedInUser", "get").and.returnValue(mockAccountDetails);
+        vi.spyOn(loggedUserService, "currentlyLoggedInUser", "get").mockReturnValue(mockAccountDetails);
         fixture.detectChanges();
     });
 
@@ -55,8 +55,8 @@ describe("FinalYamlModalComponent", () => {
     });
 
     it("should save event", () => {
-        const commitEventToDatasetSpy = spyOn(datasetCommitService, "commitEventToDataset").and.returnValue(of());
-        const closeModalSpy = spyOn(activeModal, "close");
+        const commitEventToDatasetSpy = vi.spyOn(datasetCommitService, "commitEventToDataset").mockReturnValue(of());
+        const closeModalSpy = vi.spyOn(activeModal, "close").mockImplementation(() => {});
 
         emitClickOnElementByDataTestId(fixture, "save-event");
 

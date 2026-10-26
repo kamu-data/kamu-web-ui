@@ -73,10 +73,10 @@ class BashEditHookTest(unittest.TestCase):
         for client in CLIENTS:
             with self.subTest(client=client):
                 result = self.harness.shell_write(client, "printf ... > example.spec.ts",
-                                                  {"example.spec.ts": self.harness.ts('fit("x",()=>{expect(1).toBe(1)})')})
+                                                  {"example.spec.ts": self.harness.ts('it.only("x",()=>{expect(1).toBe(1)})')})
                 self.assertEqual(result.returncode, 2)
                 self.assertIn("focused or disabled tests", result.stderr)
-                self.assertIn('fit("x", () => {', (self.harness.root / "example.spec.ts").read_text())
+                self.assertIn('it.only("x", () => {', (self.harness.root / "example.spec.ts").read_text())
 
     def test_a_command_that_changes_nothing_is_silent(self):
         for client in CLIENTS:
@@ -88,7 +88,7 @@ class BashEditHookTest(unittest.TestCase):
         for client in CLIENTS:
             with self.subTest(client=client):
                 result = self.harness.shell_write(client, "git switch other",
-                                                  {"example.spec.ts": self.harness.ts('fit("x", () => {});')})
+                                                  {"example.spec.ts": self.harness.ts('it.only("x", () => {});')})
                 self.assertEqual((result.returncode, result.stderr), (0, ""))
 
     def test_a_guarded_path_written_without_its_skill_gets_a_reminder(self):
@@ -134,7 +134,7 @@ class BashEditHookTest(unittest.TestCase):
             with self.subTest(client=client):
                 pre = self.harness.invoke(client, "PreToolUse", "git reset --hard")
                 self.assertIn('"deny"', pre.stdout)
-                (self.harness.root / "example.spec.ts").write_text(self.harness.ts('fit("x", () => {});'))
+                (self.harness.root / "example.spec.ts").write_text(self.harness.ts('it.only("x", () => {});'))
                 post = self.harness.invoke(client, "PostToolUse", "git reset --hard")
                 self.assertEqual((post.returncode, post.stderr), (0, ""))
 

@@ -5,6 +5,10 @@
 /src/app/editor/generated
 /.vscode
 
+# Vitest browser-mode failure screenshots and their copies for reporters
+__screenshots__/
+/.vitest-attachments
+
 # Agent harness runtime state and local working material
 .codex/*
 !.codex/hooks.json

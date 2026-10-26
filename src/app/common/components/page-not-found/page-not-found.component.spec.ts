@@ -10,6 +10,7 @@ import { ComponentFixture, TestBed } from "@angular/core/testing";
 import { Apollo } from "apollo-angular";
 
 import { PageNotFoundComponent } from "@common/components/page-not-found/page-not-found.component";
+import { requireValue } from "@common/helpers/app.helpers";
 import { emitClickOnElementByDataTestId } from "@common/helpers/base-test.helpers.spec";
 
 import { LoggedUserService } from "src/app/auth/logged-user.service";
@@ -39,16 +40,16 @@ describe("PageNotFoundComponent", () => {
     });
 
     it("should redirect to home page", () => {
-        const navigateToHomeSpy = spyOn(navigationService, "navigateToHome").and.returnValue();
+        const navigateToHomeSpy = vi.spyOn(navigationService, "navigateToHome").mockReturnValue();
         component.navigateToHome();
         expect(navigateToHomeSpy).toHaveBeenCalledWith();
     });
 
     it("should navigate to login page", () => {
-        spyOnProperty(loggedUserService, "isAuthenticated", "get").and.returnValue(false);
-        const navigateToHomeSpy = spyOn(navigationService, "navigateToLogin").and.returnValue();
+        vi.spyOn(loggedUserService, "isAuthenticated", "get").mockReturnValue(false);
+        const navigateToHomeSpy = vi.spyOn(navigationService, "navigateToLogin").mockReturnValue();
         emitClickOnElementByDataTestId(fixture, "navigate-to-login-btn");
         expect(navigateToHomeSpy).toHaveBeenCalledTimes(1);
-        expect(navigateToHomeSpy.calls.mostRecent().args.length).toEqual(1);
+        expect(requireValue(navigateToHomeSpy.mock.lastCall ?? null).length).toEqual(1);
     });
 });

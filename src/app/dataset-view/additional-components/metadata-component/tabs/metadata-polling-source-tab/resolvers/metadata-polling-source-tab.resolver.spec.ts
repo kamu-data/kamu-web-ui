@@ -40,7 +40,7 @@ describe("metadataPollingSourceTabResolverFn", () => {
         });
         datasetService = TestBed.inject(DatasetService);
         datasetSubsService = TestBed.inject(DatasetSubscriptionsService);
-        spyOnProperty(datasetSubsService, "permissionsChanges", "get").and.returnValue(
+        vi.spyOn(datasetSubsService, "permissionsChanges", "get").mockReturnValue(
             of(mockFullPowerDatasetPermissionsFragment),
         );
     });
@@ -49,8 +49,8 @@ describe("metadataPollingSourceTabResolverFn", () => {
         datasetBasics: DatasetBasicsFragment,
         metadataUpdate: MetadataSchemaUpdate,
     ): Promise<MetadataTabData | RedirectCommand> {
-        spyOnProperty(datasetService, "datasetChanges", "get").and.returnValue(of(datasetBasics));
-        spyOnProperty(datasetSubsService, "metadataSchemaChanges", "get").and.returnValue(of(metadataUpdate));
+        vi.spyOn(datasetService, "datasetChanges", "get").mockReturnValue(of(datasetBasics));
+        vi.spyOn(datasetSubsService, "metadataSchemaChanges", "get").mockReturnValue(of(metadataUpdate));
         return runResolver(metadataPollingSourceTabResolverFn);
     }
 

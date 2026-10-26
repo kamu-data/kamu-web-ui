@@ -12,9 +12,10 @@ import { of } from "rxjs";
 
 import { NgbActiveModal, NgbModal } from "@ng-bootstrap/ng-bootstrap";
 import { Apollo } from "apollo-angular";
+import type { Mock } from "vitest";
 
 import { ModalService } from "@common/components/modal/modal.service";
-import { setComponentInput } from "@common/helpers/base-test.helpers.spec";
+import { setComponentInput, stubMethod } from "@common/helpers/base-test.helpers.spec";
 import { SharedTestModule } from "@common/modules/shared-test.module";
 import { mockFile } from "@api/mock/upload-file.mock";
 import { ModalArgumentsInterface } from "@interface/modal.interface";
@@ -33,7 +34,7 @@ describe("AddDataModalComponent", () => {
     let fileUploadService: FileUploadService;
     let modalService: ModalService;
     let configService: AppUIConfig;
-    let uploadFileLimitMbSpy: jasmine.Spy<(this: AppUIConfig) => AppUIConfig["ingestUploadFileLimitMb"]>;
+    let uploadFileLimitMbSpy: Mock;
 
     function selectFile(file: File): void {
         const fileInput = document.createElement("input");
@@ -58,7 +59,7 @@ describe("AddDataModalComponent", () => {
         modalService = TestBed.inject(ModalService);
         configService = TestBed.inject(AppConfigService);
         setComponentInput(fixture, "datasetBasics", mockDatasetBasicsRootFragment);
-        uploadFileLimitMbSpy = spyOnProperty(configService, "ingestUploadFileLimitMb", "get").and.returnValue(50);
+        uploadFileLimitMbSpy = vi.spyOn(configService, "ingestUploadFileLimitMb", "get").mockReturnValue(50);
 
         fixture.detectChanges();
     });
@@ -68,25 +69,27 @@ describe("AddDataModalComponent", () => {
     });
 
     it("should check open modal with file url", () => {
-        const ngbModalServiceOpenSpy = spyOn(ngbModalService, "open");
+        const ngbModalServiceOpenSpy = stubMethod(ngbModalService, "open");
         component.onAddUrl();
         expect(ngbModalServiceOpenSpy).toHaveBeenCalledWith(FileFromUrlModalComponent);
     });
 
     it("should check if file selected and file size < 50MB", () => {
-        const uploadFileSpy = spyOn(fileUploadService, "uploadFile").and.callFake(() => of({}));
+        const uploadFileSpy = vi.spyOn(fileUploadService, "uploadFile").mockImplementation(() => of({}));
         selectFile(mockFile);
         expect(uploadFileSpy).toHaveBeenCalledTimes(1);
     });
 
     it("should check if file selected and file size is over the upload limit", () => {
-        const uploadFileSpy = spyOn(fileUploadService, "uploadFile").and.callFake(() => of({}));
-        const modalServiceSpy = spyOn(modalService, "warning").and.callFake((options: ModalArgumentsInterface) => {
-            options.handler?.call(undefined, false);
-            return Promise.resolve("");
-        });
+        const uploadFileSpy = vi.spyOn(fileUploadService, "uploadFile").mockImplementation(() => of({}));
+        const modalServiceSpy = vi
+            .spyOn(modalService, "warning")
+            .mockImplementation((options: ModalArgumentsInterface) => {
+                options.handler?.call(undefined, false);
+                return Promise.resolve("");
+            });
         // A zero limit makes any non-empty file too large, without allocating one over 50 MB
-        uploadFileLimitMbSpy.and.returnValue(0);
+        uploadFileLimitMbSpy.mockReturnValue(0);
         selectFile(mockFile);
         expect(modalServiceSpy).toHaveBeenCalledTimes(1);
         expect(uploadFileSpy).not.toHaveBeenCalled();

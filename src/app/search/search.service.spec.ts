@@ -36,9 +36,9 @@ describe("SearchService", () => {
     });
 
     it("should search datasets", () => {
-        const searchApiOverviewDataSearchSpy = spyOn(searchApi, "overviewDatasetSearch").and.returnValue(
-            of(mockSearchDatasetOverviewQuery),
-        );
+        const searchApiOverviewDataSearchSpy = vi
+            .spyOn(searchApi, "overviewDatasetSearch")
+            .mockReturnValue(of(mockSearchDatasetOverviewQuery));
 
         const subscription$ = service
             .searchDatasets(SEARCH_QUERY)
@@ -58,13 +58,13 @@ describe("SearchService", () => {
         service.searchDatasets(testSearchValue);
 
         expect(searchApiOverviewDataSearchSpy).toHaveBeenCalledWith(testSearchValue, 0);
-        expect(subscription$.closed).toBeTrue();
+        expect(subscription$.closed).toBe(true);
     });
 
     it("should fire autocompleteSearchChanges$ on autocomplete request", () => {
-        const searchApiAutocompleteDatasetSearchSpy = spyOn(searchApi, "autocompleteDatasetSearch").and.returnValue(
-            of(mockAutocompleteItems),
-        );
+        const searchApiAutocompleteDatasetSearchSpy = vi
+            .spyOn(searchApi, "autocompleteDatasetSearch")
+            .mockReturnValue(of(mockAutocompleteItems));
 
         const subscription$ = service.searchAutocompleteChanges
             .pipe(first())
@@ -76,13 +76,13 @@ describe("SearchService", () => {
         service.autocompleteDatasetSearch(testAutoCompleteValue);
 
         expect(searchApiAutocompleteDatasetSearchSpy).toHaveBeenCalledWith(testAutoCompleteValue);
-        expect(subscription$.closed).toBeTrue();
+        expect(subscription$.closed).toBe(true);
     });
 
     it("should fire autocompleteSearchChanges$ with empty collection on autocomplete request failure", () => {
-        const searchApiAutocompleteDatasetSearchSpy = spyOn(searchApi, "autocompleteDatasetSearch").and.returnValue(
-            throwError(() => "some error"),
-        );
+        const searchApiAutocompleteDatasetSearchSpy = vi
+            .spyOn(searchApi, "autocompleteDatasetSearch")
+            .mockReturnValue(throwError(() => "some error"));
 
         const subscription$ = service.searchAutocompleteChanges
             .pipe(first())
@@ -94,6 +94,6 @@ describe("SearchService", () => {
         service.autocompleteDatasetSearch(testAutoCompleteValue);
 
         expect(searchApiAutocompleteDatasetSearchSpy).toHaveBeenCalledWith(testAutoCompleteValue);
-        expect(subscription$.closed).toBeTrue();
+        expect(subscription$.closed).toBe(true);
     });
 });

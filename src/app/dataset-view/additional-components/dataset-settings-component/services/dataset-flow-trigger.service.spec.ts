@@ -13,6 +13,7 @@ import { Apollo } from "apollo-angular";
 import { ApolloTestingModule } from "apollo-angular/testing";
 import { provideToastr, ToastrService } from "ngx-toastr";
 
+import { stubMethod } from "@common/helpers/base-test.helpers.spec";
 import AppValues from "@common/values/app.values";
 import { DatasetFlowApi } from "@api/dataset-flow.api";
 import {
@@ -79,7 +80,7 @@ describe("DatasetFlowTriggerService", () => {
     });
 
     it("should check fetchDatasetFlowTrigger method", () => {
-        spyOn(datasetFlowApi, "getDatasetFlowTrigger").and.returnValue(of(mockGetDatasetFlowTriggerCronQuery));
+        vi.spyOn(datasetFlowApi, "getDatasetFlowTrigger").mockReturnValue(of(mockGetDatasetFlowTriggerCronQuery));
         const subscription$ = service
             .fetchDatasetFlowTrigger(MOCK_DATASET_ID, DatasetFlowType.Ingest)
             .subscribe((res: GetDatasetFlowTriggerQuery) => {
@@ -91,12 +92,14 @@ describe("DatasetFlowTriggerService", () => {
                 );
             });
 
-        expect(subscription$.closed).toBeTrue();
+        expect(subscription$.closed).toBe(true);
     });
 
     it("should check setDatasetFlowTrigger with success", fakeAsync(() => {
-        spyOn(datasetFlowApi, "setDatasetFlowTrigger").and.returnValue(of(mockSetDatasetFlowTriggerSuccess));
-        const navigateToDatasetViewSpy = spyOn(navigationService, "navigateToDatasetView");
+        vi.spyOn(datasetFlowApi, "setDatasetFlowTrigger").mockReturnValue(of(mockSetDatasetFlowTriggerSuccess));
+        const navigateToDatasetViewSpy = vi
+            .spyOn(navigationService, "navigateToDatasetView")
+            .mockImplementation(() => {});
 
         const subscription$ = service
             .setDatasetFlowTrigger({
@@ -112,12 +115,12 @@ describe("DatasetFlowTriggerService", () => {
                 flush();
             });
 
-        expect(subscription$.closed).toBeTrue();
+        expect(subscription$.closed).toBe(true);
     }));
 
     it("should check setDatasetTriggers with error", fakeAsync(() => {
-        spyOn(datasetFlowApi, "setDatasetFlowTrigger").and.returnValue(of(mockSetDatasetFlowTriggerError));
-        const toastrServiceErrorSpy = spyOn(toastService, "error");
+        vi.spyOn(datasetFlowApi, "setDatasetFlowTrigger").mockReturnValue(of(mockSetDatasetFlowTriggerError));
+        const toastrServiceErrorSpy = stubMethod(toastService, "error");
 
         const subscription$ = service
             .setDatasetFlowTrigger({
@@ -131,12 +134,12 @@ describe("DatasetFlowTriggerService", () => {
                 expect(toastrServiceErrorSpy).toHaveBeenCalledTimes(1);
             });
 
-        expect(subscription$.closed).toBeTrue();
+        expect(subscription$.closed).toBe(true);
     }));
 
     it("should check pauseDatasetFlowTrigger with success", () => {
-        spyOn(datasetFlowApi, "pauseDatasetFlowTrigger").and.returnValue(of(mockPauseDatasetFlowTriggerSuccess));
-        const toastrServiceSuccessSpy = spyOn(toastService, "success");
+        vi.spyOn(datasetFlowApi, "pauseDatasetFlowTrigger").mockReturnValue(of(mockPauseDatasetFlowTriggerSuccess));
+        const toastrServiceSuccessSpy = stubMethod(toastService, "success");
 
         const subscription$ = service
             .pauseDatasetFlowTrigger({
@@ -147,6 +150,6 @@ describe("DatasetFlowTriggerService", () => {
                 expect(toastrServiceSuccessSpy).toHaveBeenCalledTimes(1);
             });
 
-        expect(subscription$.closed).toBeTrue();
+        expect(subscription$.closed).toBe(true);
     });
 });

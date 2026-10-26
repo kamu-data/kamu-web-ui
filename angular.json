@@ -55,6 +55,7 @@
             },
             "index": "src/index.html",
             "polyfills": [
+              "zone.js",
               "src/polyfills.ts"
             ],
             "tsConfig": "tsconfig.app.json",
@@ -129,38 +130,23 @@
           }
         },
         "test": {
-          "builder": "@angular/build:karma",
+          "builder": "@angular/build:unit-test",
           "options": {
-            "main": "src/test.ts",
-            "polyfills": [
-              "src/polyfills.ts"
+            "runner": "vitest",
+            "buildTarget": "kamu-platform:build",
+            "browsers": [
+              "ChromiumHeadless"
             ],
+            "browserViewport": "1280x800",
             "tsConfig": "tsconfig.spec.json",
-            "karmaConfig": "karma.conf.js",
-            "assets": [
-              "src/favicon.ico",
-              "src/assets",
-              {
-                "glob": "**/*",
-                "input": "node_modules/monaco-editor",
-                "output": "/assets/monaco-0.55.1/"
-              }
+            "runnerConfig": "vitest-base.config.ts",
+            "providersFile": "src/test-providers.ts",
+            "setupFiles": [
+              "src/test-setup.ts"
             ],
-            "stylePreprocessorOptions": {
-              "includePaths": [
-                "src/assets/styles"
-              ]
-            },
-            "styles": [
-              "src/styles.scss",
-              "node_modules/prismjs/themes/prism-okaidia.css",
-              "node_modules/highlight.js/styles/atom-one-light.css",
-              "node_modules/ngx-toastr/toastr.css"
-            ],
-            "scripts": [
-              "node_modules/prismjs/prism.js",
-              "node_modules/prismjs/components/prism-css.min.js",
-              "node_modules/clipboard/dist/clipboard.min.js"
+            "exclude": [
+              "src/app/common/helpers/base-test.helpers.spec.ts",
+              "src/app/editor/components/base-editor/base-editor.component.spec.ts"
             ]
           }
         }

@@ -46,8 +46,9 @@ describe("AppComponent", () => {
 
     const apolloMock = {
         client: {
-            // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
-            cache: jasmine.createSpyObj("cache", ["restore"]),
+            cache: {
+                restore: vi.fn().mockName("cache.restore"),
+            },
         },
     };
 
@@ -81,7 +82,7 @@ describe("AppComponent", () => {
 
         component = fixture.componentInstance;
         // Silences the version banner ngOnInit prints to the console
-        spyOn(console, "info");
+        vi.spyOn(console, "info").mockImplementation(() => {});
         fixture.detectChanges();
     });
 
@@ -90,26 +91,26 @@ describe("AppComponent", () => {
     });
 
     it("should check call checkWindowSize method", () => {
-        const checkWindowSizeSpy = spyOn(component, "checkWindowSize").and.callThrough();
+        const checkWindowSizeSpy = vi.spyOn(component, "checkWindowSize");
         window.dispatchEvent(new Event("resize"));
         expect(checkWindowSizeSpy).toHaveBeenCalledWith();
         expect(component.isMobileView).toEqual(isMobileView());
     });
 
     it("should check call onLogout method", () => {
-        const logoutSpy = spyOn(loggedUserService, "logout").and.returnValue();
+        const logoutSpy = vi.spyOn(loggedUserService, "logout").mockReturnValue();
         component.onLogout();
         expect(logoutSpy).toHaveBeenCalledWith();
     });
 
     it("should check call onLogin method", () => {
-        const loginSpy = spyOn(navigationService, "navigateToLogin").and.returnValue();
+        const loginSpy = vi.spyOn(navigationService, "navigateToLogin").mockReturnValue();
         component.onLogin();
         expect(loginSpy).toHaveBeenCalledTimes(1);
     });
 
     it("should check call onSelectDataset method and navigate to dataset", () => {
-        const navigateToDatasetViewSpy = spyOn(navigationService, "navigateToDatasetView").and.returnValue();
+        const navigateToDatasetViewSpy = vi.spyOn(navigationService, "navigateToDatasetView").mockReturnValue();
         component.onSelectedDataset(mockAutocompleteItems[0]);
         expect(navigateToDatasetViewSpy).toHaveBeenCalledWith({
             accountName: mockAutocompleteItems[0].dataset.owner.accountName,
@@ -119,7 +120,7 @@ describe("AppComponent", () => {
     });
 
     it("should check call onSelectDataset method and navigate to search", () => {
-        const navigateToSearchSpy = spyOn(navigationService, "navigateToSearch").and.returnValue();
+        const navigateToSearchSpy = vi.spyOn(navigationService, "navigateToSearch").mockReturnValue();
         component.onSelectedDataset(mockAutocompleteItems[1]);
         expect(navigateToSearchSpy).toHaveBeenCalledWith(mockAutocompleteItems[1].dataset.id);
     });
@@ -127,19 +128,19 @@ describe("AppComponent", () => {
     ProjectLinks.ALL_URLS.filter((url) => !ALL_URLS_WITHOUT_HEADER.includes(url)).forEach((url: string) => {
         it(`should show header when going to ${url} page`, async () => {
             await TestBed.inject(Router).navigateByUrl(url);
-            expect(component.isHeaderVisible).toBeTrue();
+            expect(component.isHeaderVisible).toBe(true);
         });
     });
 
     ALL_URLS_WITHOUT_HEADER.forEach((url: string) => {
         it(`should hide header when going to ${url} page`, async () => {
             await TestBed.inject(Router).navigateByUrl(`/${url}`);
-            expect(component.isHeaderVisible).toBeFalse();
+            expect(component.isHeaderVisible).toBe(false);
         });
     });
 
     it("should react on login/logout changes", () => {
-        spyOn(fetchAccountDetailsGQL, "mutate").and.returnValue(
+        vi.spyOn(fetchAccountDetailsGQL, "mutate").mockReturnValue(
             of({
                 loading: false,
                 data: mockAccountFromAccessToken,

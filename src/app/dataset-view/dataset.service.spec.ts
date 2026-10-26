@@ -82,7 +82,7 @@ describe("AppDatasetService", () => {
     });
 
     it("should check get main data from api", () => {
-        spyOn(datasetApi, "getDatasetMainData").and.returnValue(of(mockDatasetMainDataResponse));
+        vi.spyOn(datasetApi, "getDatasetMainData").mockReturnValue(of(mockDatasetMainDataResponse));
 
         const datasetChangesSubscription$ = service.datasetChanges
             .pipe(first())
@@ -105,13 +105,13 @@ describe("AppDatasetService", () => {
 
         service.requestDatasetMainData(mockDatasetInfo).subscribe();
 
-        expect(datasetChangesSubscription$.closed).toBeTrue();
-        expect(datasetOverviewSubscription$.closed).toBeTrue();
-        expect(metadataSchemaSubscription$.closed).toBeTrue();
+        expect(datasetChangesSubscription$.closed).toBe(true);
+        expect(datasetOverviewSubscription$.closed).toBe(true);
+        expect(metadataSchemaSubscription$.closed).toBe(true);
     });
 
     it("should check get main data from api emits the downstreams count", () => {
-        spyOn(datasetApi, "getDatasetMainData").and.returnValue(of(mockDatasetMainDataResponse));
+        vi.spyOn(datasetApi, "getDatasetMainData").mockReturnValue(of(mockDatasetMainDataResponse));
 
         let downstreamsCount: MaybeUndefined<number>;
         const downstreamsCountSubscription$ = service.downstreamsCountChanges
@@ -120,14 +120,14 @@ describe("AppDatasetService", () => {
 
         service.requestDatasetMainData(mockDatasetInfo).subscribe();
 
-        expect(downstreamsCountSubscription$.closed).toBeTrue();
+        expect(downstreamsCountSubscription$.closed).toBe(true);
         expect(downstreamsCount).toEqual(
             mockDatasetMainDataResponse.datasets.byOwnerAndName?.metadata.currentDownstreamDependenciesCount,
         );
     });
 
     it("should check get main data from api nullifies history and lineage", () => {
-        spyOn(datasetApi, "getDatasetMainData").and.returnValue(of(mockDatasetMainDataResponse));
+        vi.spyOn(datasetApi, "getDatasetMainData").mockReturnValue(of(mockDatasetMainDataResponse));
 
         const historyChangesSubscription$ = datasetSubsService.historyChanges
             .pipe(first())
@@ -143,29 +143,29 @@ describe("AppDatasetService", () => {
 
         service.requestDatasetMainData(mockDatasetInfo).subscribe();
 
-        expect(historyChangesSubscription$.closed).toBeTrue();
-        expect(lineageChangesSubscription$.closed).toBeTrue();
+        expect(historyChangesSubscription$.closed).toBe(true);
+        expect(lineageChangesSubscription$.closed).toBe(true);
     });
 
     it("should check get main data from api when dataset not found", () => {
-        spyOn(datasetApi, "getDatasetMainData").and.returnValue(of(mockDatasetResponseNotFound));
+        vi.spyOn(datasetApi, "getDatasetMainData").mockReturnValue(of(mockDatasetResponseNotFound));
 
-        service.datasetChanges.subscribe(() => fail("Unexpected onDatasetChanges update"));
-        datasetSubsService.overviewChanges.subscribe(() => fail("Unexpected overview update"));
-        datasetSubsService.metadataSchemaChanges.subscribe(() => fail("Unexpected metadata update"));
+        service.datasetChanges.subscribe(() => expect.fail("Unexpected onDatasetChanges update"));
+        datasetSubsService.overviewChanges.subscribe(() => expect.fail("Unexpected overview update"));
+        datasetSubsService.metadataSchemaChanges.subscribe(() => expect.fail("Unexpected metadata update"));
 
         const subscription$ = service
             .requestDatasetMainData(mockDatasetInfo)
             .pipe(first())
             .subscribe(
                 () => {
-                    fail("Unexpected success");
+                    throw new Error("Unexpected success");
                 },
                 (e: Error) => {
                     expect(e).toEqual(new DatasetNotFoundError());
                 },
             );
-        expect(subscription$.closed).toBeTrue();
+        expect(subscription$.closed).toBe(true);
     });
 
     it("should check get main data from api when SQL execution fails softly", () => {
@@ -178,30 +178,30 @@ describe("AppDatasetService", () => {
                 errorKind: DataQueryResultErrorKind.InvalidSql,
             };
         }
-        spyOn(datasetApi, "getDatasetMainData").and.returnValue(of(sqlFailureResponse));
+        vi.spyOn(datasetApi, "getDatasetMainData").mockReturnValue(of(sqlFailureResponse));
 
-        service.datasetChanges.subscribe(() => fail("Unexpected onDatasetChanges update"));
-        datasetSubsService.overviewChanges.subscribe(() => fail("Unexpected overview update"));
-        datasetSubsService.metadataSchemaChanges.subscribe(() => fail("Unexpected metadata update"));
+        service.datasetChanges.subscribe(() => expect.fail("Unexpected onDatasetChanges update"));
+        datasetSubsService.overviewChanges.subscribe(() => expect.fail("Unexpected overview update"));
+        datasetSubsService.metadataSchemaChanges.subscribe(() => expect.fail("Unexpected metadata update"));
 
         const subscription$ = service
             .requestDatasetMainData(mockDatasetInfo)
             .pipe(first())
             .subscribe(
                 () => {
-                    fail("Unexpected success");
+                    throw new Error("Unexpected success");
                 },
                 (e: Error) => {
                     expect(e).toEqual(new SqlExecutionError(executionFailureMessage));
                 },
             );
-        expect(subscription$.closed).toBeTrue();
+        expect(subscription$.closed).toBe(true);
     });
 
     it("should check get history data from api", () => {
         const numRecords = 7;
         const numPage = 1;
-        spyOn(datasetApi, "getDatasetHistory").and.returnValue(of(mockDatasetHistoryResponse));
+        vi.spyOn(datasetApi, "getDatasetHistory").mockReturnValue(of(mockDatasetHistoryResponse));
 
         const subscription$ = datasetSubsService.historyChanges
             .pipe(first())
@@ -219,17 +219,17 @@ describe("AppDatasetService", () => {
                         totalPages: 1,
                     });
                 } else {
-                    fail("History reset instead of update");
+                    throw new Error("History reset instead of update");
                 }
             });
 
         service.requestDatasetHistory(mockDatasetInfo, numRecords, numPage).subscribe();
 
-        expect(subscription$.closed).toBeTrue();
+        expect(subscription$.closed).toBe(true);
     });
 
     it("should check get lineage data from api", () => {
-        spyOn(datasetApi, "getDatasetLineage").and.returnValue(of(mockDatasetLineageResponse));
+        vi.spyOn(datasetApi, "getDatasetLineage").mockReturnValue(of(mockDatasetLineageResponse));
 
         const subscription$ = datasetSubsService.lineageChanges
             .pipe(first())
@@ -242,20 +242,20 @@ describe("AppDatasetService", () => {
                         expect(lineageUpdate.origin.name).toBe(expectedName);
                     }
                 } else {
-                    fail("lineage reset instead of update");
+                    throw new Error("lineage reset instead of update");
                 }
             });
 
         service.requestDatasetLineage(mockDatasetInfo).subscribe();
 
-        expect(subscription$.closed).toBeTrue();
+        expect(subscription$.closed).toBe(true);
     });
 
     it("should check get lineage data from api with error", fakeAsync(() => {
         const exception = new DatasetNotFoundError();
         const copyResponse = structuredClone(mockDatasetLineageResponse);
         copyResponse.datasets.byOwnerAndName = null;
-        spyOn(datasetApi, "getDatasetLineage").and.returnValue(of(copyResponse));
+        vi.spyOn(datasetApi, "getDatasetLineage").mockReturnValue(of(copyResponse));
 
         expect(() => {
             service.requestDatasetLineage(mockDatasetInfo).subscribe();
@@ -268,23 +268,25 @@ describe("AppDatasetService", () => {
     it("should check get history data from api when dataset not found", () => {
         const numRecords = 7;
         const numPage = 1;
-        spyOn(datasetApi, "getDatasetHistory").and.returnValue(of(mockDatasetResponseNotFound));
+        vi.spyOn(datasetApi, "getDatasetHistory").mockReturnValue(of(mockDatasetResponseNotFound));
 
-        datasetSubsService.historyChanges.subscribe(() => fail("Unexpected history update"));
+        datasetSubsService.historyChanges.subscribe(() => expect.fail("Unexpected history update"));
 
         const subscription$ = service
             .requestDatasetHistory(mockDatasetInfo, numRecords, numPage)
             .pipe(first())
             .subscribe({
-                next: () => fail("Unexpected success"),
+                next: () => expect.fail("Unexpected success"),
                 error: (e: Error) => expect(e).toEqual(new DatasetNotFoundError()),
             });
 
-        expect(subscription$.closed).toBeTrue();
+        expect(subscription$.closed).toBe(true);
     });
 
     it("should check get dataset basics with permissions", () => {
-        spyOn(datasetApi, "getDatasetBasicsWithPermissions").and.returnValue(of(mockDatasetBasicsWithPermissionQuery));
+        vi.spyOn(datasetApi, "getDatasetBasicsWithPermissions").mockReturnValue(
+            of(mockDatasetBasicsWithPermissionQuery),
+        );
 
         const permissionsSubscription$ = datasetSubsService.permissionsChanges
             .pipe(first())
@@ -294,36 +296,36 @@ describe("AppDatasetService", () => {
 
         service.requestDatasetBasicDataWithPermissions(mockDatasetInfo).subscribe();
 
-        expect(permissionsSubscription$.closed).toBeTrue();
+        expect(permissionsSubscription$.closed).toBe(true);
     });
 
     it("should check get dataset basics with permissions when dataset is not found", () => {
-        spyOn(datasetApi, "getDatasetBasicsWithPermissions").and.returnValue(of({ datasets: {} }));
+        vi.spyOn(datasetApi, "getDatasetBasicsWithPermissions").mockReturnValue(of({ datasets: {} }));
 
         const subscription$ = service.requestDatasetBasicDataWithPermissions(mockDatasetInfo).subscribe({
-            next: () => fail("Unexpected success"),
-            error: (e: Error) => expect(e instanceof DatasetNotFoundError).toBeTrue(),
+            next: () => expect.fail("Unexpected success"),
+            error: (e: Error) => expect(e instanceof DatasetNotFoundError).toBe(true),
         });
 
-        expect(subscription$.closed).toBeTrue();
+        expect(subscription$.closed).toBe(true);
     });
 
     it("should check get hash last block", () => {
-        const datasetHashLastBlockSpy = spyOn(datasetApi, "datasetHeadBlockHash").and.returnValue(
-            of(mockDatasetHeadBlockHashQuery),
-        );
+        const datasetHashLastBlockSpy = vi
+            .spyOn(datasetApi, "datasetHeadBlockHash")
+            .mockReturnValue(of(mockDatasetHeadBlockHashQuery));
         const requestDatasetHashLastBlockSubscription$ = service
             .requestDatasetHeadBlockHash(TEST_ACCOUNT_NAME, TEST_DATASET_NAME)
             .subscribe((result: string) => {
                 expect(result).toEqual(MOCK_DATASET_HEAD_BLOCK_HASH);
             });
 
-        expect(requestDatasetHashLastBlockSubscription$.closed).toBeTrue();
+        expect(requestDatasetHashLastBlockSubscription$.closed).toBe(true);
         expect(datasetHashLastBlockSpy).toHaveBeenCalledTimes(1);
     });
 
     it("should return true is there are out of sync push remotes", () => {
-        spyOn(datasetApi, "datasetPushSyncStatuses").and.returnValue(of(mockDatasetPushSyncStatusesQuery));
+        vi.spyOn(datasetApi, "datasetPushSyncStatuses").mockReturnValue(of(mockDatasetPushSyncStatusesQuery));
 
         const subscription$ = service
             .hasOutOfSyncPushRemotes(TEST_DATASET_ID)
@@ -332,11 +334,11 @@ describe("AppDatasetService", () => {
                 expect(hasOutOfSyncRemotes).toBe(true);
             });
 
-        expect(subscription$.closed).toBeTrue();
+        expect(subscription$.closed).toBe(true);
     });
 
     it("should return false is there are no out of sync push remotes", () => {
-        spyOn(datasetApi, "datasetPushSyncStatuses").and.returnValue(of(mockDatasetPushSyncStatusesAllInSyncQuery));
+        vi.spyOn(datasetApi, "datasetPushSyncStatuses").mockReturnValue(of(mockDatasetPushSyncStatusesAllInSyncQuery));
 
         const subscription$ = service
             .hasOutOfSyncPushRemotes(TEST_DATASET_ID)
@@ -345,11 +347,11 @@ describe("AppDatasetService", () => {
                 expect(hasOutOfSyncRemotes).toBe(false);
             });
 
-        expect(subscription$.closed).toBeTrue();
+        expect(subscription$.closed).toBe(true);
     });
 
     it("should return false is there are no push remotes", () => {
-        spyOn(datasetApi, "datasetPushSyncStatuses").and.returnValue(of(mockDatasetPushSyncStatusesNoRemotesQuery));
+        vi.spyOn(datasetApi, "datasetPushSyncStatuses").mockReturnValue(of(mockDatasetPushSyncStatusesNoRemotesQuery));
 
         const subscription$ = service
             .hasOutOfSyncPushRemotes(TEST_DATASET_ID)
@@ -358,11 +360,11 @@ describe("AppDatasetService", () => {
                 expect(hasOutOfSyncRemotes).toBe(false);
             });
 
-        expect(subscription$.closed).toBeTrue();
+        expect(subscription$.closed).toBe(true);
     });
 
     it("should return list downstreams", () => {
-        spyOn(datasetApi, "datasetListDownstreams").and.returnValue(of(mockDatasetListDownstreamsQuery));
+        vi.spyOn(datasetApi, "datasetListDownstreams").mockReturnValue(of(mockDatasetListDownstreamsQuery));
         const expectedResult = ["kamu/rhine-basin.netherlands"];
 
         const subscription$ = service
@@ -372,6 +374,6 @@ describe("AppDatasetService", () => {
                 expect(list).toEqual(expectedResult);
             });
 
-        expect(subscription$.closed).toBeTrue();
+        expect(subscription$.closed).toBe(true);
     });
 });

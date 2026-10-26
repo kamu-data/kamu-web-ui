@@ -35,7 +35,7 @@ describe("EmailsTabComponent", () => {
         navigationService = TestBed.inject(NavigationService);
         component = fixture.componentInstance;
         setComponentInput(fixture, "account", mockAccountDetailsWithEmail);
-        spyOn(navigationService, "navigateToSettings");
+        vi.spyOn(navigationService, "navigateToSettings").mockImplementation(() => {});
         fixture.detectChanges();
     });
 
@@ -44,13 +44,15 @@ describe("EmailsTabComponent", () => {
     });
 
     it("should check reset error", () => {
-        const resetChangeEmailErrorSpy = spyOn(accountEmailService, "resetChangeEmailError");
+        const resetChangeEmailErrorSpy = vi
+            .spyOn(accountEmailService, "resetChangeEmailError")
+            .mockImplementation(() => {});
         component.changeEmail();
         expect(resetChangeEmailErrorSpy).toHaveBeenCalledTimes(1);
     });
 
     it("should check accountEmailChange emit value", fakeAsync(() => {
-        const changeEmailAddressSpy = spyOn(accountEmailService, "changeEmailAddress").and.returnValue(of(true));
+        const changeEmailAddressSpy = vi.spyOn(accountEmailService, "changeEmailAddress").mockReturnValue(of(true));
         component.changeEmailAddress();
         tick();
         expect(changeEmailAddressSpy).toHaveBeenCalledTimes(1);

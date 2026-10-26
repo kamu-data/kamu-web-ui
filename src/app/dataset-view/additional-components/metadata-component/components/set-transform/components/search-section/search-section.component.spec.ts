@@ -61,9 +61,9 @@ describe("SearchSectionComponent", () => {
             dummy: false,
             dataset: mockDatasetBasicsDerivedFragment,
         };
-        const searchApiAutocompleteDatasetSearchSpy = spyOn(searchApi, "autocompleteDatasetSearch").and.callFake(() =>
-            of([MOCK_AUTOCOMPLETE_ITEM]),
-        );
+        const searchApiAutocompleteDatasetSearchSpy = vi
+            .spyOn(searchApi, "autocompleteDatasetSearch")
+            .mockImplementation(() => of([MOCK_AUTOCOMPLETE_ITEM]));
 
         const SEARCH_QUERY = "query";
         dispatchInputEvent(fixture, "searchInputDatasets", SEARCH_QUERY);
@@ -84,7 +84,7 @@ describe("SearchSectionComponent", () => {
         setComponentInput(fixture, "inputsViewModel", [
             { name: "cities", owner: addedDataset.owner.accountName, alias: "cities" },
         ]);
-        spyOn(searchApi, "autocompleteDatasetSearch").and.returnValue(
+        vi.spyOn(searchApi, "autocompleteDatasetSearch").mockReturnValue(
             of(
                 [editedDataset, addedDataset, otherDataset].map((dataset) => ({
                     __typename: TypeNames.datasetType,
@@ -120,9 +120,9 @@ describe("SearchSectionComponent", () => {
             },
             preventDefault: () => undefined,
         };
-        const requestDatasetSchemaSpy = spyOn(datasetService, "requestDatasetSchema").and.returnValue(
-            of(mockGetDatasetSchemaQuery),
-        );
+        const requestDatasetSchemaSpy = vi
+            .spyOn(datasetService, "requestDatasetSchema")
+            .mockReturnValue(of(mockGetDatasetSchemaQuery));
 
         component.onSelectItem(mockNgbTypeaheadSelectItemEvent);
 
@@ -141,7 +141,7 @@ describe("SearchSectionComponent", () => {
             },
             preventDefault: () => undefined,
         };
-        spyOn(datasetService, "requestDatasetSchema").and.returnValue(throwError(() => new Error("fail")));
+        vi.spyOn(datasetService, "requestDatasetSchema").mockReturnValue(throwError(() => new Error("fail")));
 
         component.onSelectItem(mockNgbTypeaheadSelectItemEvent);
 

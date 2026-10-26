@@ -40,7 +40,7 @@ describe("AccountTabComponent", () => {
         accountService = TestBed.inject(AccountService);
         loggedUserService = TestBed.inject(LoggedUserService);
         navigationService = TestBed.inject(NavigationService);
-        spyOn(accountService, "deleteAccountByName").and.returnValue(of(true));
+        vi.spyOn(accountService, "deleteAccountByName").mockReturnValue(of(true));
         component = fixture.componentInstance;
         fixture.detectChanges();
     });
@@ -50,47 +50,55 @@ describe("AccountTabComponent", () => {
     });
 
     it("should check delete account name when the URL does not contain the account name", () => {
-        spyOnProperty(component, "accountName", "get").and.returnValue(undefined);
-        spyOnProperty(component, "isOwnerPage", "get").and.returnValue(true);
-        spyOnProperty(loggedUserService, "currentlyLoggedInUser", "get").and.returnValue(mockAccountDetails);
-        const logoutSpy = spyOn(loggedUserService, "logout");
-        const modalWindowSpy = spyOn(modalService, "error").and.callFake((options: ModalArgumentsInterface) => {
-            options.handler?.call(undefined, true);
-            return Promise.resolve("");
-        });
+        vi.spyOn(component, "accountName", "get").mockReturnValue(undefined);
+        vi.spyOn(component, "isOwnerPage", "get").mockReturnValue(true);
+        vi.spyOn(loggedUserService, "currentlyLoggedInUser", "get").mockReturnValue(mockAccountDetails);
+        const logoutSpy = vi.spyOn(loggedUserService, "logout").mockImplementation(() => {});
+        const modalWindowSpy = vi
+            .spyOn(modalService, "error")
+            .mockImplementation((options: ModalArgumentsInterface) => {
+                options.handler?.call(undefined, true);
+                return Promise.resolve("");
+            });
 
         component.deleteAccount();
         expect(modalWindowSpy).toHaveBeenCalledTimes(1);
-        expect(logoutSpy).toHaveBeenCalledOnceWith();
+        expect(logoutSpy).toHaveBeenCalledTimes(1);
+        expect(logoutSpy).toHaveBeenCalledWith();
     });
 
     it("should check delete account name when the URL contain the account name", () => {
-        spyOnProperty(component, "accountName", "get").and.returnValue(TEST_LOGIN);
-        spyOnProperty(component, "isOwnerPage", "get").and.returnValue(false);
-        spyOnProperty(loggedUserService, "currentlyLoggedInUser", "get").and.returnValue(mockAccountDetails);
-        const navigateToHomeSpy = spyOn(navigationService, "navigateToHome");
-        const modalWindowSpy = spyOn(modalService, "error").and.callFake((options: ModalArgumentsInterface) => {
-            options.handler?.call(undefined, true);
-            return Promise.resolve("");
-        });
+        vi.spyOn(component, "accountName", "get").mockReturnValue(TEST_LOGIN);
+        vi.spyOn(component, "isOwnerPage", "get").mockReturnValue(false);
+        vi.spyOn(loggedUserService, "currentlyLoggedInUser", "get").mockReturnValue(mockAccountDetails);
+        const navigateToHomeSpy = vi.spyOn(navigationService, "navigateToHome").mockImplementation(() => {});
+        const modalWindowSpy = vi
+            .spyOn(modalService, "error")
+            .mockImplementation((options: ModalArgumentsInterface) => {
+                options.handler?.call(undefined, true);
+                return Promise.resolve("");
+            });
 
         component.deleteAccount();
         expect(modalWindowSpy).toHaveBeenCalledTimes(1);
-        expect(navigateToHomeSpy).toHaveBeenCalledOnceWith();
+        expect(navigateToHomeSpy).toHaveBeenCalledTimes(1);
+        expect(navigateToHomeSpy).toHaveBeenCalledWith();
     });
 
     it("should check rename account username when the URL does not contain the account name", () => {
-        spyOnProperty(component, "accountName", "get").and.returnValue(undefined);
-        spyOnProperty(component, "isOwnerPage", "get").and.returnValue(true);
-        spyOn(accountService, "changeAccountUsername").and.returnValue(
+        vi.spyOn(component, "accountName", "get").mockReturnValue(undefined);
+        vi.spyOn(component, "isOwnerPage", "get").mockReturnValue(true);
+        vi.spyOn(accountService, "changeAccountUsername").mockReturnValue(
             of({ changed: true, name: "new-account-username" }),
         );
-        spyOnProperty(loggedUserService, "currentlyLoggedInUser", "get").and.returnValue(mockAccountDetails);
-        const navigateToOwnerViewSpy = spyOn(navigationService, "navigateToOwnerView");
-        const modalWindowSpy = spyOn(modalService, "error").and.callFake((options: ModalArgumentsInterface) => {
-            options.handler?.call(undefined, true);
-            return Promise.resolve("");
-        });
+        vi.spyOn(loggedUserService, "currentlyLoggedInUser", "get").mockReturnValue(mockAccountDetails);
+        const navigateToOwnerViewSpy = vi.spyOn(navigationService, "navigateToOwnerView").mockImplementation(() => {});
+        const modalWindowSpy = vi
+            .spyOn(modalService, "error")
+            .mockImplementation((options: ModalArgumentsInterface) => {
+                options.handler?.call(undefined, true);
+                return Promise.resolve("");
+            });
 
         component.changeUsername();
         expect(modalWindowSpy).toHaveBeenCalledTimes(1);
@@ -98,17 +106,19 @@ describe("AccountTabComponent", () => {
     });
 
     it("should check rename account username when the URL contain the account name", () => {
-        spyOnProperty(component, "accountName", "get").and.returnValue(TEST_LOGIN);
-        spyOnProperty(component, "isOwnerPage", "get").and.returnValue(false);
-        spyOn(accountService, "changeAccountUsername").and.returnValue(
+        vi.spyOn(component, "accountName", "get").mockReturnValue(TEST_LOGIN);
+        vi.spyOn(component, "isOwnerPage", "get").mockReturnValue(false);
+        vi.spyOn(accountService, "changeAccountUsername").mockReturnValue(
             of({ changed: true, name: "new-account-username" }),
         );
-        spyOnProperty(loggedUserService, "currentlyLoggedInUser", "get").and.returnValue(mockAccountDetails);
-        const navigateToOwnerViewSpy = spyOn(navigationService, "navigateToOwnerView");
-        const modalWindowSpy = spyOn(modalService, "error").and.callFake((options: ModalArgumentsInterface) => {
-            options.handler?.call(undefined, true);
-            return Promise.resolve("");
-        });
+        vi.spyOn(loggedUserService, "currentlyLoggedInUser", "get").mockReturnValue(mockAccountDetails);
+        const navigateToOwnerViewSpy = vi.spyOn(navigationService, "navigateToOwnerView").mockImplementation(() => {});
+        const modalWindowSpy = vi
+            .spyOn(modalService, "error")
+            .mockImplementation((options: ModalArgumentsInterface) => {
+                options.handler?.call(undefined, true);
+                return Promise.resolve("");
+            });
 
         component.changeUsername();
         expect(modalWindowSpy).toHaveBeenCalledTimes(1);

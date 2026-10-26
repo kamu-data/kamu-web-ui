@@ -36,19 +36,21 @@ describe("AccountStorageQuotaService", () => {
     });
 
     it("should map the storage quota and usage", () => {
-        const fetchSpy = spyOn(accountApi, "fetchAccountStorageQuota").and.returnValue(
-            of(mockAccountStorageQuotaQuery),
-        );
+        const fetchSpy = vi
+            .spyOn(accountApi, "fetchAccountStorageQuota")
+            .mockReturnValue(of(mockAccountStorageQuotaQuery));
         let result: MaybeUndefined<AccountStorageQuota>;
         service.fetchStorageQuota(TEST_ACCOUNT_NAME).subscribe((quota) => (result = quota));
 
-        expect(fetchSpy).toHaveBeenCalledOnceWith(TEST_ACCOUNT_NAME);
+        expect(fetchSpy).toHaveBeenCalledTimes(1);
+
+        expect(fetchSpy).toHaveBeenCalledWith(TEST_ACCOUNT_NAME);
         expect(result).toEqual({
-            limitBytes: 1_000_000_000,
-            usedBytes: 640_000_000,
-            dataBytes: 500_000_000,
-            checkpointsBytes: 40_000_000,
-            linkedObjectsBytes: 100_000_000,
+            limitBytes: 1000000000,
+            usedBytes: 640000000,
+            dataBytes: 500000000,
+            checkpointsBytes: 40000000,
+            linkedObjectsBytes: 100000000,
         });
     });
 
@@ -57,7 +59,7 @@ describe("AccountStorageQuotaService", () => {
         if (unlimitedQuery.accounts.byName) {
             unlimitedQuery.accounts.byName.quotas.user.storage.limitTotalBytes = null;
         }
-        spyOn(accountApi, "fetchAccountStorageQuota").and.returnValue(of(unlimitedQuery));
+        vi.spyOn(accountApi, "fetchAccountStorageQuota").mockReturnValue(of(unlimitedQuery));
         let result: MaybeUndefined<AccountStorageQuota>;
         service.fetchStorageQuota(TEST_ACCOUNT_NAME).subscribe((quota) => (result = quota));
 

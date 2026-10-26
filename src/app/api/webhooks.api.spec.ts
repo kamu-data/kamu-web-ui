@@ -106,7 +106,7 @@ describe("WebhooksApi", () => {
             .datasetWebhookCreateSubscription(DATASET_ID, mockWebhookSubscriptionInput)
             .subscribe((res: DatasetWebhookCreateSubscriptionMutation) => {
                 expect(res.datasets.byId?.webhooks.createSubscription).toEqual(
-                    jasmine.objectContaining({
+                    expect.objectContaining({
                         __typename: "CreateWebhookSubscriptionResultSuccess",
                         message: MOCK_CREATE_WEBHOOK_SUBSCRIPTION_SUCCESS_MESSAGE,
                     }),
@@ -143,7 +143,7 @@ describe("WebhooksApi", () => {
             .datasetWebhookPauseSubscription(DATASET_ID, MOCK_SUBSCRIPTION_ID)
             .subscribe((res: DatasetWebhookPauseSubscriptionMutation) => {
                 expect(res.datasets.byId?.webhooks.subscription?.pause).toEqual(
-                    jasmine.objectContaining({ __typename: "PauseWebhookSubscriptionResultSuccess", paused: true }),
+                    expect.objectContaining({ __typename: "PauseWebhookSubscriptionResultSuccess", paused: true }),
                 );
             });
 
@@ -161,7 +161,7 @@ describe("WebhooksApi", () => {
             .datasetWebhookResumeSubscription(DATASET_ID, MOCK_SUBSCRIPTION_ID)
             .subscribe((res: DatasetWebhookResumeSubscriptionMutation) => {
                 expect(res.datasets.byId?.webhooks.subscription?.resume).toEqual(
-                    jasmine.objectContaining({ __typename: "ResumeWebhookSubscriptionResultSuccess", resumed: true }),
+                    expect.objectContaining({ __typename: "ResumeWebhookSubscriptionResultSuccess", resumed: true }),
                 );
             });
 
@@ -201,7 +201,7 @@ describe("WebhooksApi", () => {
             })
             .subscribe((res: DatasetWebhookUpdateSubscriptionMutation) => {
                 expect(res.datasets.byId?.webhooks.subscription?.update).toEqual(
-                    jasmine.objectContaining({ __typename: "UpdateWebhookSubscriptionResultSuccess", updated: true }),
+                    expect.objectContaining({ __typename: "UpdateWebhookSubscriptionResultSuccess", updated: true }),
                 );
             });
 

@@ -64,7 +64,7 @@ describe("EditLicenseModalComponent", () => {
     });
 
     it("should check call onEditLicense", () => {
-        const onEditLicenseSpy = spyOn(component, "onEditLicense").and.stub();
+        const onEditLicenseSpy = vi.spyOn(component, "onEditLicense").mockImplementation(() => {});
 
         emitClickOnElementByDataTestId(fixture, "save-license");
         expect(onEditLicenseSpy).toHaveBeenCalledTimes(1);
@@ -77,7 +77,7 @@ describe("EditLicenseModalComponent", () => {
             websiteUrl: "",
         });
         fixture.detectChanges();
-        expect(component.licenseForm.valid).toBeFalse();
+        expect(component.licenseForm.valid).toBe(false);
     });
 
     it("should check validation url pattern", () => {

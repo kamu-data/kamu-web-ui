@@ -77,7 +77,7 @@ describe("AccountService", () => {
     });
 
     it("check fetchAccountByName", () => {
-        const apiAccountByNameSpy = spyOn(accountApi, "fetchAccountByName").and.returnValue(of(mockAccountDetails));
+        const apiAccountByNameSpy = vi.spyOn(accountApi, "fetchAccountByName").mockReturnValue(of(mockAccountDetails));
 
         const subscription$ = service
             .fetchAccountByName(TEST_LOGIN)
@@ -87,14 +87,14 @@ describe("AccountService", () => {
             });
 
         expect(apiAccountByNameSpy).toHaveBeenCalledWith(TEST_LOGIN);
-        expect(subscription$.closed).toBeTrue();
+        expect(subscription$.closed).toBe(true);
     });
 
     it("check fetchMultipleAccountsByName", () => {
-        const apiAccountByNameSpy = spyOn(accountApi, "fetchAccountByName").and.returnValues(
-            of(mockAccountDetails),
-            of(null),
-        );
+        const apiAccountByNameSpy = vi
+            .spyOn(accountApi, "fetchAccountByName")
+            .mockReturnValueOnce(of(mockAccountDetails))
+            .mockReturnValueOnce(of(null));
 
         const subscription$ = service
             .fetchMultipleAccountsByName([TEST_LOGIN, "non-existing-user"])
@@ -105,13 +105,13 @@ describe("AccountService", () => {
             });
 
         expect(apiAccountByNameSpy).toHaveBeenCalledTimes(2);
-        expect(subscription$.closed).toBeTrue();
+        expect(subscription$.closed).toBe(true);
     });
 
     it("check getDatasetsByAccountName", () => {
-        const fetchDatasetsByAccountNameSpy = spyOn(datasetApi, "fetchDatasetsByAccountName").and.returnValue(
-            of(mockDatasetsByAccountNameQuery),
-        );
+        const fetchDatasetsByAccountNameSpy = vi
+            .spyOn(datasetApi, "fetchDatasetsByAccountName")
+            .mockReturnValue(of(mockDatasetsByAccountNameQuery));
 
         const subscription$ = service
             .getDatasetsByAccountName(TEST_LOGIN, TEST_PAGE_NUMBER)
@@ -125,13 +125,13 @@ describe("AccountService", () => {
             });
 
         expect(fetchDatasetsByAccountNameSpy).toHaveBeenCalledTimes(1);
-        expect(subscription$.closed).toBeTrue();
+        expect(subscription$.closed).toBe(true);
     });
 
     it("check getDatasetsWithFlows", () => {
-        const accountDatasetsWithFlowsSpy = spyOn(accountApi, "accountDatasetsWithFlows").and.returnValue(
-            of(mockAccountListDatasetsWithFlowsQuery),
-        );
+        const accountDatasetsWithFlowsSpy = vi
+            .spyOn(accountApi, "accountDatasetsWithFlows")
+            .mockReturnValue(of(mockAccountListDatasetsWithFlowsQuery));
 
         const subscription$ = service
             .getDatasetsWithFlows(TEST_LOGIN)
@@ -145,12 +145,12 @@ describe("AccountService", () => {
             });
 
         expect(accountDatasetsWithFlowsSpy).toHaveBeenCalledTimes(1);
-        expect(subscription$.closed).toBeTrue();
+        expect(subscription$.closed).toBe(true);
     });
 
     it("check getAccountListFlows", () => {
-        spyOn(accountApi, "fetchAccountListFlows").and.returnValue(of(mockAccountListFlowsQuery));
-        spyOn(accountApi, "accountDatasetsWithFlows").and.returnValue(of(mockAccountListDatasetsWithFlowsQuery));
+        vi.spyOn(accountApi, "fetchAccountListFlows").mockReturnValue(of(mockAccountListFlowsQuery));
+        vi.spyOn(accountApi, "accountDatasetsWithFlows").mockReturnValue(of(mockAccountListDatasetsWithFlowsQuery));
         const PAGE = 1;
         const PER_PAGE = 15;
         const ACCOUNT_FILTERS: AccountFlowFilters = {
@@ -172,21 +172,21 @@ describe("AccountService", () => {
                 expect(data.involvedDatasets.length).toEqual(4);
             });
 
-        expect(subscription$.closed).toBeTrue();
+        expect(subscription$.closed).toBe(true);
     });
 
     it("should check delete account by name", () => {
-        spyOn(accountApi, "deleteAccountByName").and.returnValue(of(mockDeleteAccountByNameMutation));
+        vi.spyOn(accountApi, "deleteAccountByName").mockReturnValue(of(mockDeleteAccountByNameMutation));
 
         const subscription$ = service.deleteAccountByName(TEST_LOGIN).subscribe((result: boolean) => {
             expect(result).toEqual(true);
         });
 
-        expect(subscription$.closed).toBeTrue();
+        expect(subscription$.closed).toBe(true);
     });
 
     it("should check change account username with success", () => {
-        spyOn(accountApi, "changeAccountUsername").and.returnValue(of(mockChangeAccountUsernameMutation));
+        vi.spyOn(accountApi, "changeAccountUsername").mockReturnValue(of(mockChangeAccountUsernameMutation));
 
         const subscription$ = service
             .changeAccountUsername({ accountName: TEST_LOGIN, newName: "new-account-name" })
@@ -194,11 +194,11 @@ describe("AccountService", () => {
                 expect(result).toEqual({ changed: true, name: result.name });
             });
 
-        expect(subscription$.closed).toBeTrue();
+        expect(subscription$.closed).toBe(true);
     });
 
     it("should check change account username with error", () => {
-        spyOn(accountApi, "changeAccountUsername").and.returnValue(of(mockChangeAccountUsernameMutationError));
+        vi.spyOn(accountApi, "changeAccountUsername").mockReturnValue(of(mockChangeAccountUsernameMutationError));
 
         const subscription$ = service
             .changeAccountUsername({ accountName: TEST_LOGIN, newName: "new-account-name" })
@@ -206,11 +206,11 @@ describe("AccountService", () => {
                 expect(result).toEqual({ changed: false, name: TEST_LOGIN });
             });
 
-        expect(subscription$.closed).toBeTrue();
+        expect(subscription$.closed).toBe(true);
     });
 
     it("should check change password for admin", () => {
-        spyOn(accountApi, "changeAdminPassword").and.returnValue(of(mockChangeAdminPasswordMutation));
+        vi.spyOn(accountApi, "changeAdminPassword").mockReturnValue(of(mockChangeAdminPasswordMutation));
 
         const subscription$ = service
             .changeAdminPassword({ accountName: TEST_LOGIN, password: NEW_PASSWORD })
@@ -218,11 +218,11 @@ describe("AccountService", () => {
                 expect(result).toEqual(true);
             });
 
-        expect(subscription$.closed).toBeTrue();
+        expect(subscription$.closed).toBe(true);
     });
 
     it("should check change password for admin with error", () => {
-        spyOn(accountApi, "changeAdminPassword").and.returnValue(of(mockChangeAdminPasswordMutationError));
+        vi.spyOn(accountApi, "changeAdminPassword").mockReturnValue(of(mockChangeAdminPasswordMutationError));
 
         const subscription$ = service
             .changeAdminPassword({ accountName: TEST_LOGIN, password: NEW_PASSWORD })
@@ -230,11 +230,11 @@ describe("AccountService", () => {
                 expect(result).toEqual(false);
             });
 
-        expect(subscription$.closed).toBeTrue();
+        expect(subscription$.closed).toBe(true);
     });
 
     it("should check change password for user", () => {
-        spyOn(accountApi, "changeUserPassword").and.returnValue(of(mockChangeUserPasswordMutation));
+        vi.spyOn(accountApi, "changeUserPassword").mockReturnValue(of(mockChangeUserPasswordMutation));
 
         const subscription$ = service
             .changeUserPassword({ accountName: TEST_LOGIN, newPassword: NEW_PASSWORD, oldPassword: OLD_PASSWORD })
@@ -242,11 +242,11 @@ describe("AccountService", () => {
                 expect(result).toEqual(true);
             });
 
-        expect(subscription$.closed).toBeTrue();
+        expect(subscription$.closed).toBe(true);
     });
 
     it("should check change password for user with error", () => {
-        spyOn(accountApi, "changeUserPassword").and.returnValue(of(mockChangeUserPasswordMutationError));
+        vi.spyOn(accountApi, "changeUserPassword").mockReturnValue(of(mockChangeUserPasswordMutationError));
 
         const subscription$ = service
             .changeUserPassword({ accountName: TEST_LOGIN, newPassword: NEW_PASSWORD, oldPassword: OLD_PASSWORD })
@@ -254,11 +254,11 @@ describe("AccountService", () => {
                 expect(result).toEqual(false);
             });
 
-        expect(subscription$.closed).toBeTrue();
+        expect(subscription$.closed).toBe(true);
     });
 
     it("should check get flows all cards", () => {
-        spyOn(accountApi, "fetchAccountFlowsAsCards").and.returnValue(of(mockAccountFlowsAsCardsQuery));
+        vi.spyOn(accountApi, "fetchAccountFlowsAsCards").mockReturnValue(of(mockAccountFlowsAsCardsQuery));
 
         const subscription$ = service.getAccountAllCards(CARDS_PARAMS).subscribe((result: CardsStrategyResult) => {
             expect(result.cards).toEqual(
@@ -266,11 +266,11 @@ describe("AccountService", () => {
             );
         });
 
-        expect(subscription$.closed).toBeTrue();
+        expect(subscription$.closed).toBe(true);
     });
 
     it("should check get flows primary cards", () => {
-        spyOn(accountApi, "fetchAccountPrimaryCards").and.returnValue(of(mockAccountFlowsPrimaryCardsQuery));
+        vi.spyOn(accountApi, "fetchAccountPrimaryCards").mockReturnValue(of(mockAccountFlowsPrimaryCardsQuery));
 
         const subscription$ = service.getAccountPrimaryCards(CARDS_PARAMS).subscribe((result: CardsStrategyResult) => {
             expect(result.cards).toEqual(
@@ -278,11 +278,11 @@ describe("AccountService", () => {
             );
         });
 
-        expect(subscription$.closed).toBeTrue();
+        expect(subscription$.closed).toBe(true);
     });
 
     it("should check get flows webhook cards", () => {
-        spyOn(accountApi, "fetchAccountWebhookCards").and.returnValue(of(mockAccountFlowsWebhookCardsQuery));
+        vi.spyOn(accountApi, "fetchAccountWebhookCards").mockReturnValue(of(mockAccountFlowsWebhookCardsQuery));
 
         const subscription$ = service.getAccountWebhookCards(CARDS_PARAMS).subscribe((result: CardsStrategyResult) => {
             expect(result.cards).toEqual(
@@ -290,6 +290,6 @@ describe("AccountService", () => {
             );
         });
 
-        expect(subscription$.closed).toBeTrue();
+        expect(subscription$.closed).toBe(true);
     });
 });

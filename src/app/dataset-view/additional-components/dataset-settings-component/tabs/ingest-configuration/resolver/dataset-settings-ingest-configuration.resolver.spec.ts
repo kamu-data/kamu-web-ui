@@ -12,8 +12,14 @@ import { of } from "rxjs";
 
 import { ApolloTestingModule } from "apollo-angular/testing";
 import { provideToastr } from "ngx-toastr";
+import type { Mock } from "vitest";
 
-import { expectPageNotFoundRedirect, routeSnapshot, runResolver } from "@common/helpers/base-test.helpers.spec";
+import {
+    expectPageNotFoundRedirect,
+    routeSnapshot,
+    runResolver,
+    stubMethod,
+} from "@common/helpers/base-test.helpers.spec";
 import {
     DatasetFlowType,
     FlowRetryBackoffType,
@@ -39,7 +45,7 @@ describe("datasetSettingsIngestConfigurationResolverFn", () => {
     let datasetSubsService: DatasetSubscriptionsService;
     let datasetFlowConfigService: DatasetFlowConfigService;
 
-    let permissionsChangesSpy: jasmine.Spy;
+    let permissionsChangesSpy: Mock;
 
     function resolve(): Promise<DatasetSettingsIngestConfigurationTabData | RedirectCommand> {
         const route = routeSnapshot({ data: { tab: SettingsTabsEnum.INGEST_CONFIGURATION } });
@@ -150,22 +156,22 @@ describe("datasetSettingsIngestConfigurationResolverFn", () => {
             providers: [provideToastr()],
         });
 
-        spyOnProperty(TestBed.inject(DatasetService), "datasetChanges", "get").and.returnValue(
+        vi.spyOn(TestBed.inject(DatasetService), "datasetChanges", "get").mockReturnValue(
             of(mockDatasetBasicsRootFragment),
         );
 
         datasetSubsService = TestBed.inject(DatasetSubscriptionsService);
-        spyOnProperty(datasetSubsService, "overviewChanges", "get").and.returnValue(of(mockOverviewUpdate));
-        permissionsChangesSpy = spyOnProperty(datasetSubsService, "permissionsChanges", "get").and.returnValue(
-            of(mockFullPowerDatasetPermissionsFragment),
-        );
+        vi.spyOn(datasetSubsService, "overviewChanges", "get").mockReturnValue(of(mockOverviewUpdate));
+        permissionsChangesSpy = vi
+            .spyOn(datasetSubsService, "permissionsChanges", "get")
+            .mockReturnValue(of(mockFullPowerDatasetPermissionsFragment));
 
         datasetFlowConfigService = TestBed.inject(DatasetFlowConfigService);
     });
 
     it("should pass the redirect through without fetching flow configs when the tab is not accessible", async () => {
-        permissionsChangesSpy.and.returnValue(of(mockReadonlyDatasetPermissionsFragment));
-        const fetchDatasetFlowConfigsSpy = spyOn(datasetFlowConfigService, "fetchDatasetFlowConfigs");
+        permissionsChangesSpy.mockReturnValue(of(mockReadonlyDatasetPermissionsFragment));
+        const fetchDatasetFlowConfigsSpy = stubMethod(datasetFlowConfigService, "fetchDatasetFlowConfigs");
 
         const data = await resolve();
 
@@ -174,13 +180,15 @@ describe("datasetSettingsIngestConfigurationResolverFn", () => {
     });
 
     it("should call fetchDatasetFlowConfigs with correct parameters", async () => {
-        const fetchDatasetFlowConfigsSpy = spyOn(datasetFlowConfigService, "fetchDatasetFlowConfigs").and.returnValue(
-            of(mockIngestGetDatasetFlowConfigsSuccess),
-        );
+        const fetchDatasetFlowConfigsSpy = vi
+            .spyOn(datasetFlowConfigService, "fetchDatasetFlowConfigs")
+            .mockReturnValue(of(mockIngestGetDatasetFlowConfigsSuccess));
 
         const data = await resolve();
 
-        expect(fetchDatasetFlowConfigsSpy).toHaveBeenCalledOnceWith(
+        expect(fetchDatasetFlowConfigsSpy).toHaveBeenCalledTimes(1);
+
+        expect(fetchDatasetFlowConfigsSpy).toHaveBeenCalledWith(
             mockDatasetBasicsRootFragment.id,
             DatasetFlowType.Ingest,
         );
@@ -197,7 +205,9 @@ describe("datasetSettingsIngestConfigurationResolverFn", () => {
     });
 
     it("should correctly map flowConfigs to ingestionRule and retryPolicy", async () => {
-        spyOn(datasetFlowConfigService, "fetchDatasetFlowConfigs").and.returnValue(of(mockFlowConfigWithRetryPolicy));
+        vi.spyOn(datasetFlowConfigService, "fetchDatasetFlowConfigs").mockReturnValue(
+            of(mockFlowConfigWithRetryPolicy),
+        );
 
         const data = await resolve();
 
@@ -223,7 +233,7 @@ describe("datasetSettingsIngestConfigurationResolverFn", () => {
     });
 
     it("should correctly map flowConfigs when no rule is defined (tests isNil branch)", async () => {
-        spyOn(datasetFlowConfigService, "fetchDatasetFlowConfigs").and.returnValue(of(mockFlowConfigWithoutRule));
+        vi.spyOn(datasetFlowConfigService, "fetchDatasetFlowConfigs").mockReturnValue(of(mockFlowConfigWithoutRule));
 
         const data = await resolve();
 
@@ -236,7 +246,7 @@ describe("datasetSettingsIngestConfigurationResolverFn", () => {
     });
 
     it("should correctly map flowConfigs when rule has fetchUncacheable true", async () => {
-        spyOn(datasetFlowConfigService, "fetchDatasetFlowConfigs").and.returnValue(
+        vi.spyOn(datasetFlowConfigService, "fetchDatasetFlowConfigs").mockReturnValue(
             of(mockFlowConfigWithFetchUncacheable),
         );
 
@@ -255,17 +265,21 @@ describe("datasetSettingsIngestConfigurationResolverFn", () => {
     });
 
     it("should throw error when rule has unexpected type", async () => {
-        spyOn(datasetFlowConfigService, "fetchDatasetFlowConfigs").and.returnValue(of(mockFlowConfigWithWrongRuleType));
+        vi.spyOn(datasetFlowConfigService, "fetchDatasetFlowConfigs").mockReturnValue(
+            of(mockFlowConfigWithWrongRuleType),
+        );
 
-        await expectAsync(resolve()).toBeRejectedWithError(
+        await expect(resolve()).rejects.toThrowError(
             "Unexpected flow config rule type: FlowConfigRuleCompaction. Expected FlowConfigRuleIngest.",
         );
     });
 
     it("should handle errors from fetchDatasetFlowConfigs", async () => {
         const errorMessage = "Failed to fetch flow configs";
-        spyOn(datasetFlowConfigService, "fetchDatasetFlowConfigs").and.throwError(errorMessage);
+        vi.spyOn(datasetFlowConfigService, "fetchDatasetFlowConfigs").mockImplementation(() => {
+            throw new Error(errorMessage);
+        });
 
-        await expectAsync(resolve()).toBeRejectedWithError(errorMessage);
+        await expect(resolve()).rejects.toThrowError(errorMessage);
     });
 });

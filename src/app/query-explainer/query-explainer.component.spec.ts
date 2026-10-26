@@ -13,6 +13,7 @@ import { ignoreElements, of, timer } from "rxjs";
 
 import { Apollo } from "apollo-angular";
 import { provideToastr, ToastrService } from "ngx-toastr";
+import type { Mock } from "vitest";
 
 import { HIGHLIGHT_OPTIONS_PROVIDER } from "@common/helpers/app.helpers";
 import {
@@ -23,6 +24,7 @@ import {
     registerMatSvgIcons,
     setComponentInput,
     setFieldValue,
+    stubMethod,
 } from "@common/helpers/base-test.helpers.spec";
 import { SharedTestModule } from "@common/modules/shared-test.module";
 import { mockDatasetByIdQuery } from "@api/mock/dataset.mock";
@@ -43,8 +45,8 @@ describe("QueryExplainerComponent", () => {
     let queryExplainerService: QueryExplainerService;
     let datasetService: DatasetService;
     let toastrService: ToastrService;
-    let verifyQuerySpy: jasmine.Spy<QueryExplainerService["verifyQuery"]>;
-    let fetchCommitmentDataByUploadTokenSpy: jasmine.Spy<QueryExplainerService["fetchCommitmentDataByUploadToken"]>;
+    let verifyQuerySpy: Mock;
+    let fetchCommitmentDataByUploadTokenSpy: Mock;
 
     beforeEach(() => {
         TestBed.configureTestingModule({
@@ -63,14 +65,13 @@ describe("QueryExplainerComponent", () => {
         datasetService = TestBed.inject(DatasetService);
         toastrService = TestBed.inject(ToastrService);
         queryExplainerService = TestBed.inject(QueryExplainerService);
-        verifyQuerySpy = spyOn(queryExplainerService, "verifyQuery").and.returnValue(
-            of(mockVerifyQueryResponseSuccess),
-        );
-        fetchCommitmentDataByUploadTokenSpy = spyOn(
-            queryExplainerService,
-            "fetchCommitmentDataByUploadToken",
-        ).and.returnValue(of(mockQueryExplainerResponse));
-        spyOn(datasetService, "requestDatasetInfoById").and.returnValue(of(mockDatasetByIdQuery));
+        verifyQuerySpy = vi
+            .spyOn(queryExplainerService, "verifyQuery")
+            .mockReturnValue(of(mockVerifyQueryResponseSuccess));
+        fetchCommitmentDataByUploadTokenSpy = vi
+            .spyOn(queryExplainerService, "fetchCommitmentDataByUploadToken")
+            .mockReturnValue(of(mockQueryExplainerResponse));
+        vi.spyOn(datasetService, "requestDatasetInfoById").mockReturnValue(of(mockDatasetByIdQuery));
         fixture = TestBed.createComponent(QueryExplainerComponent);
         component = fixture.componentInstance;
         setComponentInput(fixture, "uploadToken", "");
@@ -87,7 +88,7 @@ describe("QueryExplainerComponent", () => {
     });
 
     it("should check error message when commitment is incorrect", () => {
-        const toastrServiceErrorSpy = spyOn(toastrService, "error");
+        const toastrServiceErrorSpy = stubMethod(toastrService, "error");
         setFieldValue(fixture, "input-textarea", "incorrect commitment");
         fixture.detectChanges();
 
@@ -96,7 +97,7 @@ describe("QueryExplainerComponent", () => {
     });
 
     it("should keep the commitment form when the pasted JSON is not a commitment", async () => {
-        const toastrServiceErrorSpy = spyOn(toastrService, "error");
+        const toastrServiceErrorSpy = stubMethod(toastrService, "error");
         setFieldValue(fixture, "input-textarea", "{}");
         fixture.detectChanges();
 
@@ -117,7 +118,7 @@ describe("QueryExplainerComponent", () => {
 
     it("should show the commitment form when the uploaded commitment cannot be loaded", async () => {
         // A failed request completes without a value, after the response arrives
-        fetchCommitmentDataByUploadTokenSpy.and.returnValue(timer(0).pipe(ignoreElements()));
+        fetchCommitmentDataByUploadTokenSpy.mockReturnValue(timer(0).pipe(ignoreElements()));
         fixture = TestBed.createComponent(QueryExplainerComponent);
         setComponentInput(fixture, "uploadToken", "uploaded-token");
         fixture.detectChanges();
@@ -130,11 +131,11 @@ describe("QueryExplainerComponent", () => {
     });
 
     it("should return to the commitment form with the pasted text when verification fails", async () => {
-        spyOn(queryExplainerService, "processQueryWithSchema").and.returnValue(
+        vi.spyOn(queryExplainerService, "processQueryWithSchema").mockReturnValue(
             of({ output: mockQueryExplainerOutput }),
         );
         // A failed request completes without a value, after the response arrives
-        verifyQuerySpy.and.returnValue(timer(0).pipe(ignoreElements()));
+        verifyQuerySpy.mockReturnValue(timer(0).pipe(ignoreElements()));
         const commitment = JSON.stringify(mockQueryExplainerResponse);
         setFieldValue(fixture, "input-textarea", commitment);
         fixture.detectChanges();

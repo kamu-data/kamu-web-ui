@@ -441,14 +441,14 @@ export const flowEventSubMessageResults: string[] = [
     "",
     "Task #1",
     'Input dataset: <a class="fs-12" href="/kamu/mockNameDerived">kamu/mockNameDerived</a>',
-    "Wake up time at Feb 12th 2024 8:22:30 PM GMT+02:00, shifted from 8:22:29 PM",
-    "Activating at Mar 13th 2024 4:54:30 PM GMT+02:00",
+    "Wake up time at Feb 12th 2024 6:22:30 PM GMT+00:00, shifted from 6:22:29 PM",
+    "Activating at Mar 13th 2024 2:54:30 PM GMT+00:00",
     "Modified by ingest rule",
     'Triggered by <a class="fs-12" href="/kamu">kamu</a>',
     '<a class="fs-12" href="/kamu/mockNameDerived/flow-details/12345/history">Flow #12345</a>. Input dataset: <a class="fs-12" href="/kamu/mockNameDerived">kamu/mockNameDerived</a>',
-    "Accumulated 100/500 records. Watermark modified. Deadline at Aug 6th 2022 12:17:30 AM GMT+03:00", //1
+    "Accumulated 100/500 records. Watermark modified. Deadline at Aug 5th 2022 9:17:30 PM GMT+00:00", //1
     "Task #5",
-    "Wake up time at Mar 13th 2024 5:54:30 PM GMT+02:00",
+    "Wake up time at Mar 13th 2024 3:54:30 PM GMT+00:00",
     "An error occurred, see logs for more details",
     "Dataset is up-to-date",
     "Ingested 100 new records in 10 new blocks",

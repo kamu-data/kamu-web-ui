@@ -43,7 +43,7 @@ describe("ModalService", () => {
                 });
             });
         service.showImage(testImageUrl);
-        expect(subscription$.closed).toBeTrue();
+        expect(subscription$.closed).toBe(true);
     });
 
     it("should show modal spinner", () => {
@@ -57,7 +57,7 @@ describe("ModalService", () => {
                 });
             });
         service.showSpinner();
-        expect(subscription$.closed).toBeTrue();
+        expect(subscription$.closed).toBe(true);
     });
 
     it("should check success show modal", async () => {

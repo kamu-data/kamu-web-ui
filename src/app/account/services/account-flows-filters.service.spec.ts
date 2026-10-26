@@ -29,7 +29,7 @@ describe("AccountFlowsFiltersService", () => {
             isFirstInitialization: true,
         });
         const result = service.setFlowProcessFilters(ProcessCardFilterMode.RECENT_ACTIVITY);
-        expect(result).toEqual(jasmine.objectContaining({ effectiveStateIn: service.initialProcessFilters }));
+        expect(result).toEqual(expect.objectContaining({ effectiveStateIn: service.initialProcessFilters }));
     });
 
     it("should check to setFlowProcessFilters with ProcessCardFilterMode.RECENT_ACTIVITY with statuses", () => {
@@ -38,11 +38,14 @@ describe("AccountFlowsFiltersService", () => {
             selectedFlowProcessStates: [FlowProcessEffectiveState.Active],
         });
         const result = service.setFlowProcessFilters(ProcessCardFilterMode.RECENT_ACTIVITY);
-        expect(result).toEqual(jasmine.objectContaining({ effectiveStateIn: [FlowProcessEffectiveState.Active] }));
+        expect(result).toEqual(expect.objectContaining({ effectiveStateIn: [FlowProcessEffectiveState.Active] }));
     });
 
     describe("mode defaults", () => {
-        const cases: { mode: ProcessCardFilterMode; states: FlowProcessEffectiveState[] }[] = [
+        const cases: {
+            mode: ProcessCardFilterMode;
+            states: FlowProcessEffectiveState[];
+        }[] = [
             {
                 mode: ProcessCardFilterMode.RECENT_ACTIVITY,
                 states: [
@@ -81,7 +84,7 @@ describe("AccountFlowsFiltersService", () => {
 
         it("should let the recent activity mode fill in its default time window", () => {
             service.applyModeDefaults(ProcessCardFilterMode.RECENT_ACTIVITY);
-            expect(service.currentFiltersSnapshot.isFirstInitialization).toBeTrue();
+            expect(service.currentFiltersSnapshot.isFirstInitialization).toBe(true);
         });
 
         it("should keep the other filters of the mode", () => {
@@ -92,7 +95,7 @@ describe("AccountFlowsFiltersService", () => {
 
             expect(service.currentFiltersSnapshot.fromFilterDate).toEqual(fromFilterDate);
             expect(service.currentFiltersSnapshot.minConsecutiveFailures).toEqual(2);
-            expect(service.currentFiltersSnapshot.isFirstInitialization).toBeFalse();
+            expect(service.currentFiltersSnapshot.isFirstInitialization).toBe(false);
         });
     });
 
@@ -160,14 +163,14 @@ describe("AccountFlowsFiltersService", () => {
         });
         const result = service.setFlowProcessFilters(ProcessCardFilterMode.TRIAGE);
         expect(result).toEqual(
-            jasmine.objectContaining({
+            expect.objectContaining({
                 effectiveStateIn: [FlowProcessEffectiveState.Failing, FlowProcessEffectiveState.StoppedAuto],
             }),
         );
     });
 
     it("should check to setFlowProcessFilters with ProcessCardFilterMode.TRIAGE without statuses", () => {
-        spyOnProperty(service, "currentFiltersSnapshot", "get").and.returnValue({
+        vi.spyOn(service, "currentFiltersSnapshot", "get").mockReturnValue({
             fromFilterDate: undefined,
             toFilterDate: undefined,
             lastFailureDate: undefined,
@@ -184,14 +187,14 @@ describe("AccountFlowsFiltersService", () => {
         });
         const result = service.setFlowProcessFilters(ProcessCardFilterMode.TRIAGE);
         expect(result).toEqual(
-            jasmine.objectContaining({
+            expect.objectContaining({
                 effectiveStateIn: [FlowProcessEffectiveState.StoppedAuto, FlowProcessEffectiveState.Failing],
             }),
         );
     });
 
     it("should check to setFlowProcessFilters with ProcessCardFilterMode.UPCOMING_SCHEDULED without statuses", () => {
-        spyOnProperty(service, "currentFiltersSnapshot", "get").and.returnValue({
+        vi.spyOn(service, "currentFiltersSnapshot", "get").mockReturnValue({
             fromFilterDate: undefined,
             toFilterDate: undefined,
             lastFailureDate: undefined,
@@ -208,14 +211,14 @@ describe("AccountFlowsFiltersService", () => {
         });
         const result = service.setFlowProcessFilters(ProcessCardFilterMode.UPCOMING_SCHEDULED);
         expect(result).toEqual(
-            jasmine.objectContaining({
+            expect.objectContaining({
                 effectiveStateIn: [FlowProcessEffectiveState.Active, FlowProcessEffectiveState.Failing],
             }),
         );
     });
 
     it("should check to setFlowProcessFilters with ProcessCardFilterMode.UPCOMING_SCHEDULED with statuses", () => {
-        spyOnProperty(service, "currentFiltersSnapshot", "get").and.returnValue({
+        vi.spyOn(service, "currentFiltersSnapshot", "get").mockReturnValue({
             fromFilterDate: undefined,
             toFilterDate: undefined,
             lastFailureDate: undefined,
@@ -232,14 +235,14 @@ describe("AccountFlowsFiltersService", () => {
         });
         const result = service.setFlowProcessFilters(ProcessCardFilterMode.UPCOMING_SCHEDULED);
         expect(result).toEqual(
-            jasmine.objectContaining({
+            expect.objectContaining({
                 effectiveStateIn: [FlowProcessEffectiveState.Active],
             }),
         );
     });
 
     it("should check to setFlowProcessFilters with ProcessCardFilterMode.PAUSED", () => {
-        spyOnProperty(service, "currentFiltersSnapshot", "get").and.returnValue({
+        vi.spyOn(service, "currentFiltersSnapshot", "get").mockReturnValue({
             fromFilterDate: undefined,
             toFilterDate: undefined,
             lastFailureDate: undefined,
@@ -256,14 +259,14 @@ describe("AccountFlowsFiltersService", () => {
         });
         const result = service.setFlowProcessFilters(ProcessCardFilterMode.PAUSED);
         expect(result).toEqual(
-            jasmine.objectContaining({
+            expect.objectContaining({
                 effectiveStateIn: [FlowProcessEffectiveState.PausedManual],
             }),
         );
     });
 
     it("should check to setFlowProcessFilters with ProcessCardFilterMode.CUSTOM without statuses", () => {
-        spyOnProperty(service, "currentFiltersSnapshot", "get").and.returnValue({
+        vi.spyOn(service, "currentFiltersSnapshot", "get").mockReturnValue({
             fromFilterDate: undefined,
             toFilterDate: undefined,
             lastFailureDate: undefined,
@@ -280,14 +283,14 @@ describe("AccountFlowsFiltersService", () => {
         });
         const result = service.setFlowProcessFilters(ProcessCardFilterMode.CUSTOM);
         expect(result).toEqual(
-            jasmine.objectContaining({
+            expect.objectContaining({
                 effectiveStateIn: service.initialProcessFilters,
             }),
         );
     });
 
     it("should check to setFlowProcessFilters with ProcessCardFilterMode.CUSTOM with statuses", () => {
-        spyOnProperty(service, "currentFiltersSnapshot", "get").and.returnValue({
+        vi.spyOn(service, "currentFiltersSnapshot", "get").mockReturnValue({
             fromFilterDate: new Date(),
             toFilterDate: new Date(),
             lastFailureDate: undefined,
@@ -304,7 +307,7 @@ describe("AccountFlowsFiltersService", () => {
         });
         const result = service.setFlowProcessFilters(ProcessCardFilterMode.CUSTOM);
         expect(result).toEqual(
-            jasmine.objectContaining({
+            expect.objectContaining({
                 effectiveStateIn: [FlowProcessEffectiveState.Failing, FlowProcessEffectiveState.PausedManual],
             }),
         );

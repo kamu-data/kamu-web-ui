@@ -25,12 +25,12 @@ describe("authenticatedGuard", () => {
     });
 
     it("should allow an authenticated user", async () => {
-        spyOnProperty(loggedUserService, "isAuthenticated", "get").and.returnValue(true);
-        expect(await runCanActivate(authenticatedGuard)).toBeTrue();
+        vi.spyOn(loggedUserService, "isAuthenticated", "get").mockReturnValue(true);
+        expect(await runCanActivate(authenticatedGuard)).toBe(true);
     });
 
     it("should redirect an anonymous user home", async () => {
-        spyOnProperty(loggedUserService, "isAuthenticated", "get").and.returnValue(false);
+        vi.spyOn(loggedUserService, "isAuthenticated", "get").mockReturnValue(false);
         expectRedirectTo(await runCanActivate(authenticatedGuard), "/");
     });
 });

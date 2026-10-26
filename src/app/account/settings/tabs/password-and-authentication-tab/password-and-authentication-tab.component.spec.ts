@@ -40,8 +40,8 @@ describe("PasswordAndAuthenticationTabComponent", () => {
     });
 
     it("should check to update password", () => {
-        const changeUserPasswordSpy = spyOn(accountService, "changeUserPassword").and.returnValue(of(true));
-        const resetSpy = spyOn(component.changeUserAccountPasswordForm, "reset");
+        const changeUserPasswordSpy = vi.spyOn(accountService, "changeUserPassword").mockReturnValue(of(true));
+        const resetSpy = vi.spyOn(component.changeUserAccountPasswordForm, "reset").mockImplementation(() => {});
         component.updateUserPassword();
         expect(changeUserPasswordSpy).toHaveBeenCalledTimes(1);
         expect(resetSpy).toHaveBeenCalledTimes(1);

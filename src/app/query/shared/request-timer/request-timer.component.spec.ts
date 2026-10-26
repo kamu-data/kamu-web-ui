@@ -67,7 +67,7 @@ describe("RequestTimerComponent", () => {
         const timeElement = findElementByDataTestId(fixture, "duration-request-time");
         expect(timeElement?.textContent?.trim()).toEqual("00:00:01.00");
 
-        spyOnProperty(document, "visibilityState").and.returnValue("hidden");
+        vi.spyOn(document, "visibilityState", "get").mockReturnValue("hidden");
         document.dispatchEvent(new Event("visibilitychange"));
         fixture.detectChanges();
 

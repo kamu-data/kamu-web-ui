@@ -15,7 +15,7 @@ describe("DragAndDropDirective", () => {
 
     it("should drop event", () => {
         const directive = new DragAndDropDirective();
-        const fileDroppedSpy = spyOn(directive.fileDropped, "emit");
+        const fileDroppedSpy = vi.spyOn(directive.fileDropped, "emit").mockImplementation(() => {});
         const file = new File([""], "dummy.jpg");
         const dataTransfer = new DataTransfer();
         dataTransfer.items.add(file);

@@ -109,9 +109,9 @@ describe("EditKeyValueModalComponent", () => {
     });
 
     it("should check add new variable", () => {
-        const evnironmentVariablesServiceSpy = spyOn(evnironmentVariablesService, "upsertEnvVariable").and.returnValue(
-            of(),
-        );
+        const evnironmentVariablesServiceSpy = vi
+            .spyOn(evnironmentVariablesService, "upsertEnvVariable")
+            .mockReturnValue(of());
         setComponentInput(fixture, "row", null);
         fixture.detectChanges();
         setFieldValue(fixture, "key", "key-1");
@@ -125,9 +125,9 @@ describe("EditKeyValueModalComponent", () => {
     });
 
     it("should check edit new variable", () => {
-        const evnironmentVariablesServiceSpy = spyOn(evnironmentVariablesService, "upsertEnvVariable").and.returnValue(
-            of(),
-        );
+        const evnironmentVariablesServiceSpy = vi
+            .spyOn(evnironmentVariablesService, "upsertEnvVariable")
+            .mockReturnValue(of());
         setComponentInput(
             fixture,
             "row",
@@ -145,10 +145,9 @@ describe("EditKeyValueModalComponent", () => {
             "row",
             requireValue(mockListEnvVariablesQuery.datasets.byOwnerAndName?.envVars.listEnvVariables.nodes[2] ?? null),
         );
-        const exposedEnvVariableValueSpy = spyOn(
-            evnironmentVariablesService,
-            "exposedEnvVariableValue",
-        ).and.returnValue(of("exposed-value"));
+        const exposedEnvVariableValueSpy = vi
+            .spyOn(evnironmentVariablesService, "exposedEnvVariableValue")
+            .mockReturnValue(of("exposed-value"));
         fixture.detectChanges();
 
         expect(exposedEnvVariableValueSpy).toHaveBeenCalledTimes(1);

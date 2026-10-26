@@ -76,8 +76,8 @@ describe("DatasetViewComponent", () => {
         datasetSubsServices = TestBed.inject(DatasetSubscriptionsService);
         datasetSubsServices.emitPermissionsChanged(mockFullPowerDatasetPermissionsFragment);
         datasetService = TestBed.inject(DatasetService);
-        spyOnProperty(datasetService, "datasetChanges", "get").and.returnValue(of(mockDatasetBasicsDerivedFragment));
-        spyOn(datasetService, "isHeadHashBlockChanged").and.returnValue(of(false));
+        vi.spyOn(datasetService, "datasetChanges", "get").mockReturnValue(of(mockDatasetBasicsDerivedFragment));
+        vi.spyOn(datasetService, "isHeadHashBlockChanged").mockReturnValue(of(false));
 
         fixture = TestBed.createComponent(DatasetViewComponent);
         navigationService = TestBed.inject(NavigationService);
@@ -96,7 +96,7 @@ describe("DatasetViewComponent", () => {
 
     it("should check navigate to owner view", () => {
         fixture.detectChanges();
-        const navigateToOwnerViewSpy = spyOn(navigationService, "navigateToOwnerView");
+        const navigateToOwnerViewSpy = vi.spyOn(navigationService, "navigateToOwnerView").mockImplementation(() => {});
         component.showOwnerPage(mockDatasetBasicsDerivedFragment.owner.accountName);
         expect(navigateToOwnerViewSpy).toHaveBeenCalledWith(mockDatasetBasicsDerivedFragment.owner.accountName);
     });

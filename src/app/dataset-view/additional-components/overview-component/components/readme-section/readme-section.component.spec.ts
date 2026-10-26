@@ -53,7 +53,7 @@ describe("ReadmeSectionComponent", () => {
         loggedUserService = TestBed.inject(LoggedUserService);
         setComponentInput(fixture, "datasetBasics", mockDatasetBasicsDerivedFragment);
         setComponentInput(fixture, "currentReadme", mockReadmeContent);
-        spyOnProperty(loggedUserService, "currentlyLoggedInUser", "get").and.returnValue(mockAccountDetails);
+        vi.spyOn(loggedUserService, "currentlyLoggedInUser", "get").mockReturnValue(mockAccountDetails);
     });
 
     it("should create", () => {
@@ -100,7 +100,7 @@ describe("ReadmeSectionComponent", () => {
     it("should check save changes", fakeAsync(() => {
         fixture.detectChanges();
         component.readmeState = mockReadmeContent + "modified";
-        const updateReadmeSpy = spyOn(datasetCommitService, "updateReadme").and.returnValue(of());
+        const updateReadmeSpy = vi.spyOn(datasetCommitService, "updateReadme").mockReturnValue(of());
         emitClickOnElementByDataTestId(fixture, "show-edit-tabs");
         fixture.detectChanges();
         emitClickOnElementByDataTestId(fixture, "save-changes");
@@ -150,7 +150,7 @@ describe("ReadmeSectionComponent", () => {
             runButtonElement.href.includes(
                 "kamu/mockNameDerived/data?sqlQuery=select%20*%20from%20%27account.tokens.portfolio.market-value%27",
             ),
-        ).toBeTrue();
+        ).toBe(true);
     });
 
     it("should check Run button navigate to Data tab with line breaks", async () => {
@@ -170,6 +170,6 @@ describe("ReadmeSectionComponent", () => {
             runButtonElement.href.includes(
                 "kamu/mockNameDerived/data?sqlQuery=select%0A*%0Afrom%20%27account.tokens.portfolio.market-value%27",
             ),
-        ).toBeTrue();
+        ).toBe(true);
     });
 });

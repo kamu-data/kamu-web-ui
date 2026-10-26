@@ -5,7 +5,9 @@
  * included in the LICENSE file.
  */
 
-import { Observable, of, Subject } from "rxjs";
+import { of, Subject } from "rxjs";
+
+import type { Mock } from "vitest";
 
 import { DatasetBasicsFragment, DatasetByIdQuery } from "@api/kamu.graphql.interface";
 import { mockDatasetByIdQuery } from "@api/mock/dataset.mock";
@@ -19,7 +21,7 @@ describe("datasetByIdChanges", () => {
     const mockMissingDatasetByIdQuery: DatasetByIdQuery = { datasets: { __typename: "Datasets", byId: null } };
 
     let datasetIds$: Subject<MaybeNull<string>>;
-    let requestSpy: jasmine.Spy<(datasetId: string) => Observable<DatasetByIdQuery>>;
+    let requestSpy: Mock;
     let emitted: MaybeNull<DatasetBasicsFragment>[];
     let firstResponse$: Subject<DatasetByIdQuery>;
     let secondResponse$: Subject<DatasetByIdQuery>;
@@ -28,16 +30,19 @@ describe("datasetByIdChanges", () => {
         datasetIds$ = new Subject<MaybeNull<string>>();
         firstResponse$ = new Subject<DatasetByIdQuery>();
         secondResponse$ = new Subject<DatasetByIdQuery>();
-        requestSpy = jasmine
-            .createSpy("requestDatasetInfoById")
-            .and.callFake((datasetId: string) => (datasetId === FIRST_DATASET_ID ? firstResponse$ : secondResponse$));
+        requestSpy = vi
+            .fn()
+            .mockImplementation((datasetId: string) =>
+                datasetId === FIRST_DATASET_ID ? firstResponse$ : secondResponse$,
+            );
         emitted = [];
         datasetByIdChanges(datasetIds$, requestSpy).subscribe((dataset) => emitted.push(dataset));
     });
 
     it("should emit null for a new id, then the dataset once it loads", () => {
         datasetIds$.next(FIRST_DATASET_ID);
-        expect(requestSpy).toHaveBeenCalledOnceWith(FIRST_DATASET_ID);
+        expect(requestSpy).toHaveBeenCalledTimes(1);
+        expect(requestSpy).toHaveBeenCalledWith(FIRST_DATASET_ID);
         expect(emitted).toEqual([null]);
 
         firstResponse$.next(mockDatasetByIdQuery);
@@ -60,7 +65,7 @@ describe("datasetByIdChanges", () => {
     });
 
     it("should emit null when the id matches no dataset", () => {
-        requestSpy.and.returnValue(of(mockMissingDatasetByIdQuery));
+        requestSpy.mockReturnValue(of(mockMissingDatasetByIdQuery));
 
         datasetIds$.next(FIRST_DATASET_ID);
 

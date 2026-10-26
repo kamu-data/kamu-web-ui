@@ -38,7 +38,7 @@ describe("CacheFieldComponent", () => {
 
     it("should check checked and unchecked value", fakeAsync(() => {
         const cacheCheckbox = requireValue(findElement(fixture, '[data-test-id="cache-control"]'));
-        const onCheckedCacheSpy = spyOn(component, "onCheckedCache").and.callThrough();
+        const onCheckedCacheSpy = vi.spyOn(component, "onCheckedCache");
 
         cacheCheckbox.triggerEventHandler("change", {
             target: { checked: true },

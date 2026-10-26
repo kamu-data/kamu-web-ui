@@ -12,6 +12,8 @@ import { TestBed } from "@angular/core/testing";
 import { Apollo } from "apollo-angular";
 import { provideToastr, ToastrService } from "ngx-toastr";
 
+import { stubMethod } from "@common/helpers/base-test.helpers.spec";
+
 import { LoggedUserService } from "src/app/auth/logged-user.service";
 import { mockSqlQueryRestResponse } from "src/app/search/mock.data";
 import { SqlQueryService } from "src/app/services/sql-query.service";
@@ -34,7 +36,7 @@ describe("SqlQueryService", () => {
         httpMock = TestBed.inject(HttpTestingController);
         loggedUserService = TestBed.inject(LoggedUserService);
         toastrService = TestBed.inject(ToastrService);
-        spyOnProperty(loggedUserService, "isAuthenticated", "get").and.returnValue(true);
+        vi.spyOn(loggedUserService, "isAuthenticated", "get").mockReturnValue(true);
     });
 
     afterEach(() => {
@@ -49,7 +51,9 @@ describe("SqlQueryService", () => {
         const query = "select\n  *\nfrom testTable";
         const limit = 20;
 
-        const emitSqlQueryResponseChangedSpy = spyOn(service, "emitSqlQueryResponseChanged");
+        const emitSqlQueryResponseChangedSpy = vi
+            .spyOn(service, "emitSqlQueryResponseChanged")
+            .mockImplementation(() => {});
 
         service.requestDataSqlRun({ query, limit }).subscribe(() => {
             expect(emitSqlQueryResponseChangedSpy).toHaveBeenCalledTimes(1);
@@ -63,8 +67,8 @@ describe("SqlQueryService", () => {
 
     function runFailingQuery(): void {
         service.requestDataSqlRun({ query: QUERY }).subscribe({
-            next: () => fail("should not emit for a failed request"),
-            error: () => fail("should not fail the stream"),
+            next: () => expect.fail("should not emit for a failed request"),
+            error: () => expect.fail("should not fail the stream"),
         });
     }
 
@@ -75,65 +79,79 @@ describe("SqlQueryService", () => {
     }
 
     it("should show the message of a 400 response as an SQL error, without a toast", () => {
-        const emitSqlErrorOccurredSpy = spyOn(service, "emitSqlErrorOccurred");
-        const toastrErrorSpy = spyOn(toastrService, "error");
+        const emitSqlErrorOccurredSpy = vi.spyOn(service, "emitSqlErrorOccurred").mockImplementation(() => {});
+        const toastrErrorSpy = stubMethod(toastrService, "error");
 
         runFailingQuery();
         expectQueryRequest().flush({ message: SERVER_MESSAGE }, { status: 400, statusText: "Bad Request" });
 
-        expect(emitSqlErrorOccurredSpy).toHaveBeenCalledOnceWith({ error: SERVER_MESSAGE });
+        expect(emitSqlErrorOccurredSpy).toHaveBeenCalledTimes(1);
+
+        expect(emitSqlErrorOccurredSpy).toHaveBeenCalledWith({ error: SERVER_MESSAGE });
         expect(toastrErrorSpy).not.toHaveBeenCalled();
     });
 
     it("should show the plain-text body of a 400 response as an SQL error", () => {
-        const emitSqlErrorOccurredSpy = spyOn(service, "emitSqlErrorOccurred");
+        const emitSqlErrorOccurredSpy = vi.spyOn(service, "emitSqlErrorOccurred").mockImplementation(() => {});
 
         runFailingQuery();
         expectQueryRequest().flush(SERVER_MESSAGE, { status: 400, statusText: "Bad Request" });
 
-        expect(emitSqlErrorOccurredSpy).toHaveBeenCalledOnceWith({ error: SERVER_MESSAGE });
+        expect(emitSqlErrorOccurredSpy).toHaveBeenCalledTimes(1);
+
+        expect(emitSqlErrorOccurredSpy).toHaveBeenCalledWith({ error: SERVER_MESSAGE });
     });
 
     it("should show the server message of a failed request other than 400 in a toast", () => {
-        const emitSqlErrorOccurredSpy = spyOn(service, "emitSqlErrorOccurred");
-        const toastrErrorSpy = spyOn(toastrService, "error");
+        const emitSqlErrorOccurredSpy = vi.spyOn(service, "emitSqlErrorOccurred").mockImplementation(() => {});
+        const toastrErrorSpy = stubMethod(toastrService, "error");
 
         runFailingQuery();
         expectQueryRequest().flush({ message: SERVER_MESSAGE }, { status: 500, statusText: "Internal Server Error" });
 
-        expect(toastrErrorSpy).toHaveBeenCalledOnceWith(SERVER_MESSAGE);
+        expect(toastrErrorSpy).toHaveBeenCalledTimes(1);
+
+        expect(toastrErrorSpy).toHaveBeenCalledWith(SERVER_MESSAGE);
         expect(emitSqlErrorOccurredSpy).not.toHaveBeenCalled();
     });
 
     it("should report the host as unreachable when the request never reached the server", () => {
-        const toastrErrorSpy = spyOn(toastrService, "error");
+        const toastrErrorSpy = stubMethod(toastrService, "error");
 
         runFailingQuery();
         const req = expectQueryRequest();
         req.error(new ProgressEvent("error"), { status: 0, statusText: "Unknown Error" });
 
-        expect(toastrErrorSpy).toHaveBeenCalledOnceWith(`Unable to resolve/connect to host: ${req.request.url}`);
+        expect(toastrErrorSpy).toHaveBeenCalledTimes(1);
+
+        expect(toastrErrorSpy).toHaveBeenCalledWith(`Unable to resolve/connect to host: ${req.request.url}`);
     });
 
     it("should report the host as unreachable for a failed response without a body message", () => {
-        const emitSqlErrorOccurredSpy = spyOn(service, "emitSqlErrorOccurred");
-        const toastrErrorSpy = spyOn(toastrService, "error");
+        const emitSqlErrorOccurredSpy = vi.spyOn(service, "emitSqlErrorOccurred").mockImplementation(() => {});
+        const toastrErrorSpy = stubMethod(toastrService, "error");
 
         runFailingQuery();
         const req = expectQueryRequest();
         req.flush(null, { status: 502, statusText: "Bad Gateway" });
 
-        expect(toastrErrorSpy).toHaveBeenCalledOnceWith(`Unable to resolve/connect to host: ${req.request.url}`);
+        expect(toastrErrorSpy).toHaveBeenCalledTimes(1);
+
+        expect(toastrErrorSpy).toHaveBeenCalledWith(`Unable to resolve/connect to host: ${req.request.url}`);
         expect(emitSqlErrorOccurredSpy).not.toHaveBeenCalled();
     });
 
     it("should show the message of an error raised while reading the response", () => {
-        spyOn(service, "emitSqlQueryResponseChanged").and.throwError("Broken response");
-        const toastrErrorSpy = spyOn(toastrService, "error");
+        vi.spyOn(service, "emitSqlQueryResponseChanged").mockImplementation(() => {
+            throw new Error("Broken response");
+        });
+        const toastrErrorSpy = stubMethod(toastrService, "error");
 
         runFailingQuery();
         expectQueryRequest().flush(mockSqlQueryRestResponse);
 
-        expect(toastrErrorSpy).toHaveBeenCalledOnceWith("Broken response");
+        expect(toastrErrorSpy).toHaveBeenCalledTimes(1);
+
+        expect(toastrErrorSpy).toHaveBeenCalledWith("Broken response");
     });
 });

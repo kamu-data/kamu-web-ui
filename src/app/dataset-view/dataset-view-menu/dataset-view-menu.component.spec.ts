@@ -51,12 +51,14 @@ describe("DatasetViewMenuComponent", () => {
 
     it("should check element has appFeatureFlag directive", () => {
         const navigateToDiscussionsElem = findElementByDataTestId(fixture, "navigateToDiscussions");
-        expect(navigateToDiscussionsElem?.hasAttribute("appfeatureflag")).toBeTrue();
+        expect(navigateToDiscussionsElem?.hasAttribute("appfeatureflag")).toBe(true);
         expect(navigateToDiscussionsElem?.getAttribute("appfeatureflag")).toEqual("dataset.panel.discussions");
     });
 
     it("should report the menu offset to the widget height service once rendered", () => {
-        const setWidgetOffsetTopSpy = spyOn(TestBed.inject(WidgetHeightService), "setWidgetOffsetTop");
+        const setWidgetOffsetTopSpy = vi
+            .spyOn(TestBed.inject(WidgetHeightService), "setWidgetOffsetTop")
+            .mockImplementation(() => {});
         const menuFixture = TestBed.createComponent(DatasetViewMenuComponent);
         setComponentInput(menuFixture, "datasetBasics", mockDatasetBasicsDerivedFragment);
         setComponentInput(menuFixture, "datasetPermissions", mockFullPowerDatasetPermissionsFragment);
@@ -67,7 +69,8 @@ describe("DatasetViewMenuComponent", () => {
         TestBed.inject(ApplicationRef).tick();
 
         const menuElement = findElementByDataTestId(menuFixture, "dataset-view-menu");
-        expect(setWidgetOffsetTopSpy).toHaveBeenCalledOnceWith(
+        expect(setWidgetOffsetTopSpy).toHaveBeenCalledTimes(1);
+        expect(setWidgetOffsetTopSpy).toHaveBeenCalledWith(
             (menuElement?.clientHeight ?? 0) + (menuElement?.offsetTop ?? 0),
         );
     });

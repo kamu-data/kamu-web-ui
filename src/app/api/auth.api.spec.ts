@@ -78,7 +78,7 @@ describe("AuthApi", () => {
 
         tick();
 
-        expect(subscription$.closed).toBeTrue();
+        expect(subscription$.closed).toBe(true);
 
         flush();
     }));
@@ -88,7 +88,7 @@ describe("AuthApi", () => {
 
         controller.expectOne(GetEnabledLoginMethodsDocument).networkError(new Error("Server unreachable"));
 
-        await expectAsync(result).toBeRejectedWithError("Server unreachable");
+        await expect(result).rejects.toThrowError("Server unreachable");
     });
 
     it("should fail reading login methods on a GraphQL error", async () => {
@@ -96,7 +96,7 @@ describe("AuthApi", () => {
 
         controller.expectOne(GetEnabledLoginMethodsDocument).graphqlErrors([{ message: "Internal error" }]);
 
-        await expectAsync(result).toBeRejected();
+        await expect(result).rejects.toThrow();
     });
 
     it("should check full login password success", () => {
@@ -126,7 +126,7 @@ describe("AuthApi", () => {
             })
             .pipe(first())
             .subscribe({
-                next: () => fail("Unexpected success"),
+                next: () => expect.fail("Unexpected success"),
                 error: (e: Error) => {
                     expect(CombinedGraphQLErrors.is(e)).toBe(true);
                 },
@@ -136,7 +136,7 @@ describe("AuthApi", () => {
         op.graphqlErrors([mockLogin401Error]);
         tick();
 
-        expect(subscription$.closed).toBeTrue();
+        expect(subscription$.closed).toBe(true);
         flush();
     }));
 
@@ -159,7 +159,7 @@ describe("AuthApi", () => {
             .fetchAccountAndTokenFromGithubCallbackCode({ code: TEST_GITHUB_CODE })
             .pipe(first())
             .subscribe({
-                next: () => fail("Unexpected success"),
+                next: () => expect.fail("Unexpected success"),
                 error: (e: Error) => {
                     expect(CombinedGraphQLErrors.is(e)).toBe(true);
                 },
@@ -169,7 +169,7 @@ describe("AuthApi", () => {
         op.graphqlErrors([mockLogin401Error]);
         tick();
 
-        expect(subscription$.closed).toBeTrue();
+        expect(subscription$.closed).toBe(true);
         flush();
     }));
 
@@ -189,7 +189,7 @@ describe("AuthApi", () => {
             .fetchAccountFromAccessToken(TEST_ACCESS_TOKEN_GITHUB)
             .pipe(first())
             .subscribe({
-                next: () => fail("Unexpected success"),
+                next: () => expect.fail("Unexpected success"),
                 error: (e: Error) => {
                     expect(CombinedGraphQLErrors.is(e)).toBe(true);
                 },
@@ -199,7 +199,7 @@ describe("AuthApi", () => {
         op.graphqlErrors([mockLogin401Error]);
         tick();
 
-        expect(subscription$.closed).toBeTrue();
+        expect(subscription$.closed).toBe(true);
         flush();
     }));
 

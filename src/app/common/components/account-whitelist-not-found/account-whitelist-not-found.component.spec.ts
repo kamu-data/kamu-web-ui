@@ -18,7 +18,7 @@ describe("AccountWhitelistNotFoundComponent", () => {
     let fixture: ComponentFixture<AccountWhitelistNotFoundComponent>;
 
     function createComponent(supportEmail: MaybeUndefined<string>): void {
-        spyOnProperty(TestBed.inject(AppConfigService), "supportEmail", "get").and.returnValue(supportEmail);
+        vi.spyOn(TestBed.inject(AppConfigService), "supportEmail", "get").mockReturnValue(supportEmail);
         fixture = TestBed.createComponent(AccountWhitelistNotFoundComponent);
         component = fixture.componentInstance;
         fixture.detectChanges();

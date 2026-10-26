@@ -87,10 +87,10 @@ describe("TimeDeltaFormComponent", () => {
         await timeDeltaHarness.setTimeDelta(-5, TimeUnit.Minutes);
 
         const isInvalid = await timeDeltaHarness.isEveryInputInvalid();
-        expect(isInvalid).toBeTrue();
+        expect(isInvalid).toBe(true);
 
         const isUntouched = await timeDeltaHarness.isEveryInputUntouched();
-        expect(isUntouched).toBeFalse();
+        expect(isUntouched).toBe(false);
 
         const errorMessage = await timeDeltaHarness.getErrorMessage();
         expect(errorMessage).toEqual("Value should be between 1 to 60");
@@ -100,10 +100,10 @@ describe("TimeDeltaFormComponent", () => {
         await timeDeltaHarness.setTimeDelta("" /*indicates empty value*/, TimeUnit.Minutes);
 
         const isInvalid = await timeDeltaHarness.isEveryInputInvalid();
-        expect(isInvalid).toBeTrue();
+        expect(isInvalid).toBe(true);
 
         const isUntouched = await timeDeltaHarness.isEveryInputUntouched();
-        expect(isUntouched).toBeFalse();
+        expect(isUntouched).toBe(false);
 
         fixture.detectChanges();
 
@@ -115,10 +115,10 @@ describe("TimeDeltaFormComponent", () => {
         await timeDeltaHarness.setTimeDelta(30, TimeUnit.Minutes);
 
         const isInvalid = await timeDeltaHarness.isEveryInputInvalid();
-        expect(isInvalid).toBeFalse();
+        expect(isInvalid).toBe(false);
 
         const isUntouched = await timeDeltaHarness.isEveryInputUntouched();
-        expect(isUntouched).toBeFalse();
+        expect(isUntouched).toBe(false);
 
         const errorMessage = await timeDeltaHarness.getErrorMessage();
         expect(errorMessage).toBeNull();
@@ -126,10 +126,10 @@ describe("TimeDeltaFormComponent", () => {
 
     it("should not display error message if every input was not touched even though it is invalid", async () => {
         const isInvalid = await timeDeltaHarness.isEveryInputInvalid();
-        expect(isInvalid).toBeTrue();
+        expect(isInvalid).toBe(true);
 
         const isUntouched = await timeDeltaHarness.isEveryInputUntouched();
-        expect(isUntouched).toBeTrue();
+        expect(isUntouched).toBe(true);
 
         const errorMessage = await timeDeltaHarness.getErrorMessage();
         expect(errorMessage).toBeNull();
@@ -204,11 +204,11 @@ describe("TimeDeltaFormComponent with excluded units", () => {
         expect(unit).toBe(TimeUnit.Days);
 
         const isInvalid = await timeDeltaHarness.isEveryInputInvalid();
-        expect(isInvalid).toBeFalse();
+        expect(isInvalid).toBe(false);
     });
 
     it("should throw error when trying to set excluded unit", async () => {
-        await expectAsync(timeDeltaHarness.setTimeDelta(30, TimeUnit.Minutes)).toBeRejectedWithError(
+        await expect(timeDeltaHarness.setTimeDelta(30, TimeUnit.Minutes)).rejects.toThrowError(
             "Unit MINUTES is not available in the current configuration",
         );
     });

@@ -36,14 +36,14 @@ describe("metadataTransformationTabResolverFn", () => {
         });
         datasetService = TestBed.inject(DatasetService);
         datasetSubsService = TestBed.inject(DatasetSubscriptionsService);
-        spyOnProperty(datasetSubsService, "permissionsChanges", "get").and.returnValue(
+        vi.spyOn(datasetSubsService, "permissionsChanges", "get").mockReturnValue(
             of(mockFullPowerDatasetPermissionsFragment),
         );
-        spyOnProperty(datasetSubsService, "overviewChanges", "get").and.returnValue(of(mockOverviewUpdate));
+        vi.spyOn(datasetSubsService, "overviewChanges", "get").mockReturnValue(of(mockOverviewUpdate));
     });
 
     function resolve(datasetBasics: DatasetBasicsFragment): Promise<DatasetOverviewTabData | RedirectCommand> {
-        spyOnProperty(datasetService, "datasetChanges", "get").and.returnValue(of(datasetBasics));
+        vi.spyOn(datasetService, "datasetChanges", "get").mockReturnValue(of(datasetBasics));
         return runResolver(metadataTransformationTabResolverFn);
     }
 
@@ -64,7 +64,7 @@ describe("metadataTransformationTabResolverFn", () => {
     });
 
     it("should redirect to page not found when the dataset cannot be loaded", async () => {
-        spyOnProperty(datasetService, "datasetChanges", "get").and.returnValue(throwError(() => new Error("fail")));
+        vi.spyOn(datasetService, "datasetChanges", "get").mockReturnValue(throwError(() => new Error("fail")));
 
         const data = await runResolver(metadataTransformationTabResolverFn);
 

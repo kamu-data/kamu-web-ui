@@ -15,10 +15,12 @@ import { of, Subject, throwError } from "rxjs";
 
 import { Apollo } from "apollo-angular";
 import { provideToastr, ToastrService } from "ngx-toastr";
+import type { Mock } from "vitest";
 
 import { environment } from "@env/environment";
 import { ModalService } from "@common/components/modal/modal.service";
-import { registerMatSvgIcons, setComponentInput } from "@common/helpers/base-test.helpers.spec";
+import { requireValue } from "@common/helpers/app.helpers";
+import { registerMatSvgIcons, setComponentInput, stubMethod } from "@common/helpers/base-test.helpers.spec";
 import { SharedTestModule } from "@common/modules/shared-test.module";
 import AppValues from "@common/values/app.values";
 import { FlowProcessEffectiveState, FlowStatus } from "@api/kamu.graphql.interface";
@@ -65,18 +67,20 @@ describe("AccountFlowsProcessesSubtabComponent", () => {
     const MOCK_ACCOUNT_NAME = "kamu";
     const MOCK_SUBSCRIPTION_ID = "121223-21212-567788";
 
-    let getAccountAllCardsSpy: jasmine.Spy<AccountService["getAccountAllCards"]>;
+    let getAccountAllCardsSpy: Mock<AccountService["getAccountAllCards"]>;
 
     // A new object each time: the "View:" toggle writes the selected mode into it
     function accountFlowsData(datasetsFiltersMode: ProcessCardFilterMode): AccountFlowsType {
         return { activeNav: AccountFlowsNav.PROCESSES, flowGroup: [FlowStatus.Finished], datasetsFiltersMode };
     }
 
-    function answerConfirmModal(ok: boolean): jasmine.Spy {
-        return spyOn(TestBed.inject(ModalService), "error").and.callFake((options: ModalArgumentsInterface) => {
-            options.handler?.call(undefined, ok);
-            return Promise.resolve("");
-        });
+    function answerConfirmModal(ok: boolean): Mock {
+        return vi
+            .spyOn(TestBed.inject(ModalService), "error")
+            .mockImplementation((options: ModalArgumentsInterface) => {
+                options.handler?.call(undefined, ok);
+                return Promise.resolve("");
+            });
     }
 
     // Tick before loading: the first poll runs on an interval, which the harness's own flush skips
@@ -126,7 +130,7 @@ describe("AccountFlowsProcessesSubtabComponent", () => {
         component = fixture.componentInstance;
         setComponentInput(fixture, "accountName", MOCK_ACCOUNT_NAME);
         setComponentInput(fixture, "accountFlowsData", accountFlowsData(ProcessCardFilterMode.CUSTOM));
-        getAccountAllCardsSpy = spyOn(accountService, "getAccountAllCards").and.returnValue(
+        getAccountAllCardsSpy = vi.spyOn(accountService, "getAccountAllCards").mockReturnValue(
             of({
                 cards: mockAccountAllCards,
                 rollup: mockAccountFullRollup,
@@ -141,7 +145,7 @@ describe("AccountFlowsProcessesSubtabComponent", () => {
 
     it("should empty block is visible", fakeAsync(async () => {
         fixture.detectChanges();
-        getAccountAllCardsSpy.and.returnValue(
+        getAccountAllCardsSpy.mockReturnValue(
             of({
                 cards: mockAccountAllCardsEmpty,
                 rollup: mockAccountFullRollup,
@@ -150,14 +154,14 @@ describe("AccountFlowsProcessesSubtabComponent", () => {
         tick(0);
         const processesSubtab = await loadHarness();
 
-        expect(await processesSubtab.isEmptyCardsBlockVisible()).toBeTrue();
-        expect(await processesSubtab.isCardsBlockVisible()).toBeFalse();
+        expect(await processesSubtab.isEmptyCardsBlockVisible()).toBe(true);
+        expect(await processesSubtab.isCardsBlockVisible()).toBe(false);
         discardPeriodicTasks();
     }));
 
     it("should check cards is visible", fakeAsync(async () => {
         fixture.detectChanges();
-        getAccountAllCardsSpy.and.returnValue(
+        getAccountAllCardsSpy.mockReturnValue(
             of({
                 cards: mockAccountAllCardsWithWebhook,
                 rollup: mockAccountFullRollup,
@@ -166,22 +170,21 @@ describe("AccountFlowsProcessesSubtabComponent", () => {
         tick(0);
         const processesSubtab = await loadHarness();
 
-        expect(await processesSubtab.isCardsBlockVisible()).toBeTrue();
-        expect(await processesSubtab.isEmptyCardsBlockVisible()).toBeFalse();
+        expect(await processesSubtab.isCardsBlockVisible()).toBe(true);
+        expect(await processesSubtab.isEmptyCardsBlockVisible()).toBe(false);
         discardPeriodicTasks();
     }));
 
     it("should check to refresh page", () => {
-        const fetchCardsDataSpy = spyOn(component, "fetchCardsData");
+        const fetchCardsDataSpy = vi.spyOn(component, "fetchCardsData").mockImplementation(() => {});
         component.refreshPage();
         expect(fetchCardsDataSpy).toHaveBeenCalledTimes(1);
     });
 
     it("should check to toggle webhook card with active state", fakeAsync(() => {
-        const datasetWebhookPauseSubscriptionSpy = spyOn(
-            datasetWebhooksService,
-            "datasetWebhookPauseSubscription",
-        ).and.returnValue(of(true));
+        const datasetWebhookPauseSubscriptionSpy = vi
+            .spyOn(datasetWebhooksService, "datasetWebhookPauseSubscription")
+            .mockReturnValue(of(true));
         component.toggleWebhookCardState({
             state: FlowProcessEffectiveState.Active,
             datasetBasics: mockDatasetBasicsRootFragment,
@@ -193,10 +196,9 @@ describe("AccountFlowsProcessesSubtabComponent", () => {
     }));
 
     it("should check to toggle webhook card with stopped state", fakeAsync(() => {
-        const datasetWebhookResumeSubscriptionSpy = spyOn(
-            datasetWebhooksService,
-            "datasetWebhookResumeSubscription",
-        ).and.returnValue(of(true));
+        const datasetWebhookResumeSubscriptionSpy = vi
+            .spyOn(datasetWebhooksService, "datasetWebhookResumeSubscription")
+            .mockReturnValue(of(true));
         component.toggleWebhookCardState({
             state: FlowProcessEffectiveState.StoppedAuto,
             datasetBasics: mockDatasetBasicsRootFragment,
@@ -208,7 +210,7 @@ describe("AccountFlowsProcessesSubtabComponent", () => {
     }));
 
     it("should check to toggle dataset card with active state", fakeAsync(() => {
-        const datasetPauseFlowsSpy = spyOn(datasetFlowsService, "datasetPauseFlows").and.returnValue(of(void 0));
+        const datasetPauseFlowsSpy = vi.spyOn(datasetFlowsService, "datasetPauseFlows").mockReturnValue(of(void 0));
         component.toggleStateDatasetCard({
             state: FlowProcessEffectiveState.Active,
             datasetBasics: mockDatasetBasicsRootFragment,
@@ -220,7 +222,7 @@ describe("AccountFlowsProcessesSubtabComponent", () => {
 
     it("should check to toggle dataset card with stopped state", fakeAsync(() => {
         answerConfirmModal(true);
-        const datasetResumeFlowsSpy = spyOn(datasetFlowsService, "datasetResumeFlows").and.returnValue(of(void 0));
+        const datasetResumeFlowsSpy = vi.spyOn(datasetFlowsService, "datasetResumeFlows").mockReturnValue(of(void 0));
         component.toggleStateDatasetCard({
             state: FlowProcessEffectiveState.StoppedAuto,
             datasetBasics: mockDatasetBasicsRootFragment,
@@ -231,10 +233,10 @@ describe("AccountFlowsProcessesSubtabComponent", () => {
     }));
 
     it("should check to update process for card belongs the root dataset", fakeAsync(() => {
-        const toastrSuccessSpy = spyOn(toastrService, "success");
-        const datasetTriggerIngestFlowSpy = spyOn(datasetFlowsService, "datasetTriggerIngestFlow").and.returnValue(
-            of(true),
-        );
+        const toastrSuccessSpy = stubMethod(toastrService, "success");
+        const datasetTriggerIngestFlowSpy = vi
+            .spyOn(datasetFlowsService, "datasetTriggerIngestFlow")
+            .mockReturnValue(of(true));
         component.updateNow(mockDatasetBasicsRootFragment);
         tick(component.TIMEOUT_REFRESH_FLOW);
         expect(toastrSuccessSpy).toHaveBeenCalledTimes(1);
@@ -243,11 +245,10 @@ describe("AccountFlowsProcessesSubtabComponent", () => {
     }));
 
     it("should check to update process for card belongs the derivative dataset", fakeAsync(() => {
-        const toastrSuccessSpy = spyOn(toastrService, "success");
-        const datasetTriggerTransformFlowSpy = spyOn(
-            datasetFlowsService,
-            "datasetTriggerTransformFlow",
-        ).and.returnValue(of(true));
+        const toastrSuccessSpy = stubMethod(toastrService, "success");
+        const datasetTriggerTransformFlowSpy = vi
+            .spyOn(datasetFlowsService, "datasetTriggerTransformFlow")
+            .mockReturnValue(of(true));
         component.updateNow(mockDatasetBasicsDerivedFragment);
         tick(component.TIMEOUT_REFRESH_FLOW);
         expect(toastrSuccessSpy).toHaveBeenCalledTimes(1);
@@ -260,7 +261,7 @@ describe("AccountFlowsProcessesSubtabComponent", () => {
         tick(0);
         const processesSubtab = await loadHarness();
 
-        expect(await processesSubtab.isFiltersModeSelected(ProcessCardFilterMode.CUSTOM)).toBeTrue();
+        expect(await processesSubtab.isFiltersModeSelected(ProcessCardFilterMode.CUSTOM)).toBe(true);
         expect(await processesSubtab.getSelectedRollupStates()).toEqual([
             FlowProcessEffectiveState.Active,
             FlowProcessEffectiveState.Failing,
@@ -271,7 +272,10 @@ describe("AccountFlowsProcessesSubtabComponent", () => {
     }));
 
     describe("'View:' mode toggle", () => {
-        const cases: { mode: ProcessCardFilterMode; shownStates: FlowProcessEffectiveState[] }[] = [
+        const cases: {
+            mode: ProcessCardFilterMode;
+            shownStates: FlowProcessEffectiveState[];
+        }[] = [
             {
                 mode: ProcessCardFilterMode.RECENT_ACTIVITY,
                 shownStates: [
@@ -298,11 +302,15 @@ describe("AccountFlowsProcessesSubtabComponent", () => {
                 fixture.detectChanges();
                 tick(0);
                 const processesSubtab = await loadHarness();
-                const navigateToOwnerViewSpy = spyOn(navigationService, "navigateToOwnerView");
+                const navigateToOwnerViewSpy = vi
+                    .spyOn(navigationService, "navigateToOwnerView")
+                    .mockImplementation(() => {});
 
                 await processesSubtab.selectFiltersMode(mode);
 
-                expect(navigateToOwnerViewSpy).toHaveBeenCalledOnceWith(
+                expect(navigateToOwnerViewSpy).toHaveBeenCalledTimes(1);
+
+                expect(navigateToOwnerViewSpy).toHaveBeenCalledWith(
                     MOCK_ACCOUNT_NAME,
                     AccountTabs.FLOWS,
                     undefined,
@@ -310,7 +318,7 @@ describe("AccountFlowsProcessesSubtabComponent", () => {
                     undefined,
                     mode,
                 );
-                expect(await processesSubtab.isFiltersModeSelected(mode)).toBeTrue();
+                expect(await processesSubtab.isFiltersModeSelected(mode)).toBe(true);
                 expect(await processesSubtab.getSelectedRollupStates()).toEqual(shownStates);
                 discardPeriodicTasks();
             }));
@@ -320,16 +328,15 @@ describe("AccountFlowsProcessesSubtabComponent", () => {
             fixture.detectChanges();
             tick(0);
             const processesSubtab = await loadHarness();
-            spyOn(navigationService, "navigateToOwnerView");
-            const applyModeDefaultsSpy = spyOn(
-                TestBed.inject(AccountFlowsFiltersService),
-                "applyModeDefaults",
-            ).and.callThrough();
+            vi.spyOn(navigationService, "navigateToOwnerView").mockImplementation(() => {});
+            const applyModeDefaultsSpy = vi.spyOn(TestBed.inject(AccountFlowsFiltersService), "applyModeDefaults");
 
             await processesSubtab.selectFiltersMode(ProcessCardFilterMode.TRIAGE);
             setComponentInput(fixture, "accountFlowsData", accountFlowsData(ProcessCardFilterMode.TRIAGE));
 
-            expect(applyModeDefaultsSpy).toHaveBeenCalledOnceWith(ProcessCardFilterMode.TRIAGE);
+            expect(applyModeDefaultsSpy).toHaveBeenCalledTimes(1);
+
+            expect(applyModeDefaultsSpy).toHaveBeenCalledWith(ProcessCardFilterMode.TRIAGE);
             expect(await processesSubtab.getSelectedRollupStates()).toEqual([
                 FlowProcessEffectiveState.Failing,
                 FlowProcessEffectiveState.StoppedAuto,
@@ -343,13 +350,13 @@ describe("AccountFlowsProcessesSubtabComponent", () => {
             fixture.detectChanges();
             tick(0);
             const processesSubtab = await loadHarness();
-            spyOn(navigationService, "navigateToOwnerView");
+            vi.spyOn(navigationService, "navigateToOwnerView").mockImplementation(() => {});
             await processesSubtab.selectFiltersMode(ProcessCardFilterMode.TRIAGE);
             setComponentInput(fixture, "accountFlowsData", accountFlowsData(ProcessCardFilterMode.TRIAGE));
 
             setComponentInput(fixture, "accountFlowsData", accountFlowsData(ProcessCardFilterMode.UPCOMING_SCHEDULED));
 
-            expect(await processesSubtab.isFiltersModeSelected(ProcessCardFilterMode.UPCOMING_SCHEDULED)).toBeTrue();
+            expect(await processesSubtab.isFiltersModeSelected(ProcessCardFilterMode.UPCOMING_SCHEDULED)).toBe(true);
             expect(await processesSubtab.getSelectedRollupStates()).toEqual([
                 FlowProcessEffectiveState.Active,
                 FlowProcessEffectiveState.Failing,
@@ -371,13 +378,15 @@ describe("AccountFlowsProcessesSubtabComponent", () => {
                 FlowProcessEffectiveState.PausedManual,
                 FlowProcessEffectiveState.StoppedAuto,
             ]);
-            expect(getAccountAllCardsSpy.calls.mostRecent().args[0].filters.lastAttemptBetween).toBeDefined();
+            expect(
+                requireValue(getAccountAllCardsSpy.mock.lastCall ?? null)[0].filters.lastAttemptBetween,
+            ).toBeDefined();
             discardPeriodicTasks();
         }));
     });
 
     it("should check to get cards for ProcessCardFilterMode.CUSTOM mode", fakeAsync(async () => {
-        spyOnProperty(component, "dashboardFiltersState", "get").and.returnValue(
+        vi.spyOn(component, "dashboardFiltersState", "get").mockReturnValue(
             mockDashboardFilters({
                 fromFilterDate: new Date(),
                 toFilterDate: new Date(),
@@ -389,7 +398,7 @@ describe("AccountFlowsProcessesSubtabComponent", () => {
         tick(0);
         const processesSubtab = await loadHarness();
 
-        expect(await processesSubtab.isCardsBlockVisible()).toBeTrue();
+        expect(await processesSubtab.isCardsBlockVisible()).toBe(true);
         expect(getAccountAllCardsSpy).toHaveBeenCalledTimes(1);
         discardPeriodicTasks();
     }));
@@ -401,7 +410,7 @@ describe("AccountFlowsProcessesSubtabComponent", () => {
         tick(0);
         const processesSubtab = await loadHarness();
 
-        expect(await processesSubtab.isCardsBlockVisible()).toBeTrue();
+        expect(await processesSubtab.isCardsBlockVisible()).toBe(true);
         expect(getAccountAllCardsSpy).toHaveBeenCalledTimes(1);
         discardPeriodicTasks();
     }));
@@ -413,14 +422,14 @@ describe("AccountFlowsProcessesSubtabComponent", () => {
         tick(0);
         const processesSubtab = await loadHarness();
 
-        expect(await processesSubtab.isCardsBlockVisible()).toBeTrue();
+        expect(await processesSubtab.isCardsBlockVisible()).toBe(true);
         expect(getAccountAllCardsSpy).toHaveBeenCalledTimes(1);
         discardPeriodicTasks();
     }));
 
     it("should check to get cards for ProcessCardFilterMode.UPCOMING_SCHEDULED mode with selectedFlowProcessStates", fakeAsync(async () => {
         setComponentInput(fixture, "accountFlowsData", accountFlowsData(ProcessCardFilterMode.UPCOMING_SCHEDULED));
-        spyOnProperty(component, "dashboardFiltersState", "get").and.returnValue(
+        vi.spyOn(component, "dashboardFiltersState", "get").mockReturnValue(
             mockDashboardFilters({
                 nextPlannedBeforeDate: new Date(),
                 nextPlannedAfterDate: new Date(),
@@ -432,14 +441,14 @@ describe("AccountFlowsProcessesSubtabComponent", () => {
         tick(0);
         const processesSubtab = await loadHarness();
 
-        expect(await processesSubtab.isCardsBlockVisible()).toBeTrue();
+        expect(await processesSubtab.isCardsBlockVisible()).toBe(true);
         expect(getAccountAllCardsSpy).toHaveBeenCalledTimes(1);
         discardPeriodicTasks();
     }));
 
     it("should check to get cards for ProcessCardFilterMode.TRIAGE mode with minConsecutiveFailures=0 ", fakeAsync(async () => {
         setComponentInput(fixture, "accountFlowsData", accountFlowsData(ProcessCardFilterMode.TRIAGE));
-        spyOnProperty(component, "dashboardFiltersState", "get").and.returnValue(
+        vi.spyOn(component, "dashboardFiltersState", "get").mockReturnValue(
             mockDashboardFilters({
                 nextPlannedBeforeDate: new Date(),
                 nextPlannedAfterDate: new Date(),
@@ -450,14 +459,14 @@ describe("AccountFlowsProcessesSubtabComponent", () => {
         tick(0);
         const processesSubtab = await loadHarness();
 
-        expect(await processesSubtab.isCardsBlockVisible()).toBeTrue();
+        expect(await processesSubtab.isCardsBlockVisible()).toBe(true);
         expect(getAccountAllCardsSpy).toHaveBeenCalledTimes(1);
         discardPeriodicTasks();
     }));
 
     it("should check to get cards for ProcessCardFilterMode.TRIAGE mode with minConsecutiveFailures>1 ", fakeAsync(async () => {
         setComponentInput(fixture, "accountFlowsData", accountFlowsData(ProcessCardFilterMode.TRIAGE));
-        spyOnProperty(component, "dashboardFiltersState", "get").and.returnValue(
+        vi.spyOn(component, "dashboardFiltersState", "get").mockReturnValue(
             mockDashboardFilters({
                 nextPlannedBeforeDate: new Date(),
                 nextPlannedAfterDate: new Date(),
@@ -470,14 +479,14 @@ describe("AccountFlowsProcessesSubtabComponent", () => {
         tick(0);
         const processesSubtab = await loadHarness();
 
-        expect(await processesSubtab.isCardsBlockVisible()).toBeTrue();
+        expect(await processesSubtab.isCardsBlockVisible()).toBe(true);
         expect(getAccountAllCardsSpy).toHaveBeenCalledTimes(1);
         discardPeriodicTasks();
     }));
 
     it("should check to get cards for ProcessCardFilterMode.RECENT_ACTIVITY mode with selectedFlowProcessStates", fakeAsync(async () => {
         setComponentInput(fixture, "accountFlowsData", accountFlowsData(ProcessCardFilterMode.RECENT_ACTIVITY));
-        spyOnProperty(component, "dashboardFiltersState", "get").and.returnValue(
+        vi.spyOn(component, "dashboardFiltersState", "get").mockReturnValue(
             mockDashboardFilters({
                 nextPlannedBeforeDate: new Date(),
                 nextPlannedAfterDate: new Date(),
@@ -489,14 +498,14 @@ describe("AccountFlowsProcessesSubtabComponent", () => {
         tick(0);
         const processesSubtab = await loadHarness();
 
-        expect(await processesSubtab.isCardsBlockVisible()).toBeTrue();
+        expect(await processesSubtab.isCardsBlockVisible()).toBe(true);
         expect(getAccountAllCardsSpy).toHaveBeenCalledTimes(1);
         discardPeriodicTasks();
     }));
 
     it("should check to get cards for ProcessCardFilterMode.RECENT_ACTIVITY mode witout selectedFlowProcessStates", fakeAsync(async () => {
         setComponentInput(fixture, "accountFlowsData", accountFlowsData(ProcessCardFilterMode.RECENT_ACTIVITY));
-        spyOnProperty(component, "dashboardFiltersState", "get").and.returnValue(
+        vi.spyOn(component, "dashboardFiltersState", "get").mockReturnValue(
             mockDashboardFilters({
                 selectedOrderDirection: false,
             }),
@@ -506,7 +515,7 @@ describe("AccountFlowsProcessesSubtabComponent", () => {
         tick(0);
         const processesSubtab = await loadHarness();
 
-        expect(await processesSubtab.isCardsBlockVisible()).toBeTrue();
+        expect(await processesSubtab.isCardsBlockVisible()).toBe(true);
         expect(getAccountAllCardsSpy).toHaveBeenCalledTimes(1);
         discardPeriodicTasks();
     }));
@@ -526,7 +535,7 @@ describe("AccountFlowsProcessesSubtabComponent", () => {
     });
 
     it("should check toggle rollup", () => {
-        const refreshNowSpy = spyOn(component, "refreshNow");
+        const refreshNowSpy = vi.spyOn(component, "refreshNow").mockImplementation(() => {});
         component.onToggleRollup();
         expect(refreshNowSpy).toHaveBeenCalledTimes(1);
     });
@@ -534,7 +543,7 @@ describe("AccountFlowsProcessesSubtabComponent", () => {
     it("should check toggle rollup on 'datasets' chip", fakeAsync(() => {
         component.flowsMode = ProcessCardGroup.DATASETS;
 
-        const getAccountPrimaryCardsSpy = spyOn(accountService, "getAccountPrimaryCards").and.returnValue(
+        const getAccountPrimaryCardsSpy = vi.spyOn(accountService, "getAccountPrimaryCards").mockReturnValue(
             of({
                 cards: mockAccountPrimaryCards,
                 rollup: mockAccountPrimaryRollup,
@@ -549,7 +558,7 @@ describe("AccountFlowsProcessesSubtabComponent", () => {
     it("should check toggle rollup on 'webhooks' chip", fakeAsync(() => {
         component.flowsMode = ProcessCardGroup.WEBHOOKS;
 
-        const getAccountWebhookCardsSpy = spyOn(accountService, "getAccountWebhookCards").and.returnValue(
+        const getAccountWebhookCardsSpy = vi.spyOn(accountService, "getAccountWebhookCards").mockReturnValue(
             of({
                 cards: mockAccountWebhookCards,
                 rollup: mockAccountWebhookRollup,
@@ -562,8 +571,8 @@ describe("AccountFlowsProcessesSubtabComponent", () => {
     }));
 
     it("should refresh cards once the delay after a webhook toggle passes", fakeAsync(() => {
-        spyOn(datasetWebhooksService, "datasetWebhookPauseSubscription").and.returnValue(of(true));
-        const refreshNowSpy = spyOn(component, "refreshNow");
+        vi.spyOn(datasetWebhooksService, "datasetWebhookPauseSubscription").mockReturnValue(of(true));
+        const refreshNowSpy = vi.spyOn(component, "refreshNow").mockImplementation(() => {});
         component.toggleWebhookCardState({
             state: FlowProcessEffectiveState.Active,
             datasetBasics: mockDatasetBasicsRootFragment,
@@ -579,8 +588,8 @@ describe("AccountFlowsProcessesSubtabComponent", () => {
     }));
 
     it("should not refresh cards after a webhook toggle once destroyed", fakeAsync(() => {
-        spyOn(datasetWebhooksService, "datasetWebhookPauseSubscription").and.returnValue(of(true));
-        const refreshNowSpy = spyOn(component, "refreshNow");
+        vi.spyOn(datasetWebhooksService, "datasetWebhookPauseSubscription").mockReturnValue(of(true));
+        const refreshNowSpy = vi.spyOn(component, "refreshNow").mockImplementation(() => {});
         component.toggleWebhookCardState({
             state: FlowProcessEffectiveState.Active,
             datasetBasics: mockDatasetBasicsRootFragment,
@@ -600,23 +609,25 @@ describe("AccountFlowsProcessesSubtabComponent", () => {
 
     it("should reset the custom filters and reload the cards from the first page", fakeAsync(async () => {
         const accountFlowsFiltersService = TestBed.inject(AccountFlowsFiltersService);
-        const resetFiltersSpy = spyOn(accountFlowsFiltersService, "resetFilters").and.callThrough();
+        const resetFiltersSpy = vi.spyOn(accountFlowsFiltersService, "resetFilters");
         fixture.detectChanges();
         tick(0);
         const processesSubtab = await loadHarness();
         component.processesPerPage = AppValues.UPLOAD_FLOW_PROCESSES_PER_PAGE * 3;
-        const refreshNowSpy = spyOn(component, "refreshNow");
+        const refreshNowSpy = vi.spyOn(component, "refreshNow").mockImplementation(() => {});
 
         await processesSubtab.clickResetFilters();
 
-        expect(resetFiltersSpy).toHaveBeenCalledOnceWith(ProcessCardFilterMode.CUSTOM);
+        expect(resetFiltersSpy).toHaveBeenCalledTimes(1);
+
+        expect(resetFiltersSpy).toHaveBeenCalledWith(ProcessCardFilterMode.CUSTOM);
         expect(component.processesPerPage).toEqual(AppValues.UPLOAD_FLOW_PROCESSES_PER_PAGE);
         expect(refreshNowSpy).toHaveBeenCalledTimes(1);
         discardPeriodicTasks();
     }));
 
     it("should load the dataset cards only once the 'Datasets' chip is selected", fakeAsync(async () => {
-        const getAccountPrimaryCardsSpy = spyOn(accountService, "getAccountPrimaryCards").and.returnValue(
+        const getAccountPrimaryCardsSpy = vi.spyOn(accountService, "getAccountPrimaryCards").mockReturnValue(
             of({
                 cards: mockAccountPrimaryCards,
                 rollup: mockAccountPrimaryRollup,
@@ -639,7 +650,7 @@ describe("AccountFlowsProcessesSubtabComponent", () => {
         fixture.detectChanges();
         tick(0);
         const processesSubtab = await loadHarness();
-        const fetchCardsDataSpy = spyOn(component, "fetchCardsData");
+        const fetchCardsDataSpy = vi.spyOn(component, "fetchCardsData").mockImplementation(() => {});
 
         await processesSubtab.clickRefreshNow();
 
@@ -657,20 +668,23 @@ describe("AccountFlowsProcessesSubtabComponent", () => {
         }
 
         it("should trigger the flow from the card's 'Update now' and report it", fakeAsync(async () => {
-            const toastrSuccessSpy = spyOn(toastrService, "success");
-            const triggerIngestSpy = spyOn(datasetFlowsService, "datasetTriggerIngestFlow").and.returnValue(of(true));
+            const toastrSuccessSpy = stubMethod(toastrService, "success");
+            const triggerIngestSpy = vi
+                .spyOn(datasetFlowsService, "datasetTriggerIngestFlow")
+                .mockReturnValue(of(true));
             const card = await loadFirstDatasetCard();
 
             await card.clickUpdateNow();
 
             expect(triggerIngestSpy).toHaveBeenCalledTimes(1);
-            expect(toastrSuccessSpy).toHaveBeenCalledOnceWith("Flow scheduled");
+            expect(toastrSuccessSpy).toHaveBeenCalledTimes(1);
+            expect(toastrSuccessSpy).toHaveBeenCalledWith("Flow scheduled");
             discardPeriodicTasks();
         }));
 
         it("should not report a flow that failed to trigger", fakeAsync(async () => {
-            const toastrSuccessSpy = spyOn(toastrService, "success");
-            spyOn(datasetFlowsService, "datasetTriggerIngestFlow").and.returnValue(of(false));
+            const toastrSuccessSpy = stubMethod(toastrService, "success");
+            vi.spyOn(datasetFlowsService, "datasetTriggerIngestFlow").mockReturnValue(of(false));
             const card = await loadFirstDatasetCard();
 
             await card.clickUpdateNow();
@@ -681,17 +695,17 @@ describe("AccountFlowsProcessesSubtabComponent", () => {
 
         it("should resume an auto-stopped process from the card after confirmation and refresh the cards", fakeAsync(async () => {
             const modalSpy = answerConfirmModal(true);
-            const resumeSpy = spyOn(datasetFlowsService, "datasetResumeFlows").and.returnValue(of(void 0));
+            const resumeSpy = vi.spyOn(datasetFlowsService, "datasetResumeFlows").mockReturnValue(of(void 0));
             const card = await loadFirstDatasetCard();
-            const refreshNowSpy = spyOn(component, "refreshNow");
+            const refreshNowSpy = vi.spyOn(component, "refreshNow").mockImplementation(() => {});
 
             expect(await card.getToggleStateLabel()).toEqual("Resume updates");
             await card.clickToggleState();
 
             expect(modalSpy).toHaveBeenCalledTimes(1);
             expect(resumeSpy).toHaveBeenCalledTimes(1);
-            expect(await card.isToggleStateDisabled()).toBeTrue();
-            expect(await card.isUpdateNowDisabled()).toBeTrue();
+            expect(await card.isToggleStateDisabled()).toBe(true);
+            expect(await card.isUpdateNowDisabled()).toBe(true);
             tick(component.TIMEOUT_REFRESH_FLOW);
             expect(refreshNowSpy).toHaveBeenCalledTimes(1);
             discardPeriodicTasks();
@@ -699,17 +713,19 @@ describe("AccountFlowsProcessesSubtabComponent", () => {
     });
 
     it("should report a scheduled flow as soon as the trigger succeeds", () => {
-        const toastrSuccessSpy = spyOn(toastrService, "success");
-        spyOn(datasetFlowsService, "datasetTriggerIngestFlow").and.returnValue(of(true));
+        const toastrSuccessSpy = stubMethod(toastrService, "success");
+        vi.spyOn(datasetFlowsService, "datasetTriggerIngestFlow").mockReturnValue(of(true));
 
         component.updateNow(mockDatasetBasicsRootFragment);
 
-        expect(toastrSuccessSpy).toHaveBeenCalledOnceWith("Flow scheduled");
+        expect(toastrSuccessSpy).toHaveBeenCalledTimes(1);
+
+        expect(toastrSuccessSpy).toHaveBeenCalledWith("Flow scheduled");
     });
 
     it("should refresh cards once the delay after a dataset card toggle passes", fakeAsync(() => {
-        spyOn(datasetFlowsService, "datasetPauseFlows").and.returnValue(of(void 0));
-        const refreshNowSpy = spyOn(component, "refreshNow");
+        vi.spyOn(datasetFlowsService, "datasetPauseFlows").mockReturnValue(of(void 0));
+        const refreshNowSpy = vi.spyOn(component, "refreshNow").mockImplementation(() => {});
         component.toggleStateDatasetCard({
             state: FlowProcessEffectiveState.Active,
             datasetBasics: mockDatasetBasicsRootFragment,
@@ -723,8 +739,8 @@ describe("AccountFlowsProcessesSubtabComponent", () => {
     }));
 
     it("should not refresh cards after a dataset card toggle once destroyed", fakeAsync(() => {
-        spyOn(datasetFlowsService, "datasetPauseFlows").and.returnValue(of(void 0));
-        const refreshNowSpy = spyOn(component, "refreshNow");
+        vi.spyOn(datasetFlowsService, "datasetPauseFlows").mockReturnValue(of(void 0));
+        const refreshNowSpy = vi.spyOn(component, "refreshNow").mockImplementation(() => {});
         component.toggleStateDatasetCard({
             state: FlowProcessEffectiveState.Active,
             datasetBasics: mockDatasetBasicsRootFragment,
@@ -736,20 +752,21 @@ describe("AccountFlowsProcessesSubtabComponent", () => {
     }));
 
     it("should still report a scheduled flow when the trigger responds after the page is left", () => {
-        const toastrSuccessSpy = spyOn(toastrService, "success");
+        const toastrSuccessSpy = stubMethod(toastrService, "success");
         const trigger$ = new Subject<boolean>();
-        spyOn(datasetFlowsService, "datasetTriggerIngestFlow").and.returnValue(trigger$);
+        vi.spyOn(datasetFlowsService, "datasetTriggerIngestFlow").mockReturnValue(trigger$);
         component.updateNow(mockDatasetBasicsRootFragment);
 
         fixture.destroy();
         trigger$.next(true);
-        expect(toastrSuccessSpy).toHaveBeenCalledOnceWith("Flow scheduled");
+        expect(toastrSuccessSpy).toHaveBeenCalledTimes(1);
+        expect(toastrSuccessSpy).toHaveBeenCalledWith("Flow scheduled");
     });
 
     it("should not refresh cards when a dataset card toggle responds after the page is left", fakeAsync(() => {
         const pause$ = new Subject<void>();
-        spyOn(datasetFlowsService, "datasetPauseFlows").and.returnValue(pause$);
-        const refreshNowSpy = spyOn(component, "refreshNow");
+        vi.spyOn(datasetFlowsService, "datasetPauseFlows").mockReturnValue(pause$);
+        const refreshNowSpy = vi.spyOn(component, "refreshNow").mockImplementation(() => {});
         component.toggleStateDatasetCard({
             state: FlowProcessEffectiveState.Active,
             datasetBasics: mockDatasetBasicsRootFragment,
@@ -765,21 +782,21 @@ describe("AccountFlowsProcessesSubtabComponent", () => {
         const datasetId = mockDatasetBasicsRootFragment.id;
 
         it("should last from a toggle until the cards refreshed after the delay arrive", fakeAsync(() => {
-            spyOn(datasetFlowsService, "datasetPauseFlows").and.returnValue(of(void 0));
+            vi.spyOn(datasetFlowsService, "datasetPauseFlows").mockReturnValue(of(void 0));
             fixture.detectChanges();
             tick(0);
             component.toggleStateDatasetCard({
                 state: FlowProcessEffectiveState.Active,
                 datasetBasics: mockDatasetBasicsRootFragment,
             });
-            expect(component.busyCardIds$.value.has(datasetId)).toBeTrue();
+            expect(component.busyCardIds$.value.has(datasetId)).toBe(true);
 
             tick(component.TIMEOUT_REFRESH_FLOW);
-            expect(component.busyCardIds$.value.has(datasetId)).toBeTrue();
+            expect(component.busyCardIds$.value.has(datasetId)).toBe(true);
 
             // The refresh request is debounced
             tick(300);
-            expect(component.busyCardIds$.value.has(datasetId)).toBeFalse();
+            expect(component.busyCardIds$.value.has(datasetId)).toBe(false);
             discardPeriodicTasks();
         }));
 
@@ -792,8 +809,8 @@ describe("AccountFlowsProcessesSubtabComponent", () => {
             const refreshedCards$ = new Subject<typeof cards>();
             const loads = [of(cards), inFlightPoll$, refreshedCards$];
             // Polls after these answer at once
-            getAccountAllCardsSpy.and.callFake(() => loads.shift() ?? of(cards));
-            spyOn(datasetFlowsService, "datasetPauseFlows").and.returnValue(of(void 0));
+            getAccountAllCardsSpy.mockImplementation(() => loads.shift() ?? of(cards));
+            vi.spyOn(datasetFlowsService, "datasetPauseFlows").mockReturnValue(of(void 0));
             fixture.detectChanges();
             tick(0);
 
@@ -805,19 +822,19 @@ describe("AccountFlowsProcessesSubtabComponent", () => {
             });
             tick(component.TIMEOUT_REFRESH_FLOW);
             inFlightPoll$.next(cards);
-            expect(component.busyCardIds$.value.has(datasetId)).toBeTrue();
+            expect(component.busyCardIds$.value.has(datasetId)).toBe(true);
 
             tick(300);
             refreshedCards$.next(cards);
-            expect(component.busyCardIds$.value.has(datasetId)).toBeFalse();
+            expect(component.busyCardIds$.value.has(datasetId)).toBe(false);
             discardPeriodicTasks();
         }));
 
         it("should track each dataset's card on its own", () => {
             const rootTrigger$ = new Subject<boolean>();
             const derivedTrigger$ = new Subject<boolean>();
-            spyOn(datasetFlowsService, "datasetTriggerIngestFlow").and.returnValue(rootTrigger$);
-            spyOn(datasetFlowsService, "datasetTriggerTransformFlow").and.returnValue(derivedTrigger$);
+            vi.spyOn(datasetFlowsService, "datasetTriggerIngestFlow").mockReturnValue(rootTrigger$);
+            vi.spyOn(datasetFlowsService, "datasetTriggerTransformFlow").mockReturnValue(derivedTrigger$);
             const derivedDataset = { ...mockDatasetBasicsDerivedFragment, id: "derived-dataset-id" };
             component.updateNow(mockDatasetBasicsRootFragment);
             component.updateNow(derivedDataset);
@@ -829,16 +846,16 @@ describe("AccountFlowsProcessesSubtabComponent", () => {
 
         it("should last while 'Update now' is waiting for the trigger", () => {
             const trigger$ = new Subject<boolean>();
-            spyOn(datasetFlowsService, "datasetTriggerIngestFlow").and.returnValue(trigger$);
+            vi.spyOn(datasetFlowsService, "datasetTriggerIngestFlow").mockReturnValue(trigger$);
             component.updateNow(mockDatasetBasicsRootFragment);
-            expect(component.busyCardIds$.value.has(datasetId)).toBeTrue();
+            expect(component.busyCardIds$.value.has(datasetId)).toBe(true);
 
             trigger$.next(false);
-            expect(component.busyCardIds$.value.has(datasetId)).toBeFalse();
+            expect(component.busyCardIds$.value.has(datasetId)).toBe(false);
         });
 
         it("should end when the toggle request fails, and leave the error to the global handler", fakeAsync(() => {
-            spyOn(datasetFlowsService, "datasetPauseFlows").and.returnValue(
+            vi.spyOn(datasetFlowsService, "datasetPauseFlows").mockReturnValue(
                 throwError(() => new Error("Network failure")),
             );
             component.toggleStateDatasetCard({
@@ -846,14 +863,14 @@ describe("AccountFlowsProcessesSubtabComponent", () => {
                 datasetBasics: mockDatasetBasicsRootFragment,
             });
 
-            expect(component.busyCardIds$.value.has(datasetId)).toBeFalse();
+            expect(component.busyCardIds$.value.has(datasetId)).toBe(false);
             expect(() => tick()).toThrowError("Network failure");
         }));
     });
 
     it("should refresh the cards after 'Update now' only once the delay passes", fakeAsync(() => {
-        spyOn(datasetFlowsService, "datasetTriggerIngestFlow").and.returnValue(of(true));
-        const refreshNowSpy = spyOn(component, "refreshNow");
+        vi.spyOn(datasetFlowsService, "datasetTriggerIngestFlow").mockReturnValue(of(true));
+        const refreshNowSpy = vi.spyOn(component, "refreshNow").mockImplementation(() => {});
         component.updateNow(mockDatasetBasicsRootFragment);
 
         tick(component.TIMEOUT_REFRESH_FLOW - 1);
@@ -864,8 +881,8 @@ describe("AccountFlowsProcessesSubtabComponent", () => {
     }));
 
     it("should not refresh the cards after 'Update now' once destroyed", fakeAsync(() => {
-        spyOn(datasetFlowsService, "datasetTriggerIngestFlow").and.returnValue(of(true));
-        const refreshNowSpy = spyOn(component, "refreshNow");
+        vi.spyOn(datasetFlowsService, "datasetTriggerIngestFlow").mockReturnValue(of(true));
+        const refreshNowSpy = vi.spyOn(component, "refreshNow").mockImplementation(() => {});
         component.updateNow(mockDatasetBasicsRootFragment);
 
         fixture.destroy();
@@ -875,7 +892,7 @@ describe("AccountFlowsProcessesSubtabComponent", () => {
 
     it("should leave an auto-stopped process alone when the resume confirmation is cancelled", () => {
         answerConfirmModal(false);
-        const resumeSpy = spyOn(datasetFlowsService, "datasetResumeFlows");
+        const resumeSpy = stubMethod(datasetFlowsService, "datasetResumeFlows");
         component.toggleStateDatasetCard({
             state: FlowProcessEffectiveState.StoppedAuto,
             datasetBasics: mockDatasetBasicsRootFragment,
@@ -886,8 +903,8 @@ describe("AccountFlowsProcessesSubtabComponent", () => {
     });
 
     it("should not hold a dataset card busy while the resume confirmation is open, as Escape closes it unanswered", () => {
-        spyOn(TestBed.inject(ModalService), "error").and.returnValue(Promise.resolve(""));
-        const resumeSpy = spyOn(datasetFlowsService, "datasetResumeFlows");
+        vi.spyOn(TestBed.inject(ModalService), "error").mockReturnValue(Promise.resolve(""));
+        const resumeSpy = stubMethod(datasetFlowsService, "datasetResumeFlows");
         component.toggleStateDatasetCard({
             state: FlowProcessEffectiveState.StoppedAuto,
             datasetBasics: mockDatasetBasicsRootFragment,
@@ -898,7 +915,7 @@ describe("AccountFlowsProcessesSubtabComponent", () => {
     });
 
     it("should keep a webhook card busy until the cards refreshed after its toggle arrive", fakeAsync(() => {
-        spyOn(datasetWebhooksService, "datasetWebhookPauseSubscription").and.returnValue(of(true));
+        vi.spyOn(datasetWebhooksService, "datasetWebhookPauseSubscription").mockReturnValue(of(true));
         fixture.detectChanges();
         tick(0);
         component.toggleWebhookCardState({
@@ -906,13 +923,13 @@ describe("AccountFlowsProcessesSubtabComponent", () => {
             datasetBasics: mockDatasetBasicsRootFragment,
             subscriptionId: MOCK_SUBSCRIPTION_ID,
         });
-        expect(component.busyCardIds$.value.has(MOCK_SUBSCRIPTION_ID)).toBeTrue();
+        expect(component.busyCardIds$.value.has(MOCK_SUBSCRIPTION_ID)).toBe(true);
 
         tick(component.TIMEOUT_REFRESH_FLOW);
-        expect(component.busyCardIds$.value.has(MOCK_SUBSCRIPTION_ID)).toBeTrue();
+        expect(component.busyCardIds$.value.has(MOCK_SUBSCRIPTION_ID)).toBe(true);
 
         tick(300);
-        expect(component.busyCardIds$.value.has(MOCK_SUBSCRIPTION_ID)).toBeFalse();
+        expect(component.busyCardIds$.value.has(MOCK_SUBSCRIPTION_ID)).toBe(false);
         discardPeriodicTasks();
     }));
 });

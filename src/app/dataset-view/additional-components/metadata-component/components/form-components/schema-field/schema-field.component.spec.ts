@@ -12,7 +12,7 @@ import { ComponentFixture, TestBed } from "@angular/core/testing";
 import { FormControl, FormGroup } from "@angular/forms";
 
 import { EditSchemaTableHarness } from "@common/components/edit-schema-table/edit-schema-table.harness";
-import { ORDER_SCHEMA } from "@common/components/edit-schema-table/schema-editor.fixtures.spec";
+import { ORDER_SCHEMA } from "@common/components/edit-schema-table/schema-editor.mock";
 import {
     SchemaValidationErrorCode,
     SchemaWarningCode,
@@ -90,12 +90,12 @@ describe("SchemaFieldComponent", () => {
             await harness.addField("city");
             fixture.detectChanges();
 
-            expect(schemaControl().valid).toBeFalse();
+            expect(schemaControl().valid).toBe(false);
             expect(component.schemaErrors.length).toBeGreaterThan(0);
 
             const table = await harness.rootTable();
             // The second "city" has a duplicate-name error
-            expect(await table.hasErrorIcon("city")).toBeTrue();
+            expect(await table.hasErrorIcon("city")).toBe(true);
             expect(await table.errorTooltipFor("city")).toEqual(SchemaValidationErrorCode.DUPLICATE_NAME);
         });
 
@@ -107,7 +107,7 @@ describe("SchemaFieldComponent", () => {
             schemaControl().updateValueAndValidity();
             fixture.detectChanges();
 
-            expect(schemaControl().valid).toBeFalse();
+            expect(schemaControl().valid).toBe(false);
             expect(component.schemaErrors.length).toBeGreaterThan(0);
         });
 
@@ -131,13 +131,13 @@ describe("SchemaFieldComponent", () => {
             schemaControl().updateValueAndValidity();
             fixture.detectChanges();
 
-            expect(schemaControl().valid).toBeFalse();
+            expect(schemaControl().valid).toBe(false);
             expect(component.schemaErrors.length).toBeGreaterThan(0);
             expect(component.schemaErrors[0].path).toEqual(["items", "itemType", "fields", "sku"]);
 
             const rootTable = await harness.rootTable();
             const itemsTable = await rootTable.nestedTable("items.itemType");
-            expect(await itemsTable.hasErrorIcon("sku")).toBeTrue();
+            expect(await itemsTable.hasErrorIcon("sku")).toBe(true);
         });
 
         it("duplicate names inside a nested Struct make the control invalid", async () => {
@@ -157,7 +157,7 @@ describe("SchemaFieldComponent", () => {
             schemaControl().updateValueAndValidity();
             fixture.detectChanges();
 
-            expect(schemaControl().valid).toBeFalse();
+            expect(schemaControl().valid).toBe(false);
             expect(component.schemaErrors.length).toBeGreaterThan(0);
 
             // The error icon must surface inside the nested table next to the duplicate field,
@@ -165,7 +165,7 @@ describe("SchemaFieldComponent", () => {
             // segment inserted by validateSchemaFields not being stripped before being passed down.
             const rootTable = await harness.rootTable();
             const addressTable = await rootTable.nestedTable("address");
-            expect(await addressTable.hasErrorIcon("city")).toBeTrue();
+            expect(await addressTable.hasErrorIcon("city")).toBe(true);
         });
     });
 
@@ -178,7 +178,7 @@ describe("SchemaFieldComponent", () => {
             await harness.addField("first name");
             fixture.detectChanges();
 
-            expect(schemaControl().valid).toBeTrue();
+            expect(schemaControl().valid).toBe(true);
             expect(component.schemaErrors.length).toBe(0);
         });
     });
@@ -192,10 +192,10 @@ describe("SchemaFieldComponent", () => {
             await harness.addField("event_time");
             fixture.detectChanges();
 
-            expect(schemaControl().valid).toBeTrue();
+            expect(schemaControl().valid).toBe(true);
 
             const table = await harness.rootTable();
-            expect(await table.hasWarningIcon("event_time")).toBeTrue();
+            expect(await table.hasWarningIcon("event_time")).toBe(true);
             expect(await table.warningTooltipFor("event_time")).toEqual(SchemaWarningCode.SYSTEM_COLUMN_NAME);
             expect(await table.errorTooltipFor("event_time")).toBeNull();
         });
@@ -204,10 +204,10 @@ describe("SchemaFieldComponent", () => {
             await harness.addField("select");
             fixture.detectChanges();
 
-            expect(schemaControl().valid).toBeTrue();
+            expect(schemaControl().valid).toBe(true);
 
             const table = await harness.rootTable();
-            expect(await table.hasWarningIcon("select")).toBeTrue();
+            expect(await table.hasWarningIcon("select")).toBe(true);
         });
 
         // Scenario 3 — SQL keyword / system-column warning, control valid
@@ -215,9 +215,9 @@ describe("SchemaFieldComponent", () => {
             await harness.addField("op");
             fixture.detectChanges();
 
-            expect(schemaControl().valid).toBeTrue();
+            expect(schemaControl().valid).toBe(true);
             const table = await harness.rootTable();
-            expect(await table.hasWarningIcon("op")).toBeTrue();
+            expect(await table.hasWarningIcon("op")).toBe(true);
         });
     });
 
@@ -232,14 +232,14 @@ describe("SchemaFieldComponent", () => {
             await harness.addField("city");
             fixture.detectChanges();
 
-            expect(schemaControl().valid).toBeFalse();
+            expect(schemaControl().valid).toBe(false);
             expect(component.schemaErrors.length).toBeGreaterThan(0);
 
             // The error icon appears next to at least one of the duplicate fields
             const table = await harness.rootTable();
             const cityError = await table.hasErrorIcon("city");
             const CityError = await table.hasErrorIcon("City");
-            expect(cityError || CityError).toBeTrue();
+            expect(cityError || CityError).toBe(true);
         });
     });
 
@@ -271,7 +271,7 @@ describe("SchemaFieldComponent", () => {
             expect(shippingFields.map((f) => f.name)).toEqual(["carrier", "tracking"]);
 
             // Control remains valid after rename
-            expect(schemaControl().valid).toBeTrue();
+            expect(schemaControl().valid).toBe(true);
         });
     });
 });

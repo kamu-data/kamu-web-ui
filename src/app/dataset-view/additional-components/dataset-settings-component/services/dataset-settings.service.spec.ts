@@ -63,9 +63,9 @@ describe("DatasetSettingsService", () => {
     });
 
     it("should check delete dataset with success", () => {
-        const deleteDatasetSpy = spyOn(datasetApi, "deleteDataset").and.returnValue(of(mockDeleteSuccessResponse));
-        spyOnProperty(loggedUserService, "isAuthenticated", "get").and.returnValue(true);
-        const navigateToSearchSpy = spyOn(navigationService, "navigateToSearch");
+        const deleteDatasetSpy = vi.spyOn(datasetApi, "deleteDataset").mockReturnValue(of(mockDeleteSuccessResponse));
+        vi.spyOn(loggedUserService, "isAuthenticated", "get").mockReturnValue(true);
+        const navigateToSearchSpy = vi.spyOn(navigationService, "navigateToSearch").mockImplementation(() => {});
 
         service.deleteDataset(ACCOUNT_NAME, DATASET_ID).subscribe(() => {
             expect(deleteDatasetSpy).toHaveBeenCalledTimes(1);
@@ -74,11 +74,11 @@ describe("DatasetSettingsService", () => {
     });
 
     it("should check delete dataset with dangling reference error", () => {
-        spyOn(datasetApi, "deleteDataset").and.returnValue(of(mockDeleteDanglingReferenceError));
-        spyOnProperty(loggedUserService, "isAuthenticated", "get").and.returnValue(true);
+        vi.spyOn(datasetApi, "deleteDataset").mockReturnValue(of(mockDeleteDanglingReferenceError));
+        vi.spyOn(loggedUserService, "isAuthenticated", "get").mockReturnValue(true);
 
         const subscription$ = service.deleteDataset(ACCOUNT_NAME, DATASET_ID).subscribe({
-            next: () => fail("unexpected success"),
+            next: () => expect.fail("unexpected success"),
             error: (e: unknown) => {
                 expect(e).toEqual(
                     new DatasetOperationError([
@@ -92,12 +92,12 @@ describe("DatasetSettingsService", () => {
     });
 
     it("should check delete dataset when not found", () => {
-        spyOnProperty(loggedUserService, "isAuthenticated", "get").and.returnValue(true);
+        vi.spyOn(loggedUserService, "isAuthenticated", "get").mockReturnValue(true);
         const notFoundResponse: DeleteDatasetMutation = { datasets: { byId: null } };
-        spyOn(datasetApi, "deleteDataset").and.returnValue(of(notFoundResponse));
+        vi.spyOn(datasetApi, "deleteDataset").mockReturnValue(of(notFoundResponse));
 
         const subscription$ = service.deleteDataset(ACCOUNT_NAME, DATASET_ID).subscribe({
-            next: () => fail("unexpected success"),
+            next: () => expect.fail("unexpected success"),
             error: (e: unknown) => {
                 expect(e).toEqual(new DatasetNotFoundError());
             },
@@ -107,7 +107,7 @@ describe("DatasetSettingsService", () => {
     });
 
     it("deleting dataset without logged user results in exception", () => {
-        spyOnProperty(loggedUserService, "isAuthenticated", "get").and.returnValue(false);
+        vi.spyOn(loggedUserService, "isAuthenticated", "get").mockReturnValue(false);
 
         expect(() => service.deleteDataset(ACCOUNT_NAME, DATASET_ID)).toThrow(
             new DatasetOperationError([new Error(DatasetSettingsService.NOT_LOGGED_USER_ERROR)]),
@@ -115,9 +115,11 @@ describe("DatasetSettingsService", () => {
     });
 
     it("should check rename dataset with success", () => {
-        spyOnProperty(loggedUserService, "isAuthenticated", "get").and.returnValue(true);
-        const navigateToDatasetViewSpy = spyOn(navigationService, "navigateToDatasetView");
-        const deleteDatasetSpy = spyOn(datasetApi, "renameDataset").and.returnValue(of(mockRenameSuccessResponse));
+        vi.spyOn(loggedUserService, "isAuthenticated", "get").mockReturnValue(true);
+        const navigateToDatasetViewSpy = vi
+            .spyOn(navigationService, "navigateToDatasetView")
+            .mockImplementation(() => {});
+        const deleteDatasetSpy = vi.spyOn(datasetApi, "renameDataset").mockReturnValue(of(mockRenameSuccessResponse));
         service
             .renameDataset({
                 accountId: TEST_ACCOUNT_ID,
@@ -132,9 +134,11 @@ describe("DatasetSettingsService", () => {
     });
 
     it("should check rename dataset with name collision", () => {
-        spyOnProperty(loggedUserService, "isAuthenticated", "get").and.returnValue(true);
-        const emitRenameDatasetErrorOccurredSpy = spyOn(service, "emitRenameDatasetErrorOccurred").and.callThrough();
-        const deleteDatasetSpy = spyOn(datasetApi, "renameDataset").and.returnValue(of(mockRenameResultNameCollision));
+        vi.spyOn(loggedUserService, "isAuthenticated", "get").mockReturnValue(true);
+        const emitRenameDatasetErrorOccurredSpy = vi.spyOn(service, "emitRenameDatasetErrorOccurred");
+        const deleteDatasetSpy = vi
+            .spyOn(datasetApi, "renameDataset")
+            .mockReturnValue(of(mockRenameResultNameCollision));
         service
             .renameDataset({
                 accountId: TEST_ACCOUNT_ID,
@@ -149,9 +153,9 @@ describe("DatasetSettingsService", () => {
     });
 
     it("should check rename dataset with no changes", () => {
-        spyOnProperty(loggedUserService, "isAuthenticated", "get").and.returnValue(true);
-        const emitRenameDatasetErrorOccurredSpy = spyOn(service, "emitRenameDatasetErrorOccurred").and.callThrough();
-        const deleteDatasetSpy = spyOn(datasetApi, "renameDataset").and.returnValue(of(mockRenameResultNoChanges));
+        vi.spyOn(loggedUserService, "isAuthenticated", "get").mockReturnValue(true);
+        const emitRenameDatasetErrorOccurredSpy = vi.spyOn(service, "emitRenameDatasetErrorOccurred");
+        const deleteDatasetSpy = vi.spyOn(datasetApi, "renameDataset").mockReturnValue(of(mockRenameResultNoChanges));
         service
             .renameDataset({
                 accountId: TEST_ACCOUNT_ID,
@@ -166,9 +170,9 @@ describe("DatasetSettingsService", () => {
     });
 
     it("should check rename dataset when not found", () => {
-        spyOnProperty(loggedUserService, "isAuthenticated", "get").and.returnValue(true);
+        vi.spyOn(loggedUserService, "isAuthenticated", "get").mockReturnValue(true);
         const notFoundResponse: RenameDatasetMutation = { datasets: { byId: null } };
-        spyOn(datasetApi, "renameDataset").and.returnValue(of(notFoundResponse));
+        vi.spyOn(datasetApi, "renameDataset").mockReturnValue(of(notFoundResponse));
 
         const subscription$ = service
             .renameDataset({
@@ -178,7 +182,7 @@ describe("DatasetSettingsService", () => {
                 newName: NEW_NAME,
             })
             .subscribe({
-                next: () => fail("unexpected success"),
+                next: () => expect.fail("unexpected success"),
                 error: (e: unknown) => {
                     expect(e).toEqual(new DatasetNotFoundError());
                 },
@@ -188,7 +192,7 @@ describe("DatasetSettingsService", () => {
     });
 
     it("renaming dataset without logged user results in exception", () => {
-        spyOnProperty(loggedUserService, "isAuthenticated", "get").and.returnValue(false);
+        vi.spyOn(loggedUserService, "isAuthenticated", "get").mockReturnValue(false);
 
         expect(() =>
             service.renameDataset({

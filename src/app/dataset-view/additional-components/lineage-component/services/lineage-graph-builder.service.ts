@@ -281,7 +281,8 @@ export class LineageGraphBuilderService {
             case "FetchStepMqtt":
                 return `${step.host}:${step.port}`;
             case "FetchStepEthereumLogs":
-                return step.nodeUrl ? step.nodeUrl : chainNameFromId(step.chainId as number);
+                // The API sends Uint64 as a string, although codegen types it as a number
+                return step.nodeUrl ? step.nodeUrl : chainNameFromId(Number(step.chainId));
             default:
                 throw new Error(`Unknown source label type ${step.__typename}`);
         }

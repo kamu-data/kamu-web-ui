@@ -141,6 +141,7 @@ describe("AccountService", () => {
                     mockAccountListDatasetsWithFlowsQuery.accounts.byName?.flows?.runs.listDatasetsWithFlow;
                 expect(data.length).toEqual(requireValue(listDatasets ?? null).nodes.length);
                 expect(data[0].name).toEqual("account.tokens.transfers");
+                expect(requireValue(listDatasets ?? null).nodes[0].name).toEqual("baccount.tokens.transfers");
             });
 
         expect(accountDatasetsWithFlowsSpy).toHaveBeenCalledTimes(1);

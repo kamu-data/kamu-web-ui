@@ -175,7 +175,7 @@ export class AccountService {
         return this.accountApi.accountDatasetsWithFlows(accounName).pipe(
             map((data: AccountListDatasetsWithFlowsQuery) => {
                 const datasets = data.accounts.byName?.flows.runs.listDatasetsWithFlow.nodes ?? [];
-                return datasets.sort((a, b) => {
+                return [...datasets].sort((a, b) => {
                     if (a.name < b.name) return -1;
                     if (a.name > b.name) return 1;
                     return 0;

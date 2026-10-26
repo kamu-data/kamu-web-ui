@@ -6,6 +6,7 @@ fragment FlowProcessSummaryData on FlowProcessSummary {
   lastFailureAt
   nextPlannedAt
   stopPolicy {
+    __typename
     ... on FlowTriggerStopPolicyNever {
       dummy
     }

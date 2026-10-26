@@ -8536,10 +8536,10 @@ export type FlowDownstreamLinkDataFragment = { __typename?: 'FlowDownstreamLink'
       | { __typename: 'FlowDescriptionWebhookDeliver' }
      } | null };
 
-export type FlowEventRetryPolicyModifiedDataFragment = { __typename?: 'FlowEventRetryPolicyModified', retryPolicy?: { __typename?: 'FlowRetryPolicy', maxAttempts: number, backoffType: FlowRetryBackoffType, minDelay: (
-      { __typename?: 'TimeDelta' }
-      & TimeDeltaDataFragment
-    ) } | null };
+export type FlowEventRetryPolicyModifiedDataFragment = { __typename?: 'FlowEventRetryPolicyModified', retryPolicy?: (
+    { __typename?: 'FlowRetryPolicy' }
+    & FlowRetryPolicyDataFragment
+  ) | null };
 
 export type FlowEventStartConditionUpdatedDataFragment = { __typename?: 'FlowEventStartConditionUpdated', startCondition:
     | (
@@ -8796,7 +8796,10 @@ export type FlowSummaryDataFragment = { __typename?: 'Flow', flowId: string, dat
     )
    | null, configSnapshot?:
     | { __typename?: 'FlowConfigRuleCompaction' }
-    | { __typename?: 'FlowConfigRuleIngest', fetchUncacheable: boolean, fetchNextIteration: boolean }
+    | (
+      { __typename?: 'FlowConfigRuleIngest' }
+      & FlowConfigRuleIngestDataFragment
+    )
     | { __typename?: 'FlowConfigRuleReset' }
    | null, retryPolicy?: { __typename?: 'FlowRetryPolicy', maxAttempts: number } | null };
 
@@ -8928,8 +8931,8 @@ export type DatasetFlowProcessesDataFragment = { __typename?: 'DatasetFlowProces
   ) };
 
 export type FlowProcessSummaryDataFragment = { __typename?: 'FlowProcessSummary', effectiveState: FlowProcessEffectiveState, consecutiveFailures: number, lastSuccessAt?: string | null, lastAttemptAt?: string | null, lastFailureAt?: string | null, nextPlannedAt?: string | null, autoStoppedReason?: FlowProcessAutoStopReason | null, autoStoppedAt?: string | null, runningSince?: string | null, pausedAt?: string | null, stopPolicy:
-    | { __typename?: 'FlowTriggerStopPolicyAfterConsecutiveFailures', maxFailures: number }
-    | { __typename?: 'FlowTriggerStopPolicyNever', dummy: boolean }
+    | { __typename: 'FlowTriggerStopPolicyAfterConsecutiveFailures', maxFailures: number }
+    | { __typename: 'FlowTriggerStopPolicyNever', dummy: boolean }
    };
 
 export type WebhookFlowSubProcessDataFragment = { __typename?: 'WebhookFlowSubProcess', id: string, name: string, summary: (
@@ -10216,6 +10219,7 @@ export const FlowProcessSummaryDataFragmentDoc = gql`
   lastFailureAt
   nextPlannedAt
   stopPolicy {
+    __typename
     ... on FlowTriggerStopPolicyNever {
       dummy
     }
@@ -10410,27 +10414,12 @@ export const ViewDatasetEnvVarConnectionDataFragmentDoc = gql`
 }
     ${ViewDatasetEnvVarDataFragmentDoc}
 ${DatasetPageInfoFragmentDoc}`;
-export const FlowConfigRuleIngestDataFragmentDoc = gql`
-    fragment FlowConfigRuleIngestData on FlowConfigRuleIngest {
-  fetchUncacheable
-  fetchNextIteration
-}
-    `;
 export const TimeDeltaDataFragmentDoc = gql`
     fragment TimeDeltaData on TimeDelta {
   every
   unit
 }
     `;
-export const FlowRetryPolicyDataFragmentDoc = gql`
-    fragment FlowRetryPolicyData on FlowRetryPolicy {
-  maxAttempts
-  minDelay {
-    ...TimeDeltaData
-  }
-  backoffType
-}
-    ${TimeDeltaDataFragmentDoc}`;
 export const FlowTriggerScheduleRuleDataFragmentDoc = gql`
     fragment FlowTriggerScheduleRuleData on FlowTriggerScheduleRule {
   ... on TimeDelta {
@@ -10643,6 +10632,12 @@ export const FlowStartConditionDataFragmentDoc = gql`
   }
 }
     ${TimeDeltaDataFragmentDoc}`;
+export const FlowConfigRuleIngestDataFragmentDoc = gql`
+    fragment FlowConfigRuleIngestData on FlowConfigRuleIngest {
+  fetchUncacheable
+  fetchNextIteration
+}
+    `;
 export const FlowSummaryDataFragmentDoc = gql`
     fragment FlowSummaryData on Flow {
   description {
@@ -10664,10 +10659,7 @@ export const FlowSummaryDataFragmentDoc = gql`
     ...FlowStartConditionData
   }
   configSnapshot {
-    ... on FlowConfigRuleIngest {
-      fetchUncacheable
-      fetchNextIteration
-    }
+    ...FlowConfigRuleIngestData
   }
   taskIds
   retryPolicy {
@@ -10678,7 +10670,8 @@ export const FlowSummaryDataFragmentDoc = gql`
 ${AccountFragmentDoc}
 ${FlowOutcomeDataFragmentDoc}
 ${FlowTimingRecordsDataFragmentDoc}
-${FlowStartConditionDataFragmentDoc}`;
+${FlowStartConditionDataFragmentDoc}
+${FlowConfigRuleIngestDataFragmentDoc}`;
 export const FlowSummaryDataWithTriggerFragmentDoc = gql`
     fragment FlowSummaryDataWithTrigger on Flow {
   ...FlowSummaryData
@@ -10784,17 +10777,22 @@ export const FlowEventTaskChangedDataFragmentDoc = gql`
   nextAttemptAt
 }
     ${TaskOutcomeDataFragmentDoc}`;
+export const FlowRetryPolicyDataFragmentDoc = gql`
+    fragment FlowRetryPolicyData on FlowRetryPolicy {
+  maxAttempts
+  minDelay {
+    ...TimeDeltaData
+  }
+  backoffType
+}
+    ${TimeDeltaDataFragmentDoc}`;
 export const FlowEventRetryPolicyModifiedDataFragmentDoc = gql`
     fragment FlowEventRetryPolicyModifiedData on FlowEventRetryPolicyModified {
   retryPolicy {
-    maxAttempts
-    minDelay {
-      ...TimeDeltaData
-    }
-    backoffType
+    ...FlowRetryPolicyData
   }
 }
-    ${TimeDeltaDataFragmentDoc}`;
+    ${FlowRetryPolicyDataFragmentDoc}`;
 export const DatasetAccessResultNotAccessibleDataFragmentDoc = gql`
     fragment DatasetAccessResultNotAccessibleData on DatasetAccessResultNotAccessible {
   id

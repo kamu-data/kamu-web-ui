@@ -234,7 +234,10 @@ function additionalMessagesActiveStateHelper(summary: FlowProcessSummaryDataFrag
 }
 
 function additionalMessagesStoppedAutoHelper(summary: FlowProcessSummaryDataFragment): string {
-    if (summary.autoStoppedReason === FlowProcessAutoStopReason.StopPolicy && "maxFailures" in summary.stopPolicy) {
+    if (
+        summary.autoStoppedReason === FlowProcessAutoStopReason.StopPolicy &&
+        summary.stopPolicy.__typename === "FlowTriggerStopPolicyAfterConsecutiveFailures"
+    ) {
         return `Reason: stop policy ${summary.consecutiveFailures} consecutive failures - ${summary.consecutiveFailures}/${summary.stopPolicy.maxFailures} consecutive failures`;
     }
     if (summary.autoStoppedReason === FlowProcessAutoStopReason.UnrecoverableFailure) {

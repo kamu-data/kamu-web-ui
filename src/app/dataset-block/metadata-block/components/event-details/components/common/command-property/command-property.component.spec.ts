@@ -7,6 +7,7 @@
 
 import { ComponentFixture, TestBed } from "@angular/core/testing";
 
+import { setComponentInput } from "@common/helpers/base-test.helpers.spec";
 import { SharedTestModule } from "@common/modules/shared-test.module";
 
 import { CommandPropertyComponent } from "src/app/dataset-block/metadata-block/components/event-details/components/common/command-property/command-property.component";
@@ -22,7 +23,7 @@ describe("CommandPropertyComponent", () => {
 
         fixture = TestBed.createComponent(CommandPropertyComponent);
         component = fixture.componentInstance;
-        component.data = ["command1", "command2"];
+        setComponentInput(fixture, "data", ["command1", "command2"]);
         fixture.detectChanges();
     });
 

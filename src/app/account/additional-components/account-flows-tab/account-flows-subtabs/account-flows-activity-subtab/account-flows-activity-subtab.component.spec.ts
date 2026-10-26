@@ -14,7 +14,9 @@ import { NgbNavChangeEvent } from "@ng-bootstrap/ng-bootstrap";
 import { Apollo } from "apollo-angular";
 import { provideToastr } from "ngx-toastr";
 
-import { Account, FlowStatus } from "@api/kamu.graphql.interface";
+import { requireValue } from "@common/helpers/app.helpers";
+import { setComponentInput } from "@common/helpers/base-test.helpers.spec";
+import { FlowStatus } from "@api/kamu.graphql.interface";
 import { mockAccountDetails } from "@api/mock/auth.mock";
 import { mockDatasetFlowsInitiatorsQuery, mockFlowsTableData } from "@api/mock/dataset-flow.mock";
 
@@ -71,12 +73,12 @@ describe("AccountFlowsActivitySubtabComponent", () => {
         datasetFlowsService = TestBed.inject(DatasetFlowsService);
         accountService = TestBed.inject(AccountService);
         component = fixture.componentInstance;
-        component.accountName = MOCK_ACCOUNT_NAME;
-        component.accountFlowsData = {
+        setComponentInput(fixture, "accountName", MOCK_ACCOUNT_NAME);
+        setComponentInput(fixture, "accountFlowsData", {
             activeNav: AccountFlowsNav.PROCESSES,
             flowGroup: [FlowStatus.Finished],
             datasetsFiltersMode: ProcessCardFilterMode.RECENT_ACTIVITY,
-        };
+        });
         spyOnProperty(loggedUserService, "currentlyLoggedInUser", "get").and.returnValue(mockAccountDetails);
         spyOn(accountService, "getAccountListFlows").and.returnValue(of(mockFlowsTableData));
         fixture.detectChanges();
@@ -125,7 +127,8 @@ describe("AccountFlowsActivitySubtabComponent", () => {
 
     it("should check to apply filter status in the request", () => {
         component.filters = {
-            accounts: mockDatasetFlowsInitiatorsQuery.datasets.byId?.flows.runs.listFlowInitiators.nodes as Account[],
+            accounts: requireValue(mockDatasetFlowsInitiatorsQuery.datasets.byId ?? null).flows.runs.listFlowInitiators
+                .nodes,
             datasets: mockDatasets,
             status: [FlowStatus.Finished],
             onlySystemFlows: false,
@@ -154,8 +157,9 @@ describe("AccountFlowsActivitySubtabComponent", () => {
     }));
 
     it("should check search by filters with filters=null", () => {
-        component.searchByAccount = mockDatasetFlowsInitiatorsQuery.datasets.byId?.flows.runs.listFlowInitiators
-            .nodes as Account[];
+        component.searchByAccount = requireValue(
+            mockDatasetFlowsInitiatorsQuery.datasets.byId ?? null,
+        ).flows.runs.listFlowInitiators.nodes;
         component.searchByDataset = mockDatasets;
         fixture.detectChanges();
         component.onSearchByFiltersChange(null);
@@ -165,8 +169,8 @@ describe("AccountFlowsActivitySubtabComponent", () => {
     });
 
     it("should check search by filters with filters options", () => {
-        const accounts = mockDatasetFlowsInitiatorsQuery.datasets.byId?.flows.runs.listFlowInitiators
-            .nodes as Account[];
+        const accounts = requireValue(mockDatasetFlowsInitiatorsQuery.datasets.byId ?? null).flows.runs
+            .listFlowInitiators.nodes;
         const filterOptions: FlowsTableFiltersOptions = {
             accounts,
             datasets: mockDatasets,
@@ -230,18 +234,22 @@ describe("AccountFlowsActivitySubtabComponent", () => {
 
     it("should check to change navigation", () => {
         const navigateToOwnerViewSpy = spyOn(navigationService, "navigateToOwnerView");
-        const event = {
+        const event: NgbNavChangeEvent<AccountFlowsNav> = {
+            activeId: AccountFlowsNav.ACTIVITY,
             nextId: AccountFlowsNav.PROCESSES,
-        } as NgbNavChangeEvent;
+            preventDefault: () => undefined,
+        };
         component.onNavChange(event);
         expect(navigateToOwnerViewSpy).toHaveBeenCalledTimes(1);
     });
 
     it("should check to change navigation status with finished status", () => {
         const navigateToOwnerViewSpy = spyOn(navigationService, "navigateToOwnerView");
-        const event = {
+        const event: NgbNavChangeEvent<FlowStatus> = {
+            activeId: FlowStatus.Running,
             nextId: FlowStatus.Finished,
-        } as NgbNavChangeEvent;
+            preventDefault: () => undefined,
+        };
         component.onNavStatusChange(event);
         expect(navigateToOwnerViewSpy).toHaveBeenCalledOnceWith(
             component.accountName,
@@ -254,9 +262,11 @@ describe("AccountFlowsActivitySubtabComponent", () => {
 
     it("should check to change navigation status with running status", () => {
         const navigateToOwnerViewSpy = spyOn(navigationService, "navigateToOwnerView");
-        const event = {
+        const event: NgbNavChangeEvent<FlowStatus> = {
+            activeId: FlowStatus.Finished,
             nextId: FlowStatus.Running,
-        } as NgbNavChangeEvent;
+            preventDefault: () => undefined,
+        };
         component.onNavStatusChange(event);
         expect(navigateToOwnerViewSpy).toHaveBeenCalledOnceWith(
             component.accountName,

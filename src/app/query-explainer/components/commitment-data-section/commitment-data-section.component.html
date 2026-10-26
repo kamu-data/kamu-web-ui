@@ -7,7 +7,7 @@
                 <span
                     data-test-id="input-hash"
                     class="font-monospace"
-                    [class.error-color]="isInputHashError(commitmentData.sqlQueryVerify?.error)"
+                    [class.error-color]="isInputHashError(verifyError)"
                     >{{ commitmentData.sqlQueryExplainerResponse.commitment.inputHash }}
                 </span>
                 <app-copy-to-clipboard
@@ -22,7 +22,7 @@
                 <span
                     data-test-id="output-hash"
                     class="font-monospace"
-                    [class.error-color]="isOutputMismatchError(commitmentData.sqlQueryVerify?.error)"
+                    [class.error-color]="isOutputMismatchError(verifyError)"
                 >
                     {{ commitmentData.sqlQueryExplainerResponse.commitment.outputHash }}</span
                 >
@@ -38,7 +38,7 @@
                 <span
                     data-test-id="sub-queries-hash"
                     class="font-monospace"
-                    [class.error-color]="isSubQueriesHashError(commitmentData.sqlQueryVerify?.error)"
+                    [class.error-color]="isSubQueriesHashError(verifyError)"
                     >{{ commitmentData.sqlQueryExplainerResponse.commitment.subQueriesHash }}
                 </span>
                 <app-copy-to-clipboard
@@ -71,7 +71,7 @@
         <div class="m-4">
             <div class="fw-semibold">Signature:</div>
             <div class="mt-2 text-break font-monospace">
-                <span [class.error-color]="isBadSignatureError(commitmentData.sqlQueryVerify?.error)">
+                <span [class.error-color]="isBadSignatureError(verifyError)">
                     {{ commitmentData.sqlQueryExplainerResponse.proof.proofValue }}
                 </span>
             </div>

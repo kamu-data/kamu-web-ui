@@ -12,7 +12,7 @@ import { of } from "rxjs";
 import { Apollo } from "apollo-angular";
 import { provideToastr } from "ngx-toastr";
 
-import { registerMatSvgIcons } from "@common/helpers/base-test.helpers.spec";
+import { registerMatSvgIcons, setComponentInput } from "@common/helpers/base-test.helpers.spec";
 import { SharedTestModule } from "@common/modules/shared-test.module";
 import { mockCreateWebhookSubscriptionSuccess } from "@api/mock/webhooks.mock";
 
@@ -43,7 +43,7 @@ describe("AddWebhookComponent", () => {
         navigationService = TestBed.inject(NavigationService);
         component = fixture.componentInstance;
         spyOn(webhooksService, "eventTypes").and.returnValue(of([]));
-        component.datasetBasics = mockDatasetBasicsRootFragment;
+        setComponentInput(fixture, "datasetBasics", mockDatasetBasicsRootFragment);
         fixture.detectChanges();
     });
 

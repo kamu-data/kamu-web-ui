@@ -1,0 +1,4 @@
+fragment TemporalTableData on TemporalTable {
+  name
+  primaryKey
+}

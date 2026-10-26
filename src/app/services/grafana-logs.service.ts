@@ -9,7 +9,7 @@ import { Injectable } from "@angular/core";
 
 import { addSeconds, subSeconds } from "date-fns";
 
-import { FlowEventTaskChanged, TaskStatus } from "@api/kamu.graphql.interface";
+import { FlowEventTaskChangedDataFragment, TaskStatus } from "@api/kamu.graphql.interface";
 
 import { GrafanaFieldDescriptor } from "src/app/dataset-flow/dataset-flow-details/dataset-flow-details.types";
 
@@ -19,7 +19,7 @@ import { GrafanaFieldDescriptor } from "src/app/dataset-flow/dataset-flow-detail
 export class GrafanaLogsService {
     private availableFields: GrafanaFieldDescriptor[] = [];
 
-    public buildTaskUrl(initialUrl: string, eventTasks: FlowEventTaskChanged[]): string {
+    public buildTaskUrl(initialUrl: string, eventTasks: FlowEventTaskChangedDataFragment[]): string {
         this.addTaskFields(eventTasks);
         return this.proccessUrl(initialUrl);
     }
@@ -39,7 +39,7 @@ export class GrafanaLogsService {
             .trim();
     }
 
-    private addTaskFields(eventTask: FlowEventTaskChanged[]): void {
+    private addTaskFields(eventTask: FlowEventTaskChangedDataFragment[]): void {
         this.availableFields = [];
         const fromTime = eventTask.filter((item) => item.taskStatus === TaskStatus.Running);
         const toTime = eventTask.filter((item) => item.taskStatus === TaskStatus.Finished);

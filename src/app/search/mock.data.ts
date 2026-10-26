@@ -5,7 +5,6 @@
  * included in the LICENSE file.
  */
 
-import { Node } from "@swimlane/ngx-graph";
 import { GraphQLError } from "graphql";
 
 import { DynamicTableColumnClassEnum } from "@common/components/dynamic-table/dynamic-table.interface";
@@ -28,21 +27,21 @@ import {
     DatasetCurrentInfoFragment,
     DatasetHeadBlockHashQuery,
     DatasetKind,
+    DatasetPageInfoFragment,
     DatasetPermissionsFragment,
+    DatasetVisibilityOutputDataFragment,
     DeleteDatasetMutation,
     GetDatasetDataSqlRunQuery,
     GetDatasetHistoryQuery,
     GetDatasetLineageQuery,
     GetDatasetMainDataQuery,
     LicenseFragment,
-    PageBasedInfo,
-    PrivateDatasetVisibility,
-    PublicDatasetVisibility,
     RenameDatasetMutation,
     SearchDatasetsOverviewQuery,
     UpdateReadmeMutation,
     UpdateWatermarkMutation,
     VersionedFileContentUrlQuery,
+    VersionedFileEntryDataFragment,
 } from "@api/kamu.graphql.interface";
 import { TEST_AVATAR_URL } from "@api/mock/auth.mock";
 import { OdfTypes } from "@interface/dataset-schema.interface";
@@ -50,7 +49,7 @@ import { DatasetInfo } from "@interface/navigation.interface";
 import { DatasetAutocompleteItem, DatasetSearchResult, SearchMode, TypeNames } from "@interface/search.interface";
 
 import {
-    LineageGraphDatasetNodeObject,
+    LineageGraphDatasetNode,
     LineageGraphNodeKind,
     LineageNodeAccess,
 } from "src/app/dataset-view/additional-components/lineage-component/lineage-model";
@@ -68,7 +67,9 @@ import { DatasetHistoryUpdate } from "src/app/dataset-view/dataset.subscriptions
 import { SqlQueryExplanationResponse } from "src/app/query-explainer/query-explainer.types";
 import { SqlQueryBasicResponse } from "src/app/query/global-query/global-query.model";
 
-export const mockPageBasedInfo: PageBasedInfo = {
+export const MOCK_DATASET_HEAD_BLOCK_HASH = "f16207c1039f6d9f5e107a2285ccfe04bc88cb65ddd2b217ceb62b717774b2f85f1f5";
+
+export const mockPageBasedInfo: DatasetPageInfoFragment = {
     currentPage: 1,
     hasNextPage: true,
     hasPreviousPage: true,
@@ -87,14 +88,13 @@ export const mockOwnerFieldsWithAvatar: AccountBasicsFragment = {
     accountProvider: AccountProvider.Password,
 };
 
-export const mockPublicDatasetVisibility: PublicDatasetVisibility = {
+export const mockPublicDatasetVisibility: DatasetVisibilityOutputDataFragment = {
     __typename: "PublicDatasetVisibility",
     anonymousAvailable: true,
 };
 
-export const mockPrivateDatasetVisibility: PrivateDatasetVisibility = {
+export const mockPrivateDatasetVisibility: DatasetVisibilityOutputDataFragment = {
     __typename: "PrivateDatasetVisibility",
-    dummy: "",
 };
 
 export const mockAutocompleteItems: DatasetAutocompleteItem[] = [
@@ -140,7 +140,7 @@ export const mockMetadataCurrentInfo: DatasetCurrentInfoFragment = {
     ],
 };
 
-export const mockMetadataCurrentLicense: LicenseFragment = {
+export const mockMetadataCurrentLicense: LicenseFragment & { spdxId: string } = {
     __typename: "SetLicense",
     shortName: "OGL-Canada-2.0",
     name: "Open Government Licence - Canada",
@@ -435,7 +435,7 @@ export const mockDatasetMainDataResponse: GetDatasetMainDataQuery = {
                     refs: [
                         {
                             name: "head",
-                            blockHash: "f16207c1039f6d9f5e107a2285ccfe04bc88cb65ddd2b217ceb62b717774b2f85f1f5",
+                            blockHash: MOCK_DATASET_HEAD_BLOCK_HASH,
                         },
                     ],
                     blocks: {
@@ -1522,7 +1522,7 @@ export const mockHistoryEditAddPushSourceService: DatasetHistoryUpdate = {
     },
 };
 
-export const mockNode: Node = {
+export const mockNode: LineageGraphDatasetNode = {
     id: "testId",
     label: "british-columbia.case-details.hm",
     data: {
@@ -1534,11 +1534,11 @@ export const mockNode: Node = {
             isCurrent: false,
             access: LineageNodeAccess.PUBLIC,
             accountName: mockDatasetBasicsDerivedFragment.owner.accountName,
-        } as LineageGraphDatasetNodeObject,
+        },
     },
 };
 
-export const mockNodesWithEqualNames: Node[] = [
+export const mockNodesWithEqualNames: LineageGraphDatasetNode[] = [
     {
         id: "testId1",
         label: "british-columbia.case-details.hm",
@@ -1551,7 +1551,7 @@ export const mockNodesWithEqualNames: Node[] = [
                 isCurrent: false,
                 access: LineageNodeAccess.PUBLIC,
                 accountName: "accountName1",
-            } as LineageGraphDatasetNodeObject,
+            },
         },
     },
     {
@@ -1566,7 +1566,7 @@ export const mockNodesWithEqualNames: Node[] = [
                 isCurrent: false,
                 access: LineageNodeAccess.PUBLIC,
                 accountName: "accountName2",
-            } as LineageGraphDatasetNodeObject,
+            },
         },
     },
     {
@@ -1581,7 +1581,7 @@ export const mockNodesWithEqualNames: Node[] = [
                 isCurrent: false,
                 access: LineageNodeAccess.PUBLIC,
                 accountName: "accountName3",
-            } as LineageGraphDatasetNodeObject,
+            },
         },
     },
 ];
@@ -1632,7 +1632,7 @@ export const mockDatasetHeadBlockHashQuery: DatasetHeadBlockHashQuery = {
                     refs: [
                         {
                             name: "head",
-                            blockHash: "f16207c1039f6d9f5e107a2285ccfe04bc88cb65ddd2b217ceb62b717774b2f85f1f5",
+                            blockHash: MOCK_DATASET_HEAD_BLOCK_HASH,
                         },
                     ],
                 },
@@ -1842,11 +1842,28 @@ export const mockSqlQueryRestResponse: SqlQueryExplanationResponse = {
     },
 };
 
+export const MOCK_VERSIONED_FILE_NAME = "test-file-pdf";
+
+export const mockVersionedFileEntryByVersion: VersionedFileEntryDataFragment = {
+    systemTime: "2025-12-18T13:09:28.643+00:00",
+    eventTime: "2025-12-18T13:09:28.396+00:00",
+    version: 1,
+    contentType: "application/pdf",
+    contentLength: 381846,
+    contentHash: "f162037eb2f65a4e07a794a63c1bf1bcd37d2bd8d55dcce2b35d64a68ce6d79907d0f",
+    contentUrl: {
+        url: "https://s3.us-west-2.amazonaws.com/repo.dev.stg.kamu.dev.us-west-2/fed01dd0540db0ffb1d66922216063b4b12e750fede89",
+        expiresAt: "2026-04-20T17:04:26.013070937+00:00",
+        __typename: "VersionedFileContentDownload",
+    },
+    __typename: "VersionedFileEntry",
+};
+
 export const mockDatasetAsVersionedFileByVersionQuery: DatasetAsVersionedFileByVersionQuery = {
     datasets: {
         __typename: "Datasets",
         byId: {
-            name: "test-file-pdf",
+            name: MOCK_VERSIONED_FILE_NAME,
             __typename: "Dataset",
             asVersionedFile: {
                 __typename: "VersionedFile",
@@ -1854,47 +1871,36 @@ export const mockDatasetAsVersionedFileByVersionQuery: DatasetAsVersionedFileByV
                     totalCount: 2,
                     __typename: "VersionedFileEntryConnection",
                 },
-                asOf: {
-                    systemTime: "2025-12-18T13:09:28.643+00:00",
-                    eventTime: "2025-12-18T13:09:28.396+00:00",
-                    version: 1,
-                    contentType: "application/pdf",
-                    contentLength: 381846,
-                    contentHash: "f162037eb2f65a4e07a794a63c1bf1bcd37d2bd8d55dcce2b35d64a68ce6d79907d0f",
-                    contentUrl: {
-                        url: "https://s3.us-west-2.amazonaws.com/repo.dev.stg.kamu.dev.us-west-2/fed01dd0540db0ffb1d66922216063b4b12e750fede89",
-                        expiresAt: "2026-04-20T17:04:26.013070937+00:00",
-                        __typename: "VersionedFileContentDownload",
-                    },
-                    __typename: "VersionedFileEntry",
-                },
+                asOf: mockVersionedFileEntryByVersion,
             },
         },
     },
+};
+
+export const mockVersionedFileEntryLatest: VersionedFileEntryDataFragment = {
+    systemTime: "2025-12-18T13:09:34.719+00:00",
+    eventTime: "2025-12-18T13:09:34.311+00:00",
+    version: 2,
+    contentType: "application/pdf",
+    contentLength: 381846,
+    contentHash: "f162037eb2f65a4e07a794a63c1bf1bcd37d2bd8d55dcce2b35d64a68ce6d79907d0f",
+    contentUrl: {
+        url: "https://s3.us-west-2.amazonaws.com/repo.dev.stg.kamu.dev.us-west-2/fed01dd0540db0ffb1d66922216063b4b12e750fede89",
+        expiresAt: "2026-04-20T17:06:49.060763118+00:00",
+        __typename: "VersionedFileContentDownload",
+    },
+    __typename: "VersionedFileEntry",
 };
 
 export const mockDatasetAsVersionedFileQuery: DatasetAsVersionedFileQuery = {
     datasets: {
         __typename: "Datasets",
         byId: {
-            name: "test-file-pdf",
+            name: MOCK_VERSIONED_FILE_NAME,
             __typename: "Dataset",
             asVersionedFile: {
                 __typename: "VersionedFile",
-                latest: {
-                    systemTime: "2025-12-18T13:09:34.719+00:00",
-                    eventTime: "2025-12-18T13:09:34.311+00:00",
-                    version: 2,
-                    contentType: "application/pdf",
-                    contentLength: 381846,
-                    contentHash: "f162037eb2f65a4e07a794a63c1bf1bcd37d2bd8d55dcce2b35d64a68ce6d79907d0f",
-                    contentUrl: {
-                        url: "https://s3.us-west-2.amazonaws.com/repo.dev.stg.kamu.dev.us-west-2/fed01dd0540db0ffb1d66922216063b4b12e750fede89",
-                        expiresAt: "2026-04-20T17:06:49.060763118+00:00",
-                        __typename: "VersionedFileContentDownload",
-                    },
-                    __typename: "VersionedFileEntry",
-                },
+                latest: mockVersionedFileEntryLatest,
                 versions: {
                     totalCount: 2,
                     __typename: "VersionedFileEntryConnection",
@@ -1904,28 +1910,30 @@ export const mockDatasetAsVersionedFileQuery: DatasetAsVersionedFileQuery = {
     },
 };
 
+export const mockVersionedFileEntryByBlockHash: VersionedFileEntryDataFragment = {
+    systemTime: "2025-12-18T13:09:34.719+00:00",
+    eventTime: "2025-12-18T13:09:34.311+00:00",
+    version: 2,
+    contentType: "application/pdf",
+    contentLength: 381846,
+    contentHash: "f162037eb2f65a4e07a794a63c1bf1bcd37d2bd8d55dcce2b35d64a68ce6d79907d0f",
+    contentUrl: {
+        url: "https://s3.us-west-2.amazonaws.com/repo.dev.stg.kamu.dev.us-west-2/fed01dd0540db0ffb1d66922216063b4b12e750fede89",
+        expiresAt: "2026-04-20T17:06:49.060763118+00:00",
+        __typename: "VersionedFileContentDownload",
+    },
+    __typename: "VersionedFileEntry",
+};
+
 export const mockDatasetAsVersionedFileByBlockHashQuery: DatasetAsVersionedFileByBlockHashQuery = {
     datasets: {
         __typename: "Datasets",
         byId: {
-            name: "test-file-pdf",
+            name: MOCK_VERSIONED_FILE_NAME,
             __typename: "Dataset",
             asVersionedFile: {
                 __typename: "VersionedFile",
-                asOf: {
-                    systemTime: "2025-12-18T13:09:34.719+00:00",
-                    eventTime: "2025-12-18T13:09:34.311+00:00",
-                    version: 2,
-                    contentType: "application/pdf",
-                    contentLength: 381846,
-                    contentHash: "f162037eb2f65a4e07a794a63c1bf1bcd37d2bd8d55dcce2b35d64a68ce6d79907d0f",
-                    contentUrl: {
-                        url: "https://s3.us-west-2.amazonaws.com/repo.dev.stg.kamu.dev.us-west-2/fed01dd0540db0ffb1d66922216063b4b12e750fede89",
-                        expiresAt: "2026-04-20T17:06:49.060763118+00:00",
-                        __typename: "VersionedFileContentDownload",
-                    },
-                    __typename: "VersionedFileEntry",
-                },
+                asOf: mockVersionedFileEntryByBlockHash,
             },
         },
     },

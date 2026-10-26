@@ -9,9 +9,10 @@ import { Clipboard } from "@angular/cdk/clipboard";
 import { ChangeDetectionStrategy, Component, inject, Input } from "@angular/core";
 
 import { CopyToClipboardComponent } from "@common/components/copy-to-clipboard/copy-to-clipboard.component";
-import { MaybeUndefined } from "@interface/app.types";
+import { MaybeNull } from "@interface/app.types";
 
 import { QueryExplainerComponentData } from "src/app/query-explainer/query-explainer.component";
+import { verifyQueryError } from "src/app/query-explainer/query-explainer.helpers";
 import { VerifyQueryError, VerifyQueryKindError } from "src/app/query-explainer/query-explainer.types";
 
 @Component({
@@ -28,19 +29,23 @@ export class CommitmentDataSectionComponent {
     private clipboard = inject(Clipboard);
     @Input({ required: true }) public commitmentData: QueryExplainerComponentData;
 
-    public isInputHashError(error: MaybeUndefined<VerifyQueryError>): boolean {
+    public get verifyError(): MaybeNull<VerifyQueryError> {
+        return verifyQueryError(this.commitmentData.sqlQueryVerify);
+    }
+
+    public isInputHashError(error: MaybeNull<VerifyQueryError>): boolean {
         return error?.kind === VerifyQueryKindError.InputHash;
     }
 
-    public isSubQueriesHashError(error: MaybeUndefined<VerifyQueryError>): boolean {
+    public isSubQueriesHashError(error: MaybeNull<VerifyQueryError>): boolean {
         return error?.kind === VerifyQueryKindError.SubQueriesHash;
     }
 
-    public isBadSignatureError(error: MaybeUndefined<VerifyQueryError>): boolean {
+    public isBadSignatureError(error: MaybeNull<VerifyQueryError>): boolean {
         return error?.kind === VerifyQueryKindError.BadSignature;
     }
 
-    public isOutputMismatchError(error: MaybeUndefined<VerifyQueryError>): boolean {
+    public isOutputMismatchError(error: MaybeNull<VerifyQueryError>): boolean {
         return error?.kind === VerifyQueryKindError.OutputMismatch;
     }
 }

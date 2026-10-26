@@ -22,8 +22,8 @@ import {
     AddPushSourceEventFragment,
     DatasetKind,
     DatasetMetadataSummaryFragment,
+    DatasetPageInfoFragment,
     DatasetTransformFragment,
-    PageBasedInfo,
     SetPollingSourceEventFragment,
 } from "@api/kamu.graphql.interface";
 import { MaybeNull, MaybeNullOrUndefined, MaybeUndefined } from "@interface/app.types";
@@ -71,7 +71,7 @@ export class MetadataComponent extends BaseComponent implements OnInit {
     public currentState?: {
         schema: MaybeNull<DatasetSchema>;
         metadataSummary: DatasetMetadataSummaryFragment;
-        pageInfo: PageBasedInfo;
+        pageInfo: DatasetPageInfoFragment;
     };
 
     public readonly SourceEventEditor: typeof SourceEventEditor = SourceEventEditor;

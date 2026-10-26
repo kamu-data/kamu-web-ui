@@ -14,7 +14,7 @@ import { HIGHLIGHT_OPTIONS } from "ngx-highlightjs";
 
 import { JwtPayload } from "@common/guards/access-token-expired.types";
 import AppValues from "@common/values/app.values";
-import { DataSchema } from "@api/kamu.graphql.interface";
+import { DataSchemaInfoFragment } from "@api/kamu.graphql.interface";
 import { MaybeNull, MaybeNullOrUndefined } from "@interface/app.types";
 import { DatasetSchema } from "@interface/dataset-schema.interface";
 
@@ -68,7 +68,7 @@ export function momentConvertDateToLocalWithFormat(dateParams: {
     return format(ISOStringDate, dateParams.format);
 }
 
-export function parseCurrentSchema(data: MaybeNullOrUndefined<DataSchema>): MaybeNull<DatasetSchema> {
+export function parseCurrentSchema(data: MaybeNullOrUndefined<DataSchemaInfoFragment>): MaybeNull<DatasetSchema> {
     return data ? (JSON.parse(removeAllLineBreaks(data.content)) as DatasetSchema) : null;
 }
 

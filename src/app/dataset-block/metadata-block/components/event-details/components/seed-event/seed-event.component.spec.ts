@@ -15,6 +15,7 @@ import {
     emitClickOnElementByDataTestId,
     getElementByDataTestId,
     registerMatSvgIcons,
+    setComponentInput,
 } from "@common/helpers/base-test.helpers.spec";
 import { SharedTestModule } from "@common/modules/shared-test.module";
 
@@ -37,7 +38,7 @@ describe("SeedEventComponent", () => {
         fixture = TestBed.createComponent(SeedEventComponent);
         toastService = TestBed.inject(ToastrService);
         component = fixture.componentInstance;
-        component.event = mockSeed;
+        setComponentInput(fixture, "event", mockSeed);
         fixture.detectChanges();
     });
 

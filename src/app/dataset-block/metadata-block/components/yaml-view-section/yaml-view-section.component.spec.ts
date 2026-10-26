@@ -9,7 +9,7 @@ import { ComponentFixture, TestBed } from "@angular/core/testing";
 
 import { provideMarkdown } from "ngx-markdown";
 
-import { findElementByDataTestId } from "@common/helpers/base-test.helpers.spec";
+import { findElementByDataTestId, setComponentInput } from "@common/helpers/base-test.helpers.spec";
 import { metadataBlockSetVocab } from "@common/helpers/data.helpers.spec";
 import { SharedTestModule } from "@common/modules/shared-test.module";
 import { MarkdownFormatPipe } from "@common/pipes/markdown-format.pipe";
@@ -37,8 +37,8 @@ describe("YamlViewSectionComponent", () => {
     });
 
     it("should check yaml event viewer  visible ", () => {
-        fixture.componentRef.setInput("block", metadataBlockSetVocab);
-        fixture.componentRef.setInput("blockAsYaml", mockAddPushSourceYaml);
+        setComponentInput(fixture, "block", metadataBlockSetVocab);
+        setComponentInput(fixture, "blockAsYaml", mockAddPushSourceYaml);
         fixture.detectChanges();
 
         const eventViewer = findElementByDataTestId(fixture, "yaml-event-viewer");

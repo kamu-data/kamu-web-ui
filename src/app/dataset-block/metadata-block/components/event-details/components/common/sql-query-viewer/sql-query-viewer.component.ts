@@ -9,7 +9,7 @@ import { ChangeDetectionStrategy, Component, Input } from "@angular/core";
 
 import { Highlight } from "ngx-highlightjs";
 
-import { SqlQueryStep } from "@api/kamu.graphql.interface";
+import { SqlQueryStepDataFragment } from "@api/kamu.graphql.interface";
 
 import { BasePropertyComponent } from "src/app/dataset-block/metadata-block/components/event-details/components/common/base-property/base-property.component";
 
@@ -23,5 +23,5 @@ import { BasePropertyComponent } from "src/app/dataset-block/metadata-block/comp
     ],
 })
 export class SqlQueryViewerComponent extends BasePropertyComponent {
-    @Input({ required: true }) public data: SqlQueryStep[];
+    @Input({ required: true }) public data: SqlQueryStepDataFragment[];
 }

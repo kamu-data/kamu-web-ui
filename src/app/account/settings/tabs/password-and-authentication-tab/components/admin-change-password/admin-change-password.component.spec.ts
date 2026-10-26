@@ -12,6 +12,8 @@ import { of } from "rxjs";
 import { Apollo } from "apollo-angular";
 import { provideToastr } from "ngx-toastr";
 
+import { setComponentInput } from "@common/helpers/base-test.helpers.spec";
+
 import { AccountService } from "src/app/account/account.service";
 import { AdminChangePasswordComponent } from "src/app/account/settings/tabs/password-and-authentication-tab/components/admin-change-password/admin-change-password.component";
 
@@ -28,7 +30,7 @@ describe("AdminChangePasswordComponent", () => {
         fixture = TestBed.createComponent(AdminChangePasswordComponent);
         accountService = TestBed.inject(AccountService);
         component = fixture.componentInstance;
-        component.accountName = "accountName";
+        setComponentInput(fixture, "accountName", "accountName");
         fixture.detectChanges();
     });
 

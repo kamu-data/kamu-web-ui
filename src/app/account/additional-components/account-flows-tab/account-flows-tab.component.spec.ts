@@ -14,7 +14,7 @@ import { NgbNavChangeEvent } from "@ng-bootstrap/ng-bootstrap";
 import { Apollo } from "apollo-angular";
 import { provideToastr } from "ngx-toastr";
 
-import { findElementByDataTestId } from "@common/helpers/base-test.helpers.spec";
+import { findElementByDataTestId, setComponentInput } from "@common/helpers/base-test.helpers.spec";
 import { FlowStatus } from "@api/kamu.graphql.interface";
 import { mockAccountDetails } from "@api/mock/auth.mock";
 import { mockFlowsTableData } from "@api/mock/dataset-flow.mock";
@@ -64,11 +64,11 @@ describe("AccountFlowsTabComponent", () => {
         navigationService = TestBed.inject(NavigationService);
         loggedUserService = TestBed.inject(LoggedUserService);
         component = fixture.componentInstance;
-        component.accountFlowsData = {
+        setComponentInput(fixture, "setAccountFlowsData", {
             activeNav: AccountFlowsNav.ACTIVITY,
             flowGroup: [FlowStatus.Finished],
             datasetsFiltersMode: ProcessCardFilterMode.RECENT_ACTIVITY,
-        };
+        });
         spyOnProperty(loggedUserService, "currentlyLoggedInUser", "get").and.returnValue(mockAccountDetails);
     });
 
@@ -78,9 +78,11 @@ describe("AccountFlowsTabComponent", () => {
 
     it("should check to change navigation", () => {
         const navigateToOwnerViewSpy = spyOn(navigationService, "navigateToOwnerView");
-        const event = {
+        const event: NgbNavChangeEvent<AccountFlowsNav> = {
+            activeId: AccountFlowsNav.ACTIVITY,
             nextId: AccountFlowsNav.PROCESSES,
-        } as NgbNavChangeEvent;
+            preventDefault: () => undefined,
+        };
         component.onNavChange(event);
         expect(navigateToOwnerViewSpy).toHaveBeenCalledTimes(1);
     });

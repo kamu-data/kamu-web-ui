@@ -16,12 +16,11 @@ import { provideToastr } from "ngx-toastr";
 
 import { TimeDeltaFormValue } from "@common/components/time-delta-form/time-delta-form.value";
 import { SharedTestModule } from "@common/modules/shared-test.module";
-import { FlowTriggerBreakingChangeRule, TimeDelta, TimeUnit } from "@api/kamu.graphql.interface";
+import { FlowTriggerBreakingChangeRule, TimeUnit } from "@api/kamu.graphql.interface";
 
 import { BatchingRuleType } from "src/app/dataset-view/additional-components/dataset-settings-component/dataset-settings.model";
 import { TransformTriggerFormComponent } from "src/app/dataset-view/additional-components/dataset-settings-component/tabs/transform-options/transform-trigger-form/transform-trigger-form.component";
 import { TransformTriggerFormHarness } from "src/app/dataset-view/additional-components/dataset-settings-component/tabs/transform-options/transform-trigger-form/transform-trigger-form.harness";
-import { TransformTriggerFormValue } from "src/app/dataset-view/additional-components/dataset-settings-component/tabs/transform-options/transform-trigger-form/transform-trigger-form.types";
 
 @Component({
     imports: [
@@ -129,7 +128,7 @@ describe("TransformTriggerFormComponent", () => {
         await transformTriggerFormHarness.setSelectedBatchingRuleType(BatchingRuleType.BUFFERING);
 
         const MIN_RECORDS = 100;
-        const MAX_BATCHING_INTERVAL: TimeDelta = { every: 5, unit: TimeUnit.Minutes };
+        const MAX_BATCHING_INTERVAL: TimeDeltaFormValue = { every: 5, unit: TimeUnit.Minutes };
         await transformTriggerFormHarness.enterBufferingBatchingRule(MIN_RECORDS, MAX_BATCHING_INTERVAL);
 
         const bufferingFormValue = await transformTriggerFormHarness.getBufferingFormValue();
@@ -160,13 +159,12 @@ describe("TransformTriggerFormComponent", () => {
         await transformTriggerFormHarness.setSelectedBatchingRuleType(BatchingRuleType.BUFFERING);
 
         const MIN_RECORDS = 50;
-        const MAX_BATCHING_INTERVAL: TimeDelta = { every: 1, unit: TimeUnit.Hours };
+        const MAX_BATCHING_INTERVAL: TimeDeltaFormValue = { every: 1, unit: TimeUnit.Hours };
         await transformTriggerFormHarness.enterBufferingBatchingRule(MIN_RECORDS, MAX_BATCHING_INTERVAL);
 
         await transformTriggerFormHarness.setSelectedBreakingChangeRule(FlowTriggerBreakingChangeRule.NoAction);
 
-        const domFormValue = await transformTriggerFormHarness.currentFormValue();
-        expect(domFormValue).toEqual({
+        const expectedFormValue = {
             forNewData: {
                 batchingRuleType: BatchingRuleType.BUFFERING,
                 buffering: {
@@ -175,8 +173,9 @@ describe("TransformTriggerFormComponent", () => {
                 },
             },
             forBreakingChange: FlowTriggerBreakingChangeRule.NoAction,
-        });
-        expect(component.form.getRawValue() as TransformTriggerFormValue).toEqual(domFormValue);
+        };
+        expect(await transformTriggerFormHarness.currentFormValue()).toEqual(expectedFormValue);
+        expect(component.form.getRawValue()).toEqual(expectedFormValue);
         expect(component.form.valid).toBeTrue();
     });
 
@@ -194,7 +193,7 @@ describe("TransformTriggerFormComponent", () => {
             forBreakingChange: FlowTriggerBreakingChangeRule.Recover,
         });
 
-        expect(component.form.getRawValue() as TransformTriggerFormValue).toEqual({
+        expect(component.form.getRawValue()).toEqual({
             forNewData: {
                 batchingRuleType: BatchingRuleType.IMMEDIATE,
                 // Note: in raw value we will see the disabled form
@@ -203,7 +202,7 @@ describe("TransformTriggerFormComponent", () => {
                     maxBatchingInterval: {
                         every: null,
                         unit: null,
-                    } as TimeDeltaFormValue,
+                    },
                 },
             },
             forBreakingChange: FlowTriggerBreakingChangeRule.Recover,

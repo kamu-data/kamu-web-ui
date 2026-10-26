@@ -35,18 +35,18 @@ import { ToastrService } from "ngx-toastr";
 
 import { environment } from "@env/environment";
 import { BaseComponent } from "@common/components/base.component";
-import { trackBusyKey } from "@common/helpers/app.helpers";
+import { trackBusyKey, unexpectedValueError } from "@common/helpers/app.helpers";
 import { MY_MOMENT_FORMATS } from "@common/helpers/data.helpers";
 import AppValues from "@common/values/app.values";
 import {
-    AccountFlowProcessCard,
-    Dataset,
+    AccountFlowProcessCardDataFragment,
     DatasetBasicsFragment,
     FlowProcessEffectiveState,
     FlowProcessFilters,
     FlowProcessGroupRollupDataFragment,
     FlowProcessOrderField,
 } from "@api/kamu.graphql.interface";
+import { MaybeUndefined } from "@interface/app.types";
 
 import { AccountTabs } from "src/app/account/account.constants";
 import { AccountService } from "src/app/account/account.service";
@@ -108,7 +108,18 @@ import { ProcessDatasetCardInteractionService } from "src/app/services/process-d
 })
 export class AccountFlowsProcessesSubtabComponent extends BaseComponent implements OnInit {
     @Input({ required: true }) public accountName: string;
-    @Input({ required: true }) public accountFlowsData: AccountFlowsType;
+    @Input({ required: true }) public set accountFlowsData(value: AccountFlowsType) {
+        this.accountFlowsDataValue = value;
+        // Also reached by back/forward navigation between modes, which reuses this component
+        if (value.datasetsFiltersMode !== this.defaultsAppliedForMode) {
+            this.applyModeDefaults(value.datasetsFiltersMode);
+        }
+    }
+    public get accountFlowsData(): AccountFlowsType {
+        return this.accountFlowsDataValue;
+    }
+    private accountFlowsDataValue: AccountFlowsType;
+    private defaultsAppliedForMode: MaybeUndefined<ProcessCardFilterMode>;
 
     private readonly accountService = inject(AccountService);
     private readonly navigationService = inject(NavigationService);
@@ -119,7 +130,7 @@ export class AccountFlowsProcessesSubtabComponent extends BaseComponent implemen
 
     public accountFlowsCardsData$: Observable<FlowProcessCardListing>;
     public hasNextPage = false;
-    public processesCards: AccountFlowProcessCard[] = [];
+    public processesCards: AccountFlowProcessCardDataFragment[] = [];
     public processesPerPage: number = AppValues.UPLOAD_FLOW_PROCESSES_PER_PAGE;
     public flowsMode: ProcessCardGroup = ProcessCardGroup.ALL;
     public activeRollup: FlowProcessGroupRollupDataFragment;
@@ -165,7 +176,7 @@ export class AccountFlowsProcessesSubtabComponent extends BaseComponent implemen
 
             tap((data: CardsStrategyResult) => {
                 this.activeRollup = data.rollup;
-                const newChunkCards = data.cards.nodes as AccountFlowProcessCard[];
+                const newChunkCards = data.cards.nodes;
                 this.hasNextPage = data.cards.pageInfo.hasNextPage;
                 this.processesCards = [...newChunkCards];
 
@@ -193,10 +204,6 @@ export class AccountFlowsProcessesSubtabComponent extends BaseComponent implemen
         return this.accountFlowsFiltersService.setFlowProcessFilters(mode);
     }
 
-    public itemToBasics(value: Dataset): DatasetBasicsFragment {
-        return value as DatasetBasicsFragment;
-    }
-
     public rollupAvailabilityMapper(mode: ProcessCardFilterMode, state: FlowProcessEffectiveState): boolean {
         return rollupAvailabilityMapper(mode, state);
     }
@@ -213,8 +220,9 @@ export class AccountFlowsProcessesSubtabComponent extends BaseComponent implemen
                 return rollup.active + rollup.failing;
             case ProcessCardFilterMode.CUSTOM:
                 return rollup.active + rollup.failing + rollup.paused + rollup.stopped;
+            /* istanbul ignore next */
             default:
-                throw new Error("Unsupported process card view mode");
+                throw unexpectedValueError(mode, "process card filter mode");
         }
     }
 
@@ -330,6 +338,7 @@ export class AccountFlowsProcessesSubtabComponent extends BaseComponent implemen
         const nextNav = event.value as ProcessCardFilterMode;
         this.resetRequestParams();
         this.accountFlowsFiltersService.resetFilters(nextNav);
+        this.applyModeDefaults(nextNav);
         this.navigationService.navigateToOwnerView(
             this.accountName,
             AccountTabs.FLOWS,
@@ -341,7 +350,12 @@ export class AccountFlowsProcessesSubtabComponent extends BaseComponent implemen
         this.refreshNow();
     }
 
-    public trackByCardId(item: AccountFlowProcessCard): string {
+    private applyModeDefaults(mode: ProcessCardFilterMode): void {
+        this.accountFlowsFiltersService.applyModeDefaults(mode);
+        this.defaultsAppliedForMode = mode;
+    }
+
+    public trackByCardId(item: AccountFlowProcessCardDataFragment): string {
         if ("dataset" in item) {
             return item.dataset.id;
         } else {

@@ -12,13 +12,14 @@ import { ComponentFixture, TestBed } from "@angular/core/testing";
 import { NgbActiveModal } from "@ng-bootstrap/ng-bootstrap";
 import { Apollo } from "apollo-angular";
 
+import { requireValue } from "@common/helpers/app.helpers";
 import {
     emitClickOnElementByDataTestId,
     getElementByDataTestId,
     getInputElementByDataTestId,
+    setComponentInput,
 } from "@common/helpers/base-test.helpers.spec";
 import { SharedTestModule } from "@common/modules/shared-test.module";
-import { DatasetDataSizeFragment, DatasetOverviewFragment } from "@api/kamu.graphql.interface";
 
 import {
     mockMetadataDerivedUpdate,
@@ -40,13 +41,13 @@ describe("EditLicenseModalComponent", () => {
 
         fixture = TestBed.createComponent(EditLicenseModalComponent);
         component = fixture.componentInstance;
-        component.datasetBasics = mockDatasetBasicsDerivedFragment;
-        component.currentState = {
+        setComponentInput(fixture, "datasetBasics", mockDatasetBasicsDerivedFragment);
+        setComponentInput(fixture, "currentState", {
             schema: mockMetadataDerivedUpdate.schema,
             data: mockOverviewDataUpdate.content,
-            overview: mockOverviewWithSetLicense as DatasetOverviewFragment,
-            size: mockOverviewDataUpdate.size as DatasetDataSizeFragment,
-        };
+            overview: mockOverviewWithSetLicense,
+            size: mockOverviewDataUpdate.size,
+        });
         fixture.detectChanges();
     });
 
@@ -55,17 +56,11 @@ describe("EditLicenseModalComponent", () => {
     });
 
     it("should check initialize form", () => {
-        component.ngOnInit();
-        expect(component.licenseForm.controls.name.value).toBe(mockOverviewWithSetLicense.metadata.currentLicense.name);
-        expect(component.licenseForm.controls.shortName.value).toBe(
-            mockOverviewWithSetLicense.metadata.currentLicense.shortName,
-        );
-        expect(component.licenseForm.controls.websiteUrl.value).toBe(
-            mockOverviewWithSetLicense.metadata.currentLicense.websiteUrl,
-        );
-        expect(component.licenseForm.controls.spdxId.value).toBe(
-            mockOverviewWithSetLicense.metadata.currentLicense.spdxId,
-        );
+        const license = requireValue(mockOverviewWithSetLicense.metadata.currentLicense ?? null);
+        expect(component.licenseForm.controls.name.value).toBe(license.name);
+        expect(component.licenseForm.controls.shortName.value).toBe(license.shortName);
+        expect(component.licenseForm.controls.websiteUrl.value).toBe(license.websiteUrl);
+        expect(component.licenseForm.controls.spdxId.value).toBe(license.spdxId ?? null);
     });
 
     it("should check call onEditLicense", () => {

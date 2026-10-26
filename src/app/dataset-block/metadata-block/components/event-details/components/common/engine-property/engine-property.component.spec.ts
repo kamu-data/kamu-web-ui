@@ -7,6 +7,7 @@
 
 import { ComponentFixture, TestBed } from "@angular/core/testing";
 
+import { setComponentInput } from "@common/helpers/base-test.helpers.spec";
 import { SharedTestModule } from "@common/modules/shared-test.module";
 
 import { EnginePropertyComponent } from "src/app/dataset-block/metadata-block/components/event-details/components/common/engine-property/engine-property.component";
@@ -22,7 +23,7 @@ describe("EnginePropertyComponent", () => {
 
         fixture = TestBed.createComponent(EnginePropertyComponent);
         component = fixture.componentInstance;
-        component.data = "spark";
+        setComponentInput(fixture, "data", "spark");
         fixture.detectChanges();
     });
 

@@ -1,124 +1,6 @@
 fragment FlowSummaryData on Flow {
   description {
-    ... on FlowDescriptionDatasetPollingIngest {
-      pollingSource {
-        fetch {
-          ...FetchStepUrlData
-          ...FetchStepFilesGlobData
-          ...FetchStepContainerData
-        }
-      }
-
-      ingestResult {
-        ... on FlowDescriptionUpdateResultUpToDate {
-          uncacheable
-        }
-
-        ... on FlowDescriptionUpdateResultSuccess {
-          numBlocks
-          numRecords
-          updatedWatermark
-        }
-
-        ... on FlowDescriptionUpdateResultUnknown {
-          message
-        }
-      }
-    }
-
-    ... on FlowDescriptionDatasetPushIngest {
-      sourceName
-      ingestResult {
-        ... on FlowDescriptionUpdateResultUpToDate {
-          uncacheable
-        }
-
-        ... on FlowDescriptionUpdateResultSuccess {
-          numBlocks
-          numRecords
-          updatedWatermark
-        }
-
-        ... on FlowDescriptionUpdateResultUnknown {
-          message
-        }
-      }
-    }
-
-    ... on FlowDescriptionDatasetExecuteTransform {
-      transform {
-        inputs {
-          __typename
-        }
-        transform {
-          ... on TransformSql {
-            engine
-          }
-        }
-      }
-
-      transformResult {
-        ... on FlowDescriptionUpdateResultUpToDate {
-          uncacheable
-        }
-
-        ... on FlowDescriptionUpdateResultSuccess {
-          numBlocks
-          numRecords
-          updatedWatermark
-        }
-
-        ... on FlowDescriptionUpdateResultUnknown {
-          message
-        }
-      }
-    }
-
-    ... on FlowDescriptionDatasetHardCompaction {
-      compactionResult {
-        ... on FlowDescriptionReorganizationSuccess {
-          originalBlocksCount
-          resultingBlocksCount
-          newHead
-        }
-
-        ... on FlowDescriptionReorganizationNothingToDo {
-          message
-          dummy
-        }
-      }
-    }
-
-    ... on FlowDescriptionSystemGC {
-      dummy
-    }
-
-    ... on FlowDescriptionDatasetReset {
-      resetResult {
-        newHead
-      }
-    }
-
-    ... on FlowDescriptionDatasetResetToMetadata {
-      resetToMetadataResult {
-        ... on FlowDescriptionReorganizationSuccess {
-          originalBlocksCount
-          resultingBlocksCount
-          newHead
-        }
-
-        ... on FlowDescriptionReorganizationNothingToDo {
-          message
-          dummy
-        }
-      }
-    }
-
-    ... on FlowDescriptionWebhookDeliver {
-      targetUrl
-      label
-      eventType
-    }
+    ...FlowDescriptionData
   }
 
   flowId
@@ -134,51 +16,15 @@ fragment FlowSummaryData on Flow {
   }
 
   timing {
-    initiatedAt
-    firstAttemptScheduledAt
-    scheduledAt
-    awaitingExecutorSince
-    runningSince
-    lastAttemptFinishedAt
+    ...FlowTimingRecordsData
   }
 
   startCondition {
-    __typename
-    ... on FlowStartConditionThrottling {
-      intervalSec
-      wakeUpAt
-      shiftedFrom
-    }
-
-    ... on FlowStartConditionReactive {
-      activeBatchingRule {
-        __typename
-        ... on FlowTriggerBatchingRuleBuffering {
-          maxBatchingInterval {
-            ...TimeDeltaData
-          }
-          minRecordsToAwait
-        }
-      }
-      batchingDeadline
-      accumulatedRecordsCount
-      watermarkModified
-    }
-
-    ... on FlowStartConditionSchedule {
-      wakeUpAt
-    }
-
-    ... on FlowStartConditionExecutor {
-      taskId
-    }
+    ...FlowStartConditionData
   }
 
   configSnapshot {
-    ... on FlowConfigRuleIngest {
-      fetchUncacheable
-      fetchNextIteration
-    }
+    ...FlowConfigRuleIngestData
   }
 
   taskIds

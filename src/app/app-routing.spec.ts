@@ -9,7 +9,7 @@ import { Location } from "@angular/common";
 import { provideHttpClient } from "@angular/common/http";
 import { provideHttpClientTesting } from "@angular/common/http/testing";
 import { provideLocationMocks } from "@angular/common/testing";
-import { NO_ERRORS_SCHEMA, Provider } from "@angular/core";
+import { Provider } from "@angular/core";
 import { ComponentFixture, fakeAsync, flush, TestBed, tick } from "@angular/core/testing";
 import { Router, ROUTES } from "@angular/router";
 
@@ -21,8 +21,8 @@ import { provideToastr } from "ngx-toastr";
 
 import { PageNotFoundComponent } from "@common/components/page-not-found/page-not-found.component";
 import { promiseWithCatch } from "@common/helpers/app.helpers";
-import { AccessTokenConnection, AccountProvider } from "@api/kamu.graphql.interface";
-import { mockListAccessTokensQuery } from "@api/mock/access-token.mock";
+import { AccountProvider } from "@api/kamu.graphql.interface";
+import { mockAccessTokenConnectionData } from "@api/mock/access-token.mock";
 import { mockAccountDetails } from "@api/mock/auth.mock";
 import { MaybeUndefined } from "@interface/app.types";
 
@@ -32,13 +32,8 @@ import { provideCatchAllRoute, provideConditionalGuardedRoutes, PUBLIC_ROUTES } 
 import { LoggedUserService } from "src/app/auth/logged-user.service";
 import { LoginMethodsService } from "src/app/auth/login-methods.service";
 import { LoginComponent } from "src/app/auth/login/login.component";
-import {
-    mockMetadataDerivedUpdate,
-    mockOverviewDataUpdate,
-    mockOverviewDataUpdateNullable,
-} from "src/app/dataset-view/additional-components/data-tabs.mock";
+import { mockDerivedOverviewUpdate } from "src/app/dataset-view/additional-components/data-tabs.mock";
 import { datasetOverviewTabResolverFn } from "src/app/dataset-view/additional-components/overview-component/resolver/dataset-overview-tab.resolver";
-import { OverviewUpdate } from "src/app/dataset-view/dataset.subscriptions.interface";
 import { datasetViewResolverFn } from "src/app/dataset-view/resolvers/dataset-view.resolver";
 import ProjectLinks from "src/app/project-links";
 import {
@@ -57,7 +52,6 @@ describe("Router", () => {
 
     async function configureRouter(allowAnonymous: boolean, extraProviders: Provider[] = []): Promise<void> {
         await TestBed.configureTestingModule({
-            schemas: [NO_ERRORS_SCHEMA],
             imports: [ApolloTestingModule, PageNotFoundComponent, LoginComponent],
             providers: [
                 Apollo,
@@ -78,11 +72,7 @@ describe("Router", () => {
                 {
                     provide: accountSettingsAccessTokensResolverFn,
                     useValue: {
-                        resolve: () =>
-                            of(
-                                mockListAccessTokensQuery.accounts.byId?.accessTokens
-                                    .listAccessTokens as AccessTokenConnection,
-                            ),
+                        resolve: () => of(mockAccessTokenConnectionData),
                     },
                 },
                 {
@@ -108,12 +98,7 @@ describe("Router", () => {
                             of({
                                 datasetBasics: mockDatasetBasicsDerivedFragment,
                                 datasetPermissions: mockFullPowerDatasetPermissionsFragment,
-                                overviewUpdate: {
-                                    schema: mockMetadataDerivedUpdate.schema,
-                                    content: mockOverviewDataUpdate.content,
-                                    overview: structuredClone(mockOverviewDataUpdateNullable.overview),
-                                    size: mockOverviewDataUpdate.size,
-                                } as OverviewUpdate,
+                                overviewUpdate: mockDerivedOverviewUpdate,
                             }),
                     },
                 },

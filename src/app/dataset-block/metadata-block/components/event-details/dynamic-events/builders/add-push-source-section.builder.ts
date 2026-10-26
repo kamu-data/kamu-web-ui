@@ -5,19 +5,19 @@
  * included in the LICENSE file.
  */
 
-import { AddPushSource } from "@api/kamu.graphql.interface";
+import { AddPushSourceEventFragment } from "@api/kamu.graphql.interface";
 
 import { ADD_PUSH_SOURCE_DESCRIPTORS } from "src/app/dataset-block/metadata-block/components/event-details/components/add-push-source-event/add-push-source-event.source";
 import { EventSectionBuilder } from "src/app/dataset-block/metadata-block/components/event-details/dynamic-events/builders/event-section.builder";
 import { EventSection } from "src/app/dataset-block/metadata-block/components/event-details/dynamic-events/dynamic-events.model";
 import { AddPushSourceSection } from "src/app/dataset-view/additional-components/metadata-component/components/source-events/add-push-source/add-push-source-form.types";
 
-export class AddPushSourceSectionBuilder extends EventSectionBuilder<AddPushSource> {
+export class AddPushSourceSectionBuilder extends EventSectionBuilder<AddPushSourceEventFragment> {
     private sectionTitleMapper: Record<string, string> = {
         sourceName: "Source",
     };
 
-    public buildEventSections(event: AddPushSource): EventSection[] {
+    public buildEventSections(event: AddPushSourceEventFragment): EventSection[] {
         const result: EventSection[] = [];
         Object.entries(event).forEach(([section, data]) => {
             if (data && section !== "__typename") {
@@ -51,7 +51,7 @@ export class AddPushSourceSectionBuilder extends EventSectionBuilder<AddPushSour
                             rows: this.buildEventRows(
                                 event,
                                 ADD_PUSH_SOURCE_DESCRIPTORS,
-                                section as keyof AddPushSource,
+                                section as keyof AddPushSourceEventFragment,
                                 allowTypenameKey,
                             ),
                         });

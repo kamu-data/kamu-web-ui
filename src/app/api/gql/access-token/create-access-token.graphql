@@ -6,12 +6,7 @@ mutation createAccessToken($accountId: AccountID!, $tokenName: String!) {
           ... on CreateAccessTokenResultSuccess {
             message
             token {
-              id
-              name
-              composed
-              account {
-                ...Account
-              }
+              ...CreatedAccessTokenData
             }
           }
 

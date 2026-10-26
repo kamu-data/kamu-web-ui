@@ -9,7 +9,6 @@ import { HarnessLoader } from "@angular/cdk/testing";
 import { TestbedHarnessEnvironment } from "@angular/cdk/testing/testbed";
 import { provideHttpClient } from "@angular/common/http";
 import { provideHttpClientTesting } from "@angular/common/http/testing";
-import { SimpleChanges } from "@angular/core";
 import { ComponentFixture, TestBed } from "@angular/core/testing";
 import { MatTableHarness } from "@angular/material/table/testing";
 
@@ -20,9 +19,9 @@ import { provideToastr, ToastrService } from "ngx-toastr";
 import timekeeper from "timekeeper";
 
 import { ModalService } from "@common/components/modal/modal.service";
-import { registerMatSvgIcons } from "@common/helpers/base-test.helpers.spec";
+import { requireValue } from "@common/helpers/app.helpers";
+import { registerMatSvgIcons, setComponentInput } from "@common/helpers/base-test.helpers.spec";
 import { SharedTestModule } from "@common/modules/shared-test.module";
-import { Account } from "@api/kamu.graphql.interface";
 import { mockDatasetFlowsInitiatorsQuery, mockFlowSummaryDataFragments } from "@api/mock/dataset-flow.mock";
 import { ModalArgumentsInterface } from "@interface/modal.interface";
 
@@ -64,16 +63,19 @@ describe("FlowsTableComponent", () => {
         toastService = TestBed.inject(ToastrService);
         component = fixture.componentInstance;
         loader = TestbedHarnessEnvironment.loader(fixture);
-        component.nodes = mockFlowSummaryDataFragments;
-        component.filterByStatus = null;
-        component.searchByAccount = [];
-        component.tableOptions = {
+        setComponentInput(fixture, "nodes", mockFlowSummaryDataFragments);
+        setComponentInput(fixture, "filterByStatus", null);
+        setComponentInput(fixture, "searchByAccount", []);
+        setComponentInput(fixture, "tableOptions", {
             displayColumns: ["description", "information", "creator", "options"],
-        };
-        component.involvedDatasets = mockDatasets;
+        });
+        setComponentInput(fixture, "involvedDatasets", mockDatasets);
 
-        component.accountFlowInitiators = mockDatasetFlowsInitiatorsQuery.datasets.byId?.flows.runs.listFlowInitiators
-            .nodes as Account[];
+        setComponentInput(
+            fixture,
+            "accountFlowInitiators",
+            requireValue(mockDatasetFlowsInitiatorsQuery.datasets.byId?.flows.runs.listFlowInitiators.nodes ?? null),
+        );
         fixture.detectChanges();
     });
 
@@ -87,17 +89,20 @@ describe("FlowsTableComponent", () => {
         expect(rows.length).toBe(8);
     });
 
-    it("should check ngOnChanges", () => {
-        const nodesSimpleChanges: SimpleChanges = {
-            nodes: {
-                previousValue: undefined,
-                currentValue: mockFlowSummaryDataFragments,
-                firstChange: true,
-                isFirstChange: () => true,
-            },
-        };
-        component.ngOnChanges(nodesSimpleChanges);
-        expect(component.dataSource.data).toEqual(mockFlowSummaryDataFragments);
+    it("should show the new nodes when the input changes", () => {
+        const nodes = mockFlowSummaryDataFragments.slice(0, 1);
+        setComponentInput(fixture, "nodes", nodes);
+        fixture.detectChanges();
+        expect(component.dataSource.data).toEqual(nodes);
+    });
+
+    it("should leave the nodes it was given unchanged when the input changes", () => {
+        const givenNodes = structuredClone(mockFlowSummaryDataFragments);
+        const nextNodes = structuredClone(mockFlowSummaryDataFragments.slice(0, 1));
+        nextNodes[0].flowId = "changed-flow-id";
+        setComponentInput(fixture, "nodes", nextNodes);
+        fixture.detectChanges();
+        expect(mockFlowSummaryDataFragments).toEqual(givenNodes);
     });
 
     it("should check show modal window for aborting flow", () => {

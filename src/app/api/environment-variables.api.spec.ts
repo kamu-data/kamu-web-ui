@@ -25,6 +25,9 @@ import { TEST_ACCOUNT_ID, TEST_ACCOUNT_NAME, TEST_DATASET_ID, TEST_DATASET_NAME 
 import {
     MOCK_PAGE,
     MOCK_PER_PAGE,
+    MOCK_UPSERT_ENV_VAR_CREATED_MESSAGE,
+    MOCK_UPSERT_ENV_VAR_UP_TO_DATE_MESSAGE,
+    MOCK_UPSERT_ENV_VAR_UPDATED_MESSAGE,
     MOCK_VAR_KEY,
     MOCK_VAR_VALUE,
     mockDeleteEnvVariableMutation,
@@ -62,11 +65,12 @@ describe("EnvironmentVariablesApi", () => {
                 isSecret: true,
             })
             .subscribe((result: UpsertEnvVariableMutation) => {
-                if (result.datasets.byId?.envVars.upsertEnvVariable.__typename === "UpsertDatasetEnvVarResultCreated") {
-                    expect(result.datasets.byId?.envVars.upsertEnvVariable.message).toEqual(
-                        mockUpsertEnvVariableMutationCreated.datasets.byId?.envVars.upsertEnvVariable.message as string,
-                    );
-                }
+                expect(result.datasets.byId?.envVars.upsertEnvVariable).toEqual(
+                    jasmine.objectContaining({
+                        __typename: "UpsertDatasetEnvVarResultCreated",
+                        message: MOCK_UPSERT_ENV_VAR_CREATED_MESSAGE,
+                    }),
+                );
             });
 
         const op = controller.expectOne(UpsertEnvVariableDocument);
@@ -90,11 +94,12 @@ describe("EnvironmentVariablesApi", () => {
                 isSecret: true,
             })
             .subscribe((result: UpsertEnvVariableMutation) => {
-                if (result.datasets.byId?.envVars.upsertEnvVariable.__typename === "UpsertDatasetEnvVarResultUpdated") {
-                    expect(result.datasets.byId?.envVars.upsertEnvVariable.message).toEqual(
-                        mockUpsertEnvVariableMutationUpdated.datasets.byId?.envVars.upsertEnvVariable.message as string,
-                    );
-                }
+                expect(result.datasets.byId?.envVars.upsertEnvVariable).toEqual(
+                    jasmine.objectContaining({
+                        __typename: "UpsertDatasetEnvVarResultUpdated",
+                        message: MOCK_UPSERT_ENV_VAR_UPDATED_MESSAGE,
+                    }),
+                );
             });
 
         const op = controller.expectOne(UpsertEnvVariableDocument);
@@ -118,11 +123,12 @@ describe("EnvironmentVariablesApi", () => {
                 isSecret: true,
             })
             .subscribe((result: UpsertEnvVariableMutation) => {
-                if (result.datasets.byId?.envVars.upsertEnvVariable.__typename === "UpsertDatasetEnvVarResultUpdated") {
-                    expect(result.datasets.byId?.envVars.upsertEnvVariable.message).toEqual(
-                        mockUpsertEnvVariableMutationCreated.datasets.byId?.envVars.upsertEnvVariable.message as string,
-                    );
-                }
+                expect(result.datasets.byId?.envVars.upsertEnvVariable).toEqual(
+                    jasmine.objectContaining({
+                        __typename: "UpsertDatasetEnvVarUpToDate",
+                        message: MOCK_UPSERT_ENV_VAR_UP_TO_DATE_MESSAGE,
+                    }),
+                );
             });
 
         const op = controller.expectOne(UpsertEnvVariableDocument);

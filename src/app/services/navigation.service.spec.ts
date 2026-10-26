@@ -176,8 +176,7 @@ describe("NavigationService", () => {
 
     it("should test navigate to website", () => {
         const mockWebsite = "http://google.com";
-        const windowMock = { document: {} } as Window;
-        const windowSpy = spyOn(window, "open").and.returnValue(windowMock);
+        const windowSpy = spyOn(window, "open").and.returnValue(null);
         service.navigateToWebsite(mockWebsite);
         expect(windowSpy).toHaveBeenCalledWith(mockWebsite, "_blank");
     });
@@ -224,9 +223,8 @@ describe("NavigationService", () => {
 
         service.navigateToDatasetView({ accountName: "kamu", datasetName: "ds", tab: "history", page: 2, state });
 
-        const [url, extras] = routerSpy.calls.mostRecent().args;
-        expect(router.serializeUrl(url as UrlTree)).toEqual("/kamu/ds/history?page=2");
-        expect(extras).toEqual({ state });
+        expect(navigatedUrl(routerSpy)).toEqual("/kamu/ds/history?page=2");
+        expect(routerSpy.calls.mostRecent().args[1]).toEqual({ state });
     });
 
     [
@@ -333,7 +331,9 @@ describe("NavigationService", () => {
         });
     });
 
-    function navigatedUrl(routerSpy: jasmine.Spy): string {
-        return router.serializeUrl(routerSpy.calls.mostRecent().args[0] as UrlTree);
+    function navigatedUrl(routerSpy: jasmine.Spy<Router["navigateByUrl"]>): string {
+        const [url] = routerSpy.calls.mostRecent().args;
+        expect(url).toBeInstanceOf(UrlTree);
+        return url instanceof UrlTree ? router.serializeUrl(url) : url;
     }
 });

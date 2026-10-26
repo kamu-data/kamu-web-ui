@@ -16,7 +16,7 @@ import {
     DatasetBasicsFragment,
     DatasetKind,
     FlowProcessEffectiveState,
-    FlowProcessSummary,
+    FlowProcessSummaryDataFragment,
 } from "@api/kamu.graphql.interface";
 
 import { SettingsTabsEnum } from "src/app/dataset-view/additional-components/dataset-settings-component/dataset-settings.model";
@@ -45,7 +45,7 @@ import { DatasetViewTypeEnum } from "src/app/dataset-view/dataset-view.interface
 })
 export class DatasetFlowProcessCardComponent {
     @Input({ required: true }) public datasetBasics: DatasetBasicsFragment;
-    @Input({ required: true }) public summary: FlowProcessSummary;
+    @Input({ required: true }) public summary: FlowProcessSummaryDataFragment;
     @Input() public showFlowsHistoryLink = false;
     /** Disables the buttons while an action started from them has not shown its result yet */
     @Input() public actionInProgress = false;
@@ -62,7 +62,7 @@ export class DatasetFlowProcessCardComponent {
         return DatasetFlowBadgeHelpers.badgeStyles(effectiveState);
     }
 
-    public badgeMessages(datasetKind: DatasetKind, summary: FlowProcessSummary): DatasetFlowsBadgeTexts {
+    public badgeMessages(datasetKind: DatasetKind, summary: FlowProcessSummaryDataFragment): DatasetFlowsBadgeTexts {
         const isRoot = datasetKind === DatasetKind.Root;
         return DatasetFlowBadgeHelpers.badgeMessages(summary, isRoot);
     }

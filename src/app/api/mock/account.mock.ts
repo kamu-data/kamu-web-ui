@@ -8,6 +8,7 @@
 import {
     AccountByNameQuery,
     AccountChangeEmailMutation,
+    AccountFlowProcessCardConnectionDataFragment,
     AccountFlowsAsCardsQuery,
     AccountListDatasetsWithFlowsQuery,
     AccountListFlowsQuery,
@@ -20,12 +21,15 @@ import {
     ChangeAccountUsernameMutation,
     ChangeAdminPasswordMutation,
     ChangeUserPasswordMutation,
+    DatasetFlowProcessConnectionDataFragment,
     DatasetFlowType,
     DatasetKind,
     DeleteAccountByNameMutation,
     FlowProcessAutoStopReason,
     FlowProcessEffectiveState,
+    FlowProcessGroupRollupDataFragment,
     FlowStatus,
+    WebhookFlowSubProcessConnectionDataFragment,
 } from "@api/kamu.graphql.interface";
 import { mockAccountDetails } from "@api/mock/auth.mock";
 
@@ -285,11 +289,13 @@ export const mockAccountChangeEmailMutationSuccess: AccountChangeEmailMutation =
     },
 };
 
+export const MOCK_CHANGE_EMAIL_NON_UNIQUE_MESSAGE = "Non unique email";
+
 export const mockAccountChangeEmailMutationError: AccountChangeEmailMutation = {
     accounts: {
         byName: {
             updateEmail: {
-                message: "Non unique email",
+                message: MOCK_CHANGE_EMAIL_NON_UNIQUE_MESSAGE,
                 __typename: "UpdateEmailNonUnique",
             },
             __typename: "AccountMut",
@@ -432,71 +438,208 @@ export const mockChangeUserPasswordMutationError: ChangeUserPasswordMutation = {
     },
 };
 
+export const mockAccountFullRollup: FlowProcessGroupRollupDataFragment = {
+    total: 14,
+    active: 1,
+    failing: 2,
+    paused: 3,
+    stopped: 8,
+    unconfigured: 0,
+    worstConsecutiveFailures: 14,
+    __typename: "FlowProcessGroupRollup",
+};
+
+export const mockAccountAllCards: AccountFlowProcessCardConnectionDataFragment = {
+    nodes: [
+        {
+            flowType: DatasetFlowType.Ingest,
+            dataset: {
+                id: "did:odf:fed01ac74ce96a0822763f55c84f8d48695647bd48bb79b0b1ae0f3a3c873807444f5",
+                kind: DatasetKind.Root,
+                name: "account.tokens.transfers",
+                owner: {
+                    id: "did:odf:fed016b61ed2ab1b63a006b61ed2ab1b63a00b016d65607000000e0821aafbf163e6f",
+                    accountName: "kamu",
+                    accountProvider: AccountProvider.Password,
+                    avatarUrl: "https://avatars.githubusercontent.com/u/50896974?s=200&v=4",
+                    __typename: "Account",
+                },
+                alias: "kamu/account.tokens.transfers",
+                visibility: {
+                    anonymousAvailable: false,
+                    __typename: "PublicDatasetVisibility",
+                },
+                __typename: "Dataset",
+            },
+            summary: {
+                effectiveState: FlowProcessEffectiveState.StoppedAuto,
+                consecutiveFailures: 1,
+                lastSuccessAt: null,
+                lastAttemptAt: "2025-11-11T10:53:42.239144541+00:00",
+                lastFailureAt: "2025-11-11T10:53:42.239144541+00:00",
+                nextPlannedAt: null,
+                stopPolicy: {
+                    dummy: true,
+                    __typename: "FlowTriggerStopPolicyNever",
+                },
+                autoStoppedReason: FlowProcessAutoStopReason.UnrecoverableFailure,
+                autoStoppedAt: "2025-11-11T10:53:42.239144541+00:00",
+                __typename: "FlowProcessSummary",
+            },
+            __typename: "DatasetFlowProcess",
+        },
+    ],
+    totalCount: 1,
+    pageInfo: {
+        hasNextPage: false,
+        hasPreviousPage: false,
+        currentPage: 0,
+        totalPages: 1,
+        __typename: "PageBasedInfo",
+    },
+    __typename: "AccountFlowProcessCardConnection",
+};
+
+export const mockAccountAllCardsWithWebhook: AccountFlowProcessCardConnectionDataFragment = {
+    nodes: [
+        {
+            id: "d20a935e-0ccb-4844-b1bb-f4b5b9b0279a",
+            name: "qwert",
+            summary: {
+                effectiveState: FlowProcessEffectiveState.PausedManual,
+                consecutiveFailures: 0,
+                lastSuccessAt: null,
+                lastAttemptAt: null,
+                lastFailureAt: null,
+                nextPlannedAt: null,
+                stopPolicy: {
+                    maxFailures: 5,
+                    __typename: "FlowTriggerStopPolicyAfterConsecutiveFailures",
+                },
+                autoStoppedReason: null,
+                autoStoppedAt: null,
+                __typename: "FlowProcessSummary",
+            },
+            __typename: "WebhookFlowSubProcess",
+        },
+    ],
+    totalCount: 1,
+    pageInfo: {
+        hasNextPage: false,
+        hasPreviousPage: false,
+        currentPage: 0,
+        totalPages: 1,
+        __typename: "PageBasedInfo",
+    },
+    __typename: "AccountFlowProcessCardConnection",
+};
+
+export const mockAccountAllCardsEmpty: AccountFlowProcessCardConnectionDataFragment = {
+    nodes: [],
+    totalCount: 0,
+    pageInfo: {
+        hasNextPage: false,
+        hasPreviousPage: false,
+        currentPage: 0,
+        totalPages: 1,
+        __typename: "PageBasedInfo",
+    },
+    __typename: "AccountFlowProcessCardConnection",
+};
+
+export const mockAccountPrimaryCards: DatasetFlowProcessConnectionDataFragment = {
+    nodes: [
+        {
+            flowType: DatasetFlowType.Ingest,
+            dataset: {
+                id: "did:odf:fed01ac74ce96a0822763f55c84f8d48695647bd48bb79b0b1ae0f3a3c873807444f5",
+                kind: DatasetKind.Root,
+                name: "account.tokens.transfers",
+                owner: {
+                    id: "did:odf:fed016b61ed2ab1b63a006b61ed2ab1b63a00b016d65607000000e0821aafbf163e6f",
+                    accountName: "kamu",
+                    accountProvider: AccountProvider.Password,
+                    avatarUrl: "https://avatars.githubusercontent.com/u/50896974?s=200&v=4",
+                    __typename: "Account",
+                },
+                alias: "kamu/account.tokens.transfers",
+                visibility: {
+                    anonymousAvailable: false,
+                    __typename: "PublicDatasetVisibility",
+                },
+                __typename: "Dataset",
+            },
+            summary: {
+                effectiveState: FlowProcessEffectiveState.StoppedAuto,
+                consecutiveFailures: 1,
+                lastSuccessAt: null,
+                lastAttemptAt: "2025-11-11T10:53:42.239144541+00:00",
+                lastFailureAt: "2025-11-11T10:53:42.239144541+00:00",
+                nextPlannedAt: null,
+                stopPolicy: {
+                    dummy: true,
+                    __typename: "FlowTriggerStopPolicyNever",
+                },
+                autoStoppedReason: FlowProcessAutoStopReason.UnrecoverableFailure,
+                autoStoppedAt: "2025-11-11T10:53:42.239144541+00:00",
+                __typename: "FlowProcessSummary",
+            },
+            __typename: "DatasetFlowProcess",
+        },
+    ],
+    totalCount: 1,
+    pageInfo: {
+        hasNextPage: false,
+        hasPreviousPage: false,
+        currentPage: 0,
+        totalPages: 1,
+        __typename: "PageBasedInfo",
+    },
+    __typename: "DatasetFlowProcessConnection",
+};
+
+export const mockAccountPrimaryRollup: FlowProcessGroupRollupDataFragment = {
+    total: 12,
+    active: 1,
+    failing: 2,
+    paused: 2,
+    stopped: 7,
+    unconfigured: 0,
+    worstConsecutiveFailures: 14,
+    __typename: "FlowProcessGroupRollup",
+};
+
+export const mockAccountWebhookCards: WebhookFlowSubProcessConnectionDataFragment = {
+    nodes: [],
+    totalCount: 1,
+    pageInfo: {
+        hasNextPage: false,
+        hasPreviousPage: false,
+        currentPage: 0,
+        totalPages: 1,
+        __typename: "PageBasedInfo",
+    },
+    __typename: "WebhookFlowSubProcessConnection",
+};
+
+export const mockAccountWebhookRollup: FlowProcessGroupRollupDataFragment = {
+    total: 2,
+    active: 0,
+    failing: 0,
+    paused: 1,
+    stopped: 1,
+    unconfigured: 0,
+    worstConsecutiveFailures: 5,
+    __typename: "FlowProcessGroupRollup",
+};
+
 export const mockAccountFlowsAsCardsQuery: AccountFlowsAsCardsQuery = {
     accounts: {
         byName: {
             flows: {
                 processes: {
-                    allCards: {
-                        nodes: [
-                            {
-                                flowType: DatasetFlowType.Ingest,
-                                dataset: {
-                                    id: "did:odf:fed01ac74ce96a0822763f55c84f8d48695647bd48bb79b0b1ae0f3a3c873807444f5",
-                                    kind: DatasetKind.Root,
-                                    name: "account.tokens.transfers",
-                                    owner: {
-                                        id: "did:odf:fed016b61ed2ab1b63a006b61ed2ab1b63a00b016d65607000000e0821aafbf163e6f",
-                                        accountName: "kamu",
-                                        accountProvider: AccountProvider.Password,
-                                        avatarUrl: "https://avatars.githubusercontent.com/u/50896974?s=200&v=4",
-                                        __typename: "Account",
-                                    },
-                                    alias: "kamu/account.tokens.transfers",
-                                    visibility: {
-                                        anonymousAvailable: false,
-                                        __typename: "PublicDatasetVisibility",
-                                    },
-                                    __typename: "Dataset",
-                                },
-                                summary: {
-                                    effectiveState: FlowProcessEffectiveState.StoppedAuto,
-                                    consecutiveFailures: 1,
-                                    lastSuccessAt: null,
-                                    lastAttemptAt: "2025-11-11T10:53:42.239144541+00:00",
-                                    lastFailureAt: "2025-11-11T10:53:42.239144541+00:00",
-                                    nextPlannedAt: null,
-                                    stopPolicy: {
-                                        dummy: true,
-                                        __typename: "FlowTriggerStopPolicyNever",
-                                    },
-                                    autoStoppedReason: FlowProcessAutoStopReason.UnrecoverableFailure,
-                                    autoStoppedAt: "2025-11-11T10:53:42.239144541+00:00",
-                                    __typename: "FlowProcessSummary",
-                                },
-                                __typename: "DatasetFlowProcess",
-                            },
-                        ],
-                        totalCount: 1,
-                        pageInfo: {
-                            hasNextPage: false,
-                            hasPreviousPage: false,
-                            currentPage: 0,
-                            totalPages: 1,
-                            __typename: "PageBasedInfo",
-                        },
-                        __typename: "AccountFlowProcessCardConnection",
-                    },
-                    fullRollup: {
-                        total: 14,
-                        active: 1,
-                        failing: 2,
-                        paused: 3,
-                        stopped: 8,
-                        unconfigured: 0,
-                        worstConsecutiveFailures: 14,
-                        __typename: "FlowProcessGroupRollup",
-                    },
+                    allCards: mockAccountAllCards,
+                    fullRollup: mockAccountFullRollup,
                     __typename: "AccountFlowProcesses",
                 },
                 __typename: "AccountFlows",
@@ -512,49 +655,8 @@ export const mockAccountFlowsAsCardsQueryWithWebhook: AccountFlowsAsCardsQuery =
         byName: {
             flows: {
                 processes: {
-                    allCards: {
-                        nodes: [
-                            {
-                                id: "d20a935e-0ccb-4844-b1bb-f4b5b9b0279a",
-                                name: "qwert",
-                                summary: {
-                                    effectiveState: FlowProcessEffectiveState.PausedManual,
-                                    consecutiveFailures: 0,
-                                    lastSuccessAt: null,
-                                    lastAttemptAt: null,
-                                    lastFailureAt: null,
-                                    nextPlannedAt: null,
-                                    stopPolicy: {
-                                        maxFailures: 5,
-                                        __typename: "FlowTriggerStopPolicyAfterConsecutiveFailures",
-                                    },
-                                    autoStoppedReason: null,
-                                    autoStoppedAt: null,
-                                    __typename: "FlowProcessSummary",
-                                },
-                                __typename: "WebhookFlowSubProcess",
-                            },
-                        ],
-                        totalCount: 1,
-                        pageInfo: {
-                            hasNextPage: false,
-                            hasPreviousPage: false,
-                            currentPage: 0,
-                            totalPages: 1,
-                            __typename: "PageBasedInfo",
-                        },
-                        __typename: "AccountFlowProcessCardConnection",
-                    },
-                    fullRollup: {
-                        total: 14,
-                        active: 1,
-                        failing: 2,
-                        paused: 3,
-                        stopped: 8,
-                        unconfigured: 0,
-                        worstConsecutiveFailures: 14,
-                        __typename: "FlowProcessGroupRollup",
-                    },
+                    allCards: mockAccountAllCardsWithWebhook,
+                    fullRollup: mockAccountFullRollup,
                     __typename: "AccountFlowProcesses",
                 },
                 __typename: "AccountFlows",
@@ -570,28 +672,8 @@ export const mockAccountFlowsAsCardsQueryEmpty: AccountFlowsAsCardsQuery = {
         byName: {
             flows: {
                 processes: {
-                    allCards: {
-                        nodes: [],
-                        totalCount: 0,
-                        pageInfo: {
-                            hasNextPage: false,
-                            hasPreviousPage: false,
-                            currentPage: 0,
-                            totalPages: 1,
-                            __typename: "PageBasedInfo",
-                        },
-                        __typename: "AccountFlowProcessCardConnection",
-                    },
-                    fullRollup: {
-                        total: 14,
-                        active: 1,
-                        failing: 2,
-                        paused: 3,
-                        stopped: 8,
-                        unconfigured: 0,
-                        worstConsecutiveFailures: 14,
-                        __typename: "FlowProcessGroupRollup",
-                    },
+                    allCards: mockAccountAllCardsEmpty,
+                    fullRollup: mockAccountFullRollup,
                     __typename: "AccountFlowProcesses",
                 },
                 __typename: "AccountFlows",
@@ -607,69 +689,10 @@ export const mockAccountFlowsPrimaryCardsQuery: AccountPrimaryCardsQuery = {
         byName: {
             flows: {
                 processes: {
-                    primaryCards: {
-                        nodes: [
-                            {
-                                flowType: DatasetFlowType.Ingest,
-                                dataset: {
-                                    id: "did:odf:fed01ac74ce96a0822763f55c84f8d48695647bd48bb79b0b1ae0f3a3c873807444f5",
-                                    kind: DatasetKind.Root,
-                                    name: "account.tokens.transfers",
-                                    owner: {
-                                        id: "did:odf:fed016b61ed2ab1b63a006b61ed2ab1b63a00b016d65607000000e0821aafbf163e6f",
-                                        accountName: "kamu",
-                                        accountProvider: AccountProvider.Password,
-                                        avatarUrl: "https://avatars.githubusercontent.com/u/50896974?s=200&v=4",
-                                        __typename: "Account",
-                                    },
-                                    alias: "kamu/account.tokens.transfers",
-                                    visibility: {
-                                        anonymousAvailable: false,
-                                        __typename: "PublicDatasetVisibility",
-                                    },
-                                    __typename: "Dataset",
-                                },
-                                summary: {
-                                    effectiveState: FlowProcessEffectiveState.StoppedAuto,
-                                    consecutiveFailures: 1,
-                                    lastSuccessAt: null,
-                                    lastAttemptAt: "2025-11-11T10:53:42.239144541+00:00",
-                                    lastFailureAt: "2025-11-11T10:53:42.239144541+00:00",
-                                    nextPlannedAt: null,
-                                    stopPolicy: {
-                                        dummy: true,
-                                        __typename: "FlowTriggerStopPolicyNever",
-                                    },
-                                    autoStoppedReason: FlowProcessAutoStopReason.UnrecoverableFailure,
-                                    autoStoppedAt: "2025-11-11T10:53:42.239144541+00:00",
-                                    __typename: "FlowProcessSummary",
-                                },
-                                __typename: "DatasetFlowProcess",
-                            },
-                        ],
-                        totalCount: 1,
-                        pageInfo: {
-                            hasNextPage: false,
-                            hasPreviousPage: false,
-                            currentPage: 0,
-                            totalPages: 1,
-                            __typename: "PageBasedInfo",
-                        },
-                        __typename: "DatasetFlowProcessConnection",
-                    },
-                    primaryRollup: {
-                        total: 12,
-                        active: 1,
-                        failing: 2,
-                        paused: 2,
-                        stopped: 7,
-                        unconfigured: 0,
-                        worstConsecutiveFailures: 14,
-                        __typename: "FlowProcessGroupRollup",
-                    },
+                    primaryCards: mockAccountPrimaryCards,
+                    primaryRollup: mockAccountPrimaryRollup,
                     __typename: "AccountFlowProcesses",
                 },
-
                 __typename: "AccountFlows",
             },
             __typename: "Account",
@@ -683,28 +706,8 @@ export const mockAccountFlowsWebhookCardsQuery: AccountWebhookCardsQuery = {
         byName: {
             flows: {
                 processes: {
-                    webhookCards: {
-                        nodes: [],
-                        totalCount: 1,
-                        pageInfo: {
-                            hasNextPage: false,
-                            hasPreviousPage: false,
-                            currentPage: 0,
-                            totalPages: 1,
-                            __typename: "PageBasedInfo",
-                        },
-                        __typename: "WebhookFlowSubProcessConnection",
-                    },
-                    webhookRollup: {
-                        total: 2,
-                        active: 0,
-                        failing: 0,
-                        paused: 1,
-                        stopped: 1,
-                        unconfigured: 0,
-                        worstConsecutiveFailures: 5,
-                        __typename: "FlowProcessGroupRollup",
-                    },
+                    webhookCards: mockAccountWebhookCards,
+                    webhookRollup: mockAccountWebhookRollup,
                     __typename: "AccountFlowProcesses",
                 },
                 __typename: "AccountFlows",

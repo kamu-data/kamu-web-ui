@@ -9,6 +9,7 @@ import { HarnessLoader } from "@angular/cdk/testing";
 import { TestbedHarnessEnvironment } from "@angular/cdk/testing/testbed";
 import { ComponentFixture, TestBed } from "@angular/core/testing";
 
+import { setComponentInput } from "@common/helpers/base-test.helpers.spec";
 import AppValues from "@common/values/app.values";
 import { mockDatasetFlowByIdResponse } from "@api/mock/dataset-flow.mock";
 
@@ -39,7 +40,7 @@ describe("FlowDetailsSummaryTabComponent", () => {
             Object.assign(mockResponse.flow, mockOverrides);
         }
 
-        component.response = mockResponse;
+        setComponentInput(fixture, "response", mockResponse);
         fixture.detectChanges();
 
         harness = await loader.getHarness(FlowDetailsSummaryTabHarness);

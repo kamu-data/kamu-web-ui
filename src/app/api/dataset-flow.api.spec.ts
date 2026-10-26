@@ -10,6 +10,7 @@ import { TestBed } from "@angular/core/testing";
 import { Apollo } from "apollo-angular";
 import { ApolloTestingController, ApolloTestingModule } from "apollo-angular/testing";
 
+import { requireValue } from "@common/helpers/app.helpers";
 import { DatasetFlowApi } from "@api/dataset-flow.api";
 import {
     CancelFlowRunDocument,
@@ -26,9 +27,6 @@ import {
     DatasetTriggerResetFlowDocument,
     DatasetTriggerResetToMetadataFlowDocument,
     DatasetTriggerTransformFlowDocument,
-    FlowConfigRuleCompaction,
-    FlowConfigRuleIngest,
-    FlowConnectionDataFragment,
     FlowTriggerBreakingChangeRule,
     GetDatasetFlowConfigsDocument,
     GetDatasetFlowConfigsQuery,
@@ -99,7 +97,7 @@ describe("DatasetFlowApi", () => {
                 const configType = res.datasets.byId?.flows.configs.byType;
                 const configRule = configType?.rule;
                 expect(configRule?.__typename).toEqual("FlowConfigRuleIngest");
-                expect((configRule as FlowConfigRuleIngest)?.fetchUncacheable).toEqual(false);
+                expect(configRule).toEqual(jasmine.objectContaining({ fetchUncacheable: false }));
             });
 
         const op = controller.expectOne(GetDatasetFlowConfigsDocument);
@@ -118,10 +116,7 @@ describe("DatasetFlowApi", () => {
                 const configRule = configType?.rule;
                 expect(configRule?.__typename).toEqual("FlowConfigRuleCompaction");
 
-                const compactionConfig = configRule as FlowConfigRuleCompaction;
-
-                expect(compactionConfig).toBeDefined();
-                expect(compactionConfig).toEqual({
+                expect(configRule).toEqual({
                     __typename: "FlowConfigRuleCompaction",
                     maxSliceSize: 1000000,
                     maxSliceRecords: 50000,
@@ -387,7 +382,7 @@ describe("DatasetFlowApi", () => {
                 filters: MOCK_FILTERS,
             })
             .subscribe((res: GetDatasetListFlowsQuery) => {
-                expect((res.datasets.byId?.flows.runs.table as FlowConnectionDataFragment).totalCount).toEqual(2);
+                expect(requireValue(res.datasets.byId?.flows.runs.table ?? null).totalCount).toEqual(2);
             });
 
         const op = controller.expectOne(GetDatasetListFlowsDocument);

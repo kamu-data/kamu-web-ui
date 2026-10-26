@@ -11,7 +11,9 @@ import { ComponentFixture, TestBed } from "@angular/core/testing";
 import { Apollo } from "apollo-angular";
 import { provideToastr } from "ngx-toastr";
 
-import { FlowProcessEffectiveState, WebhookFlowSubProcess } from "@api/kamu.graphql.interface";
+import { requireValue } from "@common/helpers/app.helpers";
+import { setComponentInput } from "@common/helpers/base-test.helpers.spec";
+import { FlowProcessEffectiveState } from "@api/kamu.graphql.interface";
 import { mockDatasetFlowsProcessesQuery } from "@api/mock/dataset-flow.mock";
 
 import { SubscriptionsTableComponent } from "src/app/dataset-view/additional-components/flows-component/components/flows-associated-channels/components/subscriptions-table/subscriptions-table.component";
@@ -30,10 +32,13 @@ describe("SubscriptionsTableComponent", () => {
         });
         fixture = TestBed.createComponent(SubscriptionsTableComponent);
         component = fixture.componentInstance;
-        component.datasetBasics = mockDatasetBasicsRootFragment;
-        component.subprocesses = mockDatasetFlowsProcessesQuery.datasets.byId?.flows.processes.webhooks
-            .subprocesses as WebhookFlowSubProcess[];
-        component.webhookTableFilters = [];
+        setComponentInput(fixture, "datasetBasics", mockDatasetBasicsRootFragment);
+        setComponentInput(
+            fixture,
+            "subprocesses",
+            requireValue(mockDatasetFlowsProcessesQuery.datasets.byId?.flows.processes.webhooks.subprocesses ?? null),
+        );
+        setComponentInput(fixture, "webhookTableFilters", []);
         fixture.detectChanges();
     });
 
@@ -85,7 +90,7 @@ describe("SubscriptionsTableComponent", () => {
         const table = await TestbedHarnessEnvironment.harnessForFixture(fixture, SubscriptionsTableHarness);
         const [busy, idle] = component.subprocesses;
 
-        fixture.componentRef.setInput("busySubscriptionIds", new Set([busy.id]));
+        setComponentInput(fixture, "busySubscriptionIds", new Set([busy.id]));
 
         expect(await table.isToggleDisabled(busy.id)).toBeTrue();
         expect(await table.isToggleDisabled(idle.id)).toBeFalse();

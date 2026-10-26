@@ -17,12 +17,15 @@ import { Apollo } from "apollo-angular";
 import { ApolloTestingModule } from "apollo-angular/testing";
 import { provideToastr } from "ngx-toastr";
 
-import { registerMatSvgIcons } from "@common/helpers/base-test.helpers.spec";
+import { registerMatSvgIcons, setComponentInput } from "@common/helpers/base-test.helpers.spec";
 import { FlowStatus } from "@api/kamu.graphql.interface";
 import { mockDatasetFlowByIdResponse, mockFlowSummaryDataFragments } from "@api/mock/dataset-flow.mock";
 
 import { DatasetFlowDetailsComponent } from "src/app/dataset-flow/dataset-flow-details/dataset-flow-details.component";
-import { FlowDetailsTabs } from "src/app/dataset-flow/dataset-flow-details/dataset-flow-details.types";
+import {
+    DatasetFlowByIdResponse,
+    FlowDetailsTabs,
+} from "src/app/dataset-flow/dataset-flow-details/dataset-flow-details.types";
 import { DatasetService } from "src/app/dataset-view/dataset.service";
 import { DatasetSubscriptionsService } from "src/app/dataset-view/dataset.subscriptions.service";
 import {
@@ -75,22 +78,26 @@ describe("DatasetFlowDetailsComponent", () => {
 
         registerMatSvgIcons();
 
-        fixture = TestBed.createComponent(DatasetFlowDetailsComponent);
         datasetService = TestBed.inject(DatasetService);
         datasetSubsService = TestBed.inject(DatasetSubscriptionsService);
         navigationService = TestBed.inject(NavigationService);
-        component = fixture.componentInstance;
-        component.flowId = MOCK_FLOW_ID;
-        component.activeTab = FlowDetailsTabs.HISTORY;
-        component.flowDetails = mockDatasetFlowByIdResponse;
-        component.datasetInfo = mockDatasetInfo;
         spyOnProperty(datasetSubsService, "permissionsChanges", "get").and.returnValue(
             of(mockFullPowerDatasetPermissionsFragment),
         );
         spyOnProperty(datasetService, "datasetChanges", "get").and.returnValue(of(mockDatasetBasicsRootFragment));
         navigateToFlowDetailsSpy = spyOn(navigationService, "navigateToFlowDetails");
-        fixture.detectChanges();
+        render(mockDatasetFlowByIdResponse);
     });
+
+    function render(flowDetails: DatasetFlowByIdResponse): void {
+        fixture = TestBed.createComponent(DatasetFlowDetailsComponent);
+        component = fixture.componentInstance;
+        setComponentInput(fixture, "flowId", MOCK_FLOW_ID);
+        setComponentInput(fixture, "activeTab", FlowDetailsTabs.HISTORY);
+        setComponentInput(fixture, "flowDetails", flowDetails);
+        setComponentInput(fixture, "datasetInfo", mockDatasetInfo);
+        fixture.detectChanges();
+    }
 
     it("should create", () => {
         expect(component).toBeTruthy();
@@ -122,24 +129,23 @@ describe("DatasetFlowDetailsComponent", () => {
 
         it("should refresh a finished flow a few more times, then stop", fakeAsync(() => {
             navigateToFlowDetailsSpy.calls.reset();
-            component.ngOnInit();
+            render(mockDatasetFlowByIdResponse);
 
             tick(interval * 5);
             expect(navigateToFlowDetailsSpy).toHaveBeenCalledTimes(DatasetFlowDetailsComponent.REFRESHES_AFTER_FINISH);
         }));
 
         it("should keep refreshing an unfinished flow until shortly after it finishes", fakeAsync(() => {
-            component.flowDetails = {
+            navigateToFlowDetailsSpy.calls.reset();
+            render({
                 ...mockDatasetFlowByIdResponse,
                 flow: { ...mockFlowSummaryDataFragments[0], status: FlowStatus.Running },
-            };
-            navigateToFlowDetailsSpy.calls.reset();
-            component.ngOnInit();
+            });
 
             tick(interval * 3);
             expect(navigateToFlowDetailsSpy).toHaveBeenCalledTimes(3);
 
-            component.flowDetails = mockDatasetFlowByIdResponse;
+            setComponentInput(fixture, "flowDetails", mockDatasetFlowByIdResponse);
             tick(interval * 5);
             expect(navigateToFlowDetailsSpy).toHaveBeenCalledTimes(
                 3 + DatasetFlowDetailsComponent.REFRESHES_AFTER_FINISH,

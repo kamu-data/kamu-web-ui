@@ -1,0 +1,9 @@
+fragment ViewDatasetEnvVarConnectionData on ViewDatasetEnvVarConnection {
+  totalCount
+  nodes {
+    ...ViewDatasetEnvVarData
+  }
+  pageInfo {
+    ...DatasetPageInfo
+  }
+}

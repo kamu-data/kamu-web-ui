@@ -12,13 +12,7 @@ import { map } from "rxjs/operators";
 
 import { extractSchemaFromReadStep } from "@common/helpers/data-schema.helpers";
 import { DatasetApi } from "@api/dataset.api";
-import {
-    AddPushSource,
-    GetMetadataBlockQuery,
-    MetadataBlockExtended,
-    MetadataEventType,
-    MetadataManifestFormat,
-} from "@api/kamu.graphql.interface";
+import { GetMetadataBlockQuery, MetadataEventType, MetadataManifestFormat } from "@api/kamu.graphql.interface";
 import { MaybeNull, MaybeNullOrUndefined, MaybeUndefined } from "@interface/app.types";
 import { DataSchemaField } from "@interface/dataset-schema.interface";
 import { DatasetInfo } from "@interface/navigation.interface";
@@ -65,7 +59,7 @@ export class BlockService {
             .getBlocksByEventType({ ...params, eventTypes: [MetadataEventType.SetPollingSource] })
             .pipe(
                 map((data) => {
-                    const blocks = data.datasets.byOwnerAndName?.metadata.metadataProjection as MetadataBlockExtended[];
+                    const blocks = data.datasets.byOwnerAndName?.metadata.metadataProjection ?? [];
                     return blocks.length ? (blocks[0].encoded?.content as string) : null;
                 }),
             );
@@ -78,7 +72,7 @@ export class BlockService {
     }): Observable<MaybeNull<string>> {
         return this.datasetApi.getBlocksByEventType({ ...params, eventTypes: [MetadataEventType.SetTransform] }).pipe(
             map((data) => {
-                const blocks = data.datasets.byOwnerAndName?.metadata.metadataProjection as MetadataBlockExtended[];
+                const blocks = data.datasets.byOwnerAndName?.metadata.metadataProjection ?? [];
                 return blocks.length ? (blocks[0].encoded?.content as string) : null;
             }),
         );
@@ -96,8 +90,10 @@ export class BlockService {
     }): Observable<MaybeNullOrUndefined<string>> {
         return this.datasetApi.getBlocksByEventType({ ...params, eventTypes: [MetadataEventType.AddPushSource] }).pipe(
             map((data) => {
-                const blocks = data.datasets.byOwnerAndName?.metadata.metadataProjection as MetadataBlockExtended[];
-                this.sourceNames = blocks.map((item) => (item.event as AddPushSource).sourceName);
+                const blocks = data.datasets.byOwnerAndName?.metadata.metadataProjection ?? [];
+                this.sourceNames = blocks.flatMap((item) =>
+                    item.event.__typename === "AddPushSource" ? [item.event.sourceName] : [],
+                );
                 if (params.sourceName) {
                     const block = blocks.find(
                         (item) =>

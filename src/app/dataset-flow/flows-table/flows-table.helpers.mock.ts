@@ -10,8 +10,13 @@ import {
     AccountType,
     DatasetBasicsFragment,
     DatasetKind,
+    FetchStepContainerDataFragment,
+    FetchStepFilesGlobDataFragment,
+    FetchStepUrlDataFragment,
     FlowStatus,
     FlowSummaryDataFragment,
+    SetPollingSourceFetchDataFragment,
+    SetTransformEngineDataFragment,
     TimeUnit,
 } from "@api/kamu.graphql.interface";
 
@@ -58,7 +63,9 @@ export const expectationsDescriptionEndOfMessage = [
     "running",
 ];
 
-export const mockFlowPollingSourceFragmentFetchUrl = {
+export const mockFlowPollingSourceFragmentFetchUrl: SetPollingSourceFetchDataFragment & {
+    fetch: { __typename: "FetchStepUrl" } & FetchStepUrlDataFragment;
+} = {
     __typename: "SetPollingSource" as const,
     fetch: {
         url: "https://api.etherscan.io/api?module=account&action=tokentx&address=0xeadb3840596cabf312f2bc88a4bb0b93a4e1ff5f&page=1&offset=1000&startblock=0&endblock=99999999&apikey=${{ env.ETHERSCAN_API_KEY }}",
@@ -69,7 +76,9 @@ export const mockFlowPollingSourceFragmentFetchUrl = {
     },
 };
 
-export const mockFlowPollingSourceFragmentFetchImage = {
+export const mockFlowPollingSourceFragmentFetchImage: SetPollingSourceFetchDataFragment & {
+    fetch: { __typename: "FetchStepContainer" } & FetchStepContainerDataFragment;
+} = {
     __typename: "SetPollingSource" as const,
     fetch: {
         image: "mockImage",
@@ -77,7 +86,9 @@ export const mockFlowPollingSourceFragmentFetchImage = {
     },
 };
 
-export const mockFlowPollingSourceFragmentFetchStepFilesGlob = {
+export const mockFlowPollingSourceFragmentFetchStepFilesGlob: SetPollingSourceFetchDataFragment & {
+    fetch: { __typename: "FetchStepFilesGlob" } & FetchStepFilesGlobDataFragment;
+} = {
     __typename: "SetPollingSource" as const,
     fetch: {
         path: "c:/mock-path",
@@ -85,7 +96,7 @@ export const mockFlowPollingSourceFragmentFetchStepFilesGlob = {
     },
 };
 
-export const mockFlowSetTransformFragment = {
+export const mockFlowSetTransformFragment: SetTransformEngineDataFragment = {
     __typename: "SetTransform" as const,
     inputs: [
         {

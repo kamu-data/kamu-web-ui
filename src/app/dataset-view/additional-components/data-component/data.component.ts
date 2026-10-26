@@ -17,7 +17,7 @@ import { BaseComponent } from "@common/components/base.component";
 import { promiseWithCatch } from "@common/helpers/app.helpers";
 import RoutingResolvers from "@common/resolvers/routing-resolvers";
 import AppValues from "@common/values/app.values";
-import { DatasetBasicsFragment, DatasetKind, OffsetInterval } from "@api/kamu.graphql.interface";
+import { DatasetBasicsFragment, DatasetKind } from "@api/kamu.graphql.interface";
 import { MaybeNull } from "@interface/app.types";
 import { DatasetRequestBySql } from "@interface/dataset.interface";
 
@@ -95,7 +95,7 @@ export class DataComponent extends BaseComponent implements OnInit {
             this.sqlRequestCode = sqlQueryFromUrl;
         } else {
             this.sqlRequestCode += `'${this.dataTabData.datasetBasics.alias}'`;
-            const offset = this.location.getState() as MaybeNull<Partial<OffsetInterval>>;
+            const offset = this.location.getState() as MaybeNull<{ start?: number; end?: number }>;
             if (offset && typeof offset.start !== "undefined" && typeof offset.end !== "undefined") {
                 this.sqlRequestCode += `\nwhere ${this.offsetColumnName}>=${offset.start} and ${this.offsetColumnName}<=${offset.end}\norder by ${this.offsetColumnName} desc`;
                 return;

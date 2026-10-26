@@ -16,19 +16,16 @@ import { NgbModal } from "@ng-bootstrap/ng-bootstrap";
 import { Apollo } from "apollo-angular";
 import { provideToastr } from "ngx-toastr";
 
-import { emitClickOnElementByDataTestId } from "@common/helpers/base-test.helpers.spec";
+import { emitClickOnElementByDataTestId, setComponentInput } from "@common/helpers/base-test.helpers.spec";
 import AppValues from "@common/values/app.values";
 
 import { DataComponent } from "src/app/dataset-view/additional-components/data-component/data.component";
 import {
-    mockMetadataDerivedUpdate,
-    mockMetadataRootUpdate,
-    mockOverviewDataUpdate,
-    mockOverviewDataUpdateNullable,
+    mockDerivedOverviewUpdate,
+    mockRootOverviewUpdate,
 } from "src/app/dataset-view/additional-components/data-tabs.mock";
 import { EngineService } from "src/app/dataset-view/additional-components/metadata-component/components/set-transform/components/engine-section/engine.service";
 import { mockEngines } from "src/app/dataset-view/additional-components/metadata-component/components/set-transform/mock.data";
-import { OverviewUpdate } from "src/app/dataset-view/dataset.subscriptions.interface";
 import ProjectLinks from "src/app/project-links";
 import {
     mockDatasetBasicsDerivedFragment,
@@ -96,16 +93,11 @@ describe("DataComponent", () => {
         spyOn(navigationService, "navigateWithSqlQuery");
 
         component = fixture.componentInstance;
-        component.dataTabData = {
+        setComponentInput(fixture, "dataTabData", {
             datasetBasics: mockDatasetBasicsRootFragment,
             datasetPermissions: mockFullPowerDatasetPermissionsFragment,
-            overviewUpdate: {
-                schema: mockMetadataRootUpdate.schema,
-                content: mockOverviewDataUpdate.content,
-                overview: structuredClone(mockOverviewDataUpdate.overview), // clone, as we modify this data in the tests
-                size: mockOverviewDataUpdate.size,
-            } as OverviewUpdate,
-        };
+            overviewUpdate: mockRootOverviewUpdate,
+        });
         component.sqlLoading = false;
         requestDataSqlRunSpy = spyOn(sqlQueryService, "requestDataSqlRun").and.returnValue(of().pipe());
     });
@@ -134,12 +126,7 @@ describe("DataComponent", () => {
     it("should check add data", () => {
         const ngbModalServiceSpy = spyOn(ngbModalService, "open").and.callThrough();
 
-        component.addData({
-            schema: mockMetadataDerivedUpdate.schema,
-            content: mockOverviewDataUpdate.content,
-            overview: structuredClone(mockOverviewDataUpdateNullable.overview),
-            size: mockOverviewDataUpdate.size,
-        } as OverviewUpdate);
+        component.addData(mockDerivedOverviewUpdate);
         expect(ngbModalServiceSpy).toHaveBeenCalledTimes(1);
     });
 

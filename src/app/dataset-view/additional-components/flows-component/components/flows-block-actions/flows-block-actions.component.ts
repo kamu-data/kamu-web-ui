@@ -12,7 +12,7 @@ import { BaseComponent } from "@common/components/base.component";
 import AppValues from "@common/values/app.values";
 import {
     DatasetBasicsFragment,
-    DatasetFlowProcess,
+    DatasetFlowProcessDataFragment,
     DatasetKind,
     FlowProcessEffectiveState,
 } from "@api/kamu.graphql.interface";
@@ -31,7 +31,7 @@ import { DatasetViewTypeEnum } from "src/app/dataset-view/dataset-view.interface
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class FlowsBlockActionsComponent extends BaseComponent {
-    @Input({ required: true }) public flowProcess: DatasetFlowProcess;
+    @Input({ required: true }) public flowProcess: DatasetFlowProcessDataFragment;
     @Input({ required: true }) public datasetBasics: DatasetBasicsFragment;
     @Input({ required: true }) public hasPushSources: boolean;
 

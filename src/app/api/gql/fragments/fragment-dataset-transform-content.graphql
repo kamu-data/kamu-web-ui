@@ -2,11 +2,9 @@ fragment DatasetTransformContent on TransformSql {
   engine
   version
   queries {
-    alias
-    query
+    ...SqlQueryStepData
   }
   temporalTables {
-    name
-    primaryKey
+    ...TemporalTableData
   }
 }

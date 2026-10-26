@@ -6,100 +6,53 @@
  */
 
 import { TestBed } from "@angular/core/testing";
-import { ActivatedRouteSnapshot, Data, ResolveFn, RouterStateSnapshot } from "@angular/router";
 
-import { MaybeNull } from "@interface/app.types";
+import { routeSnapshot, runResolver } from "@common/helpers/base-test.helpers.spec";
 
 import { FlowDetailsTabs } from "src/app/dataset-flow/dataset-flow-details/dataset-flow-details.types";
 import { flowDetailsActiveTabResolverFn } from "src/app/dataset-flow/dataset-flow-details/resolvers/flow-details-active-tab.resolver";
 import ProjectLinks from "src/app/project-links";
 
 describe("flowDetailsActiveTabResolverFn", () => {
-    const mockState = {} as RouterStateSnapshot;
-
-    const executeResolver: ResolveFn<MaybeNull<FlowDetailsTabs>> = (...resolverParameters) =>
-        TestBed.runInInjectionContext(() => flowDetailsActiveTabResolverFn(...resolverParameters));
-
     beforeEach(() => {
         TestBed.configureTestingModule({});
     });
 
-    it("should be created", () => {
-        expect(executeResolver).toBeTruthy();
-    });
+    [
+        FlowDetailsTabs.SUMMARY,
+        FlowDetailsTabs.HISTORY,
+        FlowDetailsTabs.LOGS,
+        FlowDetailsTabs.USAGE,
+        FlowDetailsTabs.ADMIN,
+    ].forEach((tab) => {
+        it(`should return the ${tab} tab from the first child route`, async () => {
+            const route = routeSnapshot({
+                children: [routeSnapshot({ data: { [ProjectLinks.URL_PARAM_TAB]: tab } })],
+            });
 
-    it("should return correct tab for different flow details tabs", () => {
-        const testCases = [
-            { tab: FlowDetailsTabs.SUMMARY },
-            { tab: FlowDetailsTabs.HISTORY },
-            { tab: FlowDetailsTabs.LOGS },
-            { tab: FlowDetailsTabs.USAGE },
-            { tab: FlowDetailsTabs.ADMIN },
-        ];
-
-        testCases.forEach(({ tab }) => {
-            const mockRoute = {
-                children: [
-                    {
-                        data: {
-                            [ProjectLinks.URL_PARAM_TAB]: tab,
-                        },
-                    },
-                ],
-            } as ActivatedRouteSnapshot;
-
-            const result = executeResolver(mockRoute, mockState);
-
-            expect(result).toBe(tab);
+            expect(await runResolver(flowDetailsActiveTabResolverFn, route)).toBe(tab);
         });
     });
 
     describe("should return null when no tab data is available", () => {
-        const testCases = [
+        [
             {
                 description: "route has no children",
-                mockRoute: {
-                    children: [],
-                } as unknown as ActivatedRouteSnapshot,
-            },
-            {
-                description: "children array is undefined",
-                mockRoute: {} as unknown as ActivatedRouteSnapshot,
-            },
-            {
-                description: "first child has no data",
-                mockRoute: {
-                    children: [{}],
-                } as unknown as ActivatedRouteSnapshot,
+                route: routeSnapshot(),
             },
             {
                 description: "first child data has no tab parameter",
-                mockRoute: {
-                    children: [
-                        {
-                            data: {} as Data,
-                        },
-                    ],
-                } as unknown as ActivatedRouteSnapshot,
+                route: routeSnapshot({ children: [routeSnapshot()] }),
             },
             {
-                description: "first child data is null",
-                mockRoute: {
-                    children: [
-                        {
-                            data: {
-                                [ProjectLinks.URL_PARAM_TAB]: null,
-                            },
-                        },
-                    ],
-                } as unknown as ActivatedRouteSnapshot,
+                description: "first child tab is null",
+                route: routeSnapshot({
+                    children: [routeSnapshot({ data: { [ProjectLinks.URL_PARAM_TAB]: null } })],
+                }),
             },
-        ];
-
-        testCases.forEach(({ description, mockRoute }) => {
-            it(`when ${description}`, () => {
-                const result = executeResolver(mockRoute, mockState);
-                expect(result).toBeNull();
+        ].forEach(({ description, route }) => {
+            it(`when ${description}`, async () => {
+                expect(await runResolver(flowDetailsActiveTabResolverFn, route)).toBeNull();
             });
         });
     });

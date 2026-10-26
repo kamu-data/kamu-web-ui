@@ -21,34 +21,25 @@ import { provideToastr } from "ngx-toastr";
 import {
     emitClickOnElementByDataTestId,
     findElementByDataTestId,
+    getElementByDataTestId,
     registerMatSvgIcons,
+    setComponentInput,
 } from "@common/helpers/base-test.helpers.spec";
 import { SharedTestModule } from "@common/modules/shared-test.module";
-import RoutingResolvers from "@common/resolvers/routing-resolvers";
 import AppValues from "@common/values/app.values";
-import {
-    AccountProvider,
-    DatasetCurrentInfoFragment,
-    DatasetKind,
-    DatasetOverviewFragment,
-} from "@api/kamu.graphql.interface";
+import { DatasetCurrentInfoFragment, DatasetKind, DatasetOverviewFragment } from "@api/kamu.graphql.interface";
 
 import { LoggedUserService } from "src/app/auth/logged-user.service";
 import { mockSetLicense } from "src/app/dataset-block/metadata-block/components/event-details/mock.events";
-import {
-    mockMetadataDerivedUpdate,
-    mockOverviewDataUpdate,
-} from "src/app/dataset-view/additional-components/data-tabs.mock";
+import { mockOverviewUpdateWithDerivedSchema } from "src/app/dataset-view/additional-components/data-tabs.mock";
 import { DatasetCollaborationsService } from "src/app/dataset-view/additional-components/dataset-settings-component/tabs/access/dataset-settings-access-tab/dataset-collaborations.service";
 import { DatasetFlowsService } from "src/app/dataset-view/additional-components/flows-component/services/dataset-flows.service";
 import { OverviewComponent } from "src/app/dataset-view/additional-components/overview-component/overview.component";
-import { DatasetOverviewTabData } from "src/app/dataset-view/dataset-view.interface";
-import { OverviewUpdate } from "src/app/dataset-view/dataset.subscriptions.interface";
 import { DatasetSubscriptionsService } from "src/app/dataset-view/dataset.subscriptions.service";
 import {
     mockDatasetBasicsDerivedFragment,
+    mockDatasetBasicsRootFragment,
     mockFullPowerDatasetPermissionsFragment,
-    mockPublicDatasetVisibility,
 } from "src/app/search/mock.data";
 import { NavigationService } from "src/app/services/navigation.service";
 
@@ -71,12 +62,7 @@ describe("OverviewComponent", () => {
         registerMatSvgIcons();
 
         datasetSubsService = TestBed.inject(DatasetSubscriptionsService);
-        datasetSubsService.emitOverviewChanged({
-            schema: mockMetadataDerivedUpdate.schema,
-            content: mockOverviewDataUpdate.content,
-            overview: structuredClone(mockOverviewDataUpdate.overview), // clone, as we modify this data in the tests
-            size: mockOverviewDataUpdate.size,
-        } as OverviewUpdate);
+        datasetSubsService.emitOverviewChanged(structuredClone(mockOverviewUpdateWithDerivedSchema));
 
         navigationService = TestBed.inject(NavigationService);
         datasetFlowsService = TestBed.inject(DatasetFlowsService);
@@ -87,38 +73,18 @@ describe("OverviewComponent", () => {
         fixture = TestBed.createComponent(OverviewComponent);
         component = fixture.componentInstance;
         spyOn(datasetCollaborationsService, "getRoleByDatasetId").and.returnValue(of(null));
-        fixture.componentRef.setInput(RoutingResolvers.DATASET_VIEW_OVERVIEW_KEY, {
-            datasetBasics: {
-                id: mockOverviewDataUpdate.overview.id,
-                kind: mockOverviewDataUpdate.overview.kind,
-                name: mockOverviewDataUpdate.overview.name,
-                alias: mockOverviewDataUpdate.overview.alias,
-                owner: {
-                    __typename: "Account",
-                    id: mockOverviewDataUpdate.overview.owner.id,
-                    accountName: mockOverviewDataUpdate.overview.owner.accountName,
-                    accountProvider: AccountProvider.Password,
-                },
-                visibility: mockPublicDatasetVisibility,
-            },
+        setComponentInput(fixture, "datasetOverviewTabData", {
+            datasetBasics: structuredClone(mockDatasetBasicsRootFragment),
             datasetPermissions: structuredClone(mockFullPowerDatasetPermissionsFragment),
-            overviewUpdate: {
-                schema: mockMetadataDerivedUpdate.schema,
-                content: mockOverviewDataUpdate.content,
-                overview: structuredClone(mockOverviewDataUpdate.overview),
-                size: mockOverviewDataUpdate.size,
-            } as OverviewUpdate,
-        } satisfies DatasetOverviewTabData);
+            overviewUpdate: structuredClone(mockOverviewUpdateWithDerivedSchema),
+        });
         fixture.detectChanges();
     });
 
     // Tests change the tab data in place and stub getters; the resolver delivers a new object instead,
     // so pass a fresh copy through the input to re-render the OnPush view.
     function updateView(): void {
-        fixture.componentRef.setInput(
-            RoutingResolvers.DATASET_VIEW_OVERVIEW_KEY,
-            structuredClone(component.datasetOverviewTabData),
-        );
+        setComponentInput(fixture, "datasetOverviewTabData", structuredClone(component.datasetOverviewTabData));
         fixture.detectChanges();
     }
 
@@ -272,7 +238,7 @@ describe("OverviewComponent", () => {
             spyOnProperty(loggedUserService, "isAuthenticated", "get").and.returnValue(true);
             updateView();
 
-            const refreshButton = findElementByDataTestId(fixture, "refresh-now-button") as HTMLButtonElement;
+            const refreshButton = getElementByDataTestId(fixture, "refresh-now-button", HTMLButtonElement);
             expect(refreshButton.disabled).toBeTrue();
         });
 
@@ -333,7 +299,7 @@ describe("OverviewComponent", () => {
             spyOnProperty(loggedUserService, "isAuthenticated", "get").and.returnValue(true);
             updateView();
 
-            const refreshButton = findElementByDataTestId(fixture, "refresh-now-button") as HTMLButtonElement;
+            const refreshButton = getElementByDataTestId(fixture, "refresh-now-button", HTMLButtonElement);
             expect(refreshButton.disabled).toBeTrue();
         });
 

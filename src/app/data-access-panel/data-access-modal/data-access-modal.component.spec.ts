@@ -14,7 +14,7 @@ import { of } from "rxjs";
 import { NgbActiveModal } from "@ng-bootstrap/ng-bootstrap";
 import { Apollo } from "apollo-angular";
 
-import { registerMatSvgIcons } from "@common/helpers/base-test.helpers.spec";
+import { registerMatSvgIcons, setComponentInput } from "@common/helpers/base-test.helpers.spec";
 
 import { AppConfigService } from "src/app/app-config.service";
 import { LoggedUserService } from "src/app/auth/logged-user.service";
@@ -46,7 +46,7 @@ describe("DataAccessModalComponent", () => {
         protocolsService = TestBed.inject(ProtocolsService);
         getProtocolsSpy = spyOn(protocolsService, "getProtocols").and.returnValue(of(mockDatasetEndPoints));
         component = fixture.componentInstance;
-        component.datasetBasics = mockDatasetBasicsRootFragment;
+        setComponentInput(fixture, "datasetBasics", mockDatasetBasicsRootFragment);
         fixture.detectChanges();
     });
 

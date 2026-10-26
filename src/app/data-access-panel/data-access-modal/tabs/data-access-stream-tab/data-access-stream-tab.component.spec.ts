@@ -9,7 +9,7 @@ import { provideHttpClient } from "@angular/common/http";
 import { provideHttpClientTesting } from "@angular/common/http/testing";
 import { ComponentFixture, TestBed } from "@angular/core/testing";
 
-import { registerMatSvgIcons } from "@common/helpers/base-test.helpers.spec";
+import { registerMatSvgIcons, setComponentInput } from "@common/helpers/base-test.helpers.spec";
 
 import { DataAccessStreamTabComponent } from "src/app/data-access-panel/data-access-modal/tabs/data-access-stream-tab/data-access-stream-tab.component";
 import { mockDatasetEndPoints } from "src/app/data-access-panel/data-access-panel-mock.data";
@@ -28,8 +28,8 @@ describe("DataAccessStreamTabComponent", () => {
 
         fixture = TestBed.createComponent(DataAccessStreamTabComponent);
         component = fixture.componentInstance;
-        component.kafka = mockDatasetEndPoints.kafka;
-        component.websocket = mockDatasetEndPoints.websocket;
+        setComponentInput(fixture, "kafka", mockDatasetEndPoints.kafka);
+        setComponentInput(fixture, "websocket", mockDatasetEndPoints.websocket);
         fixture.detectChanges();
     });
 

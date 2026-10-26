@@ -59,11 +59,6 @@ describe("FlowRetryPolicyFormComponent", () => {
 
         component = hostComponent.formComponent;
 
-        // Manually trigger the initial setup to ensure proper state
-        component.ngOnInit();
-        fixture.detectChanges();
-        await fixture.whenStable();
-
         loader = TestbedHarnessEnvironment.loader(fixture);
         flowRetryPolicyFormHarness = await loader.getHarness(FlowRetryPolicyFormHarness);
     });

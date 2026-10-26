@@ -23,7 +23,7 @@ export abstract class BaseDynamicEventComponent<TEvent extends GenericDynamicEve
     @Input({ required: true }) public event: TEvent;
     protected eventSections: EventSection[];
 
-    protected abstract readonly sectionBuilder: EventSectionBuilder<GenericDynamicEventType>;
+    protected abstract readonly sectionBuilder: EventSectionBuilder<TEvent>;
 
     public ngOnChanges(changes: SimpleChanges): void {
         if (changes.event) {

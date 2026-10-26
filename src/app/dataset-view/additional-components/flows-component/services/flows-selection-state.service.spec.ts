@@ -7,7 +7,8 @@
 
 import { TestBed } from "@angular/core/testing";
 
-import { DatasetFlowProcesses, FlowProcessEffectiveState } from "@api/kamu.graphql.interface";
+import { requireValue } from "@common/helpers/app.helpers";
+import { FlowProcessEffectiveState } from "@api/kamu.graphql.interface";
 import { mockDatasetFlowsProcessesQuery } from "@api/mock/dataset-flow.mock";
 
 import { FlowsSelectionStateService } from "src/app/dataset-view/additional-components/flows-component/services/flows-selection-state.service";
@@ -167,7 +168,7 @@ describe("FlowsSelectionStateService", () => {
 
     it("should check #initFlowsSelectionState with webhookFilterButtons", () => {
         service.setWebhookFilterButtons([FlowProcessEffectiveState.Active]);
-        const processes = mockDatasetFlowsProcessesQuery.datasets.byId?.flows.processes as DatasetFlowProcesses;
+        const processes = requireValue(mockDatasetFlowsProcessesQuery.datasets.byId?.flows.processes ?? null);
         service.initFlowsSelectionState(processes);
         expect(service.snapshot).toEqual(
             jasmine.objectContaining({
@@ -179,7 +180,7 @@ describe("FlowsSelectionStateService", () => {
     it("should check #initFlowsSelectionState without webhookFilterButtons", () => {
         const mockId = "a9f33c51-aeda-4003-865f-8dc9712619d7";
         service.addWebhookId(mockId);
-        const processes = mockDatasetFlowsProcessesQuery.datasets.byId?.flows.processes as DatasetFlowProcesses;
+        const processes = requireValue(mockDatasetFlowsProcessesQuery.datasets.byId?.flows.processes ?? null);
         service.initFlowsSelectionState(processes);
         expect(service.snapshot).toEqual(
             jasmine.objectContaining({
@@ -189,7 +190,7 @@ describe("FlowsSelectionStateService", () => {
     });
 
     it("should check #selectSubscription", () => {
-        const processes = mockDatasetFlowsProcessesQuery.datasets.byId?.flows.processes as DatasetFlowProcesses;
+        const processes = requireValue(mockDatasetFlowsProcessesQuery.datasets.byId?.flows.processes ?? null);
         const mockId = processes.webhooks.subprocesses[0].id;
         const mockName = processes.webhooks.subprocesses[0].name;
         service.setFlowsCategory("updates");

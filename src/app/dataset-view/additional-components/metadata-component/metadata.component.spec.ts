@@ -12,19 +12,17 @@ import { ComponentFixture, TestBed } from "@angular/core/testing";
 import { RouterModule } from "@angular/router";
 
 import { HIGHLIGHT_OPTIONS_PROVIDER } from "@common/helpers/app.helpers";
-import { registerMatSvgIcons } from "@common/helpers/base-test.helpers.spec";
+import { registerMatSvgIcons, setComponentInput } from "@common/helpers/base-test.helpers.spec";
 import { SharedTestModule } from "@common/modules/shared-test.module";
 import { DatasetKind } from "@api/kamu.graphql.interface";
 
 import {
+    mockDerivedOverviewUpdate,
     mockMetadataDerivedUpdate,
     mockMetadataRootUpdate,
-    mockOverviewDataUpdate,
-    mockOverviewDataUpdateNullable,
 } from "src/app/dataset-view/additional-components/data-tabs.mock";
 import { MetadataComponent } from "src/app/dataset-view/additional-components/metadata-component/metadata.component";
 import { MetadataTabs } from "src/app/dataset-view/additional-components/metadata-component/metadata.constants";
-import { OverviewUpdate } from "src/app/dataset-view/dataset.subscriptions.interface";
 import { DatasetSubscriptionsService } from "src/app/dataset-view/dataset.subscriptions.service";
 import {
     mockDatasetBasicsDerivedFragment,
@@ -52,17 +50,12 @@ describe("MetadataComponent", () => {
         fixture = TestBed.createComponent(MetadataComponent);
         component = fixture.componentInstance;
         datasetSubsService.emitMetadataSchemaChanged(mockMetadataDerivedUpdate);
-        component.datasetMetadataTabData = {
+        setComponentInput(fixture, "datasetMetadataTabData", {
             datasetBasics: mockDatasetBasicsDerivedFragment,
             datasetPermissions: mockFullPowerDatasetPermissionsFragment,
-            overviewUpdate: {
-                schema: mockMetadataDerivedUpdate.schema,
-                content: mockOverviewDataUpdate.content,
-                overview: structuredClone(mockOverviewDataUpdateNullable.overview),
-                size: mockOverviewDataUpdate.size,
-            } as OverviewUpdate,
-        };
-        component.activeTab = MetadataTabs.Schema;
+            overviewUpdate: mockDerivedOverviewUpdate,
+        });
+        setComponentInput(fixture, "activeTab", MetadataTabs.Schema);
         fixture.detectChanges();
     });
 

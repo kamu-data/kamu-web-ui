@@ -33,24 +33,25 @@
                 </svg:marker>
             </ng-template>
             <ng-template #nodeTemplate let-node>
-                @if (node.data.kind === LineageGraphNodeKind.Dataset) {
+                @let data = nodeData(node);
+                @if (data.kind === LineageGraphNodeKind.Dataset) {
                     <svg:g class="node">
                         <svg:rect
-                            attr.data-test-id="lineage-node-{{ node.data.kind }}-{{ node.label }}"
+                            attr.data-test-id="lineage-node-{{ data.kind }}-{{ node.label }}"
                             [attr.width]="node.dimension.width"
                             [attr.height]="node.dimension.height"
                             [attr.rx]="5"
-                            [attr.fill]="node.data.dataObject.kind === DatasetKind.Root ? '#FFCBA6' : '#BDDEF1'"
+                            [attr.fill]="data.dataObject.kind === DatasetKind.Root ? '#FFCBA6' : '#BDDEF1'"
                             [attr.cursor]="'pointer'"
                             [attr.stroke]="
-                                node.data.dataObject.isCurrent
-                                    ? node.data.dataObject.kind === DatasetKind.Root
+                                data.dataObject.isCurrent
+                                    ? data.dataObject.kind === DatasetKind.Root
                                         ? '#FF842B'
                                         : '#6095C6'
                                     : 'black'
                             "
-                            [attr.stroke-width]="node.data.dataObject.isCurrent ? 3 : 0"
-                            (click)="!node.data.dataObject.isCurrent && onClickNode(node)"
+                            [attr.stroke-width]="data.dataObject.isCurrent ? 3 : 0"
+                            (click)="!data.dataObject.isCurrent && onClickNode(node)"
                         />
                         <svg:text
                             alignment-baseline="central"
@@ -58,7 +59,7 @@
                             [attr.y]="node.dimension.height * 0.6"
                             [attr.font-weight]="'600'"
                             [attr.cursor]="'pointer'"
-                            (click)="!node.data.dataObject.isCurrent && onClickNode(node)"
+                            (click)="!data.dataObject.isCurrent && onClickNode(node)"
                         >
                             {{ node.label }}
                         </svg:text>
@@ -68,38 +69,38 @@
                             [attr.width]="18"
                             [attr.height]="18"
                             attr.data-test-id="account-avatar-{{ node.label }}"
-                            [attr.xlink:href]="node.data.dataObject.avatarUrl || DEFAULT_AVATAR_URL"
-                            (click)="!node.data.dataObject.isCurrent && onClickNode(node)"
+                            [attr.xlink:href]="data.dataObject.avatarUrl || DEFAULT_AVATAR_URL"
+                            (click)="!data.dataObject.isCurrent && onClickNode(node)"
                         />
                         <svg:text
                             alignment-baseline="central"
-                            (click)="!node.data.dataObject.isCurrent && onClickNode(node)"
+                            (click)="!data.dataObject.isCurrent && onClickNode(node)"
                             [attr.x]="LINEAGE_NODE_LAYOUT.datasetAccountX"
                             [attr.y]="18"
                             [attr.font-weight]="'normal'"
                         >
-                            {{ node.data.dataObject.accountName }}
+                            {{ data.dataObject.accountName }}
                         </svg:text>
                     </svg:g>
+                    @if (data.dataObject.access === LineageNodeAccess.PRIVATE) {
+                        <svg:g
+                            attr.data-test-id="lineage-private-icon-{{ node.label }}"
+                            [attr.transform]="'translate(' + node.dimension.width + ', 0)'"
+                        >
+                            <image
+                                [attr.x]="-10"
+                                [attr.y]="-12"
+                                [attr.width]="20"
+                                [attr.height]="20"
+                                [attr.href]="'../assets/images/private.png'"
+                            />
+                        </svg:g>
+                    }
                 }
-                @if (node.data && node.data.dataObject && node.data.dataObject.access === LineageNodeAccess.PRIVATE) {
-                    <svg:g
-                        attr.data-test-id="lineage-private-icon-{{ node.label }}"
-                        [attr.transform]="'translate(' + node.dimension.width + ', 0)'"
-                    >
-                        <image
-                            [attr.x]="-10"
-                            [attr.y]="-12"
-                            [attr.width]="20"
-                            [attr.height]="20"
-                            [attr.href]="'../assets/images/private.png'"
-                        />
-                    </svg:g>
-                }
-                @if (node.data.kind === LineageGraphNodeKind.Source) {
+                @if (data.kind === LineageGraphNodeKind.Source) {
                     <svg:g class="node">
                         <svg:rect
-                            attr.data-test-id="lineage-node-{{ node.data.kind }}-{{ node.label }}"
+                            attr.data-test-id="lineage-node-{{ data.kind }}-{{ node.label }}"
                             [attr.width]="node.dimension.width"
                             [attr.height]="50"
                             [attr.rx]="5"
@@ -124,10 +125,10 @@
                         </svg:text>
                     </svg:g>
                 }
-                @if (node.data.kind === LineageGraphNodeKind.Mqtt) {
+                @if (data.kind === LineageGraphNodeKind.Mqtt) {
                     <svg:g class="node">
                         <svg:rect
-                            attr.data-test-id="lineage-node-{{ node.data.kind }}-{{ node.label }}"
+                            attr.data-test-id="lineage-node-{{ data.kind }}-{{ node.label }}"
                             [attr.width]="node.dimension.width"
                             [attr.height]="50"
                             [attr.rx]="5"
@@ -152,10 +153,10 @@
                         </svg:text>
                     </svg:g>
                 }
-                @if (node.data.kind === LineageGraphNodeKind.EthereumLogs) {
+                @if (data.kind === LineageGraphNodeKind.EthereumLogs) {
                     <svg:g class="node">
                         <svg:rect
-                            attr.data-test-id="lineage-node-{{ node.data.kind }}-{{ node.label }}"
+                            attr.data-test-id="lineage-node-{{ data.kind }}-{{ node.label }}"
                             [attr.width]="node.dimension.width"
                             [attr.height]="50"
                             [attr.rx]="5"
@@ -180,10 +181,10 @@
                         </svg:text>
                     </svg:g>
                 }
-                @if (node.data.kind === LineageGraphNodeKind.DatasetNotAccessable) {
+                @if (data.kind === LineageGraphNodeKind.DatasetNotAccessable) {
                     <svg:g class="node">
                         <svg:rect
-                            attr.data-test-id="lineage-node-{{ node.data.kind }}-{{ node.label }}"
+                            attr.data-test-id="lineage-node-{{ data.kind }}-{{ node.label }}"
                             [attr.width]="node.dimension.width"
                             [attr.height]="node.dimension.height"
                             [attr.rx]="5"
@@ -212,10 +213,10 @@
                         </svg:g>
                     </svg:g>
                 }
-                @if (node.data.kind === LineageGraphNodeKind.PushSource) {
+                @if (data.kind === LineageGraphNodeKind.PushSource) {
                     <svg:g class="node">
                         <svg:rect
-                            attr.data-test-id="lineage-node-{{ node.data.kind }}-{{ node.label }}"
+                            attr.data-test-id="lineage-node-{{ data.kind }}-{{ node.label }}"
                             [attr.width]="node.dimension.width"
                             [attr.height]="50"
                             [attr.rx]="5"

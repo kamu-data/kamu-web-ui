@@ -17,8 +17,8 @@ import { ApolloTestingModule } from "apollo-angular/testing";
 import { provideToastr } from "ngx-toastr";
 
 import { ModalService } from "@common/components/modal/modal.service";
-import { registerMatSvgIcons } from "@common/helpers/base-test.helpers.spec";
-import { ViewDatasetEnvVarConnection } from "@api/kamu.graphql.interface";
+import { requireValue } from "@common/helpers/app.helpers";
+import { registerMatSvgIcons, setComponentInput } from "@common/helpers/base-test.helpers.spec";
 import { MOCK_VAR_KEY, mockListEnvVariablesQuery } from "@api/mock/environment-variables-and-secrets.mock";
 import { ModalArgumentsInterface } from "@interface/modal.interface";
 
@@ -81,16 +81,13 @@ describe("DatasetSettingsSecretsManagerTabComponent", () => {
         modalService = TestBed.inject(ModalService);
         navigationService = TestBed.inject(NavigationService);
         component = fixture.componentInstance;
-        component.variablesAndSecretsTabData = {
+        setComponentInput(fixture, "variablesAndSecretsTabData", {
             datasetBasics: mockDatasetBasicsRootFragment,
             datasetPermissions: mockFullPowerDatasetPermissionsFragment,
-        };
-        component.datasetInfo = MOCK_DATASET_INFO;
+        });
+        setComponentInput(fixture, "datasetInfo", MOCK_DATASET_INFO);
         spyOn(environmentVariablesService, "listEnvVariables").and.returnValue(
-            of(
-                mockListEnvVariablesQuery.datasets.byOwnerAndName?.envVars
-                    .listEnvVariables as ViewDatasetEnvVarConnection,
-            ),
+            of(requireValue(mockListEnvVariablesQuery.datasets.byOwnerAndName?.envVars.listEnvVariables ?? null)),
         );
         fixture.detectChanges();
     });

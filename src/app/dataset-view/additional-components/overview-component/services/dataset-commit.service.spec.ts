@@ -14,14 +14,12 @@ import { first } from "rxjs/operators";
 
 import { Apollo } from "apollo-angular";
 
+import { requireValue } from "@common/helpers/app.helpers";
 import { DatasetNotFoundError, DatasetOperationError } from "@common/values/errors";
 import { DatasetApi } from "@api/dataset.api";
-import {
-    CommitEventToDatasetMutation,
-    DatasetByAccountAndDatasetNameQuery,
-    UpdateReadmeMutation,
-} from "@api/kamu.graphql.interface";
+import { CommitEventToDatasetMutation, UpdateReadmeMutation } from "@api/kamu.graphql.interface";
 import { TEST_ACCOUNT_ID } from "@api/mock/auth.mock";
+import { mockDatasetByAccountAndDatasetNameQuery } from "@api/mock/dataset.mock";
 import { MaybeUndefined } from "@interface/app.types";
 
 import { LoggedUserService } from "src/app/auth/logged-user.service";
@@ -33,8 +31,6 @@ import {
     mockCommitEventToDatasetErrorMessage,
     mockCommitEventToDatasetMutation,
     mockCommitEventToDatasetResultAppendError,
-    mockDatasetMainDataId,
-    mockDatasetMainDataResponse,
     mockUpdateReadmeErrorMessage,
     mockUpdateReadmeSuccessResponse,
 } from "src/app/search/mock.data";
@@ -51,7 +47,7 @@ describe("DatasetCommitService", () => {
 
     const TEST_ACCOUNT_NAME = "accountName";
     const TEST_DATASET_NAME = "datasetName";
-    const TEST_DATASET_ID: string = mockDatasetMainDataId;
+    const TEST_DATASET_ID = requireValue(mockDatasetByAccountAndDatasetNameQuery.datasets.byOwnerAndName ?? null).id;
     const TEST_EVENT_CONTENT = "event content";
 
     beforeEach(() => {
@@ -64,7 +60,7 @@ describe("DatasetCommitService", () => {
         loggedUserService = TestBed.inject(LoggedUserService);
 
         getDatasetInfoSpy = spyOn(datasetApi, "getDatasetInfoByAccountAndDatasetName").and.returnValue(
-            of(mockDatasetMainDataResponse as DatasetByAccountAndDatasetNameQuery),
+            of(mockDatasetByAccountAndDatasetNameQuery),
         );
         navigationServiceSpy = spyOn(navigationService, "navigateToDatasetView");
     });
@@ -209,7 +205,8 @@ describe("DatasetCommitService", () => {
 
     it("should check commit to dataset when not found", () => {
         spyOnProperty(loggedUserService, "isAuthenticated", "get").and.returnValue(true);
-        spyOn(datasetApi, "commitEvent").and.returnValue(of({ datasets: {} } as CommitEventToDatasetMutation));
+        const notFoundResponse: CommitEventToDatasetMutation = { datasets: { byId: null } };
+        spyOn(datasetApi, "commitEvent").and.returnValue(of(notFoundResponse));
 
         const subscription$ = requestCommitEvent().subscribe({
             next: () => fail("unexpected success"),
@@ -256,7 +253,8 @@ describe("DatasetCommitService", () => {
 
     it("should check update readme for dataset when not found", () => {
         spyOnProperty(loggedUserService, "isAuthenticated", "get").and.returnValue(true);
-        spyOn(datasetApi, "updateReadme").and.returnValue(of({ datasets: {} } as UpdateReadmeMutation));
+        const notFoundResponse: UpdateReadmeMutation = { datasets: { byId: null } };
+        spyOn(datasetApi, "updateReadme").and.returnValue(of(notFoundResponse));
 
         const README_CONTENT = "readme content";
         const subscription$ = commitService

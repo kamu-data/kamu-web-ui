@@ -9,7 +9,7 @@ import { ChangeDetectionStrategy, Component, Input } from "@angular/core";
 import { MatIconModule } from "@angular/material/icon";
 
 import { BaseComponent } from "@common/components/base.component";
-import { MetadataBlockFragment } from "@api/kamu.graphql.interface";
+import { MetadataEventDataFragment } from "@api/kamu.graphql.interface";
 
 @Component({
     selector: "app-unsupported-event",
@@ -21,5 +21,5 @@ import { MetadataBlockFragment } from "@api/kamu.graphql.interface";
     ],
 })
 export class UnsupportedEventComponent extends BaseComponent {
-    @Input() public event?: MetadataBlockFragment["event"];
+    @Input() public event?: MetadataEventDataFragment;
 }

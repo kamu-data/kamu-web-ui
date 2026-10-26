@@ -24,6 +24,7 @@ import {
     RevokeAccessTokenMutation,
 } from "@api/kamu.graphql.interface";
 import {
+    MOCK_CREATE_ACCESS_TOKEN_SUCCESS_MESSAGE,
     mockCreateAccessTokenMutation,
     mockListAccessTokensQuery,
     mockRevokeAccessTokenMutation,
@@ -78,11 +79,12 @@ describe("AccessTokenApi", () => {
 
     it("should check create access token", () => {
         service.createAccessToken(TEST_ACCOUNT_ID, TOKEN_NAME).subscribe((data: CreateAccessTokenMutation) => {
-            if (data.accounts.byId?.accessTokens.createAccessToken.__typename === "CreateAccessTokenResultSuccess") {
-                expect(data.accounts.byId?.accessTokens.createAccessToken.message).toEqual(
-                    mockCreateAccessTokenMutation.accounts.byId?.accessTokens.createAccessToken.message as string,
-                );
-            }
+            expect(data.accounts.byId?.accessTokens.createAccessToken).toEqual(
+                jasmine.objectContaining({
+                    __typename: "CreateAccessTokenResultSuccess",
+                    message: MOCK_CREATE_ACCESS_TOKEN_SUCCESS_MESSAGE,
+                }),
+            );
         });
 
         const op = controller.expectOne(CreateAccessTokenDocument);

@@ -3,24 +3,7 @@ query datasetFlowsProcesses($datasetId: DatasetID!) {
     byId(datasetId: $datasetId) {
       flows {
         processes {
-          primary {
-            flowType
-            summary {
-              ...FlowProcessSummaryData
-            }
-          }
-          webhooks {
-            rollup {
-              ...FlowProcessGroupRollupData
-            }
-            subprocesses {
-              id
-              name
-              summary {
-                ...FlowProcessSummaryData
-              }
-            }
-          }
+          ...DatasetFlowProcessesData
         }
       }
     }

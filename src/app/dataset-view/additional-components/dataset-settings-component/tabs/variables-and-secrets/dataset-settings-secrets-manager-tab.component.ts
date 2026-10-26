@@ -24,10 +24,10 @@ import { promiseWithCatch } from "@common/helpers/app.helpers";
 import RoutingResolvers from "@common/resolvers/routing-resolvers";
 import {
     DatasetBasicsFragment,
+    DatasetPageInfoFragment,
     DatasetPermissionsFragment,
-    PageBasedInfo,
-    ViewDatasetEnvVar,
-    ViewDatasetEnvVarConnection,
+    ViewDatasetEnvVarConnectionDataFragment,
+    ViewDatasetEnvVarDataFragment,
 } from "@api/kamu.graphql.interface";
 import { DatasetInfo } from "@interface/navigation.interface";
 
@@ -66,9 +66,9 @@ export class DatasetSettingsSecretsManagerTabComponent extends BaseComponent imp
     @Input(RoutingResolvers.DATASET_INFO_KEY) public datasetInfo: DatasetInfo;
 
     public readonly DISPLAY_COLUMNS: string[] = ["key", "value", "actions"];
-    public dataSource = new MatTableDataSource();
+    public dataSource = new MatTableDataSource<ViewDatasetEnvVarDataFragment>();
     @ViewChild(MatSort) private sort: MatSort;
-    public pageBasedInfo: PageBasedInfo;
+    public pageBasedInfo: DatasetPageInfoFragment;
     public readonly PER_PAGE = 15;
     public searchByKey = "";
     public currentPage: number = 1;
@@ -95,7 +95,7 @@ export class DatasetSettingsSecretsManagerTabComponent extends BaseComponent imp
         return this.datasetPermissions.permissions.envVars.canUpdate;
     }
 
-    public onAddOrEditRow(envVar?: ViewDatasetEnvVar): void {
+    public onAddOrEditRow(envVar?: ViewDatasetEnvVarDataFragment): void {
         const modalRef = this.ngbModalService.open(EditKeyValueModalComponent);
         const modalRefInstance = modalRef.componentInstance as EditKeyValueModalComponent;
         modalRefInstance.datasetBasics = this.datasetBasics;
@@ -116,8 +116,8 @@ export class DatasetSettingsSecretsManagerTabComponent extends BaseComponent imp
     }
 
     public applyFilter(search: string): void {
-        this.dataSource.filterPredicate = (data: unknown, filter: string): boolean => {
-            return (data as ViewDatasetEnvVar).key.toLowerCase().includes(filter.trim().toLowerCase());
+        this.dataSource.filterPredicate = (data: ViewDatasetEnvVarDataFragment, filter: string): boolean => {
+            return data.key.toLowerCase().includes(filter.trim().toLowerCase());
         };
         this.dataSource.filter = search.trim().toLowerCase();
     }
@@ -160,7 +160,7 @@ export class DatasetSettingsSecretsManagerTabComponent extends BaseComponent imp
                 perPage: this.PER_PAGE,
             })
             .pipe(takeUntilDestroyed(this.destroyRef))
-            .subscribe((result: ViewDatasetEnvVarConnection) => {
+            .subscribe((result: ViewDatasetEnvVarConnectionDataFragment) => {
                 this.dataSource.data = result.nodes;
                 this.dataSource.sort = this.sort;
                 this.pageBasedInfo = result.pageInfo;

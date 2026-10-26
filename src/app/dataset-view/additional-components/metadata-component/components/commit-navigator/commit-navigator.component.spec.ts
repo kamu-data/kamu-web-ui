@@ -7,7 +7,7 @@
 
 import { ComponentFixture, TestBed } from "@angular/core/testing";
 
-import { emitClickOnElementByDataTestId } from "@common/helpers/base-test.helpers.spec";
+import { emitClickOnElementByDataTestId, setComponentInput } from "@common/helpers/base-test.helpers.spec";
 
 import { CommitNavigatorComponent } from "src/app/dataset-view/additional-components/metadata-component/components/commit-navigator/commit-navigator.component";
 
@@ -25,9 +25,9 @@ describe("CommitNavigatorComponent", () => {
 
         fixture = TestBed.createComponent(CommitNavigatorComponent);
         component = fixture.componentInstance;
-        component.pageIndex = INITIAL_PAGE_INDEX;
-        component.limit = INITIAL_LIMIT;
-        component.total = INITIAL_TOTAL;
+        setComponentInput(fixture, "pageIndex", INITIAL_PAGE_INDEX);
+        setComponentInput(fixture, "limit", INITIAL_LIMIT);
+        setComponentInput(fixture, "total", INITIAL_TOTAL);
         fixture.detectChanges();
     });
 
@@ -43,7 +43,6 @@ describe("CommitNavigatorComponent", () => {
 
     it("should change page forward", () => {
         const pageChangeSpy = spyOn(component.pageChange, "emit");
-        component.ngOnChanges();
         emitClickOnElementByDataTestId(fixture, "forward-link");
         expect(pageChangeSpy).toHaveBeenCalledWith(INITIAL_PAGE_INDEX + 1);
     });

@@ -6,14 +6,14 @@
  */
 
 import { TestBed } from "@angular/core/testing";
-import { ActivatedRouteSnapshot, ResolveFn, RouterStateSnapshot } from "@angular/router";
+import { RedirectCommand } from "@angular/router";
 
-import { firstValueFrom, Observable, of } from "rxjs";
+import { of } from "rxjs";
 
 import { ApolloTestingModule } from "apollo-angular/testing";
 import { provideToastr } from "ngx-toastr";
 
-import { expectPageNotFoundRedirect } from "@common/helpers/base-test.helpers.spec";
+import { expectPageNotFoundRedirect, routeSnapshot, runResolver } from "@common/helpers/base-test.helpers.spec";
 import {
     DatasetFlowType,
     FlowRetryBackoffType,
@@ -36,21 +36,14 @@ import {
 } from "src/app/search/mock.data";
 
 describe("datasetSettingsIngestConfigurationResolverFn", () => {
-    const mockActivatedRouteSnapshot = new ActivatedRouteSnapshot();
-    const mockRouterStateSnapshot = {} as RouterStateSnapshot;
-
     let datasetSubsService: DatasetSubscriptionsService;
     let datasetFlowConfigService: DatasetFlowConfigService;
 
     let permissionsChangesSpy: jasmine.Spy;
 
-    const executeResolver: ResolveFn<DatasetSettingsIngestConfigurationTabData> = (...resolverParameters) =>
-        TestBed.runInInjectionContext(() => datasetSettingsIngestConfigurationResolverFn(...resolverParameters));
-
-    function resolve(): Promise<unknown> {
-        return firstValueFrom(
-            executeResolver(mockActivatedRouteSnapshot, mockRouterStateSnapshot) as Observable<unknown>,
-        );
+    function resolve(): Promise<DatasetSettingsIngestConfigurationTabData | RedirectCommand> {
+        const route = routeSnapshot({ data: { tab: SettingsTabsEnum.INGEST_CONFIGURATION } });
+        return runResolver(datasetSettingsIngestConfigurationResolverFn, route);
     }
 
     // Mock data for different scenarios
@@ -156,8 +149,6 @@ describe("datasetSettingsIngestConfigurationResolverFn", () => {
             imports: [ApolloTestingModule],
             providers: [provideToastr()],
         });
-
-        mockActivatedRouteSnapshot.data = { tab: SettingsTabsEnum.INGEST_CONFIGURATION };
 
         spyOnProperty(TestBed.inject(DatasetService), "datasetChanges", "get").and.returnValue(
             of(mockDatasetBasicsRootFragment),

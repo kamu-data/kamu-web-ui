@@ -8,6 +8,8 @@
 import { ComponentFixture, TestBed } from "@angular/core/testing";
 import { ActivatedRoute } from "@angular/router";
 
+import { setComponentInput } from "@common/helpers/base-test.helpers.spec";
+
 import { CardsPropertyComponent } from "src/app/dataset-block/metadata-block/components/event-details/components/common/cards-property/cards-property.component";
 
 describe("CardsPropertyComponent", () => {
@@ -40,7 +42,7 @@ describe("CardsPropertyComponent", () => {
 
         fixture = TestBed.createComponent(CardsPropertyComponent);
         component = fixture.componentInstance;
-        component.data = ["id", "name", "type"];
+        setComponentInput(fixture, "data", ["id", "name", "type"]);
         fixture.detectChanges();
     });
 

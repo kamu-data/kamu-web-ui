@@ -4,13 +4,7 @@ query listEnvVariables($accountName: AccountName!, $datasetName: DatasetName!, $
       ...DatasetBasics
       envVars {
         listEnvVariables(page: $page, perPage: $perPage) {
-          totalCount
-          nodes {
-            ...ViewDatasetEnvVarData
-          }
-          pageInfo {
-            ...DatasetPageInfo
-          }
+          ...ViewDatasetEnvVarConnectionData
         }
       }
     }

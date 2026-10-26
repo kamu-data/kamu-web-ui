@@ -12,16 +12,11 @@ import { ComponentFixture, TestBed } from "@angular/core/testing";
 import { NgbModal } from "@ng-bootstrap/ng-bootstrap";
 import { Apollo } from "apollo-angular";
 
-import { registerMatSvgIcons } from "@common/helpers/base-test.helpers.spec";
+import { registerMatSvgIcons, setComponentInput } from "@common/helpers/base-test.helpers.spec";
 import { SharedTestModule } from "@common/modules/shared-test.module";
 
-import {
-    mockMetadataDerivedUpdate,
-    mockOverviewDataUpdate,
-    mockOverviewDataUpdateNullable,
-} from "src/app/dataset-view/additional-components/data-tabs.mock";
+import { mockDerivedOverviewUpdate } from "src/app/dataset-view/additional-components/data-tabs.mock";
 import { MetadataWatermarkTabComponent } from "src/app/dataset-view/additional-components/metadata-component/tabs/metadata-watermark-tab/metadata-watermark-tab.component";
-import { OverviewUpdate } from "src/app/dataset-view/dataset.subscriptions.interface";
 import { mockDatasetBasicsDerivedFragment, mockFullPowerDatasetPermissionsFragment } from "src/app/search/mock.data";
 
 describe("MetadataWatermarkTabComponent", () => {
@@ -37,16 +32,11 @@ describe("MetadataWatermarkTabComponent", () => {
         fixture = TestBed.createComponent(MetadataWatermarkTabComponent);
         modalService = TestBed.inject(NgbModal);
         component = fixture.componentInstance;
-        component.datasetMetadataTabData = {
+        setComponentInput(fixture, "datasetMetadataTabData", {
             datasetBasics: mockDatasetBasicsDerivedFragment,
             datasetPermissions: mockFullPowerDatasetPermissionsFragment,
-            overviewUpdate: {
-                schema: mockMetadataDerivedUpdate.schema,
-                content: mockOverviewDataUpdate.content,
-                overview: structuredClone(mockOverviewDataUpdateNullable.overview),
-                size: mockOverviewDataUpdate.size,
-            } as OverviewUpdate,
-        };
+            overviewUpdate: mockDerivedOverviewUpdate,
+        });
         registerMatSvgIcons();
         fixture.detectChanges();
     });

@@ -10,7 +10,7 @@ import { FormGroupDirective } from "@angular/forms";
 
 import { Apollo } from "apollo-angular";
 
-import { emitClickOnElementByDataTestId } from "@common/helpers/base-test.helpers.spec";
+import { emitClickOnElementByDataTestId, setComponentInput } from "@common/helpers/base-test.helpers.spec";
 import { SharedTestModule } from "@common/modules/shared-test.module";
 
 import {
@@ -35,10 +35,10 @@ describe("BaseStepComponent", () => {
 
         fixture = TestBed.createComponent(BaseStepComponent);
         component = fixture.componentInstance;
-        component.defaultKind = FetchKind.URL;
-        component.sectionFormData = FETCH_FORM_DATA;
-        component.sectionStepRadioData = FETCH_STEP_RADIO_CONTROLS;
-        component.sectionName = SetPollingSourceSection.FETCH;
+        setComponentInput(fixture, "defaultKind", FetchKind.URL);
+        setComponentInput(fixture, "sectionFormData", FETCH_FORM_DATA);
+        setComponentInput(fixture, "sectionStepRadioData", FETCH_STEP_RADIO_CONTROLS);
+        setComponentInput(fixture, "sectionName", SetPollingSourceSection.FETCH);
         fixture.detectChanges();
     });
 

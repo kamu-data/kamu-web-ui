@@ -6,16 +6,19 @@
  */
 
 import { TestBed } from "@angular/core/testing";
-import { ActivatedRouteSnapshot, convertToParamMap, ResolveFn, RouterStateSnapshot } from "@angular/router";
 
-import { firstValueFrom, Observable, of, throwError } from "rxjs";
+import { of, throwError } from "rxjs";
 
 import { Apollo } from "apollo-angular";
 
 import { requireValue } from "@common/helpers/app.helpers";
-import { expectPageNotFoundRedirect } from "@common/helpers/base-test.helpers.spec";
-import { MetadataBlockFragment } from "@api/kamu.graphql.interface";
-import { mockGetMetadataBlockQuery, TEST_ACCOUNT_NAME, TEST_DATASET_NAME } from "@api/mock/dataset.mock";
+import { expectPageNotFoundRedirect, routeSnapshot, runResolver } from "@common/helpers/base-test.helpers.spec";
+import {
+    mockGetMetadataBlockQuery,
+    mockMetadataBlockByHash,
+    TEST_ACCOUNT_NAME,
+    TEST_DATASET_NAME,
+} from "@api/mock/dataset.mock";
 
 import { BlockService } from "src/app/dataset-block/metadata-block/block.service";
 import { MetadataBlockInfo } from "src/app/dataset-block/metadata-block/metadata-block.types";
@@ -28,24 +31,20 @@ describe("blockMetadataResolverFn", () => {
     let datasetService: DatasetService;
     const MOCK_HASH_BLOCK = "weqwKwqeqwdfsdf";
 
-    const routeSnapshot = {
-        paramMap: convertToParamMap({
+    const route = routeSnapshot({
+        params: {
             [ProjectLinks.URL_PARAM_ACCOUNT_NAME]: TEST_ACCOUNT_NAME,
             [ProjectLinks.URL_PARAM_DATASET_NAME]: TEST_DATASET_NAME,
             [ProjectLinks.URL_PARAM_BLOCK_HASH]: MOCK_HASH_BLOCK,
-        }),
-    } as ActivatedRouteSnapshot;
-    const mockState = {} as RouterStateSnapshot;
+        },
+    });
 
     const mockDatasetMetadata = requireValue(mockGetMetadataBlockQuery.datasets.byOwnerAndName ?? null).metadata;
     const mockBlockInfo: MetadataBlockInfo = {
-        block: mockDatasetMetadata.chain.blockByHash as MetadataBlockFragment,
-        blockAsYaml: mockDatasetMetadata.chain.blockByHashEncoded as string,
+        block: mockMetadataBlockByHash,
+        blockAsYaml: requireValue(mockDatasetMetadata.chain.blockByHashEncoded ?? null),
         downstreamsCount: mockDatasetMetadata.currentDownstreamDependenciesCount,
     };
-
-    const executeResolver: ResolveFn<MetadataBlockInfo> = (...resolverParameters) =>
-        TestBed.runInInjectionContext(() => blockMetadataResolverFn(...resolverParameters));
 
     beforeEach(() => {
         TestBed.configureTestingModule({
@@ -59,7 +58,7 @@ describe("blockMetadataResolverFn", () => {
         const requestMetadataBlockSpy = spyOn(blockService, "requestMetadataBlock").and.returnValue(of(mockBlockInfo));
         const emitDownstreamsCountChangedSpy = spyOn(datasetService, "emitDownstreamsCountChanged");
 
-        const data = await firstValueFrom(executeResolver(routeSnapshot, mockState) as Observable<unknown>);
+        const data = await runResolver(blockMetadataResolverFn, route);
 
         expect(requestMetadataBlockSpy).toHaveBeenCalledOnceWith(
             { accountName: TEST_ACCOUNT_NAME, datasetName: TEST_DATASET_NAME },
@@ -73,7 +72,7 @@ describe("blockMetadataResolverFn", () => {
         spyOn(blockService, "requestMetadataBlock").and.returnValue(of(undefined));
         const emitDownstreamsCountChangedSpy = spyOn(datasetService, "emitDownstreamsCountChanged");
 
-        const data = await firstValueFrom(executeResolver(routeSnapshot, mockState) as Observable<unknown>);
+        const data = await runResolver(blockMetadataResolverFn, route);
 
         expectPageNotFoundRedirect(data);
         expect(emitDownstreamsCountChangedSpy).not.toHaveBeenCalled();
@@ -83,7 +82,7 @@ describe("blockMetadataResolverFn", () => {
         spyOn(blockService, "requestMetadataBlock").and.returnValue(throwError(() => new Error("fail")));
         const emitDownstreamsCountChangedSpy = spyOn(datasetService, "emitDownstreamsCountChanged");
 
-        const data = await firstValueFrom(executeResolver(routeSnapshot, mockState) as Observable<unknown>);
+        const data = await runResolver(blockMetadataResolverFn, route);
 
         expectPageNotFoundRedirect(data);
         expect(emitDownstreamsCountChangedSpy).not.toHaveBeenCalled();

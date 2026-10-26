@@ -102,7 +102,11 @@ export class FlowRetryPolicyFormHarness extends ComponentHarness {
             throw new Error("Min delay form not found");
         }
 
-        return minDelayForm.getTimeDelta();
+        const { every, unit } = await minDelayForm.getTimeDelta();
+        if (unit === null) {
+            throw new Error("Min delay unit is not selected");
+        }
+        return { every, unit };
     }
 
     public async getMinDelayValidationError(): Promise<MaybeNull<string>> {
@@ -130,8 +134,12 @@ export class FlowRetryPolicyFormHarness extends ComponentHarness {
 
     public async getBackoffType(): Promise<FlowRetryBackoffType> {
         const select = await this.locatorBackoffSelect();
-        const value = await select.getProperty<string>("value");
-        return value as FlowRetryBackoffType;
+        const value: unknown = await select.getProperty("value");
+        const backoffType = Object.values(FlowRetryBackoffType).find((type) => type === value);
+        if (backoffType === undefined) {
+            throw new Error(`Unexpected backoff type: ${String(value)}`);
+        }
+        return backoffType;
     }
 
     public async currentFormValue(): Promise<FlowRetryPolicyFormValue> {

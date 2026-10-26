@@ -14,7 +14,7 @@ import { MatTooltipModule } from "@angular/material/tooltip";
 import { CopyToClipboardComponent } from "@common/components/copy-to-clipboard/copy-to-clipboard.component";
 import { FeatureFlagDirective } from "@common/directives/feature-flag.directive";
 import { maskDotsInURL } from "@common/helpers/app.helpers";
-import { LinkProtocolDesc } from "@api/kamu.graphql.interface";
+import { LinkProtocolDescDataFragment } from "@api/kamu.graphql.interface";
 
 @Component({
     selector: "app-data-access-link-tab",
@@ -33,7 +33,7 @@ import { LinkProtocolDesc } from "@api/kamu.graphql.interface";
     ],
 })
 export class DataAccessLinkTabComponent {
-    @Input({ required: true }) public webLink: LinkProtocolDesc;
+    @Input({ required: true }) public webLink: LinkProtocolDescDataFragment;
 
     public get serializeLink(): string {
         return maskDotsInURL(this.webLink.url, 4);

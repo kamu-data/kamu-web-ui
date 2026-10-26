@@ -8,13 +8,14 @@
 import { provideHttpClient } from "@angular/common/http";
 import { provideHttpClientTesting } from "@angular/common/http/testing";
 import { TestBed } from "@angular/core/testing";
-import { ActivatedRouteSnapshot, Params, ResolveFn, RouterStateSnapshot } from "@angular/router";
+import { Params, RedirectCommand } from "@angular/router";
 
-import { firstValueFrom, Observable, of } from "rxjs";
+import { of } from "rxjs";
 
 import { Apollo } from "apollo-angular";
 import { provideToastr } from "ngx-toastr";
 
+import { routeSnapshot, runResolver } from "@common/helpers/base-test.helpers.spec";
 import { DatasetSearchResult } from "@interface/search.interface";
 
 import { AppConfigService } from "src/app/app-config.service";
@@ -24,8 +25,6 @@ import { searchResolverFn } from "src/app/search/resolver/search.resolver";
 import { SearchService } from "src/app/search/search.service";
 
 describe("searchResolverFn", () => {
-    const mockRouterStateSnapshot = {} as RouterStateSnapshot;
-
     let searchService: SearchService;
     let appConfigService: AppConfigService;
     let searchDatasetsSpy: jasmine.Spy;
@@ -33,15 +32,8 @@ describe("searchResolverFn", () => {
     const MOCK_PAGE = 2;
     const MOCK_QUERY = "mock-query";
 
-    const executeResolver: ResolveFn<DatasetSearchResult> = (...resolverParameters) =>
-        TestBed.runInInjectionContext(() => searchResolverFn(...resolverParameters));
-
-    function resolve(queryParams: Params): Promise<DatasetSearchResult> {
-        const routeSnapshot = new ActivatedRouteSnapshot();
-        routeSnapshot.queryParams = queryParams;
-        return firstValueFrom(
-            executeResolver(routeSnapshot, mockRouterStateSnapshot) as Observable<DatasetSearchResult>,
-        );
+    function resolve(queryParams: Params): Promise<DatasetSearchResult | RedirectCommand> {
+        return runResolver(searchResolverFn, routeSnapshot({ queryParams }));
     }
 
     function emptySearchResult(): DatasetSearchResult {

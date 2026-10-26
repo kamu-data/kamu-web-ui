@@ -5,7 +5,7 @@
  * included in the LICENSE file.
  */
 
-import { ChangeDetectionStrategy, Component, EventEmitter, Input, OnInit, Output } from "@angular/core";
+import { ChangeDetectionStrategy, Component, EventEmitter, Input, Output } from "@angular/core";
 import { FormsModule } from "@angular/forms";
 import { MatIconModule } from "@angular/material/icon";
 import { MatSlideToggleModule } from "@angular/material/slide-toggle";
@@ -14,7 +14,7 @@ import { OwlDateTimeModule } from "@danielmoncada/angular-datetime-picker";
 import { OwlMomentDateTimeModule } from "@danielmoncada/angular-datetime-picker-moment-adapter";
 import { NgSelectModule } from "@ng-select/ng-select";
 
-import { FlowProcessEffectiveState, OrderingDirection } from "@api/kamu.graphql.interface";
+import { OrderingDirection } from "@api/kamu.graphql.interface";
 
 import {
     DashboardFiltersOptions,
@@ -47,7 +47,7 @@ import {
     styleUrls: ["./custom-filters-view.component.scss"],
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class CustomFiltersViewComponent implements OnInit {
+export class CustomFiltersViewComponent {
     @Input({ required: true }) public dashboardFilters: DashboardFiltersOptions;
     @Output() public applyFilterEmitter = new EventEmitter<void>();
 
@@ -60,15 +60,6 @@ export class CustomFiltersViewComponent implements OnInit {
     public readonly FLOW_PROCESS_STATE_LIST = FLOW_PROCESS_STATE_LIST;
 
     public currentDateTime = new Date().toISOString();
-
-    public ngOnInit(): void {
-        this.dashboardFilters.selectedFlowProcessStates = [
-            FlowProcessEffectiveState.Active,
-            FlowProcessEffectiveState.Failing,
-            FlowProcessEffectiveState.PausedManual,
-            FlowProcessEffectiveState.StoppedAuto,
-        ];
-    }
 
     public onChangeLastAttemptFilter(): void {
         this.dashboardFilters.selectedQuickRangeLastAttempt = undefined;

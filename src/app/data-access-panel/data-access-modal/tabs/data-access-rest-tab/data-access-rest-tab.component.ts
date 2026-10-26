@@ -10,7 +10,7 @@ import { MatDividerModule } from "@angular/material/divider";
 import { MatIconModule } from "@angular/material/icon";
 
 import { CopyToClipboardComponent } from "@common/components/copy-to-clipboard/copy-to-clipboard.component";
-import { RestProtocolDesc } from "@api/kamu.graphql.interface";
+import { RestProtocolDescDataFragment } from "@api/kamu.graphql.interface";
 
 @Component({
     selector: "app-data-access-rest-tab",
@@ -25,5 +25,5 @@ import { RestProtocolDesc } from "@api/kamu.graphql.interface";
     ],
 })
 export class DataAccessRestTabComponent {
-    @Input({ required: true }) public rest: RestProtocolDesc;
+    @Input({ required: true }) public rest: RestProtocolDescDataFragment;
 }

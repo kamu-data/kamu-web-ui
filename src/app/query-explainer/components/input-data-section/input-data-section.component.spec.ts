@@ -16,7 +16,11 @@ import { provideMarkdown } from "ngx-markdown";
 import { provideToastr } from "ngx-toastr";
 
 import { HIGHLIGHT_OPTIONS_PROVIDER } from "@common/helpers/app.helpers";
-import { findElementByDataTestId, registerMatSvgIcons } from "@common/helpers/base-test.helpers.spec";
+import {
+    findElementByDataTestId,
+    registerMatSvgIcons,
+    setComponentInput,
+} from "@common/helpers/base-test.helpers.spec";
 import { MarkdownFormatPipe } from "@common/pipes/markdown-format.pipe";
 
 import ProjectLinks from "src/app/project-links";
@@ -64,10 +68,10 @@ describe("InputDataSectionComponent", () => {
 
         fixture = TestBed.createComponent(InputDataSectionComponent);
         component = fixture.componentInstance;
-        component.inputData = {
+        setComponentInput(fixture, "inputData", {
             sqlQueryExplainerResponse: mockQueryExplainerResponse,
             sqlQueryVerify: mockVerifyQueryResponseSuccess,
-        };
+        });
         component.blockHashObservables$ = [of(new Date("2024-10-22T11:54:24.234Z"))];
         component.datasetInfoObservables$ = [of(mockDatasetInfo)];
     });
@@ -108,20 +112,20 @@ describe("InputDataSectionComponent", () => {
     });
 
     it("should check DatasetBlockNotFoundError error is exist", () => {
-        component.inputData = {
+        setComponentInput(fixture, "inputData", {
             sqlQueryExplainerResponse: mockQueryExplainerResponse,
             sqlQueryVerify: mockDatasetBlockNotFoundError,
-        };
+        });
         fixture.detectChanges();
         const hashElem = findElementByDataTestId(fixture, "input-dataset-hash");
         expect(hashElem?.classList.contains("error-color")).toBeTrue();
     });
 
     it("should check isDatasetNotFoundError error is exist", () => {
-        component.inputData = {
+        setComponentInput(fixture, "inputData", {
             sqlQueryExplainerResponse: mockQueryExplainerResponse,
             sqlQueryVerify: mockDatasetNotFoundError,
-        };
+        });
         fixture.detectChanges();
         const hashElem = findElementByDataTestId(fixture, "input-dataset-id-0");
         expect(hashElem?.classList.contains("error-color")).toBeTrue();

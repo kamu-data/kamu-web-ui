@@ -16,10 +16,10 @@ import { SetPollingSourceSectionBuilder } from "src/app/dataset-block/metadata-b
 import { SetTransformSectionBuilder } from "src/app/dataset-block/metadata-block/components/event-details/dynamic-events/builders/set-transform-section.builder";
 import { DynamicEventTypes } from "src/app/dataset-block/metadata-block/components/event-details/dynamic-events/dynamic-events.model";
 
-export const SECTION_BUILDERS_BY_EVENT_TYPE: Record<DynamicEventTypes, EventSectionBuilder<GenericDynamicEventType>> = {
+export const SECTION_BUILDERS_BY_EVENT_TYPE = {
     [DynamicEventTypes.SetPollingSource]: new SetPollingSourceSectionBuilder(),
     [DynamicEventTypes.SetTransform]: new SetTransformSectionBuilder(),
     [DynamicEventTypes.ExecuteTransform]: new ExecuteTransformSectionBuilder(),
     [DynamicEventTypes.AddData]: new AddDataSectionBuilder(),
     [DynamicEventTypes.AddPushSource]: new AddPushSourceSectionBuilder(),
-};
+} satisfies Record<DynamicEventTypes, EventSectionBuilder<GenericDynamicEventType>>;

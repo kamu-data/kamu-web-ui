@@ -13,7 +13,11 @@ import { NgbTypeaheadSelectItemEvent } from "@ng-bootstrap/ng-bootstrap";
 import { Apollo } from "apollo-angular";
 import { provideToastr } from "ngx-toastr";
 
-import { dispatchInputEvent, emitClickOnElementByDataTestId } from "@common/helpers/base-test.helpers.spec";
+import {
+    dispatchInputEvent,
+    emitClickOnElementByDataTestId,
+    setComponentInput,
+} from "@common/helpers/base-test.helpers.spec";
 import { SharedTestModule } from "@common/modules/shared-test.module";
 import AppValues from "@common/values/app.values";
 import { SearchApi } from "@api/search.api";
@@ -39,9 +43,9 @@ describe("SearchSectionComponent", () => {
 
         fixture = TestBed.createComponent(SearchSectionComponent);
         component = fixture.componentInstance;
-        component.inputDatasets = new Set<string>();
-        component.inputsViewModel = [];
-        component.datasetInfo = mockDatasetInfo;
+        setComponentInput(fixture, "inputDatasets", new Set<string>());
+        setComponentInput(fixture, "inputsViewModel", []);
+        setComponentInput(fixture, "datasetInfo", mockDatasetInfo);
         searchApi = TestBed.inject(SearchApi);
         datasetService = TestBed.inject(DatasetService);
         fixture.detectChanges();
@@ -73,8 +77,13 @@ describe("SearchSectionComponent", () => {
         const editedDataset = { ...mockDatasetBasicsDerivedFragment, id: "edited", name: "derived", alias: "derived" };
         const addedDataset = { ...mockDatasetBasicsDerivedFragment, id: "added", name: "cities", alias: "cities" };
         const otherDataset = { ...mockDatasetBasicsDerivedFragment, id: "other", name: "cities-2", alias: "cities-2" };
-        component.datasetInfo = { accountName: editedDataset.owner.accountName, datasetName: editedDataset.name };
-        component.inputsViewModel = [{ name: "cities", owner: addedDataset.owner.accountName, alias: "cities" }];
+        setComponentInput(fixture, "datasetInfo", {
+            accountName: editedDataset.owner.accountName,
+            datasetName: editedDataset.name,
+        });
+        setComponentInput(fixture, "inputsViewModel", [
+            { name: "cities", owner: addedDataset.owner.accountName, alias: "cities" },
+        ]);
         spyOn(searchApi, "autocompleteDatasetSearch").and.returnValue(
             of(
                 [editedDataset, addedDataset, otherDataset].map((dataset) => ({
@@ -103,12 +112,14 @@ describe("SearchSectionComponent", () => {
     });
 
     it("should check select input dataset", () => {
-        const mockNgbTypeaheadSelectItemEvent = {
+        const mockNgbTypeaheadSelectItemEvent: NgbTypeaheadSelectItemEvent<DatasetAutocompleteItem> = {
             item: {
                 dataset: mockDatasetBasicsDerivedFragment,
+                dummy: false,
                 __typename: TypeNames.datasetType,
             },
-        } as NgbTypeaheadSelectItemEvent;
+            preventDefault: () => undefined,
+        };
         const requestDatasetSchemaSpy = spyOn(datasetService, "requestDatasetSchema").and.returnValue(
             of(mockGetDatasetSchemaQuery),
         );
@@ -122,12 +133,14 @@ describe("SearchSectionComponent", () => {
     });
 
     it("should list a selected input as unavailable when its schema fails to load", () => {
-        const mockNgbTypeaheadSelectItemEvent = {
+        const mockNgbTypeaheadSelectItemEvent: NgbTypeaheadSelectItemEvent<DatasetAutocompleteItem> = {
             item: {
                 dataset: mockDatasetBasicsDerivedFragment,
+                dummy: false,
                 __typename: TypeNames.datasetType,
             },
-        } as NgbTypeaheadSelectItemEvent;
+            preventDefault: () => undefined,
+        };
         spyOn(datasetService, "requestDatasetSchema").and.returnValue(throwError(() => new Error("fail")));
 
         component.onSelectItem(mockNgbTypeaheadSelectItemEvent);
@@ -138,18 +151,22 @@ describe("SearchSectionComponent", () => {
 
     it("should check delete input dataset", () => {
         const deletedAlias = "test-account/com.youtube.playlist.featuring-kamu-data.videos.stats";
-        component.inputDatasets = new Set([
-            '{"datasetRef":"did:odf:fed0176ed321fcd2fc471d4d1ab06662223be2c76b7e3d3f14c37413e0802e1dca3c1","alias":"kamu/github.stats"}',
-            `{"datasetRef":"did:odf:fed01ae1c46fe64c9d50d741989b406b89b6c40f3810e1b7bcc0ed83edc050fba2d9d","alias":"${deletedAlias}"}`,
-        ]);
-        component.inputsViewModel = [
+        setComponentInput(
+            fixture,
+            "inputDatasets",
+            new Set([
+                '{"datasetRef":"did:odf:fed0176ed321fcd2fc471d4d1ab06662223be2c76b7e3d3f14c37413e0802e1dca3c1","alias":"kamu/github.stats"}',
+                `{"datasetRef":"did:odf:fed01ae1c46fe64c9d50d741989b406b89b6c40f3810e1b7bcc0ed83edc050fba2d9d","alias":"${deletedAlias}"}`,
+            ]),
+        );
+        setComponentInput(fixture, "inputsViewModel", [
             { name: "github.stats", owner: "kamu", alias: "kamu/github.stats" },
             {
                 name: "com.youtube.playlist.featuring-kamu-data.videos.stats",
                 owner: "test-account",
                 alias: deletedAlias,
             },
-        ];
+        ]);
         fixture.detectChanges();
 
         component.deleteInputDataset(deletedAlias);
@@ -159,11 +176,15 @@ describe("SearchSectionComponent", () => {
 
     it("should check deleting with same dataset name, but different account name", () => {
         const deletedAlias = "test-account/com.youtube.playlist.featuring-kamu-data.videos.stats";
-        component.inputDatasets = new Set([
-            '{"datasetRef":"did:odf:fed0176ed321fcd2fc471d4d1ab06662223be2c76b7e3d3f14c37413e0802e1dca3c1","alias":"kamu/com.youtube.playlist.featuring-kamu-data.videos.stats"}',
-            `{"datasetRef":"did:odf:fed01ae1c46fe64c9d50d741989b406b89b6c40f3810e1b7bcc0ed83edc050fba2d9d","alias":"${deletedAlias}"}`,
-        ]);
-        component.inputsViewModel = [
+        setComponentInput(
+            fixture,
+            "inputDatasets",
+            new Set([
+                '{"datasetRef":"did:odf:fed0176ed321fcd2fc471d4d1ab06662223be2c76b7e3d3f14c37413e0802e1dca3c1","alias":"kamu/com.youtube.playlist.featuring-kamu-data.videos.stats"}',
+                `{"datasetRef":"did:odf:fed01ae1c46fe64c9d50d741989b406b89b6c40f3810e1b7bcc0ed83edc050fba2d9d","alias":"${deletedAlias}"}`,
+            ]),
+        );
+        setComponentInput(fixture, "inputsViewModel", [
             {
                 name: "com.youtube.playlist.featuring-kamu-data.videos.stats",
                 owner: "kamu",
@@ -174,7 +195,7 @@ describe("SearchSectionComponent", () => {
                 owner: "test-account",
                 alias: deletedAlias,
             },
-        ];
+        ]);
         fixture.detectChanges();
 
         component.deleteInputDataset(deletedAlias);
@@ -186,14 +207,18 @@ describe("SearchSectionComponent", () => {
     it("should keep an input whose alias starts with the deleted alias", () => {
         const keptInput =
             '{"datasetRef":"did:odf:fed01ae1c46fe64c9d50d741989b406b89b6c40f3810e1b7bcc0ed83edc050fba2d9d","alias":"kamu/cities-2"}';
-        component.inputDatasets = new Set([
-            '{"datasetRef":"did:odf:fed0176ed321fcd2fc471d4d1ab06662223be2c76b7e3d3f14c37413e0802e1dca3c1","alias":"kamu/cities"}',
-            keptInput,
-        ]);
-        component.inputsViewModel = [
+        setComponentInput(
+            fixture,
+            "inputDatasets",
+            new Set([
+                '{"datasetRef":"did:odf:fed0176ed321fcd2fc471d4d1ab06662223be2c76b7e3d3f14c37413e0802e1dca3c1","alias":"kamu/cities"}',
+                keptInput,
+            ]),
+        );
+        setComponentInput(fixture, "inputsViewModel", [
             { name: "cities", owner: "kamu", alias: "kamu/cities" },
             { name: "cities-2", owner: "kamu", alias: "kamu/cities-2" },
-        ];
+        ]);
         fixture.detectChanges();
 
         component.deleteInputDataset("kamu/cities");
@@ -205,14 +230,18 @@ describe("SearchSectionComponent", () => {
     it("should delete an input whose alias has no account prefix", () => {
         const keptInput =
             '{"datasetRef":"did:odf:fed01ae1c46fe64c9d50d741989b406b89b6c40f3810e1b7bcc0ed83edc050fba2d9d","alias":"account.transactions"}';
-        component.inputDatasets = new Set([
-            '{"datasetRef":"did:odf:fed0176ed321fcd2fc471d4d1ab06662223be2c76b7e3d3f14c37413e0802e1dca3c1","alias":"account.tokens.transfers"}',
-            keptInput,
-        ]);
-        component.inputsViewModel = [
+        setComponentInput(
+            fixture,
+            "inputDatasets",
+            new Set([
+                '{"datasetRef":"did:odf:fed0176ed321fcd2fc471d4d1ab06662223be2c76b7e3d3f14c37413e0802e1dca3c1","alias":"account.tokens.transfers"}',
+                keptInput,
+            ]),
+        );
+        setComponentInput(fixture, "inputsViewModel", [
             { name: "account.tokens.transfers", owner: "kamu", alias: "account.tokens.transfers" },
             { name: "account.transactions", owner: "kamu", alias: "account.transactions" },
-        ];
+        ]);
         fixture.detectChanges();
 
         component.deleteInputDataset("account.tokens.transfers");

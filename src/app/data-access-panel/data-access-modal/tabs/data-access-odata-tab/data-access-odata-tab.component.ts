@@ -10,7 +10,7 @@ import { MatDividerModule } from "@angular/material/divider";
 import { MatIconModule } from "@angular/material/icon";
 
 import { CopyToClipboardComponent } from "@common/components/copy-to-clipboard/copy-to-clipboard.component";
-import { OdataProtocolDesc } from "@api/kamu.graphql.interface";
+import { OdataProtocolDescDataFragment } from "@api/kamu.graphql.interface";
 
 @Component({
     selector: "app-data-access-odata-tab",
@@ -25,5 +25,5 @@ import { OdataProtocolDesc } from "@api/kamu.graphql.interface";
     ],
 })
 export class DataAccessOdataTabComponent {
-    @Input({ required: true }) public odata: OdataProtocolDesc;
+    @Input({ required: true }) public odata: OdataProtocolDescDataFragment;
 }

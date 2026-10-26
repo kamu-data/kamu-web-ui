@@ -13,7 +13,11 @@ import { ComponentFixture, TestBed } from "@angular/core/testing";
 import { Apollo } from "apollo-angular";
 
 import { WidgetHeightService } from "@common/components/lineage-graph/widget-height.service";
-import { findElementByDataTestId, registerMatSvgIcons } from "@common/helpers/base-test.helpers.spec";
+import {
+    findElementByDataTestId,
+    registerMatSvgIcons,
+    setComponentInput,
+} from "@common/helpers/base-test.helpers.spec";
 import { SharedTestModule } from "@common/modules/shared-test.module";
 
 import { DatasetViewMenuComponent } from "src/app/dataset-view/dataset-view-menu/dataset-view-menu.component";
@@ -34,9 +38,9 @@ describe("DatasetViewMenuComponent", () => {
 
         fixture = TestBed.createComponent(DatasetViewMenuComponent);
         component = fixture.componentInstance;
-        component.datasetBasics = mockDatasetBasicsDerivedFragment;
-        component.datasetPermissions = mockFullPowerDatasetPermissionsFragment;
-        component.datasetViewType = DatasetViewTypeEnum.Metadata;
+        setComponentInput(fixture, "datasetBasics", mockDatasetBasicsDerivedFragment);
+        setComponentInput(fixture, "datasetPermissions", mockFullPowerDatasetPermissionsFragment);
+        setComponentInput(fixture, "datasetViewType", DatasetViewTypeEnum.Metadata);
 
         fixture.detectChanges();
     });
@@ -54,9 +58,9 @@ describe("DatasetViewMenuComponent", () => {
     it("should report the menu offset to the widget height service once rendered", () => {
         const setWidgetOffsetTopSpy = spyOn(TestBed.inject(WidgetHeightService), "setWidgetOffsetTop");
         const menuFixture = TestBed.createComponent(DatasetViewMenuComponent);
-        menuFixture.componentRef.setInput("datasetBasics", mockDatasetBasicsDerivedFragment);
-        menuFixture.componentRef.setInput("datasetPermissions", mockFullPowerDatasetPermissionsFragment);
-        menuFixture.componentRef.setInput("datasetViewType", DatasetViewTypeEnum.Metadata);
+        setComponentInput(menuFixture, "datasetBasics", mockDatasetBasicsDerivedFragment);
+        setComponentInput(menuFixture, "datasetPermissions", mockFullPowerDatasetPermissionsFragment);
+        setComponentInput(menuFixture, "datasetViewType", DatasetViewTypeEnum.Metadata);
         expect(setWidgetOffsetTopSpy).not.toHaveBeenCalled();
 
         menuFixture.detectChanges();

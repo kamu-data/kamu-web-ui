@@ -10,8 +10,6 @@ import { RedirectCommand } from "@angular/router";
 
 import { combineLatest, map, Observable } from "rxjs";
 
-import { DatasetMetadata } from "@api/kamu.graphql.interface";
-
 import { AppConfigService } from "src/app/app-config.service";
 import { isSettingsTabAccessibleHelper } from "src/app/dataset-view/additional-components/dataset-settings-component/dataset-settings.helpers";
 import { SettingsTabsEnum } from "src/app/dataset-view/additional-components/dataset-settings-component/dataset-settings.model";
@@ -41,7 +39,7 @@ export function resolveSettingsTabAccess(tab: SettingsTabsEnum): Observable<Data
                 appConfigService.featureFlags,
                 datasetBasics,
                 datasetPermissions,
-                overviewUpdate.overview.metadata as DatasetMetadata,
+                overviewUpdate.overview.metadata,
             );
             return isAccessible ? { datasetBasics, datasetPermissions } : navigationService.pageNotFoundRedirect();
         }),

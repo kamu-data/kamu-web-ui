@@ -9,7 +9,7 @@ import { provideHttpClient } from "@angular/common/http";
 import { provideHttpClientTesting } from "@angular/common/http/testing";
 import { ComponentFixture, TestBed } from "@angular/core/testing";
 
-import { registerMatSvgIcons } from "@common/helpers/base-test.helpers.spec";
+import { registerMatSvgIcons, setComponentInput } from "@common/helpers/base-test.helpers.spec";
 import { SharedTestModule } from "@common/modules/shared-test.module";
 
 import { mockMetadataRootUpdate } from "src/app/dataset-view/additional-components/data-tabs.mock";
@@ -31,11 +31,11 @@ describe("MetadataPushSourcesTabComponent", () => {
         fixture = TestBed.createComponent(MetadataPushSourcesTabComponent);
         navigationService = TestBed.inject(NavigationService);
         component = fixture.componentInstance;
-        component.datasetMetadataTabData = {
+        setComponentInput(fixture, "datasetMetadataTabData", {
             datasetBasics: mockDatasetBasicsRootFragment,
             datasetPermissions: mockFullPowerDatasetPermissionsFragment,
             metadataSummary: mockMetadataRootUpdate.metadataSummary,
-        };
+        });
 
         fixture.detectChanges();
     });

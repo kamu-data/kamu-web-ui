@@ -7,6 +7,7 @@
 
 import { ComponentFixture, TestBed } from "@angular/core/testing";
 
+import { setComponentInput } from "@common/helpers/base-test.helpers.spec";
 import { SharedTestModule } from "@common/modules/shared-test.module";
 
 import { TimePropertyComponent } from "src/app/dataset-block/metadata-block/components/event-details/components/common/time-property/time-property.component";
@@ -22,7 +23,7 @@ describe("TimePropertyComponent", () => {
 
         fixture = TestBed.createComponent(TimePropertyComponent);
         component = fixture.componentInstance;
-        component.data = new Date("2021-10-03 12:00:00").toISOString();
+        setComponentInput(fixture, "data", new Date("2021-10-03 12:00:00").toISOString());
         fixture.detectChanges();
     });
 

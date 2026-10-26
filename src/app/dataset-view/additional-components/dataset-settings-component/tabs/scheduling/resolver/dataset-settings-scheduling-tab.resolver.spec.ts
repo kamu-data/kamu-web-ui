@@ -6,14 +6,14 @@
  */
 
 import { TestBed } from "@angular/core/testing";
-import { ActivatedRouteSnapshot, ResolveFn, RouterStateSnapshot } from "@angular/router";
+import { RedirectCommand } from "@angular/router";
 
-import { firstValueFrom, Observable, of } from "rxjs";
+import { of } from "rxjs";
 
 import { ApolloTestingModule } from "apollo-angular/testing";
 import { provideToastr } from "ngx-toastr";
 
-import { expectPageNotFoundRedirect } from "@common/helpers/base-test.helpers.spec";
+import { expectPageNotFoundRedirect, routeSnapshot, runResolver } from "@common/helpers/base-test.helpers.spec";
 import { DatasetFlowType } from "@api/kamu.graphql.interface";
 import { mockCronSchedule, mockGetDatasetFlowTriggerCronQuery } from "@api/mock/dataset-flow.mock";
 
@@ -31,21 +31,14 @@ import {
 } from "src/app/search/mock.data";
 
 describe("datasetSettingsSchedulingTabResolverFn", () => {
-    const mockActivatedRouteSnapshot = new ActivatedRouteSnapshot();
-    const mockRouterStateSnapshot = {} as RouterStateSnapshot;
-
     let datasetSubsService: DatasetSubscriptionsService;
     let datasetFlowTriggerService: DatasetFlowTriggerService;
 
     let permissionsChangesSpy: jasmine.Spy;
 
-    const executeResolver: ResolveFn<DatasetSettingsSchedulingTabData> = (...resolverParameters) =>
-        TestBed.runInInjectionContext(() => datasetSettingsSchedulingTabResolverFn(...resolverParameters));
-
-    function resolve(): Promise<unknown> {
-        return firstValueFrom(
-            executeResolver(mockActivatedRouteSnapshot, mockRouterStateSnapshot) as Observable<unknown>,
-        );
+    function resolve(): Promise<DatasetSettingsSchedulingTabData | RedirectCommand> {
+        const route = routeSnapshot({ data: { tab: SettingsTabsEnum.SCHEDULING } });
+        return runResolver(datasetSettingsSchedulingTabResolverFn, route);
     }
 
     beforeEach(() => {
@@ -53,8 +46,6 @@ describe("datasetSettingsSchedulingTabResolverFn", () => {
             imports: [ApolloTestingModule],
             providers: [provideToastr()],
         });
-
-        mockActivatedRouteSnapshot.data = { tab: SettingsTabsEnum.SCHEDULING };
 
         spyOnProperty(TestBed.inject(DatasetService), "datasetChanges", "get").and.returnValue(
             of(mockDatasetBasicsRootFragment),
@@ -91,7 +82,6 @@ describe("datasetSettingsSchedulingTabResolverFn", () => {
                                     schedule: null,
                                     stopPolicy: {
                                         __typename: "FlowTriggerStopPolicyNever",
-                                        dummy: false,
                                     },
                                 },
                             },
@@ -113,7 +103,6 @@ describe("datasetSettingsSchedulingTabResolverFn", () => {
             schedule: null,
             stopPolicy: {
                 __typename: "FlowTriggerStopPolicyNever",
-                dummy: false,
             },
             paused: true,
         });

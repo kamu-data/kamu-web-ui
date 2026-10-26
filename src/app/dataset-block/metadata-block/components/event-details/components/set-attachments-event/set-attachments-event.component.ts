@@ -11,7 +11,7 @@ import { MarkdownModule } from "ngx-markdown";
 
 import { BaseComponent } from "@common/components/base.component";
 import { BlockRowDataComponent } from "@common/components/block-row-data/block-row-data.component";
-import { SetAttachments } from "@api/kamu.graphql.interface";
+import { SetAttachmentsEventFragment } from "@api/kamu.graphql.interface";
 
 @Component({
     selector: "app-set-attachments-event",
@@ -25,5 +25,5 @@ import { SetAttachments } from "@api/kamu.graphql.interface";
     ],
 })
 export class SetAttachmentsEventComponent extends BaseComponent {
-    @Input({ required: true }) public event: SetAttachments;
+    @Input({ required: true }) public event: SetAttachmentsEventFragment;
 }

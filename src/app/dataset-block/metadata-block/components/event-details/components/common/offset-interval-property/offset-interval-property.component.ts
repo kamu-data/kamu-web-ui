@@ -18,7 +18,7 @@ import { takeUntilDestroyed } from "@angular/core/rxjs-interop";
 
 import { Subject } from "rxjs";
 
-import { DatasetBasicsFragment, OffsetInterval } from "@api/kamu.graphql.interface";
+import { DatasetBasicsFragment, OffsetIntervalDataFragment } from "@api/kamu.graphql.interface";
 import { MaybeNull } from "@interface/app.types";
 import { DatasetInfo } from "@interface/navigation.interface";
 
@@ -36,7 +36,7 @@ import { NavigationService } from "src/app/services/navigation.service";
 })
 export class OffsetIntervalPropertyComponent extends BasePropertyComponent implements OnChanges {
     @Input({ required: true }) public data: {
-        block: MaybeNull<OffsetInterval>;
+        block: MaybeNull<OffsetIntervalDataFragment>;
         datasetId: MaybeNull<string>;
     };
     private datasetInfo: MaybeNull<DatasetInfo> = null;

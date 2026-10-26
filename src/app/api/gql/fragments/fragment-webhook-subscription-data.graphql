@@ -1,0 +1,8 @@
+fragment WebhookSubscriptionData on WebhookSubscription {
+  id
+  label
+  datasetId
+  targetUrl
+  eventTypes
+  status
+}

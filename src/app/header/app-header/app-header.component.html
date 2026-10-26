@@ -2,6 +2,7 @@
     <nav
         class="navbar navbar-expand-lg navbar-dark bg-dark details px-3 px-md-4 px-lg-5 flex-wrap flex-md-nowrap"
         id="app-header"
+        [class.details--on]="isCollapsedAppHeaderMenu"
     >
         <div class="header-item mt-n1 mb-n1 d-none d-md-flex">
             <div [classList]="'app-brand'" id="app-header-logo">
@@ -47,6 +48,7 @@
                                         </div>
                                     }
                                     <input
+                                        #typeaheadInput
                                         type="text"
                                         data-test-id="searchInput"
                                         class="form-control"

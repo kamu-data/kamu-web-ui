@@ -8,6 +8,7 @@
 import { ComponentFixture, TestBed } from "@angular/core/testing";
 
 import { PaginationComponent } from "@common/components/pagination-component/pagination.component";
+import { setComponentInput } from "@common/helpers/base-test.helpers.spec";
 
 import { mockPageBasedInfo } from "src/app/search/mock.data";
 
@@ -22,8 +23,8 @@ describe("PaginationComponent", () => {
 
         fixture = TestBed.createComponent(PaginationComponent);
         component = fixture.componentInstance;
-        component.currentPage = 1;
-        component.pageInfo = mockPageBasedInfo;
+        setComponentInput(fixture, "currentPage", 1);
+        setComponentInput(fixture, "pageInfo", mockPageBasedInfo);
         fixture.detectChanges();
     });
 

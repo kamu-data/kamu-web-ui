@@ -12,7 +12,7 @@ import { catchError, finalize, first, Observable, of, Subject, switchMap, tap } 
 
 import { UnsubscribeDestroyRefAdapter } from "@common/components/unsubscribe.ondestroy.adapter";
 import { FileUploadError } from "@common/values/errors";
-import { DatasetBasicsFragment, DatasetEndpoints } from "@api/kamu.graphql.interface";
+import { DatasetBasicsFragment, DatasetEndpointsDataFragment } from "@api/kamu.graphql.interface";
 import { MaybeUndefined } from "@interface/app.types";
 import {
     UploadAvailableMethod,
@@ -139,7 +139,7 @@ export class FileUploadService extends UnsubscribeDestroyRefAdapter {
 
     public ingestDataToDataset(datasetInfo: DatasetInfo, uploadToken: string): Observable<object> {
         return this.protocolsService.getProtocols(datasetInfo).pipe(
-            switchMap((protocols: MaybeUndefined<DatasetEndpoints>) =>
+            switchMap((protocols: MaybeUndefined<DatasetEndpointsDataFragment>) =>
                 this.http.post<object>(`${protocols?.rest.pushUrl}?uploadToken=${uploadToken}`, null, {
                     headers: { Authorization: `Bearer ${this.localStorageService.accessToken}` },
                 }),

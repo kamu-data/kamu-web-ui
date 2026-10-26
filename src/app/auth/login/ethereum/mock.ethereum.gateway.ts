@@ -28,11 +28,11 @@ export class MockEthereumGateway implements EthereumGateway {
             return Promise.resolve(null);
         }
 
-        return Promise.resolve({
-            walletAddress: this.currentWallet,
+        const request: Web3WalletOwnershipVerificationRequest = {
             signature: `${MockEthereumGateway.SIGNATURE_PREFIX}${nonce}`,
             message: MockEthereumGateway.MESSAGE,
-        } as Web3WalletOwnershipVerificationRequest);
+        };
+        return Promise.resolve(request);
     }
 }
 

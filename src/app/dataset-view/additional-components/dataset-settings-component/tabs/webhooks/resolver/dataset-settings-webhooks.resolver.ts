@@ -10,7 +10,7 @@ import { RedirectCommand, ResolveFn } from "@angular/router";
 
 import { map, of, switchMap } from "rxjs";
 
-import { WebhookSubscription } from "@api/kamu.graphql.interface";
+import { WebhookSubscriptionDataFragment } from "@api/kamu.graphql.interface";
 
 import { SettingsTabsEnum } from "src/app/dataset-view/additional-components/dataset-settings-component/dataset-settings.model";
 import { resolveSettingsTabAccess } from "src/app/dataset-view/additional-components/dataset-settings-component/resolvers/settings-tab-access.helpers";
@@ -27,7 +27,7 @@ export const datasetSettingsWebhooksResolverFn: ResolveFn<DatasetSettingsWebhook
             }
             return datasetWebhooksService
                 .datasetWebhookSubscriptions(data.datasetBasics.id)
-                .pipe(map((subscriptions: WebhookSubscription[]) => ({ ...data, subscriptions })));
+                .pipe(map((subscriptions: WebhookSubscriptionDataFragment[]) => ({ ...data, subscriptions })));
         }),
     );
 };

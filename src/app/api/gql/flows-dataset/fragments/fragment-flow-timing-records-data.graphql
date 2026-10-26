@@ -1,0 +1,8 @@
+fragment FlowTimingRecordsData on FlowTimingRecords {
+  initiatedAt
+  firstAttemptScheduledAt
+  scheduledAt
+  awaitingExecutorSince
+  runningSince
+  lastAttemptFinishedAt
+}

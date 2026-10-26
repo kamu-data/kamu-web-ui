@@ -17,7 +17,7 @@ import {
     CancelFlowRunMutation,
     DatasetBasicsFragment,
     DatasetFlowFilters,
-    DatasetFlowProcesses,
+    DatasetFlowProcessesDataFragment,
     DatasetFlowsInitiatorsQuery,
     DatasetFlowsProcessesQuery,
     DatasetPauseFlowsMutation,
@@ -47,10 +47,10 @@ export class DatasetFlowsService {
     private datasetFlowApi = inject(DatasetFlowApi);
     private toastrService = inject(ToastrService);
 
-    public datasetFlowsProcesses(params: { datasetId: string }): Observable<DatasetFlowProcesses> {
+    public datasetFlowsProcesses(params: { datasetId: string }): Observable<DatasetFlowProcessesDataFragment> {
         return this.datasetFlowApi.getDatasetFlowsProcesses(params).pipe(
             map((data: DatasetFlowsProcessesQuery) => {
-                return data.datasets.byId?.flows.processes as DatasetFlowProcesses;
+                return data.datasets.byId?.flows.processes as DatasetFlowProcessesDataFragment;
             }),
         );
     }
@@ -229,11 +229,12 @@ export class DatasetFlowsService {
     public flowsInitiators(datasetId: string): Observable<AccountFragment[]> {
         return this.datasetFlowApi.getDatasetFlowsInitiators(datasetId).pipe(
             map((data: DatasetFlowsInitiatorsQuery) => {
-                return data.datasets.byId?.flows.runs.listFlowInitiators.nodes.sort((a, b) => {
+                const initiators = data.datasets.byId?.flows.runs.listFlowInitiators.nodes ?? [];
+                return [...initiators].sort((a, b) => {
                     if (a.accountName < b.accountName) return -1;
                     if (a.accountName > b.accountName) return 1;
                     return 0;
-                }) as AccountFragment[];
+                });
             }),
         );
     }

@@ -20,9 +20,10 @@ import {
     dispatchInputEvent,
     emitClickOnElementByDataTestId,
     findElementByDataTestId,
+    getElementByDataTestId,
     getInputElementByDataTestId,
+    setComponentInput,
 } from "@common/helpers/base-test.helpers.spec";
-import RoutingResolvers from "@common/resolvers/routing-resolvers";
 import AppValues from "@common/values/app.values";
 import { TEST_ACCOUNT_ID } from "@api/mock/auth.mock";
 import { ModalArgumentsInterface } from "@interface/modal.interface";
@@ -76,10 +77,10 @@ describe("DatasetSettingsGeneralTabComponent", () => {
 
         fixture = TestBed.createComponent(DatasetSettingsGeneralTabComponent);
         component = fixture.componentInstance;
-        component.generalTabData = {
+        setComponentInput(fixture, "generalTabData", {
             datasetBasics: mockDatasetBasicsDerivedFragment,
             datasetPermissions: structuredClone(mockFullPowerDatasetPermissionsFragment),
-        };
+        });
 
         datasetSettingsService = TestBed.inject(DatasetSettingsService);
         modalService = TestBed.inject(ModalService);
@@ -125,7 +126,7 @@ describe("DatasetSettingsGeneralTabComponent", () => {
     function setDatasetPermissions(general: { canDelete?: boolean; canRename?: boolean }): void {
         const datasetPermissions = structuredClone(mockFullPowerDatasetPermissionsFragment);
         Object.assign(datasetPermissions.permissions.general, general);
-        fixture.componentRef.setInput(RoutingResolvers.DATASET_SETTINGS_GENERAL_KEY, {
+        setComponentInput(fixture, "generalTabData", {
             datasetBasics: mockDatasetBasicsDerivedFragment,
             datasetPermissions,
         });
@@ -141,15 +142,14 @@ describe("DatasetSettingsGeneralTabComponent", () => {
     });
 
     it("should check missing rename permission", () => {
+        fixture = TestBed.createComponent(DatasetSettingsGeneralTabComponent);
+        component = fixture.componentInstance;
         setDatasetPermissions({ canRename: false });
-        component.ngOnInit();
         fixture.detectChanges();
 
         expect(component.isAllowedToDeleteDataset).toEqual(true);
         expect(component.renameDatasetForm.disabled).toEqual(true);
-        expect((findElementByDataTestId(fixture, Elements.RenameDatasetButton) as HTMLButtonElement).disabled).toEqual(
-            true,
-        );
+        expect(getElementByDataTestId(fixture, Elements.RenameDatasetButton, HTMLButtonElement).disabled).toEqual(true);
     });
 
     it("should check rename dataset", () => {

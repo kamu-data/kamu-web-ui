@@ -6,19 +6,17 @@
  */
 
 import { TestBed } from "@angular/core/testing";
-import { ActivatedRouteSnapshot, ResolveFn, RouterStateSnapshot } from "@angular/router";
+import { RedirectCommand } from "@angular/router";
 
-import { firstValueFrom, Observable, of } from "rxjs";
+import { of } from "rxjs";
 
 import { ApolloTestingModule } from "apollo-angular/testing";
 import { provideToastr } from "ngx-toastr";
 
-import { expectPageNotFoundRedirect } from "@common/helpers/base-test.helpers.spec";
+import { requireValue } from "@common/helpers/app.helpers";
+import { expectPageNotFoundRedirect, routeSnapshot, runResolver } from "@common/helpers/base-test.helpers.spec";
 import { DatasetFlowType } from "@api/kamu.graphql.interface";
-import {
-    mockBufferingBatchingReactiveRule,
-    mockGetDatasetFlowTriggersBatchingQuery,
-} from "@api/mock/dataset-flow.mock";
+import { mockGetDatasetFlowTriggersBatchingQuery } from "@api/mock/dataset-flow.mock";
 
 import { mockOverviewUpdate } from "src/app/dataset-view/additional-components/data-tabs.mock";
 import { SettingsTabsEnum } from "src/app/dataset-view/additional-components/dataset-settings-component/dataset-settings.model";
@@ -34,21 +32,14 @@ import {
 } from "src/app/search/mock.data";
 
 describe("datasetSettingsTransformOptionsTabResolverFn", () => {
-    const mockActivatedRouteSnapshot = new ActivatedRouteSnapshot();
-    const mockRouterStateSnapshot = {} as RouterStateSnapshot;
-
     let datasetSubsService: DatasetSubscriptionsService;
     let datasetFlowTriggerService: DatasetFlowTriggerService;
 
     let permissionsChangesSpy: jasmine.Spy;
 
-    const executeResolver: ResolveFn<DatasetSettingsTransformOptionsTabData> = (...resolverParameters) =>
-        TestBed.runInInjectionContext(() => datasetSettingsTransformTabResolverFn(...resolverParameters));
-
-    function resolve(): Promise<unknown> {
-        return firstValueFrom(
-            executeResolver(mockActivatedRouteSnapshot, mockRouterStateSnapshot) as Observable<unknown>,
-        );
+    function resolve(): Promise<DatasetSettingsTransformOptionsTabData | RedirectCommand> {
+        const route = routeSnapshot({ data: { tab: SettingsTabsEnum.TRANSFORM_SETTINGS } });
+        return runResolver(datasetSettingsTransformTabResolverFn, route);
     }
 
     beforeEach(() => {
@@ -56,8 +47,6 @@ describe("datasetSettingsTransformOptionsTabResolverFn", () => {
             imports: [ApolloTestingModule],
             providers: [provideToastr()],
         });
-
-        mockActivatedRouteSnapshot.data = { tab: SettingsTabsEnum.TRANSFORM_SETTINGS };
 
         spyOnProperty(TestBed.inject(DatasetService), "datasetChanges", "get").and.returnValue(
             of(mockDatasetBasicsDerivedFragment),
@@ -136,7 +125,9 @@ describe("datasetSettingsTransformOptionsTabResolverFn", () => {
         expect(data).toEqual({
             datasetBasics: mockDatasetBasicsDerivedFragment,
             datasetPermissions: mockFullPowerDatasetPermissionsFragment,
-            reactive: mockBufferingBatchingReactiveRule,
+            reactive: requireValue(
+                mockGetDatasetFlowTriggersBatchingQuery.datasets.byId?.flows.triggers.byType?.reactive ?? null,
+            ),
             stopPolicy: {
                 __typename: "FlowTriggerStopPolicyAfterConsecutiveFailures",
                 maxFailures: 5,

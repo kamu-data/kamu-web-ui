@@ -16,7 +16,11 @@ import { RouterModule } from "@angular/router";
 import { NgbModule, NgbRatingModule } from "@ng-bootstrap/ng-bootstrap";
 
 import { DatasetListItemComponent } from "@common/components/dataset-list-component/dataset-list-item/dataset-list-item.component";
-import { emitClickOnElementByDataTestId, registerMatSvgIcons } from "@common/helpers/base-test.helpers.spec";
+import {
+    emitClickOnElementByDataTestId,
+    registerMatSvgIcons,
+    setComponentInput,
+} from "@common/helpers/base-test.helpers.spec";
 import { SharedTestModule } from "@common/modules/shared-test.module";
 import { mockDatasetListItem } from "@api/mock/dataset.mock";
 
@@ -46,9 +50,9 @@ describe("DatasetListItemComponent", () => {
 
         fixture = TestBed.createComponent(DatasetListItemComponent);
         component = fixture.componentInstance;
-        component.row = mockDatasetListItem;
-        component.isClickableRow = true;
-        component.rowIndex = 0;
+        setComponentInput(fixture, "row", mockDatasetListItem);
+        setComponentInput(fixture, "isClickableRow", true);
+        setComponentInput(fixture, "rowIndex", 0);
         navigationService = TestBed.inject(NavigationService);
         fixture.detectChanges();
     });

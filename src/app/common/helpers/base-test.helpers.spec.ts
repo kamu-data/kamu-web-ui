@@ -5,24 +5,96 @@
  * included in the LICENSE file.
  */
 
-import { DebugElement, Type } from "@angular/core";
+import { DebugElement, reflectComponentType, Type } from "@angular/core";
 import { ComponentFixture, TestBed } from "@angular/core/testing";
 import { MatIconRegistry } from "@angular/material/icon";
 import { By, DomSanitizer } from "@angular/platform-browser";
-import { ActivatedRoute, RedirectCommand, Router, RouterEvent } from "@angular/router";
+import {
+    ActivatedRoute,
+    ActivatedRouteSnapshot,
+    CanActivateFn,
+    Data,
+    GuardResult,
+    Params,
+    RedirectCommand,
+    ResolveFn,
+    Router,
+    RouterStateSnapshot,
+    UrlTree,
+} from "@angular/router";
 
-import { ReplaySubject } from "rxjs";
+import { firstValueFrom, isObservable } from "rxjs";
 
 import { MaybeNull, MaybeUndefined } from "@interface/app.types";
 
 import ProjectLinks from "src/app/project-links";
 
-export function findElement<T>(fixture: ComponentFixture<T>, selector: string): DebugElement {
+/**
+ * Sets an `@Input` of the fixture's component, named by its class field, through
+ * `ComponentRef.setInput()`, so `ngOnChanges`, setters and OnPush re-rendering run as in the app.
+ * The field name and the value are type-checked against the component; an alias is resolved from
+ * the component's metadata. Throws when the field is not an input.
+ */
+export function setComponentInput<C, K extends keyof C & string>(
+    fixture: ComponentFixture<C>,
+    name: K,
+    value: C[K],
+): void {
+    const componentType = fixture.componentRef.componentType;
+    const input = reflectComponentType(componentType)?.inputs.find((item) => item.propName === name);
+    if (!input) {
+        throw new Error(`"${name}" is not an @Input of ${componentType.name}`);
+    }
+    fixture.componentRef.setInput(input.templateName, value);
+}
+
+/** The first element matching a CSS selector; `null` when none is rendered. */
+export function findElement<T>(fixture: ComponentFixture<T>, selector: string): MaybeNull<DebugElement> {
     return fixture.debugElement.query(By.css(selector));
 }
 
-export function findNativeElement<T>(fixture: ComponentFixture<T>, selector: string): HTMLElement {
-    return findElement(fixture, selector).nativeElement as HTMLElement;
+function dataTestIdSelector(id: string): string {
+    return `[data-test-id="${id}"]`;
+}
+
+function queryByDataTestId<T>(fixture: ComponentFixture<T>, id: string): MaybeNull<DebugElement> {
+    return findElement(fixture, dataTestIdSelector(id));
+}
+
+/** A DOM element class, such as `HTMLButtonElement`, that a lookup checks its result against. */
+export type ElementClass<E extends Element> = new () => E;
+
+function describeNode(node: unknown): string {
+    return node instanceof Element ? `<${node.tagName.toLowerCase()}> (${node.constructor.name})` : String(node);
+}
+
+function checkElementClass<E extends Element>(node: unknown, elementClass: ElementClass<E>, what: string): E {
+    if (node instanceof elementClass) {
+        return node;
+    }
+    throw new Error(`${what} is ${describeNode(node)}, expected ${elementClass.name}`);
+}
+
+/**
+ * The native element matching a CSS selector, checked to be an `elementClass` (`HTMLElement`
+ * by default). Throws when nothing matches or the element is of another class.
+ */
+export function findNativeElement<T>(fixture: ComponentFixture<T>, selector: string): HTMLElement;
+export function findNativeElement<T, E extends Element>(
+    fixture: ComponentFixture<T>,
+    selector: string,
+    elementClass: ElementClass<E>,
+): E;
+export function findNativeElement<T>(
+    fixture: ComponentFixture<T>,
+    selector: string,
+    elementClass: ElementClass<Element> = HTMLElement,
+): Element {
+    const debugElement = findElement(fixture, selector);
+    if (!debugElement) {
+        throw new Error(`Element "${selector}" not found`);
+    }
+    return checkElementClass(debugElement.nativeElement, elementClass, `Element "${selector}"`);
 }
 
 export function emitClickOnElement<T>(fixture: ComponentFixture<T>, selector: string): void {
@@ -30,21 +102,61 @@ export function emitClickOnElement<T>(fixture: ComponentFixture<T>, selector: st
 }
 
 export function emitClickOnElementByDataTestId<T>(fixture: ComponentFixture<T>, id: string): void {
-    const debugElement: MaybeNull<DebugElement> = fixture.debugElement.query(By.css(`[data-test-id="${id}"]`));
-    (debugElement.nativeElement as HTMLElement).click();
+    getElementByDataTestId(fixture, id).click();
 }
 
-export function findElementByDataTestId<T>(fixture: ComponentFixture<T>, id: string): MaybeUndefined<HTMLElement> {
-    const debugElement: MaybeNull<DebugElement> = fixture.debugElement.query(By.css(`[data-test-id="${id}"]`));
-    if (debugElement) {
-        return debugElement.nativeElement as HTMLElement;
-    } else {
+/**
+ * The element with the given `data-test-id`, checked to be an `elementClass` (`HTMLElement` by
+ * default); `undefined` when none is rendered. Throws when the element is of another class.
+ */
+export function findElementByDataTestId<T>(fixture: ComponentFixture<T>, id: string): MaybeUndefined<HTMLElement>;
+export function findElementByDataTestId<T, E extends Element>(
+    fixture: ComponentFixture<T>,
+    id: string,
+    elementClass: ElementClass<E>,
+): MaybeUndefined<E>;
+export function findElementByDataTestId<T>(
+    fixture: ComponentFixture<T>,
+    id: string,
+    elementClass: ElementClass<Element> = HTMLElement,
+): MaybeUndefined<Element> {
+    const debugElement = queryByDataTestId(fixture, id);
+    if (!debugElement) {
         return undefined;
     }
+    return checkElementClass(debugElement.nativeElement, elementClass, `Element "${id}"`);
 }
 
-export function getElementByDataTestId<T>(fixture: ComponentFixture<T>, id: string): HTMLElement {
-    const element: MaybeUndefined<HTMLElement> = findElementByDataTestId(fixture, id);
+/**
+ * Every element with the given `data-test-id`, in DOM order, each checked to be an
+ * `elementClass`; an empty array when none is rendered. Throws when an element is of another class.
+ */
+export function findAllElementsByDataTestId<T, E extends Element>(
+    fixture: ComponentFixture<T>,
+    id: string,
+    elementClass: ElementClass<E>,
+): E[] {
+    return fixture.debugElement
+        .queryAll(By.css(dataTestIdSelector(id)))
+        .map((debugElement) => checkElementClass(debugElement.nativeElement, elementClass, `Element "${id}"`));
+}
+
+/**
+ * The element with the given `data-test-id`, checked to be an `elementClass` (`HTMLElement` by
+ * default). Throws when none is rendered or the element is of another class.
+ */
+export function getElementByDataTestId<T>(fixture: ComponentFixture<T>, id: string): HTMLElement;
+export function getElementByDataTestId<T, E extends Element>(
+    fixture: ComponentFixture<T>,
+    id: string,
+    elementClass: ElementClass<E>,
+): E;
+export function getElementByDataTestId<T>(
+    fixture: ComponentFixture<T>,
+    id: string,
+    elementClass: ElementClass<Element> = HTMLElement,
+): Element {
+    const element = findElementByDataTestId(fixture, id, elementClass);
     if (element) {
         return element;
     }
@@ -73,30 +185,28 @@ function setFieldElementValue(element: SupportedInputElement, value: string): vo
 }
 
 export function setFieldValue<T>(fixture: ComponentFixture<T>, dataTestId: string, value: string): void {
-    const element: SupportedInputElement = getElementByDataTestId(fixture, dataTestId) as SupportedInputElement;
-    expect(element).not.toBeNull();
+    const element = getElementByDataTestId(fixture, dataTestId);
+    if (!(
+        element instanceof HTMLInputElement ||
+        element instanceof HTMLTextAreaElement ||
+        element instanceof HTMLSelectElement
+    )) {
+        throw new Error(
+            `Element "${dataTestId}" is ${describeNode(element)}, expected an input, textarea or select element`,
+        );
+    }
     setFieldElementValue(element, value);
 }
 
 export function checkInputDisabled<T>(fixture: ComponentFixture<T>, dataTestId: string, isDisabled: boolean): void {
-    const element: MaybeNull<HTMLInputElement> = getElementByDataTestId(fixture, dataTestId) as HTMLInputElement;
-    expect(element).not.toBeNull();
+    const element = getElementByDataTestId(fixture, dataTestId, HTMLInputElement);
     expect(element.disabled).toEqual(isDisabled);
 }
 
 export function checkButtonDisabled<T>(fixture: ComponentFixture<T>, dataTestId: string, isDisabled: boolean): void {
-    const element: MaybeNull<HTMLButtonElement> = getElementByDataTestId(fixture, dataTestId) as HTMLButtonElement;
-    expect(element).not.toBeNull();
+    const element = getElementByDataTestId(fixture, dataTestId, HTMLButtonElement);
     expect(element.disabled).toEqual(isDisabled);
 }
-
-export const routerMockEventSubject = new ReplaySubject<RouterEvent>(1);
-
-export const routerMock = {
-    navigate: () => null,
-    events: routerMockEventSubject.asObservable(),
-    url: "/",
-};
 
 export const snapshotParamMapMock = {
     provide: ActivatedRoute,
@@ -133,7 +243,7 @@ export const snapshotRedirectUrlMock = {
 };
 
 export function getInputElementByDataTestId<T>(fixture: ComponentFixture<T>, id: string): HTMLInputElement {
-    return getElementByDataTestId(fixture, id) as HTMLInputElement;
+    return getElementByDataTestId(fixture, id, HTMLInputElement);
 }
 
 /**
@@ -158,6 +268,26 @@ export function findComponentInstance<T, C>(
     const match = findComponentInstances(fixture, directive).find(predicate);
     if (!match) throw new Error(`No instance of ${directive.name} matching the given predicate was found`);
     return match;
+}
+
+/**
+ * The instance of a component or directive class on the element with the given `data-test-id`.
+ * Throws when no such element is rendered or the class is not on it.
+ */
+export function findComponentInstanceByDataTestId<T, C>(
+    fixture: ComponentFixture<T>,
+    id: string,
+    directive: Type<C>,
+): C {
+    const debugElement = queryByDataTestId(fixture, id);
+    if (!debugElement) {
+        throw new Error(`Element "${id}" not found`);
+    }
+    const instance = debugElement.injector.get(directive, null, { self: true });
+    if (!instance) {
+        throw new Error(`Element "${id}" has no ${directive.name}`);
+    }
+    return instance;
 }
 
 export function dispatchInputEvent<T>(fixture: ComponentFixture<T>, id: string, value: string): void {
@@ -246,8 +376,85 @@ export function registerMatSvgIcons(): void {
  */
 export function expectPageNotFoundRedirect(result: unknown): void {
     expect(result).toBeInstanceOf(RedirectCommand);
-    const command = result as RedirectCommand;
-    const redirectUrl = TestBed.inject(Router).serializeUrl(command.redirectTo);
-    expect(redirectUrl).toEqual(`/${ProjectLinks.URL_PAGE_NOT_FOUND}`);
-    expect(command.navigationBehaviorOptions?.skipLocationChange).toBeTrue();
+    if (result instanceof RedirectCommand) {
+        const redirectUrl = TestBed.inject(Router).serializeUrl(result.redirectTo);
+        expect(redirectUrl).toEqual(`/${ProjectLinks.URL_PAGE_NOT_FOUND}`);
+        expect(result.navigationBehaviorOptions?.skipLocationChange).toBeTrue();
+    }
+}
+
+/**
+ * Asserts that a guard or resolver result redirects to `url`, whether as a `UrlTree` or a
+ * `RedirectCommand`.
+ */
+export function expectRedirectTo(result: unknown, url: string): void {
+    const target = result instanceof RedirectCommand ? result.redirectTo : result;
+    expect(target).toBeInstanceOf(UrlTree);
+    if (target instanceof UrlTree) {
+        expect(TestBed.inject(Router).serializeUrl(target)).toEqual(url);
+    }
+}
+
+export interface RouteSnapshotOptions {
+    params?: Params;
+    queryParams?: Params;
+    data?: Data;
+    parent?: ActivatedRouteSnapshot;
+    children?: ActivatedRouteSnapshot[];
+}
+
+/**
+ * A real `ActivatedRouteSnapshot`, as a guard or resolver receives it; `parent` and `children`
+ * place it in a route tree.
+ */
+export function routeSnapshot(options: RouteSnapshotOptions = {}): ActivatedRouteSnapshot {
+    const snapshot = new ActivatedRouteSnapshot();
+    snapshot.params = options.params ?? {};
+    snapshot.queryParams = options.queryParams ?? {};
+    snapshot.data = options.data ?? {};
+    const parent = options.parent ?? null;
+    const children = options.children ?? [];
+    // Outside a navigation a snapshot has no router state, which these getters read the tree from
+    Object.defineProperties(snapshot, {
+        parent: { value: parent },
+        children: { value: children },
+        firstChild: { value: children.length ? children[0] : null },
+        root: { value: parent ? parent.root : snapshot },
+        pathFromRoot: { value: [...(parent ? parent.pathFromRoot : []), snapshot] },
+    });
+    return snapshot;
+}
+
+/**
+ * The router state a guard or resolver receives. The class has no public constructor, and the
+ * app's guards and resolvers read only its `url`, so `runCanActivate` and `runResolver` pass this
+ * one stand-in.
+ */
+function routerStateSnapshot(url: string = "/"): RouterStateSnapshot {
+    return { url } as RouterStateSnapshot;
+}
+
+/** Runs a functional `CanActivate` guard in the TestBed injector and waits for its result. */
+export async function runCanActivate(
+    guard: CanActivateFn,
+    route: ActivatedRouteSnapshot = routeSnapshot(),
+    url: string = "/",
+): Promise<GuardResult> {
+    const result = TestBed.runInInjectionContext(() => guard(route, routerStateSnapshot(url)));
+    return isObservable(result) ? firstValueFrom(result) : result;
+}
+
+/** Runs a functional resolver in the TestBed injector and waits for its value or redirect. */
+export async function runResolver<T>(
+    resolver: ResolveFn<T>,
+    route: ActivatedRouteSnapshot = routeSnapshot(),
+    url: string = "/",
+): Promise<T | RedirectCommand> {
+    const result = TestBed.runInInjectionContext(() => resolver(route, routerStateSnapshot(url)));
+    return isObservable(result) ? firstValueFrom(result) : result;
+}
+
+/** A `Uint64` value as the API sends it: a string, although codegen types the scalar as a number. */
+export function uint64FromApi(value: string): number {
+    return value as unknown as number;
 }

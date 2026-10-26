@@ -241,6 +241,7 @@ describe("Flows badge messages helper", () => {
                     lastFailureAt: "2025-10-13T13:29:36.582575289+00:00",
                     consecutiveFailures: 2,
                     stopPolicy: {
+                        __typename: "FlowTriggerStopPolicyAfterConsecutiveFailures" as const,
                         maxFailures: 2,
                     },
                 },
@@ -261,6 +262,7 @@ describe("Flows badge messages helper", () => {
                     lastFailureAt: "2025-10-13T13:29:36.582575289+00:00",
                     consecutiveFailures: 2,
                     stopPolicy: {
+                        __typename: "FlowTriggerStopPolicyAfterConsecutiveFailures" as const,
                         maxFailures: 2,
                     },
                 },

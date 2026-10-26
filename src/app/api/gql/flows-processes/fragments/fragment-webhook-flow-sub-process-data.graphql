@@ -1,0 +1,7 @@
+fragment WebhookFlowSubProcessData on WebhookFlowSubProcess {
+  id
+  name
+  summary {
+    ...FlowProcessSummaryData
+  }
+}

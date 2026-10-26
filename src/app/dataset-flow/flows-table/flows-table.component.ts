@@ -30,21 +30,20 @@ import { ToastrService } from "ngx-toastr";
 
 import { BaseComponent } from "@common/components/base.component";
 import { ModalService } from "@common/components/modal/modal.service";
-import { promiseWithCatch } from "@common/helpers/app.helpers";
+import { promiseWithCatch, requireValue } from "@common/helpers/app.helpers";
 import { DatasetLinkPipe } from "@common/pipes/dataset-link.pipe";
 import { FlowDetailsLinkPipe } from "@common/pipes/flow-details-link.pipe";
 import { SafeHtmlPipe } from "@common/pipes/safe-html.pipe";
 import AppValues from "@common/values/app.values";
 import {
     AccountFragment,
-    Dataset,
     DatasetBasicsFragment,
-    FlowStartCondition,
+    FlowStartConditionDataFragment,
     FlowStatus,
     FlowSummaryDataFragment,
     FlowSummaryDataWithTriggerFragment,
 } from "@api/kamu.graphql.interface";
-import { MaybeNull } from "@interface/app.types";
+import { MaybeNull, MaybeNullOrUndefined } from "@interface/app.types";
 
 import { FlowDetailsTabs } from "src/app/dataset-flow/dataset-flow-details/dataset-flow-details.types";
 import { DatasetFlowDetailsHelpers } from "src/app/dataset-flow/dataset-flow-details/tabs/flow-details-history-tab/flow-details-history-tab.helpers";
@@ -112,7 +111,8 @@ export class FlowsTableComponent extends BaseComponent implements OnInit, OnChan
         new MatTableDataSource<FlowSummaryDataWithTriggerFragment>();
 
     public ngOnInit(): void {
-        this.dataSource.data = this.nodes;
+        // The table patches its rows in place on later changes, so it owns copies, not the parent's data
+        this.dataSource.data = this.nodes.map((node) => ({ ...node }));
     }
 
     public ngOnChanges(changes: SimpleChanges): void {
@@ -138,7 +138,7 @@ export class FlowsTableComponent extends BaseComponent implements OnInit, OnChan
                 Object.assign(existing, newNode);
                 existingData[i] = existing;
             } else {
-                existingData[i] = newNode;
+                existingData[i] = { ...newNode };
             }
         }
 
@@ -185,7 +185,7 @@ export class FlowsTableComponent extends BaseComponent implements OnInit, OnChan
         return [FlowStatus.Waiting].includes(node.status);
     }
 
-    public waitingBlockText(startCondition: MaybeNull<FlowStartCondition>): string {
+    public waitingBlockText(startCondition: MaybeNullOrUndefined<FlowStartConditionDataFragment>): string {
         return FlowTableHelpers.waitingBlockText(startCondition);
     }
 
@@ -208,9 +208,8 @@ export class FlowsTableComponent extends BaseComponent implements OnInit, OnChan
         return FlowTableHelpers.retriesBlockText(node.status, node.taskIds.length, node.retryPolicy.maxAttempts);
     }
 
-    public datasetById(datasetId: string): Dataset {
-        const dataset = (this.involvedDatasets as Dataset[]).find((dataset) => dataset.id === datasetId) as Dataset;
-        return dataset;
+    public datasetById(datasetId: string): DatasetBasicsFragment {
+        return requireValue(this.involvedDatasets.find((dataset) => dataset.id === datasetId) ?? null);
     }
 
     public abortFlow(flowElement: FlowSummaryDataWithTriggerFragment): void {

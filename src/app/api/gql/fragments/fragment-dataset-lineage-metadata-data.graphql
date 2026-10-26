@@ -1,0 +1,10 @@
+fragment DatasetLineageMetadataData on DatasetMetadata {
+  ...CurrentSourceFetchUrl
+  currentPushSources {
+    sourceName
+  }
+  currentLicense {
+    ...License
+  }
+  currentWatermark
+}

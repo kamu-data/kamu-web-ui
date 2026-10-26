@@ -41,7 +41,7 @@ import {
 import { TooltipIconComponent } from "@common/components/tooltip-icon/tooltip-icon.component";
 import { MarkdownFormatPipe } from "@common/pipes/markdown-format.pipe";
 import AppValues from "@common/values/app.values";
-import { EngineDesc } from "@api/kamu.graphql.interface";
+import { EngineDescDataFragment } from "@api/kamu.graphql.interface";
 import { MaybeNull, MaybeUndefined } from "@interface/app.types";
 import { DataSchemaField } from "@interface/dataset-schema.interface";
 import { DatasetRequestBySql } from "@interface/dataset.interface";
@@ -108,7 +108,7 @@ export class QueryAndResultSectionsComponent extends BaseComponent implements On
     public currentData: DynamicTableDataRow[] = [];
     public isAllDataLoaded: boolean;
     public selectedEngine = AppValues.DEFAULT_ENGINE_NAME.toLowerCase();
-    public knownEngines$: Observable<EngineDesc[]>;
+    public knownEngines$: Observable<EngineDescDataFragment[]>;
     public enabledProof: boolean = false;
     public readonly GENERATE_PROOF_TOOLTIP: string = "Please log in to use this feature";
     public selectedCode: string = "";

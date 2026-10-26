@@ -5,12 +5,12 @@
  * included in the LICENSE file.
  */
 
-import { FlowConfigRuleIngest, FlowRetryPolicy } from "@api/kamu.graphql.interface";
+import { FlowConfigRuleIngestDataFragment, FlowRetryPolicyDataFragment } from "@api/kamu.graphql.interface";
 import { MaybeNull } from "@interface/app.types";
 
 import { DatasetViewData } from "src/app/dataset-view/dataset-view.interface";
 
 export interface DatasetSettingsIngestConfigurationTabData extends DatasetViewData {
-    ingestionRule: FlowConfigRuleIngest;
-    retryPolicy: MaybeNull<FlowRetryPolicy>;
+    ingestionRule: FlowConfigRuleIngestDataFragment;
+    retryPolicy: MaybeNull<FlowRetryPolicyDataFragment>;
 }

@@ -1,24 +1,5 @@
 fragment DatasetConnectionData on DatasetConnection {
   nodes {
-    ...DatasetBasics
-    metadata {
-      currentPollingSource {
-        fetch {
-          ...FetchStepUrlData
-          ...FetchStepFilesGlobData
-          ...FetchStepContainerData
-        }
-      }
-      currentTransform {
-        inputs {
-          __typename
-        }
-        transform {
-          ... on TransformSql {
-            engine
-          }
-        }
-      }
-    }
+    ...DatasetWithFlowsData
   }
 }

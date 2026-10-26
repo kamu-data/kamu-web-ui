@@ -33,6 +33,7 @@ import {
 } from "@api/kamu.graphql.interface";
 import { TEST_DATASET_ID } from "@api/mock/dataset.mock";
 import {
+    MOCK_CREATE_WEBHOOK_SUBSCRIPTION_SUCCESS_MESSAGE,
     mockDatasetWebhookByIdQuery,
     mockDatasetWebhookCreateSubscriptionMutation,
     mockDatasetWebhookPauseSubscriptionMutation,
@@ -104,15 +105,12 @@ describe("WebhooksApi", () => {
         service
             .datasetWebhookCreateSubscription(DATASET_ID, mockWebhookSubscriptionInput)
             .subscribe((res: DatasetWebhookCreateSubscriptionMutation) => {
-                if (
-                    res.datasets.byId?.webhooks.createSubscription.__typename ===
-                    "CreateWebhookSubscriptionResultSuccess"
-                ) {
-                    expect(res.datasets.byId?.webhooks.createSubscription.message).toEqual(
-                        mockDatasetWebhookCreateSubscriptionMutation.datasets.byId?.webhooks.createSubscription
-                            .message as string,
-                    );
-                }
+                expect(res.datasets.byId?.webhooks.createSubscription).toEqual(
+                    jasmine.objectContaining({
+                        __typename: "CreateWebhookSubscriptionResultSuccess",
+                        message: MOCK_CREATE_WEBHOOK_SUBSCRIPTION_SUCCESS_MESSAGE,
+                    }),
+                );
             });
 
         const op = controller.expectOne(DatasetWebhookCreateSubscriptionDocument);
@@ -144,12 +142,9 @@ describe("WebhooksApi", () => {
         service
             .datasetWebhookPauseSubscription(DATASET_ID, MOCK_SUBSCRIPTION_ID)
             .subscribe((res: DatasetWebhookPauseSubscriptionMutation) => {
-                if (
-                    res.datasets.byId?.webhooks.subscription?.pause.__typename ===
-                    "PauseWebhookSubscriptionResultSuccess"
-                ) {
-                    expect(res.datasets.byId?.webhooks.subscription?.pause.paused).toEqual(true);
-                }
+                expect(res.datasets.byId?.webhooks.subscription?.pause).toEqual(
+                    jasmine.objectContaining({ __typename: "PauseWebhookSubscriptionResultSuccess", paused: true }),
+                );
             });
 
         const op = controller.expectOne(DatasetWebhookPauseSubscriptionDocument);
@@ -165,12 +160,9 @@ describe("WebhooksApi", () => {
         service
             .datasetWebhookResumeSubscription(DATASET_ID, MOCK_SUBSCRIPTION_ID)
             .subscribe((res: DatasetWebhookResumeSubscriptionMutation) => {
-                if (
-                    res.datasets.byId?.webhooks.subscription?.resume.__typename ===
-                    "ResumeWebhookSubscriptionResultSuccess"
-                ) {
-                    expect(res.datasets.byId?.webhooks.subscription?.resume.resumed).toEqual(true);
-                }
+                expect(res.datasets.byId?.webhooks.subscription?.resume).toEqual(
+                    jasmine.objectContaining({ __typename: "ResumeWebhookSubscriptionResultSuccess", resumed: true }),
+                );
             });
 
         const op = controller.expectOne(DatasetWebhookResumeSubscriptionDocument);
@@ -208,12 +200,9 @@ describe("WebhooksApi", () => {
                 input: mockWebhookSubscriptionInput,
             })
             .subscribe((res: DatasetWebhookUpdateSubscriptionMutation) => {
-                if (
-                    res.datasets.byId?.webhooks.subscription?.update.__typename ===
-                    "UpdateWebhookSubscriptionResultSuccess"
-                ) {
-                    expect(res.datasets.byId?.webhooks.subscription.update.updated).toEqual(true);
-                }
+                expect(res.datasets.byId?.webhooks.subscription?.update).toEqual(
+                    jasmine.objectContaining({ __typename: "UpdateWebhookSubscriptionResultSuccess", updated: true }),
+                );
             });
 
         const op = controller.expectOne(DatasetWebhookUpdateSubscriptionDocument);

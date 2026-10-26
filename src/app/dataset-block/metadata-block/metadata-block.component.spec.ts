@@ -19,9 +19,8 @@ import { of } from "rxjs";
 import { ApolloTestingModule } from "apollo-angular/testing";
 import { provideToastr } from "ngx-toastr";
 
-import { registerMatSvgIcons } from "@common/helpers/base-test.helpers.spec";
-import { MetadataBlockFragment } from "@api/kamu.graphql.interface";
-import { mockGetMetadataBlockQuery } from "@api/mock/dataset.mock";
+import { registerMatSvgIcons, setComponentInput } from "@common/helpers/base-test.helpers.spec";
+import { mockMetadataBlockByHash } from "@api/mock/dataset.mock";
 
 import { MetadataBlockComponent } from "src/app/dataset-block/metadata-block/metadata-block.component";
 
@@ -29,9 +28,6 @@ describe("MetadataBlockComponent", () => {
     let component: MetadataBlockComponent;
     let fixture: ComponentFixture<MetadataBlockComponent>;
     let loader: HarnessLoader;
-
-    const blockFragment = mockGetMetadataBlockQuery.datasets.byOwnerAndName?.metadata.chain
-        .blockByHash as MetadataBlockFragment;
 
     beforeEach(async () => {
         await TestBed.configureTestingModule({
@@ -70,11 +66,11 @@ describe("MetadataBlockComponent", () => {
         fixture = TestBed.createComponent(MetadataBlockComponent);
         component = fixture.componentInstance;
         loader = TestbedHarnessEnvironment.loader(fixture);
-        component.metadata = {
-            block: blockFragment,
+        setComponentInput(fixture, "metadata", {
+            block: mockMetadataBlockByHash,
             blockAsYaml: "test yaml",
             downstreamsCount: 0,
-        };
+        });
         fixture.detectChanges();
     });
 

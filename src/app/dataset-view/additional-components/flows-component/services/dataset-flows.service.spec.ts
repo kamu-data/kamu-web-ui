@@ -14,11 +14,13 @@ import { firstValueFrom, of } from "rxjs";
 import { Apollo } from "apollo-angular";
 import { provideToastr, ToastrService } from "ngx-toastr";
 
+import { requireValue } from "@common/helpers/app.helpers";
 import { DatasetFlowApi } from "@api/dataset-flow.api";
-import { AccountFragment, DatasetFlowProcesses } from "@api/kamu.graphql.interface";
+import { AccountFragment, DatasetFlowProcessesDataFragment } from "@api/kamu.graphql.interface";
 import {
     mockCancelFlowRunMutationError,
     mockCancelFlowRunMutationSuccess,
+    mockDatasetFlowInitiators,
     mockDatasetFlowsInitiatorsQuery,
     mockDatasetFlowsProcessesQuery,
     mockDatasetPauseFlowsMutationError,
@@ -74,9 +76,9 @@ describe("DatasetFlowsService", () => {
             .datasetFlowsProcesses({
                 datasetId: MOCK_DATASET_ID,
             })
-            .subscribe((data: DatasetFlowProcesses) => {
+            .subscribe((data: DatasetFlowProcessesDataFragment) => {
                 expect(data).toEqual(
-                    mockDatasetFlowsProcessesQuery.datasets.byId?.flows.processes as DatasetFlowProcesses,
+                    requireValue(mockDatasetFlowsProcessesQuery.datasets.byId?.flows.processes ?? null),
                 );
             });
 
@@ -356,13 +358,13 @@ describe("DatasetFlowsService", () => {
     it("should check flows initiators", () => {
         spyOn(datasetFlowApi, "getDatasetFlowsInitiators").and.returnValue(of(mockDatasetFlowsInitiatorsQuery));
 
+        const initiatorsBefore = [...mockDatasetFlowInitiators];
+
         const subscription$ = service.flowsInitiators(MOCK_DATASET_ID).subscribe((data: AccountFragment[]) => {
-            expect(data.length).toEqual(
-                mockDatasetFlowsInitiatorsQuery.datasets.byId?.flows.runs.listFlowInitiators.nodes.length as number,
-            );
-            expect(data[0].accountName).toEqual("bamu");
+            expect(data.map((initiator) => initiator.accountName)).toEqual(["bamu", "kamu", "kamu"]);
         });
 
         expect(subscription$.closed).toBeTrue();
+        expect(mockDatasetFlowInitiators).toEqual(initiatorsBefore);
     });
 });

@@ -8,12 +8,14 @@
 import { provideHttpClient } from "@angular/common/http";
 import { provideHttpClientTesting } from "@angular/common/http/testing";
 import { TestBed } from "@angular/core/testing";
-import { ActivatedRouteSnapshot, convertToParamMap, ResolveFn, Router } from "@angular/router";
+
+import { of } from "rxjs";
 
 import { Apollo } from "apollo-angular";
 import { provideToastr } from "ngx-toastr";
 
-import { AccessTokenConnection } from "@api/kamu.graphql.interface";
+import { routeSnapshot, runResolver } from "@common/helpers/base-test.helpers.spec";
+import { mockAccessTokenConnectionData } from "@api/mock/access-token.mock";
 import { mockAccountDetails } from "@api/mock/auth.mock";
 
 import { AccessTokenService } from "src/app/account/settings/tabs/access-tokens-tab/access-token.service";
@@ -22,12 +24,8 @@ import { LoggedUserService } from "src/app/auth/logged-user.service";
 import ProjectLinks from "src/app/project-links";
 
 describe("accountSettingsAccessTokensResolverFn", () => {
-    let router: Router;
     let accessTokenService: AccessTokenService;
     let loggedUserService: LoggedUserService;
-
-    const executeResolver: ResolveFn<AccessTokenConnection> = (...resolverParameters) =>
-        TestBed.runInInjectionContext(() => accountSettingsAccessTokensResolverFn(...resolverParameters));
 
     beforeEach(() => {
         TestBed.configureTestingModule({
@@ -35,23 +33,18 @@ describe("accountSettingsAccessTokensResolverFn", () => {
             providers: [Apollo, provideToastr(), provideHttpClient(), provideHttpClientTesting()],
         });
 
-        router = TestBed.inject(Router);
         accessTokenService = TestBed.inject(AccessTokenService);
         loggedUserService = TestBed.inject(LoggedUserService);
     });
 
-    it("should be created", () => {
-        expect(executeResolver).toBeTruthy();
-    });
-
     it("should check resolver ", async () => {
-        const routeSnapshot = {
-            queryParamMap: convertToParamMap({}),
-        } as ActivatedRouteSnapshot;
-        const listAccessTokensSpy = spyOn(accessTokenService, "listAccessTokens");
+        const listAccessTokensSpy = spyOn(accessTokenService, "listAccessTokens").and.returnValue(
+            of(mockAccessTokenConnectionData),
+        );
         spyOnProperty(loggedUserService, "currentlyLoggedInUser", "get").and.returnValue(mockAccountDetails);
 
-        await executeResolver(routeSnapshot, router.routerState.snapshot);
+        const result = await runResolver(accountSettingsAccessTokensResolverFn);
+        expect(result).toEqual(mockAccessTokenConnectionData);
         expect(listAccessTokensSpy).toHaveBeenCalledOnceWith({
             accountId: mockAccountDetails.id,
             page: 0,
@@ -61,13 +54,13 @@ describe("accountSettingsAccessTokensResolverFn", () => {
 
     it("should check resolver with query param 'page'", async () => {
         const PAGE = 2;
-        const routeSnapshot = {
-            queryParamMap: convertToParamMap({ [ProjectLinks.URL_QUERY_PARAM_PAGE]: PAGE }),
-        } as ActivatedRouteSnapshot;
-        const listAccessTokensSpy = spyOn(accessTokenService, "listAccessTokens");
+        const route = routeSnapshot({ queryParams: { [ProjectLinks.URL_QUERY_PARAM_PAGE]: PAGE } });
+        const listAccessTokensSpy = spyOn(accessTokenService, "listAccessTokens").and.returnValue(
+            of(mockAccessTokenConnectionData),
+        );
         spyOnProperty(loggedUserService, "currentlyLoggedInUser", "get").and.returnValue(mockAccountDetails);
 
-        await executeResolver(routeSnapshot, router.routerState.snapshot);
+        await runResolver(accountSettingsAccessTokensResolverFn, route);
         expect(listAccessTokensSpy).toHaveBeenCalledOnceWith({
             accountId: mockAccountDetails.id,
             page: PAGE - 1,

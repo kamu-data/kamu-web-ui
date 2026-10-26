@@ -3,13 +3,7 @@ query listAccessTokens($accountId: AccountID!, $page: Int, $perPage: Int) {
     byId(accountId: $accountId) {
       accessTokens {
         listAccessTokens(page: $page, perPage: $perPage) {
-          nodes {
-            ...AccessTokenData
-          }
-          totalCount
-          pageInfo {
-            ...DatasetPageInfo
-          }
+          ...AccessTokenConnectionData
         }
       }
     }

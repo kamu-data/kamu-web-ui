@@ -7,6 +7,7 @@
 
 import { ComponentFixture, TestBed } from "@angular/core/testing";
 
+import { setComponentInput } from "@common/helpers/base-test.helpers.spec";
 import { SharedTestModule } from "@common/modules/shared-test.module";
 
 import { SetLicenseEventComponent } from "src/app/dataset-block/metadata-block/components/event-details/components/set-license-event/set-license-event.component";
@@ -23,7 +24,7 @@ describe("SetLicenseEventComponent", () => {
 
         fixture = TestBed.createComponent(SetLicenseEventComponent);
         component = fixture.componentInstance;
-        component.event = mockSetLicense;
+        setComponentInput(fixture, "event", mockSetLicense);
         fixture.detectChanges();
     });
 

@@ -7,6 +7,7 @@
 
 import { ComponentFixture, TestBed } from "@angular/core/testing";
 
+import { setComponentInput } from "@common/helpers/base-test.helpers.spec";
 import { SharedTestModule } from "@common/modules/shared-test.module";
 
 import { OrderPropertyComponent } from "src/app/dataset-block/metadata-block/components/event-details/components/common/order-property/order-property.component";
@@ -22,7 +23,7 @@ describe("OrderPropertyComponent", () => {
 
         fixture = TestBed.createComponent(OrderPropertyComponent);
         component = fixture.componentInstance;
-        component.data = "BY_NAME";
+        setComponentInput(fixture, "data", "BY_NAME");
         fixture.detectChanges();
     });
 

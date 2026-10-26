@@ -1,0 +1,12 @@
+fragment FlowTriggerReactiveRuleData on FlowTriggerReactiveRule {
+  forNewData {
+    __typename
+    ... on FlowTriggerBatchingRuleBuffering {
+      maxBatchingInterval {
+        ...TimeDeltaData
+      }
+      minRecordsToAwait
+    }
+  }
+  forBreakingChange
+}

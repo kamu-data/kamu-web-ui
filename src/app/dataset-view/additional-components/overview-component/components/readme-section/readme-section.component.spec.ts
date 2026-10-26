@@ -7,7 +7,6 @@
 
 import { provideHttpClient } from "@angular/common/http";
 import { provideHttpClientTesting } from "@angular/common/http/testing";
-import { SimpleChanges } from "@angular/core";
 import { ComponentFixture, fakeAsync, flush, TestBed, tick } from "@angular/core/testing";
 
 import { of } from "rxjs";
@@ -21,6 +20,7 @@ import {
     findNativeElement,
     getElementByDataTestId,
     registerMatSvgIcons,
+    setComponentInput,
 } from "@common/helpers/base-test.helpers.spec";
 import { SharedTestModule } from "@common/modules/shared-test.module";
 import { mockAccountDetails } from "@api/mock/auth.mock";
@@ -51,8 +51,8 @@ describe("ReadmeSectionComponent", () => {
         component = fixture.componentInstance;
         datasetCommitService = TestBed.inject(DatasetCommitService);
         loggedUserService = TestBed.inject(LoggedUserService);
-        component.datasetBasics = mockDatasetBasicsDerivedFragment;
-        component.currentReadme = mockReadmeContent;
+        setComponentInput(fixture, "datasetBasics", mockDatasetBasicsDerivedFragment);
+        setComponentInput(fixture, "currentReadme", mockReadmeContent);
         spyOnProperty(loggedUserService, "currentlyLoggedInUser", "get").and.returnValue(mockAccountDetails);
     });
 
@@ -89,8 +89,9 @@ describe("ReadmeSectionComponent", () => {
 
     it("should check push button 'cancel changes' when currentReadme is not exist", () => {
         fixture.detectChanges();
-        component.currentReadme = null;
-        emitClickOnElementByDataTestId(fixture, "show-edit-tabs");
+        setComponentInput(fixture, "currentReadme", null);
+        fixture.detectChanges();
+        setComponentInput(fixture, "editingInProgress", true);
         fixture.detectChanges();
         emitClickOnElementByDataTestId(fixture, "cancel-changes");
         expect(component.readmeState).toEqual("");
@@ -109,21 +110,19 @@ describe("ReadmeSectionComponent", () => {
     }));
 
     it("should check readme updated in the onChanges hook", () => {
+        fixture.detectChanges();
         const modifiedReadmeContent = mockReadmeContent + "modified";
-        const readmeSimpleChanges: SimpleChanges = {
-            currentReadme: {
-                previousValue: mockReadmeContent,
-                currentValue: modifiedReadmeContent,
-                firstChange: false,
-                isFirstChange: () => false,
-            },
-        };
-        component.ngOnChanges(readmeSimpleChanges);
+        setComponentInput(fixture, "currentReadme", modifiedReadmeContent);
+        fixture.detectChanges();
         expect(component.readmeState).toEqual(modifiedReadmeContent);
     });
 
     it("should check Run and Copy buttons exist", async () => {
-        component.readmeState = "```sql" + "\nselect * from 'account.tokens.portfolio.market-value'" + "\n```";
+        setComponentInput(
+            fixture,
+            "currentReadme",
+            "```sql" + "\nselect * from 'account.tokens.portfolio.market-value'" + "\n```",
+        );
         component.viewMode = EditMode.Preview;
         fixture.detectChanges();
         await fixture.whenStable();
@@ -135,14 +134,18 @@ describe("ReadmeSectionComponent", () => {
     });
 
     it("should check Run button navigate to Data tab", async () => {
-        component.readmeState = "```sql" + "\nselect * from 'account.tokens.portfolio.market-value'" + "\n```";
+        setComponentInput(
+            fixture,
+            "currentReadme",
+            "```sql" + "\nselect * from 'account.tokens.portfolio.market-value'" + "\n```",
+        );
         component.viewMode = EditMode.Preview;
 
         fixture.detectChanges();
         await fixture.whenStable();
         fixture.detectChanges();
 
-        const runButtonElement = getElementByDataTestId(fixture, "markdown-run-button") as HTMLLinkElement;
+        const runButtonElement = getElementByDataTestId(fixture, "markdown-run-button", HTMLAnchorElement);
         expect(
             runButtonElement.href.includes(
                 "kamu/mockNameDerived/data?sqlQuery=select%20*%20from%20%27account.tokens.portfolio.market-value%27",
@@ -151,14 +154,18 @@ describe("ReadmeSectionComponent", () => {
     });
 
     it("should check Run button navigate to Data tab with line breaks", async () => {
-        component.readmeState = "```sql" + "\nselect\n*\nfrom 'account.tokens.portfolio.market-value'" + "\n```";
+        setComponentInput(
+            fixture,
+            "currentReadme",
+            "```sql" + "\nselect\n*\nfrom 'account.tokens.portfolio.market-value'" + "\n```",
+        );
         component.viewMode = EditMode.Preview;
 
         fixture.detectChanges();
         await fixture.whenStable();
         fixture.detectChanges();
 
-        const runButtonElement = getElementByDataTestId(fixture, "markdown-run-button") as HTMLLinkElement;
+        const runButtonElement = getElementByDataTestId(fixture, "markdown-run-button", HTMLAnchorElement);
         expect(
             runButtonElement.href.includes(
                 "kamu/mockNameDerived/data?sqlQuery=select%0A*%0Afrom%20%27account.tokens.portfolio.market-value%27",

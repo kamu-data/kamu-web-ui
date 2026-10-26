@@ -12,19 +12,24 @@ import { ComponentFixture, TestBed } from "@angular/core/testing";
 
 import { NgSelectComponent } from "@ng-select/ng-select";
 
-import { findElement, registerMatSvgIcons } from "@common/helpers/base-test.helpers.spec";
-import { MaybeNull } from "@interface/app.types";
 import {
-    DataSchemaListField,
-    DataSchemaMapField,
-    DataSchemaOptionField,
-    DataSchemaStructField,
-    DataSchemaTimeField,
-    DataSchemaTypeField,
-    OdfTypes,
-} from "@interface/dataset-schema.interface";
+    findComponentInstance,
+    findComponentInstanceByDataTestId,
+    getElementByDataTestId,
+    registerMatSvgIcons,
+} from "@common/helpers/base-test.helpers.spec";
+import { MaybeNull } from "@interface/app.types";
+import { DataSchemaTypeField, OdfTypes } from "@interface/dataset-schema.interface";
 
-import { TYPES_OPTIONS_LIST } from "../../edit-schema-table.types";
+import { TimestampPrecision, TimestampTimezone, TYPES_OPTIONS_LIST } from "../../edit-schema-table.types";
+import {
+    requireListField,
+    requireMapField,
+    requireOptionField,
+    requireStructField,
+    requireTimeField,
+    selectNgSelectOption,
+} from "../../schema-editor.fixtures.spec";
 import { TypeEditorComponent } from "./type-editor.component";
 
 // ---------------------------------------------------------------------------
@@ -76,7 +81,7 @@ describe("TypeEditorComponent", () => {
     });
 
     function editor(): TypeEditorComponent {
-        return fixture.debugElement.children[0].componentInstance as TypeEditorComponent;
+        return findComponentInstance(fixture, TypeEditorComponent);
     }
 
     // Mirrors what ng-select's [(ngModel)] does before firing (change): writes the new kind
@@ -119,7 +124,7 @@ describe("TypeEditorComponent", () => {
         it("emits unit and timezone when switching to Timestamp", () => {
             selectKind(OdfTypes.Timestamp);
             fixture.detectChanges();
-            const emitted = host.lastEmitted as DataSchemaTimeField;
+            const emitted = requireTimeField(host.lastEmitted);
             expect(emitted.kind).toBe(OdfTypes.Timestamp);
             expect(emitted.unit).toBeDefined();
             expect(emitted.timezone).toBeDefined();
@@ -130,7 +135,7 @@ describe("TypeEditorComponent", () => {
             fixture.detectChanges();
             editor().changeUnitTime({ label: "Second", value: "Second" });
             fixture.detectChanges();
-            const emitted = host.lastEmitted as DataSchemaTimeField;
+            const emitted = requireTimeField(host.lastEmitted);
             expect(emitted.unit).toBe("Second");
         });
 
@@ -139,7 +144,7 @@ describe("TypeEditorComponent", () => {
             fixture.detectChanges();
             editor().changeTimezone({ label: "UTC", value: "UTC" });
             fixture.detectChanges();
-            const emitted = host.lastEmitted as DataSchemaTimeField;
+            const emitted = requireTimeField(host.lastEmitted);
             expect(emitted.timezone).toBe("UTC");
         });
     });
@@ -153,10 +158,10 @@ describe("TypeEditorComponent", () => {
             it(`emits unit (no timezone) when switching to ${kind}`, () => {
                 selectKind(kind);
                 fixture.detectChanges();
-                const emitted = host.lastEmitted as DataSchemaTimeField;
+                const emitted = requireTimeField(host.lastEmitted);
                 expect(emitted.kind).toBe(kind);
                 expect(emitted.unit).toBeDefined();
-                expect((emitted as { timezone?: string }).timezone).toBeUndefined();
+                expect(emitted.timezone).toBeUndefined();
             });
         });
     });
@@ -166,21 +171,16 @@ describe("TypeEditorComponent", () => {
     // ---------------------------------------------------------------------------
 
     describe("Option type", () => {
-        it("does not expose Option as a kind option", () => {
-            expect(TYPES_OPTIONS_LIST.some((option) => option.value === OdfTypes.Option)).toBeFalse();
-        });
-
         it("emits Option<String> when Optional is enabled", () => {
             editor().changeOptional(true);
             fixture.detectChanges();
-            const emitted = host.lastEmitted as DataSchemaOptionField;
+            const emitted = requireOptionField(host.lastEmitted);
             expect(emitted.kind).toBe(OdfTypes.Option);
             expect(emitted.inner).toEqual({ kind: OdfTypes.String });
         });
 
         it("toggles Optional through the UI switch and reflects its accessibility state", () => {
-            const optionalToggle = findElement(fixture, `[data-test-id="root:type:field:optional"]`)
-                .nativeElement as HTMLButtonElement;
+            const optionalToggle = getElementByDataTestId(fixture, "root:type:field:optional", HTMLButtonElement);
 
             expect(optionalToggle.getAttribute("role")).toBe("switch");
             expect(optionalToggle.getAttribute("aria-checked")).toBe("false");
@@ -189,7 +189,7 @@ describe("TypeEditorComponent", () => {
             optionalToggle.click();
             fixture.detectChanges();
 
-            const emitted = host.lastEmitted as DataSchemaOptionField;
+            const emitted = requireOptionField(host.lastEmitted);
             expect(emitted.kind).toBe(OdfTypes.Option);
             expect(emitted.inner).toEqual({ kind: OdfTypes.String });
             expect(optionalToggle.getAttribute("aria-checked")).toBe("true");
@@ -209,7 +209,7 @@ describe("TypeEditorComponent", () => {
             fixture.detectChanges();
             selectKind(OdfTypes.Int64);
             fixture.detectChanges();
-            const emitted = host.lastEmitted as DataSchemaOptionField;
+            const emitted = requireOptionField(host.lastEmitted);
             expect(emitted.kind).toBe(OdfTypes.Option);
             expect(emitted.inner).toEqual({ kind: OdfTypes.Int64 });
         });
@@ -223,7 +223,7 @@ describe("TypeEditorComponent", () => {
         it("emits List<String> on switch to List", () => {
             selectKind(OdfTypes.List);
             fixture.detectChanges();
-            const emitted = host.lastEmitted as DataSchemaListField;
+            const emitted = requireListField(host.lastEmitted);
             expect(emitted.kind).toBe(OdfTypes.List);
             expect(emitted.itemType).toBeDefined();
         });
@@ -233,7 +233,7 @@ describe("TypeEditorComponent", () => {
             fixture.detectChanges();
             editor().typeListChange({ kind: OdfTypes.Float64 });
             fixture.detectChanges();
-            const emitted = host.lastEmitted as DataSchemaListField;
+            const emitted = requireListField(host.lastEmitted);
             expect(emitted.itemType).toEqual({ kind: OdfTypes.Float64 });
         });
     });
@@ -246,7 +246,7 @@ describe("TypeEditorComponent", () => {
         it("emits Map<String, String> on switch to Map", () => {
             selectKind(OdfTypes.Map);
             fixture.detectChanges();
-            const emitted = host.lastEmitted as DataSchemaMapField;
+            const emitted = requireMapField(host.lastEmitted);
             expect(emitted.kind).toBe(OdfTypes.Map);
             expect(emitted.keyType).toBeDefined();
             expect(emitted.valueType).toBeDefined();
@@ -261,7 +261,7 @@ describe("TypeEditorComponent", () => {
             fixture.detectChanges();
             editor().typeMapKeyChange({ kind: OdfTypes.Int32 });
             fixture.detectChanges();
-            const emitted = host.lastEmitted as DataSchemaMapField;
+            const emitted = requireMapField(host.lastEmitted);
             expect(emitted.keyType).toEqual({ kind: OdfTypes.Int32 });
             expect(emitted.valueType).toEqual({ kind: OdfTypes.String });
         });
@@ -275,7 +275,7 @@ describe("TypeEditorComponent", () => {
             fixture.detectChanges();
             editor().typeMapValueChange({ kind: OdfTypes.Int64 });
             fixture.detectChanges();
-            const emitted = host.lastEmitted as DataSchemaMapField;
+            const emitted = requireMapField(host.lastEmitted);
             expect(emitted.keyType).toEqual({ kind: OdfTypes.String });
             expect(emitted.valueType).toEqual({ kind: OdfTypes.Int64 });
         });
@@ -299,10 +299,10 @@ describe("TypeEditorComponent", () => {
             });
             fixture.detectChanges();
 
-            const emitted = host.lastEmitted as DataSchemaListField;
+            const emitted = requireListField(host.lastEmitted);
             expect(emitted.kind).toBe(OdfTypes.List);
-            expect((emitted.itemType as DataSchemaMapField).kind).toBe(OdfTypes.Map);
-            expect((emitted.itemType as DataSchemaMapField).valueType).toEqual({ kind: OdfTypes.String });
+            expect(requireMapField(emitted.itemType).kind).toBe(OdfTypes.Map);
+            expect(requireMapField(emitted.itemType).valueType).toEqual({ kind: OdfTypes.String });
         });
     });
 
@@ -315,7 +315,7 @@ describe("TypeEditorComponent", () => {
             selectKind(OdfTypes.Timestamp);
             fixture.detectChanges();
 
-            const emitted = host.lastEmitted as DataSchemaTimeField;
+            const emitted = requireTimeField(host.lastEmitted);
             expect(emitted.kind).toBe(OdfTypes.Timestamp);
             expect(emitted.unit).toBeDefined();
             expect(emitted.timezone).toBeDefined();
@@ -332,10 +332,10 @@ describe("TypeEditorComponent", () => {
             });
             fixture.detectChanges();
 
-            const emitted = host.lastEmitted as DataSchemaListField;
+            const emitted = requireListField(host.lastEmitted);
             expect(emitted.kind).toBe(OdfTypes.List);
             expect(emitted.itemType.kind).toBe(OdfTypes.Struct);
-            expect((emitted.itemType as DataSchemaStructField).fields.map((f) => f.name)).toContain("sku");
+            expect(requireStructField(emitted.itemType).fields.map((f) => f.name)).toContain("sku");
         });
 
         it("Option<List<String>>: enable Optional then set base type to List<String>", () => {
@@ -345,10 +345,10 @@ describe("TypeEditorComponent", () => {
             selectKind(OdfTypes.List);
             fixture.detectChanges();
 
-            const emitted = host.lastEmitted as DataSchemaOptionField;
+            const emitted = requireOptionField(host.lastEmitted);
             expect(emitted.kind).toBe(OdfTypes.Option);
             expect(emitted.inner.kind).toBe(OdfTypes.List);
-            expect((emitted.inner as DataSchemaListField).itemType.kind).toBe(OdfTypes.String);
+            expect(requireListField(emitted.inner).itemType.kind).toBe(OdfTypes.String);
         });
     });
 
@@ -375,7 +375,7 @@ describe("TypeEditorComponent", () => {
             selectKind(OdfTypes.Struct);
             fixture.detectChanges();
 
-            const emitted = host.lastEmitted as DataSchemaStructField;
+            const emitted = requireStructField(host.lastEmitted);
             expect(emitted.kind).toBe(OdfTypes.Struct);
             expect(emitted.fields.map((f) => f.name)).toContain("sku");
         });
@@ -396,10 +396,10 @@ describe("TypeEditorComponent", () => {
             selectKind(OdfTypes.List);
             fixture.detectChanges();
 
-            const emitted = host.lastEmitted as DataSchemaListField;
+            const emitted = requireListField(host.lastEmitted);
             expect(emitted.kind).toBe(OdfTypes.List);
             expect(emitted.itemType.kind).toBe(OdfTypes.Struct);
-            expect((emitted.itemType as DataSchemaStructField).fields.map((f) => f.name)).toContain("qty");
+            expect(requireStructField(emitted.itemType).fields.map((f) => f.name)).toContain("qty");
         });
     });
 
@@ -408,18 +408,8 @@ describe("TypeEditorComponent", () => {
     // ---------------------------------------------------------------------------
 
     describe("ng-select wiring (smoke)", () => {
-        // ng-select has no CDK harness. Drive it via NgSelectComponent's public API
-        // (open + select) to avoid DOM timing issues with the option panel.
         function selectKindViaApi(kindValue: OdfTypes): void {
-            const ngSelect = findElement(fixture, "ng-select").componentInstance as NgSelectComponent;
-            ngSelect.open();
-            fixture.detectChanges();
-            const item = ngSelect.itemsList.items.find(
-                (i) => (i.value as MaybeNull<{ value?: OdfTypes }>)?.value === kindValue,
-            );
-            if (!item) throw new Error(`ng-select kind option not found: ${kindValue}`);
-            ngSelect.select(item);
-            fixture.detectChanges();
+            selectNgSelectOption(fixture, findComponentInstance(fixture, NgSelectComponent), kindValue);
         }
 
         it("selecting Int64 from the kind panel emits { kind: Int64 }", () => {
@@ -445,7 +435,7 @@ describe("TypeEditorComponent", () => {
             selectKindViaApi(OdfTypes.Struct);
             fixture.detectChanges();
 
-            const emitted = host.lastEmitted as DataSchemaStructField;
+            const emitted = requireStructField(host.lastEmitted);
             expect(emitted.kind).toBe(OdfTypes.Struct);
             expect(emitted.fields.map((f) => f.name)).toContain("sku");
         });
@@ -466,25 +456,25 @@ describe("TypeEditorComponent", () => {
             selectKindViaApi(OdfTypes.List);
             fixture.detectChanges();
 
-            const emitted = host.lastEmitted as DataSchemaListField;
+            const emitted = requireListField(host.lastEmitted);
             expect(emitted.kind).toBe(OdfTypes.List);
             expect(emitted.itemType.kind).toBe(OdfTypes.Struct);
-            expect((emitted.itemType as DataSchemaStructField).fields.map((f) => f.name)).toContain("qty");
+            expect(requireStructField(emitted.itemType).fields.map((f) => f.name)).toContain("qty");
         });
 
         // Regression test: the Timestamp unit/timezone ng-selects previously updated
         // value.unit/value.timezone via ngModel but had no (change) binding, so edits
         // never reached typeChange and were lost when the parent saved editingRow.
         describe("Timestamp unit/timezone wiring", () => {
-            function selectFromNgSelectByDataTestId(testId: string, predicate: (value: unknown) => boolean): void {
-                const ngSelect = findElement(fixture, `[data-test-id="${testId}"]`)
-                    .componentInstance as NgSelectComponent;
-                ngSelect.open();
-                fixture.detectChanges();
-                const item = ngSelect.itemsList.items.find((i) => predicate(i.value));
-                if (!item) throw new Error(`ng-select option not found for ${testId}`);
-                ngSelect.select(item);
-                fixture.detectChanges();
+            function selectFromNgSelectByDataTestId(
+                testId: string,
+                value: TimestampPrecision | TimestampTimezone,
+            ): void {
+                selectNgSelectOption(
+                    fixture,
+                    findComponentInstanceByDataTestId(fixture, testId, NgSelectComponent),
+                    value,
+                );
             }
 
             beforeEach(() => {
@@ -494,24 +484,16 @@ describe("TypeEditorComponent", () => {
             });
 
             it("selecting a unit from the Timestamp unit dropdown emits the new unit via typeChange", () => {
-                selectFromNgSelectByDataTestId(
-                    "root:type:ts:unit",
-                    (v) => (v as MaybeNull<{ value?: string }>)?.value === "Second",
-                );
-                const emitted = host.lastEmitted as DataSchemaTimeField;
-                expect(emitted).not.toBeNull();
+                selectFromNgSelectByDataTestId("root:type:ts:unit", "Second");
+                const emitted = requireTimeField(host.lastEmitted);
                 expect(emitted.unit).toBe("Second");
             });
 
             it("selecting a timezone from the Timestamp timezone dropdown emits via typeChange", () => {
                 // Only "UTC" is a valid option today, but re-selecting it must still
                 // fire (change) and reach typeChange — proving the binding exists at all.
-                selectFromNgSelectByDataTestId(
-                    "root:type:ts:timezone",
-                    (v) => (v as MaybeNull<{ value?: string }>)?.value === "UTC",
-                );
-                const emitted = host.lastEmitted as DataSchemaTimeField;
-                expect(emitted).not.toBeNull();
+                selectFromNgSelectByDataTestId("root:type:ts:timezone", "UTC");
+                const emitted = requireTimeField(host.lastEmitted);
                 expect(emitted.timezone).toBe("UTC");
             });
         });

@@ -17,7 +17,7 @@ import { FeatureFlagDirective } from "@common/directives/feature-flag.directive"
 import { DataHelpers } from "@common/helpers/data.helpers";
 import { MetadataBlockLinkPipe } from "@common/pipes/metadata-block-link.pipe";
 import AppValues from "@common/values/app.values";
-import { MetadataBlockFragment, PageBasedInfo } from "@api/kamu.graphql.interface";
+import { DatasetPageInfoFragment, MetadataBlockFragment } from "@api/kamu.graphql.interface";
 
 @Component({
     selector: "app-timeline",
@@ -39,7 +39,7 @@ import { MetadataBlockFragment, PageBasedInfo } from "@api/kamu.graphql.interfac
 })
 export class TimelineComponent {
     @Input({ required: true }) public history: MetadataBlockFragment[];
-    @Input({ required: true }) public pageInfo: PageBasedInfo;
+    @Input({ required: true }) public pageInfo: DatasetPageInfoFragment;
     @Input({ required: true }) public datasetName: string;
     public readonly DEFAULT_AVATAR_URL = AppValues.DEFAULT_AVATAR_URL;
 

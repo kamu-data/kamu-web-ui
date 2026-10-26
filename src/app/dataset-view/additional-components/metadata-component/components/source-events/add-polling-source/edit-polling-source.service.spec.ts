@@ -154,8 +154,8 @@ content:
             image: new FormControl(""),
             eventTime: new FormGroup({}),
             env: new FormArray([]),
-            command: new FormArray([]),
-            args: new FormArray([]),
+            command: new FormArray<FormControl<string>>([]),
+            args: new FormArray<FormControl<string>>([]),
         });
         const editFormValue = {
             fetch: {
@@ -190,8 +190,8 @@ content:
         const groupName = SetPollingSourceSection.FETCH;
         service.patchFormValues(sectionFetchForm, editFormValue, groupName, null, destroyRef);
         expect(sectionFetchForm.value.image).toEqual(result.image);
-        expect(sectionFetchForm.value.command as string[]).toEqual(result.command);
-        expect(sectionFetchForm.value.args as string[]).toEqual(result.args);
+        expect(sectionFetchForm.value.command).toEqual(result.command);
+        expect(sectionFetchForm.value.args).toEqual(result.args);
     });
 
     it("should patch read form CSV kind without schema when datasetInfo is null", () => {

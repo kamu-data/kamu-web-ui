@@ -1,0 +1,3 @@
+fragment DatasetAccessResultNotAccessibleData on DatasetAccessResultNotAccessible {
+  id
+}

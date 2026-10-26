@@ -13,11 +13,16 @@ import { of } from "rxjs";
 import { Apollo } from "apollo-angular";
 import { provideToastr, ToastrService } from "ngx-toastr";
 
+import { setComponentInput } from "@common/helpers/base-test.helpers.spec";
 import { SharedTestModule } from "@common/modules/shared-test.module";
-import { VersionedFileEntryDataFragment } from "@api/kamu.graphql.interface";
 
 import { DatasetViewTypeEnum, VersionedFileView } from "src/app/dataset-view/dataset-view.interface";
-import { mockDatasetAsVersionedFileQuery, mockDatasetBasicsRootFragment } from "src/app/search/mock.data";
+import {
+    MOCK_VERSIONED_FILE_NAME,
+    mockDatasetAsVersionedFileQuery,
+    mockDatasetBasicsRootFragment,
+    mockVersionedFileEntryLatest,
+} from "src/app/search/mock.data";
 import { NavigationService } from "src/app/services/navigation.service";
 
 import { DatasetAsVersionedFileService } from "../../services/dataset-as-versioned-file.service";
@@ -31,17 +36,15 @@ describe("VersionedFileViewComponent", () => {
     let navigationService: NavigationService;
 
     const MOCK_VERSIONED_VIEW_FILE: VersionedFileView = {
-        name: mockDatasetAsVersionedFileQuery.datasets.byId?.name as string,
-        fileInfo: mockDatasetAsVersionedFileQuery.datasets.byId?.asVersionedFile
-            ?.latest as VersionedFileEntryDataFragment,
+        name: MOCK_VERSIONED_FILE_NAME,
+        fileInfo: mockVersionedFileEntryLatest,
         countVersions: mockDatasetAsVersionedFileQuery.datasets.byId?.asVersionedFile?.versions.totalCount,
     };
 
     function setMockObjectByContentType(contentType: string): VersionedFileView {
         return Object.assign({}, MOCK_VERSIONED_VIEW_FILE, {
             fileInfo: {
-                ...(mockDatasetAsVersionedFileQuery.datasets.byId?.asVersionedFile
-                    ?.latest as VersionedFileEntryDataFragment),
+                ...mockVersionedFileEntryLatest,
                 contentType,
             },
         });
@@ -58,7 +61,7 @@ describe("VersionedFileViewComponent", () => {
         toastrService = TestBed.inject(ToastrService);
         fixture = TestBed.createComponent(VersionedFileViewComponent);
         component = fixture.componentInstance;
-        component.datasetBasics = mockDatasetBasicsRootFragment;
+        setComponentInput(fixture, "datasetBasics", mockDatasetBasicsRootFragment);
     });
 
     it("should create", () => {
@@ -102,9 +105,7 @@ describe("VersionedFileViewComponent", () => {
         const mockVersionedFileView: VersionedFileView = setMockObjectByContentType("application/pdf");
         await component.setPreviewFileStrategy(mockVersionedFileView);
 
-        expect(component.urlContentPath).toEqual(
-            mockDatasetAsVersionedFileQuery.datasets.byId?.asVersionedFile?.latest?.contentUrl.url as string,
-        );
+        expect(component.urlContentPath).toEqual(mockVersionedFileEntryLatest.contentUrl.url);
     });
 
     it("should check setPreviewFileStrategy method for text file", async () => {

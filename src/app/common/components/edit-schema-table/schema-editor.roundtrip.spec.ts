@@ -22,16 +22,21 @@ import { FormControl, FormGroup } from "@angular/forms";
 import { of } from "rxjs";
 
 import { Apollo } from "apollo-angular";
-import { parse } from "yaml";
 
 import { EditSchemaTableHarness } from "@common/components/edit-schema-table/edit-schema-table.harness";
-import { ORDER_SCHEMA, ORDER_SCHEMA_ODF_JSON } from "@common/components/edit-schema-table/schema-editor.fixtures.spec";
-import { registerMatSvgIcons } from "@common/helpers/base-test.helpers.spec";
+import {
+    ORDER_SCHEMA,
+    ORDER_SCHEMA_ODF_JSON,
+    readSchemaOf,
+    requireDatasetSchema,
+} from "@common/components/edit-schema-table/schema-editor.fixtures.spec";
+import { registerMatSvgIcons, setComponentInput } from "@common/helpers/base-test.helpers.spec";
 import { SharedTestModule } from "@common/modules/shared-test.module";
 import { DatasetApi } from "@api/dataset.api";
-import { DatasetBlocksSchemaByEventTypeQuery, MetadataEventType } from "@api/kamu.graphql.interface";
-import { DataSchemaField, DatasetSchema, OdfTypes } from "@interface/dataset-schema.interface";
+import { DataSchemaFormat, DatasetBlocksSchemaByEventTypeQuery, MetadataEventType } from "@api/kamu.graphql.interface";
+import { DataSchemaField, OdfTypes } from "@interface/dataset-schema.interface";
 
+import { mockSetPollingSourceEvent } from "src/app/dataset-block/metadata-block/components/event-details/mock.events";
 import { SchemaFieldComponent } from "src/app/dataset-view/additional-components/metadata-component/components/form-components/schema-field/schema-field.component";
 import { schemaValidator } from "src/app/dataset-view/additional-components/metadata-component/components/form-components/schema-field/schema-field.component.helpers";
 import { SchemaFieldHarness } from "src/app/dataset-view/additional-components/metadata-component/components/form-components/schema-field/schema-field.harness";
@@ -95,17 +100,21 @@ function mockGqlProjectionWithSchema(schemaContent: string): DatasetBlocksSchema
                         {
                             __typename: "MetadataBlockExtended",
                             event: {
-                                __typename: "SetPollingSource",
+                                ...mockSetPollingSourceEvent,
                                 read: {
                                     __typename: "ReadStepCsv",
                                     schema: {
                                         __typename: "DataSchema",
                                         content: schemaContent,
-                                        format: "ODF_JSON" as never,
+                                        format: DataSchemaFormat.OdfJson,
                                     },
-                                } as never,
-                                fetch: {} as never,
-                                merge: {} as never,
+                                    separator: null,
+                                    encoding: null,
+                                    quote: null,
+                                    escape: null,
+                                    dateFormat: null,
+                                    timestampFormat: null,
+                                },
                             },
                         },
                     ],
@@ -134,9 +143,10 @@ describe("Schema editor round-trip (Load → Edit → Serialize)", () => {
         schemaControl.addValidators(schemaValidator);
 
         fixture = TestBed.createComponent(SchemaFieldComponent);
-        const component = fixture.componentInstance;
-        component.form = new FormGroup({ schema: schemaControl });
-        component.controlName = "schema";
+        setComponentInput(fixture, "form", new FormGroup({ schema: schemaControl }));
+        setComponentInput(fixture, "controlName", "schema");
+        setComponentInput(fixture, "label", "Schema");
+        setComponentInput(fixture, "tooltip", "Schema tooltip");
         fixture.detectChanges();
         await fixture.whenStable();
 
@@ -251,8 +261,8 @@ describe("Schema editor round-trip (Load → Edit → Serialize)", () => {
             null,
         );
 
-        const parsed = parse(yaml) as { content: { read: { schema: DatasetSchema } } };
-        const roundTrippedFields = parsed.content.read.schema.fields;
+        const schema = readSchemaOf(yaml);
+        const roundTrippedFields = requireDatasetSchema(schema).fields;
 
         // Root fields include the added one
         expect(roundTrippedFields.map((f: DataSchemaField) => f.name)).toContain("tags");
@@ -264,7 +274,7 @@ describe("Schema editor round-trip (Load → Edit → Serialize)", () => {
         expect(addressChildrenInYaml.map((f) => f.name)).not.toContain("street");
 
         // Schema wire shape is { fields } object, not a bare array
-        expect(Array.isArray(parsed.content.read.schema)).toBeFalse();
+        expect(Array.isArray(schema)).toBeFalse();
     });
 
     // -------------------------------------------------------------------------
@@ -296,8 +306,8 @@ describe("Schema editor round-trip (Load → Edit → Serialize)", () => {
             },
             null,
         );
-        const parsed = parse(yaml) as { content: { read: { schema: DatasetSchema } } };
-        const fields = parsed.content.read.schema.fields;
+        const schema = readSchemaOf(yaml);
+        const fields = requireDatasetSchema(schema).fields;
 
         // Added root field present
         expect(fields.map((f: DataSchemaField) => f.name)).toContain("status");
@@ -315,7 +325,7 @@ describe("Schema editor round-trip (Load → Edit → Serialize)", () => {
         expect(shippingFields.map((f) => f.name)).toContain("tracking");
 
         // Wire shape is { fields } object
-        expect(Array.isArray(parsed.content.read.schema)).toBeFalse();
+        expect(Array.isArray(schema)).toBeFalse();
     });
 
     // -------------------------------------------------------------------------
@@ -334,8 +344,8 @@ describe("Schema editor round-trip (Load → Edit → Serialize)", () => {
             },
             null,
         );
-        const parsed = parse(yaml) as { content: { read: { schema: DatasetSchema } } };
-        const fields = parsed.content.read.schema.fields;
+        const schema = readSchemaOf(yaml);
+        const fields = requireDatasetSchema(schema).fields;
 
         // notes: Option<String> preserved
         const notes = EditSchemaTableHarness.requireField(fields, "notes");

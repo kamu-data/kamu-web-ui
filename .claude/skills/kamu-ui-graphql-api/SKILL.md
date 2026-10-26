@@ -30,8 +30,23 @@ src/app/api/gql/**/*.graphql ┴─ npm run gql-codegen ─→ src/app/api/kamu.
   `DatasetWebhookByIdDocument`).
 - Reusable selections are fragments: `gql/fragments/fragment-<name>.graphql` (event fragments
   under `gql/fragments/events/`), spread as `...DatasetBasics`. Reuse an existing fragment
-  before writing a new selection of the same type; a component receiving a slice of data types
-  its input with the generated `XxxFragment`.
+  before writing a new selection of the same type.
+- Code that passes a slice of a result around types it with the generated `XxxFragment`: a
+  component input, a service's return type, a helper's parameter. Never use the schema type of
+  the same name (`DatasetFlowProcess`, `ViewDatasetEnvVar`): it lists every field the API has,
+  not the ones the query fetched. When a slice the code passes around is selected inline, move
+  the selection into a fragment and spread it, as `dataset-flows-processes.graphql` does with
+  `...DatasetFlowProcessesData`.
+- The same goes for a part of a bigger fragment or result: it gets its own named fragment, spread
+  inside the parent (`...FlowTimingRecordsData` in `FlowSummaryData`). Code never cuts the type
+  out of a generated one, either with indexed access (`FlowSummaryDataFragment["timing"]`,
+  `XxxQuery["datasets"]["byId"]`) or with `Extract<XxxFragment, { __typename?: "…" }>` for a
+  union member; eslint's `no-restricted-syntax` rejects both. A fragment is named after its type
+  with the `Data` suffix (`FlowEventTaskChangedData on FlowEventTaskChanged`), and a `__typename`
+  switch over a union of named fragments narrows as before.
+- An api class or domain service may assert away the `null` or `undefined` of its operation's
+  own result (`result.data as XxxQuery`, `byId?.flows.processes as
+  DatasetFlowProcessesDataFragment`); it never asserts to a schema type.
 - Select what the screen uses. Include `__typename` where the code discriminates a union or an
   interface result (`... on CreateWebhookSubscriptionResultSuccess`).
 - `.graphql` files use 2-space indentation. Prettier does not format them (`npm run prettier`
@@ -120,6 +135,8 @@ response fixture in `src/app/api/mock/<domain>.mock.ts` — the pattern is owned
 | Approach | Why rejected |
 |---|---|
 | Injecting `XxxGQL` directly in components or domain services | Spreads fetch policy and result unwrapping across the app; the api class is the one place they live |
+| Typing results with full schema types (`DatasetFlowProcesses`, `ViewDatasetEnvVar`) | The type promises fields the query never fetched, so the compiler cannot tell when code reads one, and every spec has to cast its fragment-shaped mocks up to the schema type, which hides a stale field as well. A fragment-typed input takes the same mocks with no cast |
+| Typing a part of a result as `XxxFragment["field"]` or `Extract<XxxFragment, …>` | The type has no name to search for or read in a signature, chains grow with the nesting (`["datasets"]["byId"]…["byType"]`), and the selection it describes cannot be reused by another document. A named sub-fragment gives the part a name in both the document and the code |
 | Inline `gql` template literals in TypeScript | Codegen would not see them, so there would be no generated types or `Document` for tests |
 | Editing `kamu.graphql.interface.ts` to unblock a build | Overwritten by the next codegen; fix the document or the schema instead |
 | Returning `ObservableQuery.Result` / `ApolloLink.Result` from api methods | Callers would deal with Apollo envelopes; api methods return the operation data type |

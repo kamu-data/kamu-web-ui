@@ -14,7 +14,7 @@ import { MatMenuHarness } from "@angular/material/menu/testing";
 
 import { SearchAdditionalButtonsNavHarness } from "@common/components/search-additional-buttons/search-additional-buttons-nav.harness";
 import { SearchAdditionalButtonsComponent } from "@common/components/search-additional-buttons/search-additional-buttons.component";
-import { registerMatSvgIcons } from "@common/helpers/base-test.helpers.spec";
+import { registerMatSvgIcons, setComponentInput } from "@common/helpers/base-test.helpers.spec";
 import { SharedTestModule } from "@common/modules/shared-test.module";
 
 import { SEARCH_ADDITIONAL_BUTTONS_DESCRIPTORS } from "src/app/dataset-view/dataset-view-header/dataset-view-header.model";
@@ -35,12 +35,13 @@ describe("SearchAdditionalButtonsComponent", () => {
 
         fixture = TestBed.createComponent(SearchAdditionalButtonsComponent);
         component = fixture.componentInstance;
-        fixture.componentRef.setInput(
+        setComponentInput(
+            fixture,
             "searchAdditionalButtonsData",
             structuredClone(SEARCH_ADDITIONAL_BUTTONS_DESCRIPTORS),
         );
-        fixture.componentRef.setInput("loadingListDownsreams", false);
-        fixture.componentRef.setInput("datasetBasics", mockDatasetBasicsRootFragment);
+        setComponentInput(fixture, "loadingListDownsreams", false);
+        setComponentInput(fixture, "datasetBasics", mockDatasetBasicsRootFragment);
         fixture.detectChanges();
     });
 

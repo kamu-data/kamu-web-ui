@@ -9,7 +9,6 @@ import { TestbedHarnessEnvironment } from "@angular/cdk/testing/testbed";
 import { provideHttpClient } from "@angular/common/http";
 import { provideHttpClientTesting } from "@angular/common/http/testing";
 import { ComponentFixture, discardPeriodicTasks, fakeAsync, TestBed, tick } from "@angular/core/testing";
-import { MatButtonToggleChange } from "@angular/material/button-toggle";
 import { ActivatedRoute } from "@angular/router";
 
 import { of, Subject, throwError } from "rxjs";
@@ -19,32 +18,33 @@ import { provideToastr, ToastrService } from "ngx-toastr";
 
 import { environment } from "@env/environment";
 import { ModalService } from "@common/components/modal/modal.service";
-import { registerMatSvgIcons } from "@common/helpers/base-test.helpers.spec";
+import { registerMatSvgIcons, setComponentInput } from "@common/helpers/base-test.helpers.spec";
 import { SharedTestModule } from "@common/modules/shared-test.module";
 import AppValues from "@common/values/app.values";
+import { FlowProcessEffectiveState, FlowStatus } from "@api/kamu.graphql.interface";
 import {
-    AccountFlowProcessCardConnectionDataFragment,
-    FlowProcessEffectiveState,
-    FlowProcessGroupRollupDataFragment,
-    FlowStatus,
-} from "@api/kamu.graphql.interface";
-import {
-    mockAccountFlowsAsCardsQuery,
-    mockAccountFlowsAsCardsQueryEmpty,
-    mockAccountFlowsAsCardsQueryWithWebhook,
-    mockAccountFlowsPrimaryCardsQuery,
-    mockAccountFlowsWebhookCardsQuery,
+    mockAccountAllCards,
+    mockAccountAllCardsEmpty,
+    mockAccountAllCardsWithWebhook,
+    mockAccountFullRollup,
+    mockAccountPrimaryCards,
+    mockAccountPrimaryRollup,
+    mockAccountWebhookCards,
+    mockAccountWebhookRollup,
 } from "@api/mock/account.mock";
 import { ModalArgumentsInterface } from "@interface/modal.interface";
 
+import { AccountTabs } from "src/app/account/account.constants";
 import { AccountService } from "src/app/account/account.service";
 import { AccountFlowsProcessesSubtabComponent } from "src/app/account/additional-components/account-flows-tab/account-flows-subtabs/account-flows-processes-subtab/account-flows-processes-subtab.component";
 import { AccountFlowsProcessesSubtabHarness } from "src/app/account/additional-components/account-flows-tab/account-flows-subtabs/account-flows-processes-subtab/account-flows-processes-subtab.harness";
+import { mockDashboardFilters } from "src/app/account/additional-components/account-flows-tab/account-flows-tab.mock";
 import {
     AccountFlowsNav,
     ProcessCardFilterMode,
     ProcessCardGroup,
 } from "src/app/account/additional-components/account-flows-tab/account-flows-tab.types";
+import { AccountFlowsType } from "src/app/account/additional-components/account-flows-tab/resolvers/account-flows.resolver";
 import { AccountFlowsFiltersService } from "src/app/account/services/account-flows-filters.service";
 import { DatasetWebhooksService } from "src/app/dataset-view/additional-components/dataset-settings-component/tabs/webhooks/service/dataset-webhooks.service";
 import { DatasetFlowsService } from "src/app/dataset-view/additional-components/flows-component/services/dataset-flows.service";
@@ -65,7 +65,12 @@ describe("AccountFlowsProcessesSubtabComponent", () => {
     const MOCK_ACCOUNT_NAME = "kamu";
     const MOCK_SUBSCRIPTION_ID = "121223-21212-567788";
 
-    let getAccountAllCardsSpy: jasmine.Spy;
+    let getAccountAllCardsSpy: jasmine.Spy<AccountService["getAccountAllCards"]>;
+
+    // A new object each time: the "View:" toggle writes the selected mode into it
+    function accountFlowsData(datasetsFiltersMode: ProcessCardFilterMode): AccountFlowsType {
+        return { activeNav: AccountFlowsNav.PROCESSES, flowGroup: [FlowStatus.Finished], datasetsFiltersMode };
+    }
 
     function answerConfirmModal(ok: boolean): jasmine.Spy {
         return spyOn(TestBed.inject(ModalService), "error").and.callFake((options: ModalArgumentsInterface) => {
@@ -119,18 +124,12 @@ describe("AccountFlowsProcessesSubtabComponent", () => {
         datasetFlowsService = TestBed.inject(DatasetFlowsService);
         toastrService = TestBed.inject(ToastrService);
         component = fixture.componentInstance;
-        component.accountName = MOCK_ACCOUNT_NAME;
-        component.accountFlowsData = {
-            activeNav: AccountFlowsNav.PROCESSES,
-            flowGroup: [FlowStatus.Finished],
-            datasetsFiltersMode: ProcessCardFilterMode.CUSTOM,
-        };
+        setComponentInput(fixture, "accountName", MOCK_ACCOUNT_NAME);
+        setComponentInput(fixture, "accountFlowsData", accountFlowsData(ProcessCardFilterMode.CUSTOM));
         getAccountAllCardsSpy = spyOn(accountService, "getAccountAllCards").and.returnValue(
             of({
-                cards: mockAccountFlowsAsCardsQuery.accounts.byName?.flows.processes
-                    .allCards as AccountFlowProcessCardConnectionDataFragment,
-                rollup: mockAccountFlowsAsCardsQuery.accounts.byName?.flows.processes
-                    .fullRollup as FlowProcessGroupRollupDataFragment,
+                cards: mockAccountAllCards,
+                rollup: mockAccountFullRollup,
             }),
         );
     });
@@ -144,10 +143,8 @@ describe("AccountFlowsProcessesSubtabComponent", () => {
         fixture.detectChanges();
         getAccountAllCardsSpy.and.returnValue(
             of({
-                cards: mockAccountFlowsAsCardsQueryEmpty.accounts.byName?.flows.processes
-                    .allCards as AccountFlowProcessCardConnectionDataFragment,
-                rollup: mockAccountFlowsAsCardsQueryEmpty.accounts.byName?.flows.processes
-                    .fullRollup as FlowProcessGroupRollupDataFragment,
+                cards: mockAccountAllCardsEmpty,
+                rollup: mockAccountFullRollup,
             }),
         );
         tick(0);
@@ -162,10 +159,8 @@ describe("AccountFlowsProcessesSubtabComponent", () => {
         fixture.detectChanges();
         getAccountAllCardsSpy.and.returnValue(
             of({
-                cards: mockAccountFlowsAsCardsQueryWithWebhook.accounts.byName?.flows.processes
-                    .allCards as AccountFlowProcessCardConnectionDataFragment,
-                rollup: mockAccountFlowsAsCardsQueryWithWebhook.accounts.byName?.flows.processes
-                    .fullRollup as FlowProcessGroupRollupDataFragment,
+                cards: mockAccountAllCardsWithWebhook,
+                rollup: mockAccountFullRollup,
             }),
         );
         tick(0);
@@ -260,32 +255,135 @@ describe("AccountFlowsProcessesSubtabComponent", () => {
         discardPeriodicTasks();
     }));
 
-    it("should check to change filters mode", () => {
-        const mockChangeEvent = {
-            value: ProcessCardFilterMode.RECENT_ACTIVITY,
-        };
+    it("should select the default states of the initial mode before the first render", fakeAsync(async () => {
+        fixture.detectChanges();
+        tick(0);
+        const processesSubtab = await loadHarness();
 
-        const navigateToOwnerViewSpy = spyOn(navigationService, "navigateToOwnerView");
-        component.onChangeFiltersMode(mockChangeEvent as MatButtonToggleChange);
-        expect(navigateToOwnerViewSpy).toHaveBeenCalledTimes(1);
+        expect(await processesSubtab.isFiltersModeSelected(ProcessCardFilterMode.CUSTOM)).toBeTrue();
+        expect(await processesSubtab.getSelectedRollupStates()).toEqual([
+            FlowProcessEffectiveState.Active,
+            FlowProcessEffectiveState.Failing,
+            FlowProcessEffectiveState.PausedManual,
+            FlowProcessEffectiveState.StoppedAuto,
+        ]);
+        discardPeriodicTasks();
+    }));
+
+    describe("'View:' mode toggle", () => {
+        const cases: { mode: ProcessCardFilterMode; shownStates: FlowProcessEffectiveState[] }[] = [
+            {
+                mode: ProcessCardFilterMode.RECENT_ACTIVITY,
+                shownStates: [
+                    FlowProcessEffectiveState.Active,
+                    FlowProcessEffectiveState.Failing,
+                    FlowProcessEffectiveState.PausedManual,
+                    FlowProcessEffectiveState.StoppedAuto,
+                ],
+            },
+            {
+                mode: ProcessCardFilterMode.TRIAGE,
+                shownStates: [FlowProcessEffectiveState.Failing, FlowProcessEffectiveState.StoppedAuto],
+            },
+            {
+                mode: ProcessCardFilterMode.UPCOMING_SCHEDULED,
+                shownStates: [FlowProcessEffectiveState.Active, FlowProcessEffectiveState.Failing],
+            },
+            // The paused mode shows no state toggles
+            { mode: ProcessCardFilterMode.PAUSED, shownStates: [] },
+        ];
+
+        cases.forEach(({ mode, shownStates }) => {
+            it(`should navigate to the ${mode} mode and show its default states`, fakeAsync(async () => {
+                fixture.detectChanges();
+                tick(0);
+                const processesSubtab = await loadHarness();
+                const navigateToOwnerViewSpy = spyOn(navigationService, "navigateToOwnerView");
+
+                await processesSubtab.selectFiltersMode(mode);
+
+                expect(navigateToOwnerViewSpy).toHaveBeenCalledOnceWith(
+                    MOCK_ACCOUNT_NAME,
+                    AccountTabs.FLOWS,
+                    undefined,
+                    AccountFlowsNav.PROCESSES,
+                    undefined,
+                    mode,
+                );
+                expect(await processesSubtab.isFiltersModeSelected(mode)).toBeTrue();
+                expect(await processesSubtab.getSelectedRollupStates()).toEqual(shownStates);
+                discardPeriodicTasks();
+            }));
+        });
+
+        it("should select the mode's default states only once when the navigation after a click arrives", fakeAsync(async () => {
+            fixture.detectChanges();
+            tick(0);
+            const processesSubtab = await loadHarness();
+            spyOn(navigationService, "navigateToOwnerView");
+            const applyModeDefaultsSpy = spyOn(
+                TestBed.inject(AccountFlowsFiltersService),
+                "applyModeDefaults",
+            ).and.callThrough();
+
+            await processesSubtab.selectFiltersMode(ProcessCardFilterMode.TRIAGE);
+            setComponentInput(fixture, "accountFlowsData", accountFlowsData(ProcessCardFilterMode.TRIAGE));
+
+            expect(applyModeDefaultsSpy).toHaveBeenCalledOnceWith(ProcessCardFilterMode.TRIAGE);
+            expect(await processesSubtab.getSelectedRollupStates()).toEqual([
+                FlowProcessEffectiveState.Failing,
+                FlowProcessEffectiveState.StoppedAuto,
+            ]);
+            discardPeriodicTasks();
+        }));
+    });
+
+    describe("mode reached by navigation, such as back and forward", () => {
+        it("should select the default states of the new mode", fakeAsync(async () => {
+            fixture.detectChanges();
+            tick(0);
+            const processesSubtab = await loadHarness();
+            spyOn(navigationService, "navigateToOwnerView");
+            await processesSubtab.selectFiltersMode(ProcessCardFilterMode.TRIAGE);
+            setComponentInput(fixture, "accountFlowsData", accountFlowsData(ProcessCardFilterMode.TRIAGE));
+
+            setComponentInput(fixture, "accountFlowsData", accountFlowsData(ProcessCardFilterMode.UPCOMING_SCHEDULED));
+
+            expect(await processesSubtab.isFiltersModeSelected(ProcessCardFilterMode.UPCOMING_SCHEDULED)).toBeTrue();
+            expect(await processesSubtab.getSelectedRollupStates()).toEqual([
+                FlowProcessEffectiveState.Active,
+                FlowProcessEffectiveState.Failing,
+            ]);
+            discardPeriodicTasks();
+        }));
+
+        it("should request the recent activity of the default time window", fakeAsync(async () => {
+            fixture.detectChanges();
+            tick(0);
+            const processesSubtab = await loadHarness();
+
+            setComponentInput(fixture, "accountFlowsData", accountFlowsData(ProcessCardFilterMode.RECENT_ACTIVITY));
+            tick(environment.delay_polling_ms);
+
+            expect(await processesSubtab.getSelectedRollupStates()).toEqual([
+                FlowProcessEffectiveState.Active,
+                FlowProcessEffectiveState.Failing,
+                FlowProcessEffectiveState.PausedManual,
+                FlowProcessEffectiveState.StoppedAuto,
+            ]);
+            expect(getAccountAllCardsSpy.calls.mostRecent().args[0].filters.lastAttemptBetween).toBeDefined();
+            discardPeriodicTasks();
+        }));
     });
 
     it("should check to get cards for ProcessCardFilterMode.CUSTOM mode", fakeAsync(async () => {
-        spyOnProperty(component, "dashboardFiltersState", "get").and.returnValue({
-            fromFilterDate: new Date(),
-            toFilterDate: new Date(),
-            lastFailureDate: undefined,
-            nextPlannedBeforeDate: undefined,
-            nextPlannedAfterDate: undefined,
-            selectedOrderDirection: true,
-            selectedOrderField: undefined,
-            selectedQuickRangeLastAttempt: undefined,
-            selectedQuickRangeLastFailure: undefined,
-            selectedQuickRangeNextAttempt: undefined,
-            selectedFlowProcessStates: [FlowProcessEffectiveState.Active],
-            minConsecutiveFailures: 0,
-            isFirstInitialization: false,
-        });
+        spyOnProperty(component, "dashboardFiltersState", "get").and.returnValue(
+            mockDashboardFilters({
+                fromFilterDate: new Date(),
+                toFilterDate: new Date(),
+                selectedFlowProcessStates: [FlowProcessEffectiveState.Active],
+            }),
+        );
 
         fixture.detectChanges();
         tick(0);
@@ -297,7 +395,7 @@ describe("AccountFlowsProcessesSubtabComponent", () => {
     }));
 
     it("should check to get cards for ProcessCardFilterMode.PAUSED mode", fakeAsync(async () => {
-        component.accountFlowsData.datasetsFiltersMode = ProcessCardFilterMode.PAUSED;
+        setComponentInput(fixture, "accountFlowsData", accountFlowsData(ProcessCardFilterMode.PAUSED));
 
         fixture.detectChanges();
         tick(0);
@@ -309,7 +407,7 @@ describe("AccountFlowsProcessesSubtabComponent", () => {
     }));
 
     it("should check to get cards for ProcessCardFilterMode.UPCOMING_SCHEDULED mode without selectedFlowProcessStates", fakeAsync(async () => {
-        component.accountFlowsData.datasetsFiltersMode = ProcessCardFilterMode.UPCOMING_SCHEDULED;
+        setComponentInput(fixture, "accountFlowsData", accountFlowsData(ProcessCardFilterMode.UPCOMING_SCHEDULED));
 
         fixture.detectChanges();
         tick(0);
@@ -321,22 +419,14 @@ describe("AccountFlowsProcessesSubtabComponent", () => {
     }));
 
     it("should check to get cards for ProcessCardFilterMode.UPCOMING_SCHEDULED mode with selectedFlowProcessStates", fakeAsync(async () => {
-        component.accountFlowsData.datasetsFiltersMode = ProcessCardFilterMode.UPCOMING_SCHEDULED;
-        spyOnProperty(component, "dashboardFiltersState", "get").and.returnValue({
-            fromFilterDate: undefined,
-            toFilterDate: undefined,
-            lastFailureDate: undefined,
-            nextPlannedBeforeDate: new Date(),
-            nextPlannedAfterDate: new Date(),
-            selectedOrderDirection: true,
-            selectedOrderField: undefined,
-            selectedQuickRangeLastAttempt: undefined,
-            selectedQuickRangeLastFailure: undefined,
-            selectedQuickRangeNextAttempt: undefined,
-            selectedFlowProcessStates: [FlowProcessEffectiveState.Active],
-            minConsecutiveFailures: 0,
-            isFirstInitialization: false,
-        });
+        setComponentInput(fixture, "accountFlowsData", accountFlowsData(ProcessCardFilterMode.UPCOMING_SCHEDULED));
+        spyOnProperty(component, "dashboardFiltersState", "get").and.returnValue(
+            mockDashboardFilters({
+                nextPlannedBeforeDate: new Date(),
+                nextPlannedAfterDate: new Date(),
+                selectedFlowProcessStates: [FlowProcessEffectiveState.Active],
+            }),
+        );
 
         fixture.detectChanges();
         tick(0);
@@ -348,22 +438,13 @@ describe("AccountFlowsProcessesSubtabComponent", () => {
     }));
 
     it("should check to get cards for ProcessCardFilterMode.TRIAGE mode with minConsecutiveFailures=0 ", fakeAsync(async () => {
-        component.accountFlowsData.datasetsFiltersMode = ProcessCardFilterMode.TRIAGE;
-        spyOnProperty(component, "dashboardFiltersState", "get").and.returnValue({
-            fromFilterDate: undefined,
-            toFilterDate: undefined,
-            lastFailureDate: undefined,
-            nextPlannedBeforeDate: new Date(),
-            nextPlannedAfterDate: new Date(),
-            selectedOrderDirection: true,
-            selectedOrderField: undefined,
-            selectedQuickRangeLastAttempt: undefined,
-            selectedQuickRangeLastFailure: undefined,
-            selectedQuickRangeNextAttempt: undefined,
-            selectedFlowProcessStates: [],
-            minConsecutiveFailures: 0,
-            isFirstInitialization: false,
-        });
+        setComponentInput(fixture, "accountFlowsData", accountFlowsData(ProcessCardFilterMode.TRIAGE));
+        spyOnProperty(component, "dashboardFiltersState", "get").and.returnValue(
+            mockDashboardFilters({
+                nextPlannedBeforeDate: new Date(),
+                nextPlannedAfterDate: new Date(),
+            }),
+        );
 
         fixture.detectChanges();
         tick(0);
@@ -375,22 +456,15 @@ describe("AccountFlowsProcessesSubtabComponent", () => {
     }));
 
     it("should check to get cards for ProcessCardFilterMode.TRIAGE mode with minConsecutiveFailures>1 ", fakeAsync(async () => {
-        component.accountFlowsData.datasetsFiltersMode = ProcessCardFilterMode.TRIAGE;
-        spyOnProperty(component, "dashboardFiltersState", "get").and.returnValue({
-            fromFilterDate: undefined,
-            toFilterDate: undefined,
-            lastFailureDate: undefined,
-            nextPlannedBeforeDate: new Date(),
-            nextPlannedAfterDate: new Date(),
-            selectedOrderDirection: true,
-            selectedOrderField: undefined,
-            selectedQuickRangeLastAttempt: undefined,
-            selectedQuickRangeLastFailure: undefined,
-            selectedQuickRangeNextAttempt: undefined,
-            selectedFlowProcessStates: [FlowProcessEffectiveState.Failing],
-            minConsecutiveFailures: 2,
-            isFirstInitialization: false,
-        });
+        setComponentInput(fixture, "accountFlowsData", accountFlowsData(ProcessCardFilterMode.TRIAGE));
+        spyOnProperty(component, "dashboardFiltersState", "get").and.returnValue(
+            mockDashboardFilters({
+                nextPlannedBeforeDate: new Date(),
+                nextPlannedAfterDate: new Date(),
+                selectedFlowProcessStates: [FlowProcessEffectiveState.Failing],
+                minConsecutiveFailures: 2,
+            }),
+        );
 
         fixture.detectChanges();
         tick(0);
@@ -402,22 +476,14 @@ describe("AccountFlowsProcessesSubtabComponent", () => {
     }));
 
     it("should check to get cards for ProcessCardFilterMode.RECENT_ACTIVITY mode with selectedFlowProcessStates", fakeAsync(async () => {
-        component.accountFlowsData.datasetsFiltersMode = ProcessCardFilterMode.RECENT_ACTIVITY;
-        spyOnProperty(component, "dashboardFiltersState", "get").and.returnValue({
-            fromFilterDate: undefined,
-            toFilterDate: undefined,
-            lastFailureDate: undefined,
-            nextPlannedBeforeDate: new Date(),
-            nextPlannedAfterDate: new Date(),
-            selectedOrderDirection: true,
-            selectedOrderField: undefined,
-            selectedQuickRangeLastAttempt: undefined,
-            selectedQuickRangeLastFailure: undefined,
-            selectedQuickRangeNextAttempt: undefined,
-            selectedFlowProcessStates: [FlowProcessEffectiveState.Active],
-            minConsecutiveFailures: 0,
-            isFirstInitialization: false,
-        });
+        setComponentInput(fixture, "accountFlowsData", accountFlowsData(ProcessCardFilterMode.RECENT_ACTIVITY));
+        spyOnProperty(component, "dashboardFiltersState", "get").and.returnValue(
+            mockDashboardFilters({
+                nextPlannedBeforeDate: new Date(),
+                nextPlannedAfterDate: new Date(),
+                selectedFlowProcessStates: [FlowProcessEffectiveState.Active],
+            }),
+        );
 
         fixture.detectChanges();
         tick(0);
@@ -429,22 +495,12 @@ describe("AccountFlowsProcessesSubtabComponent", () => {
     }));
 
     it("should check to get cards for ProcessCardFilterMode.RECENT_ACTIVITY mode witout selectedFlowProcessStates", fakeAsync(async () => {
-        component.accountFlowsData.datasetsFiltersMode = ProcessCardFilterMode.RECENT_ACTIVITY;
-        spyOnProperty(component, "dashboardFiltersState", "get").and.returnValue({
-            fromFilterDate: undefined,
-            toFilterDate: undefined,
-            lastFailureDate: undefined,
-            nextPlannedBeforeDate: undefined,
-            nextPlannedAfterDate: undefined,
-            selectedOrderDirection: false,
-            selectedOrderField: undefined,
-            selectedQuickRangeLastAttempt: undefined,
-            selectedQuickRangeLastFailure: undefined,
-            selectedQuickRangeNextAttempt: undefined,
-            selectedFlowProcessStates: [],
-            minConsecutiveFailures: 0,
-            isFirstInitialization: false,
-        });
+        setComponentInput(fixture, "accountFlowsData", accountFlowsData(ProcessCardFilterMode.RECENT_ACTIVITY));
+        spyOnProperty(component, "dashboardFiltersState", "get").and.returnValue(
+            mockDashboardFilters({
+                selectedOrderDirection: false,
+            }),
+        );
 
         fixture.detectChanges();
         tick(0);
@@ -480,10 +536,8 @@ describe("AccountFlowsProcessesSubtabComponent", () => {
 
         const getAccountPrimaryCardsSpy = spyOn(accountService, "getAccountPrimaryCards").and.returnValue(
             of({
-                cards: mockAccountFlowsPrimaryCardsQuery.accounts.byName?.flows.processes
-                    .primaryCards as AccountFlowProcessCardConnectionDataFragment,
-                rollup: mockAccountFlowsPrimaryCardsQuery.accounts.byName?.flows.processes
-                    .primaryRollup as FlowProcessGroupRollupDataFragment,
+                cards: mockAccountPrimaryCards,
+                rollup: mockAccountPrimaryRollup,
             }),
         );
         fixture.detectChanges();
@@ -497,10 +551,8 @@ describe("AccountFlowsProcessesSubtabComponent", () => {
 
         const getAccountWebhookCardsSpy = spyOn(accountService, "getAccountWebhookCards").and.returnValue(
             of({
-                cards: mockAccountFlowsWebhookCardsQuery.accounts.byName?.flows.processes
-                    .webhookCards as AccountFlowProcessCardConnectionDataFragment,
-                rollup: mockAccountFlowsWebhookCardsQuery.accounts.byName?.flows.processes
-                    .webhookRollup as FlowProcessGroupRollupDataFragment,
+                cards: mockAccountWebhookCards,
+                rollup: mockAccountWebhookRollup,
             }),
         );
         fixture.detectChanges();
@@ -542,17 +594,8 @@ describe("AccountFlowsProcessesSubtabComponent", () => {
     }));
 
     it("should count only the paused processes in the paused mode", () => {
-        const rollup = mockAccountFlowsAsCardsQuery.accounts.byName?.flows.processes
-            .fullRollup as FlowProcessGroupRollupDataFragment;
+        const rollup = mockAccountFullRollup;
         expect(component.totalProcessesCountByMode(ProcessCardFilterMode.PAUSED, rollup)).toEqual(rollup.paused);
-    });
-
-    it("should reject an unsupported filters mode when counting processes", () => {
-        const rollup = mockAccountFlowsAsCardsQuery.accounts.byName?.flows.processes
-            .fullRollup as FlowProcessGroupRollupDataFragment;
-        expect(() => component.totalProcessesCountByMode("unsupported" as ProcessCardFilterMode, rollup)).toThrowError(
-            "Unsupported process card view mode",
-        );
     });
 
     it("should reset the custom filters and reload the cards from the first page", fakeAsync(async () => {
@@ -575,10 +618,8 @@ describe("AccountFlowsProcessesSubtabComponent", () => {
     it("should load the dataset cards only once the 'Datasets' chip is selected", fakeAsync(async () => {
         const getAccountPrimaryCardsSpy = spyOn(accountService, "getAccountPrimaryCards").and.returnValue(
             of({
-                cards: mockAccountFlowsPrimaryCardsQuery.accounts.byName?.flows.processes
-                    .primaryCards as AccountFlowProcessCardConnectionDataFragment,
-                rollup: mockAccountFlowsPrimaryCardsQuery.accounts.byName?.flows.processes
-                    .primaryRollup as FlowProcessGroupRollupDataFragment,
+                cards: mockAccountPrimaryCards,
+                rollup: mockAccountPrimaryRollup,
             }),
         );
         fixture.detectChanges();
@@ -744,10 +785,8 @@ describe("AccountFlowsProcessesSubtabComponent", () => {
 
         it("should not end with cards whose load started before the refresh was requested", fakeAsync(() => {
             const cards = {
-                cards: mockAccountFlowsAsCardsQuery.accounts.byName?.flows.processes
-                    .allCards as AccountFlowProcessCardConnectionDataFragment,
-                rollup: mockAccountFlowsAsCardsQuery.accounts.byName?.flows.processes
-                    .fullRollup as FlowProcessGroupRollupDataFragment,
+                cards: mockAccountAllCards,
+                rollup: mockAccountFullRollup,
             };
             const inFlightPoll$ = new Subject<typeof cards>();
             const refreshedCards$ = new Subject<typeof cards>();

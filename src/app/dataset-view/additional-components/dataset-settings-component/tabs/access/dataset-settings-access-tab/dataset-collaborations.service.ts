@@ -11,14 +11,15 @@ import { map, Observable } from "rxjs";
 
 import { ToastrService } from "ngx-toastr";
 
+import { requireValue } from "@common/helpers/app.helpers";
 import { DatasetCollaborationApi } from "@api/dataset-collaboration.api";
 import {
-    AccountWithRoleConnection,
+    AccountFragment,
+    AccountWithRoleConnectionDataFragment,
     DatasetAccessRole,
     DatasetListCollaboratorsQuery,
     DatasetUserRoleQuery,
     LookupFilters,
-    NameLookupResult,
     SearchCollaboratorQuery,
     SetRoleCollaboratorMutation,
     UnsetRoleCollaboratorMutation,
@@ -36,13 +37,12 @@ export class DatasetCollaborationsService {
         datasetId: string;
         page?: number;
         perPage?: number;
-    }): Observable<AccountWithRoleConnection> {
+    }): Observable<AccountWithRoleConnectionDataFragment> {
         return this.datasetCollaborationApi
             .listCollaborators(params)
             .pipe(
-                map(
-                    (result: DatasetListCollaboratorsQuery) =>
-                        result.datasets.byId?.collaboration.accountRoles as AccountWithRoleConnection,
+                map((result: DatasetListCollaboratorsQuery) =>
+                    requireValue(result.datasets.byId?.collaboration.accountRoles ?? null),
                 ),
             );
     }
@@ -52,10 +52,10 @@ export class DatasetCollaborationsService {
         filters: LookupFilters;
         page: number;
         perPage: number;
-    }): Observable<NameLookupResult[]> {
+    }): Observable<AccountFragment[]> {
         return this.datasetCollaborationApi
             .searchCollaborator(params)
-            .pipe(map((result: SearchCollaboratorQuery) => result.search.nameLookup.nodes as NameLookupResult[]));
+            .pipe(map((result: SearchCollaboratorQuery) => result.search.nameLookup.nodes));
     }
 
     public setRoleCollaborator(params: {
@@ -85,7 +85,7 @@ export class DatasetCollaborationsService {
     public getRoleByDatasetId(datasetId: string): Observable<MaybeNull<DatasetAccessRole>> {
         return this.datasetCollaborationApi.getDatasetUserRole(datasetId).pipe(
             map((result: DatasetUserRoleQuery) => {
-                return result.datasets.byId?.role as DatasetAccessRole;
+                return result.datasets.byId?.role ?? null;
             }),
         );
     }

@@ -15,8 +15,8 @@ import { MatIconModule } from "@angular/material/icon";
 import {
     DatasetBasicsFragment,
     FlowProcessEffectiveState,
-    WebhookFlowSubProcess,
-    WebhookFlowSubProcessGroup,
+    WebhookFlowSubProcessDataFragment,
+    WebhookFlowSubProcessGroupDataFragment,
 } from "@api/kamu.graphql.interface";
 import { MaybeNull, MaybeUndefined } from "@interface/app.types";
 
@@ -46,13 +46,13 @@ import {
 })
 export class FlowsAssociatedChannelsComponent {
     @Input({ required: true }) public flowsSelectionState: FlowsSelectionState;
-    @Input({ required: true }) public webhooksData: WebhookFlowSubProcessGroup;
+    @Input({ required: true }) public webhooksData: WebhookFlowSubProcessGroupDataFragment;
     @Input({ required: true }) public datasetBasics: DatasetBasicsFragment;
     /** Subscriptions whose pause or resume has not shown its result yet */
     @Input() public busySubscriptionIds: MaybeNull<ReadonlySet<string>> = null;
     @Output() public webhookSettingsClicked: EventEmitter<string> = new EventEmitter<string>();
-    @Output() public subcriptionClicked: EventEmitter<WebhookFlowSubProcess> =
-        new EventEmitter<WebhookFlowSubProcess>();
+    @Output() public subcriptionClicked: EventEmitter<WebhookFlowSubProcessDataFragment> =
+        new EventEmitter<WebhookFlowSubProcessDataFragment>();
     @Output() public pauseWebhookClicked: EventEmitter<string> = new EventEmitter<string>();
     @Output() public resumeWebhookClicked: EventEmitter<string> = new EventEmitter<string>();
     @Output() public selectionWebhooksClicked: EventEmitter<MaybeUndefined<WebhooksSelectedCategory>> =
@@ -77,7 +77,7 @@ export class FlowsAssociatedChannelsComponent {
         this.webhookSettingsClicked.emit(subscriptionId);
     }
 
-    public navigateToSubscription(process: WebhookFlowSubProcess): void {
+    public navigateToSubscription(process: WebhookFlowSubProcessDataFragment): void {
         this.subcriptionClicked.emit(process);
     }
 

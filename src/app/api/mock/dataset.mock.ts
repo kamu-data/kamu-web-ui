@@ -5,7 +5,7 @@
  * included in the LICENSE file.
  */
 
-import { Node } from "@swimlane/ngx-graph";
+import { Edge } from "@swimlane/ngx-graph";
 
 import {
     CompareChainsStatus,
@@ -21,13 +21,14 @@ import {
     GetDatasetBasicsWithPermissionsQuery,
     GetDatasetDataSqlRunQuery,
     GetMetadataBlockQuery,
+    MetadataBlockFragment,
 } from "@api/kamu.graphql.interface";
 import { TEST_LOGIN } from "@api/mock/auth.mock";
 import { DatasetsAccountResponse } from "@interface/dataset.interface";
 
 import {
-    LineageGraphDatasetNodeObject,
-    LineageGraphNodeData,
+    LineageGraphDatasetNode,
+    LineageGraphNode,
     LineageGraphNodeKind,
     LineageNodeAccess,
 } from "src/app/dataset-view/additional-components/lineage-component/lineage-model";
@@ -397,6 +398,50 @@ export const mockDatasetsByAccountNameQuery: DatasetsByAccountNameQuery = {
     },
 };
 
+export const mockMetadataBlockByHash: MetadataBlockFragment = {
+    __typename: "MetadataBlockExtended",
+    blockHash: "zW1hNbxPz28K1oLNGbddudUzKKLT9LDPh8chjksEo6HcDev",
+    prevBlockHash: "zW1abnmxotsSC7H6SyfbL7bpWtQrMSQktUfiJds3KWX1xfm",
+    systemTime: "2022-08-05T21:20:08.053635579+00:00",
+    sequenceNumber: 6,
+    author: {
+        __typename: "Account",
+        ...mockOwnerFieldsWithAvatar,
+    },
+    event: {
+        __typename: "ExecuteTransform",
+        newData: {
+            __typename: "DataSlice",
+            offsetInterval: {
+                __typename: "OffsetInterval",
+                start: 0,
+                end: 596125,
+            },
+            logicalHash: "z63ZND5B21T2Dbmr2bB2Eu2Y4fjEJzLYrwiumM7ApeU24N29qpna",
+            physicalHash: "zW1i7cajDaJjwxCRaRyGHqJpDrqZXbm1wMZkaWrH8a8Cmbd",
+            size: 2323,
+        },
+        prevCheckpoint: null,
+        prevOffset: null,
+        newWatermark: "2022-08-01T00:00:00+00:00",
+        queryInputs: [
+            {
+                __typename: "ExecuteTransformInput",
+                datasetId: "did:odf:z4k88e8rxU6m5wCnK9idM5sGAxAGfvUgNgQbckwJ4ro78tXMLSu",
+                prevBlockHash: "zW1qJPmDvBxGS9GeC7PFseSCy7koHjvurUmisf1VWscY3AX",
+                newBlockHash: "zW1fzwrGZbrvqoXujua5oxj4j466tDwXySjpVMi8BvZ2mtj",
+                prevOffset: null,
+                newOffset: 596125,
+            },
+        ],
+        newCheckpoint: {
+            __typename: "Checkpoint",
+            physicalHash: "zW1otipGpjScUH8C2RfaF4s8RshReBbQVPDf2fPrp2R8Ft2",
+            size: 2560,
+        },
+    },
+};
+
 export const mockGetMetadataBlockQuery: GetMetadataBlockQuery = {
     datasets: {
         __typename: "Datasets",
@@ -408,49 +453,7 @@ export const mockGetMetadataBlockQuery: GetMetadataBlockQuery = {
                     __typename: "MetadataChain",
                     blockByHashEncoded:
                         "kind: MetadataBlock\nversion: 2\ncontent:\n  systemTime: 2022-08-05T21:17:30.621941313Z\n  prevBlockHash: zW1auBfep4NvrY6RqNN7asdjTzuNMAugdcsw7VfrsQFDqj1\n  sequenceNumber: 3\n  event:\n    kind: setInfo\n    description: British Columbia COVID-19 case data updated regularly from the B.C. Centre for Disease Control, Provincial Health Services Authority and the B.C. Ministry of Health.\n    keywords:\n    - Healthcare\n    - Epidemiology\n    - COVID-19\n    - SARS-CoV-2\n    - Disaggregated\n    - Anonymized\n    - British Columbia\n    - Canada\n",
-                    blockByHash: {
-                        __typename: "MetadataBlockExtended",
-                        blockHash: "zW1hNbxPz28K1oLNGbddudUzKKLT9LDPh8chjksEo6HcDev",
-                        prevBlockHash: "zW1abnmxotsSC7H6SyfbL7bpWtQrMSQktUfiJds3KWX1xfm",
-                        systemTime: "2022-08-05T21:20:08.053635579+00:00",
-                        sequenceNumber: 6,
-                        author: {
-                            __typename: "Account",
-                            ...mockOwnerFieldsWithAvatar,
-                        },
-                        event: {
-                            __typename: "ExecuteTransform",
-                            newData: {
-                                __typename: "DataSlice",
-                                offsetInterval: {
-                                    __typename: "OffsetInterval",
-                                    start: 0,
-                                    end: 596125,
-                                },
-                                logicalHash: "z63ZND5B21T2Dbmr2bB2Eu2Y4fjEJzLYrwiumM7ApeU24N29qpna",
-                                physicalHash: "zW1i7cajDaJjwxCRaRyGHqJpDrqZXbm1wMZkaWrH8a8Cmbd",
-                                size: 2323,
-                            },
-                            prevCheckpoint: null,
-                            prevOffset: null,
-                            newWatermark: "2022-08-01T00:00:00+00:00",
-                            queryInputs: [
-                                {
-                                    __typename: "ExecuteTransformInput",
-                                    datasetId: "did:odf:z4k88e8rxU6m5wCnK9idM5sGAxAGfvUgNgQbckwJ4ro78tXMLSu",
-                                    prevBlockHash: "zW1qJPmDvBxGS9GeC7PFseSCy7koHjvurUmisf1VWscY3AX",
-                                    newBlockHash: "zW1fzwrGZbrvqoXujua5oxj4j466tDwXySjpVMi8BvZ2mtj",
-                                    prevOffset: null,
-                                    newOffset: 596125,
-                                },
-                            ],
-                            newCheckpoint: {
-                                __typename: "Checkpoint",
-                                physicalHash: "zW1otipGpjScUH8C2RfaF4s8RshReBbQVPDf2fPrp2R8Ft2",
-                                size: 2560,
-                            },
-                        },
-                    },
+                    blockByHash: mockMetadataBlockByHash,
                 },
                 currentDownstreamDependenciesCount: 3,
             },
@@ -467,115 +470,92 @@ export const mockGetMetadataBlockQuery: GetMetadataBlockQuery = {
     },
 };
 
-export const MOCK_NODES: Node[] = [
-    {
-        id: "didodfz4k88e8qmphemqz8ZfEio3bGRrAjoKtP83U22XidbGtHrUcEghj",
-        label: "com.naturalearthdata.admin0.countries.50m",
-        data: {
-            kind: LineageGraphNodeKind.Dataset,
-            dataObject: {
-                id: "did:odf:z4k88e8qmphemqz8ZfEio3bGRrAjoKtP83U22XidbGtHrUcEghj",
-                name: "com.naturalearthdata.admin0.countries.50m",
-                kind: DatasetKind.Root,
-                isCurrent: true,
-                access: LineageNodeAccess.PRIVATE,
-                color: "#7aa3e5",
-                accountName: "kamu",
-            } as LineageGraphDatasetNodeObject,
-        } as LineageGraphNodeData,
-        meta: {
-            forceDimensions: false,
+export const MOCK_CURRENT_DATASET_NODE: LineageGraphDatasetNode = {
+    id: "didodfz4k88e8qmphemqz8ZfEio3bGRrAjoKtP83U22XidbGtHrUcEghj",
+    label: "com.naturalearthdata.admin0.countries.50m",
+    data: {
+        kind: LineageGraphNodeKind.Dataset,
+        dataObject: {
+            id: "did:odf:z4k88e8qmphemqz8ZfEio3bGRrAjoKtP83U22XidbGtHrUcEghj",
+            name: "com.naturalearthdata.admin0.countries.50m",
+            kind: DatasetKind.Root,
+            isCurrent: true,
+            access: LineageNodeAccess.PRIVATE,
+            accountName: "kamu",
         },
-        dimension: {
-            width: 308.9427490234375,
-            height: 30,
-        },
-        position: {
-            x: 174.47137451171875,
-            y: 65,
-        },
-        transform: "translate(20, 50)",
     },
-    {
-        id: "didodfz4k88e8h7woj2Njge7MpGneHHEo8nuSA6npPrAroFpETcukCenC",
-        label: "com.naturalearthdata.admin0.countries",
-        data: {
-            kind: LineageGraphNodeKind.Dataset,
-            dataObject: {
-                id: "did:odf:z4k88e8h7woj2Njge7MpGneHHEo8nuSA6npPrAroFpETcukCenC",
-                name: "com.naturalearthdata.admin0.countries",
-                kind: DatasetKind.Derivative,
-                isCurrent: false,
-                color: "#a8385d",
-                accountName: "kamu",
-                access: LineageNodeAccess.PRIVATE,
-            } as LineageGraphDatasetNodeObject,
-        } as LineageGraphNodeData,
-        meta: {
-            forceDimensions: false,
-        },
-        dimension: {
-            width: 279.571044921875,
-            height: 90,
-        },
-        position: {
-            x: 568.728271484375,
-            y: 65,
-        },
-        transform: "translate(428.9427490234375, 20)",
+    meta: {
+        forceDimensions: false,
     },
-    {
-        id: "didodfz4k88e8rpDWw3gTvq1bNkCJ4m6UyXfGhZsLa2HdE9RtKjVcYoMnB",
-        label: "covid19.canada.case-details",
-        data: {
-            kind: LineageGraphNodeKind.DatasetNotAccessable,
-        } as LineageGraphNodeData,
-        meta: {
-            forceDimensions: false,
-        },
-        dimension: {
-            width: 308.9427490234375,
-            height: 30,
-        },
-        position: {
-            x: 174.47137451171875,
-            y: 65,
-        },
-        transform: "translate(20, 50)",
+    dimension: {
+        width: 308.9427490234375,
+        height: 30,
     },
+    position: {
+        x: 174.47137451171875,
+        y: 65,
+    },
+    transform: "translate(20, 50)",
+};
+
+export const MOCK_OTHER_DATASET_NODE: LineageGraphDatasetNode = {
+    id: "didodfz4k88e8h7woj2Njge7MpGneHHEo8nuSA6npPrAroFpETcukCenC",
+    label: "com.naturalearthdata.admin0.countries",
+    data: {
+        kind: LineageGraphNodeKind.Dataset,
+        dataObject: {
+            id: "did:odf:z4k88e8h7woj2Njge7MpGneHHEo8nuSA6npPrAroFpETcukCenC",
+            name: "com.naturalearthdata.admin0.countries",
+            kind: DatasetKind.Derivative,
+            isCurrent: false,
+            accountName: "kamu",
+            access: LineageNodeAccess.PRIVATE,
+        },
+    },
+    meta: {
+        forceDimensions: false,
+    },
+    dimension: {
+        width: 279.571044921875,
+        height: 90,
+    },
+    position: {
+        x: 568.728271484375,
+        y: 65,
+    },
+    transform: "translate(428.9427490234375, 20)",
+};
+
+export const MOCK_INACCESSIBLE_NODE: LineageGraphNode = {
+    id: "didodfz4k88e8rpDWw3gTvq1bNkCJ4m6UyXfGhZsLa2HdE9RtKjVcYoMnB",
+    label: "covid19.canada.case-details",
+    data: {
+        kind: LineageGraphNodeKind.DatasetNotAccessable,
+    },
+    meta: {
+        forceDimensions: false,
+    },
+    dimension: {
+        width: 308.9427490234375,
+        height: 30,
+    },
+    position: {
+        x: 174.47137451171875,
+        y: 65,
+    },
+    transform: "translate(20, 50)",
+};
+
+export const MOCK_NODES: LineageGraphNode[] = [
+    MOCK_CURRENT_DATASET_NODE,
+    MOCK_OTHER_DATASET_NODE,
+    MOCK_INACCESSIBLE_NODE,
 ];
 
-export const MOCK_LINKS = [
+export const MOCK_LINKS: Edge[] = [
     {
         id: "didodfz4k88e8qmphemqz8ZfEio3bGRrAjoKtP83U22XidbGtHrUcEghj__and__didodfz4k88e8h7woj2Njge7MpGneHHEo8nuSA6npPrAroFpETcukCenC",
         source: "didodfz4k88e8qmphemqz8ZfEio3bGRrAjoKtP83U22XidbGtHrUcEghj",
         target: "didodfz4k88e8h7woj2Njge7MpGneHHEo8nuSA6npPrAroFpETcukCenC",
-    },
-];
-
-export const MOCK_CLUSTERS = [
-    {
-        id: "ROOT_cluster",
-        label: "ROOT",
-        data: {
-            customColor: "#A52A2A59",
-        },
-        position: {
-            x: 10,
-            y: 10,
-        },
-        childNodeIds: ["did:odf:z4k88e8qmphemqz8ZfEio3bGRrAjoKtP83U22XidbGtHrUcEghj"],
-    },
-    {
-        id: "DERIVATIVE_cluster",
-        label: "DERIVATIVE",
-        data: {
-            customColor: "#00800039",
-        },
-        position: {
-            x: 10,
-            y: 10,
-        },
-        childNodeIds: ["did:odf:z4k88e8h7woj2Njge7MpGneHHEo8nuSA6npPrAroFpETcukCenC"],
     },
 ];

@@ -9,7 +9,6 @@ import { ComponentFixture, TestBed } from "@angular/core/testing";
 
 import { of } from "rxjs";
 
-import { Node } from "@swimlane/ngx-graph";
 import { Apollo } from "apollo-angular";
 import { provideToastr, ToastrService } from "ngx-toastr";
 
@@ -19,12 +18,13 @@ import {
     findComponentInstance,
     findComponentInstances,
     findElementByDataTestId,
+    setComponentInput,
 } from "@common/helpers/base-test.helpers.spec";
 import { SharedTestModule } from "@common/modules/shared-test.module";
 
 import { AccountService } from "src/app/account/account.service";
 import { mockLineageGraphUpdate } from "src/app/dataset-view/additional-components/data-tabs.mock";
-import { LineageGraphNodeData } from "src/app/dataset-view/additional-components/lineage-component/lineage-model";
+import { LineageGraphDatasetNode } from "src/app/dataset-view/additional-components/lineage-component/lineage-model";
 import { LineageComponent } from "src/app/dataset-view/additional-components/lineage-component/lineage.component";
 import { mockLineageUpdateWithLoneDerivative } from "src/app/dataset-view/additional-components/lineage-component/services/lineage-graph-builder.mock";
 import { MOCK_DATASET_INFO } from "src/app/dataset-view/additional-components/metadata-component/components/set-transform/mock.data";
@@ -62,7 +62,7 @@ describe("LineageComponent", () => {
 
         fixture = TestBed.createComponent(LineageComponent);
         component = fixture.componentInstance;
-        component.datasetInfo = MOCK_DATASET_INFO;
+        setComponentInput(fixture, "datasetInfo", MOCK_DATASET_INFO);
         fixture.detectChanges();
     });
 
@@ -98,10 +98,9 @@ describe("LineageComponent", () => {
         const selectDatasetSpy = spyOn(component, "onSelectDataset");
         component.onClickNode(mockNode);
 
-        const mockNodeData: LineageGraphNodeData = mockNode.data as LineageGraphNodeData;
         expect(selectDatasetSpy).toHaveBeenCalledWith(
-            mockNodeData.dataObject.accountName,
-            mockNodeData.dataObject.name,
+            mockNode.data.dataObject.accountName,
+            mockNode.data.dataObject.name,
         );
     });
 
@@ -113,12 +112,11 @@ describe("LineageComponent", () => {
 
     it("should check click on lineage nodes with equal dataset name, but different account name ", () => {
         fixture.detectChanges();
-        mockNodesWithEqualNames.forEach((node: Node) => {
+        mockNodesWithEqualNames.forEach((node: LineageGraphDatasetNode) => {
             component.onClickNode(node);
-            const mockNodeData = node.data as LineageGraphNodeData;
             expect(navigationServiceSpy).toHaveBeenCalledWith({
-                accountName: mockNodeData.dataObject.accountName,
-                datasetName: mockNodeData.dataObject.name,
+                accountName: node.data.dataObject.accountName,
+                datasetName: node.data.dataObject.name,
                 tab: DatasetViewTypeEnum.Lineage,
             });
         });

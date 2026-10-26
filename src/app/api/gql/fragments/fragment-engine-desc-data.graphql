@@ -1,0 +1,5 @@
+fragment EngineDescData on EngineDesc {
+  name
+  dialect
+  latestImage
+}

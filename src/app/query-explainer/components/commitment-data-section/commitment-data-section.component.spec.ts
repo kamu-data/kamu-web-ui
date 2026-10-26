@@ -9,7 +9,11 @@ import { provideHttpClient } from "@angular/common/http";
 import { provideHttpClientTesting } from "@angular/common/http/testing";
 import { ComponentFixture, TestBed } from "@angular/core/testing";
 
-import { findElementByDataTestId, registerMatSvgIcons } from "@common/helpers/base-test.helpers.spec";
+import {
+    findElementByDataTestId,
+    registerMatSvgIcons,
+    setComponentInput,
+} from "@common/helpers/base-test.helpers.spec";
 
 import { CommitmentDataSectionComponent } from "src/app/query-explainer/components/commitment-data-section/commitment-data-section.component";
 import {
@@ -31,10 +35,10 @@ describe("CommitmentDataSectionComponent", () => {
 
         fixture = TestBed.createComponent(CommitmentDataSectionComponent);
         component = fixture.componentInstance;
-        component.commitmentData = {
+        setComponentInput(fixture, "commitmentData", {
             sqlQueryExplainerResponse: mockQueryExplainerResponse,
             sqlQueryVerify: mockVerifyQueryResponseSuccess,
-        };
+        });
         fixture.detectChanges();
     });
 

@@ -6,10 +6,10 @@
  */
 
 import {
-    Account,
     AccountProvider,
     AccountType,
-    AccountWithRole,
+    AccountWithRoleConnectionDataFragment,
+    AccountWithRoleDataFragment,
     DatasetAccessRole,
     DatasetKind,
     DatasetListCollaboratorsQuery,
@@ -21,17 +21,47 @@ import {
 
 import { mockOwnerFieldsWithAvatar } from "src/app/search/mock.data";
 
-export const MOCK_ACCOUNT_WITH_ROLE: AccountWithRole = {
+export const MOCK_ACCOUNT_WITH_ROLE: AccountWithRoleDataFragment = {
     account: {
         id: "did:odf:fed016b61ed2ab1b63a006b61ed2ab1b63a00b016d65607000000e0821aafbf163e6f",
         accountName: "kamu",
         displayName: "kamu",
         accountType: AccountType.User,
-        email: "test@gamil.com",
         avatarUrl: "https://avatars.githubusercontent.com/u/50896974?s=200&v=4",
         isAdmin: true,
-    } as Account,
+        accountProvider: AccountProvider.Password,
+        __typename: "Account",
+    },
     role: DatasetAccessRole.Maintainer,
+    __typename: "AccountWithRole",
+};
+
+export const mockDatasetCollaboratorsConnection: AccountWithRoleConnectionDataFragment = {
+    nodes: [
+        {
+            account: {
+                id: "did:odf:fed0137bc34f6025c18860e00d69737134224c02b6c27e069c9f3610a93ace02aba01",
+                accountName: "test-user",
+                displayName: "Test User",
+                accountType: AccountType.User,
+                avatarUrl: "https://avatars.githubusercontent.com/u/51016717?v=4",
+                isAdmin: false,
+                __typename: "Account",
+                accountProvider: AccountProvider.Password,
+            },
+            role: DatasetAccessRole.Maintainer,
+            __typename: "AccountWithRole",
+        },
+    ],
+    totalCount: 1,
+    pageInfo: {
+        hasNextPage: false,
+        hasPreviousPage: false,
+        currentPage: 0,
+        totalPages: 1,
+        __typename: "PageBasedInfo",
+    },
+    __typename: "AccountWithRoleConnection",
 };
 
 export const mockDatasetListCollaboratorsQuery: DatasetListCollaboratorsQuery = {
@@ -50,33 +80,7 @@ export const mockDatasetListCollaboratorsQuery: DatasetListCollaboratorsQuery = 
             },
             __typename: "Dataset",
             collaboration: {
-                accountRoles: {
-                    nodes: [
-                        {
-                            account: {
-                                id: "did:odf:fed0137bc34f6025c18860e00d69737134224c02b6c27e069c9f3610a93ace02aba01",
-                                accountName: "test-user",
-                                displayName: "Test User",
-                                accountType: AccountType.User,
-                                avatarUrl: "https://avatars.githubusercontent.com/u/51016717?v=4",
-                                isAdmin: false,
-                                __typename: "Account",
-                                accountProvider: AccountProvider.Password,
-                            },
-                            role: DatasetAccessRole.Maintainer,
-                            __typename: "AccountWithRole",
-                        },
-                    ],
-                    totalCount: 1,
-                    pageInfo: {
-                        hasNextPage: false,
-                        hasPreviousPage: false,
-                        currentPage: 0,
-                        totalPages: 1,
-                        __typename: "PageBasedInfo",
-                    },
-                    __typename: "AccountWithRoleConnection",
-                },
+                accountRoles: mockDatasetCollaboratorsConnection,
                 __typename: "DatasetCollaboration",
             },
         },
@@ -137,10 +141,12 @@ export const mockUnsetRoleCollaboratorMutation: UnsetRoleCollaboratorMutation = 
     },
 };
 
+export const MOCK_DATASET_USER_ROLE = DatasetAccessRole.Maintainer;
+
 export const mockDatasetUserRoleQuery: DatasetUserRoleQuery = {
     datasets: {
         byId: {
-            role: null,
+            role: MOCK_DATASET_USER_ROLE,
             __typename: "Dataset",
         },
         __typename: "Datasets",

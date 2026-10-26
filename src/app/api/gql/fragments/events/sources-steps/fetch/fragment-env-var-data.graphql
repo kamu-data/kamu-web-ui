@@ -1,0 +1,4 @@
+fragment EnvVarData on EnvVar {
+  name
+  value
+}

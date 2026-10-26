@@ -163,7 +163,7 @@ export class SearchAndSchemasSectionComponent extends BaseComponent implements O
     }
 
     public get sortedSearchResult(): GlobalQuerySearchItem[] {
-        return this.searchResult.sort((a: GlobalQuerySearchItem, b: GlobalQuerySearchItem) => {
+        return [...this.searchResult].sort((a: GlobalQuerySearchItem, b: GlobalQuerySearchItem) => {
             if (a.datasetAlias < b.datasetAlias) return -1;
             if (a.datasetAlias > b.datasetAlias) return 1;
             return 0;

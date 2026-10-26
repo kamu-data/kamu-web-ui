@@ -5,10 +5,10 @@
  * included in the LICENSE file.
  */
 
+import { OverlayContainer } from "@angular/cdk/overlay";
 import { provideHttpClient } from "@angular/common/http";
 import { provideHttpClientTesting } from "@angular/common/http/testing";
 import { ComponentFixture, TestBed } from "@angular/core/testing";
-import { By } from "@angular/platform-browser";
 
 import { of } from "rxjs";
 
@@ -18,7 +18,7 @@ import { NgbActiveModal } from "@ng-bootstrap/ng-bootstrap";
 import { Apollo } from "apollo-angular";
 import timekeeper from "timekeeper";
 
-import { emitClickOnElementByDataTestId } from "@common/helpers/base-test.helpers.spec";
+import { emitClickOnElementByDataTestId, setComponentInput } from "@common/helpers/base-test.helpers.spec";
 import { SharedTestModule } from "@common/modules/shared-test.module";
 import { mockAccountDetails } from "@api/mock/auth.mock";
 
@@ -50,7 +50,7 @@ describe("EditWatermarkModalComponent", () => {
         component = fixture.componentInstance;
         datasetCommitService = TestBed.inject(DatasetCommitService);
         loggedUserService = TestBed.inject(LoggedUserService);
-        component.datasetBasics = mockDatasetBasicsDerivedFragment;
+        setComponentInput(fixture, "datasetBasics", mockDatasetBasicsDerivedFragment);
         spyOnProperty(loggedUserService, "currentlyLoggedInUser", "get").and.returnValue(mockAccountDetails);
     });
 
@@ -69,7 +69,7 @@ describe("EditWatermarkModalComponent", () => {
     });
 
     it("should check init minLocalWatermark when currentWatermark is not null", () => {
-        component.currentWatermark = "2023-03-12T00:00:00+00:00";
+        setComponentInput(fixture, "currentWatermark", "2023-03-12T00:00:00+00:00");
         fixture.detectChanges();
         const result = "2023-03-12T00:00:00.000Z";
         expect(component.minLocalWatermark).toEqual(result);
@@ -87,8 +87,8 @@ describe("EditWatermarkModalComponent", () => {
         fixture.detectChanges();
         emitClickOnElementByDataTestId(fixture, "fromdatepicker");
         fixture.detectChanges();
-        const datepicker = fixture.debugElement.query(By.css(".owl-dt-popup-container"));
-        expect(datepicker).toBeDefined();
+        const overlayContainer = TestBed.inject(OverlayContainer).getContainerElement();
+        expect(overlayContainer.querySelector(".owl-dt-popup-container")).not.toBeNull();
     });
 
     afterAll(() => {

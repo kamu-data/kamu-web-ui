@@ -1,0 +1,12 @@
+fragment EventTimeSourceData on EventTimeSource {
+  ... on EventTimeSourceFromPath {
+    pattern
+    timestampFormat
+  }
+  ... on EventTimeSourceFromMetadata {
+    __typename
+  }
+  ... on EventTimeSourceFromSystemTime {
+    __typename
+  }
+}

@@ -9,7 +9,7 @@ import { ChangeDetectionStrategy, Component, inject, Input } from "@angular/core
 import { MatIconModule } from "@angular/material/icon";
 
 import RoutingResolvers from "@common/resolvers/routing-resolvers";
-import { FlowEventTaskChanged, TaskStatus } from "@api/kamu.graphql.interface";
+import { FlowEventTaskChangedDataFragment, TaskStatus } from "@api/kamu.graphql.interface";
 
 import { AppConfigService } from "src/app/app-config.service";
 import { LoggedUserService } from "src/app/auth/logged-user.service";
@@ -43,17 +43,21 @@ export class FlowDetailsLogsTabComponent {
 
     public get taskIds(): string[] {
         return this.flowDetails.flowHistory
-            .filter((item) => item.__typename === "FlowEventTaskChanged" && item.taskStatus === TaskStatus.Running)
-            .map((item) => (item as FlowEventTaskChanged).taskId);
+            .filter(
+                (item): item is FlowEventTaskChangedDataFragment =>
+                    item.__typename === "FlowEventTaskChanged" && item.taskStatus === TaskStatus.Running,
+            )
+            .map((item) => item.taskId);
     }
 
-    public getTaskChangeHistory(taskId: string): FlowEventTaskChanged[] {
+    public getTaskChangeHistory(taskId: string): FlowEventTaskChangedDataFragment[] {
         return this.flowDetails.flowHistory.filter(
-            (item) => item.__typename === "FlowEventTaskChanged" && item.taskId === taskId,
-        ) as FlowEventTaskChanged[];
+            (item): item is FlowEventTaskChangedDataFragment =>
+                item.__typename === "FlowEventTaskChanged" && item.taskId === taskId,
+        );
     }
 
-    public grafanaTaskLogsUrl(url: string, eventTask: FlowEventTaskChanged[]): string {
+    public grafanaTaskLogsUrl(url: string, eventTask: FlowEventTaskChangedDataFragment[]): string {
         return this.grafanaLogsService.buildTaskUrl(url, eventTask);
     }
 }

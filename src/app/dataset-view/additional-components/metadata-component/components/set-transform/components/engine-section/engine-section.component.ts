@@ -21,7 +21,7 @@ import { MatDividerModule } from "@angular/material/divider";
 
 import { BaseComponent } from "@common/components/base.component";
 import AppValues from "@common/values/app.values";
-import { EngineDesc, EnginesQuery } from "@api/kamu.graphql.interface";
+import { EngineDescDataFragment, EnginesQuery } from "@api/kamu.graphql.interface";
 import { MaybeNull } from "@interface/app.types";
 
 import { EngineSelectComponent } from "src/app/dataset-view/additional-components/metadata-component/components/set-transform/components/engine-section/components/engine-select/engine-select.component";
@@ -42,7 +42,7 @@ import { EngineService } from "src/app/dataset-view/additional-components/metada
     ],
 })
 export class EngineSectionComponent extends BaseComponent implements OnInit {
-    @Input() public knownEngines: MaybeNull<EngineDesc[]>;
+    @Input() public knownEngines: MaybeNull<EngineDescDataFragment[]>;
     @Input() public selectedEngine: string;
     @Output() public onEmitSelectedEngine: EventEmitter<string> = new EventEmitter<string>();
     public selectedImage: string;

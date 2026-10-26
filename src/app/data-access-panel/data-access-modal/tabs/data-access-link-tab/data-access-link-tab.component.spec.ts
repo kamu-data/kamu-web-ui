@@ -13,6 +13,7 @@ import {
     emitClickOnElementByDataTestId,
     getElementByDataTestId,
     registerMatSvgIcons,
+    setComponentInput,
 } from "@common/helpers/base-test.helpers.spec";
 import AppValues from "@common/values/app.values";
 
@@ -33,7 +34,7 @@ describe("DataAccessLinkTabComponent", () => {
 
         fixture = TestBed.createComponent(DataAccessLinkTabComponent);
         component = fixture.componentInstance;
-        component.webLink = mockDatasetEndPoints.webLink;
+        setComponentInput(fixture, "webLink", mockDatasetEndPoints.webLink);
         fixture.detectChanges();
     });
 

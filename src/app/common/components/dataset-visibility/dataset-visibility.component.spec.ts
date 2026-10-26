@@ -8,7 +8,7 @@
 import { ComponentFixture, TestBed } from "@angular/core/testing";
 
 import { DatasetVisibilityComponent } from "@common/components/dataset-visibility/dataset-visibility.component";
-import { findElementByDataTestId } from "@common/helpers/base-test.helpers.spec";
+import { getElementByDataTestId, setComponentInput } from "@common/helpers/base-test.helpers.spec";
 
 import { mockPrivateDatasetVisibility, mockPublicDatasetVisibility } from "src/app/search/mock.data";
 
@@ -29,16 +29,16 @@ describe("DatasetVisibilityComponent", () => {
     });
 
     it("should check dataset visibility is public", () => {
-        component.datasetVisibility = mockPublicDatasetVisibility;
+        setComponentInput(fixture, "datasetVisibility", mockPublicDatasetVisibility);
         fixture.detectChanges();
-        const badgeElemnet = findElementByDataTestId(fixture, "dataset-visibility") as HTMLSpanElement;
+        const badgeElemnet = getElementByDataTestId(fixture, "dataset-visibility", HTMLSpanElement);
         expect(badgeElemnet.textContent?.trim()).toEqual("Public");
     });
 
     it("should check dataset visibility is private", () => {
-        component.datasetVisibility = mockPrivateDatasetVisibility;
+        setComponentInput(fixture, "datasetVisibility", mockPrivateDatasetVisibility);
         fixture.detectChanges();
-        const badgeElemnet = findElementByDataTestId(fixture, "dataset-visibility") as HTMLSpanElement;
+        const badgeElemnet = getElementByDataTestId(fixture, "dataset-visibility", HTMLSpanElement);
         expect(badgeElemnet.textContent?.trim()).toEqual("Private");
     });
 });

@@ -16,8 +16,4 @@ export const mockUploadPrepareResponse: UploadPrepareResponse = {
     useMultipart: true,
 };
 
-export const mockFile = {
-    name: "data.csv",
-    size: 12,
-    type: "text/csv",
-} as File;
+export const mockFile = new File(["id,name\n1,a\n"], "data.csv", { type: "text/csv" });

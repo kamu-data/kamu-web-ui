@@ -7,6 +7,7 @@
 
 import { ComponentFixture, TestBed } from "@angular/core/testing";
 
+import { setComponentInput } from "@common/helpers/base-test.helpers.spec";
 import { SharedTestModule } from "@common/modules/shared-test.module";
 
 import { SetVocabEventComponent } from "src/app/dataset-block/metadata-block/components/event-details/components/set-vocab-event/set-vocab-event.component";
@@ -23,7 +24,7 @@ describe("SetVocabEventComponent", () => {
 
         fixture = TestBed.createComponent(SetVocabEventComponent);
         component = fixture.componentInstance;
-        component.event = mockSetVocab;
+        setComponentInput(fixture, "event", mockSetVocab);
         fixture.detectChanges();
     });
 

@@ -51,6 +51,11 @@ export class TimeDeltaFormComponent extends BaseComponent implements OnInit {
 - Inputs and outputs use the decorators — `@Input({ required: true })`, `@Input()`, `@Output()`
   with an `EventEmitter` — matching the rest of the codebase. Do not migrate to signal inputs,
   `input()`/`output()` or signals unless the user asks for that migration.
+- An input, a service result or a helper parameter is typed with what really reaches it, so
+  neither the app nor its specs need a cast to pass data in:
+  - GraphQL data: the type rules are in `kamu-ui-graphql-api`, "Documents".
+  - An input bound from a route or query parameter is `MaybeUndefined<T>`: the router sets it to
+    `undefined` when the parameter is missing.
 - Templates use the built-in control flow: `@if` / `@else`, `@for` and `@switch`. Never
   `*ngIf`, `*ngFor` or `[ngSwitch]`, which Angular deprecates for removal. Pick the `@for`
   `track` expression by where the list comes from:

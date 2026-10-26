@@ -1,0 +1,7 @@
+fragment SetPollingSourceFetchData on SetPollingSource {
+  fetch {
+    ...FetchStepUrlData
+    ...FetchStepFilesGlobData
+    ...FetchStepContainerData
+  }
+}

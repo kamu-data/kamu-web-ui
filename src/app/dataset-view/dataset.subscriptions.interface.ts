@@ -13,10 +13,11 @@ import {
     DatasetOverviewFragment,
     DatasetPageInfoFragment,
     MetadataBlockFragment,
-    SetVocab,
+    SetVocabEventFragment,
 } from "@api/kamu.graphql.interface";
 import { MaybeNull } from "@interface/app.types";
 import { DatasetSchema } from "@interface/dataset-schema.interface";
+import { DatasetLineageEntry } from "@interface/dataset.interface";
 
 export interface OverviewUpdate {
     schema: MaybeNull<DatasetSchema>;
@@ -28,7 +29,7 @@ export interface OverviewUpdate {
 export interface DataUpdate {
     schema: MaybeNull<DatasetSchema>;
     content: DynamicTableDataRow[];
-    currentVocab?: SetVocab;
+    currentVocab?: SetVocabEventFragment;
 }
 
 export interface DataSqlErrorUpdate {
@@ -47,7 +48,7 @@ export interface DatasetHistoryUpdate {
 }
 
 export interface LineageUpdate {
-    nodes: DatasetLineageBasicsFragment[];
-    edges: DatasetLineageBasicsFragment[][];
+    nodes: DatasetLineageEntry[];
+    edges: DatasetLineageEntry[][];
     origin: DatasetLineageBasicsFragment;
 }

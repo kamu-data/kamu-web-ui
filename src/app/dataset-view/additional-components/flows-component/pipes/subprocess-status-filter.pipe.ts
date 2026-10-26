@@ -7,16 +7,16 @@
 
 import { Pipe, PipeTransform } from "@angular/core";
 
-import { FlowProcessEffectiveState, WebhookFlowSubProcess } from "@api/kamu.graphql.interface";
+import { FlowProcessEffectiveState, WebhookFlowSubProcessDataFragment } from "@api/kamu.graphql.interface";
 
 @Pipe({
     name: "subprocessStatusFilter",
 })
 export class SubprocessStatusFilterPipe implements PipeTransform {
     public transform(
-        subprocesses: WebhookFlowSubProcess[],
+        subprocesses: WebhookFlowSubProcessDataFragment[],
         filter: FlowProcessEffectiveState[],
-    ): WebhookFlowSubProcess[] {
+    ): WebhookFlowSubProcessDataFragment[] {
         if (!filter.length) return subprocesses;
 
         return subprocesses.filter((item) => filter.includes(item.summary.effectiveState));

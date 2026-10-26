@@ -11,6 +11,7 @@ import { ComponentFixture, TestBed } from "@angular/core/testing";
 import { ApolloTestingModule } from "apollo-angular/testing";
 
 import { HIGHLIGHT_OPTIONS_PROVIDER } from "@common/helpers/app.helpers";
+import { setComponentInput } from "@common/helpers/base-test.helpers.spec";
 import { SharedTestModule } from "@common/modules/shared-test.module";
 
 import { BaseDynamicEventHarness } from "src/app/dataset-block/metadata-block/components/event-details/components/base-dynamic-event/base-dynamic-event.harness";
@@ -29,7 +30,7 @@ describe("SetTransformEventComponent", () => {
 
         fixture = TestBed.createComponent(SetTransformEventComponent);
         component = fixture.componentInstance;
-        fixture.componentRef.setInput("event", mockSetTransform);
+        setComponentInput(fixture, "event", mockSetTransform);
         fixture.detectChanges();
     });
 

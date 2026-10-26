@@ -6,15 +6,8 @@
  */
 
 import { TestBed } from "@angular/core/testing";
-import {
-    ActivatedRouteSnapshot,
-    CanActivateFn,
-    convertToParamMap,
-    Router,
-    RouterStateSnapshot,
-    UrlTree,
-} from "@angular/router";
 
+import { expectRedirectTo, routeSnapshot, runCanActivate } from "@common/helpers/base-test.helpers.spec";
 import { TEST_ACCOUNT_NAME } from "@api/mock/dataset.mock";
 
 import { AccountTabs } from "src/app/account/account.constants";
@@ -22,20 +15,11 @@ import { accountGuard } from "src/app/account/guards/account.guard";
 import ProjectLinks from "src/app/project-links";
 
 describe("accountGuard", () => {
-    let router: Router;
-    const routeSnapshot = {
-        paramMap: convertToParamMap({
-            [ProjectLinks.URL_PARAM_ACCOUNT_NAME]: TEST_ACCOUNT_NAME,
-        }),
-    } as ActivatedRouteSnapshot;
+    const route = routeSnapshot({ params: { [ProjectLinks.URL_PARAM_ACCOUNT_NAME]: TEST_ACCOUNT_NAME } });
     const datasetsTabUrl = `/${TEST_ACCOUNT_NAME}/${ProjectLinks.URL_ACCOUNT_SELECT}/${AccountTabs.DATASETS}`;
-
-    const executeGuard: CanActivateFn = (...guardParameters) =>
-        TestBed.runInInjectionContext(() => accountGuard(...guardParameters));
 
     beforeEach(() => {
         TestBed.configureTestingModule({});
-        router = TestBed.inject(Router);
     });
 
     [
@@ -43,9 +27,8 @@ describe("accountGuard", () => {
         `/${TEST_ACCOUNT_NAME}/${ProjectLinks.URL_ACCOUNT_SELECT}/${AccountTabs.DATASETS}?page=2`,
         `/${TEST_ACCOUNT_NAME}/${ProjectLinks.URL_ACCOUNT_SELECT}/${AccountTabs.FLOWS}#top`,
     ].forEach((url) => {
-        it(`should allow the tab URL ${url}`, () => {
-            const result = executeGuard(routeSnapshot, { url } as RouterStateSnapshot);
-            expect(result).toBeTrue();
+        it(`should allow the tab URL ${url}`, async () => {
+            expect(await runCanActivate(accountGuard, route, url)).toBeTrue();
         });
     });
 
@@ -55,9 +38,8 @@ describe("accountGuard", () => {
         `/${TEST_ACCOUNT_NAME}/`,
         `/${TEST_ACCOUNT_NAME}#/${AccountTabs.FLOWS}`,
     ].forEach((url) => {
-        it(`should redirect ${url} to the datasets tab`, () => {
-            const result = executeGuard(routeSnapshot, { url } as RouterStateSnapshot);
-            expect(router.serializeUrl(result as UrlTree)).toEqual(datasetsTabUrl);
+        it(`should redirect ${url} to the datasets tab`, async () => {
+            expectRedirectTo(await runCanActivate(accountGuard, route, url), datasetsTabUrl);
         });
     });
 });

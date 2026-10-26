@@ -8,7 +8,7 @@
 import { ComponentFixture, TestBed } from "@angular/core/testing";
 import { FormControl, FormGroup } from "@angular/forms";
 
-import { emitClickOnElementByDataTestId } from "@common/helpers/base-test.helpers.spec";
+import { emitClickOnElementByDataTestId, setComponentInput } from "@common/helpers/base-test.helpers.spec";
 
 import { SelectKindFieldComponent } from "src/app/dataset-view/additional-components/metadata-component/components/form-components/select-kind-field/select-kind-field.component";
 import { FetchKind } from "src/app/dataset-view/additional-components/metadata-component/components/source-events/add-polling-source/add-polling-source-form.types";
@@ -25,10 +25,14 @@ describe("SelectKindFieldComponent", () => {
 
         fixture = TestBed.createComponent(SelectKindFieldComponent);
         component = fixture.componentInstance;
-        component.data = FETCH_STEP_RADIO_CONTROLS;
-        component.form = new FormGroup({
-            kind: new FormControl(FetchKind.URL),
-        });
+        setComponentInput(fixture, "data", FETCH_STEP_RADIO_CONTROLS);
+        setComponentInput(
+            fixture,
+            "form",
+            new FormGroup({
+                kind: new FormControl(FetchKind.URL),
+            }),
+        );
         fixture.detectChanges();
     });
 

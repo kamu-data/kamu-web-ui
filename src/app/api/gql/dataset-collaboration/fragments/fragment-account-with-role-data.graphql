@@ -1,0 +1,6 @@
+fragment AccountWithRoleData on AccountWithRole {
+  account {
+    ...Account
+  }
+  role
+}

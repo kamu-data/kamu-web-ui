@@ -14,7 +14,7 @@ import { ToastrService } from "ngx-toastr";
 
 import { BaseComponent } from "@common/components/base.component";
 import { BlockRowDataComponent } from "@common/components/block-row-data/block-row-data.component";
-import { Seed } from "@api/kamu.graphql.interface";
+import { SeedEventFragment } from "@api/kamu.graphql.interface";
 
 @Component({
     selector: "app-seed-event",
@@ -30,7 +30,7 @@ import { Seed } from "@api/kamu.graphql.interface";
     ],
 })
 export class SeedEventComponent extends BaseComponent {
-    @Input({ required: true }) public event: Seed;
+    @Input({ required: true }) public event: SeedEventFragment;
 
     private clipboard = inject(Clipboard);
     private toastService = inject(ToastrService);

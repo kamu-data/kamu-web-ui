@@ -12,11 +12,10 @@ import { ComponentFixture, TestBed } from "@angular/core/testing";
 import { provideToastr } from "ngx-toastr";
 
 import { TimelineComponent } from "@common/components/timeline-component/timeline.component";
-import { findElementByDataTestId, registerMatSvgIcons } from "@common/helpers/base-test.helpers.spec";
+import { getElementByDataTestId, registerMatSvgIcons, setComponentInput } from "@common/helpers/base-test.helpers.spec";
 import { SharedTestModule } from "@common/modules/shared-test.module";
 import AppValues from "@common/values/app.values";
-import { MetadataBlockFragment } from "@api/kamu.graphql.interface";
-import { mockGetMetadataBlockQuery, TEST_DATASET_NAME } from "@api/mock/dataset.mock";
+import { mockMetadataBlockByHash, TEST_DATASET_NAME } from "@api/mock/dataset.mock";
 
 import { mockPageBasedInfo } from "src/app/search/mock.data";
 
@@ -34,11 +33,9 @@ describe("TimelineComponent", () => {
 
         fixture = TestBed.createComponent(TimelineComponent);
         component = fixture.componentInstance;
-        component.datasetName = TEST_DATASET_NAME;
-        component.pageInfo = mockPageBasedInfo;
-        component.history = [
-            mockGetMetadataBlockQuery.datasets.byOwnerAndName?.metadata.chain.blockByHash as MetadataBlockFragment,
-        ];
+        setComponentInput(fixture, "datasetName", TEST_DATASET_NAME);
+        setComponentInput(fixture, "pageInfo", mockPageBasedInfo);
+        setComponentInput(fixture, "history", [mockMetadataBlockByHash]);
 
         fixture.detectChanges();
     });
@@ -48,8 +45,8 @@ describe("TimelineComponent", () => {
     });
 
     it("should check avatar url", () => {
-        const imageElement = findElementByDataTestId(fixture, "timeline-avatarUrl-0") as HTMLImageElement;
-        const src = mockGetMetadataBlockQuery.datasets.byOwnerAndName?.metadata.chain.blockByHash?.author.avatarUrl;
+        const imageElement = getElementByDataTestId(fixture, "timeline-avatarUrl-0", HTMLImageElement);
+        const src = mockMetadataBlockByHash.author.avatarUrl;
         const result = src ? src : AppValues.DEFAULT_AVATAR_URL;
         expect(imageElement.src).toEqual(result);
     });

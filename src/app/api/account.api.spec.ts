@@ -12,6 +12,7 @@ import { first } from "rxjs";
 import { Apollo } from "apollo-angular";
 import { ApolloTestingController, ApolloTestingModule } from "apollo-angular/testing";
 
+import { requireValue } from "@common/helpers/app.helpers";
 import { AccountApi } from "@api/account.api";
 import {
     AccountByNameDocument,
@@ -40,13 +41,10 @@ import {
     ChangeAdminPasswordMutation,
     ChangeUserPasswordDocument,
     ChangeUserPasswordMutation,
-    DatasetFlowProcess,
     DatasetFlowType,
     DeleteAccountByNameDocument,
     DeleteAccountByNameMutation,
-    FlowConnectionDataFragment,
     FlowProcessOrderField,
-    ModifyPasswordSuccess,
     OrderingDirection,
 } from "@api/kamu.graphql.interface";
 import {
@@ -148,9 +146,8 @@ describe("AccountApi", () => {
                 filters: ACCOUNT_FILTERS,
             })
             .subscribe((list: AccountListFlowsQuery) => {
-                expect((list.accounts.byName?.flows?.runs.table as FlowConnectionDataFragment).totalCount).toEqual(
-                    (mockAccountListFlowsQuery.accounts.byName?.flows?.runs.table as FlowConnectionDataFragment)
-                        .totalCount,
+                expect(requireValue(list.accounts.byName?.flows.runs.table ?? null).totalCount).toEqual(
+                    requireValue(mockAccountListFlowsQuery.accounts.byName?.flows.runs.table ?? null).totalCount,
                 );
             });
 
@@ -259,11 +256,7 @@ describe("AccountApi", () => {
         service
             .changeAdminPassword({ accountName: ACCOUNT_NAME, password: NEW_PASSWORD })
             .subscribe((state: ChangeAdminPasswordMutation) => {
-                if (state.accounts.byName?.modifyPassword.__typename === "ModifyPasswordSuccess")
-                    expect(state.accounts.byName?.modifyPassword.message).toEqual(
-                        (mockChangeAdminPasswordMutation.accounts.byName?.modifyPassword as ModifyPasswordSuccess)
-                            .message,
-                    );
+                expect(state).toEqual(mockChangeAdminPasswordMutation);
             });
         const op = controller.expectOne(ChangeAdminPasswordDocument);
         expect(op.operation.variables.accountName).toEqual(ACCOUNT_NAME);
@@ -278,13 +271,7 @@ describe("AccountApi", () => {
         service
             .changeUserPassword({ accountName: ACCOUNT_NAME, oldPassword: OLD_PASSWORD, newPassword: NEW_PASSWORD })
             .subscribe((state: ChangeUserPasswordMutation) => {
-                if (state.accounts.byName?.modifyPasswordWithConfirmation.__typename === "ModifyPasswordSuccess")
-                    expect(state.accounts.byName?.modifyPasswordWithConfirmation.message).toEqual(
-                        (
-                            mockChangeUserPasswordMutation.accounts.byName
-                                ?.modifyPasswordWithConfirmation as ModifyPasswordSuccess
-                        ).message,
-                    );
+                expect(state).toEqual(mockChangeUserPasswordMutation);
             });
         const op = controller.expectOne(ChangeUserPasswordDocument);
         expect(op.operation.variables.accountName).toEqual(ACCOUNT_NAME);
@@ -309,9 +296,9 @@ describe("AccountApi", () => {
                 expect(result.accounts.byName?.flows.processes.allCards.nodes.length).toEqual(
                     mockAccountFlowsAsCardsQuery.accounts.byName?.flows.processes.allCards.nodes.length,
                 );
-                expect(
-                    (result.accounts.byName?.flows.processes.allCards.nodes[0] as DatasetFlowProcess).flowType,
-                ).toEqual(DatasetFlowType.Ingest);
+                expect(result.accounts.byName?.flows.processes.allCards.nodes[0]).toEqual(
+                    jasmine.objectContaining({ flowType: DatasetFlowType.Ingest }),
+                );
             });
         const op = controller.expectOne(AccountFlowsAsCardsDocument);
         expect(op.operation.variables.name).toEqual(ACCOUNT_NAME);
@@ -334,9 +321,9 @@ describe("AccountApi", () => {
                 expect(result.accounts.byName?.flows.processes.primaryCards.nodes.length).toEqual(
                     mockAccountFlowsPrimaryCardsQuery.accounts.byName?.flows.processes.primaryCards.nodes.length,
                 );
-                expect(
-                    (result.accounts.byName?.flows.processes.primaryCards.nodes[0] as DatasetFlowProcess).flowType,
-                ).toEqual(DatasetFlowType.Ingest);
+                expect(result.accounts.byName?.flows.processes.primaryCards.nodes[0].flowType).toEqual(
+                    DatasetFlowType.Ingest,
+                );
             });
         const op = controller.expectOne(AccountPrimaryCardsDocument);
         expect(op.operation.variables.name).toEqual(ACCOUNT_NAME);

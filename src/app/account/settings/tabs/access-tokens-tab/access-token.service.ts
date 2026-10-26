@@ -13,9 +13,9 @@ import { ToastrService } from "ngx-toastr";
 
 import { AccessTokenApi } from "@api/access-token.api";
 import {
-    AccessTokenConnection,
+    AccessTokenConnectionDataFragment,
     CreateAccessTokenMutation,
-    CreatedAccessToken,
+    CreatedAccessTokenDataFragment,
     ListAccessTokensQuery,
     RevokeAccessTokenMutation,
 } from "@api/kamu.graphql.interface";
@@ -32,26 +32,29 @@ export class AccessTokenService {
         accountId: string;
         page: number;
         perPage: number;
-    }): Observable<AccessTokenConnection> {
+    }): Observable<AccessTokenConnectionDataFragment> {
         return this.accessTokenApi
             .listAccessTokens(params)
             .pipe(
                 map(
                     (result: ListAccessTokensQuery) =>
-                        result.accounts.byId?.accessTokens.listAccessTokens as AccessTokenConnection,
+                        result.accounts.byId?.accessTokens.listAccessTokens as AccessTokenConnectionDataFragment,
                 ),
             );
     }
 
-    public createAccessTokens(accountId: string, tokenName: string): Observable<MaybeNull<CreatedAccessToken>> {
+    public createAccessTokens(
+        accountId: string,
+        tokenName: string,
+    ): Observable<MaybeNull<CreatedAccessTokenDataFragment>> {
         return this.accessTokenApi.createAccessToken(accountId, tokenName).pipe(
             map((result: CreateAccessTokenMutation) => {
-                const typename = result.accounts.byId?.accessTokens.createAccessToken.__typename;
-                if (typename === "CreateAccessTokenResultSuccess") {
-                    this.toastrService.success(result.accounts.byId?.accessTokens.createAccessToken.message);
-                    return result.accounts.byId?.accessTokens.createAccessToken.token as CreatedAccessToken;
+                const createResult = result.accounts.byId?.accessTokens.createAccessToken;
+                if (createResult?.__typename === "CreateAccessTokenResultSuccess") {
+                    this.toastrService.success(createResult.message);
+                    return createResult.token;
                 } else {
-                    this.toastrService.error(result.accounts.byId?.accessTokens.createAccessToken.message);
+                    this.toastrService.error(createResult?.message);
                     return null;
                 }
             }),

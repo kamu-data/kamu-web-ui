@@ -23,7 +23,7 @@
         (change)="onChangeFiltersMode($event)"
     >
         @for (item of CARD_FILTERS_MODE_OPTIONS; track item) {
-            <mat-button-toggle [value]="item.value">
+            <mat-button-toggle [value]="item.value" [attr.data-test-id]="'filters-mode-' + item.value">
                 <mat-icon aria-hidden="true" class="fs-4 mr-2px">{{ item.iconName }}</mat-icon
                 >{{ item.label }}</mat-button-toggle
             >
@@ -42,7 +42,7 @@
         >
             @for (item of ROLLUP_OPTIONS; track item) {
                 @if (rollupAvailabilityMapper(accountFlowsData.datasetsFiltersMode, item.state)) {
-                    <mat-button-toggle [value]="item.state">
+                    <mat-button-toggle [value]="item.state" [attr.data-test-id]="'rollup-state-' + item.state">
                         <mat-icon aria-hidden="true" [class]="'fs-4 mr-2px mt-2px ' + item.iconClass">{{
                             item.iconName
                         }}</mat-icon
@@ -114,7 +114,7 @@
                     @if (card.__typename === "DatasetFlowProcess") {
                         <div>
                             <app-dataset-flow-process-card
-                                [datasetBasics]="itemToBasics(card.dataset)"
+                                [datasetBasics]="card.dataset"
                                 [summary]="card.summary"
                                 [showFlowsHistoryLink]="true"
                                 [actionInProgress]="busyCardIds?.has(card.dataset.id) ?? false"
@@ -127,7 +127,7 @@
                         <div>
                             @if (card.parentDataset) {
                                 <app-webhook-flow-process-card
-                                    [datasetBasics]="itemToBasics(card.parentDataset)"
+                                    [datasetBasics]="card.parentDataset"
                                     [summary]="card.summary"
                                     [subscriptionId]="card.id"
                                     [subscriptionName]="card.name"

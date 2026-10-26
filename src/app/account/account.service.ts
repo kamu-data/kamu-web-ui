@@ -25,10 +25,10 @@ import {
     ChangeAccountUsernameMutation,
     ChangeAdminPasswordMutation,
     ChangeUserPasswordMutation,
-    Dataset,
-    DatasetBasicsFragment,
+    DatasetFlowProcessConnectionDataFragment,
     DatasetsByAccountNameQuery,
     DatasetsTotalCountByAccountNameQuery,
+    DatasetWithFlowsDataFragment,
     DeleteAccountByNameMutation,
     FlowConnectionDataFragment,
     FlowConnectionWidgetDataFragment,
@@ -36,6 +36,7 @@ import {
     FlowProcessGroupRollupDataFragment,
     FlowProcessOrdering,
     FlowRunOrder,
+    WebhookFlowSubProcessConnectionDataFragment,
 } from "@api/kamu.graphql.interface";
 import { MaybeNull } from "@interface/app.types";
 import { DatasetsAccountResponse } from "@interface/dataset.interface";
@@ -110,7 +111,7 @@ export class AccountService {
                     connectionDataForTable: listFlows.accounts.byName?.flows?.runs.table as FlowConnectionDataFragment,
                     connectionDataForWidget: listFlows.accounts.byName?.flows?.runs
                         .tiles as FlowConnectionWidgetDataFragment,
-                    involvedDatasets: datasetsWithFlows as DatasetBasicsFragment[],
+                    involvedDatasets: datasetsWithFlows,
                 };
             }),
         );
@@ -145,7 +146,7 @@ export class AccountService {
             map((data: AccountPrimaryCardsQuery) => {
                 return {
                     cards: data.accounts.byName?.flows.processes
-                        .primaryCards as AccountFlowProcessCardConnectionDataFragment,
+                        .primaryCards as DatasetFlowProcessConnectionDataFragment,
                     rollup: data.accounts.byName?.flows.processes.primaryRollup as FlowProcessGroupRollupDataFragment,
                 };
             }),
@@ -163,21 +164,22 @@ export class AccountService {
             map((data: AccountWebhookCardsQuery) => {
                 return {
                     cards: data.accounts.byName?.flows.processes
-                        .webhookCards as AccountFlowProcessCardConnectionDataFragment,
+                        .webhookCards as WebhookFlowSubProcessConnectionDataFragment,
                     rollup: data.accounts.byName?.flows.processes.webhookRollup as FlowProcessGroupRollupDataFragment,
                 };
             }),
         );
     }
 
-    public getDatasetsWithFlows(accounName: string): Observable<Dataset[]> {
+    public getDatasetsWithFlows(accounName: string): Observable<DatasetWithFlowsDataFragment[]> {
         return this.accountApi.accountDatasetsWithFlows(accounName).pipe(
             map((data: AccountListDatasetsWithFlowsQuery) => {
-                return data.accounts.byName?.flows?.runs.listDatasetsWithFlow.nodes.sort((a, b) => {
+                const datasets = data.accounts.byName?.flows.runs.listDatasetsWithFlow.nodes ?? [];
+                return [...datasets].sort((a, b) => {
                     if (a.name < b.name) return -1;
                     if (a.name > b.name) return 1;
                     return 0;
-                }) as Dataset[];
+                });
             }),
         );
     }

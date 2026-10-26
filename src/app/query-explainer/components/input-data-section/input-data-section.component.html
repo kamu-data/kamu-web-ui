@@ -54,9 +54,7 @@
                             @if (datasetInfoObservables$[i] | async; as datasetInfo) {
                                 <div class="mt-2 text-break">
                                     <a
-                                        [class.error-color]="
-                                            isDatasetNotFoundError(inputData.sqlQueryVerify?.error, dataset.id)
-                                        "
+                                        [class.error-color]="isDatasetNotFoundError(verifyError, dataset.id)"
                                         [routerLink]="
                                             {
                                                 accountName: datasetInfo.accountName,
@@ -80,9 +78,7 @@
                             <div class="fw-500">Block hash:</div>
                             <div class="mt-2">
                                 <app-display-hash
-                                    [class.error-color]="
-                                        isDatasetBlockNotFoundError(inputData.sqlQueryVerify?.error, dataset.blockHash)
-                                    "
+                                    [class.error-color]="isDatasetBlockNotFoundError(verifyError, dataset.blockHash)"
                                     [value]="dataset.blockHash"
                                     [showCopyButton]="true"
                                     data-test-id="input-dataset-hash"

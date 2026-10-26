@@ -5,11 +5,11 @@
  * included in the LICENSE file.
  */
 
-import { DatasetEndpoints, DatasetKind, DatasetProtocolsQuery } from "@api/kamu.graphql.interface";
+import { DatasetEndpointsDataFragment, DatasetKind, DatasetProtocolsQuery } from "@api/kamu.graphql.interface";
 
 import { mockOwnerFieldsWithAvatar, mockPublicDatasetVisibility } from "src/app/search/mock.data";
 
-export const mockDatasetEndPoints: DatasetEndpoints = {
+export const mockDatasetEndPoints: DatasetEndpointsDataFragment = {
     __typename: "DatasetEndpoints",
     cli: {
         __typename: "CliProtocolDesc",

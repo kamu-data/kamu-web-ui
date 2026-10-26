@@ -16,7 +16,7 @@ import { NgbModal, NgbModalRef } from "@ng-bootstrap/ng-bootstrap";
 
 import { BaseComponent } from "@common/components/base.component";
 import { FeatureFlagDirective } from "@common/directives/feature-flag.directive";
-import { DatasetBasicsFragment, DatasetEndpoints } from "@api/kamu.graphql.interface";
+import { DatasetBasicsFragment, DatasetEndpointsDataFragment } from "@api/kamu.graphql.interface";
 import { MaybeUndefined } from "@interface/app.types";
 
 import { DataAccessModalComponent } from "src/app/data-access-panel/data-access-modal/data-access-modal.component";
@@ -40,7 +40,7 @@ import { NavigationService } from "../services/navigation.service";
 export class DataAccessPanelComponent extends BaseComponent {
     @Input({ required: true }) public datasetBasics: DatasetBasicsFragment;
     @Input({ required: true }) public isUserLogged: boolean;
-    public protocols$: Observable<MaybeUndefined<DatasetEndpoints>>;
+    public protocols$: Observable<MaybeUndefined<DatasetEndpointsDataFragment>>;
 
     private ngbModalService = inject(NgbModal);
     private navigationService = inject(NavigationService);

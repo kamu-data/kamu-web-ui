@@ -13,16 +13,15 @@ import { MatIconModule } from "@angular/material/icon";
 import { NgbModal } from "@ng-bootstrap/ng-bootstrap";
 import { Apollo } from "apollo-angular";
 
-import { findElementByDataTestId, registerMatSvgIcons } from "@common/helpers/base-test.helpers.spec";
+import {
+    findElementByDataTestId,
+    registerMatSvgIcons,
+    setComponentInput,
+} from "@common/helpers/base-test.helpers.spec";
 import { SharedTestModule } from "@common/modules/shared-test.module";
 
-import {
-    mockMetadataDerivedUpdate,
-    mockOverviewDataUpdate,
-    mockOverviewDataUpdateNullable,
-} from "src/app/dataset-view/additional-components/data-tabs.mock";
+import { mockDerivedOverviewUpdate } from "src/app/dataset-view/additional-components/data-tabs.mock";
 import { MetadataLicenseTabComponent } from "src/app/dataset-view/additional-components/metadata-component/tabs/metadata-license-tab/metadata-license-tab.component";
-import { OverviewUpdate } from "src/app/dataset-view/dataset.subscriptions.interface";
 import {
     mockDatasetBasicsDerivedFragment,
     mockFullPowerDatasetPermissionsFragment,
@@ -45,16 +44,11 @@ describe("MetadataLicenseTabComponent", () => {
         modalService = TestBed.inject(NgbModal);
         component = fixture.componentInstance;
 
-        component.datasetMetadataTabData = {
+        setComponentInput(fixture, "datasetMetadataTabData", {
             datasetBasics: mockDatasetBasicsDerivedFragment,
             datasetPermissions: mockFullPowerDatasetPermissionsFragment,
-            overviewUpdate: {
-                schema: mockMetadataDerivedUpdate.schema,
-                content: mockOverviewDataUpdate.content,
-                overview: structuredClone(mockOverviewDataUpdateNullable.overview),
-                size: mockOverviewDataUpdate.size,
-            } as OverviewUpdate,
-        };
+            overviewUpdate: mockDerivedOverviewUpdate,
+        });
 
         fixture.detectChanges();
     });
@@ -75,7 +69,7 @@ describe("MetadataLicenseTabComponent", () => {
         const licenseName = findElementByDataTestId(fixture, "license-name");
         expect(licenseName?.innerText.trim()).toEqual(mockMetadataCurrentLicense.name);
         const licenseSpdxId = findElementByDataTestId(fixture, "license-spdxId");
-        expect(licenseSpdxId?.innerText.trim()).toEqual(mockMetadataCurrentLicense.spdxId as string);
+        expect(licenseSpdxId?.innerText.trim()).toEqual(mockMetadataCurrentLicense.spdxId);
         const licenseWebsiteUrl = findElementByDataTestId(fixture, "license-websiteUrl");
         expect(licenseWebsiteUrl?.innerText.trim()).toEqual(mockMetadataCurrentLicense.websiteUrl);
     });

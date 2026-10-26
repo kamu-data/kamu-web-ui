@@ -10,12 +10,10 @@ import { DatePipe } from "@angular/common";
 import AppValues from "@common/values/app.values";
 import {
     AccountFragment,
-    DatasetFlowProcesses,
+    DatasetFlowProcessesDataFragment,
     FlowProcessAutoStopReason,
     FlowProcessEffectiveState,
-    FlowProcessSummary,
     FlowProcessSummaryDataFragment,
-    FlowTriggerStopPolicyAfterConsecutiveFailures,
 } from "@api/kamu.graphql.interface";
 
 import {
@@ -60,7 +58,7 @@ export interface FlowsSelectionState {
 export interface DatasetFlowsTabState {
     flowsData: FlowsTableData;
     flowInitiators: AccountFragment[];
-    flowProcesses: DatasetFlowProcesses;
+    flowProcesses: DatasetFlowProcessesDataFragment;
 }
 
 export const RollupFiltersOptions: RollupFiltersDescriptor[] = [
@@ -227,7 +225,7 @@ function subMessagesActiveStateHelper(summary: FlowProcessSummaryDataFragment, i
     return "";
 }
 
-function additionalMessagesActiveStateHelper(summary: FlowProcessSummary): string {
+function additionalMessagesActiveStateHelper(summary: FlowProcessSummaryDataFragment): string {
     if (summary.nextPlannedAt) {
         return `Next planned: ${DatasetFlowBadgeHelpers.datePipe.transform(summary.nextPlannedAt, AppValues.DISPLAY_TIME_FORMAT)}`;
     } else {
@@ -236,8 +234,11 @@ function additionalMessagesActiveStateHelper(summary: FlowProcessSummary): strin
 }
 
 function additionalMessagesStoppedAutoHelper(summary: FlowProcessSummaryDataFragment): string {
-    if (summary.autoStoppedReason === FlowProcessAutoStopReason.StopPolicy) {
-        return `Reason: stop policy ${summary.consecutiveFailures} consecutive failures - ${summary.consecutiveFailures}/${(summary.stopPolicy as FlowTriggerStopPolicyAfterConsecutiveFailures).maxFailures} consecutive failures`;
+    if (
+        summary.autoStoppedReason === FlowProcessAutoStopReason.StopPolicy &&
+        summary.stopPolicy.__typename === "FlowTriggerStopPolicyAfterConsecutiveFailures"
+    ) {
+        return `Reason: stop policy ${summary.consecutiveFailures} consecutive failures - ${summary.consecutiveFailures}/${summary.stopPolicy.maxFailures} consecutive failures`;
     }
     if (summary.autoStoppedReason === FlowProcessAutoStopReason.UnrecoverableFailure) {
         return `Reason: unrecoverable failure`;

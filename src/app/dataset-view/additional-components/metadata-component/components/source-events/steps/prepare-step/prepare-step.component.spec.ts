@@ -10,7 +10,7 @@ import { FormGroupDirective } from "@angular/forms";
 
 import { Apollo } from "apollo-angular";
 
-import { emitClickOnElementByDataTestId } from "@common/helpers/base-test.helpers.spec";
+import { emitClickOnElementByDataTestId, setComponentInput } from "@common/helpers/base-test.helpers.spec";
 import { SharedTestModule } from "@common/modules/shared-test.module";
 import { MaybeNull } from "@interface/app.types";
 
@@ -37,8 +37,8 @@ describe("PrepareStepComponent", () => {
     function createComponent(eventYamlByHash: MaybeNull<string>): void {
         fixture = TestBed.createComponent(PrepareStepComponent);
         component = fixture.componentInstance;
-        component.sectionName = SetPollingSourceSection.PREPARE;
-        component.eventYamlByHash = eventYamlByHash;
+        setComponentInput(fixture, "sectionName", SetPollingSourceSection.PREPARE);
+        setComponentInput(fixture, "eventYamlByHash", eventYamlByHash);
         fixture.detectChanges();
     }
 
@@ -46,6 +46,24 @@ describe("PrepareStepComponent", () => {
         beforeEach(() => createComponent(mockSetPollingSourceEventYaml));
 
         it("should load the prepare steps from the event", () => {
+            expect(component.sectionForm.value).toEqual([
+                { kind: PrepareKind.PIPE, command: "jq -c .result[]" },
+                { kind: PrepareKind.DECOMPRESS, format: "zip", subPath: null },
+            ]);
+        });
+    });
+
+    describe("editing an event with a step of an unknown kind", () => {
+        beforeEach(() =>
+            createComponent(
+                mockSetPollingSourceEventYaml.replace(
+                    "    - kind: Pipe\n",
+                    "    - kind: Unknown\n      value: 1\n    - kind: Pipe\n",
+                ),
+            ),
+        );
+
+        it("should load only the steps of known kinds", () => {
             expect(component.sectionForm.value).toEqual([
                 { kind: PrepareKind.PIPE, command: "jq -c .result[]" },
                 { kind: PrepareKind.DECOMPRESS, format: "zip", subPath: null },

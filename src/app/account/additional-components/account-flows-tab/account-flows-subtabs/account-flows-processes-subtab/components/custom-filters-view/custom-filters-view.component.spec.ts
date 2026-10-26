@@ -9,9 +9,10 @@ import { ComponentFixture, TestBed } from "@angular/core/testing";
 
 import timekeeper from "timekeeper";
 
-import { emitClickOnElementByDataTestId } from "@common/helpers/base-test.helpers.spec";
+import { emitClickOnElementByDataTestId, setComponentInput } from "@common/helpers/base-test.helpers.spec";
 
 import { CustomFiltersViewComponent } from "src/app/account/additional-components/account-flows-tab/account-flows-subtabs/account-flows-processes-subtab/components/custom-filters-view/custom-filters-view.component";
+import { mockDashboardFilters } from "src/app/account/additional-components/account-flows-tab/account-flows-tab.mock";
 import { RangeLastAttempt } from "src/app/account/additional-components/account-flows-tab/account-flows-tab.types";
 
 describe("CustomFiltersViewComponent", () => {
@@ -24,21 +25,7 @@ describe("CustomFiltersViewComponent", () => {
         });
         fixture = TestBed.createComponent(CustomFiltersViewComponent);
         component = fixture.componentInstance;
-        component.dashboardFilters = component.dashboardFilters = {
-            fromFilterDate: undefined,
-            toFilterDate: undefined,
-            lastFailureDate: undefined,
-            nextPlannedBeforeDate: undefined,
-            nextPlannedAfterDate: undefined,
-            selectedOrderDirection: true,
-            selectedOrderField: undefined,
-            selectedQuickRangeLastAttempt: undefined,
-            selectedQuickRangeLastFailure: undefined,
-            selectedQuickRangeNextAttempt: undefined,
-            selectedFlowProcessStates: [],
-            minConsecutiveFailures: 0,
-            isFirstInitialization: false,
-        };
+        setComponentInput(fixture, "dashboardFilters", mockDashboardFilters());
     });
 
     it("should create", () => {
@@ -46,15 +33,27 @@ describe("CustomFiltersViewComponent", () => {
         expect(component).toBeTruthy();
     });
 
+    it("should render without changing the selected states, which the parent sets for the mode", () => {
+        fixture.detectChanges();
+        expect(component.dashboardFilters.selectedFlowProcessStates).toEqual([]);
+        expect(component.dashboardFilters.isFirstInitialization).toBeFalse();
+    });
+
     it("should check to change last attempt filter", () => {
-        component.dashboardFilters.selectedQuickRangeLastAttempt = RangeLastAttempt.LAST_5_MINUTES;
+        setComponentInput(fixture, "dashboardFilters", {
+            ...component.dashboardFilters,
+            selectedQuickRangeLastAttempt: RangeLastAttempt.LAST_5_MINUTES,
+        });
         fixture.detectChanges();
         component.onChangeLastAttemptFilter();
         expect(component.dashboardFilters.selectedQuickRangeLastAttempt).toBeUndefined();
     });
 
     it("should check to change last failure filter", () => {
-        component.dashboardFilters.selectedQuickRangeLastFailure = RangeLastAttempt.LAST_5_MINUTES;
+        setComponentInput(fixture, "dashboardFilters", {
+            ...component.dashboardFilters,
+            selectedQuickRangeLastFailure: RangeLastAttempt.LAST_5_MINUTES,
+        });
         fixture.detectChanges();
         component.onChangeLastFailureFilter();
         expect(component.dashboardFilters.selectedQuickRangeLastFailure).toBeUndefined();
@@ -71,126 +70,74 @@ describe("CustomFiltersViewComponent", () => {
     });
 
     it("should check to change next attempt filter", () => {
-        component.dashboardFilters = {
-            fromFilterDate: undefined,
-            toFilterDate: undefined,
-            lastFailureDate: undefined,
-            nextPlannedBeforeDate: undefined,
-            nextPlannedAfterDate: undefined,
-            selectedOrderDirection: true,
-            selectedOrderField: undefined,
-            selectedQuickRangeLastAttempt: undefined,
-            selectedQuickRangeLastFailure: undefined,
-            selectedQuickRangeNextAttempt: RangeLastAttempt.NEXT_15_MINUTES,
-            selectedFlowProcessStates: [],
-            minConsecutiveFailures: 0,
-            isFirstInitialization: false,
-        };
+        setComponentInput(
+            fixture,
+            "dashboardFilters",
+            mockDashboardFilters({
+                selectedQuickRangeNextAttempt: RangeLastAttempt.NEXT_15_MINUTES,
+            }),
+        );
         fixture.detectChanges();
         component.onChangeNextAttemptFilter();
         expect(component.dashboardFilters.selectedQuickRangeNextAttempt).toEqual(undefined);
     });
 
     it("should check to clear 'from' control", () => {
-        component.dashboardFilters = {
-            fromFilterDate: new Date(),
-            toFilterDate: undefined,
-            lastFailureDate: undefined,
-            nextPlannedBeforeDate: undefined,
-            nextPlannedAfterDate: undefined,
-            selectedOrderDirection: false,
-            selectedOrderField: undefined,
-            selectedQuickRangeLastAttempt: undefined,
-            selectedQuickRangeLastFailure: undefined,
-            selectedQuickRangeNextAttempt: undefined,
-            selectedFlowProcessStates: [],
-            minConsecutiveFailures: 0,
-            isFirstInitialization: false,
-        };
+        setComponentInput(
+            fixture,
+            "dashboardFilters",
+            mockDashboardFilters({
+                fromFilterDate: new Date(),
+                selectedOrderDirection: false,
+            }),
+        );
         fixture.detectChanges();
         emitClickOnElementByDataTestId(fixture, "clear-from-control");
         expect(component.dashboardFilters.fromFilterDate).toEqual(undefined);
     });
 
     it("should check to clear 'to' control", () => {
-        component.dashboardFilters = {
-            fromFilterDate: undefined,
-            toFilterDate: new Date(),
-            lastFailureDate: undefined,
-            nextPlannedBeforeDate: undefined,
-            nextPlannedAfterDate: undefined,
-            selectedOrderDirection: false,
-            selectedOrderField: undefined,
-            selectedQuickRangeLastAttempt: undefined,
-            selectedQuickRangeLastFailure: undefined,
-            selectedQuickRangeNextAttempt: undefined,
-            selectedFlowProcessStates: [],
-            minConsecutiveFailures: 0,
-            isFirstInitialization: false,
-        };
+        setComponentInput(
+            fixture,
+            "dashboardFilters",
+            mockDashboardFilters({
+                toFilterDate: new Date(),
+                selectedOrderDirection: false,
+            }),
+        );
         fixture.detectChanges();
         emitClickOnElementByDataTestId(fixture, "clear-to-control");
         expect(component.dashboardFilters.toFilterDate).toEqual(undefined);
     });
 
     it("should check clear nextPlannedAfterDate control", () => {
-        component.dashboardFilters = {
-            fromFilterDate: undefined,
-            toFilterDate: undefined,
-            lastFailureDate: undefined,
-            nextPlannedBeforeDate: undefined,
-            nextPlannedAfterDate: new Date(),
-            selectedOrderDirection: false,
-            selectedOrderField: undefined,
-            selectedQuickRangeLastAttempt: undefined,
-            selectedQuickRangeLastFailure: undefined,
-            selectedQuickRangeNextAttempt: undefined,
-            selectedFlowProcessStates: [],
-            minConsecutiveFailures: 0,
-            isFirstInitialization: false,
-        };
+        setComponentInput(
+            fixture,
+            "dashboardFilters",
+            mockDashboardFilters({
+                nextPlannedAfterDate: new Date(),
+                selectedOrderDirection: false,
+            }),
+        );
         fixture.detectChanges();
         emitClickOnElementByDataTestId(fixture, "clear-after-control");
         expect(component.dashboardFilters.nextPlannedAfterDate).toEqual(undefined);
     });
 
     it("should check clear nextPlannedBeforeDate control", () => {
-        component.dashboardFilters = {
-            fromFilterDate: undefined,
-            toFilterDate: undefined,
-            lastFailureDate: undefined,
-            nextPlannedBeforeDate: new Date(),
-            nextPlannedAfterDate: undefined,
-            selectedOrderDirection: true,
-            selectedOrderField: undefined,
-            selectedQuickRangeLastAttempt: undefined,
-            selectedQuickRangeLastFailure: undefined,
-            selectedQuickRangeNextAttempt: undefined,
-            selectedFlowProcessStates: [],
-            minConsecutiveFailures: 0,
-            isFirstInitialization: false,
-        };
+        setComponentInput(
+            fixture,
+            "dashboardFilters",
+            mockDashboardFilters({
+                nextPlannedBeforeDate: new Date(),
+            }),
+        );
         fixture.detectChanges();
         emitClickOnElementByDataTestId(fixture, "clear-before-control");
         expect(component.dashboardFilters.nextPlannedBeforeDate).toEqual(undefined);
     });
 
     it("should check to change quick range last attempt", () => {
-        component.dashboardFilters = {
-            fromFilterDate: undefined,
-            toFilterDate: undefined,
-            lastFailureDate: undefined,
-            nextPlannedBeforeDate: undefined,
-            nextPlannedAfterDate: undefined,
-            selectedOrderDirection: true,
-            selectedOrderField: undefined,
-            selectedQuickRangeLastAttempt: undefined,
-            selectedQuickRangeLastFailure: undefined,
-            selectedQuickRangeNextAttempt: undefined,
-            selectedFlowProcessStates: [],
-            minConsecutiveFailures: 0,
-            isFirstInitialization: false,
-        };
         fixture.detectChanges();
         component.onQuickRangeLastAttempt({
             id: 1,
@@ -202,21 +149,6 @@ describe("CustomFiltersViewComponent", () => {
     });
 
     it("should check to change quick range next attempt", () => {
-        component.dashboardFilters = {
-            fromFilterDate: undefined,
-            toFilterDate: undefined,
-            lastFailureDate: undefined,
-            nextPlannedBeforeDate: undefined,
-            nextPlannedAfterDate: undefined,
-            selectedOrderDirection: true,
-            selectedOrderField: undefined,
-            selectedQuickRangeLastAttempt: undefined,
-            selectedQuickRangeLastFailure: undefined,
-            selectedQuickRangeNextAttempt: undefined,
-            selectedFlowProcessStates: [],
-            minConsecutiveFailures: 0,
-            isFirstInitialization: false,
-        };
         fixture.detectChanges();
         component.onQuickRangeNextAttempt({
             id: 1,

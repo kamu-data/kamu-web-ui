@@ -6,13 +6,13 @@
  */
 
 import { TestBed } from "@angular/core/testing";
-import { ActivatedRouteSnapshot, ResolveFn, RouterStateSnapshot } from "@angular/router";
+import { RedirectCommand } from "@angular/router";
 
-import { firstValueFrom, Observable, of } from "rxjs";
+import { of } from "rxjs";
 
 import { Apollo } from "apollo-angular";
 
-import { expectPageNotFoundRedirect } from "@common/helpers/base-test.helpers.spec";
+import { expectPageNotFoundRedirect, routeSnapshot, runResolver } from "@common/helpers/base-test.helpers.spec";
 import AppValues from "@common/values/app.values";
 
 import { AppConfigService } from "src/app/app-config.service";
@@ -34,9 +34,6 @@ describe("datasetSettingsGeneralTabResolverFn", () => {
     let datasetSubService: DatasetSubscriptionsService;
     let appConfigService: AppConfigService;
 
-    const executeResolver: ResolveFn<DatasetViewData> = (...resolverParameters) =>
-        TestBed.runInInjectionContext(() => datasetSettingsGeneralTabResolverFn(...resolverParameters));
-
     beforeEach(() => {
         TestBed.configureTestingModule({
             providers: [Apollo],
@@ -49,17 +46,9 @@ describe("datasetSettingsGeneralTabResolverFn", () => {
         );
     });
 
-    it("should be created", () => {
-        expect(executeResolver).toBeTruthy();
-    });
-
-    function resolve(tab: string): Promise<unknown> {
-        const mockRoute = {
-            data: {
-                [ProjectLinks.URL_PARAM_TAB]: tab,
-            },
-        } as unknown as ActivatedRouteSnapshot;
-        return firstValueFrom(executeResolver(mockRoute, {} as RouterStateSnapshot) as Observable<unknown>);
+    function resolve(tab: string): Promise<DatasetViewData | RedirectCommand> {
+        const route = routeSnapshot({ data: { [ProjectLinks.URL_PARAM_TAB]: tab } });
+        return runResolver(datasetSettingsGeneralTabResolverFn, route);
     }
 
     function mockDataset(permissions = mockFullPowerDatasetPermissionsFragment): void {

@@ -20,6 +20,7 @@ import {
     emitClickOnElementByDataTestId,
     findElementByDataTestId,
     getElementByDataTestId,
+    setComponentInput,
 } from "@common/helpers/base-test.helpers.spec";
 import { SharedTestModule } from "@common/modules/shared-test.module";
 import { mockUploadPrepareResponse } from "@api/mock/upload-file.mock";
@@ -52,8 +53,8 @@ describe("QueryAndResultSectionsComponent", () => {
         engineService = TestBed.inject(EngineService);
         spyOn(engineService, "engines").and.returnValue(of(mockEngines));
 
-        component.sqlLoading = false;
-        component.sqlRequestCode = "select * from 'mock-dataset'";
+        setComponentInput(fixture, "sqlLoading", false);
+        setComponentInput(fixture, "sqlRequestCode", "select * from 'mock-dataset'");
     });
 
     it("should create", () => {
@@ -68,9 +69,9 @@ describe("QueryAndResultSectionsComponent", () => {
     });
 
     it("should check 'Run' button is disabled", () => {
-        component.sqlLoading = true;
+        setComponentInput(fixture, "sqlLoading", true);
         fixture.detectChanges();
-        const runButtonElem = findElementByDataTestId(fixture, "runSqlQueryButton") as HTMLButtonElement;
+        const runButtonElem = getElementByDataTestId(fixture, "runSqlQueryButton", HTMLButtonElement);
         expect(runButtonElem.disabled).toEqual(true);
     });
 
@@ -92,13 +93,13 @@ describe("QueryAndResultSectionsComponent", () => {
     }));
 
     it("should check invalid SQL result update", fakeAsync(() => {
-        component.sqlRequestCode = "select * from 'mock-dataset'";
-        component.sqlError = mockSqlErrorUpdate.error;
+        setComponentInput(fixture, "sqlRequestCode", "select * from 'mock-dataset'");
+        setComponentInput(fixture, "sqlError", mockSqlErrorUpdate.error);
         tick();
         fixture.detectChanges();
         tick();
         fixture.detectChanges();
-        const runSqlButton = findElementByDataTestId(fixture, "runSqlQueryButton") as HTMLButtonElement;
+        const runSqlButton = getElementByDataTestId(fixture, "runSqlQueryButton", HTMLButtonElement);
         const elem = getElementByDataTestId(fixture, "sql-error-message");
         expect(runSqlButton.disabled).toBe(false);
         expect(elem.textContent).toEqual(mockSqlErrorUpdate.error);
@@ -122,8 +123,7 @@ describe("QueryAndResultSectionsComponent", () => {
         component.loadMore(limit);
         params.skip = component.currentData.length;
 
-        const secondCallParams = sqlReq.calls.allArgs()[1] as DatasetRequestBySql[];
-        expect(secondCallParams).toEqual([params]);
+        expect(sqlReq.calls.argsFor(1)).toEqual([params]);
     });
 
     it("should check click on `Share query` button", fakeAsync(() => {

@@ -8,6 +8,7 @@
 import { ComponentFixture, TestBed } from "@angular/core/testing";
 import { FormControl, FormGroup } from "@angular/forms";
 
+import { setComponentInput } from "@common/helpers/base-test.helpers.spec";
 import { SharedTestModule } from "@common/modules/shared-test.module";
 
 import { NumberFieldComponent } from "src/app/dataset-view/additional-components/metadata-component/components/form-components/number-field/number-field.component";
@@ -23,11 +24,9 @@ describe("NumberFieldComponent", () => {
 
         fixture = TestBed.createComponent(NumberFieldComponent);
         component = fixture.componentInstance;
-        component.form = new FormGroup({
-            port: new FormControl(""),
-        });
-        component.controlName = "port";
-        component.dataTestId = "port";
+        setComponentInput(fixture, "form", new FormGroup({ port: new FormControl("") }));
+        setComponentInput(fixture, "controlName", "port");
+        setComponentInput(fixture, "dataTestId", "port");
         fixture.detectChanges();
     });
 

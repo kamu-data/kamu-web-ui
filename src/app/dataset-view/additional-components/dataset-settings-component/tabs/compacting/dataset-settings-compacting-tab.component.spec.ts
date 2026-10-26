@@ -14,7 +14,7 @@ import { Apollo } from "apollo-angular";
 import { provideToastr } from "ngx-toastr";
 
 import { ModalService } from "@common/components/modal/modal.service";
-import { emitClickOnElementByDataTestId } from "@common/helpers/base-test.helpers.spec";
+import { emitClickOnElementByDataTestId, setComponentInput } from "@common/helpers/base-test.helpers.spec";
 import AppValues from "@common/values/app.values";
 import { ModalArgumentsInterface } from "@interface/modal.interface";
 
@@ -64,10 +64,10 @@ describe("DatasetSettingsCompactingTabComponent", () => {
         modalService = TestBed.inject(ModalService);
         datasetFlowsService = TestBed.inject(DatasetFlowsService);
         navigationService = TestBed.inject(NavigationService);
-        component.compactingTabData = {
+        setComponentInput(fixture, "compactingTabData", {
             datasetBasics: mockDatasetBasicsDerivedFragment,
             datasetPermissions: structuredClone(mockFullPowerDatasetPermissionsFragment),
-        };
+        });
         fixture.detectChanges();
     });
 

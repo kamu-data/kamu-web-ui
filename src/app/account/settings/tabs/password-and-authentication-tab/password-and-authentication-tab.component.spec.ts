@@ -12,6 +12,7 @@ import { of } from "rxjs";
 import { Apollo } from "apollo-angular";
 import { provideToastr } from "ngx-toastr";
 
+import { setComponentInput } from "@common/helpers/base-test.helpers.spec";
 import { mockAccountDetails } from "@api/mock/auth.mock";
 
 import { AccountService } from "src/app/account/account.service";
@@ -30,7 +31,7 @@ describe("PasswordAndAuthenticationTabComponent", () => {
         fixture = TestBed.createComponent(PasswordAndAuthenticationTabComponent);
         accountService = TestBed.inject(AccountService);
         component = fixture.componentInstance;
-        component.account = mockAccountDetails;
+        setComponentInput(fixture, "account", mockAccountDetails);
         fixture.detectChanges();
     });
 

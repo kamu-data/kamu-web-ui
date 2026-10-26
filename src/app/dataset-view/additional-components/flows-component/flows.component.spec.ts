@@ -9,7 +9,7 @@ import { TestbedHarnessEnvironment } from "@angular/cdk/testing/testbed";
 import { provideHttpClient } from "@angular/common/http";
 import { provideHttpClientTesting } from "@angular/common/http/testing";
 import { ComponentFixture, discardPeriodicTasks, fakeAsync, flush, TestBed, tick } from "@angular/core/testing";
-import { MatChipListboxChange } from "@angular/material/chips";
+import { MatChipListbox, MatChipListboxChange } from "@angular/material/chips";
 import { ActivatedRoute } from "@angular/router";
 
 import { delay, of, Subject, throwError } from "rxjs";
@@ -18,15 +18,10 @@ import { Apollo } from "apollo-angular";
 import { provideToastr } from "ngx-toastr";
 
 import { ModalService } from "@common/components/modal/modal.service";
-import { registerMatSvgIcons } from "@common/helpers/base-test.helpers.spec";
-import RoutingResolvers from "@common/resolvers/routing-resolvers";
+import { requireValue } from "@common/helpers/app.helpers";
+import { registerMatSvgIcons, setComponentInput } from "@common/helpers/base-test.helpers.spec";
 import AppValues from "@common/values/app.values";
-import {
-    DatasetFlowProcesses,
-    DatasetFlowType,
-    FlowProcessEffectiveState,
-    FlowStatus,
-} from "@api/kamu.graphql.interface";
+import { DatasetFlowType, FlowProcessEffectiveState, FlowStatus } from "@api/kamu.graphql.interface";
 import { mockAccountDetails } from "@api/mock/auth.mock";
 import { mockDatasetFlowsProcessesQuery, mockFlowsTableData } from "@api/mock/dataset-flow.mock";
 import { ModalArgumentsInterface } from "@interface/modal.interface";
@@ -42,7 +37,6 @@ import { DatasetFlowsService } from "src/app/dataset-view/additional-components/
 import { FlowsSelectionStateService } from "src/app/dataset-view/additional-components/flows-component/services/flows-selection-state.service";
 import { DatasetViewTypeEnum } from "src/app/dataset-view/dataset-view.interface";
 import { DatasetFlowProcessCardHarness } from "src/app/flow-cards/dataset-flow-process-card/dataset-flow-process-card.harness";
-import ProjectLinks from "src/app/project-links";
 import {
     mockDatasetBasicsDerivedFragment,
     mockDatasetBasicsRootFragment,
@@ -63,6 +57,10 @@ describe("FlowsComponent", () => {
     let datasetCardService: ProcessDatasetCardInteractionService;
 
     const MOCK_FLOW_ID = "2";
+
+    function chipListboxChange(value: string): MatChipListboxChange {
+        return new MatChipListboxChange(jasmine.createSpyObj<MatChipListbox>("MatChipListbox", ["focus"]), value);
+    }
 
     // A copy, since `mockFlowsTableData` shares its connections with other fixtures
     function flowsTableDataWithoutRuns(): FlowsTableData {
@@ -121,11 +119,11 @@ describe("FlowsComponent", () => {
         datasetCardService = TestBed.inject(ProcessDatasetCardInteractionService);
 
         component = fixture.componentInstance;
-        component.flowsData = {
+        setComponentInput(fixture, "flowsData", {
             datasetBasics: mockDatasetBasicsRootFragment,
             datasetPermissions: mockFullPowerDatasetPermissionsFragment,
             overviewUpdate: mockOverviewUpdate,
-        };
+        });
     });
 
     it("should create", () => {
@@ -142,7 +140,7 @@ describe("FlowsComponent", () => {
         spyOn(datasetFlowsService, "datasetFlowsList").and.returnValue(of(flowsTableDataWithoutRuns()));
         spyOn(datasetFlowsService, "flowsInitiators").and.returnValue(of([]));
         spyOn(datasetFlowsService, "datasetFlowsProcesses").and.returnValue(
-            of(mockDatasetFlowsProcessesQuery.datasets.byId?.flows.processes as DatasetFlowProcesses),
+            of(requireValue(mockDatasetFlowsProcessesQuery.datasets.byId?.flows.processes ?? null)),
         );
         // The first poll runs on an interval, which the harness's own flush skips
         fixture.detectChanges();
@@ -160,7 +158,7 @@ describe("FlowsComponent", () => {
         );
         spyOn(datasetFlowsService, "flowsInitiators").and.returnValue(of([]));
         spyOn(datasetFlowsService, "datasetFlowsProcesses").and.returnValue(
-            of(mockDatasetFlowsProcessesQuery.datasets.byId?.flows.processes as DatasetFlowProcesses),
+            of(requireValue(mockDatasetFlowsProcessesQuery.datasets.byId?.flows.processes ?? null)),
         );
         tick();
         fixture.detectChanges();
@@ -187,11 +185,11 @@ describe("FlowsComponent", () => {
     }));
 
     it("should check update now button for derivative dataset", fakeAsync(() => {
-        component.flowsData = {
+        setComponentInput(fixture, "flowsData", {
             datasetBasics: mockDatasetBasicsDerivedFragment,
             datasetPermissions: mockFullPowerDatasetPermissionsFragment,
             overviewUpdate: mockOverviewUpdate,
-        };
+        });
         const refreshFlowSpy = spyOn(component, "refreshFlow");
         spyOn(datasetFlowsService, "datasetTriggerTransformFlow").and.returnValue(of(true));
         component.updateNow();
@@ -287,7 +285,7 @@ describe("FlowsComponent", () => {
     it("should show the init loading block until the flow runs arrive", fakeAsync(async () => {
         const flowsList$ = new Subject<FlowsTableData>();
         spyOn(datasetFlowsService, "datasetFlowsProcesses").and.returnValue(
-            of(mockDatasetFlowsProcessesQuery.datasets.byId?.flows.processes as DatasetFlowProcesses),
+            of(requireValue(mockDatasetFlowsProcessesQuery.datasets.byId?.flows.processes ?? null)),
         );
         spyOn(datasetFlowsService, "datasetFlowsList").and.returnValue(flowsList$);
         spyOn(datasetFlowsService, "flowsInitiators").and.returnValue(of([]));
@@ -303,7 +301,7 @@ describe("FlowsComponent", () => {
 
     it("should check 'update now' link for root dataset with PollingSource", fakeAsync(async () => {
         spyOn(datasetFlowsService, "datasetFlowsProcesses").and.returnValue(
-            of(mockDatasetFlowsProcessesQuery.datasets.byId?.flows.processes as DatasetFlowProcesses),
+            of(requireValue(mockDatasetFlowsProcessesQuery.datasets.byId?.flows.processes ?? null)),
         );
         spyOn(datasetFlowsService, "datasetFlowsList").and.returnValue(of(flowsTableDataWithoutRuns()));
         spyOn(datasetFlowsService, "flowsInitiators").and.returnValue(of([]));
@@ -324,13 +322,13 @@ describe("FlowsComponent", () => {
         copyMockOverviewUpdate.overview.metadata.currentTransform = {
             __typename: "SetTransform",
         };
-        component.flowsData = {
+        setComponentInput(fixture, "flowsData", {
             datasetBasics: mockDatasetBasicsDerivedFragment,
             datasetPermissions: mockFullPowerDatasetPermissionsFragment,
             overviewUpdate: copyMockOverviewUpdate,
-        };
+        });
         spyOn(datasetFlowsService, "datasetFlowsProcesses").and.returnValue(
-            of(mockDatasetFlowsProcessesQuery.datasets.byId?.flows.processes as DatasetFlowProcesses),
+            of(requireValue(mockDatasetFlowsProcessesQuery.datasets.byId?.flows.processes ?? null)),
         );
         spyOn(datasetFlowsService, "datasetFlowsList").and.returnValue(of(flowsTableDataWithoutRuns()));
         spyOn(datasetFlowsService, "flowsInitiators").and.returnValue(of([]));
@@ -349,7 +347,7 @@ describe("FlowsComponent", () => {
         const serviceInComponent = fixture.debugElement.injector.get(FlowsSelectionStateService);
         const addWebhookIdSpy = spyOn(serviceInComponent, "addWebhookId");
         const mockWebhookId = "d20a935e-0ccb-4844-b1bb-f4b5b9b0279a,d20a935e-0ccb-4844-b1bb-f4b5b9b0279b";
-        component.setWebhookId = mockWebhookId;
+        setComponentInput(fixture, "setWebhookId", mockWebhookId);
         expect(addWebhookIdSpy).toHaveBeenCalledTimes(2);
     });
 
@@ -357,7 +355,7 @@ describe("FlowsComponent", () => {
         const serviceInComponent = fixture.debugElement.injector.get(FlowsSelectionStateService);
         const addWebhookIdSpy = spyOn(serviceInComponent, "addWebhookId");
         const mockWebhookId = null;
-        component.setWebhookId = mockWebhookId;
+        setComponentInput(fixture, "setWebhookId", mockWebhookId);
         expect(addWebhookIdSpy).not.toHaveBeenCalled();
     });
 
@@ -365,7 +363,7 @@ describe("FlowsComponent", () => {
         const serviceInComponent = fixture.debugElement.injector.get(FlowsSelectionStateService);
         const setWebhooksCategorySpy = spyOn(serviceInComponent, "setWebhooksCategory");
         const mockStates = null;
-        component.setWebhookState = mockStates;
+        setComponentInput(fixture, "setWebhookState", mockStates);
         expect(setWebhooksCategorySpy).not.toHaveBeenCalled();
     });
 
@@ -373,7 +371,7 @@ describe("FlowsComponent", () => {
         const serviceInComponent = fixture.debugElement.injector.get(FlowsSelectionStateService);
         const setWebhooksCategorySpy = spyOn(serviceInComponent, "setWebhooksCategory");
         const mockStates = `${FlowProcessEffectiveState.Active},${FlowProcessEffectiveState.Failing}`;
-        component.setWebhookState = mockStates;
+        setComponentInput(fixture, "setWebhookState", mockStates);
         expect(setWebhooksCategorySpy).toHaveBeenCalledTimes(1);
     });
 
@@ -381,7 +379,7 @@ describe("FlowsComponent", () => {
         const serviceInComponent = fixture.debugElement.injector.get(FlowsSelectionStateService);
         const setWebhooksCategorySpy = spyOn(serviceInComponent, "setWebhooksCategory");
         const category = "webhooks";
-        component.setFlowsCategory = category;
+        setComponentInput(fixture, "setFlowsCategory", category);
         expect(setWebhooksCategorySpy).toHaveBeenCalledTimes(1);
     });
 
@@ -389,7 +387,7 @@ describe("FlowsComponent", () => {
         const serviceInComponent = fixture.debugElement.injector.get(FlowsSelectionStateService);
         const setFlowsCategorySpy = spyOn(serviceInComponent, "setFlowsCategory");
         const category = "updates";
-        component.setFlowsCategory = category;
+        setComponentInput(fixture, "setFlowsCategory", category);
         expect(setFlowsCategorySpy).toHaveBeenCalledTimes(1);
     });
 
@@ -415,7 +413,7 @@ describe("FlowsComponent", () => {
     });
 
     it("should check to navigate to subscription", () => {
-        const processes = mockDatasetFlowsProcessesQuery.datasets.byId?.flows.processes as DatasetFlowProcesses;
+        const processes = requireValue(mockDatasetFlowsProcessesQuery.datasets.byId?.flows.processes ?? null);
         const navigateToDatasetViewSpy = spyOn(navigationService, "navigateToDatasetView");
         component.navigateToSubscription(processes.webhooks.subprocesses[0]);
         expect(navigateToDatasetViewSpy).toHaveBeenCalledTimes(1);
@@ -454,7 +452,7 @@ describe("FlowsComponent", () => {
     });
 
     it("should check remove selected webhook", () => {
-        const processes = mockDatasetFlowsProcessesQuery.datasets.byId?.flows.processes as DatasetFlowProcesses;
+        const processes = requireValue(mockDatasetFlowsProcessesQuery.datasets.byId?.flows.processes ?? null);
         const navigateToDatasetViewSpy = spyOn(navigationService, "navigateToDatasetView");
         component.removeSelectedWebhook("qwer", processes.webhooks.subprocesses);
         expect(navigateToDatasetViewSpy).toHaveBeenCalledWith(
@@ -465,7 +463,7 @@ describe("FlowsComponent", () => {
     });
 
     it("should check toggle webhook filter if states not exist", () => {
-        const processes = mockDatasetFlowsProcessesQuery.datasets.byId?.flows.processes as DatasetFlowProcesses;
+        const processes = requireValue(mockDatasetFlowsProcessesQuery.datasets.byId?.flows.processes ?? null);
         const navigateToDatasetViewSpy = spyOn(navigationService, "navigateToDatasetView");
         component.onToggleWebhookFilter([FlowProcessEffectiveState.Active], processes.webhooks.subprocesses);
         expect(navigateToDatasetViewSpy).toHaveBeenCalledWith(
@@ -476,7 +474,7 @@ describe("FlowsComponent", () => {
     });
 
     it("should check toggle webhook filter if states  exist", () => {
-        const processes = mockDatasetFlowsProcessesQuery.datasets.byId?.flows.processes as DatasetFlowProcesses;
+        const processes = requireValue(mockDatasetFlowsProcessesQuery.datasets.byId?.flows.processes ?? null);
         const navigateToDatasetViewSpy = spyOn(navigationService, "navigateToDatasetView");
         component.onToggleWebhookFilter([], processes.webhooks.subprocesses);
         expect(navigateToDatasetViewSpy).toHaveBeenCalledWith(
@@ -497,7 +495,7 @@ describe("FlowsComponent", () => {
     });
 
     it("should check selection `Flows`chips", () => {
-        const mockEvent = { value: "updates" } as unknown as MatChipListboxChange;
+        const mockEvent = chipListboxChange("updates");
         const navigateToDatasetViewSpy = spyOn(navigationService, "navigateToDatasetView");
         component.onSelectionFlowsChange(mockEvent);
         expect(navigateToDatasetViewSpy).toHaveBeenCalledWith(
@@ -509,12 +507,12 @@ describe("FlowsComponent", () => {
 
     it("should check set ProcessTypeFilter with webhookId", fakeAsync(() => {
         const mockWebhookId = "d20a935e-0ccb-4844-b1bb-f4b5b9b0279a,d20a935e-0ccb-4844-b1bb-f4b5b9b0279b";
-        component.setWebhookId = mockWebhookId;
+        setComponentInput(fixture, "setWebhookId", mockWebhookId);
         fixture.detectChanges();
         const serviceInComponent = fixture.debugElement.injector.get(FlowsSelectionStateService);
         const clearFlowsCategorySpy = spyOn(serviceInComponent, "clearFlowsCategory");
         spyOn(datasetFlowsService, "datasetFlowsProcesses").and.returnValue(
-            of(mockDatasetFlowsProcessesQuery.datasets.byId?.flows.processes as DatasetFlowProcesses),
+            of(requireValue(mockDatasetFlowsProcessesQuery.datasets.byId?.flows.processes ?? null)),
         );
         spyOn(datasetFlowsService, "datasetFlowsList").and.returnValue(of(mockFlowsTableData).pipe(delay(10)));
         spyOn(datasetFlowsService, "flowsInitiators").and.returnValue(of([]));
@@ -529,10 +527,10 @@ describe("FlowsComponent", () => {
         const serviceInComponent = fixture.debugElement.injector.get(FlowsSelectionStateService);
         const setWebhooksCategorySpy = spyOn(serviceInComponent, "setWebhooksCategory");
         const mockStates = `${FlowProcessEffectiveState.Active},${FlowProcessEffectiveState.Failing}`;
-        component.setWebhookState = mockStates;
+        setComponentInput(fixture, "setWebhookState", mockStates);
 
         spyOn(datasetFlowsService, "datasetFlowsProcesses").and.returnValue(
-            of(mockDatasetFlowsProcessesQuery.datasets.byId?.flows.processes as DatasetFlowProcesses),
+            of(requireValue(mockDatasetFlowsProcessesQuery.datasets.byId?.flows.processes ?? null)),
         );
         spyOn(datasetFlowsService, "datasetFlowsList").and.returnValue(of(mockFlowsTableData).pipe(delay(10)));
         spyOn(datasetFlowsService, "flowsInitiators").and.returnValue(of([mockAccountDetails]));
@@ -599,7 +597,7 @@ describe("FlowsComponent", () => {
 
         beforeEach(() => {
             spyOn(datasetFlowsService, "datasetFlowsProcesses").and.returnValue(
-                of(mockDatasetFlowsProcessesQuery.datasets.byId?.flows.processes as DatasetFlowProcesses),
+                of(requireValue(mockDatasetFlowsProcessesQuery.datasets.byId?.flows.processes ?? null)),
             );
             datasetFlowsListSpy = spyOn(datasetFlowsService, "datasetFlowsList").and.returnValue(
                 of(mockFlowsTableData),
@@ -608,7 +606,7 @@ describe("FlowsComponent", () => {
         });
 
         it("should request ingest flows only for the `updates` category of a root dataset", fakeAsync(() => {
-            component.setFlowsCategory = "updates";
+            setComponentInput(fixture, "setFlowsCategory", "updates");
             fixture.detectChanges();
             tick();
 
@@ -623,8 +621,11 @@ describe("FlowsComponent", () => {
         }));
 
         it("should request transform flows only for the `updates` category of a derivative dataset", fakeAsync(() => {
-            component.flowsData = { ...component.flowsData, datasetBasics: mockDatasetBasicsDerivedFragment };
-            component.setFlowsCategory = "updates";
+            setComponentInput(fixture, "flowsData", {
+                ...component.flowsData,
+                datasetBasics: mockDatasetBasicsDerivedFragment,
+            });
+            setComponentInput(fixture, "setFlowsCategory", "updates");
             fixture.detectChanges();
             tick();
 
@@ -643,7 +644,7 @@ describe("FlowsComponent", () => {
 
         it("should request webhook flows only for the `webhooks` category and drop the flows category", fakeAsync(() => {
             const selectionStateService = fixture.debugElement.injector.get(FlowsSelectionStateService);
-            component.setFlowsCategory = "webhooks";
+            setComponentInput(fixture, "setFlowsCategory", "webhooks");
             fixture.detectChanges();
             tick();
 
@@ -665,18 +666,24 @@ describe("FlowsComponent", () => {
         overviewWithPushSource.overview.metadata.currentTransform = null;
         overviewWithPushSource.overview.metadata.currentPushSources = [{ __typename: "AddPushSource" }];
 
-        component.flowsData = { ...component.flowsData, overviewUpdate: overviewWithPushSource };
+        setComponentInput(fixture, "flowsData", {
+            ...component.flowsData,
+            overviewUpdate: overviewWithPushSource,
+        });
         expect(component.hasPushSources).toBeTrue();
         expect(component.isSetPollingSourceEmpty).toBeFalse();
 
-        component.flowsData = { ...component.flowsData, datasetBasics: mockDatasetBasicsDerivedFragment };
+        setComponentInput(fixture, "flowsData", {
+            ...component.flowsData,
+            datasetBasics: mockDatasetBasicsDerivedFragment,
+        });
         expect(component.isSetTransformEmpty).toBeFalse();
     });
 
     describe("dataset process card", () => {
         beforeEach(() => {
             spyOn(datasetFlowsService, "datasetFlowsProcesses").and.returnValue(
-                of(mockDatasetFlowsProcessesQuery.datasets.byId?.flows.processes as DatasetFlowProcesses),
+                of(requireValue(mockDatasetFlowsProcessesQuery.datasets.byId?.flows.processes ?? null)),
             );
             spyOn(datasetFlowsService, "datasetFlowsList").and.returnValue(of(mockFlowsTableData));
             spyOn(datasetFlowsService, "flowsInitiators").and.returnValue(of([]));
@@ -875,15 +882,15 @@ describe("FlowsComponent", () => {
 
         beforeEach(() => {
             datasetFlowsProcessesSpy = spyOn(datasetFlowsService, "datasetFlowsProcesses").and.returnValue(
-                of(mockDatasetFlowsProcessesQuery.datasets.byId?.flows.processes as DatasetFlowProcesses),
+                of(requireValue(mockDatasetFlowsProcessesQuery.datasets.byId?.flows.processes ?? null)),
             );
             spyOn(datasetFlowsService, "datasetFlowsList").and.returnValue(of(mockFlowsTableData));
             spyOn(datasetFlowsService, "flowsInitiators").and.returnValue(of([]));
-            fixture.componentRef.setInput(RoutingResolvers.DATASET_VIEW_FLOWS_KEY, component.flowsData);
+            setComponentInput(fixture, "flowsData", component.flowsData);
         });
 
         function switchTo(flowsData: typeof component.flowsData): void {
-            fixture.componentRef.setInput(RoutingResolvers.DATASET_VIEW_FLOWS_KEY, flowsData);
+            setComponentInput(fixture, "flowsData", flowsData);
             fixture.detectChanges();
             tick();
         }
@@ -901,7 +908,7 @@ describe("FlowsComponent", () => {
 
         it("should keep only the selection the current URL asks for", fakeAsync(() => {
             const selectionStateService = fixture.debugElement.injector.get(FlowsSelectionStateService);
-            fixture.componentRef.setInput(ProjectLinks.URL_QUERY_PARAM_WEBHOOK_ID, "subscription-from-url");
+            setComponentInput(fixture, "setWebhookId", "subscription-from-url");
             fixture.detectChanges();
             tick();
             selectionStateService.addWebhookId("subscription-of-the-previous-dataset");
@@ -986,16 +993,16 @@ describe("FlowsComponent", () => {
     });
 
     describe("page of flow runs", () => {
-        let datasetFlowsListSpy: jasmine.Spy;
+        let datasetFlowsListSpy: jasmine.Spy<DatasetFlowsService["datasetFlowsList"]>;
 
         // The API pages from 0, the URL and the pagination from 1
         function lastRequestedPage(): number {
-            return (datasetFlowsListSpy.calls.mostRecent().args[0] as { page: number }).page + 1;
+            return datasetFlowsListSpy.calls.mostRecent().args[0].page + 1;
         }
 
         beforeEach(() => {
             spyOn(datasetFlowsService, "datasetFlowsProcesses").and.returnValue(
-                of(mockDatasetFlowsProcessesQuery.datasets.byId?.flows.processes as DatasetFlowProcesses),
+                of(requireValue(mockDatasetFlowsProcessesQuery.datasets.byId?.flows.processes ?? null)),
             );
             datasetFlowsListSpy = spyOn(datasetFlowsService, "datasetFlowsList").and.returnValue(
                 of(mockFlowsTableData),
@@ -1035,7 +1042,7 @@ describe("FlowsComponent", () => {
             component.onPageChange(3);
             tick();
 
-            component.onSelectionFlowsChange({ value: "updates" } as MatChipListboxChange);
+            component.onSelectionFlowsChange(chipListboxChange("updates"));
             tick();
 
             expect(lastRequestedPage()).toEqual(1);

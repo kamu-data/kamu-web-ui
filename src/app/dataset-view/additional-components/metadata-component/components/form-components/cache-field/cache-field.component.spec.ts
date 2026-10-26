@@ -8,7 +8,8 @@
 import { ComponentFixture, fakeAsync, flush, TestBed, tick } from "@angular/core/testing";
 import { FormControl, FormGroup } from "@angular/forms";
 
-import { findElement } from "@common/helpers/base-test.helpers.spec";
+import { requireValue } from "@common/helpers/app.helpers";
+import { findElement, setComponentInput } from "@common/helpers/base-test.helpers.spec";
 import { SharedTestModule } from "@common/modules/shared-test.module";
 
 import { CacheFieldComponent } from "src/app/dataset-view/additional-components/metadata-component/components/form-components/cache-field/cache-field.component";
@@ -25,9 +26,9 @@ describe("CacheFieldComponent", () => {
 
         fixture = TestBed.createComponent(CacheFieldComponent);
         component = fixture.componentInstance;
-        component.controlName = "cache";
-        component.form = new FormGroup({ cache: new FormControl(false) });
-        component.dataTestId = dataTestId;
+        setComponentInput(fixture, "controlName", "cache");
+        setComponentInput(fixture, "form", new FormGroup({ cache: new FormControl(false) }));
+        setComponentInput(fixture, "dataTestId", dataTestId);
         fixture.detectChanges();
     });
 
@@ -36,7 +37,7 @@ describe("CacheFieldComponent", () => {
     });
 
     it("should check checked and unchecked value", fakeAsync(() => {
-        const cacheCheckbox = findElement(fixture, '[data-test-id="cache-control"]');
+        const cacheCheckbox = requireValue(findElement(fixture, '[data-test-id="cache-control"]'));
         const onCheckedCacheSpy = spyOn(component, "onCheckedCache").and.callThrough();
 
         cacheCheckbox.triggerEventHandler("change", {

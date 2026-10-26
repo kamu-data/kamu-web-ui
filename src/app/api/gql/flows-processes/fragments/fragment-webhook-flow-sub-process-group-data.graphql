@@ -1,0 +1,8 @@
+fragment WebhookFlowSubProcessGroupData on WebhookFlowSubProcessGroup {
+  rollup {
+    ...FlowProcessGroupRollupData
+  }
+  subprocesses {
+    ...WebhookFlowSubProcessData
+  }
+}

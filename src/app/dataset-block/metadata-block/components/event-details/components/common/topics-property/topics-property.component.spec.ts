@@ -9,6 +9,7 @@ import { ComponentFixture, TestBed } from "@angular/core/testing";
 
 import { provideToastr } from "ngx-toastr";
 
+import { setComponentInput } from "@common/helpers/base-test.helpers.spec";
 import { SharedTestModule } from "@common/modules/shared-test.module";
 import { MqttQos } from "@api/kamu.graphql.interface";
 
@@ -26,7 +27,7 @@ describe("TopicsPropertyComponent", () => {
 
         fixture = TestBed.createComponent(TopicsPropertyComponent);
         component = fixture.componentInstance;
-        component.data = [{ path: "test.com", qos: MqttQos.AtMostOnce }];
+        setComponentInput(fixture, "data", [{ path: "test.com", qos: MqttQos.AtMostOnce }]);
         fixture.detectChanges();
     });
 

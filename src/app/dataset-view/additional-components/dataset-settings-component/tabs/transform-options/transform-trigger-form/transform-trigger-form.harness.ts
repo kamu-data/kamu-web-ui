@@ -66,8 +66,7 @@ export class TransformTriggerFormHarness extends ComponentHarness {
                 await bufferingRadio.check();
             }
         } else {
-            // eslint-disable-next-line @typescript-eslint/restrict-template-expressions
-            throw new Error(`Unsupported batching rule type: ${batchingRuleType}`);
+            throw new Error(`Unsupported batching rule type: ${String(batchingRuleType)}`);
         }
     }
 
@@ -84,8 +83,7 @@ export class TransformTriggerFormHarness extends ComponentHarness {
                 await noActionRadio.check();
             }
         } else {
-            // eslint-disable-next-line @typescript-eslint/restrict-template-expressions
-            throw new Error(`Unsupported breaking change rule: ${rule}`);
+            throw new Error(`Unsupported breaking change rule: ${String(rule)}`);
         }
     }
 
@@ -146,11 +144,21 @@ export class TransformTriggerFormHarness extends ComponentHarness {
 
         return {
             forNewData: {
-                batchingRuleType: batchingRuleType ?? BatchingRuleType.IMMEDIATE,
+                batchingRuleType,
                 buffering:
-                    batchingRuleType === BatchingRuleType.BUFFERING ? await this.getBufferingFormValue() : undefined,
+                    batchingRuleType === BatchingRuleType.BUFFERING
+                        ? await this.requireBufferingFormValue()
+                        : undefined,
             },
-            forBreakingChange: breakingChangeRule ?? FlowTriggerBreakingChangeRule.NoAction,
-        } as TransformTriggerFormValue;
+            forBreakingChange: breakingChangeRule,
+        };
+    }
+
+    private async requireBufferingFormValue(): Promise<BufferingBatchingRuleFormValue> {
+        const bufferingFormValue = await this.getBufferingFormValue();
+        if (!bufferingFormValue) {
+            throw new Error("Buffering form is not shown while the buffering batching rule is selected");
+        }
+        return bufferingFormValue;
     }
 }

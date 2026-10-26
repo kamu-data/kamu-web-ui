@@ -10,13 +10,15 @@ import { ComponentFixture, TestBed } from "@angular/core/testing";
 
 import { provideToastr } from "ngx-toastr";
 
-import { HIGHLIGHT_OPTIONS_PROVIDER } from "@common/helpers/app.helpers";
-import { getElementByDataTestId } from "@common/helpers/base-test.helpers.spec";
+import { HIGHLIGHT_OPTIONS_PROVIDER, requireValue } from "@common/helpers/app.helpers";
+import { getElementByDataTestId, setComponentInput } from "@common/helpers/base-test.helpers.spec";
 import { SharedTestModule } from "@common/modules/shared-test.module";
-import { FetchStepMqtt, FetchStepUrl, PrepStepDecompress } from "@api/kamu.graphql.interface";
 
 import { SetPollingSourceEventComponent } from "src/app/dataset-block/metadata-block/components/event-details/components/set-polling-source-event/set-polling-source-event.component";
 import {
+    mockFetchStepMqtt,
+    mockFetchStepUrl,
+    mockPrepStepDecompress,
     mockSetPollingSourceEvent,
     mockSetPollingSourceEventWithFetchStepMqtt,
 } from "src/app/dataset-block/metadata-block/components/event-details/mock.events";
@@ -40,7 +42,8 @@ describe("SetPollingSourceEventComponent", () => {
     });
 
     it("should check render event data", () => {
-        fixture.componentRef.setInput(
+        setComponentInput(
+            fixture,
             "event",
             Object.assign({}, mockSetPollingSourceEvent, {
                 unsupportedKey: { name: "" },
@@ -48,7 +51,7 @@ describe("SetPollingSourceEventComponent", () => {
         );
         fixture.detectChanges();
         const url = getElementByDataTestId(fixture, "setPollingSource-fetchStepUrl-url");
-        expect(url.innerText).toEqual((mockSetPollingSourceEvent.fetch as FetchStepUrl).url);
+        expect(url.innerText).toEqual(mockFetchStepUrl.url);
 
         const schema = getElementByDataTestId(fixture, "setPollingSource-readStepCsv-schema");
         expect(schema).toBeDefined();
@@ -69,21 +72,18 @@ describe("SetPollingSourceEventComponent", () => {
         expect(queries).toBeDefined();
 
         const prepareFormat = getElementByDataTestId(fixture, "setPollingSource-prepStepDecompress-format");
-        expect(prepareFormat.textContent).toEqual(
-            (mockSetPollingSourceEvent.prepare as PrepStepDecompress[])[0].format,
-        );
+        expect(prepareFormat.textContent).toEqual(mockPrepStepDecompress.format);
 
         const prepareSubPath = getElementByDataTestId(fixture, "setPollingSource-prepStepDecompress-subPath");
-        expect(prepareSubPath.textContent).toEqual(
-            (mockSetPollingSourceEvent.prepare as PrepStepDecompress[])[0].subPath ?? "",
-        );
+        expect(prepareSubPath.textContent).toEqual(mockPrepStepDecompress.subPath ?? "");
 
         const unsupportedSection = getElementByDataTestId(fixture, "unsupported-section");
         expect(unsupportedSection).toBeDefined();
     });
 
     it("should check render unsupported section", () => {
-        fixture.componentRef.setInput(
+        setComponentInput(
+            fixture,
             "event",
             Object.assign({}, mockSetPollingSourceEvent, {
                 unsupportedKey: { name: "" },
@@ -95,8 +95,8 @@ describe("SetPollingSourceEventComponent", () => {
     });
 
     it("should check render event data with FetchStepMqtt", () => {
-        const fetchStep = mockSetPollingSourceEventWithFetchStepMqtt.fetch as FetchStepMqtt;
-        fixture.componentRef.setInput("event", mockSetPollingSourceEventWithFetchStepMqtt);
+        const fetchStep = mockFetchStepMqtt;
+        setComponentInput(fixture, "event", mockSetPollingSourceEventWithFetchStepMqtt);
         fixture.detectChanges();
         const host = getElementByDataTestId(fixture, "setPollingSource-FetchStepMqtt-host");
         expect(host.innerText).toEqual(fetchStep.host);
@@ -105,14 +105,14 @@ describe("SetPollingSourceEventComponent", () => {
         expect(port.innerText).toEqual(fetchStep.port.toString());
 
         const username = getElementByDataTestId(fixture, "setPollingSource-FetchStepMqtt-username");
-        expect(username.innerText).toEqual(fetchStep.username as string);
+        expect(username.innerText).toEqual(requireValue(fetchStep.username ?? null));
 
         const password = getElementByDataTestId(fixture, "setPollingSource-FetchStepMqtt-password");
-        expect(password.innerText).toEqual(fetchStep.password as string);
+        expect(password.innerText).toEqual(requireValue(fetchStep.password ?? null));
     });
 
     it("should keep the rendered property components on later change detection", () => {
-        fixture.componentRef.setInput("event", mockSetPollingSourceEvent);
+        setComponentInput(fixture, "event", mockSetPollingSourceEvent);
         fixture.detectChanges();
         const urlBefore = getElementByDataTestId(fixture, "setPollingSource-fetchStepUrl-url");
 

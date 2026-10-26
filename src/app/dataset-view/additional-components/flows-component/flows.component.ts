@@ -25,14 +25,14 @@ import AppValues from "@common/values/app.values";
 import {
     AccountFragment,
     DatasetBasicsFragment,
-    DatasetFlowProcesses,
+    DatasetFlowProcessesDataFragment,
     DatasetFlowType,
     DatasetKind,
     FlowProcessEffectiveState,
     FlowProcessTypeFilterInput,
     FlowStatus,
     InitiatorFilterInput,
-    WebhookFlowSubProcess,
+    WebhookFlowSubProcessDataFragment,
 } from "@api/kamu.graphql.interface";
 import { MaybeNull, MaybeUndefined } from "@interface/app.types";
 
@@ -118,7 +118,7 @@ export class FlowsComponent extends FlowsTableProcessingBaseComponent implements
     private flowsSelectionStateService = inject(FlowsSelectionStateService);
     private datasetCardService = inject(ProcessDatasetCardInteractionService);
 
-    public flowsProcesses$: Observable<DatasetFlowProcesses>;
+    public flowsProcesses$: Observable<DatasetFlowProcessesDataFragment>;
 
     public flowConnectionData$: Observable<DatasetFlowsTabState>;
 
@@ -203,15 +203,20 @@ export class FlowsComponent extends FlowsTableProcessingBaseComponent implements
     ): void {
         this.flowConnectionData$ = timer(0, environment.delay_polling_ms).pipe(
             switchMap(() => this.flowsService.datasetFlowsProcesses({ datasetId: this.flowsData.datasetBasics.id })),
-            tap((flowProcesses: DatasetFlowProcesses) => {
-                const modifiedRollup = {
-                    ...flowProcesses.webhooks.rollup,
-                    paused: flowProcesses.webhooks.rollup.paused + flowProcesses.webhooks.rollup.unconfigured,
-                };
-                flowProcesses.webhooks.rollup = modifiedRollup;
+            map((flowProcesses: DatasetFlowProcessesDataFragment): DatasetFlowProcessesDataFragment => ({
+                ...flowProcesses,
+                webhooks: {
+                    ...flowProcesses.webhooks,
+                    rollup: {
+                        ...flowProcesses.webhooks.rollup,
+                        paused: flowProcesses.webhooks.rollup.paused + flowProcesses.webhooks.rollup.unconfigured,
+                    },
+                },
+            })),
+            tap((flowProcesses: DatasetFlowProcessesDataFragment) => {
                 this.flowsSelectionStateService.initFlowsSelectionState(flowProcesses);
             }),
-            switchMap((flowProcesses: DatasetFlowProcesses) =>
+            switchMap((flowProcesses: DatasetFlowProcessesDataFragment) =>
                 combineLatest([
                     this.flowsService.datasetFlowsList({
                         datasetId: this.flowsData.datasetBasics.id,
@@ -278,7 +283,7 @@ export class FlowsComponent extends FlowsTableProcessingBaseComponent implements
         });
     }
 
-    public navigateToSubscription(process: WebhookFlowSubProcess): void {
+    public navigateToSubscription(process: WebhookFlowSubProcessDataFragment): void {
         this.flowsSelectionStateService.selectSubscription(process);
         this.navigationService.navigateToDatasetView({
             accountName: this.flowsData.datasetBasics.owner.accountName,
@@ -331,7 +336,10 @@ export class FlowsComponent extends FlowsTableProcessingBaseComponent implements
         this.refreshFromFirstPage();
     }
 
-    public onToggleWebhookFilter(states: FlowProcessEffectiveState[], subprocesses: WebhookFlowSubProcess[]): void {
+    public onToggleWebhookFilter(
+        states: FlowProcessEffectiveState[],
+        subprocesses: WebhookFlowSubProcessDataFragment[],
+    ): void {
         this.flowsSelectionStateService.clearSubscription();
         this.flowsSelectionStateService.clearWebhookIds();
         subprocesses
@@ -348,7 +356,7 @@ export class FlowsComponent extends FlowsTableProcessingBaseComponent implements
         this.refreshFromFirstPage();
     }
 
-    public removeSelectedWebhook(subscriptionName: string, subprocesses: WebhookFlowSubProcess[]): void {
+    public removeSelectedWebhook(subscriptionName: string, subprocesses: WebhookFlowSubProcessDataFragment[]): void {
         this.flowsSelectionStateService.removeSubscription(subscriptionName);
         const removedId = subprocesses.filter((item) => item.name === subscriptionName)[0].id;
         this.flowsSelectionStateService.removeWebhookId(removedId);

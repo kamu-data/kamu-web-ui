@@ -9,7 +9,7 @@ import { provideHttpClient } from "@angular/common/http";
 import { provideHttpClientTesting } from "@angular/common/http/testing";
 import { ComponentFixture, TestBed } from "@angular/core/testing";
 
-import { registerMatSvgIcons } from "@common/helpers/base-test.helpers.spec";
+import { registerMatSvgIcons, setComponentInput } from "@common/helpers/base-test.helpers.spec";
 
 import { DataAccessOdataTabComponent } from "src/app/data-access-panel/data-access-modal/tabs/data-access-odata-tab/data-access-odata-tab.component";
 import { mockDatasetEndPoints } from "src/app/data-access-panel/data-access-panel-mock.data";
@@ -28,7 +28,7 @@ describe("DataAccessOdataTabComponent", () => {
 
         fixture = TestBed.createComponent(DataAccessOdataTabComponent);
         component = fixture.componentInstance;
-        component.odata = mockDatasetEndPoints.odata;
+        setComponentInput(fixture, "odata", mockDatasetEndPoints.odata);
         fixture.detectChanges();
     });
 

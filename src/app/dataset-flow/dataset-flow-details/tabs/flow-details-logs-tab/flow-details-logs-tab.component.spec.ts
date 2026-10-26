@@ -9,7 +9,7 @@ import { ComponentFixture, TestBed } from "@angular/core/testing";
 
 import { Apollo } from "apollo-angular";
 
-import { findElementByDataTestId } from "@common/helpers/base-test.helpers.spec";
+import { findElementByDataTestId, setComponentInput } from "@common/helpers/base-test.helpers.spec";
 import { TaskStatus } from "@api/kamu.graphql.interface";
 import { mockDatasetFlowByIdResponse } from "@api/mock/dataset-flow.mock";
 
@@ -33,7 +33,7 @@ describe("FlowDetailsLogsTabComponent", () => {
         fixture = TestBed.createComponent(FlowDetailsLogsTabComponent);
         appConfigService = TestBed.inject(AppConfigService);
         component = fixture.componentInstance;
-        component.flowDetails = mockDatasetFlowByIdResponse;
+        setComponentInput(fixture, "flowDetails", mockDatasetFlowByIdResponse);
     });
 
     it("should create", () => {
@@ -53,7 +53,7 @@ describe("FlowDetailsLogsTabComponent", () => {
     it("should check grafana logs block is visible", () => {
         spyOnProperty(loggedUserService, "isAdmin", "get").and.returnValue(true);
         spyOnProperty(component, "grafanaTaskDetailsURL", "get").and.returnValue("http://mock.url");
-        component.flowDetails = {
+        setComponentInput(fixture, "flowDetails", {
             ...mockDatasetFlowByIdResponse,
             flowHistory: [
                 {
@@ -68,7 +68,7 @@ describe("FlowDetailsLogsTabComponent", () => {
                     nextAttemptAt: null,
                 },
             ],
-        };
+        });
         fixture.detectChanges();
 
         const grafanaLogsBlock = findElementByDataTestId(fixture, "grafana-logs-section");

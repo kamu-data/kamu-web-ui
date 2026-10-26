@@ -8,7 +8,7 @@
 import { ComponentFixture, TestBed } from "@angular/core/testing";
 import { FormArray, FormGroup } from "@angular/forms";
 
-import { emitClickOnElementByDataTestId } from "@common/helpers/base-test.helpers.spec";
+import { emitClickOnElementByDataTestId, setComponentInput } from "@common/helpers/base-test.helpers.spec";
 import { SharedTestModule } from "@common/modules/shared-test.module";
 
 import { KeyValueFieldComponent } from "src/app/dataset-view/additional-components/metadata-component/components/form-components/key-value-field/key-value-field.component";
@@ -24,11 +24,9 @@ describe("KeyValueFieldComponent", () => {
 
         fixture = TestBed.createComponent(KeyValueFieldComponent);
         component = fixture.componentInstance;
-        component.controlName = "primaryKey";
-        component.buttonText = "Add key";
-        component.form = new FormGroup({
-            [component.controlName]: new FormArray([]),
-        });
+        setComponentInput(fixture, "controlName", "primaryKey");
+        setComponentInput(fixture, "buttonText", "Add key");
+        setComponentInput(fixture, "form", new FormGroup({ primaryKey: new FormArray([]) }));
         fixture.detectChanges();
     });
 
@@ -37,7 +35,7 @@ describe("KeyValueFieldComponent", () => {
     });
 
     it("should name the missing form array", () => {
-        component.controlName = "missing";
+        setComponentInput(fixture, "controlName", "missing");
         expect(() => component.items).toThrowError(`Form array "missing" is missing from the parent form`);
     });
 

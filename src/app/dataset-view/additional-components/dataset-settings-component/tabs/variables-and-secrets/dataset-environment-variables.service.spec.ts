@@ -12,11 +12,13 @@ import { of } from "rxjs";
 import { Apollo } from "apollo-angular";
 import { provideToastr, ToastrService } from "ngx-toastr";
 
+import { requireValue } from "@common/helpers/app.helpers";
 import { EnvironmentVariablesApi } from "@api/environment-variables.api";
-import { ViewDatasetEnvVar, ViewDatasetEnvVarConnection } from "@api/kamu.graphql.interface";
+import { ViewDatasetEnvVarConnectionDataFragment } from "@api/kamu.graphql.interface";
 import { TEST_ACCOUNT_ID } from "@api/mock/auth.mock";
 import { TEST_ACCOUNT_NAME, TEST_DATASET_ID, TEST_DATASET_NAME } from "@api/mock/dataset.mock";
 import {
+    MOCK_EXPOSED_ENV_VAR_VALUE,
     MOCK_PAGE,
     MOCK_PER_PAGE,
     MOCK_VAR_KEY,
@@ -60,10 +62,11 @@ describe("EnvironmentVariablesService", () => {
                 page: MOCK_PAGE,
                 perPage: MOCK_PER_PAGE,
             })
-            .subscribe((result: ViewDatasetEnvVarConnection) => {
+            .subscribe((result: ViewDatasetEnvVarConnectionDataFragment) => {
                 expect(result.nodes).toEqual(
-                    mockListEnvVariablesQuery.datasets.byOwnerAndName?.envVars.listEnvVariables
-                        .nodes as ViewDatasetEnvVar[],
+                    requireValue(
+                        mockListEnvVariablesQuery.datasets.byOwnerAndName?.envVars.listEnvVariables.nodes ?? null,
+                    ),
                 );
             });
 
@@ -143,11 +146,7 @@ describe("EnvironmentVariablesService", () => {
                 datasetName: TEST_DATASET_NAME,
                 datasetEnvVarKey: MOCK_VAR_KEY,
             })
-            .subscribe((result) =>
-                expect(result).toEqual(
-                    mockExposedEnvVariableValueQuery.datasets.byOwnerAndName?.envVars.exposedValue as string,
-                ),
-            );
+            .subscribe((result) => expect(result).toEqual(MOCK_EXPOSED_ENV_VAR_VALUE));
 
         expect(exposedEnvVariableValueSpy).toHaveBeenCalledTimes(1);
         expect(subscription$.closed).toBeTrue();

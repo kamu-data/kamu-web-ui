@@ -1,6 +1,6 @@
 ---
 name: kamu-ui-unit-tests
-description: Unit test conventions for Kamu Web UI — Karma + Jasmine specs next to their source, TestBed setup, CDK component harnesses (Material and custom *.harness.ts), data-test-id selectors and the shared DOM helpers, Apollo testing for api classes, mock fixtures, fake async and frozen time, render hooks and timers in specs, and running a narrowed test set. Use before writing or editing any *.spec.ts, *.harness.ts or mock file.
+description: Unit test conventions for Kamu Web UI — Karma + Jasmine specs next to their source, TestBed setup, CDK component harnesses (Material and custom *.harness.ts), data-test-id selectors and the shared DOM helpers, Apollo testing for api classes, mock fixtures and their typing (no type assertions on test data), fake async and frozen time, render hooks and timers in specs, and running a narrowed test set. Use before writing or editing any *.spec.ts, *.harness.ts or mock file.
 ---
 
 # Kamu UI Unit Tests
@@ -32,7 +32,7 @@ beforeEach(async () => {
     fixture = TestBed.createComponent(FlowsTableComponent);
     component = fixture.componentInstance;
     loader = TestbedHarnessEnvironment.loader(fixture);
-    fixture.componentRef.setInput("nodes", mockFlowSummaryDataFragments);
+    setComponentInput(fixture, "nodes", mockFlowSummaryDataFragments);
     fixture.detectChanges();
 });
 ```
@@ -46,12 +46,23 @@ beforeEach(async () => {
 - TestBed runs with zone-based change detection, like the app, and with exhaustive
   `checkNoChanges` (`src/test.ts`). `fixture.detectChanges()` does not re-render an OnPush
   component whose state a test changed after the first render, and the exhaustive check fails such
-  a spec with NG0100. Set inputs with `fixture.componentRef.setInput()`; after changing internal
-  state, call `fixture.debugElement.injector.get(ChangeDetectorRef).markForCheck()`.
-- `setInput()` takes the value as `unknown`, so an object literal passed to it is not checked
-  against the input's type. Add `satisfies <InputType>` to the literal
-  (`setInput("featureFlags", { ... } satisfies AppUIConfigFeatureFlags)`) so a misspelled or
-  missing property fails to compile. Do not use `as`, which hides both.
+  a spec with NG0100. Set inputs with `setComponentInput(fixture, "field", value)` from
+  `@common/helpers/base-test.helpers.spec`; after changing internal state, call
+  `fixture.debugElement.injector.get(ChangeDetectorRef).markForCheck()`.
+- `setComponentInput` goes through `ComponentRef.setInput()`, so `ngOnChanges`, setters and
+  OnPush re-rendering run as in the app. It names the input by its class field, so the compiler
+  checks the name and the value's type, including misspelled properties of an object literal; an
+  alias (`@Input(RoutingResolvers.X)`) is resolved for you, and a field that is not an input
+  throws. eslint rejects a direct `componentRef.setInput()` in a spec, since it takes the name as
+  a string and the value as `unknown`. A value that does not fit is never cast to fit; see
+  [Types in specs and mocks](#types-in-specs-and-mocks).
+- Lifecycle hooks run through change detection, never by hand. To test how a component reacts to
+  an input change, set the input and call `fixture.detectChanges()`. Never call `ngOnChanges`
+  with a hand-built `SimpleChanges` (eslint rejects it). Never call `ngOnInit()` again on a
+  component the first `detectChanges()` already initialised: it subscribes a second time and
+  tests a state the app never reaches.
+- `src/test.ts` sets `errorOnUnknownProperties` and `errorOnUnknownElements`, so binding an
+  unknown property or using an undeclared element in a spec template throws instead of logging.
 - The same NG0100 also flags a template value that differs on every evaluation, such as a getter
   returning `new Date()`: give the component a field it updates at a defined moment instead.
 - Mock collaborators with `spyOn(service, "method").and.returnValue(of(...))` on the real
@@ -115,16 +126,24 @@ specs written with the DOM helpers stay as they are until they are rewritten for
 In specs that already use them, and in a new spec only for a single trivial check (one element
 present or absent, with no harness to extend), the helpers in
 `@common/helpers/base-test.helpers.spec` select by `data-test-id`:
-`getElementByDataTestId`, `findElementByDataTestId`, `emitClickOnElementByDataTestId`,
-`checkVisible`, `setFieldValue`, `dispatchInputEvent`, `checkButtonDisabled`,
-`checkInputDisabled`, `findComponentInstance`, `findComponentInstances`, plus `routerMock`,
-`snapshotParamMapMock` and `registerMatSvgIcons()`. Add an attribute to the template rather
-than selecting by CSS class or element structure.
+`getElementByDataTestId`, `findElementByDataTestId`, `findAllElementsByDataTestId`,
+`emitClickOnElementByDataTestId`, `checkVisible`, `setFieldValue`, `dispatchInputEvent`,
+`checkButtonDisabled`, `checkInputDisabled`, `findComponentInstance`, `findComponentInstances`,
+`findComponentInstanceByDataTestId`, plus `snapshotParamMapMock` and `registerMatSvgIcons()`. Add an attribute to the template rather than selecting by CSS class or
+element structure.
+
+A spec never casts a lookup result. `getElementByDataTestId`, `findElementByDataTestId` and
+`findNativeElement` take the element class as an optional last argument
+(`getElementByDataTestId(fixture, "save-btn", HTMLButtonElement)`) and return that type;
+`findAllElementsByDataTestId(fixture, "block-hash", HTMLElement)` requires it and returns every
+match. Each checks the class with `instanceof` and throws on a mismatch. A component instance
+comes from `findComponentInstance` or `findComponentInstanceByDataTestId`, never from a
+`DebugElement`'s `componentInstance`.
 
 A spec does not query `fixture.debugElement` inline (`query(By.directive(...))`,
-`queryAll(...)`): rendered components and directives are reached through
-`findComponentInstance` / `findComponentInstances`, and a query no helper covers yet becomes a
-new helper in `base-test.helpers.spec.ts`.
+`queryAll(...)`): elements are reached through the lookups above, rendered components and
+directives through `findComponentInstance` / `findComponentInstances`, and a query no helper
+covers yet becomes a new helper in `base-test.helpers.spec.ts`.
 
 ## API class tests
 
@@ -146,18 +165,23 @@ One case per api method: assert the variables sent, flush a fixture typed with t
 
 ## Guard, resolver and interceptor tests
 
-- Run a functional guard or resolver inside the TestBed injector:
-  `const executeGuard: CanActivateFn = (...p) => TestBed.runInInjectionContext(() => adminGuard(...p));`.
+- Run a functional guard or resolver with `runCanActivate(guard, route, url)` or
+  `runResolver(resolver, route, url)` from `@common/helpers/base-test.helpers.spec`, in an
+  `async` test: they run it in the TestBed injector and await an observable or promise result.
   Stub the services it injects with `spyOn` / `spyOnProperty`.
+- Build the route it receives with `routeSnapshot({ params, queryParams, data, parent, children })`:
+  a real `ActivatedRouteSnapshot`, whose `paramMap`, `parent` and `pathFromRoot` work as in a
+  navigation. The router state they pass is a stand-in that carries only `url`, the one field
+  the app's guards and resolvers read.
 - A guard redirect is asserted by where it leads, not by `false`:
-  `` expect(router.serializeUrl(result as UrlTree)).toEqual(`/${ProjectLinks.URL_LOGIN}`) ``
-  (`common/guards/forbid-anonymous-access.guard.spec.ts`).
-- Collect a resolver's value with `await firstValueFrom(executeResolver(route, state) as Observable<T>)`
-  in an `async` test, and an expected error with
-  `await expectAsync(firstValueFrom(...)).toBeRejectedWithError(...)`. A redirect is checked with
-  `expectPageNotFoundRedirect(data)` from `@common/helpers/base-test.helpers.spec`; a resolver
-  built on another one also gets a test that the `RedirectCommand` passes through and its own
-  fetch is not called (`dataset-settings-scheduling-tab.resolver.spec.ts`).
+  `` expectRedirectTo(await runCanActivate(guard, route, url), `/${ProjectLinks.URL_LOGIN}`) ``
+  (`account/guards/account.guard.spec.ts`).
+- An expected resolver error is checked with
+  `await expectAsync(runResolver(...)).toBeRejectedWithError(...)`. A page-not-found redirect is
+  checked with `expectPageNotFoundRedirect(data)`; a resolver built on another one also gets a
+  test that the `RedirectCommand` passes through and its own fetch is not called
+  (`dataset-settings-scheduling-tab.resolver.spec.ts`). Narrow a `T | RedirectCommand` result
+  with `instanceof`, never with a cast.
 - Interceptors: `provideHttpClient(withInterceptors([fn]))` + `provideHttpClientTesting()`,
   requests driven through `HttpClient` and answered with `HttpTestingController`; timing runs in
   `fakeAsync` (`common/components/spinner/spinner.interceptor.spec.ts`).
@@ -166,6 +190,41 @@ One case per api method: assert the variables sent, flush a fixture typed with t
   `{ provide: someResolverFn, useValue: { resolve: () => of(data) } }` replaces it there. A URL
   that reaches a `loadChildren` or `loadComponent` route needs an `async` test with `await
   router.navigate(...)`, since `tick()` does not wait for a lazy chunk.
+
+## Types in specs and mocks
+
+The compiler is the first check a spec gets: test data typed as the app's data catches a stale
+or misspelled field before any test runs. A type assertion switches that check off.
+
+- Every exported mock is declared with its type:
+  - a response fixture with the generated `XxxQuery` / `XxxMutation`;
+  - a slice of GraphQL data with the fragment type the code under test takes
+    (`kamu-ui-graphql-api`, "Documents"), or with the union member a spec needs
+    (`{ __typename: "AddData" } & AddDataEventFragment`);
+  - a view model with its app interface (`OverviewUpdate`).
+
+  A field the spec does not need takes its empty value (`schema: null`, `[]`); it is not dropped
+  from the type with `Omit` or `Partial`.
+- Specs, mocks, harnesses and the test modules in `common/modules` hold no type assertions at
+  all: no `{ ... } as T`, no `mock.a?.b as T`, no `as unknown as T`, no `as HTMLButtonElement`.
+  eslint's `consistent-type-assertions` rejects every one. Replace each as follows:
+
+  | The value | Use |
+  |---|---|
+  | sits behind optional chaining in a typed fixture | `requireValue(mock.a?.b ?? null)` from `@common/helpers/app.helpers` |
+  | is one member of a `__typename` union | a mock typed with that member, or an `if` on `__typename` |
+  | is a variant of a typed mock | a spread: `{ ...structuredClone(mockX), field: value }` |
+  | is a browser object such as `File` | the constructor: `new File(["a,b"], "data.csv", { type: "text/csv" })` |
+  | is a DOM element or a component instance | the typed lookups ("DOM helpers") |
+  | is a DOM property a harness reads, such as a `<select>` value | a lookup in the enum's values that throws on anything else (`time-delta-form.harness.ts`) |
+  | is a spy's call arguments | the spy `spyOn` returned, typed as `jasmine.Spy<Service["method"]>` |
+  | still does not fit the component's input | a wrong input type: type the input with what reaches it (`kamu-ui-angular-style`, "Component anatomy"), not the value with a cast |
+
+- `as const` on a literal and `satisfies T` on a typed local constant are fine: neither hides a
+  field, and the rule allows both.
+- A value that cannot be typed honestly, such as a router snapshot with no public constructor or
+  a scalar codegen types wrongly (`uint64FromApi`), gets a named helper in
+  `base-test.helpers.spec.ts`, the one file the rule exempts.
 
 ## Mocks and fixtures
 
@@ -200,6 +259,10 @@ One case per api method: assert the variables sent, flush a fixture typed with t
 
 | Approach | Why rejected |
 |---|---|
+| Assigning an input field directly (`component.foo = x`) | Skips `ngOnChanges` and setters and does not re-render an OnPush view: readme-section specs asserted on a state `ngOnChanges` would have overwritten, and clicked a button the real view hides |
+| `fixture.componentRef.setInput("name", value)` with `satisfies` added by hand | The name is a string and the value `unknown`, so nothing is checked unless someone remembers `satisfies`, and an unknown name only logs NG0303. Values that do not fit their inputs pass unnoticed, such as `undefined` for a GitHub callback input typed `string` that the router does set to `undefined` |
+| Calling `ngOnChanges` with a hand-built `SimpleChanges` | Tests a change Angular never sends. Combined with change detection it runs the hook twice per change, and a hand-picked change set hides a hook that throws on a change Angular does send, such as one where only the request timer's `class` input changed |
+| Casting test data to the expected type (`{ ... } as T`, `mock.a?.b as T`) | Hides missing, misspelled and stale fields: a cast mock keeps a field the schema has renamed (`addedOutputData` for `newData`) or one the query never fetches, and still compiles. It also hides a wrong input type, such as a component input typed with a full schema type that the app's data never matches |
 | Selecting elements by CSS class or tag structure | Breaks on styling changes; `data-test-id` is the contract between template and test |
 | Raw `nativeElement` clicks inside Material components | Depends on Material's internal DOM; the Material harnesses are the supported API |
 | Hand-built Apollo response objects inline in specs | Not reusable and not type-checked against codegen; fixtures go to `api/mock/` |

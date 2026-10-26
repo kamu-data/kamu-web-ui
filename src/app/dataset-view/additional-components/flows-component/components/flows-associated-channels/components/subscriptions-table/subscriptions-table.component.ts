@@ -9,7 +9,11 @@ import { ChangeDetectionStrategy, Component, EventEmitter, Input, Output } from 
 import { MatIconModule } from "@angular/material/icon";
 import { MatTableModule } from "@angular/material/table";
 
-import { DatasetBasicsFragment, FlowProcessEffectiveState, WebhookFlowSubProcess } from "@api/kamu.graphql.interface";
+import {
+    DatasetBasicsFragment,
+    FlowProcessEffectiveState,
+    WebhookFlowSubProcessDataFragment,
+} from "@api/kamu.graphql.interface";
 import { MaybeNull } from "@interface/app.types";
 
 import { webhooksStateMapper } from "src/app/dataset-view/additional-components/flows-component/flows.helpers";
@@ -29,14 +33,14 @@ import { SubprocessStatusFilterPipe } from "src/app/dataset-view/additional-comp
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class SubscriptionsTableComponent {
-    @Input({ required: true }) public subprocesses: WebhookFlowSubProcess[];
+    @Input({ required: true }) public subprocesses: WebhookFlowSubProcessDataFragment[];
     @Input({ required: true }) public webhookTableFilters: FlowProcessEffectiveState[];
     @Input({ required: true }) public datasetBasics: DatasetBasicsFragment;
     /** Subscriptions whose pause or resume has not shown its result yet */
     @Input() public busySubscriptionIds: MaybeNull<ReadonlySet<string>> = null;
     @Output() public webhookSettingsClicked: EventEmitter<string> = new EventEmitter<string>();
-    @Output() public subscriptionClicked: EventEmitter<WebhookFlowSubProcess> =
-        new EventEmitter<WebhookFlowSubProcess>();
+    @Output() public subscriptionClicked: EventEmitter<WebhookFlowSubProcessDataFragment> =
+        new EventEmitter<WebhookFlowSubProcessDataFragment>();
     @Output() public pauseWebhookClicked: EventEmitter<string> = new EventEmitter<string>();
     @Output() public resumeWebhookClicked: EventEmitter<string> = new EventEmitter<string>();
 
@@ -48,7 +52,7 @@ export class SubscriptionsTableComponent {
         "options",
     ];
 
-    public navigateToSubscription(process: WebhookFlowSubProcess): void {
+    public navigateToSubscription(process: WebhookFlowSubProcessDataFragment): void {
         this.subscriptionClicked.emit(process);
     }
 
@@ -68,7 +72,7 @@ export class SubscriptionsTableComponent {
         return webhooksStateMapper[state];
     }
 
-    public trackBySubscriptionId(index: number, item: WebhookFlowSubProcess): string {
+    public trackBySubscriptionId(index: number, item: WebhookFlowSubProcessDataFragment): string {
         return item.id;
     }
 }

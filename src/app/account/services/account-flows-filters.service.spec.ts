@@ -41,6 +41,61 @@ describe("AccountFlowsFiltersService", () => {
         expect(result).toEqual(jasmine.objectContaining({ effectiveStateIn: [FlowProcessEffectiveState.Active] }));
     });
 
+    describe("mode defaults", () => {
+        const cases: { mode: ProcessCardFilterMode; states: FlowProcessEffectiveState[] }[] = [
+            {
+                mode: ProcessCardFilterMode.RECENT_ACTIVITY,
+                states: [
+                    FlowProcessEffectiveState.Active,
+                    FlowProcessEffectiveState.Failing,
+                    FlowProcessEffectiveState.PausedManual,
+                    FlowProcessEffectiveState.StoppedAuto,
+                ],
+            },
+            {
+                mode: ProcessCardFilterMode.TRIAGE,
+                states: [FlowProcessEffectiveState.Failing, FlowProcessEffectiveState.StoppedAuto],
+            },
+            {
+                mode: ProcessCardFilterMode.UPCOMING_SCHEDULED,
+                states: [FlowProcessEffectiveState.Active, FlowProcessEffectiveState.Failing],
+            },
+            { mode: ProcessCardFilterMode.PAUSED, states: [FlowProcessEffectiveState.PausedManual] },
+            {
+                mode: ProcessCardFilterMode.CUSTOM,
+                states: [
+                    FlowProcessEffectiveState.Active,
+                    FlowProcessEffectiveState.Failing,
+                    FlowProcessEffectiveState.PausedManual,
+                    FlowProcessEffectiveState.StoppedAuto,
+                ],
+            },
+        ];
+
+        cases.forEach(({ mode, states }) => {
+            it(`should select the default states of the ${mode} mode`, () => {
+                service.applyModeDefaults(mode);
+                expect(service.currentFiltersSnapshot.selectedFlowProcessStates).toEqual(states);
+            });
+        });
+
+        it("should let the recent activity mode fill in its default time window", () => {
+            service.applyModeDefaults(ProcessCardFilterMode.RECENT_ACTIVITY);
+            expect(service.currentFiltersSnapshot.isFirstInitialization).toBeTrue();
+        });
+
+        it("should keep the other filters of the mode", () => {
+            const fromFilterDate = new Date("2024-03-14T11:22:29+00:00");
+            service.updateFilters({ fromFilterDate, minConsecutiveFailures: 2 });
+
+            service.applyModeDefaults(ProcessCardFilterMode.TRIAGE);
+
+            expect(service.currentFiltersSnapshot.fromFilterDate).toEqual(fromFilterDate);
+            expect(service.currentFiltersSnapshot.minConsecutiveFailures).toEqual(2);
+            expect(service.currentFiltersSnapshot.isFirstInitialization).toBeFalse();
+        });
+    });
+
     it("should check order direction with false", () => {
         service.updateFilters({
             selectedOrderDirection: false,

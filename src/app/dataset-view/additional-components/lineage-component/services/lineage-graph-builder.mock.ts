@@ -5,11 +5,13 @@
  * included in the LICENSE file.
  */
 
+import { uint64FromApi } from "@common/helpers/base-test.helpers.spec";
 import {
-    DatasetAccessResultNotAccessible,
+    DatasetAccessResultNotAccessibleDataFragment,
     DatasetKind,
     DatasetLineageBasicsFragment,
-    FetchStepEthereumLogs,
+    DatasetLineageMetadataDataFragment,
+    FetchStepDataFragment,
 } from "@api/kamu.graphql.interface";
 
 import { mockGraphNode } from "src/app/dataset-view/additional-components/data-tabs.mock";
@@ -19,7 +21,7 @@ function mockLineageDataset(
     id: string,
     name: string,
     kind: DatasetKind,
-    metadata: Partial<DatasetLineageBasicsFragment["metadata"]> = {},
+    metadata: Partial<DatasetLineageMetadataDataFragment> = {},
 ): DatasetLineageBasicsFragment {
     return {
         ...mockGraphNode,
@@ -37,7 +39,7 @@ function mockLineageDataset(
     };
 }
 
-function mockEthereumRoot(id: string, name: string, fetch: FetchStepEthereumLogs): DatasetLineageBasicsFragment {
+function mockEthereumRoot(id: string, name: string, fetch: FetchStepDataFragment): DatasetLineageBasicsFragment {
     return mockLineageDataset(id, name, DatasetKind.Root, {
         currentPollingSource: { __typename: "SetPollingSource", fetch },
     });
@@ -63,8 +65,7 @@ export const mockLineageUpdateWithSharedPushSource: LineageUpdate = {
     origin: MOCK_DERIVED_DATASET,
 };
 
-// The API sends Uint64 as a string, although codegen types it as a number
-const MOCK_CHAIN_ID_FROM_API = "1" as unknown as number;
+const MOCK_CHAIN_ID_FROM_API = uint64FromApi("1");
 
 export const MOCK_ETHEREUM_NODE_URL = "https://eth.example.com";
 
@@ -88,18 +89,14 @@ export const mockLineageUpdateWithEthereumSources: LineageUpdate = {
     origin: MOCK_DERIVED_DATASET,
 };
 
-export const MOCK_INACCESSIBLE_DATASET: DatasetAccessResultNotAccessible = {
+export const MOCK_INACCESSIBLE_DATASET: DatasetAccessResultNotAccessibleDataFragment = {
     __typename: "DatasetAccessResultNotAccessible",
     id: "did:odf:hidden",
-    message: "Dataset is not accessible",
 };
 
-// DatasetService emits inaccessible datasets among the nodes and edges, although LineageUpdate does not type them
-const mockInaccessibleLineageEntry = MOCK_INACCESSIBLE_DATASET as unknown as DatasetLineageBasicsFragment;
-
 export const mockLineageUpdateWithInaccessibleDataset: LineageUpdate = {
-    nodes: [MOCK_DERIVED_DATASET, mockInaccessibleLineageEntry],
-    edges: [[mockInaccessibleLineageEntry, MOCK_DERIVED_DATASET]],
+    nodes: [MOCK_DERIVED_DATASET, MOCK_INACCESSIBLE_DATASET],
+    edges: [[MOCK_INACCESSIBLE_DATASET, MOCK_DERIVED_DATASET]],
     origin: MOCK_DERIVED_DATASET,
 };
 

@@ -7,7 +7,6 @@
 
 import { provideHttpClient } from "@angular/common/http";
 import { ComponentFixture, fakeAsync, flush, TestBed, tick } from "@angular/core/testing";
-import { By } from "@angular/platform-browser";
 
 import { of, throwError } from "rxjs";
 
@@ -15,7 +14,11 @@ import { NgbTypeaheadSelectItemEvent } from "@ng-bootstrap/ng-bootstrap";
 import { Apollo } from "apollo-angular";
 import { provideToastr } from "ngx-toastr";
 
-import { dispatchInputEvent, emitClickOnElementByDataTestId } from "@common/helpers/base-test.helpers.spec";
+import {
+    dispatchInputEvent,
+    emitClickOnElementByDataTestId,
+    findAllElementsByDataTestId,
+} from "@common/helpers/base-test.helpers.spec";
 import { SharedTestModule } from "@common/modules/shared-test.module";
 import AppValues from "@common/values/app.values";
 import { SearchApi } from "@api/search.api";
@@ -34,6 +37,11 @@ describe("SearchAndSchemasSectionComponent", () => {
     let datasetService: DatasetService;
     let searchApi: SearchApi;
     let requestDatasetSchemaSpy: jasmine.Spy;
+
+    const selectDatasetEvent: NgbTypeaheadSelectItemEvent<DatasetAutocompleteItem> = {
+        item: { dataset: mockDatasetBasicsDerivedFragment, dummy: false, __typename: TypeNames.datasetType },
+        preventDefault: () => undefined,
+    };
 
     beforeEach(() => {
         TestBed.configureTestingModule({
@@ -71,13 +79,10 @@ describe("SearchAndSchemasSectionComponent", () => {
     });
 
     it("should check a removed dataset can be picked again", () => {
-        const selectEvent = {
-            item: { dataset: mockDatasetBasicsDerivedFragment, __typename: TypeNames.datasetType },
-        } as NgbTypeaheadSelectItemEvent;
-        component.onSelectItem(selectEvent);
+        component.onSelectItem(selectDatasetEvent);
 
         component.removeDataset(mockDatasetBasicsDerivedFragment.alias);
-        component.onSelectItem(selectEvent);
+        component.onSelectItem(selectDatasetEvent);
 
         expect(requestDatasetSchemaSpy).toHaveBeenCalledTimes(2);
     });
@@ -113,14 +118,7 @@ describe("SearchAndSchemasSectionComponent", () => {
     });
 
     it("should check select input dataset", () => {
-        const mockNgbTypeaheadSelectItemEvent = {
-            item: {
-                dataset: mockDatasetBasicsDerivedFragment,
-                __typename: TypeNames.datasetType,
-            },
-        } as NgbTypeaheadSelectItemEvent;
-
-        component.onSelectItem(mockNgbTypeaheadSelectItemEvent);
+        component.onSelectItem(selectDatasetEvent);
 
         expect(component.inputDatasets.size).toBe(1);
         expect(requestDatasetSchemaSpy).toHaveBeenCalledTimes(1);
@@ -129,25 +127,23 @@ describe("SearchAndSchemasSectionComponent", () => {
     it("should check sorterd dataset list", () => {
         fixture.detectChanges();
         component.searchResult = [
-            { datasetAlias: "dataset1", schema: null },
             { datasetAlias: "dataset2", schema: null },
+            { datasetAlias: "dataset1", schema: null },
         ];
-        expect(component.sortedSearchResult[0].datasetAlias).toEqual("dataset1");
-        expect(component.sortedSearchResult[1].datasetAlias).toEqual("dataset2");
+        expect(component.sortedSearchResult.map((item) => item.datasetAlias)).toEqual(["dataset1", "dataset2"]);
+        expect(component.searchResult.map((item) => item.datasetAlias)).toEqual(["dataset2", "dataset1"]);
     });
 
     it("should check running the query again keeps the schema panels", () => {
         fixture.detectChanges();
-        const panelsBefore = fixture.debugElement.queryAll(By.css('[data-test-id="schema-panel"]'));
+        const panelsBefore = findAllElementsByDataTestId(fixture, "schema-panel", HTMLElement);
         expect(panelsBefore.length).toBeGreaterThan(0);
 
         sqlQueryService.emitSqlQueryResponseChanged(mockSqlQueryResponseState);
         fixture.detectChanges();
 
-        const panelsAfter = fixture.debugElement.queryAll(By.css('[data-test-id="schema-panel"]'));
-        expect(panelsAfter.map((panel) => panel.nativeElement as HTMLElement)).toEqual(
-            panelsBefore.map((panel) => panel.nativeElement as HTMLElement),
-        );
+        const panelsAfter = findAllElementsByDataTestId(fixture, "schema-panel", HTMLElement);
+        expect(panelsAfter).toEqual(panelsBefore);
     });
 
     it("should show schemas of the next query after a schema request fails", () => {
@@ -164,13 +160,11 @@ describe("SearchAndSchemasSectionComponent", () => {
 
     it("should check picking a dataset that is already shown keeps one schema panel for it", () => {
         fixture.detectChanges();
-        const panelCount = fixture.debugElement.queryAll(By.css('[data-test-id="schema-panel"]')).length;
+        const panelCount = findAllElementsByDataTestId(fixture, "schema-panel", HTMLElement).length;
 
-        component.onSelectItem({
-            item: { dataset: mockDatasetBasicsDerivedFragment, __typename: TypeNames.datasetType },
-        } as NgbTypeaheadSelectItemEvent);
+        component.onSelectItem(selectDatasetEvent);
         fixture.detectChanges();
 
-        expect(fixture.debugElement.queryAll(By.css('[data-test-id="schema-panel"]')).length).toEqual(panelCount);
+        expect(findAllElementsByDataTestId(fixture, "schema-panel", HTMLElement).length).toEqual(panelCount);
     });
 });

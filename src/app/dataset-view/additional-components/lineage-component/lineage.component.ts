@@ -11,7 +11,6 @@ import { ChangeDetectionStrategy, Component, inject, Input } from "@angular/core
 
 import { Observable, switchMap } from "rxjs";
 
-import { Node } from "@swimlane/ngx-graph";
 import { ToastrService } from "ngx-toastr";
 
 import { BaseComponent } from "@common/components/base.component";
@@ -21,7 +20,7 @@ import { MaybeNull } from "@interface/app.types";
 import { DatasetInfo } from "@interface/navigation.interface";
 
 import {
-    LineageGraphNodeData,
+    LineageGraphNode,
     LineageGraphNodeKind,
     LineageGraphUpdate,
 } from "src/app/dataset-view/additional-components/lineage-component/lineage-model";
@@ -61,17 +60,16 @@ export class LineageComponent extends BaseComponent {
             .pipe(switchMap(() => this.lineageGraphBuilderService.buildGraph()));
     }
 
-    public onClickNode(node: Node): void {
-        const nodeData: LineageGraphNodeData = node.data as LineageGraphNodeData;
+    public onClickNode(node: LineageGraphNode): void {
         /* istanbul ignore else */
-        if (nodeData.kind === LineageGraphNodeKind.Dataset) {
-            this.onSelectDataset(nodeData.dataObject.accountName, nodeData.dataObject.name);
+        if (node.data.kind === LineageGraphNodeKind.Dataset) {
+            this.onSelectDataset(node.data.dataObject.accountName, node.data.dataObject.name);
         } else {
             throw new Error("Clicked lineage node of unexpected type");
         }
     }
 
-    public onClickPrivateNode(node: Node): void {
+    public onClickPrivateNode(node: LineageGraphNode): void {
         this.clipboard.copy(node.id);
         this.toastr.success("Copied ID");
     }

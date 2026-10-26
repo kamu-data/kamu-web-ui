@@ -16,6 +16,7 @@ import {
     emitClickOnElementByDataTestId,
     getElementByDataTestId,
     registerMatSvgIcons,
+    setComponentInput,
 } from "@common/helpers/base-test.helpers.spec";
 import { SharedTestModule } from "@common/modules/shared-test.module";
 import { TEST_BLOCK_HASH } from "@api/mock/dataset.mock";
@@ -38,8 +39,8 @@ describe("DisplayHashComponent", () => {
         fixture = TestBed.createComponent(DisplayHashComponent);
         toastService = TestBed.inject(ToastrService);
         component = fixture.componentInstance;
-        component.value = TEST_BLOCK_HASH;
-        component.navigationTargetDataset = mockDatasetInfo;
+        setComponentInput(fixture, "value", TEST_BLOCK_HASH);
+        setComponentInput(fixture, "navigationTargetDataset", mockDatasetInfo);
         fixture.detectChanges();
     });
 
@@ -48,7 +49,7 @@ describe("DisplayHashComponent", () => {
     });
 
     it("should check copyToClipboard button is exist", () => {
-        component.showCopyButton = true;
+        setComponentInput(fixture, "showCopyButton", true);
         fixture.detectChanges();
 
         const copyToClipboardButton = getElementByDataTestId(fixture, "copyToClipboardButton");
@@ -57,14 +58,14 @@ describe("DisplayHashComponent", () => {
 
     it("should check copyToClipboard button is work", () => {
         const successToastServiceSpy = spyOn(toastService, "success");
-        component.showCopyButton = true;
+        setComponentInput(fixture, "showCopyButton", true);
         fixture.detectChanges();
         emitClickOnElementByDataTestId(fixture, "copyToClipboardButton");
         expect(successToastServiceSpy).toHaveBeenCalledWith("Copied");
     });
 
     it("should check hash length", () => {
-        component.navigationTargetDataset = undefined;
+        setComponentInput(fixture, "navigationTargetDataset", undefined);
         fixture.detectChanges();
         const spanElement = getElementByDataTestId(fixture, "notNavigableValue");
         expect(spanElement.textContent?.length).toEqual(8);

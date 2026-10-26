@@ -17,7 +17,7 @@ import { NgbModal, NgbModalRef } from "@ng-bootstrap/ng-bootstrap";
 import { Apollo } from "apollo-angular";
 import { ApolloTestingModule } from "apollo-angular/testing";
 
-import { registerMatSvgIcons } from "@common/helpers/base-test.helpers.spec";
+import { registerMatSvgIcons, setComponentInput } from "@common/helpers/base-test.helpers.spec";
 import { mockAccountDetails } from "@api/mock/auth.mock";
 import { DataSchemaField } from "@interface/dataset-schema.interface";
 
@@ -86,9 +86,9 @@ describe("AddPushSourceComponent with query parameter name", () => {
         datasetCommitService = TestBed.inject(DatasetCommitService);
         loggedUserService = TestBed.inject(LoggedUserService);
         component = fixture.componentInstance;
-        component.eventYamlByHash = mockAddPushSourceYaml;
-        component.queryParamName = "mockSourceName";
-        component.datasetInfo = mockDatasetInfo;
+        setComponentInput(fixture, "eventYamlByHash", mockAddPushSourceYaml);
+        setComponentInput(fixture, "queryParamName", "mockSourceName");
+        setComponentInput(fixture, "datasetInfo", mockDatasetInfo);
         component.addPushSourceForm = new FormGroup({
             sourceName: new FormControl(""),
             read: new FormGroup({
@@ -115,7 +115,6 @@ describe("AddPushSourceComponent with query parameter name", () => {
     });
 
     it("should check eventYamlByHash is not null", () => {
-        component.ngOnInit();
         expect(component.eventYamlByHash).toEqual(mockAddPushSourceYaml);
     });
 
@@ -136,13 +135,16 @@ describe("AddPushSourceComponent with query parameter name", () => {
     });
 
     it("should check an existing preprocess step is shown when the editor opens", () => {
-        component.eventYamlByHash = mockAddPushSourceYamlWithPreprocess;
-        component.ngOnInit();
+        fixture = TestBed.createComponent(AddPushSourceComponent);
+        component = fixture.componentInstance;
+        setComponentInput(fixture, "eventYamlByHash", mockAddPushSourceYamlWithPreprocess);
+        setComponentInput(fixture, "queryParamName", "mockSourceName");
+        setComponentInput(fixture, "datasetInfo", mockDatasetInfo);
+        fixture.detectChanges();
         expect(component.showPreprocessStep).toEqual(true);
     });
 
     it("should check open edit modal", () => {
-        component.ngOnInit();
         const openModalSpy = spyOn(modalService, "open").and.returnValue(modalRef);
         component.onEditYaml();
         expect(openModalSpy).toHaveBeenCalledTimes(1);
@@ -178,9 +180,9 @@ describe("AddPushSourceComponent without query parameter name", () => {
 
         fixture = TestBed.createComponent(AddPushSourceComponent);
         component = fixture.componentInstance;
-        component.queryParamName = "";
-        component.eventYamlByHash = mockAddPushSourceYaml;
-        component.datasetInfo = mockDatasetInfo;
+        setComponentInput(fixture, "queryParamName", "");
+        setComponentInput(fixture, "eventYamlByHash", mockAddPushSourceYaml);
+        setComponentInput(fixture, "datasetInfo", mockDatasetInfo);
         component.addPushSourceForm = new FormGroup({
             sourceName: new FormControl("mockName"),
             read: new FormGroup({
@@ -192,13 +194,11 @@ describe("AddPushSourceComponent without query parameter name", () => {
             }),
             prepare: new FormArray([]),
         });
-
-        fixture.detectChanges();
     });
 
     it("should check add validator when query parameter name equal null", () => {
         const addValidatorSpy = spyOn(component.addPushSourceForm.controls.sourceName, "addValidators");
-        component.ngOnInit();
+        fixture.detectChanges();
         expect(addValidatorSpy).toHaveBeenCalledTimes(1);
     });
 });

@@ -6,13 +6,13 @@
  */
 
 import { TestBed } from "@angular/core/testing";
-import { ActivatedRouteSnapshot, ResolveFn, RouterStateSnapshot } from "@angular/router";
+import { RedirectCommand } from "@angular/router";
 
-import { firstValueFrom, Observable, of, throwError } from "rxjs";
+import { of, throwError } from "rxjs";
 
 import { Apollo } from "apollo-angular";
 
-import { expectPageNotFoundRedirect } from "@common/helpers/base-test.helpers.spec";
+import { expectPageNotFoundRedirect, runResolver } from "@common/helpers/base-test.helpers.spec";
 import { DatasetBasicsFragment } from "@api/kamu.graphql.interface";
 
 import { mockOverviewUpdate } from "src/app/dataset-view/additional-components/data-tabs.mock";
@@ -30,12 +30,6 @@ describe("metadataTransformationTabResolverFn", () => {
     let datasetService: DatasetService;
     let datasetSubsService: DatasetSubscriptionsService;
 
-    const routeSnapshot = {} as ActivatedRouteSnapshot;
-    const mockState = {} as RouterStateSnapshot;
-
-    const executeResolver: ResolveFn<DatasetOverviewTabData> = (...resolverParameters) =>
-        TestBed.runInInjectionContext(() => metadataTransformationTabResolverFn(...resolverParameters));
-
     beforeEach(() => {
         TestBed.configureTestingModule({
             providers: [Apollo],
@@ -48,9 +42,9 @@ describe("metadataTransformationTabResolverFn", () => {
         spyOnProperty(datasetSubsService, "overviewChanges", "get").and.returnValue(of(mockOverviewUpdate));
     });
 
-    function resolve(datasetBasics: DatasetBasicsFragment): Promise<unknown> {
+    function resolve(datasetBasics: DatasetBasicsFragment): Promise<DatasetOverviewTabData | RedirectCommand> {
         spyOnProperty(datasetService, "datasetChanges", "get").and.returnValue(of(datasetBasics));
-        return firstValueFrom(executeResolver(routeSnapshot, mockState) as Observable<unknown>);
+        return runResolver(metadataTransformationTabResolverFn);
     }
 
     it("should resolve the overview for a derivative dataset", async () => {
@@ -72,7 +66,7 @@ describe("metadataTransformationTabResolverFn", () => {
     it("should redirect to page not found when the dataset cannot be loaded", async () => {
         spyOnProperty(datasetService, "datasetChanges", "get").and.returnValue(throwError(() => new Error("fail")));
 
-        const data = await firstValueFrom(executeResolver(routeSnapshot, mockState) as Observable<unknown>);
+        const data = await runResolver(metadataTransformationTabResolverFn);
 
         expectPageNotFoundRedirect(data);
     });

@@ -13,9 +13,12 @@ import { MatIconModule } from "@angular/material/icon";
 import { provideToastr } from "ngx-toastr";
 
 import { HIGHLIGHT_OPTIONS_PROVIDER } from "@common/helpers/app.helpers";
-import { findElementByDataTestId, registerMatSvgIcons } from "@common/helpers/base-test.helpers.spec";
+import {
+    findElementByDataTestId,
+    registerMatSvgIcons,
+    setComponentInput,
+} from "@common/helpers/base-test.helpers.spec";
 import { SharedTestModule } from "@common/modules/shared-test.module";
-import { FetchStepUrl } from "@api/kamu.graphql.interface";
 
 import { mockMetadataRootUpdate } from "src/app/dataset-view/additional-components/data-tabs.mock";
 import { MetadataPollingSourceTabComponent } from "src/app/dataset-view/additional-components/metadata-component/tabs/metadata-polling-source-tab/metadata-polling-source-tab.component";
@@ -35,11 +38,11 @@ describe("MetadataPollingSourceTabComponent", () => {
         fixture = TestBed.createComponent(MetadataPollingSourceTabComponent);
         navigationService = TestBed.inject(NavigationService);
         component = fixture.componentInstance;
-        component.datasetMetadataTabData = {
+        setComponentInput(fixture, "datasetMetadataTabData", {
             datasetBasics: mockDatasetBasicsRootFragment,
             datasetPermissions: mockFullPowerDatasetPermissionsFragment,
             metadataSummary: mockMetadataRootUpdate.metadataSummary,
-        };
+        });
         registerMatSvgIcons();
         fixture.detectChanges();
     });
@@ -56,9 +59,10 @@ describe("MetadataPollingSourceTabComponent", () => {
 
     it("should check to render data", () => {
         const url = findElementByDataTestId(fixture, "fetch-step-url");
-        const expectedUrl = (
-            mockMetadataRootUpdate.metadataSummary.metadata.currentPollingSource?.fetch as FetchStepUrl
-        ).url;
-        expect(url?.innerText.trim()).toEqual(expectedUrl);
+        const fetch = mockMetadataRootUpdate.metadataSummary.metadata.currentPollingSource?.fetch;
+        expect(fetch?.__typename).toEqual("FetchStepUrl");
+        if (fetch?.__typename === "FetchStepUrl") {
+            expect(url?.innerText.trim()).toEqual(fetch.url);
+        }
     });
 });

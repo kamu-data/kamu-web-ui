@@ -9,7 +9,7 @@ import { ComponentFixture, TestBed } from "@angular/core/testing";
 
 import { provideToastr } from "ngx-toastr";
 
-import { findElementByDataTestId } from "@common/helpers/base-test.helpers.spec";
+import { findElementByDataTestId, setComponentInput } from "@common/helpers/base-test.helpers.spec";
 
 import { ReproducedResultSectionComponent } from "src/app/query-explainer/components/reproduced-result-section/reproduced-result-section.component";
 import { mockQueryExplainerEmptyOutput, mockQueryExplainerOutput } from "src/app/query-explainer/query-explainer.mocks";
@@ -25,7 +25,7 @@ describe("ReproducedResultSectionComponent", () => {
         });
         fixture = TestBed.createComponent(ReproducedResultSectionComponent);
         component = fixture.componentInstance;
-        component.dataJsonAoS = mockQueryExplainerOutput;
+        setComponentInput(fixture, "dataJsonAoS", mockQueryExplainerOutput);
     });
 
     it("should create", () => {
@@ -34,7 +34,7 @@ describe("ReproducedResultSectionComponent", () => {
     });
 
     it("should check empty data result", () => {
-        component.dataJsonAoS = mockQueryExplainerEmptyOutput;
+        setComponentInput(fixture, "dataJsonAoS", mockQueryExplainerEmptyOutput);
         fixture.detectChanges();
         const emptyElement = findElementByDataTestId(fixture, "emptyResult");
         expect(emptyElement?.textContent?.trim()).toEqual("0 records");

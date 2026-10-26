@@ -6,36 +6,23 @@
  */
 
 import { TestBed } from "@angular/core/testing";
-import { ActivatedRouteSnapshot, ResolveFn, RouterStateSnapshot } from "@angular/router";
+
+import { routeSnapshot, runResolver } from "@common/helpers/base-test.helpers.spec";
 
 import { MetadataTabs } from "src/app/dataset-view/additional-components/metadata-component/metadata.constants";
 import { metadataActiveTabResolverFn } from "src/app/dataset-view/additional-components/metadata-component/resolver/metadata-active-tab.resolver";
 import ProjectLinks from "src/app/project-links";
 
 describe("metadataActiveTabResolver", () => {
-    const executeResolver: ResolveFn<MetadataTabs> = (...resolverParameters) =>
-        TestBed.runInInjectionContext(() => metadataActiveTabResolverFn(...resolverParameters));
-
     beforeEach(() => {
         TestBed.configureTestingModule({});
     });
 
-    it("should be created", () => {
-        expect(executeResolver).toBeTruthy();
-    });
-
     it("should check to resolve an active tab", async () => {
-        const routeSnapshot = {
-            children: [
-                {
-                    data: {
-                        [ProjectLinks.URL_PARAM_TAB]: MetadataTabs.Schema,
-                    },
-                },
-            ],
-        } as ActivatedRouteSnapshot;
-        const mockState = {} as RouterStateSnapshot;
-        const result = await metadataActiveTabResolverFn(routeSnapshot, mockState);
+        const route = routeSnapshot({
+            children: [routeSnapshot({ data: { [ProjectLinks.URL_PARAM_TAB]: MetadataTabs.Schema } })],
+        });
+        const result = await runResolver(metadataActiveTabResolverFn, route);
         expect(result).toEqual(MetadataTabs.Schema);
     });
 });

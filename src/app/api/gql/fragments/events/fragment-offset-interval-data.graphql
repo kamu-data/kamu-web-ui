@@ -1,0 +1,4 @@
+fragment OffsetIntervalData on OffsetInterval {
+  start
+  end
+}

@@ -17,7 +17,11 @@ import { ModalService } from "@common/components/modal/modal.service";
 import { FeatureFlagDirective } from "@common/directives/feature-flag.directive";
 import { promiseWithCatch } from "@common/helpers/app.helpers";
 import RoutingResolvers from "@common/resolvers/routing-resolvers";
-import { DatasetBasicsFragment, WebhookSubscription, WebhookSubscriptionStatus } from "@api/kamu.graphql.interface";
+import {
+    DatasetBasicsFragment,
+    WebhookSubscriptionDataFragment,
+    WebhookSubscriptionStatus,
+} from "@api/kamu.graphql.interface";
 
 import { DatasetSettingsWebhookTabData } from "src/app/dataset-view/additional-components/dataset-settings-component/tabs/webhooks/dataset-settings-webhooks-tab.component.types";
 import { DatasetWebhooksService } from "src/app/dataset-view/additional-components/dataset-settings-component/tabs/webhooks/service/dataset-webhooks.service";
@@ -48,9 +52,9 @@ export class ListWebhooksComponent implements OnInit {
 
     public readonly DISPLAY_COLUMNS: string[] = ["event", "status", "actions"];
     public readonly WebhookSubscriptionStatus: typeof WebhookSubscriptionStatus = WebhookSubscriptionStatus;
-    private readonly _rowsSubject$ = new BehaviorSubject<WebhookSubscription[]>([]);
+    private readonly _rowsSubject$ = new BehaviorSubject<WebhookSubscriptionDataFragment[]>([]);
     public readonly rows$ = this._rowsSubject$.asObservable();
-    public readonly dataSource$: Observable<WebhookSubscription[]> = this.rows$;
+    public readonly dataSource$: Observable<WebhookSubscriptionDataFragment[]> = this.rows$;
 
     private datasetWebhooksService = inject(DatasetWebhooksService);
     private modalService = inject(ModalService);
@@ -91,8 +95,9 @@ export class ListWebhooksComponent implements OnInit {
                             .pipe(take(1))
                             .subscribe((result: boolean) => {
                                 if (result) {
-                                    const currentRows: WebhookSubscription[] = this._rowsSubject$.getValue();
-                                    const updatedRows: WebhookSubscription[] = currentRows.filter(
+                                    const currentRows: WebhookSubscriptionDataFragment[] =
+                                        this._rowsSubject$.getValue();
+                                    const updatedRows: WebhookSubscriptionDataFragment[] = currentRows.filter(
                                         (row) => row.id !== subscriptionId,
                                     );
                                     this._rowsSubject$.next(updatedRows);
@@ -183,7 +188,7 @@ export class ListWebhooksComponent implements OnInit {
             });
     }
 
-    public viewDeliveryReport(subscription: WebhookSubscription): void {
+    public viewDeliveryReport(subscription: WebhookSubscriptionDataFragment): void {
         this.navigationService.navigateToDatasetView({
             accountName: this.datasetBasics.owner.accountName,
             datasetName: this.datasetBasics.name,
@@ -192,7 +197,7 @@ export class ListWebhooksComponent implements OnInit {
         });
     }
 
-    public editWebhook(subscription: WebhookSubscription): void {
+    public editWebhook(subscription: WebhookSubscriptionDataFragment): void {
         this.navigationService.navigateToWebhooks({
             accountName: this.datasetBasics.owner.accountName,
             datasetName: this.datasetBasics.name,
@@ -207,11 +212,14 @@ export class ListWebhooksComponent implements OnInit {
         return WebhooksHelpers.webhookStatusBadgeOptions(status);
     }
 
-    public trackByWebhookId(index: number, item: WebhookSubscription): string {
+    public trackByWebhookId(index: number, item: WebhookSubscriptionDataFragment): string {
         return item.id;
     }
 
-    private updateRowStatus(predicate: (row: WebhookSubscription) => boolean, status: WebhookSubscriptionStatus): void {
+    private updateRowStatus(
+        predicate: (row: WebhookSubscriptionDataFragment) => boolean,
+        status: WebhookSubscriptionStatus,
+    ): void {
         const current = this._rowsSubject$.getValue();
         const updated = current.map((row) => (predicate(row) ? { ...row, status } : row));
         this._rowsSubject$.next(updated);

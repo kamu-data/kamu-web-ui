@@ -46,7 +46,7 @@ import {
     DatasetKind,
     DatasetPermissionsFragment,
     DatasetVisibilityInput,
-    DatasetVisibilityOutput,
+    DatasetVisibilityOutputDataFragment,
 } from "@api/kamu.graphql.interface";
 import { MaybeNull } from "@interface/app.types";
 
@@ -166,7 +166,7 @@ export class DatasetSettingsGeneralTabComponent extends BaseComponent implements
         return this.datasetBasics.visibility.__typename === "PrivateDatasetVisibility";
     }
 
-    public get datasetVisibility(): DatasetVisibilityOutput {
+    public get datasetVisibility(): DatasetVisibilityOutputDataFragment {
         return this.datasetBasics.visibility;
     }
 

@@ -6,21 +6,24 @@
  */
 
 import {
-    DatasetAccessResultNotAccessible,
+    DatasetAccessResultNotAccessibleDataFragment,
     DatasetLineageBasicsFragment,
+    DatasetPageInfoFragment,
     DatasetSearchOverviewFragment,
-    PageBasedInfo,
 } from "@api/kamu.graphql.interface";
 
+/** A dataset in the lineage graph: its basics when the user can access it, only its ID otherwise */
+export type DatasetLineageEntry = DatasetLineageBasicsFragment | DatasetAccessResultNotAccessibleDataFragment;
+
 export interface DatasetLineageNode {
-    basics: DatasetLineageBasicsFragment | DatasetAccessResultNotAccessible;
+    basics: DatasetLineageEntry;
     downstreamDependencies: DatasetLineageNode[];
     upstreamDependencies: DatasetLineageNode[];
 }
 
 export interface DatasetsAccountResponse {
     datasets: DatasetSearchOverviewFragment[];
-    pageInfo: PageBasedInfo;
+    pageInfo: DatasetPageInfoFragment;
     datasetTotalCount: number;
 }
 

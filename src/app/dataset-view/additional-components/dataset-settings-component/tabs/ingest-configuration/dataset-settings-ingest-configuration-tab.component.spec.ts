@@ -13,9 +13,10 @@ import { Apollo } from "apollo-angular";
 import { ApolloTestingModule } from "apollo-angular/testing";
 import { provideToastr } from "ngx-toastr";
 
-import { getElementByDataTestId } from "@common/helpers/base-test.helpers.spec";
+import { getElementByDataTestId, setComponentInput } from "@common/helpers/base-test.helpers.spec";
 import { SharedTestModule } from "@common/modules/shared-test.module";
 import { FlowRetryBackoffType, TimeUnit } from "@api/kamu.graphql.interface";
+import { MaybeNull } from "@interface/app.types";
 
 import { DatasetFlowConfigService } from "src/app/dataset-view/additional-components/dataset-settings-component/services/dataset-flow-config.service";
 import { DatasetSettingsIngestConfigurationTabComponent } from "src/app/dataset-view/additional-components/dataset-settings-component/tabs/ingest-configuration/dataset-settings-ingest-configuration-tab.component";
@@ -46,20 +47,25 @@ describe("DatasetSettingsIngestConfigurationTabComponent", () => {
             providers: [Apollo, provideToastr()],
         }).compileComponents();
 
-        fixture = TestBed.createComponent(DatasetSettingsIngestConfigurationTabComponent);
         datasetFlowConfigService = TestBed.inject(DatasetFlowConfigService);
+        await createComponent({ fetchUncacheable: false, fetchNextIteration: false }, null);
+    });
 
+    async function createComponent(
+        ingestionRule: { fetchUncacheable: boolean; fetchNextIteration: boolean },
+        retryPolicy: MaybeNull<typeof MOCK_RETRY_POLICY>,
+    ): Promise<void> {
+        fixture = TestBed.createComponent(DatasetSettingsIngestConfigurationTabComponent);
         component = fixture.componentInstance;
-        component.ingestConfigurationTabData = {
+        setComponentInput(fixture, "ingestConfigurationTabData", {
             datasetBasics: mockDatasetBasicsRootFragment,
             datasetPermissions: mockFullPowerDatasetPermissionsFragment,
             ingestionRule: {
                 __typename: "FlowConfigRuleIngest",
-                fetchUncacheable: false,
-                fetchNextIteration: false,
+                ...ingestionRule,
             },
-            retryPolicy: null,
-        };
+            retryPolicy,
+        });
 
         fixture.detectChanges();
         await fixture.whenStable();
@@ -67,10 +73,10 @@ describe("DatasetSettingsIngestConfigurationTabComponent", () => {
         loader = TestbedHarnessEnvironment.loader(fixture);
         ingestConfigurationRuleFormHarness = await loader.getHarness(IngestConfigurationRuleFormHarness);
         flowRetryPolicyFormHarness = await loader.getHarness(FlowRetryPolicyFormHarness);
-    });
+    }
 
     function getSaveButton(): HTMLButtonElement {
-        return getElementByDataTestId(fixture, "save-ingest-configuration-btn") as HTMLButtonElement;
+        return getElementByDataTestId(fixture, "save-ingest-configuration-btn", HTMLButtonElement);
     }
 
     // Helper function to validate form state consistency
@@ -122,10 +128,7 @@ describe("DatasetSettingsIngestConfigurationTabComponent", () => {
     });
 
     it("should check form is valid when loaded with ingestion rule enabled", async () => {
-        component.ingestConfigurationTabData.ingestionRule.fetchUncacheable = true;
-        component.ingestConfigurationTabData.ingestionRule.fetchNextIteration = true;
-        component.ngAfterViewInit();
-        fixture.detectChanges();
+        await createComponent({ fetchUncacheable: true, fetchNextIteration: true }, null);
 
         expect(component.form.status).toBe("VALID");
 
@@ -141,9 +144,7 @@ describe("DatasetSettingsIngestConfigurationTabComponent", () => {
     });
 
     it("should check form is valid when loaded with retry policy", async () => {
-        component.ingestConfigurationTabData.retryPolicy = MOCK_RETRY_POLICY;
-        component.ngAfterViewInit();
-        fixture.detectChanges();
+        await createComponent({ fetchUncacheable: false, fetchNextIteration: false }, MOCK_RETRY_POLICY);
 
         expect(component.form.status).toBe("VALID");
 
@@ -159,11 +160,7 @@ describe("DatasetSettingsIngestConfigurationTabComponent", () => {
     });
 
     it("should check form is valid when loaded with both ingestion rule and retry policy", async () => {
-        component.ingestConfigurationTabData.ingestionRule.fetchUncacheable = true;
-        component.ingestConfigurationTabData.ingestionRule.fetchNextIteration = true;
-        component.ingestConfigurationTabData.retryPolicy = MOCK_RETRY_POLICY;
-        component.ngAfterViewInit();
-        fixture.detectChanges();
+        await createComponent({ fetchUncacheable: true, fetchNextIteration: true }, MOCK_RETRY_POLICY);
 
         expect(component.form.status).toBe("VALID");
 

@@ -6,6 +6,7 @@
  */
 
 import {
+    AccountFragment,
     AccountProvider,
     AccountType,
     CancelFlowRunMutation,
@@ -34,8 +35,7 @@ import {
     FlowStatus,
     FlowSummaryDataFragment,
     FlowTriggerBreakingChangeRule,
-    FlowTriggerReactiveRule,
-    FlowTriggerScheduleRule,
+    FlowTriggerScheduleRuleDataFragment,
     GetDatasetFlowConfigsQuery,
     GetDatasetFlowTriggerQuery,
     GetDatasetListFlowsQuery,
@@ -256,7 +256,7 @@ export const mockPauseDatasetFlowTriggerSuccess: PauseDatasetFlowTriggerMutation
     },
 };
 
-export const mockCronSchedule: FlowTriggerScheduleRule = {
+export const mockCronSchedule: FlowTriggerScheduleRuleDataFragment = {
     __typename: "Cron5ComponentExpression",
     cron5ComponentExpression: "* * * * ?",
 };
@@ -303,20 +303,6 @@ export const mockGetDatasetFlowTriggersTimeDeltaQuery: GetDatasetFlowTriggerQuer
             },
         },
     },
-};
-
-export const mockBufferingBatchingReactiveRule: FlowTriggerReactiveRule = {
-    __typename: "FlowTriggerReactiveRule",
-    forNewData: {
-        __typename: "FlowTriggerBatchingRuleBuffering",
-        minRecordsToAwait: 100,
-        maxBatchingInterval: {
-            __typename: "TimeDelta",
-            every: 10,
-            unit: TimeUnit.Hours,
-        },
-    },
-    forBreakingChange: FlowTriggerBreakingChangeRule.Recover,
 };
 
 export const mockGetDatasetFlowTriggersBatchingQuery: GetDatasetFlowTriggerQuery = {
@@ -800,173 +786,179 @@ export const mockDatasetResumeFlowsMutationError: DatasetResumeFlowsMutation = {
     },
 };
 
+const mockDatasetListFlowsDataset: DatasetBasicsFragment = {
+    id: "did:odf:fed0114053491ae4e9b40205d34e252b193ff97b490bd9f27a3a618f9f7221231ab99",
+    kind: DatasetKind.Root,
+    name: "test-dataset",
+    owner: {
+        __typename: "Account",
+        ...mockOwnerFieldsWithAvatar,
+    },
+    alias: "test-dataset",
+    visibility: mockPublicDatasetVisibility,
+    __typename: "Dataset",
+};
+
+const mockDatasetListFlowsTable: FlowConnectionDataFragment = {
+    nodes: [
+        {
+            datasetId: "did:odf:fed0114053491ae4e9b40205d34e252b193ff97b490bd9f27a3a618f9f7221231ab99",
+            description: {
+                ingestResult: {
+                    numBlocks: 2,
+                    numRecords: 203,
+                    updatedWatermark: "2024-08-07T00:56:35+00:00",
+                    __typename: "FlowDescriptionUpdateResultSuccess",
+                },
+                pollingSource: mockFlowPollingSourceFragmentFetchUrl,
+                __typename: "FlowDescriptionDatasetPollingIngest",
+            },
+            flowId: "3",
+            status: FlowStatus.Finished,
+            initiator: {
+                id: "did:odf:fed016b61ed2ab1b63a006b61ed2ab1b63a00b016d65607000000e0821aafbf163e6f",
+                accountName: "kamu",
+                displayName: "kamu",
+                accountType: AccountType.User,
+                avatarUrl: "https://avatars.githubusercontent.com/u/50896974?s=200&v=4",
+                isAdmin: true,
+                __typename: "Account",
+                accountProvider: AccountProvider.Password,
+            },
+            outcome: {
+                message: "SUCCESS",
+                __typename: "FlowSuccessResult",
+            },
+            timing: {
+                firstAttemptScheduledAt: "2024-08-21T08:46:19.426925618+00:00",
+                scheduledAt: "2024-08-21T08:46:19.426925618+00:00",
+                awaitingExecutorSince: "2024-08-21T08:46:19.426925618+00:00",
+                runningSince: "2024-08-21T08:46:20.507478673+00:00",
+                lastAttemptFinishedAt: "2024-08-21T08:46:22.636437316+00:00",
+                initiatedAt: "2024-08-21T08:46:18.426925618+00:00",
+                __typename: "FlowTimingRecords",
+            },
+            startCondition: null,
+            configSnapshot: {
+                fetchUncacheable: false,
+                fetchNextIteration: false,
+                __typename: "FlowConfigRuleIngest",
+            },
+            retryPolicy: null,
+            taskIds: [],
+            __typename: "Flow",
+        },
+        {
+            datasetId: "did:odf:fed0114053491ae4e9b40205d34e252b193ff97b490bd9f27a3a618f9f7221231ab99",
+            description: {
+                ingestResult: null,
+                pollingSource: mockFlowPollingSourceFragmentFetchUrl,
+                __typename: "FlowDescriptionDatasetPollingIngest",
+            },
+            flowId: "2",
+            status: FlowStatus.Finished,
+            initiator: null,
+            outcome: {
+                reason: {
+                    message: "FAILED",
+                    __typename: "TaskFailureReasonGeneral",
+                    recoverable: true,
+                },
+                __typename: "FlowFailedError",
+            },
+            timing: {
+                firstAttemptScheduledAt: "2024-08-21T08:45:17+00:00",
+                scheduledAt: "2024-08-21T08:45:17+00:00",
+                awaitingExecutorSince: "2024-08-21T08:45:17+00:00",
+                runningSince: "2024-08-21T08:45:18.722052534+00:00",
+                lastAttemptFinishedAt: null,
+                initiatedAt: "2024-08-21T08:45:16+00:00",
+                __typename: "FlowTimingRecords",
+            },
+            startCondition: null,
+            configSnapshot: {
+                fetchUncacheable: false,
+                fetchNextIteration: false,
+                __typename: "FlowConfigRuleIngest",
+            },
+            retryPolicy: null,
+            taskIds: [],
+            __typename: "Flow",
+        },
+    ],
+    totalCount: 2,
+    pageInfo: {
+        hasNextPage: false,
+        hasPreviousPage: false,
+        currentPage: 0,
+        totalPages: 1,
+        __typename: "PageBasedInfo",
+    },
+    __typename: "FlowConnection",
+};
+
+const mockDatasetListFlowsTiles: FlowConnectionWidgetDataFragment = {
+    nodes: [
+        {
+            flowId: "0",
+            datasetId: mockDatasetMainDataId,
+            status: FlowStatus.Finished,
+            initiator: {
+                accountName: "kamu",
+                __typename: "Account",
+            },
+            outcome: {
+                message: "SUCCESS",
+                __typename: "FlowSuccessResult",
+            },
+            timing: {
+                initiatedAt: "2024-08-21T08:46:09.426925618+00:00",
+                firstAttemptScheduledAt: "2024-08-21T08:46:19.426925618+00:00",
+                scheduledAt: "2024-08-21T08:46:19.426925618+00:00",
+                awaitingExecutorSince: "2024-08-21T08:46:19.426925618+00:00",
+                runningSince: "2024-08-21T08:46:20.507478673+00:00",
+                lastAttemptFinishedAt: "2024-08-21T08:46:22.636437316+00:00",
+                __typename: "FlowTimingRecords",
+            },
+            __typename: "Flow",
+        },
+        {
+            flowId: "1",
+            datasetId: mockDatasetMainDataId,
+            status: FlowStatus.Finished,
+            initiator: null,
+            outcome: {
+                reason: {
+                    message: "FAILED",
+                    __typename: "TaskFailureReasonGeneral",
+                    recoverable: true,
+                },
+                __typename: "FlowFailedError",
+            },
+            timing: {
+                initiatedAt: "2024-08-21T08:45:07+00:00",
+                firstAttemptScheduledAt: "2024-08-21T08:45:17+00:00",
+                scheduledAt: "2024-08-21T08:45:17+00:00",
+                awaitingExecutorSince: "2024-08-21T08:45:17+00:00",
+                runningSince: "2024-08-21T08:45:18.722052534+00:00",
+                lastAttemptFinishedAt: null,
+                __typename: "FlowTimingRecords",
+            },
+            __typename: "Flow",
+        },
+    ],
+    totalCount: 2,
+    __typename: "FlowConnection",
+};
+
 export const mockGetDatasetListFlowsQuery: GetDatasetListFlowsQuery = {
     datasets: {
         byId: {
-            id: "did:odf:fed0114053491ae4e9b40205d34e252b193ff97b490bd9f27a3a618f9f7221231ab99",
-            kind: DatasetKind.Root,
-            name: "test-dataset",
-            owner: {
-                __typename: "Account",
-                ...mockOwnerFieldsWithAvatar,
-            },
-            alias: "test-dataset",
-            visibility: mockPublicDatasetVisibility,
-            __typename: "Dataset",
+            ...mockDatasetListFlowsDataset,
             flows: {
                 runs: {
-                    table: {
-                        nodes: [
-                            {
-                                datasetId:
-                                    "did:odf:fed0114053491ae4e9b40205d34e252b193ff97b490bd9f27a3a618f9f7221231ab99",
-                                description: {
-                                    ingestResult: {
-                                        numBlocks: 2,
-                                        numRecords: 203,
-                                        updatedWatermark: "2024-08-07T00:56:35+00:00",
-                                        __typename: "FlowDescriptionUpdateResultSuccess",
-                                    },
-                                    pollingSource: mockFlowPollingSourceFragmentFetchUrl,
-                                    __typename: "FlowDescriptionDatasetPollingIngest",
-                                },
-                                flowId: "3",
-                                status: FlowStatus.Finished,
-                                initiator: {
-                                    id: "did:odf:fed016b61ed2ab1b63a006b61ed2ab1b63a00b016d65607000000e0821aafbf163e6f",
-                                    accountName: "kamu",
-                                    displayName: "kamu",
-                                    accountType: AccountType.User,
-                                    avatarUrl: "https://avatars.githubusercontent.com/u/50896974?s=200&v=4",
-                                    isAdmin: true,
-                                    __typename: "Account",
-                                    accountProvider: AccountProvider.Password,
-                                },
-                                outcome: {
-                                    message: "SUCCESS",
-                                    __typename: "FlowSuccessResult",
-                                },
-                                timing: {
-                                    firstAttemptScheduledAt: "2024-08-21T08:46:19.426925618+00:00",
-                                    scheduledAt: "2024-08-21T08:46:19.426925618+00:00",
-                                    awaitingExecutorSince: "2024-08-21T08:46:19.426925618+00:00",
-                                    runningSince: "2024-08-21T08:46:20.507478673+00:00",
-                                    lastAttemptFinishedAt: "2024-08-21T08:46:22.636437316+00:00",
-                                    initiatedAt: "2024-08-21T08:46:18.426925618+00:00",
-                                    __typename: "FlowTimingRecords",
-                                },
-                                startCondition: null,
-                                configSnapshot: {
-                                    fetchUncacheable: false,
-                                    fetchNextIteration: false,
-                                    __typename: "FlowConfigRuleIngest",
-                                },
-                                retryPolicy: null,
-                                taskIds: [],
-                                __typename: "Flow",
-                            },
-                            {
-                                datasetId:
-                                    "did:odf:fed0114053491ae4e9b40205d34e252b193ff97b490bd9f27a3a618f9f7221231ab99",
-                                description: {
-                                    ingestResult: null,
-                                    pollingSource: mockFlowPollingSourceFragmentFetchUrl,
-                                    __typename: "FlowDescriptionDatasetPollingIngest",
-                                },
-                                flowId: "2",
-                                status: FlowStatus.Finished,
-                                initiator: null,
-                                outcome: {
-                                    reason: {
-                                        message: "FAILED",
-                                        __typename: "TaskFailureReasonGeneral",
-                                        recoverable: true,
-                                    },
-                                    __typename: "FlowFailedError",
-                                },
-                                timing: {
-                                    firstAttemptScheduledAt: "2024-08-21T08:45:17+00:00",
-                                    scheduledAt: "2024-08-21T08:45:17+00:00",
-                                    awaitingExecutorSince: "2024-08-21T08:45:17+00:00",
-                                    runningSince: "2024-08-21T08:45:18.722052534+00:00",
-                                    lastAttemptFinishedAt: null,
-                                    initiatedAt: "2024-08-21T08:45:16+00:00",
-                                    __typename: "FlowTimingRecords",
-                                },
-                                startCondition: null,
-                                configSnapshot: {
-                                    fetchUncacheable: false,
-                                    fetchNextIteration: false,
-                                    __typename: "FlowConfigRuleIngest",
-                                },
-                                retryPolicy: null,
-                                taskIds: [],
-                                __typename: "Flow",
-                            },
-                        ],
-                        totalCount: 2,
-                        pageInfo: {
-                            hasNextPage: false,
-                            hasPreviousPage: false,
-                            currentPage: 0,
-                            totalPages: 1,
-                            __typename: "PageBasedInfo",
-                        },
-                        __typename: "FlowConnection",
-                    },
-                    tiles: {
-                        nodes: [
-                            {
-                                flowId: "0",
-                                datasetId: mockDatasetMainDataId,
-                                status: FlowStatus.Finished,
-                                initiator: {
-                                    accountName: "kamu",
-                                    __typename: "Account",
-                                },
-                                outcome: {
-                                    message: "SUCCESS",
-                                    __typename: "FlowSuccessResult",
-                                },
-                                timing: {
-                                    initiatedAt: "2024-08-21T08:46:09.426925618+00:00",
-                                    firstAttemptScheduledAt: "2024-08-21T08:46:19.426925618+00:00",
-                                    scheduledAt: "2024-08-21T08:46:19.426925618+00:00",
-                                    awaitingExecutorSince: "2024-08-21T08:46:19.426925618+00:00",
-                                    runningSince: "2024-08-21T08:46:20.507478673+00:00",
-                                    lastAttemptFinishedAt: "2024-08-21T08:46:22.636437316+00:00",
-                                    __typename: "FlowTimingRecords",
-                                },
-                                __typename: "Flow",
-                            },
-                            {
-                                flowId: "1",
-                                datasetId: mockDatasetMainDataId,
-                                status: FlowStatus.Finished,
-                                initiator: null,
-                                outcome: {
-                                    reason: {
-                                        message: "FAILED",
-                                        __typename: "TaskFailureReasonGeneral",
-                                        recoverable: true,
-                                    },
-                                    __typename: "FlowFailedError",
-                                },
-                                timing: {
-                                    initiatedAt: "2024-08-21T08:45:07+00:00",
-                                    firstAttemptScheduledAt: "2024-08-21T08:45:17+00:00",
-                                    scheduledAt: "2024-08-21T08:45:17+00:00",
-                                    awaitingExecutorSince: "2024-08-21T08:45:17+00:00",
-                                    runningSince: "2024-08-21T08:45:18.722052534+00:00",
-                                    lastAttemptFinishedAt: null,
-                                    __typename: "FlowTimingRecords",
-                                },
-                                __typename: "Flow",
-                            },
-                        ],
-                        totalCount: 2,
-                        __typename: "FlowConnection",
-                    },
+                    table: mockDatasetListFlowsTable,
+                    tiles: mockDatasetListFlowsTiles,
                     __typename: "DatasetFlowRuns",
                 },
                 __typename: "DatasetFlows",
@@ -977,14 +969,10 @@ export const mockGetDatasetListFlowsQuery: GetDatasetListFlowsQuery = {
 };
 
 export const mockFlowsTableData: FlowsTableData = {
-    connectionDataForTable: mockGetDatasetListFlowsQuery.datasets.byId?.flows.runs.table as FlowConnectionDataFragment,
-    connectionDataForWidget: mockGetDatasetListFlowsQuery.datasets.byId?.flows.runs
-        .tiles as FlowConnectionWidgetDataFragment,
+    connectionDataForTable: mockDatasetListFlowsTable,
+    connectionDataForWidget: mockDatasetListFlowsTiles,
     // Every dataset the table rows reference, as the service provides them; the template reads their owners
-    involvedDatasets: [
-        mockGetDatasetListFlowsQuery.datasets.byId as DatasetBasicsFragment,
-        { ...mockDatasetBasicsDerivedFragment, id: mockDatasetMainDataId },
-    ],
+    involvedDatasets: [mockDatasetListFlowsDataset, { ...mockDatasetBasicsDerivedFragment, id: mockDatasetMainDataId }],
 };
 
 export const mockDatasetTriggerIngestFlowMutation: DatasetTriggerIngestFlowMutation = {
@@ -1685,45 +1673,47 @@ export const mockDatasetFlowCompactionMutationError: SetDatasetFlowTriggerMutati
     },
 };
 
+export const mockDatasetFlowInitiators: AccountFragment[] = [
+    {
+        id: "did:odf:fed016b61ed2ab1b63a006b61ed2ab1b63a00b016d65607000000e0821aafbf163e6f",
+        accountName: "kamu",
+        displayName: "kamu",
+        accountType: AccountType.User,
+        avatarUrl: "https://avatars.githubusercontent.com/u/50896974?s=200&v=4",
+        isAdmin: true,
+        __typename: "Account",
+        accountProvider: AccountProvider.Password,
+    },
+    {
+        id: "did:odf:fed016b61ed2ab1b63a006b61ed2ab1b63a00b016d65607000000e0821aafbf163e6f",
+        accountName: "bamu",
+        displayName: "bamu",
+        accountType: AccountType.User,
+        avatarUrl: "https://avatars.githubusercontent.com/u/50896974?s=200&v=4",
+        isAdmin: true,
+        __typename: "Account",
+        accountProvider: AccountProvider.Password,
+    },
+    {
+        id: "did:odf:fed016b61ed2ab1b63a006b61ed2ab1b63a00b016d65607000000e0821aafbf163e6f",
+        accountName: "kamu",
+        displayName: "kamu",
+        accountType: AccountType.User,
+        avatarUrl: "https://avatars.githubusercontent.com/u/50896974?s=200&v=4",
+        isAdmin: true,
+        __typename: "Account",
+        accountProvider: AccountProvider.Password,
+    },
+];
+
 export const mockDatasetFlowsInitiatorsQuery: DatasetFlowsInitiatorsQuery = {
     datasets: {
         byId: {
             flows: {
                 runs: {
                     listFlowInitiators: {
-                        totalCount: 1,
-                        nodes: [
-                            {
-                                id: "did:odf:fed016b61ed2ab1b63a006b61ed2ab1b63a00b016d65607000000e0821aafbf163e6f",
-                                accountName: "kamu",
-                                displayName: "kamu",
-                                accountType: AccountType.User,
-                                avatarUrl: "https://avatars.githubusercontent.com/u/50896974?s=200&v=4",
-                                isAdmin: true,
-                                __typename: "Account",
-                                accountProvider: AccountProvider.Password,
-                            },
-                            {
-                                id: "did:odf:fed016b61ed2ab1b63a006b61ed2ab1b63a00b016d65607000000e0821aafbf163e6f",
-                                accountName: "bamu",
-                                displayName: "bamu",
-                                accountType: AccountType.User,
-                                avatarUrl: "https://avatars.githubusercontent.com/u/50896974?s=200&v=4",
-                                isAdmin: true,
-                                __typename: "Account",
-                                accountProvider: AccountProvider.Password,
-                            },
-                            {
-                                id: "did:odf:fed016b61ed2ab1b63a006b61ed2ab1b63a00b016d65607000000e0821aafbf163e6f",
-                                accountName: "kamu",
-                                displayName: "kamu",
-                                accountType: AccountType.User,
-                                avatarUrl: "https://avatars.githubusercontent.com/u/50896974?s=200&v=4",
-                                isAdmin: true,
-                                __typename: "Account",
-                                accountProvider: AccountProvider.Password,
-                            },
-                        ],
+                        totalCount: mockDatasetFlowInitiators.length,
+                        nodes: mockDatasetFlowInitiators,
                         __typename: "AccountConnection",
                     },
                     __typename: "DatasetFlowRuns",

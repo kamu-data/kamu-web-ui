@@ -8,11 +8,7 @@
 import { Edge, Node } from "@swimlane/ngx-graph";
 
 import { DatasetKind, DatasetLineageBasicsFragment } from "@api/kamu.graphql.interface";
-
-export interface LineageGraphNodeData {
-    kind: LineageGraphNodeKind;
-    dataObject: LineageGraphDatasetNodeObject;
-}
+import { MaybeNull } from "@interface/app.types";
 
 export enum LineageGraphNodeKind {
     Dataset = "dataset",
@@ -35,11 +31,41 @@ export interface LineageGraphDatasetNodeObject {
     isCurrent: boolean;
     access: LineageNodeAccess;
     accountName: string;
-    avatarUrl?: string;
+    avatarUrl?: MaybeNull<string>;
+}
+
+export interface LineageGraphDatasetNodeData {
+    kind: LineageGraphNodeKind.Dataset;
+    dataObject: LineageGraphDatasetNodeObject;
+}
+
+export interface LineageGraphInaccessibleNodeData {
+    kind: LineageGraphNodeKind.DatasetNotAccessable;
+}
+
+export type LineageGraphSourceNodeKind =
+    | LineageGraphNodeKind.Source
+    | LineageGraphNodeKind.Mqtt
+    | LineageGraphNodeKind.EthereumLogs
+    | LineageGraphNodeKind.PushSource;
+
+export interface LineageGraphSourceNodeData {
+    kind: LineageGraphSourceNodeKind;
+}
+
+export type LineageGraphNodeData =
+    LineageGraphDatasetNodeData | LineageGraphInaccessibleNodeData | LineageGraphSourceNodeData;
+
+export interface LineageGraphNode extends Node {
+    data: LineageGraphNodeData;
+}
+
+export interface LineageGraphDatasetNode extends LineageGraphNode {
+    data: LineageGraphDatasetNodeData;
 }
 
 export interface LineageGraph {
-    nodes: Node[];
+    nodes: LineageGraphNode[];
     links: Edge[];
 }
 

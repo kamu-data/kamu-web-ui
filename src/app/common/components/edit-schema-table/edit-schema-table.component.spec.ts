@@ -5,7 +5,7 @@
  * included in the LICENSE file.
  */
 
-import { CdkDragDrop } from "@angular/cdk/drag-drop";
+import { CdkDrag, CdkDragDrop, CdkDropList } from "@angular/cdk/drag-drop";
 import { HarnessLoader } from "@angular/cdk/testing";
 import { TestbedHarnessEnvironment } from "@angular/cdk/testing/testbed";
 import { provideHttpClient } from "@angular/common/http";
@@ -15,14 +15,14 @@ import { ComponentFixture, TestBed } from "@angular/core/testing";
 
 import { NgSelectComponent } from "@ng-select/ng-select";
 
-import { findComponentInstance, findElement, registerMatSvgIcons } from "@common/helpers/base-test.helpers.spec";
+import { findComponentInstance, registerMatSvgIcons } from "@common/helpers/base-test.helpers.spec";
 import { MaybeNull } from "@interface/app.types";
-import { DataSchemaField, DataSchemaListField, OdfTypes } from "@interface/dataset-schema.interface";
+import { DataSchemaField, OdfTypes } from "@interface/dataset-schema.interface";
 
 import { TypeEditorComponent } from "./components/type-editor/type-editor.component";
 import { EditSchemaTableComponent } from "./edit-schema-table.component";
 import { EditSchemaTableHarness } from "./edit-schema-table.harness";
-import { ORDER_SCHEMA } from "./schema-editor.fixtures.spec";
+import { ORDER_SCHEMA, requireListField, selectNgSelectOption } from "./schema-editor.fixtures.spec";
 
 // ---------------------------------------------------------------------------
 // TestHost
@@ -281,16 +281,7 @@ describe("EditSchemaTableComponent", () => {
             await table.editField("amount");
             fixture.detectChanges();
 
-            // Drive the kind ng-select via its public API (no CDK harness for ng-select)
-            const ngSelect = findElement(fixture, "ng-select").componentInstance as NgSelectComponent;
-            ngSelect.open();
-            fixture.detectChanges();
-            const item = ngSelect.itemsList.items.find(
-                (i) => (i.value as MaybeNull<{ value?: OdfTypes }>)?.value === OdfTypes.Int64,
-            );
-            if (!item) throw new Error("Int64 option not found in kind ng-select");
-            ngSelect.select(item);
-            fixture.detectChanges();
+            selectNgSelectOption(fixture, findComponentInstance(fixture, NgSelectComponent), OdfTypes.Int64);
 
             await table.save();
             fixture.detectChanges();
@@ -314,8 +305,7 @@ describe("EditSchemaTableComponent", () => {
             await table.save();
             fixture.detectChanges();
 
-            const emitted = host.lastEmitted?.[0].type as DataSchemaListField;
-            expect(emitted.kind).toBe(OdfTypes.List);
+            const emitted = requireListField(host.lastEmitted?.[0].type);
             expect(emitted.itemType.kind).toBe(OdfTypes.Struct);
             if (emitted.itemType.kind === OdfTypes.Struct) {
                 expect(emitted.itemType.fields).toEqual([{ name: "sku", type: { kind: OdfTypes.String } }]);
@@ -350,8 +340,7 @@ describe("EditSchemaTableComponent", () => {
             await table.save();
             fixture.detectChanges();
 
-            const emitted = host.lastEmitted?.[0].type as DataSchemaListField;
-            expect(emitted.kind).toBe(OdfTypes.List);
+            const emitted = requireListField(host.lastEmitted?.[0].type);
             expect(emitted.itemType.kind).toBe(OdfTypes.Struct);
             if (emitted.itemType.kind === OdfTypes.Struct) {
                 expect(emitted.itemType.fields).toEqual([{ name: "sku", type: { kind: OdfTypes.String } }]);
@@ -575,11 +564,34 @@ describe("EditSchemaTableComponent", () => {
             return findComponentInstance(fixture, EditSchemaTableComponent, (c) => c.tablePath === tablePath);
         }
 
+        function dropEvent(
+            component: EditSchemaTableComponent,
+            previousIndex: number,
+            currentIndex: number,
+        ): CdkDragDrop<DataSchemaField[]> {
+            const dropList = jasmine.createSpyObj<CdkDropList<DataSchemaField[]>>("CdkDropList", ["getSortedItems"], {
+                data: component.fields,
+            });
+            return {
+                previousIndex,
+                currentIndex,
+                item: jasmine.createSpyObj<CdkDrag<DataSchemaField>>("CdkDrag", ["reset"], {
+                    data: component.fields[previousIndex],
+                }),
+                container: dropList,
+                previousContainer: dropList,
+                isPointerOverContainer: true,
+                distance: { x: 0, y: 0 },
+                dropPoint: { x: 0, y: 0 },
+                event: new MouseEvent("mouseup"),
+            };
+        }
+
         it("dropping a top-level field at a new index reorders fields and emits", async () => {
             await setup([stringField("a"), stringField("b"), stringField("c")]);
             const component = componentInstanceOf("root");
 
-            component.dropField({ previousIndex: 0, currentIndex: 2 } as CdkDragDrop<DataSchemaField[]>);
+            component.dropField(dropEvent(component, 0, 2));
             fixture.detectChanges();
 
             expect(await table.getFieldNames()).toEqual(["b", "c", "a"]);
@@ -590,7 +602,7 @@ describe("EditSchemaTableComponent", () => {
             await setup([stringField("a"), stringField("b")]);
             const component = componentInstanceOf("root");
 
-            component.dropField({ previousIndex: 1, currentIndex: 1 } as CdkDragDrop<DataSchemaField[]>);
+            component.dropField(dropEvent(component, 1, 1));
             fixture.detectChanges();
 
             expect(host.lastEmitted).toBeNull();
@@ -604,7 +616,7 @@ describe("EditSchemaTableComponent", () => {
             const customerComponent = componentInstanceOf("root.customer");
             const namesBefore = await customerTable.getFieldNames();
 
-            customerComponent.dropField({ previousIndex: 0, currentIndex: 1 } as CdkDragDrop<DataSchemaField[]>);
+            customerComponent.dropField(dropEvent(customerComponent, 0, 1));
             fixture.detectChanges();
 
             const emitted = host.lastEmitted ?? [];

@@ -16,16 +16,25 @@ import { LineageGraphComponent } from "@common/components/lineage-graph/lineage-
 import { LineageGraphHarness } from "@common/components/lineage-graph/lineage-graph.harness";
 import { MOCK_GRAPH_WITH_SOURCES, MOCK_SOURCE_NODES } from "@common/components/lineage-graph/lineage-graph.mock";
 import { WidgetHeightService } from "@common/components/lineage-graph/widget-height.service";
-import { findComponentInstance, findElementByDataTestId } from "@common/helpers/base-test.helpers.spec";
+import {
+    findComponentInstance,
+    getElementByDataTestId,
+    setComponentInput,
+} from "@common/helpers/base-test.helpers.spec";
 import { SharedTestModule } from "@common/modules/shared-test.module";
 import AppValues from "@common/values/app.values";
 import { DatasetLineageBasicsFragment } from "@api/kamu.graphql.interface";
-import { MOCK_LINKS, MOCK_NODES } from "@api/mock/dataset.mock";
+import {
+    MOCK_CURRENT_DATASET_NODE,
+    MOCK_INACCESSIBLE_NODE,
+    MOCK_LINKS,
+    MOCK_NODES,
+    MOCK_OTHER_DATASET_NODE,
+} from "@api/mock/dataset.mock";
 
 import { mockGraphNode } from "src/app/dataset-view/additional-components/data-tabs.mock";
 import {
     LineageGraph,
-    LineageGraphNodeData,
     LineageGraphNodeKind,
 } from "src/app/dataset-view/additional-components/lineage-component/lineage-model";
 import { SessionStorageService } from "src/app/services/session-storage.service";
@@ -40,9 +49,9 @@ describe("LineageGraphComponent", () => {
     const FROZEN_TIME = new Date("2023-10-01 12:00:00");
     const MOCK_GRAPH: LineageGraph = { links: MOCK_LINKS, nodes: MOCK_NODES };
 
-    const CURRENT_NODE = MOCK_NODES[0];
-    const OTHER_NODE = MOCK_NODES[1];
-    const INACCESSIBLE_NODE = MOCK_NODES[2];
+    const CURRENT_NODE = MOCK_CURRENT_DATASET_NODE;
+    const OTHER_NODE = MOCK_OTHER_DATASET_NODE;
+    const INACCESSIBLE_NODE = MOCK_INACCESSIBLE_NODE;
 
     // The fit leaves this much room on the left for the minimap, and on the right for an open side panel
     const MINIMAP_INSET = 110;
@@ -69,8 +78,8 @@ describe("LineageGraphComponent", () => {
 
         fixture = TestBed.createComponent(LineageGraphComponent);
         component = fixture.componentInstance;
-        fixture.componentRef.setInput("graph", options.graph ?? MOCK_GRAPH);
-        fixture.componentRef.setInput("currentDataset", options.currentDataset ?? mockGraphNode);
+        setComponentInput(fixture, "graph", options.graph ?? MOCK_GRAPH);
+        setComponentInput(fixture, "currentDataset", options.currentDataset ?? mockGraphNode);
         fixture.detectChanges();
     }
 
@@ -107,7 +116,7 @@ describe("LineageGraphComponent", () => {
         });
 
         it("should not emit a click on the current dataset", async () => {
-            expect((CURRENT_NODE.data as LineageGraphNodeData).dataObject.isCurrent).toBeTrue();
+            expect(CURRENT_NODE.data.dataObject.isCurrent).toBeTrue();
             const onClickNodeEventSpy = spyOn(component.onClickNodeEvent, "emit");
 
             await harness.clickNode(LineageGraphNodeKind.Dataset, CURRENT_NODE.label ?? "");
@@ -141,8 +150,12 @@ describe("LineageGraphComponent", () => {
         });
 
         it("should render the default avatar for an owner without one", () => {
-            const avatarElement = findElementByDataTestId(fixture, `account-avatar-${CURRENT_NODE.label}`);
-            expect(avatarElement?.getAttribute("xlink:href")).toEqual(AppValues.DEFAULT_AVATAR_URL);
+            const avatarElement = getElementByDataTestId(
+                fixture,
+                `account-avatar-${CURRENT_NODE.label}`,
+                SVGImageElement,
+            );
+            expect(avatarElement.getAttribute("xlink:href")).toEqual(AppValues.DEFAULT_AVATAR_URL);
         });
     });
 
@@ -150,7 +163,7 @@ describe("LineageGraphComponent", () => {
         await render({ graph: MOCK_GRAPH_WITH_SOURCES });
 
         for (const node of MOCK_SOURCE_NODES) {
-            const kind = (node.data as LineageGraphNodeData).kind;
+            const kind = node.data.kind;
             expect(await harness.hasNode(kind, node.label ?? ""))
                 .withContext(kind)
                 .toBeTrue();
@@ -213,11 +226,8 @@ describe("LineageGraphComponent", () => {
     });
 
     describe("view size", () => {
-        beforeEach(async () => {
+        it("should measure the view again when the window is resized", async () => {
             await render();
-        });
-
-        it("should measure the view again when the window is resized", () => {
             const spyOnResize = spyOn(component, "changeLineageGraphView").and.callThrough();
             window.dispatchEvent(new Event("resize"));
             window.dispatchEvent(new Event("resize"));
@@ -227,7 +237,7 @@ describe("LineageGraphComponent", () => {
         it("should take the view height from the widget height", () => {
             const mockHeight = 1000;
             const widgetHeightSpy = spyOnProperty(widgetHeightService, "widgetHeight").and.returnValue(mockHeight);
-            component.ngOnInit();
+            create();
             expect(component.view[1]).toEqual(mockHeight);
             expect(widgetHeightSpy).toHaveBeenCalledWith();
         });
@@ -238,8 +248,8 @@ describe("LineageGraphComponent", () => {
         fixture = TestBed.createComponent(LineageGraphComponent);
         component = fixture.componentInstance;
         const changeViewSpy = spyOn(component, "changeLineageGraphView").and.callThrough();
-        fixture.componentRef.setInput("graph", MOCK_GRAPH);
-        fixture.componentRef.setInput("currentDataset", mockGraphNode);
+        setComponentInput(fixture, "graph", MOCK_GRAPH);
+        setComponentInput(fixture, "currentDataset", mockGraphNode);
 
         fixture.detectChanges();
         TestBed.inject(ApplicationRef).tick();

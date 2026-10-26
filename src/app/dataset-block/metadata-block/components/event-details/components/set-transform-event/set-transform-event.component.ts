@@ -10,7 +10,7 @@ import { ChangeDetectionStrategy, Component } from "@angular/core";
 import { MatIconModule } from "@angular/material/icon";
 
 import { BlockRowDataComponent } from "@common/components/block-row-data/block-row-data.component";
-import { SetTransform } from "@api/kamu.graphql.interface";
+import { DatasetTransformFragment } from "@api/kamu.graphql.interface";
 
 import { BaseDynamicEventComponent } from "src/app/dataset-block/metadata-block/components/event-details/components/base-dynamic-event/base-dynamic-event.component";
 import { SECTION_BUILDERS_BY_EVENT_TYPE } from "src/app/dataset-block/metadata-block/components/event-details/dynamic-events/builders/event-section.builders";
@@ -28,6 +28,6 @@ import { SECTION_BUILDERS_BY_EVENT_TYPE } from "src/app/dataset-block/metadata-b
         BlockRowDataComponent,
     ],
 })
-export class SetTransformEventComponent extends BaseDynamicEventComponent<SetTransform> {
+export class SetTransformEventComponent extends BaseDynamicEventComponent<DatasetTransformFragment> {
     protected readonly sectionBuilder = SECTION_BUILDERS_BY_EVENT_TYPE.SetTransform;
 }

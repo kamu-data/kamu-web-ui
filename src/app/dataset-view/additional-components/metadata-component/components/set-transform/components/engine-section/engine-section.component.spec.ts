@@ -11,10 +11,10 @@ import { of } from "rxjs";
 
 import { Apollo } from "apollo-angular";
 
-import { findElementByDataTestId } from "@common/helpers/base-test.helpers.spec";
+import { getElementByDataTestId, setComponentInput } from "@common/helpers/base-test.helpers.spec";
 import { SharedTestModule } from "@common/modules/shared-test.module";
 import AppValues from "@common/values/app.values";
-import { EngineDesc } from "@api/kamu.graphql.interface";
+import { EngineDescDataFragment } from "@api/kamu.graphql.interface";
 
 import { EngineSectionComponent } from "src/app/dataset-view/additional-components/metadata-component/components/set-transform/components/engine-section/engine-section.component";
 import { EngineService } from "src/app/dataset-view/additional-components/metadata-component/components/set-transform/components/engine-section/engine.service";
@@ -34,12 +34,12 @@ describe("EngineSectionComponent", () => {
         fixture = TestBed.createComponent(EngineSectionComponent);
         component = fixture.componentInstance;
         engineService = TestBed.inject(EngineService);
-        component.knownEngines = mockEngines.data.knownEngines;
+        setComponentInput(fixture, "knownEngines", mockEngines.data.knownEngines);
         spyOn(engineService, "engines").and.returnValue(of(mockEngines));
-        fixture.detectChanges();
     });
 
     it("should create", () => {
+        fixture.detectChanges();
         expect(component).toBeTruthy();
     });
 
@@ -48,12 +48,12 @@ describe("EngineSectionComponent", () => {
         { testCase: "flink", expected: mockEngines.data.knownEngines[1] },
         { testCase: "datafusion", expected: mockEngines.data.knownEngines[2] },
         { testCase: "risingwave", expected: mockEngines.data.knownEngines[3] },
-    ].forEach((item: { testCase: string; expected: EngineDesc }) => {
+    ].forEach((item: { testCase: string; expected: EngineDescDataFragment }) => {
         it(`should check init ${item.testCase} engine and image`, fakeAsync(() => {
-            component.selectedEngine = item.testCase;
-            component.ngOnInit();
+            setComponentInput(fixture, "selectedEngine", item.testCase);
+            fixture.detectChanges();
             tick();
-            const image = findElementByDataTestId(fixture, "engine-image") as HTMLInputElement;
+            const image = getElementByDataTestId(fixture, "engine-image", HTMLInputElement);
             expect(image.value).toEqual(item.expected.latestImage);
             expect(component.selectedEngine.toUpperCase()).toBe(item.expected.name.toUpperCase());
             expect(component.selectedImage).toBe(item.expected.latestImage);
@@ -62,9 +62,8 @@ describe("EngineSectionComponent", () => {
     });
 
     it("should check the default engine applies when none is passed in", fakeAsync(() => {
-        component.selectedEngine = "";
+        setComponentInput(fixture, "selectedEngine", "");
         fixture.detectChanges();
-        component.ngOnInit();
         tick();
 
         expect(component.selectedEngine).toBe(AppValues.DEFAULT_ENGINE_NAME);

@@ -15,7 +15,7 @@ import { of } from "rxjs";
 import { Apollo } from "apollo-angular";
 import { provideToastr } from "ngx-toastr";
 
-import { registerMatSvgIcons } from "@common/helpers/base-test.helpers.spec";
+import { registerMatSvgIcons, setComponentInput } from "@common/helpers/base-test.helpers.spec";
 import { SharedTestModule } from "@common/modules/shared-test.module";
 
 import { mockHistoryUpdate } from "src/app/dataset-view/additional-components/data-tabs.mock";
@@ -78,7 +78,7 @@ describe("HistoryComponent", () => {
         datasetSubsService = TestBed.inject(DatasetSubscriptionsService);
 
         component = fixture.componentInstance;
-        component.datasetInfo = MOCK_DATASET_INFO;
+        setComponentInput(fixture, "datasetInfo", MOCK_DATASET_INFO);
 
         spyOn(datasetService, "requestDatasetHistory").and.returnValue(of());
         datasetSubsService.emitHistoryChanged(mockHistoryUpdate);

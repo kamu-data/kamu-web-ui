@@ -1,0 +1,6 @@
+fragment FlowTriggerStopPolicyData on FlowTriggerStopPolicy {
+  __typename
+  ... on FlowTriggerStopPolicyAfterConsecutiveFailures {
+    maxFailures
+  }
+}

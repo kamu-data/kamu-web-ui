@@ -14,6 +14,7 @@ import { of } from "rxjs";
 import { Apollo } from "apollo-angular";
 import { provideToastr } from "ngx-toastr";
 
+import { setComponentInput } from "@common/helpers/base-test.helpers.spec";
 import { SharedTestModule } from "@common/modules/shared-test.module";
 
 import { EngineService } from "src/app/dataset-view/additional-components/metadata-component/components/set-transform/components/engine-section/engine.service";
@@ -37,7 +38,7 @@ describe("GlobalQueryComponent", () => {
         });
         fixture = TestBed.createComponent(GlobalQueryComponent);
         component = fixture.componentInstance;
-        component.sqlQuery = SQL_QUERY;
+        setComponentInput(fixture, "sqlQuery", SQL_QUERY);
         sqlQueryService = TestBed.inject(SqlQueryService);
         navigationService = TestBed.inject(NavigationService);
         engineService = TestBed.inject(EngineService);
@@ -51,7 +52,6 @@ describe("GlobalQueryComponent", () => {
     });
 
     it("should check init sql request code ", () => {
-        component.ngOnInit();
         expect(component.sqlRequestCode).toEqual(SQL_QUERY);
     });
 

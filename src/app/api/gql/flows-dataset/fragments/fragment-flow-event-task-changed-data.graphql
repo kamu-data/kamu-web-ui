@@ -1,0 +1,13 @@
+fragment FlowEventTaskChangedData on FlowEventTaskChanged {
+  __typename
+  eventId
+  eventTime
+  taskId
+  taskStatus
+  task {
+    outcome {
+      ...TaskOutcomeData
+    }
+  }
+  nextAttemptAt
+}

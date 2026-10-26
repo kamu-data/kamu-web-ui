@@ -1,0 +1,5 @@
+fragment FlowEventRetryPolicyModifiedData on FlowEventRetryPolicyModified {
+  retryPolicy {
+    ...FlowRetryPolicyData
+  }
+}

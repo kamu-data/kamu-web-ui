@@ -1,0 +1,8 @@
+fragment DataSliceData on DataSlice {
+  offsetInterval {
+    ...OffsetIntervalData
+  }
+  logicalHash
+  physicalHash
+  size
+}

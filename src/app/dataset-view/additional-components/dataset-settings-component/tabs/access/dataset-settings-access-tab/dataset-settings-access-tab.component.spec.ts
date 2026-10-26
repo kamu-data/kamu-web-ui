@@ -16,10 +16,10 @@ import { Apollo } from "apollo-angular";
 import { provideToastr } from "ngx-toastr";
 
 import { ModalService } from "@common/components/modal/modal.service";
-import { registerMatSvgIcons } from "@common/helpers/base-test.helpers.spec";
-import { AccountWithRoleConnection, DatasetAccessRole } from "@api/kamu.graphql.interface";
+import { registerMatSvgIcons, setComponentInput } from "@common/helpers/base-test.helpers.spec";
+import { DatasetAccessRole } from "@api/kamu.graphql.interface";
 import { mockAccountDetails } from "@api/mock/auth.mock";
-import { MOCK_ACCOUNT_WITH_ROLE, mockDatasetListCollaboratorsQuery } from "@api/mock/dataset-collaborations.mock";
+import { MOCK_ACCOUNT_WITH_ROLE, mockDatasetCollaboratorsConnection } from "@api/mock/dataset-collaborations.mock";
 import { ModalArgumentsInterface } from "@interface/modal.interface";
 
 import { LoggedUserService } from "src/app/auth/logged-user.service";
@@ -83,16 +83,13 @@ describe("DatasetSettingsAccessTabComponent", () => {
         modalService = TestBed.inject(ModalService);
         spyOnProperty(loggedUserService, "currentlyLoggedInUser", "get").and.returnValue(mockAccountDetails);
         spyOn(datasetCollaborationsService, "listCollaborators").and.returnValue(
-            of(
-                mockDatasetListCollaboratorsQuery.datasets.byId?.collaboration
-                    .accountRoles as AccountWithRoleConnection,
-            ),
+            of(mockDatasetCollaboratorsConnection),
         );
         component = fixture.componentInstance;
-        component.accessViewData = {
+        setComponentInput(fixture, "accessViewData", {
             datasetBasics: mockDatasetBasicsRootFragment,
             datasetPermissions: mockFullPowerDatasetPermissionsFragment,
-        };
+        });
         fixture.detectChanges();
     });
 
@@ -166,9 +163,7 @@ describe("DatasetSettingsAccessTabComponent", () => {
         expect(unsetRoleCollaboratorSpy).toHaveBeenCalledOnceWith(
             jasmine.objectContaining({
                 datasetId: component.datasetBasics.id,
-                accountIds: [
-                    mockDatasetListCollaboratorsQuery.datasets.byId?.collaboration.accountRoles.nodes[0].account.id,
-                ],
+                accountIds: [mockDatasetCollaboratorsConnection.nodes[0].account.id],
             }),
         );
     });

@@ -1,0 +1,4 @@
+fragment RequestHeaderData on RequestHeader {
+  name
+  value
+}

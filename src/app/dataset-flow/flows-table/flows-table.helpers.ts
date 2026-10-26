@@ -12,18 +12,20 @@ import { excludeAgoWord, isNil, pluralize } from "@common/helpers/app.helpers";
 import { DataHelpers } from "@common/helpers/data.helpers";
 import AppValues from "@common/values/app.values";
 import {
-    FlowStartCondition,
+    FlowDescriptionDataFragment,
+    FlowOutcomeDataFragment,
+    FlowStartConditionDataFragment,
     FlowStatus,
     FlowSummaryDataFragment,
-    FlowTimingRecords,
+    FlowTimingRecordsDataFragment,
 } from "@api/kamu.graphql.interface";
-import { MaybeNull } from "@interface/app.types";
+import { MaybeNull, MaybeNullOrUndefined } from "@interface/app.types";
 
 /** The part of a flow needed to describe its type and status */
 export type FlowStatusInfo = {
     status: FlowStatus;
-    outcome?: MaybeNull<Pick<NonNullable<FlowSummaryDataFragment["outcome"]>, "__typename">>;
-    description: Pick<FlowSummaryDataFragment["description"], "__typename">;
+    outcome?: MaybeNull<Pick<FlowOutcomeDataFragment, "__typename">>;
+    description: Pick<FlowDescriptionDataFragment, "__typename">;
 };
 
 export class FlowTableHelpers {
@@ -338,7 +340,10 @@ export class FlowTableHelpers {
         }
     }
 
-    public static fullDurationTimingText(flowNode: { timing: FlowTimingRecords; outcome?: MaybeNull<object> }): string {
+    public static fullDurationTimingText(flowNode: {
+        timing: FlowTimingRecordsDataFragment;
+        outcome?: MaybeNull<object>;
+    }): string {
         if (flowNode.outcome) {
             if (flowNode.timing.lastAttemptFinishedAt) {
                 return DataHelpers.durationTask(flowNode.timing.initiatedAt, flowNode.timing.lastAttemptFinishedAt);
@@ -351,7 +356,10 @@ export class FlowTableHelpers {
         }
     }
 
-    public static runDurationTimingText(flowNode: { timing: FlowTimingRecords; outcome?: MaybeNull<object> }): string {
+    public static runDurationTimingText(flowNode: {
+        timing: FlowTimingRecordsDataFragment;
+        outcome?: MaybeNull<object>;
+    }): string {
         if (flowNode.outcome) {
             if (flowNode.timing.firstAttemptScheduledAt && flowNode.timing.lastAttemptFinishedAt) {
                 return DataHelpers.durationTask(
@@ -372,7 +380,7 @@ export class FlowTableHelpers {
         }
     }
 
-    public static waitingBlockText(startCondition: MaybeNull<FlowStartCondition>): string {
+    public static waitingBlockText(startCondition: MaybeNullOrUndefined<FlowStartConditionDataFragment>): string {
         switch (startCondition?.__typename) {
             case "FlowStartConditionThrottling":
                 return "waiting for a throttling condition";

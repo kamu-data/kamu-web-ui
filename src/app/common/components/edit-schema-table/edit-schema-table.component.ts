@@ -26,12 +26,7 @@ import { MatTooltipModule } from "@angular/material/tooltip";
 import { AutoFocusDirective } from "@common/directives/auto-focus.directive";
 import { odfType2String } from "@common/helpers/data-schema.helpers";
 import { MaybeNull } from "@interface/app.types";
-import {
-    DataSchemaField,
-    DataSchemaStructField,
-    DataSchemaTypeField,
-    OdfTypes,
-} from "@interface/dataset-schema.interface";
+import { DataSchemaField, DataSchemaTypeField, OdfTypes } from "@interface/dataset-schema.interface";
 
 import { TypeEditorComponent } from "./components/type-editor/type-editor.component";
 import { EditSchemaEditingCoordinator, FieldView, NestedStructTable } from "./edit-schema-table.types";
@@ -375,7 +370,7 @@ export class EditSchemaTableComponent implements OnChanges {
         const [segment, ...rest] = path;
         switch (segment) {
             case "fields":
-                return { ...(type as DataSchemaStructField), fields: nestedFields };
+                return type.kind === OdfTypes.Struct ? { ...type, fields: nestedFields } : type;
             case "inner":
                 return type.kind === OdfTypes.Option
                     ? { ...type, inner: this.updateNestedStructFields(type.inner, rest, nestedFields) }

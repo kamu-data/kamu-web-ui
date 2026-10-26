@@ -6,7 +6,6 @@
  */
 
 import { provideHttpClient } from "@angular/common/http";
-import { SimpleChanges } from "@angular/core";
 import { ComponentFixture, fakeAsync, flush, TestBed, tick } from "@angular/core/testing";
 
 import { delay, of } from "rxjs";
@@ -14,7 +13,11 @@ import { delay, of } from "rxjs";
 import { Apollo } from "apollo-angular";
 import { provideToastr } from "ngx-toastr";
 
-import { findElementByDataTestId, registerMatSvgIcons } from "@common/helpers/base-test.helpers.spec";
+import {
+    findElementByDataTestId,
+    registerMatSvgIcons,
+    setComponentInput,
+} from "@common/helpers/base-test.helpers.spec";
 import { DatasetApi } from "@api/dataset.api";
 
 import {
@@ -51,17 +54,8 @@ describe("CollectionViewComponent", () => {
         datasetService = TestBed.inject(DatasetService);
         fixture = TestBed.createComponent(CollectionViewComponent);
         component = fixture.componentInstance;
-        component.datasetBasics = mockDatasetBasicsRootFragment;
-        const datasetBasicsSimpleChanges: SimpleChanges = {
-            datasetBasics: {
-                previousValue: undefined,
-                currentValue: mockDatasetBasicsRootFragment,
-                firstChange: true,
-                isFirstChange: () => true,
-            },
-        };
-        component.pathPrefix = "/test-folder";
-        component.ngOnChanges(datasetBasicsSimpleChanges);
+        setComponentInput(fixture, "datasetBasics", mockDatasetBasicsRootFragment);
+        setComponentInput(fixture, "pathPrefix", "/test-folder");
 
         fixture.detectChanges();
     });

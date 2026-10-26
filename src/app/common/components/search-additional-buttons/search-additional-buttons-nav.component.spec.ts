@@ -12,7 +12,7 @@ import { ComponentFixture, TestBed } from "@angular/core/testing";
 
 import { SearchAdditionalButtonsNavComponent } from "@common/components/search-additional-buttons/search-additional-buttons-nav.component";
 import { SearchAdditionalButtonsNavHarness } from "@common/components/search-additional-buttons/search-additional-buttons-nav.harness";
-import { registerMatSvgIcons } from "@common/helpers/base-test.helpers.spec";
+import { registerMatSvgIcons, setComponentInput } from "@common/helpers/base-test.helpers.spec";
 import { SharedTestModule } from "@common/modules/shared-test.module";
 import { MaybeUndefined } from "@interface/app.types";
 
@@ -33,8 +33,8 @@ describe("SearchAdditionalButtonsNavComponent", () => {
 
         fixture = TestBed.createComponent(SearchAdditionalButtonsNavComponent);
         component = fixture.componentInstance;
-        fixture.componentRef.setInput("searchAdditionalButtonsData", SEARCH_ADDITIONAL_BUTTONS_DESCRIPTORS);
-        fixture.componentRef.setInput("loadingListDownsreams", false);
+        setComponentInput(fixture, "searchAdditionalButtonsData", SEARCH_ADDITIONAL_BUTTONS_DESCRIPTORS);
+        setComponentInput(fixture, "loadingListDownsreams", false);
 
         fixture.detectChanges();
     });
@@ -47,7 +47,8 @@ describe("SearchAdditionalButtonsNavComponent", () => {
         let harness: SearchAdditionalButtonsNavHarness;
 
         function setDeriveFromFootnote(footnote: MaybeUndefined<string>): void {
-            fixture.componentRef.setInput(
+            setComponentInput(
+                fixture,
                 "searchAdditionalButtonsData",
                 SEARCH_ADDITIONAL_BUTTONS_DESCRIPTORS.map((item) =>
                     item.value === SearchAdditionalButtonsEnum.DeriveFrom

@@ -12,6 +12,7 @@ import { of } from "rxjs";
 import { Apollo } from "apollo-angular";
 import { provideToastr } from "ngx-toastr";
 
+import { setComponentInput } from "@common/helpers/base-test.helpers.spec";
 import { SharedTestModule } from "@common/modules/shared-test.module";
 import { WebhookSubscriptionStatus } from "@api/kamu.graphql.interface";
 
@@ -36,7 +37,7 @@ describe("EditWebhookComponent", () => {
         datasetWebhooksService = TestBed.inject(DatasetWebhooksService);
         navigationService = TestBed.inject(NavigationService);
         component = fixture.componentInstance;
-        component.editWebhooksData = {
+        setComponentInput(fixture, "editWebhooksData", {
             datasetBasics: mockDatasetBasicsRootFragment,
             subscription: {
                 targetUrl: "https://mock.com",
@@ -45,7 +46,7 @@ describe("EditWebhookComponent", () => {
                 id: "112-32323-3232-323",
                 label: "",
             },
-        };
+        });
         fixture.detectChanges();
     });
 

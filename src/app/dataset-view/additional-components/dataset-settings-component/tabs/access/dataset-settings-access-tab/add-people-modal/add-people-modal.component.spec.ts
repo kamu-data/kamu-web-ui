@@ -15,10 +15,10 @@ import { NgbActiveModal, NgbTypeaheadSelectItemEvent } from "@ng-bootstrap/ng-bo
 import { Apollo } from "apollo-angular";
 import { provideToastr } from "ngx-toastr";
 
-import { registerMatSvgIcons } from "@common/helpers/base-test.helpers.spec";
+import { registerMatSvgIcons, setComponentInput } from "@common/helpers/base-test.helpers.spec";
 import { SharedTestModule } from "@common/modules/shared-test.module";
 import AppValues from "@common/values/app.values";
-import { DatasetAccessRole, NameLookupResult } from "@api/kamu.graphql.interface";
+import { AccountFragment, DatasetAccessRole } from "@api/kamu.graphql.interface";
 import { mockDatasetSearchCollaboratorQuery } from "@api/mock/dataset-collaborations.mock";
 
 import { AddPeopleModalComponent } from "src/app/dataset-view/additional-components/dataset-settings-component/tabs/access/dataset-settings-access-tab/add-people-modal/add-people-modal.component";
@@ -42,8 +42,8 @@ describe("AddPeopleModalComponent", () => {
         datasetCollaborationsService = TestBed.inject(DatasetCollaborationsService);
         ngbActiveModal = TestBed.inject(NgbActiveModal);
         component = fixture.componentInstance;
-        component.datasetBasics = mockDatasetBasicsRootFragment;
-        component.activeCollaboratorsIds = [];
+        setComponentInput(fixture, "datasetBasics", mockDatasetBasicsRootFragment);
+        setComponentInput(fixture, "activeCollaboratorsIds", []);
         fixture.detectChanges();
     });
 
@@ -52,8 +52,7 @@ describe("AddPeopleModalComponent", () => {
     });
 
     it("should check clear selected collaborator", () => {
-        component.selectedCollaborator = mockDatasetSearchCollaboratorQuery.search.nameLookup
-            .nodes[0] as NameLookupResult;
+        component.selectedCollaborator = mockDatasetSearchCollaboratorQuery.search.nameLookup.nodes[0];
         component.searchPerson = "qwe";
 
         component.closeSelectedMember();
@@ -62,9 +61,9 @@ describe("AddPeopleModalComponent", () => {
     });
 
     it("should check select collaborator", () => {
-        const nameLookupResult = mockDatasetSearchCollaboratorQuery.search.nameLookup.nodes[0] as NameLookupResult;
+        const nameLookupResult = mockDatasetSearchCollaboratorQuery.search.nameLookup.nodes[0];
 
-        const item: NgbTypeaheadSelectItemEvent<NameLookupResult> = {
+        const item: NgbTypeaheadSelectItemEvent<AccountFragment> = {
             item: nameLookupResult,
             preventDefault: () => null,
         };
@@ -84,8 +83,7 @@ describe("AddPeopleModalComponent", () => {
 
     it("should check save changes", () => {
         component.role = DatasetAccessRole.Editor;
-        component.selectedCollaborator = mockDatasetSearchCollaboratorQuery.search.nameLookup
-            .nodes[0] as NameLookupResult;
+        component.selectedCollaborator = mockDatasetSearchCollaboratorQuery.search.nameLookup.nodes[0];
         const ngbActiveModalCloseSpy = spyOn(ngbActiveModal, "close");
         component.saveChanges();
         expect(ngbActiveModalCloseSpy).toHaveBeenCalledOnceWith(
@@ -94,7 +92,7 @@ describe("AddPeopleModalComponent", () => {
     });
 
     it("should check save formatter", () => {
-        const result = mockDatasetSearchCollaboratorQuery.search.nameLookup.nodes[0] as NameLookupResult;
+        const result = mockDatasetSearchCollaboratorQuery.search.nameLookup.nodes[0];
         expect(component.formatter(result)).toEqual(result.accountName);
     });
 });

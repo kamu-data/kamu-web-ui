@@ -9,6 +9,7 @@ import { TestbedHarnessEnvironment } from "@angular/cdk/testing/testbed";
 import { ComponentFixture, TestBed } from "@angular/core/testing";
 import { provideRouter } from "@angular/router";
 
+import { setComponentInput } from "@common/helpers/base-test.helpers.spec";
 import { FlowDownstreamLinkDataFragment } from "@api/kamu.graphql.interface";
 import { mockFlowDownstreamLinks } from "@api/mock/dataset-flow.mock";
 
@@ -28,7 +29,7 @@ describe("FlowDetailsDownstreamFlowsComponent", () => {
 
     async function setupComponent(links: FlowDownstreamLinkDataFragment[]) {
         fixture = TestBed.createComponent(FlowDetailsDownstreamFlowsComponent);
-        fixture.componentRef.setInput("links", links);
+        setComponentInput(fixture, "links", links);
         fixture.detectChanges();
         harness = await TestbedHarnessEnvironment.harnessForFixture(fixture, FlowDetailsDownstreamFlowsHarness);
     }

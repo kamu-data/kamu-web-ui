@@ -14,18 +14,19 @@ describe("MarkdownFormatPipe", () => {
         expect(pipe).toBeTruthy();
     });
 
-    [
+    const cases: { value: string; format: MarkdownSupportedFormats; expectedResult: string }[] = [
         {
             value: "version: 1",
-            format: "yaml" as MarkdownSupportedFormats,
+            format: "yaml",
             expectedResult: "```yaml\n" + "version: 1" + "\n```",
         },
         {
             value: "select * from 'test-dataset'",
-            format: "sql" as MarkdownSupportedFormats,
+            format: "sql",
             expectedResult: "```sql\n" + "select * from 'test-dataset'" + "\n```",
         },
-    ].forEach(({ value, format, expectedResult }) => {
+    ];
+    cases.forEach(({ value, format, expectedResult }) => {
         it("#MarkdownFormatPipe", () => {
             expect(pipe.transform(value, format)).toBe(expectedResult);
         });

@@ -1,0 +1,9 @@
+fragment DatasetVisibilityOutputData on DatasetVisibilityOutput {
+  ... on PrivateDatasetVisibility {
+    __typename
+  }
+
+  ... on PublicDatasetVisibility {
+    anonymousAvailable
+  }
+}

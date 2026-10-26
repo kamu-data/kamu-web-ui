@@ -1,0 +1,4 @@
+fragment BlockRefData on BlockRef {
+  name
+  blockHash
+}

@@ -7,6 +7,7 @@
 
 import { ComponentFixture, TestBed } from "@angular/core/testing";
 
+import { setComponentInput } from "@common/helpers/base-test.helpers.spec";
 import { SharedTestModule } from "@common/modules/shared-test.module";
 
 import { DatasetNamePropertyComponent } from "src/app/dataset-block/metadata-block/components/event-details/components/common/dataset-name-property/dataset-name-property.component";
@@ -22,7 +23,7 @@ describe("DatasetNamePropertyComponent", () => {
 
         fixture = TestBed.createComponent(DatasetNamePropertyComponent);
         component = fixture.componentInstance;
-        component.data = { datasetName: "test", ownerAccountName: "testOwner" };
+        setComponentInput(fixture, "data", { datasetName: "test", ownerAccountName: "testOwner" });
         fixture.detectChanges();
     });
 

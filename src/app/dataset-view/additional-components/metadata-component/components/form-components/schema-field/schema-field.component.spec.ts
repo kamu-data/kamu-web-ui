@@ -17,7 +17,7 @@ import {
     SchemaValidationErrorCode,
     SchemaWarningCode,
 } from "@common/components/edit-schema-table/validation/schema-validation.types";
-import { registerMatSvgIcons } from "@common/helpers/base-test.helpers.spec";
+import { registerMatSvgIcons, setComponentInput } from "@common/helpers/base-test.helpers.spec";
 import { SharedTestModule } from "@common/modules/shared-test.module";
 import { DataSchemaField, OdfTypes } from "@interface/dataset-schema.interface";
 
@@ -40,8 +40,12 @@ describe("SchemaFieldComponent", () => {
     async function setup(initialFields: DataSchemaField[] = []): Promise<void> {
         fixture = TestBed.createComponent(SchemaFieldComponent);
         component = fixture.componentInstance;
-        component.form = new FormGroup({ schema: new FormControl<DataSchemaField[]>(initialFields) });
-        component.controlName = "schema";
+        setComponentInput(
+            fixture,
+            "form",
+            new FormGroup({ schema: new FormControl<DataSchemaField[]>(initialFields) }),
+        );
+        setComponentInput(fixture, "controlName", "schema");
         fixture.detectChanges();
         await fixture.whenStable();
         harness = await TestbedHarnessEnvironment.harnessForFixture(fixture, SchemaFieldHarness);

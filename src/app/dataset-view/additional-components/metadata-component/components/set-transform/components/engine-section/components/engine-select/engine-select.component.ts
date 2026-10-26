@@ -19,7 +19,7 @@ import {
 } from "@angular/core";
 
 import { DataHelpers } from "@common/helpers/data.helpers";
-import { EngineDesc } from "@api/kamu.graphql.interface";
+import { EngineDescDataFragment } from "@api/kamu.graphql.interface";
 
 import { EventPropertyLogo } from "src/app/dataset-block/metadata-block/components/event-details/supported.events";
 
@@ -36,7 +36,7 @@ export class EngineSelectComponent {
     @ViewChild("selectedImage", { static: true })
     private selectedImage: ElementRef<HTMLImageElement>;
     public showDropdown = false;
-    @Input({ required: true }) public data: EngineDesc[];
+    @Input({ required: true }) public data: EngineDescDataFragment[];
     @Input({ required: true }) public engine: string;
     @Input() public disabledOptionsMode: boolean = false;
     @Output() public selectedEngineEmitter = new EventEmitter<string>();
@@ -59,7 +59,7 @@ export class EngineSelectComponent {
         return DataHelpers.descriptionForEngine(name);
     }
 
-    public clickShowDropdown(item: EngineDesc): void {
+    public clickShowDropdown(item: EngineDescDataFragment): void {
         const description = item.name.toLowerCase();
         this.render.setAttribute(this.selectedImage.nativeElement, "src", this.getLogo(description).url_logo ?? "");
         this.selectedEngineEmitter.emit(description);

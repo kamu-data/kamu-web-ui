@@ -21,13 +21,13 @@ import {
     findElementByDataTestId,
     getElementByDataTestId,
     registerMatSvgIcons,
+    setComponentInput,
     setFieldValue,
 } from "@common/helpers/base-test.helpers.spec";
 import { SharedTestModule } from "@common/modules/shared-test.module";
 import { mockDatasetByIdQuery } from "@api/mock/dataset.mock";
 
 import { DatasetService } from "src/app/dataset-view/dataset.service";
-import ProjectLinks from "src/app/project-links";
 import { QueryExplainerComponent } from "src/app/query-explainer/query-explainer.component";
 import {
     mockQueryExplainerOutput,
@@ -43,6 +43,8 @@ describe("QueryExplainerComponent", () => {
     let queryExplainerService: QueryExplainerService;
     let datasetService: DatasetService;
     let toastrService: ToastrService;
+    let verifyQuerySpy: jasmine.Spy<QueryExplainerService["verifyQuery"]>;
+    let fetchCommitmentDataByUploadTokenSpy: jasmine.Spy<QueryExplainerService["fetchCommitmentDataByUploadToken"]>;
 
     beforeEach(() => {
         TestBed.configureTestingModule({
@@ -61,14 +63,17 @@ describe("QueryExplainerComponent", () => {
         datasetService = TestBed.inject(DatasetService);
         toastrService = TestBed.inject(ToastrService);
         queryExplainerService = TestBed.inject(QueryExplainerService);
-        spyOn(queryExplainerService, "verifyQuery").and.returnValue(of(mockVerifyQueryResponseSuccess));
-        spyOn(queryExplainerService, "fetchCommitmentDataByUploadToken").and.returnValue(
-            of(mockQueryExplainerResponse),
+        verifyQuerySpy = spyOn(queryExplainerService, "verifyQuery").and.returnValue(
+            of(mockVerifyQueryResponseSuccess),
         );
+        fetchCommitmentDataByUploadTokenSpy = spyOn(
+            queryExplainerService,
+            "fetchCommitmentDataByUploadToken",
+        ).and.returnValue(of(mockQueryExplainerResponse));
         spyOn(datasetService, "requestDatasetInfoById").and.returnValue(of(mockDatasetByIdQuery));
         fixture = TestBed.createComponent(QueryExplainerComponent);
         component = fixture.componentInstance;
-        component.uploadToken = "";
+        setComponentInput(fixture, "uploadToken", "");
         fixture.detectChanges();
     });
 
@@ -112,11 +117,9 @@ describe("QueryExplainerComponent", () => {
 
     it("should show the commitment form when the uploaded commitment cannot be loaded", async () => {
         // A failed request completes without a value, after the response arrives
-        (queryExplainerService.fetchCommitmentDataByUploadToken as jasmine.Spy).and.returnValue(
-            timer(0).pipe(ignoreElements()),
-        );
+        fetchCommitmentDataByUploadTokenSpy.and.returnValue(timer(0).pipe(ignoreElements()));
         fixture = TestBed.createComponent(QueryExplainerComponent);
-        fixture.componentRef.setInput(ProjectLinks.URL_QUERY_PARAM_COMMITMENT_UPLOAD_TOKEN, "uploaded-token");
+        setComponentInput(fixture, "uploadToken", "uploaded-token");
         fixture.detectChanges();
         expect(findElementByDataTestId(fixture, "input-textarea")).toBeUndefined();
 
@@ -131,7 +134,7 @@ describe("QueryExplainerComponent", () => {
             of({ output: mockQueryExplainerOutput }),
         );
         // A failed request completes without a value, after the response arrives
-        (queryExplainerService.verifyQuery as jasmine.Spy).and.returnValue(timer(0).pipe(ignoreElements()));
+        verifyQuerySpy.and.returnValue(timer(0).pipe(ignoreElements()));
         const commitment = JSON.stringify(mockQueryExplainerResponse);
         setFieldValue(fixture, "input-textarea", commitment);
         fixture.detectChanges();
@@ -145,7 +148,7 @@ describe("QueryExplainerComponent", () => {
         fixture.detectChanges();
         await fixture.whenStable();
 
-        const textarea = getElementByDataTestId(fixture, "input-textarea") as HTMLTextAreaElement;
+        const textarea = getElementByDataTestId(fixture, "input-textarea", HTMLTextAreaElement);
         expect(textarea.value).toEqual(commitment);
     });
 });

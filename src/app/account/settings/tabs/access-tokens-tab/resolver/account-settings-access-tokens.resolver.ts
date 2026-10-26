@@ -8,13 +8,13 @@
 import { inject } from "@angular/core";
 import { ActivatedRouteSnapshot, ResolveFn } from "@angular/router";
 
-import { AccessTokenConnection } from "@api/kamu.graphql.interface";
+import { AccessTokenConnectionDataFragment } from "@api/kamu.graphql.interface";
 
 import { AccessTokenService } from "src/app/account/settings/tabs/access-tokens-tab/access-token.service";
 import { LoggedUserService } from "src/app/auth/logged-user.service";
 import ProjectLinks from "src/app/project-links";
 
-export const accountSettingsAccessTokensResolverFn: ResolveFn<AccessTokenConnection> = (
+export const accountSettingsAccessTokensResolverFn: ResolveFn<AccessTokenConnectionDataFragment> = (
     route: ActivatedRouteSnapshot,
 ) => {
     const accessTokenService = inject(AccessTokenService);

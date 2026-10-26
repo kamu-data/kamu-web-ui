@@ -7,12 +7,14 @@
 
 import { inject, Injectable } from "@angular/core";
 
-import { map, Observable } from "rxjs";
+import { map, Observable, switchMap } from "rxjs";
 
 import { Edge, Node } from "@swimlane/ngx-graph";
 
+import { LineageNodeSizeService } from "@common/components/lineage-graph/lineage-node-size.service";
 import { isNil } from "@common/helpers/app.helpers";
 import { chainNameFromId } from "@common/helpers/ethereum.helpers";
+import { DisplayDatasetIdPipe } from "@common/pipes/display-dataset-id.pipe";
 import {
     DatasetAccessResultNotAccessible,
     DatasetKind,
@@ -36,9 +38,12 @@ import { DatasetSubscriptionsService } from "src/app/dataset-view/dataset.subscr
 })
 export class LineageGraphBuilderService {
     private datasetSubsService = inject(DatasetSubscriptionsService);
+    private nodeSizeService = inject(LineageNodeSizeService);
+    private displayDatasetIdPipe = new DisplayDatasetIdPipe();
 
     public buildGraph(): Observable<MaybeNull<LineageGraphUpdate>> {
-        return this.datasetSubsService.lineageChanges.pipe(
+        return this.nodeSizeService.whenFontsReady().pipe(
+            switchMap(() => this.datasetSubsService.lineageChanges),
             map((lineageUpdate: MaybeNull<LineageUpdate>) => {
                 if (lineageUpdate) {
                     const uniqueDatasets: DatasetLineageBasicsFragment[] = this.collectUniqueDatasets(lineageUpdate);
@@ -108,6 +113,7 @@ export class LineageGraphBuilderService {
                 return {
                     id: this.sanitizeID(dataset.id),
                     label: dataset.name,
+                    dimension: this.nodeSizeService.datasetNodeSize(dataset.name, dataset.owner.accountName),
                     data: {
                         kind: LineageGraphNodeKind.Dataset,
                         dataObject: {
@@ -129,6 +135,7 @@ export class LineageGraphBuilderService {
                 return {
                     id: this.sanitizeID(id),
                     label: id,
+                    dimension: this.nodeSizeService.inaccessibleNodeSize(this.displayDatasetIdPipe.transform(id)),
                     data: {
                         kind: LineageGraphNodeKind.DatasetNotAccessable,
                     },
@@ -190,6 +197,10 @@ export class LineageGraphBuilderService {
                         sourceNode = {
                             id: `source-node-${sourceNodeLabel}`,
                             label: sourceNodeLabel,
+                            dimension: this.nodeSizeService.sourceNodeSize(
+                                this.graphNodeKindMapper[kind],
+                                sourceNodeLabel,
+                            ),
                             data: {
                                 kind: this.graphNodeKindMapper[kind],
                                 dataObject: {},
@@ -230,6 +241,7 @@ export class LineageGraphBuilderService {
                     sourceNode = {
                         id: `source-node-${datasetId}`,
                         label: sourceNodeLabel,
+                        dimension: this.nodeSizeService.sourceNodeSize(this.graphNodeKindMapper[kind], sourceNodeLabel),
                         data: {
                             kind: this.graphNodeKindMapper[kind],
                             dataObject: {},

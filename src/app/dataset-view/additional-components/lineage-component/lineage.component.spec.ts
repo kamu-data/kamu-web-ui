@@ -14,6 +14,7 @@ import { Apollo } from "apollo-angular";
 import { provideToastr, ToastrService } from "ngx-toastr";
 
 import { LineageGraphComponent } from "@common/components/lineage-graph/lineage-graph.component";
+import { LineageNodeSizeService } from "@common/components/lineage-graph/lineage-node-size.service";
 import {
     findComponentInstance,
     findComponentInstances,
@@ -55,6 +56,7 @@ describe("LineageComponent", () => {
         datasetService = TestBed.inject(DatasetService);
         spyOn(datasetService, "requestDatasetLineage").and.returnValue(of(undefined));
         datasetSubsService = TestBed.inject(DatasetSubscriptionsService);
+        spyOn(TestBed.inject(LineageNodeSizeService), "whenFontsReady").and.returnValue(of(undefined));
         spyOn(accountService, "fetchMultipleAccountsByName").and.returnValue(of());
         navigationServiceSpy = spyOn(navigationService, "navigateToDatasetView");
 

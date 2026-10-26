@@ -30,13 +30,13 @@ import {
     readSchemaOf,
     requireDatasetSchema,
 } from "@common/components/edit-schema-table/schema-editor.fixtures.spec";
-import { registerMatSvgIcons } from "@common/helpers/base-test.helpers.spec";
+import { registerMatSvgIcons, setComponentInput } from "@common/helpers/base-test.helpers.spec";
 import { SharedTestModule } from "@common/modules/shared-test.module";
 import { DatasetApi } from "@api/dataset.api";
 import { DataSchemaFormat, DatasetBlocksSchemaByEventTypeQuery, MetadataEventType } from "@api/kamu.graphql.interface";
 import { DataSchemaField, OdfTypes } from "@interface/dataset-schema.interface";
 
-import { mockSetPollingSourceEventFragment } from "src/app/dataset-view/additional-components/data-tabs.mock";
+import { mockSetPollingSourceEvent } from "src/app/dataset-block/metadata-block/components/event-details/mock.events";
 import { SchemaFieldComponent } from "src/app/dataset-view/additional-components/metadata-component/components/form-components/schema-field/schema-field.component";
 import { schemaValidator } from "src/app/dataset-view/additional-components/metadata-component/components/form-components/schema-field/schema-field.component.helpers";
 import { SchemaFieldHarness } from "src/app/dataset-view/additional-components/metadata-component/components/form-components/schema-field/schema-field.harness";
@@ -100,7 +100,7 @@ function mockGqlProjectionWithSchema(schemaContent: string): DatasetBlocksSchema
                         {
                             __typename: "MetadataBlockExtended",
                             event: {
-                                ...mockSetPollingSourceEventFragment,
+                                ...mockSetPollingSourceEvent,
                                 read: {
                                     __typename: "ReadStepCsv",
                                     schema: {
@@ -143,9 +143,10 @@ describe("Schema editor round-trip (Load → Edit → Serialize)", () => {
         schemaControl.addValidators(schemaValidator);
 
         fixture = TestBed.createComponent(SchemaFieldComponent);
-        const component = fixture.componentInstance;
-        component.form = new FormGroup({ schema: schemaControl });
-        component.controlName = "schema";
+        setComponentInput(fixture, "form", new FormGroup({ schema: schemaControl }));
+        setComponentInput(fixture, "controlName", "schema");
+        setComponentInput(fixture, "label", "Schema");
+        setComponentInput(fixture, "tooltip", "Schema tooltip");
         fixture.detectChanges();
         await fixture.whenStable();
 

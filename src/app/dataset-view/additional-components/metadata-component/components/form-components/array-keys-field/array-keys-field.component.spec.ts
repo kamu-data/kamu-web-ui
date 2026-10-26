@@ -8,7 +8,7 @@
 import { ComponentFixture, TestBed } from "@angular/core/testing";
 import { FormArray, FormGroup } from "@angular/forms";
 
-import { emitClickOnElementByDataTestId } from "@common/helpers/base-test.helpers.spec";
+import { emitClickOnElementByDataTestId, setComponentInput } from "@common/helpers/base-test.helpers.spec";
 import { SharedTestModule } from "@common/modules/shared-test.module";
 
 import { ArrayKeysFieldComponent } from "src/app/dataset-view/additional-components/metadata-component/components/form-components/array-keys-field/array-keys-field.component";
@@ -24,8 +24,8 @@ describe("ArrayKeysFieldComponent", () => {
 
         fixture = TestBed.createComponent(ArrayKeysFieldComponent);
         component = fixture.componentInstance;
-        component.form = new FormGroup({ primaryKey: new FormArray([]) });
-        component.controlName = "primaryKey";
+        setComponentInput(fixture, "form", new FormGroup({ primaryKey: new FormArray([]) }));
+        setComponentInput(fixture, "controlName", "primaryKey");
         fixture.detectChanges();
     });
 
@@ -34,7 +34,7 @@ describe("ArrayKeysFieldComponent", () => {
     });
 
     it("should name the missing form array", () => {
-        component.controlName = "missing";
+        setComponentInput(fixture, "controlName", "missing");
         expect(() => component.items).toThrowError(`Form array "missing" is missing from the parent form`);
     });
 

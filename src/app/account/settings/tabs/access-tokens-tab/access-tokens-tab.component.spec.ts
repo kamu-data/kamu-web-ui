@@ -15,7 +15,11 @@ import { Apollo } from "apollo-angular";
 import { provideToastr } from "ngx-toastr";
 
 import { ModalService } from "@common/components/modal/modal.service";
-import { emitClickOnElementByDataTestId, registerMatSvgIcons } from "@common/helpers/base-test.helpers.spec";
+import {
+    emitClickOnElementByDataTestId,
+    registerMatSvgIcons,
+    setComponentInput,
+} from "@common/helpers/base-test.helpers.spec";
 import { mockAccessTokenConnectionData, mockCreatedAccessTokenData, TOKEN_ID } from "@api/mock/access-token.mock";
 import { mockAccountDetails } from "@api/mock/auth.mock";
 import { ModalArgumentsInterface } from "@interface/modal.interface";
@@ -81,7 +85,7 @@ describe("AccessTokensTabComponent", () => {
         component = fixture.componentInstance;
         navigateToSettingsSpy = spyOn(navigationService, "navigateToSettings");
         spyOnProperty(loggedUserService, "currentlyLoggedInUser", "get").and.returnValue(mockAccountDetails);
-        component.tokenConnection = mockAccessTokenConnectionData;
+        setComponentInput(fixture, "tokenConnectionData", mockAccessTokenConnectionData);
     });
 
     it("should create", () => {
@@ -122,17 +126,29 @@ describe("AccessTokensTabComponent", () => {
         expect(component.currentCreateStep).toEqual(TokenCreateStep.INITIAL);
     });
 
+    function filteredTokenNames(): string[] {
+        return component.dataSource.filteredData.map((token) => token.name);
+    }
+
+    it("should fill the table from the resolved token connection", () => {
+        expect(component.dataSource.data).toEqual(mockAccessTokenConnectionData.nodes);
+        expect(component.pageBasedInfo).toEqual(mockAccessTokenConnectionData.pageInfo);
+        expect(filteredTokenNames()).toEqual(["q2"]);
+    });
+
     it("should check refresh filter", () => {
-        component.dataSource.filter = "test-token-name";
+        component.applyFilter("test-token-name");
+        expect(filteredTokenNames()).toEqual([]);
+
         component.refreshSearchByName();
         expect(component.dataSource.filter).toEqual("");
+        expect(filteredTokenNames()).toEqual(["q1", "q2"]);
     });
 
     it("should check apply filter", () => {
-        const searchToken = "test";
-        expect(component.dataSource.filter).toEqual("");
-        component.applyFilter(searchToken);
-        expect(component.dataSource.filter).toEqual(searchToken);
+        component.applyFilter(" Q1 ");
+        expect(component.dataSource.filter).toEqual("q1");
+        expect(filteredTokenNames()).toEqual(["q1"]);
     });
 
     it("should check revoke token", () => {
@@ -158,9 +174,11 @@ describe("AccessTokensTabComponent", () => {
         component.showRevokedToken = true;
         component.toggleTokens();
         expect(component.dataSource.filter).toEqual("");
+        expect(filteredTokenNames()).toEqual(["q1", "q2"]);
 
         component.showRevokedToken = false;
         component.toggleTokens();
         expect(component.dataSource.filter).toEqual("false");
+        expect(filteredTokenNames()).toEqual(["q2"]);
     });
 });

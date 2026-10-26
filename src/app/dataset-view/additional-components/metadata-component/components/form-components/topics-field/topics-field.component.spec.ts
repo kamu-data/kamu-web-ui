@@ -24,11 +24,9 @@ describe("TopicsFieldComponent", () => {
 
         fixture = TestBed.createComponent(TopicsFieldComponent);
         component = fixture.componentInstance;
-        component.controlName = "topics";
+        setComponentInput(fixture, "controlName", "topics");
         setComponentInput(fixture, "buttonText", "Add new topics");
-        component.form = new FormGroup({
-            [component.controlName]: new FormArray([]),
-        });
+        setComponentInput(fixture, "form", new FormGroup({ topics: new FormArray([]) }));
         fixture.detectChanges();
     });
 
@@ -37,7 +35,7 @@ describe("TopicsFieldComponent", () => {
     });
 
     it("should name the missing form array", () => {
-        component.controlName = "missing";
+        setComponentInput(fixture, "controlName", "missing");
         expect(() => component.items).toThrowError(`Form array "missing" is missing from the parent form`);
     });
 

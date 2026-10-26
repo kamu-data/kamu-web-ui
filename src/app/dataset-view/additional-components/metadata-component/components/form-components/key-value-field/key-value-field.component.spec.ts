@@ -24,11 +24,9 @@ describe("KeyValueFieldComponent", () => {
 
         fixture = TestBed.createComponent(KeyValueFieldComponent);
         component = fixture.componentInstance;
-        component.controlName = "primaryKey";
+        setComponentInput(fixture, "controlName", "primaryKey");
         setComponentInput(fixture, "buttonText", "Add key");
-        component.form = new FormGroup({
-            [component.controlName]: new FormArray([]),
-        });
+        setComponentInput(fixture, "form", new FormGroup({ primaryKey: new FormArray([]) }));
         fixture.detectChanges();
     });
 
@@ -37,7 +35,7 @@ describe("KeyValueFieldComponent", () => {
     });
 
     it("should name the missing form array", () => {
-        component.controlName = "missing";
+        setComponentInput(fixture, "controlName", "missing");
         expect(() => component.items).toThrowError(`Form array "missing" is missing from the parent form`);
     });
 

@@ -48,11 +48,9 @@ describe("TypeaheadFieldComponent", () => {
         fixture = TestBed.createComponent(TypeaheadFieldComponent);
         component = fixture.componentInstance;
         setComponentInput(fixture, "data", ["test1", "test2"]);
-        component.controlName = "name";
-        component.dataTestId = "typeahead";
-        component.form = new FormGroup({
-            name: new FormControl(""),
-        });
+        setComponentInput(fixture, "controlName", "name");
+        setComponentInput(fixture, "dataTestId", "typeahead");
+        setComponentInput(fixture, "form", new FormGroup({ name: new FormControl("") }));
         fixture.detectChanges();
     });
 

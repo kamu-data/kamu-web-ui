@@ -8,6 +8,7 @@
 import { ComponentFixture, TestBed } from "@angular/core/testing";
 import { FormControl, FormGroup } from "@angular/forms";
 
+import { setComponentInput } from "@common/helpers/base-test.helpers.spec";
 import { SharedTestModule } from "@common/modules/shared-test.module";
 
 import { JsonKindFieldComponent } from "src/app/dataset-view/additional-components/metadata-component/components/form-components/json-kind-field/json-kind-field.component";
@@ -24,9 +25,7 @@ describe("JsonKindFieldComponent", () => {
 
         fixture = TestBed.createComponent(JsonKindFieldComponent);
         component = fixture.componentInstance;
-        component.form = new FormGroup({
-            jsonKind: new FormControl(ReadKind.JSON),
-        });
+        setComponentInput(fixture, "form", new FormGroup({ jsonKind: new FormControl(ReadKind.JSON) }));
         fixture.detectChanges();
     });
 

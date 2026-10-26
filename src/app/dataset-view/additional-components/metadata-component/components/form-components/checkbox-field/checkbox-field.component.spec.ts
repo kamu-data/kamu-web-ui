@@ -24,10 +24,10 @@ describe("CheckboxFieldComponent", () => {
 
         fixture = TestBed.createComponent(CheckboxFieldComponent);
         component = fixture.componentInstance;
-        component.form = new FormGroup({ test: new FormControl(false) });
-        component.controlName = "test";
-        component.tooltip = "Test tooltip";
-        component.dataTestId = "checkbox";
+        setComponentInput(fixture, "form", new FormGroup({ test: new FormControl(false) }));
+        setComponentInput(fixture, "controlName", "test");
+        setComponentInput(fixture, "tooltip", "Test tooltip");
+        setComponentInput(fixture, "dataTestId", "checkbox");
         setComponentInput(fixture, "checked", false);
         fixture.detectChanges();
     });

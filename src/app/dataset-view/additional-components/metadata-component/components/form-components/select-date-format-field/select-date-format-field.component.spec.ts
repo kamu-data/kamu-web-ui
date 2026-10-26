@@ -45,12 +45,16 @@ describe("SelectDateFormatFieldComponent", () => {
 
         fixture = TestBed.createComponent(SelectDateFormatFieldComponent);
         component = fixture.componentInstance;
-        component.form = new FormGroup({
-            eventTime: new FormGroup({
-                kind: new FormControl(EventTimeSourceKind.FROM_METADATA),
+        setComponentInput(
+            fixture,
+            "form",
+            new FormGroup({
+                eventTime: new FormGroup({
+                    kind: new FormControl(EventTimeSourceKind.FROM_METADATA),
+                }),
             }),
-        });
-        component.controlName = "eventTime";
+        );
+        setComponentInput(fixture, "controlName", "eventTime");
         setComponentInput(fixture, "innerTooltips", {
             fromMetadata: SetPollingSourceTooltipsTexts.EVENT_TIME_FROM_METADATA,
             fromPath: SetPollingSourceTooltipsTexts.EVENT_TIME_FROM_PATH,

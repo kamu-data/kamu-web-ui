@@ -14,7 +14,7 @@ import { NgbNavChangeEvent } from "@ng-bootstrap/ng-bootstrap";
 import { Apollo } from "apollo-angular";
 import { provideToastr } from "ngx-toastr";
 
-import { findElementByDataTestId } from "@common/helpers/base-test.helpers.spec";
+import { findElementByDataTestId, setComponentInput } from "@common/helpers/base-test.helpers.spec";
 import { FlowStatus } from "@api/kamu.graphql.interface";
 import { mockAccountDetails } from "@api/mock/auth.mock";
 import { mockFlowsTableData } from "@api/mock/dataset-flow.mock";
@@ -64,11 +64,11 @@ describe("AccountFlowsTabComponent", () => {
         navigationService = TestBed.inject(NavigationService);
         loggedUserService = TestBed.inject(LoggedUserService);
         component = fixture.componentInstance;
-        component.accountFlowsData = {
+        setComponentInput(fixture, "setAccountFlowsData", {
             activeNav: AccountFlowsNav.ACTIVITY,
             flowGroup: [FlowStatus.Finished],
             datasetsFiltersMode: ProcessCardFilterMode.RECENT_ACTIVITY,
-        };
+        });
         spyOnProperty(loggedUserService, "currentlyLoggedInUser", "get").and.returnValue(mockAccountDetails);
     });
 

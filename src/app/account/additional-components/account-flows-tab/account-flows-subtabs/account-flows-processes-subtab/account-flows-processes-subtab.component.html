@@ -42,7 +42,7 @@
         >
             @for (item of ROLLUP_OPTIONS; track item) {
                 @if (rollupAvailabilityMapper(accountFlowsData.datasetsFiltersMode, item.state)) {
-                    <mat-button-toggle [value]="item.state">
+                    <mat-button-toggle [value]="item.state" [attr.data-test-id]="'rollup-state-' + item.state">
                         <mat-icon aria-hidden="true" [class]="'fs-4 mr-2px mt-2px ' + item.iconClass">{{
                             item.iconName
                         }}</mat-icon

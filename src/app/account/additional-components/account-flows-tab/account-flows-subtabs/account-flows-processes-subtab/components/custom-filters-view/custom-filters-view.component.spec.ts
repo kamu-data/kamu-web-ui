@@ -46,6 +46,12 @@ describe("CustomFiltersViewComponent", () => {
         expect(component).toBeTruthy();
     });
 
+    it("should render without changing the selected states, which the parent sets for the mode", () => {
+        fixture.detectChanges();
+        expect(component.dashboardFilters.selectedFlowProcessStates).toEqual([]);
+        expect(component.dashboardFilters.isFirstInitialization).toBeFalse();
+    });
+
     it("should check to change last attempt filter", () => {
         component.dashboardFilters.selectedQuickRangeLastAttempt = RangeLastAttempt.LAST_5_MINUTES;
         fixture.detectChanges();

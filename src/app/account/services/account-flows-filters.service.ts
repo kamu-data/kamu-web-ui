@@ -61,6 +61,35 @@ export class AccountFlowsFiltersService {
         ];
     }
 
+    private defaultFlowProcessStates(mode: ProcessCardFilterMode): FlowProcessEffectiveState[] {
+        switch (mode) {
+            case ProcessCardFilterMode.RECENT_ACTIVITY:
+            case ProcessCardFilterMode.CUSTOM:
+                return this.initialProcessFilters;
+            case ProcessCardFilterMode.TRIAGE:
+                return [FlowProcessEffectiveState.Failing, FlowProcessEffectiveState.StoppedAuto];
+            case ProcessCardFilterMode.UPCOMING_SCHEDULED:
+                return [FlowProcessEffectiveState.Active, FlowProcessEffectiveState.Failing];
+            case ProcessCardFilterMode.PAUSED:
+                return [FlowProcessEffectiveState.PausedManual];
+            /* istanbul ignore next */
+            default:
+                throw new Error("Unknown filters mode");
+        }
+    }
+
+    /**
+     * Selects the default states of the mode, and for the recent activity mode
+     * lets the next request fill in its default time window.
+     * Call it before the mode's filters render: the view binds the selected states.
+     */
+    public applyModeDefaults(mode: ProcessCardFilterMode): void {
+        this.updateFilters({
+            selectedFlowProcessStates: this.defaultFlowProcessStates(mode),
+            ...(mode === ProcessCardFilterMode.RECENT_ACTIVITY ? { isFirstInitialization: true } : {}),
+        });
+    }
+
     public setFlowProcessFilters(mode: ProcessCardFilterMode): FlowProcessFilters {
         switch (mode) {
             case ProcessCardFilterMode.RECENT_ACTIVITY: {

@@ -5,7 +5,7 @@
  * included in the LICENSE file.
  */
 
-import { ChangeDetectionStrategy, Component, EventEmitter, Input, OnInit, Output } from "@angular/core";
+import { ChangeDetectionStrategy, Component, EventEmitter, Input, Output } from "@angular/core";
 import { FormsModule } from "@angular/forms";
 import { MatIconModule } from "@angular/material/icon";
 import { MatSlideToggleModule } from "@angular/material/slide-toggle";
@@ -15,7 +15,7 @@ import { MomentDateTimeAdapter, OwlMomentDateTimeModule } from "@danielmoncada/a
 import { NgSelectModule } from "@ng-select/ng-select";
 
 import { MY_MOMENT_FORMATS } from "@common/helpers/data.helpers";
-import { FlowProcessEffectiveState, OrderingDirection } from "@api/kamu.graphql.interface";
+import { OrderingDirection } from "@api/kamu.graphql.interface";
 
 import {
     DashboardFiltersOptions,
@@ -44,23 +44,13 @@ import { lastTimeRangeHelper } from "src/app/dataset-view/additional-components/
     styleUrls: ["./recent-activity-filters-view.component.scss"],
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class RecentActivityFiltersViewComponent implements OnInit {
+export class RecentActivityFiltersViewComponent {
     @Input({ required: true }) public dashboardFilters: DashboardFiltersOptions;
     @Output() public applyFilterEmitter = new EventEmitter<void>();
 
     public readonly RANGE_LAST_ATTEMPT_LIST = RANGE_LAST_ATTEMPT_LIST;
 
     public currentDateTime = new Date().toISOString();
-
-    public ngOnInit(): void {
-        this.dashboardFilters.isFirstInitialization = true;
-        this.dashboardFilters.selectedFlowProcessStates = [
-            FlowProcessEffectiveState.Active,
-            FlowProcessEffectiveState.Failing,
-            FlowProcessEffectiveState.PausedManual,
-            FlowProcessEffectiveState.StoppedAuto,
-        ];
-    }
 
     public onDirectionToggle(): void {
         this.applyFilterEmitter.next();

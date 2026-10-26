@@ -9,7 +9,6 @@ import { TestbedHarnessEnvironment } from "@angular/cdk/testing/testbed";
 import { provideHttpClient } from "@angular/common/http";
 import { provideHttpClientTesting } from "@angular/common/http/testing";
 import { ComponentFixture, discardPeriodicTasks, fakeAsync, TestBed, tick } from "@angular/core/testing";
-import { MatButtonToggle, MatButtonToggleChange } from "@angular/material/button-toggle";
 import { ActivatedRoute } from "@angular/router";
 
 import { of, Subject, throwError } from "rxjs";
@@ -20,11 +19,7 @@ import { provideToastr, ToastrService } from "ngx-toastr";
 import { environment } from "@env/environment";
 import { ModalService } from "@common/components/modal/modal.service";
 import { requireValue } from "@common/helpers/app.helpers";
-import {
-    findComponentInstanceByDataTestId,
-    registerMatSvgIcons,
-    setComponentInput,
-} from "@common/helpers/base-test.helpers.spec";
+import { registerMatSvgIcons, setComponentInput } from "@common/helpers/base-test.helpers.spec";
 import { SharedTestModule } from "@common/modules/shared-test.module";
 import AppValues from "@common/values/app.values";
 import { FlowProcessEffectiveState, FlowStatus } from "@api/kamu.graphql.interface";
@@ -258,27 +253,67 @@ describe("AccountFlowsProcessesSubtabComponent", () => {
         discardPeriodicTasks();
     }));
 
-    it("should check to change filters mode", fakeAsync(() => {
+    it("should select the default states of the initial mode before the first render", fakeAsync(async () => {
         fixture.detectChanges();
         tick(0);
-        const toggle = findComponentInstanceByDataTestId(
-            fixture,
-            `filters-mode-${ProcessCardFilterMode.RECENT_ACTIVITY}`,
-            MatButtonToggle,
-        );
+        const processesSubtab = await loadHarness();
 
-        const navigateToOwnerViewSpy = spyOn(navigationService, "navigateToOwnerView");
-        component.onChangeFiltersMode(new MatButtonToggleChange(toggle, ProcessCardFilterMode.RECENT_ACTIVITY));
-        expect(navigateToOwnerViewSpy).toHaveBeenCalledOnceWith(
-            MOCK_ACCOUNT_NAME,
-            AccountTabs.FLOWS,
-            undefined,
-            AccountFlowsNav.PROCESSES,
-            undefined,
-            ProcessCardFilterMode.RECENT_ACTIVITY,
-        );
+        expect(await processesSubtab.isFiltersModeSelected(ProcessCardFilterMode.CUSTOM)).toBeTrue();
+        expect(await processesSubtab.getSelectedRollupStates()).toEqual([
+            FlowProcessEffectiveState.Active,
+            FlowProcessEffectiveState.Failing,
+            FlowProcessEffectiveState.PausedManual,
+            FlowProcessEffectiveState.StoppedAuto,
+        ]);
         discardPeriodicTasks();
     }));
+
+    describe("'View:' mode toggle", () => {
+        const cases: { mode: ProcessCardFilterMode; shownStates: FlowProcessEffectiveState[] }[] = [
+            {
+                mode: ProcessCardFilterMode.RECENT_ACTIVITY,
+                shownStates: [
+                    FlowProcessEffectiveState.Active,
+                    FlowProcessEffectiveState.Failing,
+                    FlowProcessEffectiveState.PausedManual,
+                    FlowProcessEffectiveState.StoppedAuto,
+                ],
+            },
+            {
+                mode: ProcessCardFilterMode.TRIAGE,
+                shownStates: [FlowProcessEffectiveState.Failing, FlowProcessEffectiveState.StoppedAuto],
+            },
+            {
+                mode: ProcessCardFilterMode.UPCOMING_SCHEDULED,
+                shownStates: [FlowProcessEffectiveState.Active, FlowProcessEffectiveState.Failing],
+            },
+            // The paused mode shows no state toggles
+            { mode: ProcessCardFilterMode.PAUSED, shownStates: [] },
+        ];
+
+        cases.forEach(({ mode, shownStates }) => {
+            it(`should navigate to the ${mode} mode and show its default states`, fakeAsync(async () => {
+                fixture.detectChanges();
+                tick(0);
+                const processesSubtab = await loadHarness();
+                const navigateToOwnerViewSpy = spyOn(navigationService, "navigateToOwnerView");
+
+                await processesSubtab.selectFiltersMode(mode);
+
+                expect(navigateToOwnerViewSpy).toHaveBeenCalledOnceWith(
+                    MOCK_ACCOUNT_NAME,
+                    AccountTabs.FLOWS,
+                    undefined,
+                    AccountFlowsNav.PROCESSES,
+                    undefined,
+                    mode,
+                );
+                expect(await processesSubtab.isFiltersModeSelected(mode)).toBeTrue();
+                expect(await processesSubtab.getSelectedRollupStates()).toEqual(shownStates);
+                discardPeriodicTasks();
+            }));
+        });
+    });
 
     it("should check to get cards for ProcessCardFilterMode.CUSTOM mode", fakeAsync(async () => {
         spyOnProperty(component, "dashboardFiltersState", "get").and.returnValue({

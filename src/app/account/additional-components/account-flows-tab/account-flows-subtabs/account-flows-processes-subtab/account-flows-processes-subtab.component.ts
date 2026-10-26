@@ -141,6 +141,7 @@ export class AccountFlowsProcessesSubtabComponent extends BaseComponent implemen
     public readonly ProcessCardGroup: typeof ProcessCardGroup = ProcessCardGroup;
 
     public ngOnInit(): void {
+        this.accountFlowsFiltersService.applyModeDefaults(this.accountFlowsData.datasetsFiltersMode);
         this.loadingCardsSubject$.next(true);
         this.fetchCardsData();
     }
@@ -326,6 +327,7 @@ export class AccountFlowsProcessesSubtabComponent extends BaseComponent implemen
         const nextNav = event.value as ProcessCardFilterMode;
         this.resetRequestParams();
         this.accountFlowsFiltersService.resetFilters(nextNav);
+        this.accountFlowsFiltersService.applyModeDefaults(nextNav);
         this.navigationService.navigateToOwnerView(
             this.accountName,
             AccountTabs.FLOWS,

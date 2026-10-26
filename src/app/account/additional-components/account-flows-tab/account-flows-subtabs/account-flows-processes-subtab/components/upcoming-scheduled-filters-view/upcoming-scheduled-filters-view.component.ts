@@ -5,7 +5,7 @@
  * included in the LICENSE file.
  */
 
-import { ChangeDetectionStrategy, Component, EventEmitter, Input, OnInit, Output } from "@angular/core";
+import { ChangeDetectionStrategy, Component, EventEmitter, Input, Output } from "@angular/core";
 import { FormsModule } from "@angular/forms";
 import { MatIconModule } from "@angular/material/icon";
 import { MatSlideToggleModule } from "@angular/material/slide-toggle";
@@ -14,7 +14,7 @@ import { OwlDateTimeModule } from "@danielmoncada/angular-datetime-picker";
 import { OwlMomentDateTimeModule } from "@danielmoncada/angular-datetime-picker-moment-adapter";
 import { NgSelectModule } from "@ng-select/ng-select";
 
-import { FlowProcessEffectiveState, OrderingDirection } from "@api/kamu.graphql.interface";
+import { OrderingDirection } from "@api/kamu.graphql.interface";
 
 import {
     DashboardFiltersOptions,
@@ -39,20 +39,13 @@ import { nextTimeRangeHelper } from "src/app/dataset-view/additional-components/
     styleUrls: ["./upcoming-scheduled-filters-view.component.scss"],
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class UpcomingScheduledFiltersViewComponent implements OnInit {
+export class UpcomingScheduledFiltersViewComponent {
     @Input({ required: true }) public dashboardFilters: DashboardFiltersOptions;
     @Output() public applyFilterEmitter = new EventEmitter<void>();
 
     public readonly RANGE_NEXT_ATTEMPT_LIST = RANGE_NEXT_ATTEMPT_LIST;
 
     public currentDateTime = new Date().toISOString();
-
-    public ngOnInit(): void {
-        this.dashboardFilters.selectedFlowProcessStates = [
-            FlowProcessEffectiveState.Active,
-            FlowProcessEffectiveState.Failing,
-        ];
-    }
 
     public clearAfterControl(): void {
         this.dashboardFilters.nextPlannedAfterDate = undefined;

@@ -54,6 +54,12 @@ describe("UpcomingScheduledFiltersViewComponent", () => {
         expect(component).toBeTruthy();
     });
 
+    it("should render without changing the selected states, which the parent sets for the mode", () => {
+        fixture.detectChanges();
+        expect(component.dashboardFilters.selectedFlowProcessStates).toEqual([]);
+        expect(component.dashboardFilters.isFirstInitialization).toBeFalse();
+    });
+
     it("should check clear nextPlannedAfterDate control", () => {
         setComponentInput(fixture, "dashboardFilters", {
             fromFilterDate: undefined,

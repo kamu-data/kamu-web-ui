@@ -5,7 +5,7 @@
  * included in the LICENSE file.
  */
 
-import { DataSchemaField, OdfTypes } from "@interface/dataset-schema.interface";
+import { DataSchemaDefaultField, DataSchemaField, OdfTypes } from "@interface/dataset-schema.interface";
 
 import {
     schemaNameWarnings,
@@ -18,8 +18,8 @@ import {
 // Helpers
 // ---------------------------------------------------------------------------
 
-function field(name: string, kind: OdfTypes = OdfTypes.String): DataSchemaField {
-    return { name, type: { kind } as DataSchemaField["type"] };
+function field(name: string, kind: DataSchemaDefaultField["kind"] = OdfTypes.String): DataSchemaField {
+    return { name, type: { kind } };
 }
 
 function structField(name: string, children: DataSchemaField[]): DataSchemaField {

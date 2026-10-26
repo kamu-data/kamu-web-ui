@@ -35,6 +35,11 @@ describe("SearchAndSchemasSectionComponent", () => {
     let searchApi: SearchApi;
     let requestDatasetSchemaSpy: jasmine.Spy;
 
+    const selectDatasetEvent: NgbTypeaheadSelectItemEvent<DatasetAutocompleteItem> = {
+        item: { dataset: mockDatasetBasicsDerivedFragment, dummy: false, __typename: TypeNames.datasetType },
+        preventDefault: () => undefined,
+    };
+
     beforeEach(() => {
         TestBed.configureTestingModule({
             imports: [SharedTestModule, SearchAndSchemasSectionComponent],
@@ -71,13 +76,10 @@ describe("SearchAndSchemasSectionComponent", () => {
     });
 
     it("should check a removed dataset can be picked again", () => {
-        const selectEvent = {
-            item: { dataset: mockDatasetBasicsDerivedFragment, __typename: TypeNames.datasetType },
-        } as NgbTypeaheadSelectItemEvent;
-        component.onSelectItem(selectEvent);
+        component.onSelectItem(selectDatasetEvent);
 
         component.removeDataset(mockDatasetBasicsDerivedFragment.alias);
-        component.onSelectItem(selectEvent);
+        component.onSelectItem(selectDatasetEvent);
 
         expect(requestDatasetSchemaSpy).toHaveBeenCalledTimes(2);
     });
@@ -113,14 +115,7 @@ describe("SearchAndSchemasSectionComponent", () => {
     });
 
     it("should check select input dataset", () => {
-        const mockNgbTypeaheadSelectItemEvent = {
-            item: {
-                dataset: mockDatasetBasicsDerivedFragment,
-                __typename: TypeNames.datasetType,
-            },
-        } as NgbTypeaheadSelectItemEvent;
-
-        component.onSelectItem(mockNgbTypeaheadSelectItemEvent);
+        component.onSelectItem(selectDatasetEvent);
 
         expect(component.inputDatasets.size).toBe(1);
         expect(requestDatasetSchemaSpy).toHaveBeenCalledTimes(1);
@@ -166,9 +161,7 @@ describe("SearchAndSchemasSectionComponent", () => {
         fixture.detectChanges();
         const panelCount = fixture.debugElement.queryAll(By.css('[data-test-id="schema-panel"]')).length;
 
-        component.onSelectItem({
-            item: { dataset: mockDatasetBasicsDerivedFragment, __typename: TypeNames.datasetType },
-        } as NgbTypeaheadSelectItemEvent);
+        component.onSelectItem(selectDatasetEvent);
         fixture.detectChanges();
 
         expect(fixture.debugElement.queryAll(By.css('[data-test-id="schema-panel"]')).length).toEqual(panelCount);

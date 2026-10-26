@@ -9,7 +9,7 @@ import { TestbedHarnessEnvironment } from "@angular/cdk/testing/testbed";
 import { provideHttpClient } from "@angular/common/http";
 import { provideHttpClientTesting } from "@angular/common/http/testing";
 import { ComponentFixture, discardPeriodicTasks, fakeAsync, flush, TestBed, tick } from "@angular/core/testing";
-import { MatChipListboxChange } from "@angular/material/chips";
+import { MatChipListbox, MatChipListboxChange } from "@angular/material/chips";
 import { ActivatedRoute } from "@angular/router";
 
 import { delay, of, Subject, throwError } from "rxjs";
@@ -57,6 +57,10 @@ describe("FlowsComponent", () => {
     let datasetCardService: ProcessDatasetCardInteractionService;
 
     const MOCK_FLOW_ID = "2";
+
+    function chipListboxChange(value: string): MatChipListboxChange {
+        return new MatChipListboxChange(jasmine.createSpyObj<MatChipListbox>("MatChipListbox", ["focus"]), value);
+    }
 
     // A copy, since `mockFlowsTableData` shares its connections with other fixtures
     function flowsTableDataWithoutRuns(): FlowsTableData {
@@ -491,7 +495,7 @@ describe("FlowsComponent", () => {
     });
 
     it("should check selection `Flows`chips", () => {
-        const mockEvent = { value: "updates" } as unknown as MatChipListboxChange;
+        const mockEvent = chipListboxChange("updates");
         const navigateToDatasetViewSpy = spyOn(navigationService, "navigateToDatasetView");
         component.onSelectionFlowsChange(mockEvent);
         expect(navigateToDatasetViewSpy).toHaveBeenCalledWith(
@@ -1038,7 +1042,7 @@ describe("FlowsComponent", () => {
             component.onPageChange(3);
             tick();
 
-            component.onSelectionFlowsChange({ value: "updates" } as MatChipListboxChange);
+            component.onSelectionFlowsChange(chipListboxChange("updates"));
             tick();
 
             expect(lastRequestedPage()).toEqual(1);

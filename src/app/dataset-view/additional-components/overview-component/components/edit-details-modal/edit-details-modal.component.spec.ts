@@ -8,14 +8,14 @@
 import { provideHttpClient } from "@angular/common/http";
 import { provideHttpClientTesting } from "@angular/common/http/testing";
 import { ComponentFixture, TestBed } from "@angular/core/testing";
-import { MatChipInputEvent } from "@angular/material/chips";
+import { MatChipInput, MatChipInputEvent } from "@angular/material/chips";
 
 import { NgbActiveModal } from "@ng-bootstrap/ng-bootstrap";
 import { Apollo } from "apollo-angular";
 
 import {
     emitClickOnElementByDataTestId,
-    getElementByDataTestId,
+    getInputElementByDataTestId,
     setComponentInput,
 } from "@common/helpers/base-test.helpers.spec";
 import { SharedTestModule } from "@common/modules/shared-test.module";
@@ -31,6 +31,14 @@ import { mockDatasetBasicsDerivedFragment } from "src/app/search/mock.data";
 describe("EditDetailsModalComponent", () => {
     let component: EditDetailsModalComponent;
     let fixture: ComponentFixture<EditDetailsModalComponent>;
+
+    function keywordInputEvent(value: string): MatChipInputEvent {
+        return {
+            input: getInputElementByDataTestId(fixture, "input-keyword"),
+            value,
+            chipInput: jasmine.createSpyObj<MatChipInput>("MatChipInput", ["clear"]),
+        };
+    }
 
     beforeEach(async () => {
         await TestBed.configureTestingModule({
@@ -73,14 +81,7 @@ describe("EditDetailsModalComponent", () => {
     it("should check commit event", () => {
         const commitSetInfoEventSpy = spyOn(component, "commitSetInfoEvent").and.stub();
 
-        const inputKeyword = getElementByDataTestId(fixture, "input-keyword");
-        component.addKeywordFromInput({
-            input: inputKeyword,
-            value: "keyword1",
-            chipInput: {
-                clear: () => undefined,
-            },
-        } as MatChipInputEvent);
+        component.addKeywordFromInput(keywordInputEvent("keyword1"));
         fixture.detectChanges();
         emitClickOnElementByDataTestId(fixture, "commit-event");
 
@@ -88,32 +89,18 @@ describe("EditDetailsModalComponent", () => {
     });
 
     it("should check add keyword", () => {
-        const inputKeyword = getElementByDataTestId(fixture, "input-keyword");
         expect(component.keywords.length).toBe(0);
 
-        component.addKeywordFromInput({
-            input: inputKeyword,
-            value: "keyword1",
-            chipInput: {
-                clear: () => undefined,
-            },
-        } as MatChipInputEvent);
+        component.addKeywordFromInput(keywordInputEvent("keyword1"));
         fixture.detectChanges();
 
         expect(component.keywords.length).toBe(1);
     });
 
     it("should check remove keyword", () => {
-        const inputKeyword = getElementByDataTestId(fixture, "input-keyword");
         expect(component.keywords.length).toBe(0);
 
-        component.addKeywordFromInput({
-            input: inputKeyword,
-            value: "keyword1",
-            chipInput: {
-                clear: () => undefined,
-            },
-        } as MatChipInputEvent);
+        component.addKeywordFromInput(keywordInputEvent("keyword1"));
         fixture.detectChanges();
         expect(component.keywords.length).toBe(1);
 

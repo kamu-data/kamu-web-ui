@@ -209,7 +209,8 @@ describe("DatasetCommitService", () => {
 
     it("should check commit to dataset when not found", () => {
         spyOnProperty(loggedUserService, "isAuthenticated", "get").and.returnValue(true);
-        spyOn(datasetApi, "commitEvent").and.returnValue(of({ datasets: {} } as CommitEventToDatasetMutation));
+        const notFoundResponse: CommitEventToDatasetMutation = { datasets: { byId: null } };
+        spyOn(datasetApi, "commitEvent").and.returnValue(of(notFoundResponse));
 
         const subscription$ = requestCommitEvent().subscribe({
             next: () => fail("unexpected success"),
@@ -256,7 +257,8 @@ describe("DatasetCommitService", () => {
 
     it("should check update readme for dataset when not found", () => {
         spyOnProperty(loggedUserService, "isAuthenticated", "get").and.returnValue(true);
-        spyOn(datasetApi, "updateReadme").and.returnValue(of({ datasets: {} } as UpdateReadmeMutation));
+        const notFoundResponse: UpdateReadmeMutation = { datasets: { byId: null } };
+        spyOn(datasetApi, "updateReadme").and.returnValue(of(notFoundResponse));
 
         const README_CONTENT = "readme content";
         const subscription$ = commitService

@@ -78,9 +78,11 @@ describe("AccountFlowsTabComponent", () => {
 
     it("should check to change navigation", () => {
         const navigateToOwnerViewSpy = spyOn(navigationService, "navigateToOwnerView");
-        const event = {
+        const event: NgbNavChangeEvent<AccountFlowsNav> = {
+            activeId: AccountFlowsNav.ACTIVITY,
             nextId: AccountFlowsNav.PROCESSES,
-        } as NgbNavChangeEvent;
+            preventDefault: () => undefined,
+        };
         component.onNavChange(event);
         expect(navigateToOwnerViewSpy).toHaveBeenCalledTimes(1);
     });

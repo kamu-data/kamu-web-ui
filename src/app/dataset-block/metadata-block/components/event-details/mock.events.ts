@@ -14,7 +14,7 @@ import {
     DatasetTransformFragment,
     ExecuteTransformEventFragment,
     MqttQos,
-    ReadStepCsvDataFragment,
+    ReadStepCsv,
     Seed,
     SetAttachments,
     SetDataSchema,
@@ -48,6 +48,25 @@ export const mockAddData: { __typename: "AddData" } & AddDataEventFragment = {
     },
 };
 
+const setPollingSourceReadStep: ReadStepCsv = {
+    __typename: "ReadStepCsv",
+    schema: {
+        format: DataSchemaFormat.OdfJson,
+        content:
+            '{"fields":[{"name":"id","type":{"kind":"Option","inner":{"kind":"Int64"}}},{"name":"source","type":{"kind":"Option","inner":{"kind":"String"}}},{"name":"captures","type":{"kind":"Option","inner":{"kind":"Int32"}}},{"name":"capture_measure","type":{"kind":"Option","inner":{"kind":"String"}}},{"name":"taxon_name","type":{"kind":"Option","inner":{"kind":"String"}}},{"name":"scientific_name","type":{"kind":"Option","inner":{"kind":"String"}}},{"name":"parent_taxon","type":{"kind":"Option","inner":{"kind":"String"}}},{"name":"year","type":{"kind":"Option","inner":{"kind":"Int32"}}},{"name":"rfmo","type":{"kind":"Option","inner":{"kind":"String"}}},{"name":"gear_name","type":{"kind":"Option","inner":{"kind":"String"}}},{"name":"gear_code","type":{"kind":"Option","inner":{"kind":"String"}}},{"name":"flag","type":{"kind":"Option","inner":{"kind":"String"}}},{"name":"ocean","type":{"kind":"Option","inner":{"kind":"String"}}},{"name":"latitude","type":{"kind":"Option","inner":{"kind":"Float32"}}},{"name":"longitude","type":{"kind":"Option","inner":{"kind":"Float32"}}},{"name":"dataset_organisation","type":{"kind":"Option","inner":{"kind":"String"}}},{"name":"dataset_acknowledgement","type":{"kind":"Option","inner":{"kind":"String"}}},{"name":"dataset_url","type":{"kind":"Option","inner":{"kind":"String"}}},{"name":"dataset_date","type":{"kind":"Date"}}]}',
+        __typename: "DataSchema",
+    },
+    separator: ",",
+    encoding: null,
+    quote: null,
+    escape: null,
+    header: true,
+    inferSchema: false,
+    nullValue: null,
+    dateFormat: null,
+    timestampFormat: null,
+};
+
 export const mockSetPollingSourceEvent: SetPollingSource = {
     __typename: "SetPollingSource",
     fetch: {
@@ -55,24 +74,7 @@ export const mockSetPollingSourceEvent: SetPollingSource = {
         url: "https://www.alberta.ca/data/stats/covid-19-alberta-statistics-data.csv",
         eventTime: null,
     },
-    read: {
-        __typename: "ReadStepCsv",
-        schema: {
-            format: DataSchemaFormat.OdfJson,
-            content:
-                '{"fields":[{"name":"id","type":{"kind":"Option","inner":{"kind":"Int64"}}},{"name":"source","type":{"kind":"Option","inner":{"kind":"String"}}},{"name":"captures","type":{"kind":"Option","inner":{"kind":"Int32"}}},{"name":"capture_measure","type":{"kind":"Option","inner":{"kind":"String"}}},{"name":"taxon_name","type":{"kind":"Option","inner":{"kind":"String"}}},{"name":"scientific_name","type":{"kind":"Option","inner":{"kind":"String"}}},{"name":"parent_taxon","type":{"kind":"Option","inner":{"kind":"String"}}},{"name":"year","type":{"kind":"Option","inner":{"kind":"Int32"}}},{"name":"rfmo","type":{"kind":"Option","inner":{"kind":"String"}}},{"name":"gear_name","type":{"kind":"Option","inner":{"kind":"String"}}},{"name":"gear_code","type":{"kind":"Option","inner":{"kind":"String"}}},{"name":"flag","type":{"kind":"Option","inner":{"kind":"String"}}},{"name":"ocean","type":{"kind":"Option","inner":{"kind":"String"}}},{"name":"latitude","type":{"kind":"Option","inner":{"kind":"Float32"}}},{"name":"longitude","type":{"kind":"Option","inner":{"kind":"Float32"}}},{"name":"dataset_organisation","type":{"kind":"Option","inner":{"kind":"String"}}},{"name":"dataset_acknowledgement","type":{"kind":"Option","inner":{"kind":"String"}}},{"name":"dataset_url","type":{"kind":"Option","inner":{"kind":"String"}}},{"name":"dataset_date","type":{"kind":"Date"}}]}',
-            __typename: "DataSchema",
-        },
-        separator: ",",
-        encoding: null,
-        quote: null,
-        escape: null,
-        header: true,
-        inferSchema: false,
-        nullValue: null,
-        dateFormat: null,
-        timestampFormat: null,
-    } as ReadStepCsvDataFragment,
+    read: setPollingSourceReadStep,
     merge: {
         __typename: "MergeStrategyLedger",
         primaryKey: ["id"],
@@ -99,6 +101,25 @@ export const mockSetPollingSourceEvent: SetPollingSource = {
     },
 };
 
+const setPollingSourceWithMqttReadStep: ReadStepCsv = {
+    __typename: "ReadStepCsv",
+    schema: {
+        format: DataSchemaFormat.OdfJson,
+        content:
+            '{"fields":[{"name":"id","type":{"kind":"Option","inner":{"kind":"Int64"}}},{"name":"source","type":{"kind":"Option","inner":{"kind":"String"}}},{"name":"captures","type":{"kind":"Option","inner":{"kind":"Int32"}}},{"name":"capture_measure","type":{"kind":"Option","inner":{"kind":"String"}}},{"name":"taxon_name","type":{"kind":"Option","inner":{"kind":"String"}}},{"name":"scientific_name","type":{"kind":"Option","inner":{"kind":"String"}}},{"name":"parent_taxon","type":{"kind":"Option","inner":{"kind":"String"}}},{"name":"year","type":{"kind":"Option","inner":{"kind":"Int32"}}},{"name":"rfmo","type":{"kind":"Option","inner":{"kind":"String"}}},{"name":"gear_name","type":{"kind":"Option","inner":{"kind":"String"}}},{"name":"gear_code","type":{"kind":"Option","inner":{"kind":"String"}}},{"name":"flag","type":{"kind":"Option","inner":{"kind":"String"}}},{"name":"ocean","type":{"kind":"Option","inner":{"kind":"String"}}},{"name":"latitude","type":{"kind":"Option","inner":{"kind":"Float32"}}},{"name":"longitude","type":{"kind":"Option","inner":{"kind":"Float32"}}},{"name":"dataset_organisation","type":{"kind":"Option","inner":{"kind":"String"}}},{"name":"dataset_acknowledgement","type":{"kind":"Option","inner":{"kind":"String"}}},{"name":"dataset_url","type":{"kind":"Option","inner":{"kind":"String"}}},{"name":"dataset_date","type":{"kind":"Date"}}]}',
+        __typename: "DataSchema",
+    },
+    separator: ",",
+    encoding: null,
+    quote: null,
+    escape: null,
+    header: true,
+    inferSchema: false,
+    nullValue: null,
+    dateFormat: null,
+    timestampFormat: null,
+};
+
 export const mockSetPollingSourceEventWithFetchStepMqtt: SetPollingSource = {
     __typename: "SetPollingSource",
     fetch: {
@@ -109,24 +130,7 @@ export const mockSetPollingSourceEventWithFetchStepMqtt: SetPollingSource = {
         password: "123456",
         topics: [{ __typename: "MqttTopicSubscription", path: "dev.kamu.example.mqtt.temp", qos: MqttQos.AtMostOnce }],
     },
-    read: {
-        __typename: "ReadStepCsv",
-        schema: {
-            format: DataSchemaFormat.OdfJson,
-            content:
-                '{"fields":[{"name":"id","type":{"kind":"Option","inner":{"kind":"Int64"}}},{"name":"source","type":{"kind":"Option","inner":{"kind":"String"}}},{"name":"captures","type":{"kind":"Option","inner":{"kind":"Int32"}}},{"name":"capture_measure","type":{"kind":"Option","inner":{"kind":"String"}}},{"name":"taxon_name","type":{"kind":"Option","inner":{"kind":"String"}}},{"name":"scientific_name","type":{"kind":"Option","inner":{"kind":"String"}}},{"name":"parent_taxon","type":{"kind":"Option","inner":{"kind":"String"}}},{"name":"year","type":{"kind":"Option","inner":{"kind":"Int32"}}},{"name":"rfmo","type":{"kind":"Option","inner":{"kind":"String"}}},{"name":"gear_name","type":{"kind":"Option","inner":{"kind":"String"}}},{"name":"gear_code","type":{"kind":"Option","inner":{"kind":"String"}}},{"name":"flag","type":{"kind":"Option","inner":{"kind":"String"}}},{"name":"ocean","type":{"kind":"Option","inner":{"kind":"String"}}},{"name":"latitude","type":{"kind":"Option","inner":{"kind":"Float32"}}},{"name":"longitude","type":{"kind":"Option","inner":{"kind":"Float32"}}},{"name":"dataset_organisation","type":{"kind":"Option","inner":{"kind":"String"}}},{"name":"dataset_acknowledgement","type":{"kind":"Option","inner":{"kind":"String"}}},{"name":"dataset_url","type":{"kind":"Option","inner":{"kind":"String"}}},{"name":"dataset_date","type":{"kind":"Date"}}]}',
-            __typename: "DataSchema",
-        },
-        separator: ",",
-        encoding: null,
-        quote: null,
-        escape: null,
-        header: true,
-        inferSchema: false,
-        nullValue: null,
-        dateFormat: null,
-        timestampFormat: null,
-    } as ReadStepCsvDataFragment,
+    read: setPollingSourceWithMqttReadStep,
     merge: {
         __typename: "MergeStrategyLedger",
         primaryKey: ["id"],
@@ -269,27 +273,29 @@ export const mockSetDataSchema: SetDataSchema = {
     },
 };
 
+const addPushSourceReadStep: ReadStepCsv = {
+    __typename: "ReadStepCsv",
+    schema: {
+        format: DataSchemaFormat.OdfJson,
+        content:
+            '{"fields":[{"name":"id","type":{"kind":"Option","inner":{"kind":"Int64"}}},{"name":"source","type":{"kind":"Option","inner":{"kind":"String"}}},{"name":"captures","type":{"kind":"Option","inner":{"kind":"Int32"}}},{"name":"capture_measure","type":{"kind":"Option","inner":{"kind":"String"}}},{"name":"taxon_name","type":{"kind":"Option","inner":{"kind":"String"}}},{"name":"scientific_name","type":{"kind":"Option","inner":{"kind":"String"}}},{"name":"parent_taxon","type":{"kind":"Option","inner":{"kind":"String"}}},{"name":"year","type":{"kind":"Option","inner":{"kind":"Int32"}}},{"name":"rfmo","type":{"kind":"Option","inner":{"kind":"String"}}},{"name":"gear_name","type":{"kind":"Option","inner":{"kind":"String"}}},{"name":"gear_code","type":{"kind":"Option","inner":{"kind":"String"}}},{"name":"flag","type":{"kind":"Option","inner":{"kind":"String"}}},{"name":"ocean","type":{"kind":"Option","inner":{"kind":"String"}}},{"name":"latitude","type":{"kind":"Option","inner":{"kind":"Float32"}}},{"name":"longitude","type":{"kind":"Option","inner":{"kind":"Float32"}}},{"name":"dataset_organisation","type":{"kind":"Option","inner":{"kind":"String"}}},{"name":"dataset_acknowledgement","type":{"kind":"Option","inner":{"kind":"String"}}},{"name":"dataset_url","type":{"kind":"Option","inner":{"kind":"String"}}},{"name":"dataset_date","type":{"kind":"Date"}}]}',
+        __typename: "DataSchema",
+    },
+    separator: ",",
+    encoding: null,
+    quote: null,
+    escape: null,
+    header: true,
+    inferSchema: false,
+    nullValue: null,
+    dateFormat: null,
+    timestampFormat: null,
+};
+
 export const mockAddPushSource: AddPushSource = {
     __typename: "AddPushSource",
     sourceName: "mock1",
-    read: {
-        __typename: "ReadStepCsv",
-        schema: {
-            format: DataSchemaFormat.OdfJson,
-            content:
-                '{"fields":[{"name":"id","type":{"kind":"Option","inner":{"kind":"Int64"}}},{"name":"source","type":{"kind":"Option","inner":{"kind":"String"}}},{"name":"captures","type":{"kind":"Option","inner":{"kind":"Int32"}}},{"name":"capture_measure","type":{"kind":"Option","inner":{"kind":"String"}}},{"name":"taxon_name","type":{"kind":"Option","inner":{"kind":"String"}}},{"name":"scientific_name","type":{"kind":"Option","inner":{"kind":"String"}}},{"name":"parent_taxon","type":{"kind":"Option","inner":{"kind":"String"}}},{"name":"year","type":{"kind":"Option","inner":{"kind":"Int32"}}},{"name":"rfmo","type":{"kind":"Option","inner":{"kind":"String"}}},{"name":"gear_name","type":{"kind":"Option","inner":{"kind":"String"}}},{"name":"gear_code","type":{"kind":"Option","inner":{"kind":"String"}}},{"name":"flag","type":{"kind":"Option","inner":{"kind":"String"}}},{"name":"ocean","type":{"kind":"Option","inner":{"kind":"String"}}},{"name":"latitude","type":{"kind":"Option","inner":{"kind":"Float32"}}},{"name":"longitude","type":{"kind":"Option","inner":{"kind":"Float32"}}},{"name":"dataset_organisation","type":{"kind":"Option","inner":{"kind":"String"}}},{"name":"dataset_acknowledgement","type":{"kind":"Option","inner":{"kind":"String"}}},{"name":"dataset_url","type":{"kind":"Option","inner":{"kind":"String"}}},{"name":"dataset_date","type":{"kind":"Date"}}]}',
-            __typename: "DataSchema",
-        },
-        separator: ",",
-        encoding: null,
-        quote: null,
-        escape: null,
-        header: true,
-        inferSchema: false,
-        nullValue: null,
-        dateFormat: null,
-        timestampFormat: null,
-    } as ReadStepCsvDataFragment,
+    read: addPushSourceReadStep,
     merge: {
         __typename: "MergeStrategyLedger",
         primaryKey: ["id"],

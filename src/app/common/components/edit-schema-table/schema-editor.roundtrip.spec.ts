@@ -29,9 +29,10 @@ import { ORDER_SCHEMA, ORDER_SCHEMA_ODF_JSON } from "@common/components/edit-sch
 import { registerMatSvgIcons } from "@common/helpers/base-test.helpers.spec";
 import { SharedTestModule } from "@common/modules/shared-test.module";
 import { DatasetApi } from "@api/dataset.api";
-import { DatasetBlocksSchemaByEventTypeQuery, MetadataEventType } from "@api/kamu.graphql.interface";
+import { DataSchemaFormat, DatasetBlocksSchemaByEventTypeQuery, MetadataEventType } from "@api/kamu.graphql.interface";
 import { DataSchemaField, DatasetSchema, OdfTypes } from "@interface/dataset-schema.interface";
 
+import { mockSetPollingSourceEventFragment } from "src/app/dataset-view/additional-components/data-tabs.mock";
 import { SchemaFieldComponent } from "src/app/dataset-view/additional-components/metadata-component/components/form-components/schema-field/schema-field.component";
 import { schemaValidator } from "src/app/dataset-view/additional-components/metadata-component/components/form-components/schema-field/schema-field.component.helpers";
 import { SchemaFieldHarness } from "src/app/dataset-view/additional-components/metadata-component/components/form-components/schema-field/schema-field.harness";
@@ -95,17 +96,21 @@ function mockGqlProjectionWithSchema(schemaContent: string): DatasetBlocksSchema
                         {
                             __typename: "MetadataBlockExtended",
                             event: {
-                                __typename: "SetPollingSource",
+                                ...mockSetPollingSourceEventFragment,
                                 read: {
                                     __typename: "ReadStepCsv",
                                     schema: {
                                         __typename: "DataSchema",
                                         content: schemaContent,
-                                        format: "ODF_JSON" as never,
+                                        format: DataSchemaFormat.OdfJson,
                                     },
-                                } as never,
-                                fetch: {} as never,
-                                merge: {} as never,
+                                    separator: null,
+                                    encoding: null,
+                                    quote: null,
+                                    escape: null,
+                                    dateFormat: null,
+                                    timestampFormat: null,
+                                },
                             },
                         },
                     ],

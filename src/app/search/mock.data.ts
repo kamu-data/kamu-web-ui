@@ -50,7 +50,7 @@ import { DatasetInfo } from "@interface/navigation.interface";
 import { DatasetAutocompleteItem, DatasetSearchResult, SearchMode, TypeNames } from "@interface/search.interface";
 
 import {
-    LineageGraphDatasetNodeObject,
+    LineageGraphNodeData,
     LineageGraphNodeKind,
     LineageNodeAccess,
 } from "src/app/dataset-view/additional-components/lineage-component/lineage-model";
@@ -1534,8 +1534,8 @@ export const mockNode: Node = {
             isCurrent: false,
             access: LineageNodeAccess.PUBLIC,
             accountName: mockDatasetBasicsDerivedFragment.owner.accountName,
-        } as LineageGraphDatasetNodeObject,
-    },
+        },
+    } satisfies LineageGraphNodeData,
 };
 
 export const mockNodesWithEqualNames: Node[] = [
@@ -1551,8 +1551,8 @@ export const mockNodesWithEqualNames: Node[] = [
                 isCurrent: false,
                 access: LineageNodeAccess.PUBLIC,
                 accountName: "accountName1",
-            } as LineageGraphDatasetNodeObject,
-        },
+            },
+        } satisfies LineageGraphNodeData,
     },
     {
         id: "testId2",
@@ -1566,8 +1566,8 @@ export const mockNodesWithEqualNames: Node[] = [
                 isCurrent: false,
                 access: LineageNodeAccess.PUBLIC,
                 accountName: "accountName2",
-            } as LineageGraphDatasetNodeObject,
-        },
+            },
+        } satisfies LineageGraphNodeData,
     },
     {
         id: "testId3",
@@ -1581,8 +1581,8 @@ export const mockNodesWithEqualNames: Node[] = [
                 isCurrent: false,
                 access: LineageNodeAccess.PUBLIC,
                 accountName: "accountName3",
-            } as LineageGraphDatasetNodeObject,
-        },
+            },
+        } satisfies LineageGraphNodeData,
     },
 ];
 

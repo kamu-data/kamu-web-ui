@@ -5,40 +5,19 @@
  * included in the LICENSE file.
  */
 
-import * as monaco from "monaco-editor";
+import type * as monaco from "monaco-editor";
 
-export const editorMock: monaco.editor.IStandaloneCodeEditor = {
-    getModel(): monaco.editor.ITextModel {
-        return {} as monaco.editor.ITextModel;
-    },
+export const editorModelMock: jasmine.SpyObj<monaco.editor.ITextModel> = jasmine.createSpyObj<monaco.editor.ITextModel>(
+    "ITextModel",
+    ["getValue", "getValueInRange"],
+);
 
-    addAction(_: monaco.editor.IActionDescriptor): monaco.IDisposable {
-        return {
-            dispose() {
-                // Do nothing
-            },
-        };
-    },
-
-    createContextKey(key: string, defaultValue: boolean): monaco.editor.IContextKey<boolean> {
-        return {
-            set: (_: boolean) => {},
-            reset: () => {},
-            get: () => defaultValue,
-        };
-    },
-
-    getSelection(): monaco.Selection {
-        return {
-            isEmpty: () => true,
-        } as monaco.Selection;
-    },
-
-    onDidChangeCursorSelection(_: (e: monaco.editor.ICursorSelectionChangedEvent) => void): monaco.IDisposable {
-        return {
-            dispose() {},
-        };
-    },
-} as monaco.editor.IStandaloneCodeEditor;
-
-export const editorModelMock: monaco.editor.ITextModel = {} as monaco.editor.ITextModel;
+export const editorMock: jasmine.SpyObj<monaco.editor.IStandaloneCodeEditor> =
+    jasmine.createSpyObj<monaco.editor.IStandaloneCodeEditor>("IStandaloneCodeEditor", {
+        getModel: editorModelMock,
+        addAction: { dispose: () => undefined },
+        createContextKey: { set: () => undefined, reset: () => undefined, get: () => false },
+        getSelection: jasmine.createSpyObj<monaco.Selection>("Selection", { isEmpty: true }),
+        onDidChangeCursorSelection: { dispose: () => undefined },
+        focus: undefined,
+    });

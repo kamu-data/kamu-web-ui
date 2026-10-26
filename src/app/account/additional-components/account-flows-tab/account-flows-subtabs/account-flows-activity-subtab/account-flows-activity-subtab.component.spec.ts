@@ -231,18 +231,22 @@ describe("AccountFlowsActivitySubtabComponent", () => {
 
     it("should check to change navigation", () => {
         const navigateToOwnerViewSpy = spyOn(navigationService, "navigateToOwnerView");
-        const event = {
+        const event: NgbNavChangeEvent<AccountFlowsNav> = {
+            activeId: AccountFlowsNav.ACTIVITY,
             nextId: AccountFlowsNav.PROCESSES,
-        } as NgbNavChangeEvent;
+            preventDefault: () => undefined,
+        };
         component.onNavChange(event);
         expect(navigateToOwnerViewSpy).toHaveBeenCalledTimes(1);
     });
 
     it("should check to change navigation status with finished status", () => {
         const navigateToOwnerViewSpy = spyOn(navigationService, "navigateToOwnerView");
-        const event = {
+        const event: NgbNavChangeEvent<FlowStatus> = {
+            activeId: FlowStatus.Running,
             nextId: FlowStatus.Finished,
-        } as NgbNavChangeEvent;
+            preventDefault: () => undefined,
+        };
         component.onNavStatusChange(event);
         expect(navigateToOwnerViewSpy).toHaveBeenCalledOnceWith(
             component.accountName,
@@ -255,9 +259,11 @@ describe("AccountFlowsActivitySubtabComponent", () => {
 
     it("should check to change navigation status with running status", () => {
         const navigateToOwnerViewSpy = spyOn(navigationService, "navigateToOwnerView");
-        const event = {
+        const event: NgbNavChangeEvent<FlowStatus> = {
+            activeId: FlowStatus.Finished,
             nextId: FlowStatus.Running,
-        } as NgbNavChangeEvent;
+            preventDefault: () => undefined,
+        };
         component.onNavStatusChange(event);
         expect(navigateToOwnerViewSpy).toHaveBeenCalledOnceWith(
             component.accountName,

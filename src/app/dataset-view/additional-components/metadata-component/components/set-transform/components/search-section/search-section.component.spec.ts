@@ -112,12 +112,14 @@ describe("SearchSectionComponent", () => {
     });
 
     it("should check select input dataset", () => {
-        const mockNgbTypeaheadSelectItemEvent = {
+        const mockNgbTypeaheadSelectItemEvent: NgbTypeaheadSelectItemEvent<DatasetAutocompleteItem> = {
             item: {
                 dataset: mockDatasetBasicsDerivedFragment,
+                dummy: false,
                 __typename: TypeNames.datasetType,
             },
-        } as NgbTypeaheadSelectItemEvent;
+            preventDefault: () => undefined,
+        };
         const requestDatasetSchemaSpy = spyOn(datasetService, "requestDatasetSchema").and.returnValue(
             of(mockGetDatasetSchemaQuery),
         );
@@ -131,12 +133,14 @@ describe("SearchSectionComponent", () => {
     });
 
     it("should list a selected input as unavailable when its schema fails to load", () => {
-        const mockNgbTypeaheadSelectItemEvent = {
+        const mockNgbTypeaheadSelectItemEvent: NgbTypeaheadSelectItemEvent<DatasetAutocompleteItem> = {
             item: {
                 dataset: mockDatasetBasicsDerivedFragment,
+                dummy: false,
                 __typename: TypeNames.datasetType,
             },
-        } as NgbTypeaheadSelectItemEvent;
+            preventDefault: () => undefined,
+        };
         spyOn(datasetService, "requestDatasetSchema").and.returnValue(throwError(() => new Error("fail")));
 
         component.onSelectItem(mockNgbTypeaheadSelectItemEvent);

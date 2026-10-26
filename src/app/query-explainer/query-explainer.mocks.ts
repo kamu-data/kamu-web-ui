@@ -115,33 +115,40 @@ export const mockVerifyQueryResponseError: VerifyQueryResponse = {
         message: "Error",
     },
 };
+
+const datasetBlockNotFoundError: VerifyQueryDatasetBlockNotFoundError = {
+    dataset_id: "test-id",
+    block_hash: "f16207781e20aca696acfafc462429613e7d5c3d0f333d6bd0003240b53a083a52d27",
+    kind: VerifyQueryKindError.DatasetBlockNotFound,
+    message: "Error dataset block not found",
+};
+
 export const mockDatasetBlockNotFoundError: VerifyQueryResponse = {
     ok: false,
-    error: {
-        dataset_id: "test-id",
-        block_hash: "f16207781e20aca696acfafc462429613e7d5c3d0f333d6bd0003240b53a083a52d27",
-        kind: VerifyQueryKindError.DatasetBlockNotFound,
-        message: "Error dataset block not found",
-    } as VerifyQueryDatasetBlockNotFoundError,
+    error: datasetBlockNotFoundError,
+};
+
+const datasetNotFoundError: VerifyQueryDatasetNotFoundError = {
+    dataset_id: "did:odf:fed01df8964328b3b36fdfc5b140c5aea8795d445403a577428b2eafa5111f47dc212",
+    kind: VerifyQueryKindError.DatasetNotFound,
+    message: "Error dataset not found",
 };
 
 export const mockDatasetNotFoundError: VerifyQueryResponse = {
     ok: false,
-    error: {
-        dataset_id: "did:odf:fed01df8964328b3b36fdfc5b140c5aea8795d445403a577428b2eafa5111f47dc212",
-        kind: VerifyQueryKindError.DatasetNotFound,
-        message: "Error dataset not found",
-    } as VerifyQueryDatasetNotFoundError,
+    error: datasetNotFoundError,
+};
+
+const verifyQueryOutputMismatchError: VerifyQueryOutputMismatchError = {
+    kind: VerifyQueryKindError.OutputMismatch,
+    message: "Error",
+    expected_hash: "f16207781e20aca696acfafc462429613e7d5c3d0f333d6bd0003240b53a083a52d27",
+    actual_hash: "f16207781e20aca696acfafc462429613e7d5c3d0f333d6bd0003240b53a083a52d29",
 };
 
 export const mockVerifyQueryOutputMismatchError: VerifyQueryResponse = {
     ok: false,
-    error: {
-        kind: VerifyQueryKindError.OutputMismatch,
-        message: "Error",
-        expected_hash: "f16207781e20aca696acfafc462429613e7d5c3d0f333d6bd0003240b53a083a52d27",
-        actual_hash: "f16207781e20aca696acfafc462429613e7d5c3d0f333d6bd0003240b53a083a52d29",
-    } as VerifyQueryOutputMismatchError,
+    error: verifyQueryOutputMismatchError,
 };
 
 export const mockQueryExplainerResponse: QueryExplainerProofResponse = {

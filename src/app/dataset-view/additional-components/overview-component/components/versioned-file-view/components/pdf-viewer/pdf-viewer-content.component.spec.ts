@@ -52,18 +52,16 @@ describe("PdfViewerComponent", () => {
         expect(component.zoom).toEqual(1);
         component.zoomOut();
         expect(component.zoom).toEqual(0.9);
-        const mockPdfDocument = {
+        const mockPdfDocument = jasmine.createSpyObj<PDFDocumentProxy>("PDFDocumentProxy", ["destroy"], {
             numPages: 10,
-
-            destroy: () => Promise.resolve(),
-        } as PDFDocumentProxy;
+        });
         component.afterLoadComplete(mockPdfDocument);
     });
 
     it("should check #afterLoadComplete", () => {
-        const mockPdfDocument = {
+        const mockPdfDocument = jasmine.createSpyObj<PDFDocumentProxy>("PDFDocumentProxy", ["destroy"], {
             numPages: 10,
-        } as PDFDocumentProxy;
+        });
         component.afterLoadComplete(mockPdfDocument);
         expect(component.totalPages).toEqual(10);
     });

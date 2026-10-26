@@ -165,7 +165,7 @@ describe("LineageGraphBuilderService", () => {
                 label: MOCK_INACCESSIBLE_DATASET.id,
                 dimension: INACCESSIBLE_NODE_SIZE,
                 data: { kind: LineageGraphNodeKind.DatasetNotAccessable },
-            } as Node,
+            },
         ]);
         expect(inaccessibleNodeSizeSpy).toHaveBeenCalledOnceWith(
             new DisplayDatasetIdPipe().transform(MOCK_INACCESSIBLE_DATASET.id),

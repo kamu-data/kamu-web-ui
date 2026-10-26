@@ -5,7 +5,7 @@
  * included in the LICENSE file.
  */
 
-import { CdkDragDrop } from "@angular/cdk/drag-drop";
+import { CdkDrag, CdkDragDrop, CdkDropList } from "@angular/cdk/drag-drop";
 import { HarnessLoader } from "@angular/cdk/testing";
 import { TestbedHarnessEnvironment } from "@angular/cdk/testing/testbed";
 import { provideHttpClient } from "@angular/common/http";
@@ -575,11 +575,34 @@ describe("EditSchemaTableComponent", () => {
             return findComponentInstance(fixture, EditSchemaTableComponent, (c) => c.tablePath === tablePath);
         }
 
+        function dropEvent(
+            component: EditSchemaTableComponent,
+            previousIndex: number,
+            currentIndex: number,
+        ): CdkDragDrop<DataSchemaField[]> {
+            const dropList = jasmine.createSpyObj<CdkDropList<DataSchemaField[]>>("CdkDropList", ["getSortedItems"], {
+                data: component.fields,
+            });
+            return {
+                previousIndex,
+                currentIndex,
+                item: jasmine.createSpyObj<CdkDrag<DataSchemaField>>("CdkDrag", ["reset"], {
+                    data: component.fields[previousIndex],
+                }),
+                container: dropList,
+                previousContainer: dropList,
+                isPointerOverContainer: true,
+                distance: { x: 0, y: 0 },
+                dropPoint: { x: 0, y: 0 },
+                event: new MouseEvent("mouseup"),
+            };
+        }
+
         it("dropping a top-level field at a new index reorders fields and emits", async () => {
             await setup([stringField("a"), stringField("b"), stringField("c")]);
             const component = componentInstanceOf("root");
 
-            component.dropField({ previousIndex: 0, currentIndex: 2 } as CdkDragDrop<DataSchemaField[]>);
+            component.dropField(dropEvent(component, 0, 2));
             fixture.detectChanges();
 
             expect(await table.getFieldNames()).toEqual(["b", "c", "a"]);
@@ -590,7 +613,7 @@ describe("EditSchemaTableComponent", () => {
             await setup([stringField("a"), stringField("b")]);
             const component = componentInstanceOf("root");
 
-            component.dropField({ previousIndex: 1, currentIndex: 1 } as CdkDragDrop<DataSchemaField[]>);
+            component.dropField(dropEvent(component, 1, 1));
             fixture.detectChanges();
 
             expect(host.lastEmitted).toBeNull();
@@ -604,7 +627,7 @@ describe("EditSchemaTableComponent", () => {
             const customerComponent = componentInstanceOf("root.customer");
             const namesBefore = await customerTable.getFieldNames();
 
-            customerComponent.dropField({ previousIndex: 0, currentIndex: 1 } as CdkDragDrop<DataSchemaField[]>);
+            customerComponent.dropField(dropEvent(customerComponent, 0, 1));
             fixture.detectChanges();
 
             const emitted = host.lastEmitted ?? [];

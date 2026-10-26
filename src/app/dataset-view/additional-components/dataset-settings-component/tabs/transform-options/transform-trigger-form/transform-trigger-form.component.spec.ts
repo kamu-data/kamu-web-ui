@@ -14,7 +14,6 @@ import { FormControl, FormGroup, FormsModule, ReactiveFormsModule } from "@angul
 import { Apollo } from "apollo-angular";
 import { provideToastr } from "ngx-toastr";
 
-import { TimeDeltaFormValue } from "@common/components/time-delta-form/time-delta-form.value";
 import { SharedTestModule } from "@common/modules/shared-test.module";
 import { FlowTriggerBreakingChangeRule, TimeDelta, TimeUnit } from "@api/kamu.graphql.interface";
 
@@ -203,7 +202,7 @@ describe("TransformTriggerFormComponent", () => {
                     maxBatchingInterval: {
                         every: null,
                         unit: null,
-                    } as TimeDeltaFormValue,
+                    },
                 },
             },
             forBreakingChange: FlowTriggerBreakingChangeRule.Recover,

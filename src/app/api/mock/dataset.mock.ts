@@ -26,7 +26,6 @@ import { TEST_LOGIN } from "@api/mock/auth.mock";
 import { DatasetsAccountResponse } from "@interface/dataset.interface";
 
 import {
-    LineageGraphDatasetNodeObject,
     LineageGraphNodeData,
     LineageGraphNodeKind,
     LineageNodeAccess,
@@ -479,10 +478,9 @@ export const MOCK_NODES: Node[] = [
                 kind: DatasetKind.Root,
                 isCurrent: true,
                 access: LineageNodeAccess.PRIVATE,
-                color: "#7aa3e5",
                 accountName: "kamu",
-            } as LineageGraphDatasetNodeObject,
-        } as LineageGraphNodeData,
+            },
+        } satisfies LineageGraphNodeData,
         meta: {
             forceDimensions: false,
         },
@@ -506,11 +504,10 @@ export const MOCK_NODES: Node[] = [
                 name: "com.naturalearthdata.admin0.countries",
                 kind: DatasetKind.Derivative,
                 isCurrent: false,
-                color: "#a8385d",
                 accountName: "kamu",
                 access: LineageNodeAccess.PRIVATE,
-            } as LineageGraphDatasetNodeObject,
-        } as LineageGraphNodeData,
+            },
+        } satisfies LineageGraphNodeData,
         meta: {
             forceDimensions: false,
         },
@@ -529,7 +526,7 @@ export const MOCK_NODES: Node[] = [
         label: "covid19.canada.case-details",
         data: {
             kind: LineageGraphNodeKind.DatasetNotAccessable,
-        } as LineageGraphNodeData,
+        },
         meta: {
             forceDimensions: false,
         },

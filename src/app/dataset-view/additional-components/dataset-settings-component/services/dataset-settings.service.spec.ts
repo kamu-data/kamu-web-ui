@@ -93,7 +93,8 @@ describe("DatasetSettingsService", () => {
 
     it("should check delete dataset when not found", () => {
         spyOnProperty(loggedUserService, "isAuthenticated", "get").and.returnValue(true);
-        spyOn(datasetApi, "deleteDataset").and.returnValue(of({ datasets: {} } as DeleteDatasetMutation));
+        const notFoundResponse: DeleteDatasetMutation = { datasets: { byId: null } };
+        spyOn(datasetApi, "deleteDataset").and.returnValue(of(notFoundResponse));
 
         const subscription$ = service.deleteDataset(ACCOUNT_NAME, DATASET_ID).subscribe({
             next: () => fail("unexpected success"),
@@ -166,7 +167,8 @@ describe("DatasetSettingsService", () => {
 
     it("should check rename dataset when not found", () => {
         spyOnProperty(loggedUserService, "isAuthenticated", "get").and.returnValue(true);
-        spyOn(datasetApi, "renameDataset").and.returnValue(of({ datasets: {} } as RenameDatasetMutation));
+        const notFoundResponse: RenameDatasetMutation = { datasets: { byId: null } };
+        spyOn(datasetApi, "renameDataset").and.returnValue(of(notFoundResponse));
 
         const subscription$ = service
             .renameDataset({

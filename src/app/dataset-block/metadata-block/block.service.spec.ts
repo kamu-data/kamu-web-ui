@@ -14,11 +14,13 @@ import { Apollo } from "apollo-angular";
 import { requireValue } from "@common/helpers/app.helpers";
 import { DatasetApi } from "@api/dataset.api";
 import {
+    DataSchemaFormat,
     DatasetBlocksEncodedByEventTypeQuery,
     DatasetBlocksSchemaByEventTypeQuery,
     MetadataBlockFragment,
     MetadataEventType,
     MetadataManifestFormat,
+    ReadStepCsvDataFragment,
 } from "@api/kamu.graphql.interface";
 import { mockGetMetadataBlockQuery, TEST_BLOCK_HASH } from "@api/mock/dataset.mock";
 import { MaybeNull, MaybeNullOrUndefined } from "@interface/app.types";
@@ -30,6 +32,15 @@ import { mockDatasetInfo } from "src/app/search/mock.data";
 describe("BlockService", () => {
     let service: BlockService;
     let datasetApi: DatasetApi;
+
+    function csvReadStep(schemaContent: MaybeNull<string>): { __typename: "ReadStepCsv" } & ReadStepCsvDataFragment {
+        return {
+            __typename: "ReadStepCsv",
+            schema: schemaContent
+                ? { __typename: "DataSchema", content: schemaContent, format: DataSchemaFormat.OdfJson }
+                : null,
+        };
+    }
 
     beforeEach(() => {
         TestBed.configureTestingModule({
@@ -94,18 +105,9 @@ describe("BlockService", () => {
                                     __typename: "MetadataBlockExtended",
                                     event: {
                                         __typename: "SetPollingSource",
-                                        read: {
-                                            __typename: "ReadStepCsv",
-                                            schema: schemaContent
-                                                ? {
-                                                      __typename: "DataSchema",
-                                                      content: schemaContent,
-                                                      format: "ODF_JSON" as never,
-                                                  }
-                                                : null,
-                                        } as never,
-                                        fetch: {} as never,
-                                        merge: {} as never,
+                                        read: csvReadStep(schemaContent),
+                                        fetch: { __typename: "FetchStepUrl", url: "https://example.com/data.csv" },
+                                        merge: { __typename: "MergeStrategyAppend" },
                                     },
                                 },
                             ],
@@ -186,17 +188,8 @@ describe("BlockService", () => {
                                     event: {
                                         __typename: "AddPushSource",
                                         sourceName: "my-source",
-                                        read: {
-                                            __typename: "ReadStepCsv",
-                                            schema: schemaContent
-                                                ? {
-                                                      __typename: "DataSchema",
-                                                      content: schemaContent,
-                                                      format: "ODF_JSON" as never,
-                                                  }
-                                                : null,
-                                        } as never,
-                                        merge: {} as never,
+                                        read: csvReadStep(schemaContent),
+                                        merge: { __typename: "MergeStrategyAppend" },
                                     },
                                 },
                             ],
@@ -259,17 +252,12 @@ describe("BlockService", () => {
                                     event: {
                                         __typename: "AddPushSource",
                                         sourceName: "source-a",
-                                        read: {
-                                            __typename: "ReadStepCsv",
-                                            schema: {
-                                                __typename: "DataSchema",
-                                                content: JSON.stringify({
-                                                    fields: [{ name: "a_field", type: { kind: "String" } }],
-                                                }),
-                                                format: "ODF_JSON" as never,
-                                            },
-                                        } as never,
-                                        merge: {} as never,
+                                        read: csvReadStep(
+                                            JSON.stringify({
+                                                fields: [{ name: "a_field", type: { kind: "String" } }],
+                                            }),
+                                        ),
+                                        merge: { __typename: "MergeStrategyAppend" },
                                     },
                                 },
                                 {
@@ -277,17 +265,12 @@ describe("BlockService", () => {
                                     event: {
                                         __typename: "AddPushSource",
                                         sourceName: "source-b",
-                                        read: {
-                                            __typename: "ReadStepCsv",
-                                            schema: {
-                                                __typename: "DataSchema",
-                                                content: JSON.stringify({
-                                                    fields: [{ name: "b_field", type: { kind: "Int32" } }],
-                                                }),
-                                                format: "ODF_JSON" as never,
-                                            },
-                                        } as never,
-                                        merge: {} as never,
+                                        read: csvReadStep(
+                                            JSON.stringify({
+                                                fields: [{ name: "b_field", type: { kind: "Int32" } }],
+                                            }),
+                                        ),
+                                        merge: { __typename: "MergeStrategyAppend" },
                                     },
                                 },
                             ],

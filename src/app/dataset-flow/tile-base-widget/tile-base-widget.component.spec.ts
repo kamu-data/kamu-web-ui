@@ -62,7 +62,7 @@ describe("TileBaseWidgetComponent", () => {
     it("should check flow's duration and run time of retrying flow", () => {
         const initiationTime = new Date(new Date().getTime() - 60000); // 1 minute ago
 
-        const flowNode = {
+        const flowNode: FlowItemWidgetDataFragment = {
             ...mockFlowItemWidgetDataFragments[5],
             timing: {
                 ...mockFlowItemWidgetDataFragments[5].timing,
@@ -73,7 +73,7 @@ describe("TileBaseWidgetComponent", () => {
                 runningSince: null,
                 lastAttemptFinishedAt: new Date(initiationTime.getTime() + 10000).toISOString(), // 10 seconds after initiation
             },
-        } as FlowItemWidgetDataFragment;
+        };
 
         const runDuration = component.flowRunDuration(flowNode);
         expect(runDuration).toEqual("55 seconds");

@@ -11,7 +11,6 @@ import { MOCK_NODES } from "@api/mock/dataset.mock";
 
 import {
     LineageGraph,
-    LineageGraphNodeData,
     LineageGraphNodeKind,
 } from "src/app/dataset-view/additional-components/lineage-component/lineage-model";
 
@@ -19,7 +18,7 @@ function mockSourceNode(kind: LineageGraphNodeKind, label: string): Node {
     return {
         id: `source-node-${kind}`,
         label,
-        data: { kind, dataObject: {} } as LineageGraphNodeData,
+        data: { kind, dataObject: {} },
     };
 }
 

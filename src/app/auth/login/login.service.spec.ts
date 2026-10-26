@@ -225,7 +225,6 @@ describe("LoginService", () => {
     it("should successfully complete web3 wallet login flow", fakeAsync(() => {
         const mockNonce = "mock-nonce-12345";
         const expectedVerificationRequest = {
-            walletAddress: MockEthereumGateway.WALLET_ADDRESS,
             signature: `${MockEthereumGateway.SIGNATURE_PREFIX}${mockNonce}`,
             message: MockEthereumGateway.MESSAGE,
         };
@@ -255,7 +254,6 @@ describe("LoginService", () => {
         const mockDeviceCode = "mock-device-code-123";
         const mockNonce = "mock-nonce-12345";
         const expectedVerificationRequest = {
-            walletAddress: MockEthereumGateway.WALLET_ADDRESS,
             signature: `${MockEthereumGateway.SIGNATURE_PREFIX}${mockNonce}`,
             message: MockEthereumGateway.MESSAGE,
         };

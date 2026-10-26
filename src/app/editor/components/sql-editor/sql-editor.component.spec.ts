@@ -26,6 +26,12 @@ import { SqlEditorComponent } from "src/app/editor/components/sql-editor/sql-edi
 import { editorMock } from "src/app/editor/mock/editor.mock";
 import { MonacoService } from "src/app/editor/services/monaco.service";
 
+/** The part of the Monaco namespace the SQL editor reads from `window` to build its keybindings */
+interface MonacoKeyCodes {
+    KeyCode: { Enter: number };
+    KeyMod: { CtrlCmd: number };
+}
+
 describe("SqlEditorComponent", () => {
     let fixture: ComponentFixture<SqlEditorComponent>;
     let component: SqlEditorComponent;
@@ -50,27 +56,43 @@ describe("SqlEditorComponent", () => {
 
     sharedBasedEditorComponentTest(createTestEnvironment);
 
+    function editorWithSelectedText(selectedText: string): jasmine.SpyObj<monaco.editor.IStandaloneCodeEditor> {
+        return jasmine.createSpyObj<monaco.editor.IStandaloneCodeEditor>("IStandaloneCodeEditor", {
+            getModel: jasmine.createSpyObj<monaco.editor.ITextModel>("ITextModel", { getValueInRange: selectedText }),
+            getSelection: jasmine.createSpyObj<monaco.Selection>("Selection", { isEmpty: !selectedText }),
+            addAction: { dispose: () => undefined },
+            createContextKey: { set: () => undefined, reset: () => undefined, get: () => false },
+            onDidChangeCursorSelection: { dispose: () => undefined },
+        });
+    }
+
+    function selectionChangedEvent(isEmpty: boolean): monaco.editor.ICursorSelectionChangedEvent {
+        return {
+            selection: jasmine.createSpyObj<monaco.Selection>("Selection", { isEmpty }),
+            secondarySelections: [],
+            modelVersionId: 1,
+            oldSelections: null,
+            oldModelVersionId: 1,
+            source: "keyboard",
+            reason: 0,
+        };
+    }
+
     it("should run SQL action inside Angular zone", () => {
         const ngZone = TestBed.inject(NgZone);
         const ngZoneRunSpy = spyOn(ngZone, "run").and.callThrough();
         const actions: monaco.editor.IActionDescriptor[] = [];
-        const editor = {
-            ...editorMock,
-            addAction: (action: monaco.editor.IActionDescriptor): monaco.IDisposable => {
-                actions.push(action);
-                return { dispose: () => undefined };
-            },
-            getModel: () =>
-                ({
-                    getValueInRange: () => "",
-                }) as unknown as monaco.editor.ITextModel,
-        } as monaco.editor.IStandaloneCodeEditor;
-        const windowWithMonaco = window as typeof window & { monaco?: typeof monaco };
+        const editor = editorWithSelectedText("");
+        editor.addAction.and.callFake((action: monaco.editor.IActionDescriptor): monaco.IDisposable => {
+            actions.push(action);
+            return { dispose: () => undefined };
+        });
+        const windowWithMonaco: typeof window & { monaco?: MonacoKeyCodes } = window;
         const originalMonaco = windowWithMonaco.monaco;
         windowWithMonaco.monaco = {
             KeyCode: { Enter: 3 },
             KeyMod: { CtrlCmd: 2048 },
-        } as unknown as typeof monaco;
+        };
 
         component.onInitEditor(editor);
         const runSqlAction = actions.find((action) => action.id === "run-sql");
@@ -83,35 +105,34 @@ describe("SqlEditorComponent", () => {
     });
 
     describe("run actions", () => {
-        const windowWithMonaco = window as typeof window & { monaco?: typeof monaco };
-        let originalMonaco: MaybeUndefined<typeof monaco>;
+        const windowWithMonaco: typeof window & { monaco?: MonacoKeyCodes } = window;
+        let originalMonaco: MaybeUndefined<MonacoKeyCodes>;
         let actions: monaco.editor.IActionDescriptor[];
         let selectionListener: (e: monaco.editor.ICursorSelectionChangedEvent) => void;
-        let hasSelectionValues: boolean[];
+        let hasSelectionValues: monaco.editor.ContextKeyValue[];
 
         function initEditorWithSelectedText(selectedText: string): monaco.editor.IStandaloneCodeEditor {
-            const editor = {
-                ...editorMock,
-                addAction: (action: monaco.editor.IActionDescriptor): monaco.IDisposable => {
-                    actions.push(action);
-                    return { dispose: () => undefined };
-                },
-                createContextKey: (_: string, defaultValue: boolean): monaco.editor.IContextKey<boolean> => ({
-                    set: (value: boolean) => hasSelectionValues.push(value),
+            const editor = editorWithSelectedText(selectedText);
+            editor.addAction.and.callFake((action: monaco.editor.IActionDescriptor): monaco.IDisposable => {
+                actions.push(action);
+                return { dispose: () => undefined };
+            });
+            editor.createContextKey.and.callFake(
+                <T extends monaco.editor.ContextKeyValue>(
+                    _: string,
+                    defaultValue: T,
+                ): monaco.editor.IContextKey<T> => ({
+                    set: (value: T) => hasSelectionValues.push(value),
                     reset: () => undefined,
                     get: () => defaultValue,
                 }),
-                onDidChangeCursorSelection: (
-                    listener: (e: monaco.editor.ICursorSelectionChangedEvent) => void,
-                ): monaco.IDisposable => {
+            );
+            editor.onDidChangeCursorSelection.and.callFake(
+                (listener: (e: monaco.editor.ICursorSelectionChangedEvent) => void): monaco.IDisposable => {
                     selectionListener = listener;
                     return { dispose: () => undefined };
                 },
-                getModel: () =>
-                    ({
-                        getValueInRange: () => selectedText,
-                    }) as unknown as monaco.editor.ITextModel,
-            } as monaco.editor.IStandaloneCodeEditor;
+            );
             component.onInitEditor(editor);
             return editor;
         }
@@ -129,7 +150,7 @@ describe("SqlEditorComponent", () => {
             windowWithMonaco.monaco = {
                 KeyCode: { Enter: 3 },
                 KeyMod: { CtrlCmd: 2048 },
-            } as unknown as typeof monaco;
+            };
         });
 
         afterEach(() => {
@@ -167,8 +188,8 @@ describe("SqlEditorComponent", () => {
         it("should check selection changes toggle the hasSelection context key", () => {
             initEditorWithSelectedText("");
 
-            selectionListener({ selection: { isEmpty: () => false } } as monaco.editor.ICursorSelectionChangedEvent);
-            selectionListener({ selection: { isEmpty: () => true } } as monaco.editor.ICursorSelectionChangedEvent);
+            selectionListener(selectionChangedEvent(false));
+            selectionListener(selectionChangedEvent(true));
 
             expect(hasSelectionValues).toEqual([true, false]);
         });

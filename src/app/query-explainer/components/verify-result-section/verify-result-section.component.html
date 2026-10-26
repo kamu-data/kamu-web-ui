@@ -8,24 +8,24 @@
             <span class="fs-18" data-test-id="verification-success">Verification successful</span>
         </div>
     }
-    @if (verifyResponse.error) {
+    @if (verifyError; as error) {
         <div class="alert alert-info message-error error-color mx-4 mt-4 w-50 mx-auto d-flex flex-column" role="alert">
             <div class="d-flex align-items-center justify-content-center mb-2 fs-18">
                 <mat-icon class="me-1">error</mat-icon>
                 <span class="fs-18" data-test-id="verification-failed"> Verification failed </span>
             </div>
-            @if (verifyResponse.error.message) {
+            @if (error.message) {
                 <div class="fs-13 text-center">
-                    {{ verifyResponse.error.message }}
+                    {{ error.message }}
                 </div>
             }
-            @if (isOutputMismatchError(verifyResponse.error)) {
+            @if (outputMismatchError; as outputMismatch) {
                 <div class="mx-auto">
                     <div data-test-id="error-actual-hash" class="mt-4 ms-2 fs-13">
-                        Actual hash: {{ outputMismatchError(verifyResponse.error).actual_hash }}
+                        Actual hash: {{ outputMismatch.actual_hash }}
                     </div>
                     <div data-test-id="error-expected-hash" class="my-2 ms-2 fs-13">
-                        Expected hash: {{ outputMismatchError(verifyResponse.error).expected_hash }}
+                        Expected hash: {{ outputMismatch.expected_hash }}
                     </div>
                 </div>
             }

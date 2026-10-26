@@ -10,9 +10,10 @@ import {
     QueryExplainerProofResponse,
     VerifyQueryDatasetBlockNotFoundError,
     VerifyQueryDatasetNotFoundError,
+    VerifyQueryFailureResponse,
     VerifyQueryKindError,
     VerifyQueryOutputMismatchError,
-    VerifyQueryResponse,
+    VerifyQuerySuccessResponse,
 } from "src/app/query-explainer/query-explainer.types";
 
 export const mockTextareaCommitment: string = `
@@ -107,8 +108,8 @@ export const mockQueryExplainerEmptyOutput: QueryExplainerOutputType = {
     },
 };
 
-export const mockVerifyQueryResponseSuccess: VerifyQueryResponse = { ok: true };
-export const mockVerifyQueryResponseError: VerifyQueryResponse = {
+export const mockVerifyQueryResponseSuccess: VerifyQuerySuccessResponse = { ok: true };
+export const mockVerifyQueryResponseError: VerifyQueryFailureResponse = {
     ok: false,
     error: {
         kind: VerifyQueryKindError.InputHash,
@@ -123,7 +124,7 @@ const datasetBlockNotFoundError: VerifyQueryDatasetBlockNotFoundError = {
     message: "Error dataset block not found",
 };
 
-export const mockDatasetBlockNotFoundError: VerifyQueryResponse = {
+export const mockDatasetBlockNotFoundError: VerifyQueryFailureResponse = {
     ok: false,
     error: datasetBlockNotFoundError,
 };
@@ -134,7 +135,7 @@ const datasetNotFoundError: VerifyQueryDatasetNotFoundError = {
     message: "Error dataset not found",
 };
 
-export const mockDatasetNotFoundError: VerifyQueryResponse = {
+export const mockDatasetNotFoundError: VerifyQueryFailureResponse = {
     ok: false,
     error: datasetNotFoundError,
 };
@@ -146,7 +147,7 @@ const verifyQueryOutputMismatchError: VerifyQueryOutputMismatchError = {
     actual_hash: "f16207781e20aca696acfafc462429613e7d5c3d0f333d6bd0003240b53a083a52d29",
 };
 
-export const mockVerifyQueryOutputMismatchError: VerifyQueryResponse = {
+export const mockVerifyQueryOutputMismatchError: VerifyQueryFailureResponse = {
     ok: false,
     error: verifyQueryOutputMismatchError,
 };

@@ -94,9 +94,15 @@ export interface QueryExplainerDatasetsType {
     id: string;
 }
 
-export interface VerifyQueryResponse {
-    ok: boolean;
-    error?: VerifyQueryError;
+export type VerifyQueryResponse = VerifyQuerySuccessResponse | VerifyQueryFailureResponse;
+
+export interface VerifyQuerySuccessResponse {
+    ok: true;
+}
+
+export interface VerifyQueryFailureResponse {
+    ok: false;
+    error: VerifyQueryError;
 }
 
 export enum VerifyQueryKindError {
@@ -108,23 +114,43 @@ export enum VerifyQueryKindError {
     DatasetBlockNotFound = "VerificationFailed::DatasetBlockNotFound",
 }
 
-export interface VerifyQueryError {
-    kind: VerifyQueryKindError;
+export type VerifyQueryError =
+    | VerifyQueryInputHashError
+    | VerifyQuerySubQueriesHashError
+    | VerifyQueryBadSignatureError
+    | VerifyQueryOutputMismatchError
+    | VerifyQueryDatasetNotFoundError
+    | VerifyQueryDatasetBlockNotFoundError;
+
+interface VerifyQueryErrorBase {
     message: string;
 }
 
-export interface VerifyQueryInputHashError extends VerifyQueryError {}
-export interface VerifyQuerySubQueriesHashError extends VerifyQueryError {}
-export interface VerifyQueryBadSignatureError extends VerifyQueryError {}
-export interface VerifyQueryOutputMismatchError extends VerifyQueryError {
+export interface VerifyQueryInputHashError extends VerifyQueryErrorBase {
+    kind: VerifyQueryKindError.InputHash;
+}
+
+export interface VerifyQuerySubQueriesHashError extends VerifyQueryErrorBase {
+    kind: VerifyQueryKindError.SubQueriesHash;
+}
+
+export interface VerifyQueryBadSignatureError extends VerifyQueryErrorBase {
+    kind: VerifyQueryKindError.BadSignature;
+}
+
+export interface VerifyQueryOutputMismatchError extends VerifyQueryErrorBase {
+    kind: VerifyQueryKindError.OutputMismatch;
     expected_hash: string;
     actual_hash: string;
 }
-export interface VerifyQueryDatasetNotFoundError extends VerifyQueryError {
+
+export interface VerifyQueryDatasetNotFoundError extends VerifyQueryErrorBase {
+    kind: VerifyQueryKindError.DatasetNotFound;
     dataset_id: string;
 }
 
-export interface VerifyQueryDatasetBlockNotFoundError extends VerifyQueryError {
+export interface VerifyQueryDatasetBlockNotFoundError extends VerifyQueryErrorBase {
+    kind: VerifyQueryKindError.DatasetBlockNotFound;
     dataset_id: string;
     block_hash: string;
 }

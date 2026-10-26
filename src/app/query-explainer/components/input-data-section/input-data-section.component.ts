@@ -18,17 +18,12 @@ import { addMarkdownRunButton } from "@common/helpers/app.helpers";
 import { DatasetLinkPipe } from "@common/pipes/dataset-link.pipe";
 import { MarkdownFormatPipe } from "@common/pipes/markdown-format.pipe";
 import AppValues from "@common/values/app.values";
-import { MaybeUndefined } from "@interface/app.types";
+import { MaybeNull } from "@interface/app.types";
 import { DatasetInfo } from "@interface/navigation.interface";
 
 import ProjectLinks from "src/app/project-links";
 import { QueryExplainerComponentData } from "src/app/query-explainer/query-explainer.component";
-import {
-    VerifyQueryDatasetBlockNotFoundError,
-    VerifyQueryDatasetNotFoundError,
-    VerifyQueryError,
-    VerifyQueryKindError,
-} from "src/app/query-explainer/query-explainer.types";
+import { VerifyQueryError, VerifyQueryKindError } from "src/app/query-explainer/query-explainer.types";
 
 @Component({
     selector: "app-input-data-section",
@@ -58,18 +53,17 @@ export class InputDataSectionComponent {
     public readonly DISPLAY_TIME_FORMAT = AppValues.DISPLAY_TIME_FORMAT;
     private markdownFormatPipe = inject(MarkdownFormatPipe);
 
-    public isDatasetBlockNotFoundError(error: MaybeUndefined<VerifyQueryError>, blockHash: string): boolean {
-        return (
-            error?.kind === VerifyQueryKindError.DatasetBlockNotFound &&
-            (error as VerifyQueryDatasetBlockNotFoundError).block_hash === blockHash
-        );
+    public get verifyError(): MaybeNull<VerifyQueryError> {
+        const response = this.inputData.sqlQueryVerify;
+        return response?.ok === false ? response.error : null;
     }
 
-    public isDatasetNotFoundError(error: MaybeUndefined<VerifyQueryError>, datasetId: string): boolean {
-        return (
-            error?.kind === VerifyQueryKindError.DatasetNotFound &&
-            (error as VerifyQueryDatasetNotFoundError).dataset_id === datasetId
-        );
+    public isDatasetBlockNotFoundError(error: MaybeNull<VerifyQueryError>, blockHash: string): boolean {
+        return error?.kind === VerifyQueryKindError.DatasetBlockNotFound && error.block_hash === blockHash;
+    }
+
+    public isDatasetNotFoundError(error: MaybeNull<VerifyQueryError>, datasetId: string): boolean {
+        return error?.kind === VerifyQueryKindError.DatasetNotFound && error.dataset_id === datasetId;
     }
 
     public get sqlCode(): string {

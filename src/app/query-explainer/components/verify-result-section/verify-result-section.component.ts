@@ -8,7 +8,7 @@
 import { ChangeDetectionStrategy, Component, Input } from "@angular/core";
 import { MatIconModule } from "@angular/material/icon";
 
-import { MaybeNull, MaybeUndefined } from "@interface/app.types";
+import { MaybeNull } from "@interface/app.types";
 
 import {
     VerifyQueryError,
@@ -30,11 +30,12 @@ import {
 export class VerifyResultSectionComponent {
     @Input({ required: true }) public verifyResponse: MaybeNull<VerifyQueryResponse>;
 
-    public isOutputMismatchError(error: MaybeUndefined<VerifyQueryError>): boolean {
-        return error?.kind === VerifyQueryKindError.OutputMismatch;
+    public get verifyError(): MaybeNull<VerifyQueryError> {
+        return this.verifyResponse?.ok === false ? this.verifyResponse.error : null;
     }
 
-    public outputMismatchError(error: MaybeUndefined<VerifyQueryError>): VerifyQueryOutputMismatchError {
-        return error as VerifyQueryOutputMismatchError;
+    public get outputMismatchError(): MaybeNull<VerifyQueryOutputMismatchError> {
+        const error = this.verifyError;
+        return error?.kind === VerifyQueryKindError.OutputMismatch ? error : null;
     }
 }

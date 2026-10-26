@@ -11,6 +11,7 @@ import { map, Observable } from "rxjs";
 
 import { ToastrService } from "ngx-toastr";
 
+import { requireValue } from "@common/helpers/app.helpers";
 import { DatasetCollaborationApi } from "@api/dataset-collaboration.api";
 import {
     AccountFragment,
@@ -40,9 +41,8 @@ export class DatasetCollaborationsService {
         return this.datasetCollaborationApi
             .listCollaborators(params)
             .pipe(
-                map(
-                    (result: DatasetListCollaboratorsQuery) =>
-                        result.datasets.byId?.collaboration.accountRoles as AccountWithRoleConnectionDataFragment,
+                map((result: DatasetListCollaboratorsQuery) =>
+                    requireValue(result.datasets.byId?.collaboration.accountRoles ?? null),
                 ),
             );
     }
@@ -85,7 +85,7 @@ export class DatasetCollaborationsService {
     public getRoleByDatasetId(datasetId: string): Observable<MaybeNull<DatasetAccessRole>> {
         return this.datasetCollaborationApi.getDatasetUserRole(datasetId).pipe(
             map((result: DatasetUserRoleQuery) => {
-                return result.datasets.byId?.role as DatasetAccessRole;
+                return result.datasets.byId?.role ?? null;
             }),
         );
     }

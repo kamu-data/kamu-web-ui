@@ -145,4 +145,14 @@ describe("DatasetCollaborationsService", () => {
         expect(getDatasetUserRoleSpy).toHaveBeenCalledTimes(1);
         expect(subscription$.closed).toBeTrue();
     });
+
+    it("should give no role when the dataset is not found", () => {
+        spyOn(datasetCollaborationApi, "getDatasetUserRole").and.returnValue(of({ datasets: { byId: null } }));
+
+        const subscription$ = service.getRoleByDatasetId(TEST_DATASET_ID).subscribe((result) => {
+            expect(result).toBeNull();
+        });
+
+        expect(subscription$.closed).toBeTrue();
+    });
 });

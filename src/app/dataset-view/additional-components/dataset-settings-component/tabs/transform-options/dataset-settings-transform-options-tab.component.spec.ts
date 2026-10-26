@@ -25,6 +25,7 @@ import { DatasetFlowTriggerService } from "src/app/dataset-view/additional-compo
 import { FlowStopPolicyFormComponent } from "src/app/dataset-view/additional-components/dataset-settings-component/tabs/shared/flow-stop-policy-form/flow-stop-policy-form.component";
 import { FlowStopPolicyFormHarness } from "src/app/dataset-view/additional-components/dataset-settings-component/tabs/shared/flow-stop-policy-form/flow-stop-policy-form.harness";
 import { DatasetSettingsTransformOptionsTabComponent } from "src/app/dataset-view/additional-components/dataset-settings-component/tabs/transform-options/dataset-settings-transform-options-tab.component";
+import { DatasetSettingsTransformOptionsTabData } from "src/app/dataset-view/additional-components/dataset-settings-component/tabs/transform-options/dataset-settings-transform-options-tab.data";
 import { TransformTriggerFormHarness } from "src/app/dataset-view/additional-components/dataset-settings-component/tabs/transform-options/transform-trigger-form/transform-trigger-form.harness";
 import { mockDatasetBasicsDerivedFragment, mockFullPowerDatasetPermissionsFragment } from "src/app/search/mock.data";
 
@@ -43,16 +44,19 @@ describe("DatasetSettingsTransformOptionsTabComponent", () => {
             imports: [ApolloTestingModule, SharedTestModule, DatasetSettingsTransformOptionsTabComponent],
         });
 
-        fixture = TestBed.createComponent(DatasetSettingsTransformOptionsTabComponent);
         datasetFlowTriggerService = TestBed.inject(DatasetFlowTriggerService);
+        await createComponent({ reactive: null, stopPolicy: null, paused: true });
+    });
 
+    async function createComponent(
+        trigger: Pick<DatasetSettingsTransformOptionsTabData, "reactive" | "stopPolicy" | "paused">,
+    ): Promise<void> {
+        fixture = TestBed.createComponent(DatasetSettingsTransformOptionsTabComponent);
         component = fixture.componentInstance;
         setComponentInput(fixture, "transformTabData", {
             datasetBasics: mockDatasetBasicsDerivedFragment,
             datasetPermissions: mockFullPowerDatasetPermissionsFragment,
-            reactive: null,
-            stopPolicy: null,
-            paused: true,
+            ...trigger,
         });
 
         fixture.detectChanges();
@@ -61,7 +65,7 @@ describe("DatasetSettingsTransformOptionsTabComponent", () => {
         loader = TestbedHarnessEnvironment.loader(fixture);
         transformTriggerFormHarness = await loader.getHarness(TransformTriggerFormHarness);
         stopPolicyFormHarness = await loader.getHarness(FlowStopPolicyFormHarness);
-    });
+    }
 
     it("should create", () => {
         expect(component).toBeTruthy();
@@ -81,10 +85,6 @@ describe("DatasetSettingsTransformOptionsTabComponent", () => {
     });
 
     it("should check form is valid when loaded with no reactive rule defined", async () => {
-        component.transformTabData.reactive = null;
-        component.ngAfterViewInit();
-        fixture.detectChanges();
-
         expect(component.form.status).toBe("VALID");
 
         const domTransformTriggerFormValue = await transformTriggerFormHarness.currentFormValue();
@@ -98,23 +98,23 @@ describe("DatasetSettingsTransformOptionsTabComponent", () => {
     });
 
     it("should check form is valid when loaded with buffering batching rule", async () => {
-        component.transformTabData.paused = false;
-        component.transformTabData.reactive = {
-            forNewData: {
-                __typename: "FlowTriggerBatchingRuleBuffering",
-                minRecordsToAwait: 10,
-                maxBatchingInterval: {
-                    every: 5,
-                    unit: TimeUnit.Minutes,
+        await createComponent({
+            paused: false,
+            reactive: {
+                forNewData: {
+                    __typename: "FlowTriggerBatchingRuleBuffering",
+                    minRecordsToAwait: 10,
+                    maxBatchingInterval: {
+                        every: 5,
+                        unit: TimeUnit.Minutes,
+                    },
                 },
+                forBreakingChange: FlowTriggerBreakingChangeRule.Recover,
             },
-            forBreakingChange: FlowTriggerBreakingChangeRule.Recover,
-        };
-        component.transformTabData.stopPolicy = {
-            __typename: "FlowTriggerStopPolicyNever",
-        };
-        component.ngAfterViewInit();
-        fixture.detectChanges();
+            stopPolicy: {
+                __typename: "FlowTriggerStopPolicyNever",
+            },
+        });
 
         expect(component.form.status).toBe("VALID");
 
@@ -155,24 +155,24 @@ describe("DatasetSettingsTransformOptionsTabComponent", () => {
     });
 
     it("should check time unit of day is converted into 24 hours", async () => {
-        component.transformTabData.paused = false;
-        component.transformTabData.reactive = {
-            forNewData: {
-                __typename: "FlowTriggerBatchingRuleBuffering",
-                minRecordsToAwait: 10,
-                maxBatchingInterval: {
-                    every: 1,
-                    unit: TimeUnit.Days, // This should be converted to 24 hours
+        await createComponent({
+            paused: false,
+            reactive: {
+                forNewData: {
+                    __typename: "FlowTriggerBatchingRuleBuffering",
+                    minRecordsToAwait: 10,
+                    maxBatchingInterval: {
+                        every: 1,
+                        unit: TimeUnit.Days, // This should be converted to 24 hours
+                    },
                 },
+                forBreakingChange: FlowTriggerBreakingChangeRule.Recover,
             },
-            forBreakingChange: FlowTriggerBreakingChangeRule.Recover,
-        };
-        component.transformTabData.stopPolicy = {
-            __typename: "FlowTriggerStopPolicyAfterConsecutiveFailures",
-            maxFailures: 3,
-        };
-        component.ngAfterViewInit();
-        fixture.detectChanges();
+            stopPolicy: {
+                __typename: "FlowTriggerStopPolicyAfterConsecutiveFailures",
+                maxFailures: 3,
+            },
+        });
 
         expect(component.form.status).toBe("VALID");
 
@@ -213,18 +213,18 @@ describe("DatasetSettingsTransformOptionsTabComponent", () => {
     });
 
     it("should check form is valid when loaded with immediate batching rule", async () => {
-        component.transformTabData.paused = false;
-        component.transformTabData.reactive = {
-            forNewData: {
-                __typename: "FlowTriggerBatchingRuleImmediate",
+        await createComponent({
+            paused: false,
+            reactive: {
+                forNewData: {
+                    __typename: "FlowTriggerBatchingRuleImmediate",
+                },
+                forBreakingChange: FlowTriggerBreakingChangeRule.NoAction,
             },
-            forBreakingChange: FlowTriggerBreakingChangeRule.NoAction,
-        };
-        component.transformTabData.stopPolicy = {
-            __typename: "FlowTriggerStopPolicyNever",
-        };
-        component.ngAfterViewInit();
-        fixture.detectChanges();
+            stopPolicy: {
+                __typename: "FlowTriggerStopPolicyNever",
+            },
+        });
 
         expect(component.form.status).toBe("VALID");
 

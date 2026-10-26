@@ -48,10 +48,12 @@ describe("ModalComponent", () => {
         expect(component).toBeTruthy();
     });
 
-    it("should check ngOnit", () => {
-        const executeSpy = spyOn(component, "_execute").and.callThrough();
+    it("should execute the command it receives on init", () => {
         const getCommandSpy = spyOn(modalService, "getCommand").and.returnValue(of(MOCK_COMMAND_INTERFACE));
-        component.ngOnInit();
+        fixture = TestBed.createComponent(ModalComponent);
+        component = fixture.componentInstance;
+        const executeSpy = spyOn(component, "_execute").and.callThrough();
+        fixture.detectChanges();
         expect(executeSpy).toHaveBeenCalledTimes(1);
         expect(getCommandSpy).toHaveBeenCalledTimes(1);
     });

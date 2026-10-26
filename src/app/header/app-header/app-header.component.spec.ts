@@ -105,7 +105,6 @@ describe("AppHeaderComponent", () => {
 
     it("should check initial value search input", () => {
         pushNavigationEnd();
-        component.ngOnInit();
         fixture.detectChanges();
         expect(component.searchQuery).toEqual(DEFAULT_SEARCH_QUERY);
     });

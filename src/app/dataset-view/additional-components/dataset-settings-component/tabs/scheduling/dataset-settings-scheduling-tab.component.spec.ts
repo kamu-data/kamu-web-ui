@@ -23,6 +23,7 @@ import {
 } from "src/app/dataset-view/additional-components/dataset-settings-component/dataset-settings.model";
 import { DatasetFlowTriggerService } from "src/app/dataset-view/additional-components/dataset-settings-component/services/dataset-flow-trigger.service";
 import { DatasetSettingsSchedulingTabComponent } from "src/app/dataset-view/additional-components/dataset-settings-component/tabs/scheduling/dataset-settings-scheduling-tab.component";
+import { DatasetSettingsSchedulingTabData } from "src/app/dataset-view/additional-components/dataset-settings-component/tabs/scheduling/dataset-settings-scheduling-tab.data";
 import { IngestTriggerFormHarness } from "src/app/dataset-view/additional-components/dataset-settings-component/tabs/scheduling/ingest-trigger-form/ingest-trigger-form.harness";
 import { FlowStopPolicyFormComponent } from "src/app/dataset-view/additional-components/dataset-settings-component/tabs/shared/flow-stop-policy-form/flow-stop-policy-form.component";
 import { FlowStopPolicyFormHarness } from "src/app/dataset-view/additional-components/dataset-settings-component/tabs/shared/flow-stop-policy-form/flow-stop-policy-form.harness";
@@ -51,16 +52,19 @@ describe("DatasetSettingsSchedulingTabComponent", () => {
             imports: [ApolloTestingModule, SharedTestModule, DatasetSettingsSchedulingTabComponent],
         }).compileComponents();
 
-        fixture = TestBed.createComponent(DatasetSettingsSchedulingTabComponent);
         datasetFlowTriggerService = TestBed.inject(DatasetFlowTriggerService);
+        await createComponent({ schedule: null, stopPolicy: null, paused: true });
+    });
 
+    async function createComponent(
+        trigger: Pick<DatasetSettingsSchedulingTabData, "schedule" | "stopPolicy" | "paused">,
+    ): Promise<void> {
+        fixture = TestBed.createComponent(DatasetSettingsSchedulingTabComponent);
         component = fixture.componentInstance;
         setComponentInput(fixture, "schedulingTabData", {
             datasetBasics: mockDatasetBasicsRootFragment,
             datasetPermissions: mockFullPowerDatasetPermissionsFragment,
-            schedule: null,
-            stopPolicy: null,
-            paused: true,
+            ...trigger,
         });
 
         fixture.detectChanges();
@@ -69,7 +73,7 @@ describe("DatasetSettingsSchedulingTabComponent", () => {
         loader = TestbedHarnessEnvironment.loader(fixture);
         ingestTriggerFormHarness = await loader.getHarness(IngestTriggerFormHarness);
         stopPolicyFormHarness = await loader.getHarness(FlowStopPolicyFormHarness);
-    });
+    }
 
     function getSaveButton(): HTMLButtonElement {
         return getElementByDataTestId(fixture, "save-btn") as HTMLButtonElement;
@@ -89,18 +93,18 @@ describe("DatasetSettingsSchedulingTabComponent", () => {
     });
 
     it("should check form is valid when loaded with time delta schedule", async () => {
-        component.schedulingTabData.paused = false;
-        component.schedulingTabData.schedule = {
-            __typename: "TimeDelta",
-            every: MOCK_PARAM_EVERY,
-            unit: MOCK_PARAM_UNIT,
-        };
-        component.schedulingTabData.stopPolicy = {
-            __typename: "FlowTriggerStopPolicyAfterConsecutiveFailures",
-            maxFailures: 3,
-        };
-        component.ngAfterViewInit();
-        fixture.detectChanges();
+        await createComponent({
+            paused: false,
+            schedule: {
+                __typename: "TimeDelta",
+                every: MOCK_PARAM_EVERY,
+                unit: MOCK_PARAM_UNIT,
+            },
+            stopPolicy: {
+                __typename: "FlowTriggerStopPolicyAfterConsecutiveFailures",
+                maxFailures: 3,
+            },
+        });
 
         expect(component.form.status).toBe("VALID");
 
@@ -124,16 +128,16 @@ describe("DatasetSettingsSchedulingTabComponent", () => {
     });
 
     it("should check form is valid when loaded with cron schedule", async () => {
-        component.schedulingTabData.paused = false;
-        component.schedulingTabData.schedule = {
-            __typename: "Cron5ComponentExpression",
-            cron5ComponentExpression: MOCK_CRON_EXPRESSION,
-        };
-        component.schedulingTabData.stopPolicy = {
-            __typename: "FlowTriggerStopPolicyNever",
-        };
-        component.ngAfterViewInit();
-        fixture.detectChanges();
+        await createComponent({
+            paused: false,
+            schedule: {
+                __typename: "Cron5ComponentExpression",
+                cron5ComponentExpression: MOCK_CRON_EXPRESSION,
+            },
+            stopPolicy: {
+                __typename: "FlowTriggerStopPolicyNever",
+            },
+        });
 
         expect(component.form.status).toBe("VALID");
 

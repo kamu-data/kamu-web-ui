@@ -36,10 +36,10 @@ describe("EngineSectionComponent", () => {
         engineService = TestBed.inject(EngineService);
         setComponentInput(fixture, "knownEngines", mockEngines.data.knownEngines);
         spyOn(engineService, "engines").and.returnValue(of(mockEngines));
-        fixture.detectChanges();
     });
 
     it("should create", () => {
+        fixture.detectChanges();
         expect(component).toBeTruthy();
     });
 
@@ -51,7 +51,7 @@ describe("EngineSectionComponent", () => {
     ].forEach((item: { testCase: string; expected: EngineDesc }) => {
         it(`should check init ${item.testCase} engine and image`, fakeAsync(() => {
             setComponentInput(fixture, "selectedEngine", item.testCase);
-            component.ngOnInit();
+            fixture.detectChanges();
             tick();
             const image = findElementByDataTestId(fixture, "engine-image") as HTMLInputElement;
             expect(image.value).toEqual(item.expected.latestImage);
@@ -64,7 +64,6 @@ describe("EngineSectionComponent", () => {
     it("should check the default engine applies when none is passed in", fakeAsync(() => {
         setComponentInput(fixture, "selectedEngine", "");
         fixture.detectChanges();
-        component.ngOnInit();
         tick();
 
         expect(component.selectedEngine).toBe(AppValues.DEFAULT_ENGINE_NAME);

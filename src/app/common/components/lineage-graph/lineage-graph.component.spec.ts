@@ -217,11 +217,8 @@ describe("LineageGraphComponent", () => {
     });
 
     describe("view size", () => {
-        beforeEach(async () => {
+        it("should measure the view again when the window is resized", async () => {
             await render();
-        });
-
-        it("should measure the view again when the window is resized", () => {
             const spyOnResize = spyOn(component, "changeLineageGraphView").and.callThrough();
             window.dispatchEvent(new Event("resize"));
             window.dispatchEvent(new Event("resize"));
@@ -231,7 +228,7 @@ describe("LineageGraphComponent", () => {
         it("should take the view height from the widget height", () => {
             const mockHeight = 1000;
             const widgetHeightSpy = spyOnProperty(widgetHeightService, "widgetHeight").and.returnValue(mockHeight);
-            component.ngOnInit();
+            create();
             expect(component.view[1]).toEqual(mockHeight);
             expect(widgetHeightSpy).toHaveBeenCalledWith();
         });

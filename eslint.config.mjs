@@ -83,7 +83,7 @@ export default [
     },
   },
   // Specs set inputs through setComponentInput(), which type-checks the input name and value,
-  // and leave ngOnChanges to change detection, which passes the changes Angular really produces
+  // and leave lifecycle hooks to change detection, which runs them as the app does
   {
     files: ["src/app/**/*.spec.ts"],
     ignores: ["src/app/common/helpers/base-test.helpers.spec.ts"],
@@ -99,6 +99,16 @@ export default [
           selector: "CallExpression[callee.property.name='ngOnChanges']",
           message:
             "Set the input with setComponentInput() and run fixture.detectChanges(): a hand-built SimpleChanges is a change Angular never produces.",
+        },
+        {
+          selector:
+            "CallExpression[callee.property.name=/^ng(OnInit|DoCheck|AfterContentInit|AfterContentChecked|AfterViewInit|AfterViewChecked)$/]",
+          message:
+            "Arrange the state, then let the first fixture.detectChanges() run the hook: calling it again runs it twice, in a state the app never reaches.",
+        },
+        {
+          selector: "CallExpression[callee.property.name='ngOnDestroy']",
+          message: "Destroy the component with fixture.destroy(), which runs ngOnDestroy as the app does.",
         },
       ],
     },

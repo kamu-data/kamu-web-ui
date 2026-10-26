@@ -55,6 +55,9 @@ describe("EditDetailsModalComponent", () => {
     });
 
     it("should check initialize details", () => {
+        fixture = TestBed.createComponent(EditDetailsModalComponent);
+        component = fixture.componentInstance;
+        setComponentInput(fixture, "datasetBasics", mockDatasetBasicsDerivedFragment);
         setComponentInput(fixture, "currentState", {
             schema: mockMetadataDerivedUpdate.schema,
             data: mockOverviewDataUpdate.content,
@@ -62,7 +65,6 @@ describe("EditDetailsModalComponent", () => {
             size: mockOverviewDataUpdate.size,
         });
         fixture.detectChanges();
-        component.ngOnInit();
 
         expect(component.keywords).toBeDefined();
         expect(component.description).toBeDefined();

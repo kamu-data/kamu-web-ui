@@ -45,7 +45,6 @@ describe("SearchComponent", () => {
         searchApi = TestBed.inject(SearchApi);
         component = fixture.componentInstance;
         setComponentInput(fixture, "data", mockDatasetSearchResult);
-        component.ngOnInit();
         fixture.detectChanges();
     });
 

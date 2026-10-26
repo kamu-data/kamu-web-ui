@@ -141,8 +141,9 @@ describe("DatasetSettingsGeneralTabComponent", () => {
     });
 
     it("should check missing rename permission", () => {
+        fixture = TestBed.createComponent(DatasetSettingsGeneralTabComponent);
+        component = fixture.componentInstance;
         setDatasetPermissions({ canRename: false });
-        component.ngOnInit();
         fixture.detectChanges();
 
         expect(component.isAllowedToDeleteDataset).toEqual(true);

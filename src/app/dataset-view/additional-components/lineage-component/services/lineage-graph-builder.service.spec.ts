@@ -82,6 +82,12 @@ describe("LineageGraphBuilderService", () => {
         expect(update).toBeNull();
     });
 
+    it("should build the graph even when a font fails to load", async () => {
+        spyOn(document.fonts, "load").and.returnValue(Promise.reject(new Error("Font download blocked")));
+        const update = await buildGraph(mockLineageGraphUpdate);
+        expect(update.graph.nodes.length).toBeGreaterThan(0);
+    });
+
     it("should check get current dataset", async () => {
         const update = await buildGraph(mockLineageGraphUpdate);
         expect(update.originDataset).toEqual(mockLineageGraphUpdate.origin);

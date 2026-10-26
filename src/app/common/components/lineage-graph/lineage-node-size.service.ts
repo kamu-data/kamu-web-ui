@@ -30,11 +30,14 @@ const TEXT_FONT_WEIGHT = 400;
 export class LineageNodeSizeService {
     private context: MaybeNull<CanvasRenderingContext2D> = null;
 
-    /** Emits once the node fonts have loaded, so that text is measured in the font it renders with */
+    /**
+     * Emits once the node fonts have loaded, so that text is measured in the font it renders with.
+     * Also emits when they fail to load: the texts then render, and are measured, in the fallback font.
+     */
     public whenFontsReady(): Observable<void> {
         // Browsers load a font face only once something uses it, so the faces are requested explicitly
         return from(
-            Promise.all([
+            Promise.allSettled([
                 document.fonts.load(this.font(LABEL_FONT_WEIGHT)),
                 document.fonts.load(this.font(TEXT_FONT_WEIGHT)),
             ]),

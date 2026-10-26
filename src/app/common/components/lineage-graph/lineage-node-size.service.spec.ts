@@ -30,6 +30,11 @@ describe("LineageNodeSizeService", () => {
         await expectAsync(firstValueFrom(service.whenFontsReady())).toBeResolved();
     });
 
+    it("should still emit when a font fails to load", async () => {
+        spyOn(document.fonts, "load").and.returnValue(Promise.reject(new Error("Font download blocked")));
+        await expectAsync(firstValueFrom(service.whenFontsReady())).toBeResolved();
+    });
+
     it("should give every node the configured height", () => {
         expect(service.datasetNodeSize(LONG_NAME, "kamu").height).toEqual(LINEAGE_CONFIG.nodeHeight);
         expect(service.inaccessibleNodeSize(LONG_NAME).height).toEqual(LINEAGE_CONFIG.nodeHeight);

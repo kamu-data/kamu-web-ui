@@ -17,7 +17,7 @@ import { provideToastr } from "ngx-toastr";
 
 import { ModalService } from "@common/components/modal/modal.service";
 import { registerMatSvgIcons, setComponentInput } from "@common/helpers/base-test.helpers.spec";
-import { AccountWithRoleConnection, DatasetAccessRole } from "@api/kamu.graphql.interface";
+import { AccountWithRoleConnectionDataFragment, DatasetAccessRole } from "@api/kamu.graphql.interface";
 import { mockAccountDetails } from "@api/mock/auth.mock";
 import { MOCK_ACCOUNT_WITH_ROLE, mockDatasetListCollaboratorsQuery } from "@api/mock/dataset-collaborations.mock";
 import { ModalArgumentsInterface } from "@interface/modal.interface";
@@ -85,7 +85,7 @@ describe("DatasetSettingsAccessTabComponent", () => {
         spyOn(datasetCollaborationsService, "listCollaborators").and.returnValue(
             of(
                 mockDatasetListCollaboratorsQuery.datasets.byId?.collaboration
-                    .accountRoles as AccountWithRoleConnection,
+                    .accountRoles as AccountWithRoleConnectionDataFragment,
             ),
         );
         component = fixture.componentInstance;

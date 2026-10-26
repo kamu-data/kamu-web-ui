@@ -26,7 +26,12 @@ import { promiseWithCatch } from "@common/helpers/app.helpers";
 import { DatasetLinkPipe } from "@common/pipes/dataset-link.pipe";
 import RoutingResolvers from "@common/resolvers/routing-resolvers";
 import AppValues from "@common/values/app.values";
-import { AccountWithRole, DatasetAccessRole, DatasetBasicsFragment, PageBasedInfo } from "@api/kamu.graphql.interface";
+import {
+    AccountWithRoleDataFragment,
+    DatasetAccessRole,
+    DatasetBasicsFragment,
+    DatasetPageInfoFragment,
+} from "@api/kamu.graphql.interface";
 
 import { LoggedUserService } from "src/app/auth/logged-user.service";
 import { SettingsTabsEnum } from "src/app/dataset-view/additional-components/dataset-settings-component/dataset-settings.model";
@@ -59,12 +64,12 @@ import { NavigationService } from "src/app/services/navigation.service";
 export class DatasetSettingsAccessTabComponent extends BaseComponent implements OnInit {
     @Input(RoutingResolvers.DATASET_SETTINGS_ACCESS_KEY) public accessViewData: DatasetViewData;
 
-    public dataSource = new MatTableDataSource();
+    public dataSource = new MatTableDataSource<AccountWithRoleDataFragment>();
     public currentPage = 1;
-    public pageBasedInfo: PageBasedInfo;
+    public pageBasedInfo: DatasetPageInfoFragment;
     public readonly PER_PAGE = 15;
     public searchMember = "";
-    public selection = new SelectionModel<AccountWithRole>(true, []);
+    public selection = new SelectionModel<AccountWithRoleDataFragment>(true, []);
 
     public readonly DISPLAY_COLUMNS: string[] = ["user", "role", "actions"];
     public readonly DatasetViewTypeEnum: typeof DatasetViewTypeEnum = DatasetViewTypeEnum;
@@ -159,7 +164,7 @@ export class DatasetSettingsAccessTabComponent extends BaseComponent implements 
             });
     }
 
-    public editCollaborator(collaborator: AccountWithRole): void {
+    public editCollaborator(collaborator: AccountWithRoleDataFragment): void {
         const modalRef = this.ngbModalService.open(EditCollaboratorModalComponent);
         const modalRefInstance = modalRef.componentInstance as EditCollaboratorModalComponent;
         modalRefInstance.collaborator = collaborator;
@@ -182,7 +187,7 @@ export class DatasetSettingsAccessTabComponent extends BaseComponent implements 
             });
     }
 
-    public removeCollaborator(collaborator: AccountWithRole): void {
+    public removeCollaborator(collaborator: AccountWithRoleDataFragment): void {
         promiseWithCatch(
             this.modalService.error({
                 title: "Remove collaborator",
@@ -209,7 +214,7 @@ export class DatasetSettingsAccessTabComponent extends BaseComponent implements 
     }
 
     public removeAllMembers(): void {
-        const selectedCollaboratorsIds = this.selection.selected.map((s: AccountWithRole) => s.account.id);
+        const selectedCollaboratorsIds = this.selection.selected.map((s: AccountWithRoleDataFragment) => s.account.id);
         promiseWithCatch(
             this.modalService.error({
                 title: "Remove collaborators",
@@ -235,8 +240,8 @@ export class DatasetSettingsAccessTabComponent extends BaseComponent implements 
     }
 
     public applyFilter(search: string): void {
-        this.dataSource.filterPredicate = (data: unknown, filter: string): boolean => {
-            return (data as AccountWithRole).account.accountName.toLowerCase().includes(filter.trim().toLowerCase());
+        this.dataSource.filterPredicate = (data: AccountWithRoleDataFragment, filter: string): boolean => {
+            return data.account.accountName.toLowerCase().includes(filter.trim().toLowerCase());
         };
         this.dataSource.filter = search.trim().toLowerCase();
     }
@@ -251,11 +256,11 @@ export class DatasetSettingsAccessTabComponent extends BaseComponent implements 
         if (this.isAllSelected()) {
             this.selection.clear();
         } else {
-            this.dataSource.data.forEach((row) => this.selection.select(row as AccountWithRole));
+            this.dataSource.data.forEach((row) => this.selection.select(row));
         }
     }
 
-    public setRoleIcon(row: AccountWithRole): string {
+    public setRoleIcon(row: AccountWithRoleDataFragment): string {
         switch (row.role) {
             case DatasetAccessRole.Reader:
                 return "library_books";

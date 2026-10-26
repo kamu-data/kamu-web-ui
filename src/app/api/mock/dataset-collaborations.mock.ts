@@ -6,10 +6,9 @@
  */
 
 import {
-    Account,
     AccountProvider,
     AccountType,
-    AccountWithRole,
+    AccountWithRoleDataFragment,
     DatasetAccessRole,
     DatasetKind,
     DatasetListCollaboratorsQuery,
@@ -21,16 +20,16 @@ import {
 
 import { mockOwnerFieldsWithAvatar } from "src/app/search/mock.data";
 
-export const MOCK_ACCOUNT_WITH_ROLE: AccountWithRole = {
+export const MOCK_ACCOUNT_WITH_ROLE: AccountWithRoleDataFragment = {
     account: {
         id: "did:odf:fed016b61ed2ab1b63a006b61ed2ab1b63a00b016d65607000000e0821aafbf163e6f",
         accountName: "kamu",
         displayName: "kamu",
         accountType: AccountType.User,
-        email: "test@gamil.com",
         avatarUrl: "https://avatars.githubusercontent.com/u/50896974?s=200&v=4",
         isAdmin: true,
-    } as Account,
+        accountProvider: AccountProvider.Password,
+    },
     role: DatasetAccessRole.Maintainer,
 };
 

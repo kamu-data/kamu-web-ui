@@ -13,7 +13,7 @@ import { ToastrService } from "ngx-toastr";
 
 import { DatasetCollaborationApi } from "@api/dataset-collaboration.api";
 import {
-    AccountWithRoleConnection,
+    AccountWithRoleConnectionDataFragment,
     DatasetAccessRole,
     DatasetListCollaboratorsQuery,
     DatasetUserRoleQuery,
@@ -36,13 +36,13 @@ export class DatasetCollaborationsService {
         datasetId: string;
         page?: number;
         perPage?: number;
-    }): Observable<AccountWithRoleConnection> {
+    }): Observable<AccountWithRoleConnectionDataFragment> {
         return this.datasetCollaborationApi
             .listCollaborators(params)
             .pipe(
                 map(
                     (result: DatasetListCollaboratorsQuery) =>
-                        result.datasets.byId?.collaboration.accountRoles as AccountWithRoleConnection,
+                        result.datasets.byId?.collaboration.accountRoles as AccountWithRoleConnectionDataFragment,
                 ),
             );
     }

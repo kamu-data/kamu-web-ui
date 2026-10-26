@@ -1,0 +1,9 @@
+fragment AccountWithRoleConnectionData on AccountWithRoleConnection {
+  nodes {
+    ...AccountWithRoleData
+  }
+  totalCount
+  pageInfo {
+    ...DatasetPageInfo
+  }
+}

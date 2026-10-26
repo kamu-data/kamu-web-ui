@@ -11,7 +11,7 @@ import { MatDividerModule } from "@angular/material/divider";
 
 import { NgbActiveModal } from "@ng-bootstrap/ng-bootstrap";
 
-import { AccountWithRole, DatasetAccessRole } from "@api/kamu.graphql.interface";
+import { AccountWithRoleDataFragment, DatasetAccessRole } from "@api/kamu.graphql.interface";
 
 import {
     CollaboratorModalResultType,
@@ -31,7 +31,7 @@ import {
     ],
 })
 export class EditCollaboratorModalComponent implements OnInit {
-    @Input({ required: true }) public collaborator: AccountWithRole;
+    @Input({ required: true }) public collaborator: AccountWithRoleDataFragment;
     public role: DatasetAccessRole;
     public readonly SELECT_ROLE_OPTIONS = ROLE_OPTIONS;
 

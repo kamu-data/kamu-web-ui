@@ -7862,15 +7862,25 @@ export type DatasetListCollaboratorsQueryVariables = Exact<{
 
 
 export type DatasetListCollaboratorsQuery = { __typename?: 'Query', datasets: { __typename?: 'Datasets', byId?: (
-      { __typename?: 'Dataset', collaboration: { __typename?: 'DatasetCollaboration', accountRoles: { __typename?: 'AccountWithRoleConnection', totalCount: number, nodes: Array<{ __typename?: 'AccountWithRole', role: DatasetAccessRole, account: (
-              { __typename?: 'Account' }
-              & AccountFragment
-            ) }>, pageInfo: (
-            { __typename?: 'PageBasedInfo' }
-            & DatasetPageInfoFragment
-          ) } } }
+      { __typename?: 'Dataset', collaboration: { __typename?: 'DatasetCollaboration', accountRoles: (
+          { __typename?: 'AccountWithRoleConnection' }
+          & AccountWithRoleConnectionDataFragment
+        ) } }
       & DatasetBasicsFragment
     ) | null } };
+
+export type AccountWithRoleConnectionDataFragment = { __typename?: 'AccountWithRoleConnection', totalCount: number, nodes: Array<(
+    { __typename?: 'AccountWithRole' }
+    & AccountWithRoleDataFragment
+  )>, pageInfo: (
+    { __typename?: 'PageBasedInfo' }
+    & DatasetPageInfoFragment
+  ) };
+
+export type AccountWithRoleDataFragment = { __typename?: 'AccountWithRole', role: DatasetAccessRole, account: (
+    { __typename?: 'Account' }
+    & AccountFragment
+  ) };
 
 export type SetRoleCollaboratorMutationVariables = Exact<{
   datasetId: Scalars['DatasetID']['input'];
@@ -9710,6 +9720,37 @@ export const VersionedFileEntryDataFragmentDoc = gql`
   }
 }
     `;
+export const AccountFragmentDoc = gql`
+    fragment Account on Account {
+  id
+  accountName
+  displayName
+  accountType
+  avatarUrl
+  isAdmin
+  accountProvider
+}
+    `;
+export const AccountWithRoleDataFragmentDoc = gql`
+    fragment AccountWithRoleData on AccountWithRole {
+  account {
+    ...Account
+  }
+  role
+}
+    ${AccountFragmentDoc}`;
+export const AccountWithRoleConnectionDataFragmentDoc = gql`
+    fragment AccountWithRoleConnectionData on AccountWithRoleConnection {
+  nodes {
+    ...AccountWithRoleData
+  }
+  totalCount
+  pageInfo {
+    ...DatasetPageInfo
+  }
+}
+    ${AccountWithRoleDataFragmentDoc}
+${DatasetPageInfoFragmentDoc}`;
 export const ViewDatasetEnvVarDataFragmentDoc = gql`
     fragment ViewDatasetEnvVarData on ViewDatasetEnvVar {
   key
@@ -9729,17 +9770,6 @@ export const ViewDatasetEnvVarConnectionDataFragmentDoc = gql`
 }
     ${ViewDatasetEnvVarDataFragmentDoc}
 ${DatasetPageInfoFragmentDoc}`;
-export const AccountFragmentDoc = gql`
-    fragment Account on Account {
-  id
-  accountName
-  displayName
-  accountType
-  avatarUrl
-  isAdmin
-  accountProvider
-}
-    `;
 export const FlowOutcomeDataFragmentDoc = gql`
     fragment FlowOutcomeData on FlowOutcome {
   ... on FlowSuccessResult {
@@ -12269,24 +12299,14 @@ export const DatasetListCollaboratorsDocument = gql`
       ...DatasetBasics
       collaboration {
         accountRoles(page: $page, perPage: $perPage) {
-          nodes {
-            account {
-              ...Account
-            }
-            role
-          }
-          totalCount
-          pageInfo {
-            ...DatasetPageInfo
-          }
+          ...AccountWithRoleConnectionData
         }
       }
     }
   }
 }
     ${DatasetBasicsFragmentDoc}
-${AccountFragmentDoc}
-${DatasetPageInfoFragmentDoc}`;
+${AccountWithRoleConnectionDataFragmentDoc}`;
 
   @Injectable({
     providedIn: 'root'

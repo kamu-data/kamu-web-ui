@@ -21,11 +21,14 @@ import {
 } from "@common/helpers/base-test.helpers.spec";
 import { DatasetApi } from "@api/dataset.api";
 
+import { DatasetViewTypeEnum } from "src/app/dataset-view/dataset-view.interface";
+import ProjectLinks from "src/app/project-links";
 import {
     mockCollectionEntryConnection,
     mockDatasetAsCollectionQuery,
     mockDatasetBasicsRootFragment,
 } from "src/app/search/mock.data";
+import { NavigationService } from "src/app/services/navigation.service";
 
 import { DatasetAsCollectionService } from "../../services/dataset-as-collection.service";
 import { DatasetService } from "./../../../../dataset.service";
@@ -107,8 +110,19 @@ describe("CollectionViewComponent", () => {
             .spyOn(datasetService, "isHeadHashBlockChanged")
             .mockReturnValue(of(true).pipe());
 
+        const navigateToDatasetViewSpy = vi
+            .spyOn(TestBed.inject(NavigationService), "navigateToDatasetView")
+            .mockImplementation(() => {});
+
         component.dbClickTableRow(row);
         expect(isHeadHashBlockChangedSpy).toHaveBeenCalledTimes(1);
+        expect(navigateToDatasetViewSpy).toHaveBeenCalledTimes(1);
+        expect(navigateToDatasetViewSpy).toHaveBeenCalledWith({
+            accountName: mockDatasetBasicsRootFragment.owner.accountName,
+            datasetName: mockDatasetBasicsRootFragment.name,
+            tab: DatasetViewTypeEnum.Overview,
+            [ProjectLinks.URL_QUERY_PARAM_PATH_PREFIX]: component.pathPrefix,
+        });
     });
 
     it("should check double click on file row", () => {
@@ -161,9 +175,19 @@ describe("CollectionViewComponent", () => {
         const isHeadHashBlockChangedSpy = vi
             .spyOn(datasetService, "isHeadHashBlockChanged")
             .mockReturnValue(of(true).pipe());
+        const navigateToDatasetViewSpy = vi
+            .spyOn(TestBed.inject(NavigationService), "navigateToDatasetView")
+            .mockImplementation(() => {});
         component.currentPage = 2;
         component.goUp();
         expect(component.currentPage).toEqual(1);
         expect(isHeadHashBlockChangedSpy).toHaveBeenCalledTimes(1);
+        expect(navigateToDatasetViewSpy).toHaveBeenCalledTimes(1);
+        expect(navigateToDatasetViewSpy).toHaveBeenCalledWith({
+            accountName: mockDatasetBasicsRootFragment.owner.accountName,
+            datasetName: mockDatasetBasicsRootFragment.name,
+            tab: DatasetViewTypeEnum.Overview,
+            [ProjectLinks.URL_QUERY_PARAM_PATH_PREFIX]: "/",
+        });
     });
 });

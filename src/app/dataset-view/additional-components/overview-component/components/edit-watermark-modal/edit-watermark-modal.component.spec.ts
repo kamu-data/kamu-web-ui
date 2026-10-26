@@ -5,10 +5,10 @@
  * included in the LICENSE file.
  */
 
+import { OverlayContainer } from "@angular/cdk/overlay";
 import { provideHttpClient } from "@angular/common/http";
 import { provideHttpClientTesting } from "@angular/common/http/testing";
 import { ComponentFixture, TestBed } from "@angular/core/testing";
-import { By } from "@angular/platform-browser";
 
 import { of } from "rxjs";
 
@@ -87,8 +87,8 @@ describe("EditWatermarkModalComponent", () => {
         fixture.detectChanges();
         emitClickOnElementByDataTestId(fixture, "fromdatepicker");
         fixture.detectChanges();
-        const datepicker = fixture.debugElement.query(By.css(".owl-dt-popup-container"));
-        expect(datepicker).toBeDefined();
+        const overlayContainer = TestBed.inject(OverlayContainer).getContainerElement();
+        expect(overlayContainer.querySelector(".owl-dt-popup-container")).not.toBeNull();
     });
 
     afterAll(() => {

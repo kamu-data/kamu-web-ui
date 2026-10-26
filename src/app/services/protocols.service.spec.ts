@@ -41,9 +41,7 @@ describe("ProtocolsService", () => {
         const subscription$ = service
             .getProtocols(mockDatasetInfo)
             .subscribe((result: MaybeUndefined<DatasetEndpointsDataFragment>) => {
-                if (result) {
-                    expect(result).toEqual(mockDatasetEndPoints);
-                }
+                expect(result).toEqual(mockDatasetEndPoints);
             });
 
         expect(getProtocolsSpy).toHaveBeenCalledTimes(1);

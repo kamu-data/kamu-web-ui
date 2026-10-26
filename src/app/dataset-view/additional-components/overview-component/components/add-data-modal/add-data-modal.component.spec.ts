@@ -33,7 +33,7 @@ describe("AddDataModalComponent", () => {
     let fileUploadService: FileUploadService;
     let modalService: ModalService;
     let configService: AppUIConfig;
-    let uploadFileLimitMbSpy: jasmine.Spy;
+    let uploadFileLimitMbSpy: jasmine.Spy<(this: AppUIConfig) => AppUIConfig["ingestUploadFileLimitMb"]>;
 
     function selectFile(file: File): void {
         const fileInput = document.createElement("input");
@@ -80,6 +80,7 @@ describe("AddDataModalComponent", () => {
     });
 
     it("should check if file selected and file size is over the upload limit", () => {
+        const uploadFileSpy = spyOn(fileUploadService, "uploadFile").and.callFake(() => of({}));
         const modalServiceSpy = spyOn(modalService, "warning").and.callFake((options: ModalArgumentsInterface) => {
             options.handler?.call(undefined, false);
             return Promise.resolve("");
@@ -88,5 +89,6 @@ describe("AddDataModalComponent", () => {
         uploadFileLimitMbSpy.and.returnValue(0);
         selectFile(mockFile);
         expect(modalServiceSpy).toHaveBeenCalledTimes(1);
+        expect(uploadFileSpy).not.toHaveBeenCalled();
     });
 });

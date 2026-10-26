@@ -105,6 +105,7 @@ describe("addPushSourceResolverFn", () => {
             mockReadonlyDatasetPermissionsFragment,
         );
 
+        expect(data).toBeInstanceOf(RedirectCommand);
         expectRedirectTo(data, `/${TEST_ACCOUNT_NAME}/${TEST_DATASET_NAME}`);
         expect(getEventAsYamlSpy).not.toHaveBeenCalled();
     });

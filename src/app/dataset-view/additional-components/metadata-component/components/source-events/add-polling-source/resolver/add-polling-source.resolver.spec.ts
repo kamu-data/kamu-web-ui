@@ -62,6 +62,7 @@ describe("addPollingSourceResolverFn", () => {
     }
 
     function expectOverviewRedirect(data: unknown): void {
+        expect(data).toBeInstanceOf(RedirectCommand);
         expectRedirectTo(data, `/${TEST_ACCOUNT_NAME}/${TEST_DATASET_NAME}`);
     }
 

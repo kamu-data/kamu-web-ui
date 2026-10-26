@@ -72,9 +72,7 @@ describe("AccessTokenService", () => {
         const subscription$ = service
             .createAccessTokens(TEST_ACCOUNT_ID, TOKEN_NAME)
             .subscribe((data: MaybeNull<CreatedAccessTokenDataFragment>) => {
-                if (data) {
-                    expect(data.composed).toEqual(result);
-                }
+                expect(data?.composed).toEqual(result);
             });
 
         expect(toastrServiceSuccessSpy).toHaveBeenCalledTimes(1);

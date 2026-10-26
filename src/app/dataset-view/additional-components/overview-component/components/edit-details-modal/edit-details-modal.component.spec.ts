@@ -74,8 +74,8 @@ describe("EditDetailsModalComponent", () => {
         });
         fixture.detectChanges();
 
-        expect(component.keywords).toBeDefined();
-        expect(component.description).toBeDefined();
+        expect(component.keywords).toEqual(["mock1", "mock2"]);
+        expect(component.description).toEqual("mock description");
     });
 
     it("should check commit event", () => {

@@ -111,12 +111,15 @@ describe("AccountComponent", () => {
         expect(fetchAccountByNameSpy).toHaveBeenCalledOnceWith(mockAccountDetails.accountName);
     });
 
-    it("should check activeTab when URL not exist query param tab", () => {
-        fixture.detectChanges();
-        mockQueryParams.next({ page: 1 });
+    it("should highlight the tab the route resolved as active", () => {
         setComponentInput(fixture, "activeTab", AccountTabs.DATASETS);
+        fixture.detectChanges();
+        const datasetsTab = getElementByDataTestId(fixture, "account-datasets-tab");
+        expect(datasetsTab.classList).toContain("active-link");
 
-        expect(component.activeTab).toEqual(AccountTabs.DATASETS);
+        setComponentInput(fixture, "activeTab", AccountTabs.STARS);
+        fixture.detectChanges();
+        expect(datasetsTab.classList).not.toContain("active-link");
     });
 
     it("should check routers link ", () => {

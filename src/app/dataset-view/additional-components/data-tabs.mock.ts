@@ -13,7 +13,6 @@ import {
     DatasetLineageBasicsFragment,
     DatasetOverviewFragment,
     DatasetOverviewMetadataDataFragment,
-    SetPollingSourceEventFragment,
 } from "@api/kamu.graphql.interface";
 import { TEST_AVATAR_URL } from "@api/mock/auth.mock";
 import { OdfTypes } from "@interface/dataset-schema.interface";
@@ -694,50 +693,6 @@ export const mockBuildGraphNodesResult: LineageGraphNode[] = [
     },
 ];
 
-export const mockSetPollingSourceEventFragment: SetPollingSourceEventFragment = {
-    __typename: "SetPollingSource",
-    fetch: {
-        __typename: "FetchStepUrl",
-        url: "https://www.alphavantage.co/query?function=TIME_SERIES_DAILY_ADJUSTED&symbol=SPY&outputsize=full&datatype=csv&apikey=${{ env.ALPHA_VANTAGE_API_KEY }}",
-        eventTime: null,
-        headers: null,
-        cache: null,
-    },
-    read: {
-        __typename: "ReadStepCsv",
-        schema: {
-            format: DataSchemaFormat.OdfJson,
-            content:
-                '{"fields":[{"name":"id","type":{"kind":"Option","inner":{"kind":"Int64"}}},{"name":"source","type":{"kind":"Option","inner":{"kind":"String"}}},{"name":"captures","type":{"kind":"Option","inner":{"kind":"Int32"}}},{"name":"capture_measure","type":{"kind":"Option","inner":{"kind":"String"}}},{"name":"taxon_name","type":{"kind":"Option","inner":{"kind":"String"}}},{"name":"scientific_name","type":{"kind":"Option","inner":{"kind":"String"}}},{"name":"parent_taxon","type":{"kind":"Option","inner":{"kind":"String"}}},{"name":"year","type":{"kind":"Option","inner":{"kind":"Int32"}}},{"name":"rfmo","type":{"kind":"Option","inner":{"kind":"String"}}},{"name":"gear_name","type":{"kind":"Option","inner":{"kind":"String"}}},{"name":"gear_code","type":{"kind":"Option","inner":{"kind":"String"}}},{"name":"flag","type":{"kind":"Option","inner":{"kind":"String"}}},{"name":"ocean","type":{"kind":"Option","inner":{"kind":"String"}}},{"name":"latitude","type":{"kind":"Option","inner":{"kind":"Float32"}}},{"name":"longitude","type":{"kind":"Option","inner":{"kind":"Float32"}}},{"name":"dataset_organisation","type":{"kind":"Option","inner":{"kind":"String"}}},{"name":"dataset_acknowledgement","type":{"kind":"Option","inner":{"kind":"String"}}},{"name":"dataset_url","type":{"kind":"Option","inner":{"kind":"String"}}},{"name":"dataset_date","type":{"kind":"Date"}}]}',
-            __typename: "DataSchema",
-        },
-        separator: null,
-        encoding: null,
-        quote: null,
-        escape: null,
-        dateFormat: null,
-        timestampFormat: null,
-    },
-    merge: {
-        __typename: "MergeStrategyLedger",
-        primaryKey: ["event_time"],
-    },
-    prepare: null,
-    preprocess: {
-        __typename: "TransformSql",
-        engine: "spark",
-        version: null,
-        queries: [
-            {
-                __typename: "SqlQueryStep",
-                query: 'select\n  timestamp as event_time,\n  "spy" as from_symbol,\n  "usd" as to_symbol,\n  open,\n  high,\n  low,\n  close\nfrom input\n',
-                alias: null,
-            },
-        ],
-        temporalTables: null,
-    },
-};
-
 export const mockOverviewDataUpdate: OverviewUpdate = {
     schema: null,
     content: [
@@ -868,75 +823,14 @@ export const mockOverviewDataUpdateNullable: OverviewUpdate = {
     schema: null,
     content: mockOverviewDataUpdate.content,
     overview: {
-        __typename: "Dataset",
-        data: {
-            __typename: "DatasetData",
-            numRecordsTotal: 6909,
-            estimatedSizeBytes: 1102418,
-        },
+        ...structuredClone(mockOverviewDataUpdate.overview),
         metadata: {
-            __typename: "DatasetMetadata",
-            currentInfo: {
-                __typename: "SetInfo",
-                description: null,
-                keywords: null,
-            },
+            ...structuredClone(mockOverviewDataUpdate.overview.metadata),
             currentLicense: mockMetadataCurrentLicense,
-            currentWatermark: "2022-08-05T20:24:55+00:00",
-            currentTransform: null,
-            currentPushSources: [],
             currentPollingSource: null,
-            currentReadme: null,
-            chain: {
-                __typename: "MetadataChain",
-                blocks: {
-                    __typename: "MetadataBlockConnection",
-                    nodes: [
-                        {
-                            __typename: "MetadataBlockExtended",
-                            blockHash: "zW1fSULqRHyTyhGXeCP4f8zX8QxcNVKNhVui42BWRdzHet3",
-                            prevBlockHash: "zW1prmMP3XKbMfdWn9MQWpy4WaT8u8LADxXb8us7CTVb1Vu",
-                            systemTime: "2022-08-05T21:15:03.947245004+00:00",
-                            sequenceNumber: 14,
-                            author: {
-                                __typename: "Account",
-                                ...mockOwnerFieldsWithAvatar,
-                            },
-                            event: {
-                                __typename: "AddData",
-                                newData: {
-                                    __typename: "DataSlice",
-                                    offsetInterval: {
-                                        __typename: "OffsetInterval",
-                                        start: 0,
-                                        end: 6908,
-                                    },
-                                    logicalHash: "z63ZND5BE6FyKyd9Wa2avVDuJXJWs79CrhCpu51J8v6vEPDZs7dW",
-                                    physicalHash: "zW1ZWFc65JcCqbCWCqqaWVnwcoY13t1MdHZ5fNifD94pv8w",
-                                    size: 1102418,
-                                },
-                            },
-                        },
-                    ],
-                    totalCount: 4,
-                    pageInfo: {
-                        __typename: "PageBasedInfo",
-                        hasNextPage: true,
-                        hasPreviousPage: false,
-                        currentPage: 0,
-                        totalPages: 4,
-                    },
-                },
-            },
         },
-        createdAt: "2022-08-05T21:10:57.332924745+00:00",
-        lastUpdatedAt: "2022-08-05T21:15:03.947245004+00:00",
     },
-    size: {
-        __typename: "DatasetData",
-        numRecordsTotal: 6909,
-        estimatedSizeBytes: 1102418,
-    },
+    size: structuredClone(mockOverviewDataUpdate.size),
 };
 
 export const mockMetadataRootUpdate: MetadataSchemaUpdate = {
@@ -1547,141 +1441,23 @@ export const mockMetadataDerivedUpdate: MetadataSchemaUpdate = {
 };
 
 export const mockOverviewWithSetInfo: DatasetOverviewFragment = {
-    __typename: "Dataset",
-    data: {
-        __typename: "DatasetData",
-        numRecordsTotal: 6909,
-        estimatedSizeBytes: 1102418,
-    },
+    ...structuredClone(mockOverviewDataUpdate.overview),
     metadata: {
-        __typename: "DatasetMetadata",
+        ...structuredClone(mockOverviewDataUpdate.overview.metadata),
         currentInfo: {
             __typename: "SetInfo",
             description: "mock description",
             keywords: ["mock1", "mock2"],
         },
-        currentLicense: null,
-        currentWatermark: "2022-08-05T20:24:55+00:00",
-        currentTransform: null,
-        currentPushSources: [],
-        currentPollingSource: { __typename: "SetPollingSource" },
-        currentReadme: null,
-        chain: {
-            __typename: "MetadataChain",
-            blocks: {
-                __typename: "MetadataBlockConnection",
-                nodes: [
-                    {
-                        __typename: "MetadataBlockExtended",
-                        blockHash: "zW1fSULqRHyTyhGXeCP4f8zX8QxcNVKNhVui42BWRdzHet3",
-                        prevBlockHash: "zW1prmMP3XKbMfdWn9MQWpy4WaT8u8LADxXb8us7CTVb1Vu",
-                        systemTime: "2022-08-05T21:15:03.947245004+00:00",
-                        sequenceNumber: 14,
-                        author: {
-                            __typename: "Account",
-                            ...mockOwnerFieldsWithAvatar,
-                        },
-                        event: {
-                            __typename: "AddData",
-                            newData: {
-                                __typename: "DataSlice",
-                                offsetInterval: {
-                                    __typename: "OffsetInterval",
-                                    start: 0,
-                                    end: 6908,
-                                },
-                                logicalHash: "z63ZND5BE6FyKyd9Wa2avVDuJXJWs79CrhCpu51J8v6vEPDZs7dW",
-                                physicalHash: "zW1ZWFc65JcCqbCWCqqaWVnwcoY13t1MdHZ5fNifD94pv8w",
-                                size: 1102418,
-                            },
-                        },
-                    },
-                ],
-                totalCount: 4,
-                pageInfo: {
-                    __typename: "PageBasedInfo",
-                    hasNextPage: true,
-                    hasPreviousPage: false,
-                    currentPage: 0,
-                    totalPages: 4,
-                },
-            },
-        },
     },
-    createdAt: "2022-08-05T21:10:57.332924745+00:00",
-    lastUpdatedAt: "2022-08-05T21:15:03.947245004+00:00",
 };
 
 export const mockOverviewWithSetLicense: DatasetOverviewFragment = {
-    __typename: "Dataset",
-    data: {
-        __typename: "DatasetData",
-        numRecordsTotal: 6909,
-        estimatedSizeBytes: 1102418,
-    },
+    ...structuredClone(mockOverviewWithSetInfo),
     metadata: {
-        __typename: "DatasetMetadata",
-        currentInfo: {
-            __typename: "SetInfo",
-            description: "mock description",
-            keywords: ["mock1", "mock2"],
-        },
-        currentLicense: {
-            shortName: "OGL-Canada-2.0",
-            name: "Open Government Licence - Canada",
-            spdxId: "OGL-Canada-2.0",
-            websiteUrl: "https://open.canada.ca/en/open-government-licence-canada",
-            __typename: "SetLicense",
-        },
-        currentWatermark: "2022-08-05T20:24:55+00:00",
-        currentTransform: null,
-        currentPushSources: [],
-        currentPollingSource: { __typename: "SetPollingSource" },
-        currentReadme: null,
-        chain: {
-            __typename: "MetadataChain",
-            blocks: {
-                __typename: "MetadataBlockConnection",
-                nodes: [
-                    {
-                        __typename: "MetadataBlockExtended",
-                        blockHash: "zW1fSULqRHyTyhGXeCP4f8zX8QxcNVKNhVui42BWRdzHet3",
-                        prevBlockHash: "zW1prmMP3XKbMfdWn9MQWpy4WaT8u8LADxXb8us7CTVb1Vu",
-                        systemTime: "2022-08-05T21:15:03.947245004+00:00",
-                        sequenceNumber: 14,
-                        author: {
-                            __typename: "Account",
-                            ...mockOwnerFieldsWithAvatar,
-                        },
-                        event: {
-                            __typename: "AddData",
-                            newData: {
-                                __typename: "DataSlice",
-                                offsetInterval: {
-                                    __typename: "OffsetInterval",
-                                    start: 0,
-                                    end: 6908,
-                                },
-                                logicalHash: "z63ZND5BE6FyKyd9Wa2avVDuJXJWs79CrhCpu51J8v6vEPDZs7dW",
-                                physicalHash: "zW1ZWFc65JcCqbCWCqqaWVnwcoY13t1MdHZ5fNifD94pv8w",
-                                size: 1102418,
-                            },
-                        },
-                    },
-                ],
-                totalCount: 4,
-                pageInfo: {
-                    __typename: "PageBasedInfo",
-                    hasNextPage: true,
-                    hasPreviousPage: false,
-                    currentPage: 0,
-                    totalPages: 4,
-                },
-            },
-        },
+        ...structuredClone(mockOverviewWithSetInfo.metadata),
+        currentLicense: structuredClone(mockMetadataCurrentLicense),
     },
-    createdAt: "2022-08-05T21:10:57.332924745+00:00",
-    lastUpdatedAt: "2022-08-05T21:15:03.947245004+00:00",
 };
 
 export const datasetMetadataDerivativeDataset: DatasetOverviewMetadataDataFragment = {
@@ -1701,4 +1477,19 @@ export const datasetMetadataRootDataset: DatasetOverviewMetadataDataFragment = {
 export const mockOverviewUpdate: OverviewUpdate = {
     ...structuredClone(mockOverviewDataUpdate), // clone, as we modify this data in the tests
     schema: mockMetadataRootPushSourceUpdate.schema,
+};
+
+export const mockDerivedOverviewUpdate: OverviewUpdate = {
+    ...structuredClone(mockOverviewDataUpdateNullable),
+    schema: mockMetadataDerivedUpdate.schema,
+};
+
+export const mockRootOverviewUpdate: OverviewUpdate = {
+    ...structuredClone(mockOverviewDataUpdate),
+    schema: mockMetadataRootUpdate.schema,
+};
+
+export const mockOverviewUpdateWithDerivedSchema: OverviewUpdate = {
+    ...structuredClone(mockOverviewDataUpdate),
+    schema: mockMetadataDerivedUpdate.schema,
 };

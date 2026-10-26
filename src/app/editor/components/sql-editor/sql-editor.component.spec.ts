@@ -23,7 +23,7 @@ import {
     sharedBasedEditorComponentTest,
 } from "src/app/editor/components/base-editor/base-editor.component.spec";
 import { SqlEditorComponent } from "src/app/editor/components/sql-editor/sql-editor.component";
-import { editorMock } from "src/app/editor/mock/editor.mock";
+import { createEditorMock } from "src/app/editor/mock/editor.mock";
 import { MonacoService } from "src/app/editor/services/monaco.service";
 
 /** The part of the Monaco namespace the SQL editor reads from `window` to build its keybindings */
@@ -56,16 +56,6 @@ describe("SqlEditorComponent", () => {
 
     sharedBasedEditorComponentTest(createTestEnvironment);
 
-    function editorWithSelectedText(selectedText: string): jasmine.SpyObj<monaco.editor.IStandaloneCodeEditor> {
-        return jasmine.createSpyObj<monaco.editor.IStandaloneCodeEditor>("IStandaloneCodeEditor", {
-            getModel: jasmine.createSpyObj<monaco.editor.ITextModel>("ITextModel", { getValueInRange: selectedText }),
-            getSelection: jasmine.createSpyObj<monaco.Selection>("Selection", { isEmpty: !selectedText }),
-            addAction: { dispose: () => undefined },
-            createContextKey: { set: () => undefined, reset: () => undefined, get: () => false },
-            onDidChangeCursorSelection: { dispose: () => undefined },
-        });
-    }
-
     function selectionChangedEvent(isEmpty: boolean): monaco.editor.ICursorSelectionChangedEvent {
         return {
             selection: jasmine.createSpyObj<monaco.Selection>("Selection", { isEmpty }),
@@ -82,7 +72,7 @@ describe("SqlEditorComponent", () => {
         const ngZone = TestBed.inject(NgZone);
         const ngZoneRunSpy = spyOn(ngZone, "run").and.callThrough();
         const actions: monaco.editor.IActionDescriptor[] = [];
-        const editor = editorWithSelectedText("");
+        const editor = createEditorMock();
         editor.addAction.and.callFake((action: monaco.editor.IActionDescriptor): monaco.IDisposable => {
             actions.push(action);
             return { dispose: () => undefined };
@@ -112,7 +102,7 @@ describe("SqlEditorComponent", () => {
         let hasSelectionValues: monaco.editor.ContextKeyValue[];
 
         function initEditorWithSelectedText(selectedText: string): monaco.editor.IStandaloneCodeEditor {
-            const editor = editorWithSelectedText(selectedText);
+            const editor = createEditorMock(selectedText);
             editor.addAction.and.callFake((action: monaco.editor.IActionDescriptor): monaco.IDisposable => {
                 actions.push(action);
                 return { dispose: () => undefined };
@@ -216,7 +206,7 @@ describe("SqlEditorComponent", () => {
 
         it("should check clicking the placeholder focuses the editor", () => {
             const focusSpy = jasmine.createSpy("focus");
-            component.onInitEditor({ ...editorMock, focus: focusSpy });
+            component.onInitEditor({ ...createEditorMock(), focus: focusSpy });
             setComponentInput(fixture, "template", "");
             fixture.detectChanges();
 

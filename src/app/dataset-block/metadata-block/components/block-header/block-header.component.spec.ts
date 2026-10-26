@@ -12,10 +12,9 @@ import { ComponentFixture, TestBed } from "@angular/core/testing";
 import { Apollo } from "apollo-angular";
 import { provideToastr } from "ngx-toastr";
 
-import { requireValue } from "@common/helpers/app.helpers";
 import { registerMatSvgIcons, setComponentInput } from "@common/helpers/base-test.helpers.spec";
 import { SharedTestModule } from "@common/modules/shared-test.module";
-import { mockGetMetadataBlockQuery } from "@api/mock/dataset.mock";
+import { mockMetadataBlockByHash } from "@api/mock/dataset.mock";
 
 import { BlockHeaderComponent } from "src/app/dataset-block/metadata-block/components/block-header/block-header.component";
 
@@ -33,11 +32,7 @@ describe("BlockHeaderComponent", () => {
 
         fixture = TestBed.createComponent(BlockHeaderComponent);
         component = fixture.componentInstance;
-        setComponentInput(
-            fixture,
-            "block",
-            requireValue(mockGetMetadataBlockQuery.datasets.byOwnerAndName?.metadata.chain.blockByHash ?? null),
-        );
+        setComponentInput(fixture, "block", mockMetadataBlockByHash);
         fixture.detectChanges();
     });
 

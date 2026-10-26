@@ -30,8 +30,10 @@ export const MOCK_ACCOUNT_WITH_ROLE: AccountWithRoleDataFragment = {
         avatarUrl: "https://avatars.githubusercontent.com/u/50896974?s=200&v=4",
         isAdmin: true,
         accountProvider: AccountProvider.Password,
+        __typename: "Account",
     },
     role: DatasetAccessRole.Maintainer,
+    __typename: "AccountWithRole",
 };
 
 export const mockDatasetCollaboratorsConnection: AccountWithRoleConnectionDataFragment = {

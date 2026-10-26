@@ -11,10 +11,7 @@ import { ComponentFixture, TestBed } from "@angular/core/testing";
 
 import { registerMatSvgIcons, setComponentInput } from "@common/helpers/base-test.helpers.spec";
 
-import {
-    mockMetadataDerivedUpdate,
-    mockOverviewDataUpdateNullable,
-} from "src/app/dataset-view/additional-components/data-tabs.mock";
+import { mockDerivedOverviewUpdate } from "src/app/dataset-view/additional-components/data-tabs.mock";
 import { MetadataTransformationTabComponent } from "src/app/dataset-view/additional-components/metadata-component/tabs/metadata-transformation-tab/metadata-transformation-tab.component";
 import { mockDatasetBasicsDerivedFragment, mockFullPowerDatasetPermissionsFragment } from "src/app/search/mock.data";
 
@@ -32,10 +29,7 @@ describe("MetadataTransformationTabComponent", () => {
         setComponentInput(fixture, "datasetMetadataTabData", {
             datasetBasics: structuredClone(mockDatasetBasicsDerivedFragment),
             datasetPermissions: structuredClone(mockFullPowerDatasetPermissionsFragment),
-            overviewUpdate: {
-                ...structuredClone(mockOverviewDataUpdateNullable),
-                schema: mockMetadataDerivedUpdate.schema,
-            },
+            overviewUpdate: mockDerivedOverviewUpdate,
         });
         registerMatSvgIcons();
         fixture.detectChanges();

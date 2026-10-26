@@ -19,9 +19,8 @@ import { of } from "rxjs";
 import { ApolloTestingModule } from "apollo-angular/testing";
 import { provideToastr } from "ngx-toastr";
 
-import { requireValue } from "@common/helpers/app.helpers";
 import { registerMatSvgIcons, setComponentInput } from "@common/helpers/base-test.helpers.spec";
-import { mockGetMetadataBlockQuery } from "@api/mock/dataset.mock";
+import { mockMetadataBlockByHash } from "@api/mock/dataset.mock";
 
 import { MetadataBlockComponent } from "src/app/dataset-block/metadata-block/metadata-block.component";
 
@@ -29,10 +28,6 @@ describe("MetadataBlockComponent", () => {
     let component: MetadataBlockComponent;
     let fixture: ComponentFixture<MetadataBlockComponent>;
     let loader: HarnessLoader;
-
-    const blockFragment = requireValue(
-        mockGetMetadataBlockQuery.datasets.byOwnerAndName?.metadata.chain.blockByHash ?? null,
-    );
 
     beforeEach(async () => {
         await TestBed.configureTestingModule({
@@ -72,7 +67,7 @@ describe("MetadataBlockComponent", () => {
         component = fixture.componentInstance;
         loader = TestbedHarnessEnvironment.loader(fixture);
         setComponentInput(fixture, "metadata", {
-            block: blockFragment,
+            block: mockMetadataBlockByHash,
             blockAsYaml: "test yaml",
             downstreamsCount: 0,
         });

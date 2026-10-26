@@ -13,10 +13,7 @@ import { provideToastr } from "ngx-toastr";
 
 import { registerMatSvgIcons, setComponentInput } from "@common/helpers/base-test.helpers.spec";
 
-import {
-    mockMetadataDerivedUpdate,
-    mockOverviewDataUpdateNullable,
-} from "src/app/dataset-view/additional-components/data-tabs.mock";
+import { mockDerivedOverviewUpdate } from "src/app/dataset-view/additional-components/data-tabs.mock";
 import { MetadataSchemaTabComponent } from "src/app/dataset-view/additional-components/metadata-component/tabs/metadata-schema-tab/metadata-schema-tab.component";
 import { mockDatasetBasicsDerivedFragment, mockFullPowerDatasetPermissionsFragment } from "src/app/search/mock.data";
 
@@ -35,10 +32,7 @@ describe("MetadataSchemaTabComponent", () => {
         setComponentInput(fixture, "datasetMetadataTabData", {
             datasetBasics: mockDatasetBasicsDerivedFragment,
             datasetPermissions: mockFullPowerDatasetPermissionsFragment,
-            overviewUpdate: {
-                ...structuredClone(mockOverviewDataUpdateNullable),
-                schema: mockMetadataDerivedUpdate.schema,
-            },
+            overviewUpdate: mockDerivedOverviewUpdate,
         });
 
         fixture.detectChanges();

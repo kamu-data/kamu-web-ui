@@ -10,7 +10,7 @@ import { ComponentFixture, TestBed } from "@angular/core/testing";
 import { setComponentInput } from "@common/helpers/base-test.helpers.spec";
 
 import { BaseEditorComponent } from "src/app/editor/components/base-editor/base-editor.component";
-import { editorMock, editorModelMock } from "src/app/editor/mock/editor.mock";
+import { createEditorMock, createEditorModelMock } from "src/app/editor/mock/editor.mock";
 import { MonacoService } from "src/app/editor/services/monaco.service";
 
 export interface BaseEditorComponentTestEnvironment {
@@ -27,7 +27,7 @@ export function sharedBasedEditorComponentTest(environmentFactory: () => BaseEdi
         fixture = testEnvironment.fixture;
         component = fixture.componentInstance;
         monacoService = TestBed.inject(MonacoService);
-        component.editorModel = editorModelMock;
+        component.editorModel = createEditorModelMock();
     });
 
     it("should create", () => {
@@ -64,7 +64,7 @@ export function sharedBasedEditorComponentTest(environmentFactory: () => BaseEdi
     it("should emit onEditorLoaded on onInitEditor", () => {
         const onEditorLoadedSpy = spyOn(component.onEditorLoaded, "emit");
 
-        component.onInitEditor(editorMock);
+        component.onInitEditor(createEditorMock());
 
         expect(onEditorLoadedSpy).toHaveBeenCalledWith();
     });

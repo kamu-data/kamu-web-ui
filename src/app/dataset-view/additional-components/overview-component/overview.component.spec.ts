@@ -31,10 +31,7 @@ import { DatasetCurrentInfoFragment, DatasetKind, DatasetOverviewFragment } from
 
 import { LoggedUserService } from "src/app/auth/logged-user.service";
 import { mockSetLicense } from "src/app/dataset-block/metadata-block/components/event-details/mock.events";
-import {
-    mockMetadataDerivedUpdate,
-    mockOverviewDataUpdate,
-} from "src/app/dataset-view/additional-components/data-tabs.mock";
+import { mockOverviewUpdateWithDerivedSchema } from "src/app/dataset-view/additional-components/data-tabs.mock";
 import { DatasetCollaborationsService } from "src/app/dataset-view/additional-components/dataset-settings-component/tabs/access/dataset-settings-access-tab/dataset-collaborations.service";
 import { DatasetFlowsService } from "src/app/dataset-view/additional-components/flows-component/services/dataset-flows.service";
 import { OverviewComponent } from "src/app/dataset-view/additional-components/overview-component/overview.component";
@@ -65,10 +62,7 @@ describe("OverviewComponent", () => {
         registerMatSvgIcons();
 
         datasetSubsService = TestBed.inject(DatasetSubscriptionsService);
-        datasetSubsService.emitOverviewChanged({
-            ...structuredClone(mockOverviewDataUpdate), // clone, as we modify this data in the tests
-            schema: mockMetadataDerivedUpdate.schema,
-        });
+        datasetSubsService.emitOverviewChanged(structuredClone(mockOverviewUpdateWithDerivedSchema));
 
         navigationService = TestBed.inject(NavigationService);
         datasetFlowsService = TestBed.inject(DatasetFlowsService);
@@ -82,10 +76,7 @@ describe("OverviewComponent", () => {
         setComponentInput(fixture, "datasetOverviewTabData", {
             datasetBasics: structuredClone(mockDatasetBasicsRootFragment),
             datasetPermissions: structuredClone(mockFullPowerDatasetPermissionsFragment),
-            overviewUpdate: {
-                ...structuredClone(mockOverviewDataUpdate),
-                schema: mockMetadataDerivedUpdate.schema,
-            },
+            overviewUpdate: structuredClone(mockOverviewUpdateWithDerivedSchema),
         });
         fixture.detectChanges();
     });

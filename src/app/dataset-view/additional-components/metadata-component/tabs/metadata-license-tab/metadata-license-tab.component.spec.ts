@@ -20,10 +20,7 @@ import {
 } from "@common/helpers/base-test.helpers.spec";
 import { SharedTestModule } from "@common/modules/shared-test.module";
 
-import {
-    mockMetadataDerivedUpdate,
-    mockOverviewDataUpdateNullable,
-} from "src/app/dataset-view/additional-components/data-tabs.mock";
+import { mockDerivedOverviewUpdate } from "src/app/dataset-view/additional-components/data-tabs.mock";
 import { MetadataLicenseTabComponent } from "src/app/dataset-view/additional-components/metadata-component/tabs/metadata-license-tab/metadata-license-tab.component";
 import {
     mockDatasetBasicsDerivedFragment,
@@ -50,10 +47,7 @@ describe("MetadataLicenseTabComponent", () => {
         setComponentInput(fixture, "datasetMetadataTabData", {
             datasetBasics: mockDatasetBasicsDerivedFragment,
             datasetPermissions: mockFullPowerDatasetPermissionsFragment,
-            overviewUpdate: {
-                ...structuredClone(mockOverviewDataUpdateNullable),
-                schema: mockMetadataDerivedUpdate.schema,
-            },
+            overviewUpdate: mockDerivedOverviewUpdate,
         });
 
         fixture.detectChanges();

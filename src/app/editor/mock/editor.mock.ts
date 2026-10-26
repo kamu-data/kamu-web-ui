@@ -7,17 +7,22 @@
 
 import type * as monaco from "monaco-editor";
 
-export const editorModelMock: jasmine.SpyObj<monaco.editor.ITextModel> = jasmine.createSpyObj<monaco.editor.ITextModel>(
-    "ITextModel",
-    ["getValue", "getValueInRange"],
-);
+/** A new model spy per call, so call records never carry over between specs. */
+export function createEditorModelMock(selectedText: string = ""): jasmine.SpyObj<monaco.editor.ITextModel> {
+    return jasmine.createSpyObj<monaco.editor.ITextModel>("ITextModel", {
+        getValue: undefined,
+        getValueInRange: selectedText,
+    });
+}
 
-export const editorMock: jasmine.SpyObj<monaco.editor.IStandaloneCodeEditor> =
-    jasmine.createSpyObj<monaco.editor.IStandaloneCodeEditor>("IStandaloneCodeEditor", {
-        getModel: editorModelMock,
+/** A new editor spy per call whose model returns `selectedText` and whose selection is empty when it is. */
+export function createEditorMock(selectedText: string = ""): jasmine.SpyObj<monaco.editor.IStandaloneCodeEditor> {
+    return jasmine.createSpyObj<monaco.editor.IStandaloneCodeEditor>("IStandaloneCodeEditor", {
+        getModel: createEditorModelMock(selectedText),
         addAction: { dispose: () => undefined },
         createContextKey: { set: () => undefined, reset: () => undefined, get: () => false },
-        getSelection: jasmine.createSpyObj<monaco.Selection>("Selection", { isEmpty: true }),
+        getSelection: jasmine.createSpyObj<monaco.Selection>("Selection", { isEmpty: !selectedText }),
         onDidChangeCursorSelection: { dispose: () => undefined },
         focus: undefined,
     });
+}

@@ -21,10 +21,7 @@ import {
     setComponentInput,
 } from "@common/helpers/base-test.helpers.spec";
 
-import {
-    mockMetadataRootUpdate,
-    mockOverviewDataUpdate,
-} from "src/app/dataset-view/additional-components/data-tabs.mock";
+import { mockRootOverviewUpdate } from "src/app/dataset-view/additional-components/data-tabs.mock";
 import { DatasetSettingsComponent } from "src/app/dataset-view/additional-components/dataset-settings-component/dataset-settings.component";
 import { SettingsTabsEnum } from "src/app/dataset-view/additional-components/dataset-settings-component/dataset-settings.model";
 import { mockDatasetBasicsDerivedFragment, mockFullPowerDatasetPermissionsFragment } from "src/app/search/mock.data";
@@ -75,10 +72,7 @@ describe("DatasetSettingsComponent", () => {
         setComponentInput(fixture, "datasetSettingsTabData", {
             datasetBasics: mockDatasetBasicsDerivedFragment,
             datasetPermissions: mockFullPowerDatasetPermissionsFragment,
-            overviewUpdate: {
-                ...structuredClone(mockOverviewDataUpdate), // clone, as we modify this data in the tests
-                schema: mockMetadataRootUpdate.schema,
-            },
+            overviewUpdate: mockRootOverviewUpdate,
         });
         fixture.detectChanges();
     });

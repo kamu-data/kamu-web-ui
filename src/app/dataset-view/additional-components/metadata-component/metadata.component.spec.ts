@@ -17,9 +17,9 @@ import { SharedTestModule } from "@common/modules/shared-test.module";
 import { DatasetKind } from "@api/kamu.graphql.interface";
 
 import {
+    mockDerivedOverviewUpdate,
     mockMetadataDerivedUpdate,
     mockMetadataRootUpdate,
-    mockOverviewDataUpdateNullable,
 } from "src/app/dataset-view/additional-components/data-tabs.mock";
 import { MetadataComponent } from "src/app/dataset-view/additional-components/metadata-component/metadata.component";
 import { MetadataTabs } from "src/app/dataset-view/additional-components/metadata-component/metadata.constants";
@@ -53,10 +53,7 @@ describe("MetadataComponent", () => {
         setComponentInput(fixture, "datasetMetadataTabData", {
             datasetBasics: mockDatasetBasicsDerivedFragment,
             datasetPermissions: mockFullPowerDatasetPermissionsFragment,
-            overviewUpdate: {
-                ...structuredClone(mockOverviewDataUpdateNullable),
-                schema: mockMetadataDerivedUpdate.schema,
-            },
+            overviewUpdate: mockDerivedOverviewUpdate,
         });
         setComponentInput(fixture, "activeTab", MetadataTabs.Schema);
         fixture.detectChanges();

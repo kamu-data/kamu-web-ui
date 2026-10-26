@@ -13,7 +13,7 @@ import { HIGHLIGHT_OPTIONS_PROVIDER } from "@common/helpers/app.helpers";
 import { setComponentInput } from "@common/helpers/base-test.helpers.spec";
 import { SharedTestModule } from "@common/modules/shared-test.module";
 
-import { mockSetPollingSourceEventFragment } from "src/app/dataset-view/additional-components/data-tabs.mock";
+import { mockSetPollingSourceEvent } from "src/app/dataset-block/metadata-block/components/event-details/mock.events";
 import { SourceEventCommonDataComponent } from "src/app/dataset-view/additional-components/metadata-component/tabs/common/source-event-common-data/source-event-common-data.component";
 
 describe("SourceEventCommonDataComponent", () => {
@@ -27,7 +27,7 @@ describe("SourceEventCommonDataComponent", () => {
         });
         fixture = TestBed.createComponent(SourceEventCommonDataComponent);
         component = fixture.componentInstance;
-        setComponentInput(fixture, "sourceEvent", structuredClone(mockSetPollingSourceEventFragment));
+        setComponentInput(fixture, "sourceEvent", mockSetPollingSourceEvent);
         fixture.detectChanges();
     });
 

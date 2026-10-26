@@ -9,7 +9,7 @@ import { Location } from "@angular/common";
 import { provideHttpClient } from "@angular/common/http";
 import { provideHttpClientTesting } from "@angular/common/http/testing";
 import { provideLocationMocks } from "@angular/common/testing";
-import { NO_ERRORS_SCHEMA, Provider } from "@angular/core";
+import { Provider } from "@angular/core";
 import { ComponentFixture, fakeAsync, flush, TestBed, tick } from "@angular/core/testing";
 import { Router, ROUTES } from "@angular/router";
 
@@ -32,10 +32,7 @@ import { provideCatchAllRoute, provideConditionalGuardedRoutes, PUBLIC_ROUTES } 
 import { LoggedUserService } from "src/app/auth/logged-user.service";
 import { LoginMethodsService } from "src/app/auth/login-methods.service";
 import { LoginComponent } from "src/app/auth/login/login.component";
-import {
-    mockMetadataDerivedUpdate,
-    mockOverviewDataUpdateNullable,
-} from "src/app/dataset-view/additional-components/data-tabs.mock";
+import { mockDerivedOverviewUpdate } from "src/app/dataset-view/additional-components/data-tabs.mock";
 import { datasetOverviewTabResolverFn } from "src/app/dataset-view/additional-components/overview-component/resolver/dataset-overview-tab.resolver";
 import { datasetViewResolverFn } from "src/app/dataset-view/resolvers/dataset-view.resolver";
 import ProjectLinks from "src/app/project-links";
@@ -55,7 +52,6 @@ describe("Router", () => {
 
     async function configureRouter(allowAnonymous: boolean, extraProviders: Provider[] = []): Promise<void> {
         await TestBed.configureTestingModule({
-            schemas: [NO_ERRORS_SCHEMA],
             imports: [ApolloTestingModule, PageNotFoundComponent, LoginComponent],
             providers: [
                 Apollo,
@@ -102,10 +98,7 @@ describe("Router", () => {
                             of({
                                 datasetBasics: mockDatasetBasicsDerivedFragment,
                                 datasetPermissions: mockFullPowerDatasetPermissionsFragment,
-                                overviewUpdate: {
-                                    ...structuredClone(mockOverviewDataUpdateNullable),
-                                    schema: mockMetadataDerivedUpdate.schema,
-                                },
+                                overviewUpdate: mockDerivedOverviewUpdate,
                             }),
                     },
                 },

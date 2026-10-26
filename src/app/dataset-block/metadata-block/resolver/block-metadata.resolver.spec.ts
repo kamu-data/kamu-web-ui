@@ -13,7 +13,12 @@ import { Apollo } from "apollo-angular";
 
 import { requireValue } from "@common/helpers/app.helpers";
 import { expectPageNotFoundRedirect, routeSnapshot, runResolver } from "@common/helpers/base-test.helpers.spec";
-import { mockGetMetadataBlockQuery, TEST_ACCOUNT_NAME, TEST_DATASET_NAME } from "@api/mock/dataset.mock";
+import {
+    mockGetMetadataBlockQuery,
+    mockMetadataBlockByHash,
+    TEST_ACCOUNT_NAME,
+    TEST_DATASET_NAME,
+} from "@api/mock/dataset.mock";
 
 import { BlockService } from "src/app/dataset-block/metadata-block/block.service";
 import { MetadataBlockInfo } from "src/app/dataset-block/metadata-block/metadata-block.types";
@@ -36,7 +41,7 @@ describe("blockMetadataResolverFn", () => {
 
     const mockDatasetMetadata = requireValue(mockGetMetadataBlockQuery.datasets.byOwnerAndName ?? null).metadata;
     const mockBlockInfo: MetadataBlockInfo = {
-        block: requireValue(mockDatasetMetadata.chain.blockByHash ?? null),
+        block: mockMetadataBlockByHash,
         blockAsYaml: requireValue(mockDatasetMetadata.chain.blockByHashEncoded ?? null),
         downstreamsCount: mockDatasetMetadata.currentDownstreamDependenciesCount,
     };

@@ -109,13 +109,6 @@ export const mockQueryExplainerEmptyOutput: QueryExplainerOutputType = {
 };
 
 export const mockVerifyQueryResponseSuccess: VerifyQuerySuccessResponse = { ok: true };
-export const mockVerifyQueryResponseError: VerifyQueryFailureResponse = {
-    ok: false,
-    error: {
-        kind: VerifyQueryKindError.InputHash,
-        message: "Error",
-    },
-};
 
 const datasetBlockNotFoundError: VerifyQueryDatasetBlockNotFoundError = {
     dataset_id: "test-id",

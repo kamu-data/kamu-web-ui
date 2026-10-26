@@ -786,7 +786,7 @@ export const mockDatasetResumeFlowsMutationError: DatasetResumeFlowsMutation = {
     },
 };
 
-export const mockDatasetListFlowsDataset: DatasetBasicsFragment = {
+const mockDatasetListFlowsDataset: DatasetBasicsFragment = {
     id: "did:odf:fed0114053491ae4e9b40205d34e252b193ff97b490bd9f27a3a618f9f7221231ab99",
     kind: DatasetKind.Root,
     name: "test-dataset",
@@ -799,7 +799,7 @@ export const mockDatasetListFlowsDataset: DatasetBasicsFragment = {
     __typename: "Dataset",
 };
 
-export const mockDatasetListFlowsTable: FlowConnectionDataFragment = {
+const mockDatasetListFlowsTable: FlowConnectionDataFragment = {
     nodes: [
         {
             datasetId: "did:odf:fed0114053491ae4e9b40205d34e252b193ff97b490bd9f27a3a618f9f7221231ab99",
@@ -897,7 +897,7 @@ export const mockDatasetListFlowsTable: FlowConnectionDataFragment = {
     __typename: "FlowConnection",
 };
 
-export const mockDatasetListFlowsTiles: FlowConnectionWidgetDataFragment = {
+const mockDatasetListFlowsTiles: FlowConnectionWidgetDataFragment = {
     nodes: [
         {
             flowId: "0",

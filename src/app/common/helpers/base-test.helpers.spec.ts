@@ -456,11 +456,6 @@ export async function runResolver<T>(
     return isObservable(result) ? firstValueFrom(result) : result;
 }
 
-/** A `Uint64` value as the API sends it: a string, although codegen types the scalar as a number. */
-export function uint64FromApi(value: string): number {
-    return value as unknown as number;
-}
-
 // Methods of `T`, without those every object inherits, which an object literal would otherwise have to match.
 type MethodKey<T> = Exclude<
     { [K in keyof T]: T[K] extends (...args: never[]) => unknown ? K : never }[keyof T],

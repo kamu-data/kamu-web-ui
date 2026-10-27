@@ -5,7 +5,6 @@
  * included in the LICENSE file.
  */
 
-import { uint64FromApi } from "@common/helpers/base-test.helpers.spec";
 import {
     DatasetAccessResultNotAccessibleDataFragment,
     DatasetKind,
@@ -65,19 +64,19 @@ export const mockLineageUpdateWithSharedPushSource: LineageUpdate = {
     origin: MOCK_DERIVED_DATASET,
 };
 
-const MOCK_CHAIN_ID_FROM_API = uint64FromApi("1");
+const MOCK_CHAIN_ID = "1";
 
 export const MOCK_ETHEREUM_NODE_URL = "https://eth.example.com";
 
 const mockEthereumRootWithNodeUrl = mockEthereumRoot("did:odf:eth-node", "eth-node", {
     __typename: "FetchStepEthereumLogs",
     nodeUrl: MOCK_ETHEREUM_NODE_URL,
-    chainId: MOCK_CHAIN_ID_FROM_API,
+    chainId: MOCK_CHAIN_ID,
 });
 const mockEthereumRootWithChainOnly = mockEthereumRoot("did:odf:eth-chain", "eth-chain", {
     __typename: "FetchStepEthereumLogs",
     nodeUrl: null,
-    chainId: MOCK_CHAIN_ID_FROM_API,
+    chainId: MOCK_CHAIN_ID,
 });
 
 export const mockLineageUpdateWithEthereumSources: LineageUpdate = {

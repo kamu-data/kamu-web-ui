@@ -15,4 +15,4 @@ generates:
       gqlImport: "@apollo/client/core#gql"
       scalars:
         ExtraData: Record<string, any>
-        Uint64: number
+        Uint64: string

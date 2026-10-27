@@ -37,17 +37,17 @@ export const mockAddData: { __typename: "AddData" } & AddDataEventFragment = {
         __typename: "DataSlice",
         offsetInterval: {
             __typename: "OffsetInterval",
-            start: 0,
-            end: 596125,
+            start: "0",
+            end: "596125",
         },
         logicalHash: "z63ZND5BG3GUBRWVV3AtQj1WHLucVaAb9kSpXLeVxTdWob7PSc5J",
         physicalHash: "zW1hrpnAnB6AoHu4j9e1m8McQRWzDN1Q8h4Vm4GCa9XKnWf",
-        size: 5993876,
+        size: "5993876",
     },
     newCheckpoint: {
         __typename: "Checkpoint",
         physicalHash: "zW1diFMSn97sDG4WMMKZ7pvM7vVenC5ytAesQK7V3qqALPv",
-        size: 2560,
+        size: "2560",
     },
 };
 
@@ -194,12 +194,12 @@ export const mockExecuteTransform: ExecuteTransformEventFragment = {
         __typename: "DataSlice",
         offsetInterval: {
             __typename: "OffsetInterval",
-            start: 0,
-            end: 596125,
+            start: "0",
+            end: "596125",
         },
         logicalHash: "z63ZND5B21T2Dbmr2bB2Eu2Y4fjEJzLYrwiumM7ApeU24N29qpna",
         physicalHash: "zW1i7cajDaJjwxCRaRyGHqJpDrqZXbm1wMZkaWrH8a8Cmbd",
-        size: 2323,
+        size: "2323",
     },
     prevCheckpoint: null,
     newWatermark: "2022-08-01T00:00:00+00:00",
@@ -210,13 +210,13 @@ export const mockExecuteTransform: ExecuteTransformEventFragment = {
             prevBlockHash: "zW1qJPmDvBxGS9GeC7PFseSCy7koHjvurUmisf1VWscY3AX",
             newBlockHash: "zW1fzwrGZbrvqoXujua5oxj4j466tDwXySjpVMi8BvZ2mtj",
             prevOffset: null,
-            newOffset: 596125,
+            newOffset: "596125",
         },
     ],
     newCheckpoint: {
         __typename: "Checkpoint",
         physicalHash: "zW1otipGpjScUH8C2RfaF4s8RshReBbQVPDf2fPrp2R8Ft2",
-        size: 2560,
+        size: "2560",
     },
 };
 

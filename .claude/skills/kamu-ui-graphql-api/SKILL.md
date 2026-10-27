@@ -58,9 +58,13 @@ src/app/api/gql/**/*.graphql ┴─ npm run gql-codegen ─→ src/app/api/kamu.
   `kamu.graphql.interface.ts` in the same change. The file is generated — the edit hook refuses
   hand edits.
 - Codegen config is `gql-codegen.yml`: `inlineFragmentTypes: combine`, unknown scalars default
-  to `string`, `ExtraData` is `Record<string, any>`, `Uint64` is `number`. The generated header
+  to `string`, `ExtraData` is `Record<string, any>`, `Uint64` is `string`. The generated header
   must import `gql` from `@apollo/client/core` (`gqlImport` in the config); if it ever shows
   `apollo-angular`, fix the config rather than the output.
+- `Uint64` stays `string` because the API sends it as a JSON string: a JSON number above 2^53
+  loses precision in `JSON.parse`, and the backend rejects a number as input. Code that counts
+  with one converts it, `Number()` for values known to be small (chain ids, byte sizes),
+  `BigInt()` where the result must stay exact (offset arithmetic in `data.helpers.ts`).
 - A codegen error means a document does not match the schema. Fix the document, or refresh the
   schema when the backend has moved on.
 

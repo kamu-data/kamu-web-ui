@@ -223,7 +223,7 @@ describe("NavigationService", () => {
 
     it("should navigate to a dataset tab and pass the navigation state", () => {
         const routerSpy = vi.spyOn(router, "navigateByUrl").mockResolvedValue(true);
-        const state = { from: "test" };
+        const state = { start: "0", end: "9" };
 
         service.navigateToDatasetView({ accountName: "kamu", datasetName: "ds", tab: "history", page: 2, state });
 

@@ -32,7 +32,6 @@ export const FETCH_FORM_DATA: JsonFormData = {
             {
                 name: "eventTime",
                 label: "Event time",
-                value: "",
                 type: ControlType.EVENT_TIME,
                 tooltip: SetPollingSourceTooltipsTexts.EVENT_TIME,
                 options: {
@@ -46,7 +45,6 @@ export const FETCH_FORM_DATA: JsonFormData = {
             },
             {
                 name: "headers",
-                value: "",
                 label: "Headers",
                 type: ControlType.ARRAY_KEY_VALUE,
                 tooltip: SourcesTooltipsTexts.HEADERS,
@@ -91,7 +89,6 @@ export const FETCH_FORM_DATA: JsonFormData = {
             {
                 name: "eventTime",
                 label: "Event time",
-                value: "",
                 type: ControlType.EVENT_TIME,
                 tooltip: SetPollingSourceTooltipsTexts.EVENT_TIME,
                 validators: {},
@@ -129,11 +126,9 @@ export const FETCH_FORM_DATA: JsonFormData = {
                 name: "command",
                 label: "Commands",
                 placeholder: "Enter command...",
-                value: "",
                 type: ControlType.ARRAY_KEY,
                 tooltip: SetPollingSourceTooltipsTexts.COMMANDS,
                 options: {
-                    formArrayName: "command",
                     buttonText: "+ Add command",
                 },
                 validators: {},
@@ -142,11 +137,9 @@ export const FETCH_FORM_DATA: JsonFormData = {
                 name: "args",
                 label: "Arguments",
                 placeholder: "Enter argument...",
-                value: "",
                 type: ControlType.ARRAY_KEY,
                 tooltip: SetPollingSourceTooltipsTexts.ARGUMENTS,
                 options: {
-                    formArrayName: "args",
                     buttonText: "+ Add argument",
                 },
                 validators: {},
@@ -154,12 +147,6 @@ export const FETCH_FORM_DATA: JsonFormData = {
 
             {
                 name: "env",
-                value: [
-                    {
-                        name: "ETH_NODE_PROVIDER_URL",
-                        value: null,
-                    },
-                ],
                 label: "Environment variables",
                 type: ControlType.ARRAY_KEY_VALUE,
                 tooltip: SetPollingSourceTooltipsTexts.ENVIRONMENT_VARIABLES,
@@ -215,7 +202,6 @@ export const FETCH_FORM_DATA: JsonFormData = {
             },
             {
                 name: "topics",
-                value: [],
                 label: "Topics",
                 type: ControlType.TOPICS,
                 tooltip: SetPollingSourceTooltipsTexts.MQTT_TOPICS,

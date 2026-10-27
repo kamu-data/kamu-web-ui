@@ -24,7 +24,7 @@ export interface CollectionEntryViewType {
     size: MaybeNull<number>;
     owner: MaybeNull<AccountSummaryFragment>;
     contentType: MaybeNull<string>;
-    extraData: object;
+    extraData: Record<string, unknown>;
 }
 
 export interface CollectionEntriesResult {

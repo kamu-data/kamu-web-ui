@@ -24,32 +24,37 @@ export interface JsonFormValidators {
     min?: number;
 }
 
-interface JsonFormControlOptions {
-    buttonText?: string;
-    formArrayName?: string;
-    innerTooltips?: Record<string, string>;
-}
-
 export interface ReadFormatControlType {
     label: string;
     value: string;
 }
 
-export interface JsonFormControl {
+interface JsonFormControlBase {
     name: string;
     label: string;
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    value: any;
-    type: ControlType;
-    tooltip?: string;
-    placeholder?: string;
-    options?: JsonFormControlOptions;
-    required?: boolean;
+    tooltip: string;
     validators: JsonFormValidators;
     dataTestId?: string;
-    list?: string[];
-    readFormatDescriptors?: ReadFormatControlType[];
 }
+
+interface JsonFormArrayOptions {
+    formArrayName: string;
+    buttonText: string;
+}
+
+/** A control of a source event step, configured per kind; `type` decides which fields it has. */
+export type JsonFormControl = JsonFormControlBase &
+    (
+        | { type: ControlType.TEXT | ControlType.NUMBER; value: string; placeholder?: string }
+        | { type: ControlType.CHECKBOX; value: boolean }
+        | { type: ControlType.CACHE | ControlType.ORDER; value: string }
+        | { type: ControlType.TYPEAHEAD; value: string; placeholder?: string; list: string[] }
+        | { type: ControlType.JSON_KIND; value: string; readFormatDescriptors: ReadFormatControlType[] }
+        | { type: ControlType.ARRAY_KEY_VALUE | ControlType.TOPICS; options: JsonFormArrayOptions }
+        | { type: ControlType.ARRAY_KEY; placeholder: string; options: Pick<JsonFormArrayOptions, "buttonText"> }
+        | { type: ControlType.EVENT_TIME; options: { innerTooltips: Record<string, string> } }
+        | { type: ControlType.SCHEMA }
+    );
 
 export type JsonFormData = Record<
     string,

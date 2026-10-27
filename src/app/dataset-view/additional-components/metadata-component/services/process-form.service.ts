@@ -99,8 +99,7 @@ export class ProcessFormService {
         formKeys.forEach((formKey: FormKeys) => {
             Object.entries(form[formKey]).forEach(([key, value]) => {
                 if (!value || (Array.isArray(value) && !value.length)) {
-                    // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-dynamic-delete
-                    delete formGroup.value[formKey][key];
+                    Reflect.deleteProperty(form[formKey], key);
                 }
             });
         });
@@ -117,8 +116,7 @@ export class ProcessFormService {
         formKeys.forEach((formKey: FormKeys) => {
             Object.entries(form[formKey]).forEach(([key, value]) => {
                 if (!value || (Array.isArray(value) && !value.length)) {
-                    // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-dynamic-delete
-                    delete formGroup.value[formKey][key];
+                    Reflect.deleteProperty(form[formKey], key);
                 }
             });
         });

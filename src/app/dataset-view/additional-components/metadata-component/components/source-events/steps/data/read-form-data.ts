@@ -20,7 +20,6 @@ export const READ_FORM_DATA: JsonFormData = {
             {
                 name: "schema",
                 label: "Schema",
-                value: "",
                 type: ControlType.SCHEMA,
                 tooltip: SourcesTooltipsTexts.SCHEMA,
                 validators: {},
@@ -125,7 +124,6 @@ export const READ_FORM_DATA: JsonFormData = {
             {
                 name: "schema",
                 label: "Schema",
-                value: "",
                 type: ControlType.SCHEMA,
                 tooltip: SourcesTooltipsTexts.SCHEMA,
                 validators: {},
@@ -149,7 +147,6 @@ export const READ_FORM_DATA: JsonFormData = {
             {
                 name: "schema",
                 label: "Schema",
-                value: "",
                 type: ControlType.SCHEMA,
                 tooltip: SourcesTooltipsTexts.SCHEMA,
                 validators: {},
@@ -170,7 +167,6 @@ export const READ_FORM_DATA: JsonFormData = {
             {
                 name: "schema",
                 label: "Schema",
-                value: "",
                 tooltip: SourcesTooltipsTexts.SCHEMA,
                 type: ControlType.SCHEMA,
                 validators: {},
@@ -182,7 +178,6 @@ export const READ_FORM_DATA: JsonFormData = {
             {
                 name: "schema",
                 label: "Schema",
-                value: "",
                 type: ControlType.SCHEMA,
                 tooltip: SourcesTooltipsTexts.SCHEMA,
                 validators: {},

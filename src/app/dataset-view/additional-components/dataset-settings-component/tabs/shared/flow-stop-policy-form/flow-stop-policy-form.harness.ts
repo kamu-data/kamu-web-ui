@@ -10,6 +10,7 @@
 import { ComponentHarness } from "@angular/cdk/testing";
 import { MatRadioButtonHarness } from "@angular/material/radio/testing";
 
+import { unexpectedValueError } from "@common/helpers/app.helpers";
 import { MaybeNull } from "@interface/app.types";
 
 import { FlowTriggerStopPolicyType } from "src/app/dataset-view/additional-components/dataset-settings-component/dataset-settings.model";
@@ -54,8 +55,7 @@ export class FlowStopPolicyFormHarness extends ComponentHarness {
                 await afterConsecutiveFailuresRadio.check();
             }
         } else {
-            // eslint-disable-next-line @typescript-eslint/restrict-template-expressions
-            throw new Error(`Unsupported stop policy type: ${stopPolicyType}`);
+            throw unexpectedValueError(stopPolicyType, "stop policy type");
         }
     }
 

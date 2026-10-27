@@ -116,6 +116,7 @@ describe("DatasetSettingsSecretsManagerTabComponent", () => {
         vi.spyOn(environmentVariablesService, "listEnvVariables").mockReturnValue(response$);
         const navigateToDatasetViewSpy = stubMethod(navigationService, "navigateToDatasetView");
         // A table that starts empty and stays empty gives Angular no reason to re-render on its own
+        fixture.destroy();
         const pastEndFixture = TestBed.createComponent(DatasetSettingsSecretsManagerTabComponent);
         setComponentInput(pastEndFixture, "variablesAndSecretsTabData", {
             datasetBasics: mockDatasetBasicsRootFragment,

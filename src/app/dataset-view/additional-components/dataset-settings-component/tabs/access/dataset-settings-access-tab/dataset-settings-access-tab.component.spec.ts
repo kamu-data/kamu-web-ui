@@ -119,6 +119,8 @@ describe("DatasetSettingsAccessTabComponent", () => {
                 pageInfo: { ...mockDatasetCollaboratorsConnection.pageInfo, totalPages: 1 },
             }),
         );
+        // The shared fixture would re-render alongside, and its pager move from page 2 to its only page
+        fixture.destroy();
         const pastEndFixture = TestBed.createComponent(DatasetSettingsAccessTabComponent);
         setComponentInput(pastEndFixture, "accessViewData", {
             datasetBasics: mockDatasetBasicsRootFragment,
@@ -134,6 +136,7 @@ describe("DatasetSettingsAccessTabComponent", () => {
 
     it("should not report a page past the last one while the collaborators load", async () => {
         vi.spyOn(datasetCollaborationsService, "listCollaborators").mockReturnValue(NEVER);
+        fixture.destroy();
         const loadingFixture = TestBed.createComponent(DatasetSettingsAccessTabComponent);
         setComponentInput(loadingFixture, "accessViewData", {
             datasetBasics: mockDatasetBasicsRootFragment,

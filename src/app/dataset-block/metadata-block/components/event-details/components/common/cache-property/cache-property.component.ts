@@ -7,7 +7,10 @@
 
 import { ChangeDetectionStrategy, Component, Input } from "@angular/core";
 
+import { SourceCaching } from "@api/kamu.graphql.interface";
+
 import { BasePropertyComponent } from "src/app/dataset-block/metadata-block/components/event-details/components/common/base-property/base-property.component";
+import { hasTypename } from "src/app/dataset-block/metadata-block/components/event-details/components/common/base-property/base-property.helpers";
 
 @Component({
     selector: "app-cache-property",
@@ -15,5 +18,9 @@ import { BasePropertyComponent } from "src/app/dataset-block/metadata-block/comp
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class CachePropertyComponent extends BasePropertyComponent {
-    @Input({ required: true }) public data: string;
+    @Input({ required: true }) public data: SourceCaching;
+
+    public static acceptsData(data: unknown): data is CachePropertyComponent["data"] {
+        return hasTypename(data, "SourceCachingForever");
+    }
 }

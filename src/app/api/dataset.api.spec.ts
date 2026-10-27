@@ -29,8 +29,6 @@ import {
     DataSchemaFormat,
     DatasetAsCollectionDocument,
     DatasetAsCollectionQuery,
-    DatasetAsVersionedFileByBlockHashDocument,
-    DatasetAsVersionedFileByBlockHashQuery,
     DatasetAsVersionedFileByVersionDocument,
     DatasetAsVersionedFileByVersionQuery,
     DatasetAsVersionedFileDocument,
@@ -100,7 +98,6 @@ import {
     mockCreateEmptyDatasetResponse,
     mockDataset403OperationError,
     mockDatasetAsCollectionQuery,
-    mockDatasetAsVersionedFileByBlockHashQuery,
     mockDatasetAsVersionedFileByVersionQuery,
     mockDatasetAsVersionedFileQuery,
     mockDatasetBasicsDerivedFragment,
@@ -852,34 +849,6 @@ describe("DatasetApi", () => {
 
         op.flush({
             data: mockDatasetAsVersionedFileByVersionQuery,
-        });
-
-        tick();
-
-        expect(subscription$.closed).toEqual(true);
-
-        flush();
-    }));
-
-    it("should get dataset as versioned file by version", fakeAsync(() => {
-        const MOCK_BLOCK_HASH = "";
-        const subscription$ = service
-            .getDatasetAsVersionedFileByBlockHash(TEST_DATASET_ID, MOCK_BLOCK_HASH)
-            .subscribe((res: DatasetAsVersionedFileByBlockHashQuery) => {
-                expect(res.datasets.byId?.asVersionedFile?.asOf?.contentHash).toEqual(
-                    mockDatasetAsVersionedFileByBlockHashQuery.datasets.byId?.asVersionedFile?.asOf?.contentHash,
-                );
-                expect(res.datasets.byId?.asVersionedFile?.asOf?.version).toEqual(
-                    mockDatasetAsVersionedFileByBlockHashQuery.datasets.byId?.asVersionedFile?.asOf?.version,
-                );
-            });
-
-        const op = controller.expectOne(DatasetAsVersionedFileByBlockHashDocument);
-        expect(op.operation.variables.datasetId).toEqual(TEST_DATASET_ID);
-        expect(op.operation.variables.blockHash).toEqual(MOCK_BLOCK_HASH);
-
-        op.flush({
-            data: mockDatasetAsVersionedFileByBlockHashQuery,
         });
 
         tick();

@@ -11,7 +11,7 @@
         @if (sourceEvent.read.schema) {
             <div class="mx-4">
                 <app-block-row-data [tooltip]="SOURCES_TOOLTIPS.SCHEMA" [label]="'Schema:'">
-                    <app-odf-schema-property [data]="sourceEvent.read.schema!" />
+                    <app-odf-schema-property [data]="sourceEvent.read.schema" />
                 </app-block-row-data>
             </div>
         }
@@ -138,9 +138,10 @@
                         <app-cards-property [data]="sourceEvent.merge.primaryKey" />
                     </app-block-row-data>
                 }
-                @if (sourceEvent.merge.compareColumns?.length) {
+                @let compareColumns = sourceEvent.merge.compareColumns ?? [];
+                @if (compareColumns.length) {
                     <app-block-row-data [tooltip]="SOURCES_TOOLTIPS.COMPARE_COLUMNS" [label]="'Compare columns:'">
-                        <app-cards-property [data]="sourceEvent.merge.compareColumns!" />
+                        <app-cards-property [data]="compareColumns" />
                     </app-block-row-data>
                 }
             </div>

@@ -18,6 +18,7 @@ import { EnvVarDataFragment, RequestHeaderDataFragment } from "@api/kamu.graphql
 import { DataSchemaField } from "@interface/dataset-schema.interface";
 
 import { BasePropertyComponent } from "src/app/dataset-block/metadata-block/components/event-details/components/common/base-property/base-property.component";
+import { isListOfTypename } from "src/app/dataset-block/metadata-block/components/event-details/components/common/base-property/base-property.helpers";
 
 @Component({
     selector: "app-env-variables-property",
@@ -31,6 +32,10 @@ import { BasePropertyComponent } from "src/app/dataset-block/metadata-block/comp
 })
 export class EnvVariablesPropertyComponent extends BasePropertyComponent {
     @Input({ required: true }) public data: EnvVarDataFragment[] | RequestHeaderDataFragment[];
+
+    public static acceptsData(data: unknown): data is EnvVariablesPropertyComponent["data"] {
+        return isListOfTypename(data, "EnvVar") || isListOfTypename(data, "RequestHeader");
+    }
 
     public get tableSource(): DynamicTableDataRow[] {
         const result: DynamicTableDataRow[] = [];

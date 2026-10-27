@@ -27,7 +27,7 @@
                         [datasetInfo]="datasetInfo"
                     />
                     <app-engine-section
-                        [selectedEngine]="currentSetTransformEvent?.transform?.engine!"
+                        [initialEngine]="currentSetTransformEvent?.transform?.engine"
                         (onEmitSelectedEngine)="onSelectEngine($event)"
                     />
                 </div>

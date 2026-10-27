@@ -17,7 +17,6 @@ import { ToastrService } from "ngx-toastr";
 import { requireValue } from "@common/helpers/app.helpers";
 import { DatasetApi } from "@api/dataset.api";
 import {
-    DatasetAsVersionedFileByBlockHashQuery,
     DatasetAsVersionedFileByVersionQuery,
     DatasetAsVersionedFileQuery,
     VersionedFileContentUrlQuery,
@@ -104,21 +103,6 @@ export class DatasetAsVersionedFileService {
             }),
             finalize(() => {
                 this.emitLoadingFileDetailsChanged(false);
-            }),
-        );
-    }
-
-    public requestDatasetAsVersionedFileByBlockHash(
-        datasetId: string,
-        blockHash: string,
-    ): Observable<VersionedFileView> {
-        return this.datasetApi.getDatasetAsVersionedFileByBlockHash(datasetId, blockHash).pipe(
-            map((result: DatasetAsVersionedFileByBlockHashQuery) => {
-                const dataset = requireValue(result.datasets.byId, "Dataset not found");
-                return {
-                    name: dataset.name,
-                    fileInfo: requireValue(dataset.asVersionedFile, "Dataset is not a versioned file").asOf ?? null,
-                };
             }),
         );
     }

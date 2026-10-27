@@ -6,6 +6,7 @@
  */
 
 import { isRecord } from "@common/helpers/app.helpers";
+import { MaybeUndefined } from "@interface/app.types";
 
 import { UnsupportedPropertyComponent } from "src/app/dataset-block/metadata-block/components/event-details/components/common/unsupported-property/unsupported-property.component";
 import {
@@ -91,9 +92,10 @@ export abstract class EventSectionBuilder<TEvent extends GenericDynamicEventType
         key: string,
         value: unknown,
     ): EventRow {
-        return {
-            descriptor: rowDescriptors[`${eventType}.${sectionType}.${key}`],
-            value,
-        };
+        const descriptor: MaybeUndefined<EventRowDescriptor> = rowDescriptors[`${eventType}.${sectionType}.${key}`];
+        if (!descriptor?.presentationComponent.acceptsData(value)) {
+            return this.buildUnsupportedRow(key, value);
+        }
+        return { descriptor, value };
     }
 }

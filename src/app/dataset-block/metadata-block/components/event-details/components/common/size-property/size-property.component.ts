@@ -21,7 +21,11 @@ import { BasePropertyComponent } from "src/app/dataset-block/metadata-block/comp
     ],
 })
 export class SizePropertyComponent extends BasePropertyComponent {
-    @Input({ required: true }) public data: string;
+    @Input({ required: true }) public data: string | number;
+
+    public static acceptsData(data: unknown): data is SizePropertyComponent["data"] {
+        return typeof data === "string" || typeof data === "number";
+    }
 
     public get sizeInBytes(): number {
         return Number(this.data);

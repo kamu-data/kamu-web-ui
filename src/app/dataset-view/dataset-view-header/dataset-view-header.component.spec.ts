@@ -10,13 +10,14 @@ import { provideHttpClient } from "@angular/common/http";
 import { provideHttpClientTesting } from "@angular/common/http/testing";
 import { ComponentFixture, TestBed } from "@angular/core/testing";
 
-import { of } from "rxjs";
+import { NEVER, of } from "rxjs";
 
 import { Apollo } from "apollo-angular";
 
 import { ModalService } from "@common/components/modal/modal.service";
 import { SearchAdditionalButtonsNavHarness } from "@common/components/search-additional-buttons/search-additional-buttons-nav.harness";
-import { registerMatSvgIcons, setComponentInput } from "@common/helpers/base-test.helpers.spec";
+import { SearchAdditionalButtonsComponent } from "@common/components/search-additional-buttons/search-additional-buttons.component";
+import { findComponentInstances, registerMatSvgIcons, setComponentInput } from "@common/helpers/base-test.helpers.spec";
 import { SharedTestModule } from "@common/modules/shared-test.module";
 import { ModalArgumentsInterface } from "@interface/modal.interface";
 
@@ -40,10 +41,10 @@ describe("DatasetViewHeaderComponent", () => {
 
         registerMatSvgIcons();
 
-        fixture = TestBed.createComponent(DatasetViewHeaderComponent);
         modalService = TestBed.inject(ModalService);
         datasetService = TestBed.inject(DatasetService);
         vi.spyOn(datasetService, "downstreamsCountChanges", "get").mockReturnValue(of(1));
+        fixture = TestBed.createComponent(DatasetViewHeaderComponent);
         component = fixture.componentInstance;
         setComponentInput(fixture, "datasetInfo", mockDatasetInfo);
         setComponentInput(fixture, "datasetBasics", mockDatasetBasicsRootFragment);
@@ -52,6 +53,17 @@ describe("DatasetViewHeaderComponent", () => {
 
     it("should create", () => {
         expect(component).toBeTruthy();
+    });
+
+    it("should show no header buttons until the downstreams count arrives", () => {
+        vi.spyOn(datasetService, "downstreamsCountChanges", "get").mockReturnValue(NEVER);
+        const pendingFixture = TestBed.createComponent(DatasetViewHeaderComponent);
+        setComponentInput(pendingFixture, "datasetInfo", mockDatasetInfo);
+        setComponentInput(pendingFixture, "datasetBasics", mockDatasetBasicsRootFragment);
+        pendingFixture.detectChanges();
+
+        expect(findComponentInstances(pendingFixture, SearchAdditionalButtonsComponent)).toEqual([]);
+        expect(findComponentInstances(fixture, SearchAdditionalButtonsComponent)).toHaveLength(1);
     });
 
     [

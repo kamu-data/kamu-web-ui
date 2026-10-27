@@ -7,6 +7,8 @@
 
 import { ChangeDetectionStrategy, Component, Input } from "@angular/core";
 
+import { isStringArray } from "@common/helpers/app.helpers";
+
 import { BasePropertyComponent } from "src/app/dataset-block/metadata-block/components/event-details/components/common/base-property/base-property.component";
 
 @Component({
@@ -17,6 +19,10 @@ import { BasePropertyComponent } from "src/app/dataset-block/metadata-block/comp
 })
 export class CommandPropertyComponent extends BasePropertyComponent {
     @Input({ required: true }) public data: string[];
+
+    public static acceptsData(data: unknown): data is CommandPropertyComponent["data"] {
+        return isStringArray(data);
+    }
 
     public get commands(): string {
         return this.data.join(" ");

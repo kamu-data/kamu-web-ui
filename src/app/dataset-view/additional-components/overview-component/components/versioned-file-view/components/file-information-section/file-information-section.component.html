@@ -58,11 +58,8 @@
                 </div>
                 <div class="dataset-info--sub-block">
                     <p data-test-id="file-content-length" class="dataset-info--text">
-                        {{
-                            fileDetails?.fileInfo?.contentLength
-                                ? (fileDetails?.fileInfo?.contentLength! | displaySize)
-                                : "-"
-                        }}
+                        @let contentLength = fileDetails?.fileInfo?.contentLength;
+                        {{ contentLength ? (contentLength | displaySize) : "-" }}
                     </p>
                 </div>
             </div>

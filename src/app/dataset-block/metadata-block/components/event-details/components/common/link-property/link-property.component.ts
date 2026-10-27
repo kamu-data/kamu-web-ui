@@ -17,4 +17,8 @@ import { BasePropertyComponent } from "src/app/dataset-block/metadata-block/comp
 })
 export class LinkPropertyComponent extends BasePropertyComponent {
     @Input({ required: true }) public data: string;
+
+    public static acceptsData(data: unknown): data is LinkPropertyComponent["data"] {
+        return typeof data === "string";
+    }
 }

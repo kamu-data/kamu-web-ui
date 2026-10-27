@@ -7,6 +7,7 @@
 
 import { distinctUntilChanged, map, Observable, of, startWith, switchMap } from "rxjs";
 
+import { isRecord } from "@common/helpers/app.helpers";
 import { DatasetBasicsFragment, DatasetByIdQuery } from "@api/kamu.graphql.interface";
 import { MaybeNull } from "@interface/app.types";
 
@@ -30,4 +31,14 @@ export function datasetByIdChanges(
                   ),
         ),
     );
+}
+
+/** Whether `data` is a GraphQL object of one of `typenames`, as Apollo tags every object it returns. */
+export function hasTypename(data: unknown, ...typenames: string[]): boolean {
+    return isRecord(data) && typeof data.__typename === "string" && typenames.includes(data.__typename);
+}
+
+/** Whether `data` is a list of GraphQL objects of `typename`. */
+export function isListOfTypename(data: unknown, typename: string): boolean {
+    return Array.isArray(data) && data.every((item) => hasTypename(item, typename));
 }

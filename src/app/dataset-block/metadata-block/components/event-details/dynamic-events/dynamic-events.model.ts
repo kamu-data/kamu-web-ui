@@ -5,8 +5,6 @@
  * included in the LICENSE file.
  */
 
-import { Type } from "@angular/core";
-
 import { BasePropertyComponent } from "src/app/dataset-block/metadata-block/components/event-details/components/common/base-property/base-property.component";
 
 export enum DynamicEventTypes {
@@ -19,12 +17,21 @@ export enum DynamicEventTypes {
 
 export type DynamicEventTypesScalar = `${DynamicEventTypes}`;
 
+/**
+ * A component that renders an event row's value through its `data` input. The row's value comes
+ * from walking the event, so `acceptsData` checks it fits `data` before the component gets it.
+ */
+export interface PropertyComponentType {
+    new (): BasePropertyComponent;
+    acceptsData(data: unknown): boolean;
+}
+
 export interface EventRowDescriptor {
     label: string;
     tooltip: string;
     separateRowForValue?: boolean;
     dataTestId?: string;
-    presentationComponent: Type<BasePropertyComponent>;
+    presentationComponent: PropertyComponentType;
 }
 
 export type EventRowDescriptorsByField = Record<string, EventRowDescriptor>;

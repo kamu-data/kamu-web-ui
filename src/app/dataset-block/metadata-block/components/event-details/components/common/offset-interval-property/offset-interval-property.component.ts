@@ -18,12 +18,16 @@ import { takeUntilDestroyed } from "@angular/core/rxjs-interop";
 
 import { Subject } from "rxjs";
 
+import { isRecord } from "@common/helpers/app.helpers";
 import { DatasetBasicsFragment, OffsetIntervalDataFragment } from "@api/kamu.graphql.interface";
 import { MaybeNull } from "@interface/app.types";
 import { DatasetInfo } from "@interface/navigation.interface";
 
 import { BasePropertyComponent } from "src/app/dataset-block/metadata-block/components/event-details/components/common/base-property/base-property.component";
-import { datasetByIdChanges } from "src/app/dataset-block/metadata-block/components/event-details/components/common/base-property/base-property.helpers";
+import {
+    datasetByIdChanges,
+    hasTypename,
+} from "src/app/dataset-block/metadata-block/components/event-details/components/common/base-property/base-property.helpers";
 import { DatasetViewTypeEnum } from "src/app/dataset-view/dataset-view.interface";
 import { DatasetService } from "src/app/dataset-view/dataset.service";
 import { NavigationService } from "src/app/services/navigation.service";
@@ -39,12 +43,21 @@ export class OffsetIntervalPropertyComponent extends BasePropertyComponent imple
         block: MaybeNull<OffsetIntervalDataFragment>;
         datasetId: MaybeNull<string>;
     };
+
     private datasetInfo: MaybeNull<DatasetInfo> = null;
     private navigationService = inject(NavigationService);
     private datasetService = inject(DatasetService);
     private cdr = inject(ChangeDetectorRef);
 
     private readonly datasetIdChanges$ = new Subject<MaybeNull<string>>();
+
+    public static acceptsData(data: unknown): data is OffsetIntervalPropertyComponent["data"] {
+        return (
+            isRecord(data) &&
+            (data.block === null || hasTypename(data.block, "OffsetInterval")) &&
+            (data.datasetId === null || typeof data.datasetId === "string")
+        );
+    }
 
     public constructor() {
         super();

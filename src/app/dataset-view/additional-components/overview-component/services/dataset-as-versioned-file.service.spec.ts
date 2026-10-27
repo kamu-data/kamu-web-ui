@@ -22,11 +22,9 @@ import { TEST_DATASET_ID } from "@api/mock/dataset.mock";
 import { VersionedFileView } from "src/app/dataset-view/dataset-view.interface";
 import {
     MOCK_VERSIONED_FILE_NAME,
-    mockDatasetAsVersionedFileByBlockHashQuery,
     mockDatasetAsVersionedFileByVersionQuery,
     mockDatasetAsVersionedFileQuery,
     mockVersionedFileContentUrlQuery,
-    mockVersionedFileEntryByBlockHash,
     mockVersionedFileEntryByVersion,
     mockVersionedFileEntryLatest,
 } from "src/app/search/mock.data";
@@ -153,22 +151,6 @@ describe("DatasetAsVersionedFileService", () => {
             expect(data).toEqual(mockVersionedFileView);
         });
         expect(emitLoadingFileDetailsChangedSpy).toHaveBeenCalledTimes(2);
-    });
-
-    it("should check #requestDatasetAsVersionedFileByBlockHash method", () => {
-        const mockBlockHash = "12343";
-        const mockVersionedFileView: VersionedFileView = {
-            name: MOCK_VERSIONED_FILE_NAME,
-            fileInfo: mockVersionedFileEntryByBlockHash,
-        };
-        const getDatasetAsVersionedFileByBlockHashSpy = vi
-            .spyOn(datasetApi, "getDatasetAsVersionedFileByBlockHash")
-            .mockReturnValue(of(mockDatasetAsVersionedFileByBlockHashQuery));
-
-        service.requestDatasetAsVersionedFileByBlockHash(TEST_DATASET_ID, mockBlockHash).subscribe((data) => {
-            expect(data).toEqual(mockVersionedFileView);
-            expect(getDatasetAsVersionedFileByBlockHashSpy).toHaveBeenCalledTimes(1);
-        });
     });
 
     it("should check #getVersionedFileContentUrl method", () => {

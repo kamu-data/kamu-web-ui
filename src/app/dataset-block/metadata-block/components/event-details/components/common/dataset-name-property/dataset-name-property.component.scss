@@ -1,9 +1,0 @@
-@use "var" as *;
-
-.name {
-    color: $app-navy-blue;
-
-    &:hover {
-        text-decoration: underline;
-    }
-}

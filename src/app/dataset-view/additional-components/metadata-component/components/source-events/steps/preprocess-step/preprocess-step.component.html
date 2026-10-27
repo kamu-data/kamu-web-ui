@@ -23,7 +23,7 @@
         <div class="col-lg-4 ps-4">
             <div class="container-engine">
                 <app-engine-section
-                    [selectedEngine]="preprocessValue.engine"
+                    [initialEngine]="preprocessValue.engine"
                     (onEmitSelectedEngine)="onSelectEngine($event)"
                 />
             </div>

@@ -99,9 +99,7 @@ export class AccountFlowsActivitySubtabComponent extends FlowsTableProcessingBas
         this.refreshNow();
     }
 
-    public get loadingFlows$(): Observable<boolean> {
-        return this.loadingFlowsSubject$.asObservable();
-    }
+    public readonly loadingFlows$: Observable<boolean> = this.loadingFlowsSubject$.asObservable();
 
     public fetchTableData(
         page: number,

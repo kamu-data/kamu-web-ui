@@ -69,11 +69,11 @@
                 @if (editingIndex === rowIndex) {
                     <div class="d-flex justify-content-between py-3 type-editor-row">
                         <div class="type-editor-slot">
-                            @if (editingRow?.type) {
+                            @if (editingRow; as row) {
                                 <app-type-editor
                                     #typeEditor
-                                    [value]="editingRow!.type"
-                                    [typePath]="tablePath + ':type:' + (editingRow!.name || '#' + rowIndex)"
+                                    [value]="row.type"
+                                    [typePath]="tablePath + ':type:' + (row.name || '#' + rowIndex)"
                                     (typeChange)="typeChangeHandle($event)"
                                 />
                             }

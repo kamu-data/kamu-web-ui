@@ -21,4 +21,8 @@ import { BasePropertyComponent } from "src/app/dataset-block/metadata-block/comp
 })
 export class UnsupportedPropertyComponent extends BasePropertyComponent {
     @Input({ required: true }) public data: unknown;
+
+    public static acceptsData(_data: unknown): _data is UnsupportedPropertyComponent["data"] {
+        return true;
+    }
 }

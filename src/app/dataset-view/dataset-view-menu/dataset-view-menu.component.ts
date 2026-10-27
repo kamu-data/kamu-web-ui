@@ -49,7 +49,6 @@ import { DatasetViewTypeEnum } from "src/app/dataset-view/dataset-view.interface
 })
 export class DatasetViewMenuComponent implements OnInit {
     @ViewChild("sidenav", { static: true }) public sidenav?: MatSidenav;
-    @ViewChild("menuTrigger") public trigger: ElementRef;
     @ViewChild("datasetViewMenu") public datasetViewMenuComponent: ElementRef<HTMLDivElement>;
 
     @Input({ required: true }) public datasetBasics: DatasetBasicsFragment;

@@ -18,6 +18,7 @@ import { MqttTopicSubscriptionDataFragment } from "@api/kamu.graphql.interface";
 import { DataSchemaField } from "@interface/dataset-schema.interface";
 
 import { BasePropertyComponent } from "src/app/dataset-block/metadata-block/components/event-details/components/common/base-property/base-property.component";
+import { isListOfTypename } from "src/app/dataset-block/metadata-block/components/event-details/components/common/base-property/base-property.helpers";
 
 @Component({
     selector: "app-topics-property",
@@ -31,6 +32,10 @@ import { BasePropertyComponent } from "src/app/dataset-block/metadata-block/comp
 })
 export class TopicsPropertyComponent extends BasePropertyComponent {
     @Input({ required: true }) public data: MqttTopicSubscriptionDataFragment[];
+
+    public static acceptsData(data: unknown): data is TopicsPropertyComponent["data"] {
+        return isListOfTypename(data, "MqttTopicSubscription");
+    }
 
     public get tableSource(): DynamicTableDataRow[] {
         const result: DynamicTableDataRow[] = [];

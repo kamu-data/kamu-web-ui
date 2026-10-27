@@ -7747,17 +7747,6 @@ export type CreateDatasetAsVersionedFileMutation = { datasets: { __typename: 'Da
       | { __typename: 'MetadataManifestUnsupportedVersion', message: string }
      } };
 
-export type DatasetAsVersionedFileByBlockHashQueryVariables = Exact<{
-  datasetId: Scalars['DatasetID']['input'];
-  blockHash?: InputMaybe<Scalars['Multihash']['input']>;
-}>;
-
-
-export type DatasetAsVersionedFileByBlockHashQuery = { datasets: { __typename: 'Datasets', byId?: { __typename: 'Dataset', name: string, asVersionedFile?: { __typename: 'VersionedFile', asOf?: (
-          { __typename: 'VersionedFileEntry' }
-          & VersionedFileEntryDataFragment
-        ) | null } | null } | null } };
-
 export type DatasetAsVersionedFileByVersionQueryVariables = Exact<{
   datasetId: Scalars['DatasetID']['input'];
   version?: InputMaybe<Scalars['Int']['input']>;
@@ -12890,31 +12879,6 @@ export const CreateDatasetAsVersionedFileDocument = gql`
   })
   export class CreateDatasetAsVersionedFileGQL extends Apollo.Mutation<CreateDatasetAsVersionedFileMutation, CreateDatasetAsVersionedFileMutationVariables> {
     document = CreateDatasetAsVersionedFileDocument;
-    
-    constructor(apollo: Apollo.Apollo) {
-      super(apollo);
-    }
-  }
-export const DatasetAsVersionedFileByBlockHashDocument = gql`
-    query datasetAsVersionedFileByBlockHash($datasetId: DatasetID!, $blockHash: Multihash) {
-  datasets {
-    byId(datasetId: $datasetId) {
-      name
-      asVersionedFile {
-        asOf(blockHash: $blockHash) {
-          ...VersionedFileEntryData
-        }
-      }
-    }
-  }
-}
-    ${VersionedFileEntryDataFragmentDoc}`;
-
-  @Injectable({
-    providedIn: 'root'
-  })
-  export class DatasetAsVersionedFileByBlockHashGQL extends Apollo.Query<DatasetAsVersionedFileByBlockHashQuery, DatasetAsVersionedFileByBlockHashQueryVariables> {
-    document = DatasetAsVersionedFileByBlockHashDocument;
     
     constructor(apollo: Apollo.Apollo) {
       super(apollo);

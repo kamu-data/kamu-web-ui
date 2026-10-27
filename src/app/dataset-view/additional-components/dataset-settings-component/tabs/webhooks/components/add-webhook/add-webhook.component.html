@@ -2,8 +2,8 @@
 <div class="box p-4 mb-4">
     <app-webhook-form
         [createOrEditSubscriptionForm]="createOrEditSubscriptionForm"
-        [dropdownList]="(dropdownList$ | async)!"
-        [disabled]="(hasSecret$ | async)!"
+        [dropdownList]="(dropdownList$ | async) ?? []"
+        [disabled]="(hasSecret$ | async) ?? false"
     />
 
     @if (secretChanges | async; as secret) {

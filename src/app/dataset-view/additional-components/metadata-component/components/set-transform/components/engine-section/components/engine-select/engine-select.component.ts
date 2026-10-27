@@ -30,7 +30,6 @@ import { EventPropertyLogo } from "src/app/dataset-block/metadata-block/componen
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class EngineSelectComponent {
-    @ViewChild("input", { static: true }) public input: ElementRef;
     @ViewChild("dropdown", { static: true })
     private dropdown: ElementRef<HTMLDivElement>;
     @ViewChild("selectedImage", { static: true })

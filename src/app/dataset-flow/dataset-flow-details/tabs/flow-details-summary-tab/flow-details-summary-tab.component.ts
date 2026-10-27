@@ -53,9 +53,14 @@ export class FlowDetailsSummaryTabComponent {
         return FlowTableHelpers.runDurationTimingText(this.flowDetails);
     }
 
-    public flowOutcomeMessage: Record<string, string> = {
-        FlowSuccessResult: "success",
-        FlowFailedError: "failed",
-        FlowAbortedResult: "aborted",
-    };
+    public flowOutcomeMessage(flowOutcome: FlowOutcomeDataFragment): string {
+        switch (flowOutcome.__typename) {
+            case "FlowSuccessResult":
+                return "success";
+            case "FlowFailedError":
+                return "failed";
+            case "FlowAbortedResult":
+                return "aborted";
+        }
+    }
 }

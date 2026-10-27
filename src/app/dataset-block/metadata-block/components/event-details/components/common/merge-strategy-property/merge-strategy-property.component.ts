@@ -21,6 +21,10 @@ import { EventPropertyLogo } from "src/app/dataset-block/metadata-block/componen
 export class MergeStrategyPropertyComponent extends BasePropertyComponent {
     @Input({ required: true }) public data: string;
 
+    public static acceptsData(data: unknown): data is MergeStrategyPropertyComponent["data"] {
+        return typeof data === "string";
+    }
+
     public get descriptionMergeStrategy(): EventPropertyLogo {
         return DataHelpers.descriptionMergeStrategy(this.data);
     }

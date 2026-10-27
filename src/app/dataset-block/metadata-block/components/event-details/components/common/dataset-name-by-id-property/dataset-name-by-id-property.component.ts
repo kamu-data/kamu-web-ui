@@ -46,6 +46,7 @@ import { DatasetService } from "src/app/dataset-view/dataset.service";
 })
 export class DatasetNameByIdPropertyComponent extends BasePropertyComponent implements OnChanges {
     @Input({ required: true }) public data: string;
+
     public datasetBasics: MaybeUndefined<DatasetBasicsFragment>;
 
     public readonly DEFAULT_AVATAR_URL = AppValues.DEFAULT_AVATAR_URL;
@@ -53,6 +54,10 @@ export class DatasetNameByIdPropertyComponent extends BasePropertyComponent impl
     private cdr = inject(ChangeDetectorRef);
 
     private readonly datasetIdChanges$ = new Subject<string>();
+
+    public static acceptsData(data: unknown): data is DatasetNameByIdPropertyComponent["data"] {
+        return typeof data === "string";
+    }
 
     public constructor() {
         super();

@@ -13,7 +13,11 @@ import { DatasetBasicsFragment, DatasetByIdQuery } from "@api/kamu.graphql.inter
 import { mockDatasetByIdQuery } from "@api/mock/dataset.mock";
 import { MaybeNull } from "@interface/app.types";
 
-import { datasetByIdChanges } from "src/app/dataset-block/metadata-block/components/event-details/components/common/base-property/base-property.helpers";
+import {
+    datasetByIdChanges,
+    hasTypename,
+    isListOfTypename,
+} from "src/app/dataset-block/metadata-block/components/event-details/components/common/base-property/base-property.helpers";
 
 describe("datasetByIdChanges", () => {
     const FIRST_DATASET_ID = "did:odf:first";
@@ -88,5 +92,37 @@ describe("datasetByIdChanges", () => {
         firstResponse$.next(mockDatasetByIdQuery);
 
         expect(emitted).toEqual([null, null]);
+    });
+});
+
+describe("hasTypename", () => {
+    it("should accept an object of one of the typenames", () => {
+        expect(
+            hasTypename(
+                { __typename: "EventTimeSourceFromPath" },
+                "EventTimeSourceFromMetadata",
+                "EventTimeSourceFromPath",
+            ),
+        ).toBe(true);
+    });
+
+    it("should reject an object of another typename, an untagged object and a primitive", () => {
+        expect(hasTypename({ __typename: "DataSchema" }, "TemporalTable")).toBe(false);
+        expect(hasTypename({ name: "a" }, "TemporalTable")).toBe(false);
+        expect(hasTypename("TemporalTable", "TemporalTable")).toBe(false);
+    });
+});
+
+describe("isListOfTypename", () => {
+    it("should accept a list whose every item has the typename", () => {
+        expect(isListOfTypename([{ __typename: "SqlQueryStep" }, { __typename: "SqlQueryStep" }], "SqlQueryStep")).toBe(
+            true,
+        );
+        expect(isListOfTypename([], "SqlQueryStep")).toBe(true);
+    });
+
+    it("should reject a list with an item of another kind, and a value that is not a list", () => {
+        expect(isListOfTypename([{ __typename: "SqlQueryStep" }, "query"], "SqlQueryStep")).toBe(false);
+        expect(isListOfTypename({ __typename: "SqlQueryStep" }, "SqlQueryStep")).toBe(false);
     });
 });

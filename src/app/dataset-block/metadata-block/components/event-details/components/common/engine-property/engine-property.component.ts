@@ -21,6 +21,10 @@ import { BasePropertyComponent } from "src/app/dataset-block/metadata-block/comp
 export class EnginePropertyComponent extends BasePropertyComponent {
     @Input({ required: true }) public data: string;
 
+    public static acceptsData(data: unknown): data is EnginePropertyComponent["data"] {
+        return typeof data === "string";
+    }
+
     public get engineLogo(): MaybeUndefined<string> {
         return DataHelpers.descriptionForEngine(this.data).url_logo;
     }

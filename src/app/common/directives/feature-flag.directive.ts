@@ -20,7 +20,7 @@ import { FeatureFlagsService } from "src/app/services/feature-flags.service";
     selector: "[appFeatureFlag]",
 })
 export class FeatureFlagDirective {
-    private el = inject(ElementRef);
+    private el = inject<ElementRef<HTMLElement>>(ElementRef);
     private renderer = inject(Renderer2);
     private featureFlagsService = inject(FeatureFlagsService);
 

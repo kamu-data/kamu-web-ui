@@ -4,7 +4,7 @@
         [hasTableHeader]="true"
         [idTable]="'odf-schema-property'"
         [columnDescriptors]="[{ columnName: 'name' }, { columnName: 'type' }]"
-        [dataRows]="schemaData(datasetSchema?.fields!)"
+        [dataRows]="schemaData(datasetSchema?.fields ?? [])"
         tableClass="font-monospace"
     />
 } @else {

@@ -120,7 +120,8 @@ export type VerifyQueryError =
     | VerifyQueryBadSignatureError
     | VerifyQueryOutputMismatchError
     | VerifyQueryDatasetNotFoundError
-    | VerifyQueryDatasetBlockNotFoundError;
+    | VerifyQueryDatasetBlockNotFoundError
+    | VerifyQueryUnknownError;
 
 interface VerifyQueryErrorBase {
     message: string;
@@ -147,6 +148,11 @@ export interface VerifyQueryOutputMismatchError extends VerifyQueryErrorBase {
 export interface VerifyQueryDatasetNotFoundError extends VerifyQueryErrorBase {
     kind: VerifyQueryKindError.DatasetNotFound;
     dataset_id: string;
+}
+
+/** A failure the UI has no specific view for, such as a kind the server added later: only its message shows. */
+export interface VerifyQueryUnknownError extends VerifyQueryErrorBase {
+    kind: "Unknown";
 }
 
 export interface VerifyQueryDatasetBlockNotFoundError extends VerifyQueryErrorBase {

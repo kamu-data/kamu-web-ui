@@ -61,7 +61,7 @@ export class AccountFlowsTabComponent {
     }
 
     public onNavChange(event: NgbNavChangeEvent): void {
-        const nextNav = enumValueOf(AccountFlowsNav, event.nextId);
+        const nextNav = requireValue(enumValueOf(AccountFlowsNav, event.nextId), "Unknown account flows tab");
         this.navigationService.navigateToOwnerView(
             this.accountName,
             AccountTabs.FLOWS,

@@ -89,6 +89,7 @@ export class AccountFlowsActivitySubtabComponent extends FlowsTableProcessingBas
     public readonly fetchTrigger$ = new Subject<AccountFiltersParams>();
     public activeStatusNav: FlowStatus = FlowStatus.Finished;
     private readonly loadingFlowsSubject$ = new BehaviorSubject<boolean>(false);
+    public readonly loadingFlows$: Observable<boolean> = this.loadingFlowsSubject$.asObservable();
 
     private readonly accountService = inject(AccountService);
     private readonly loggedUserService = inject(LoggedUserService);
@@ -98,8 +99,6 @@ export class AccountFlowsActivitySubtabComponent extends FlowsTableProcessingBas
         this.filterByStatus = this.accountFlowsData.flowGroup;
         this.refreshNow();
     }
-
-    public readonly loadingFlows$: Observable<boolean> = this.loadingFlowsSubject$.asObservable();
 
     public fetchTableData(
         page: number,
@@ -189,11 +188,6 @@ export class AccountFlowsActivitySubtabComponent extends FlowsTableProcessingBas
                         });
                 }
             });
-    }
-
-    public onNavChange(event: NgbNavChangeEvent): void {
-        const nextNav = enumValueOf(AccountFlowsNav, event.nextId);
-        this.navigationService.navigateToOwnerView(this.accountName, AccountTabs.FLOWS, undefined, nextNav);
     }
 
     public onNavStatusChange(event: NgbNavChangeEvent): void {

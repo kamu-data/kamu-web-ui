@@ -135,6 +135,7 @@ export class AccountFlowsProcessesSubtabComponent extends BaseComponent implemen
     public flowsMode: ProcessCardGroup = ProcessCardGroup.ALL;
     public activeRollup: FlowProcessGroupRollupDataFragment;
     private readonly loadingCardsSubject$ = new BehaviorSubject<boolean>(false);
+    public readonly loadingCards$: Observable<boolean> = this.loadingCardsSubject$.asObservable();
     /** IDs of the cards whose action has not shown its result yet, as `trackByCardId` gives them */
     public readonly busyCardIds$ = new BehaviorSubject<ReadonlySet<string>>(new Set());
     private readonly cardsLoadStarted$ = new Subject<void>();
@@ -160,8 +161,6 @@ export class AccountFlowsProcessesSubtabComponent extends BaseComponent implemen
     public get dashboardFiltersState(): DashboardFiltersOptions {
         return this.accountFlowsFiltersService.currentFiltersSnapshot;
     }
-
-    public readonly loadingCards$: Observable<boolean> = this.loadingCardsSubject$.asObservable();
 
     public fetchCardsData(): void {
         const polling$ = timer(0, environment.delay_polling_ms);
@@ -362,7 +361,13 @@ export class AccountFlowsProcessesSubtabComponent extends BaseComponent implemen
     }
 
     public onFlowsModeChange(event: MatChipListboxChange): void {
-        this.flowsMode = requireValue(enumValueOf(ProcessCardGroup, event.value), "Unknown flows mode");
+        const flowsMode = enumValueOf(ProcessCardGroup, event.value);
+        // Clicking the selected chip deselects it; one mode is always shown, so it stays selected
+        if (!flowsMode) {
+            event.source.value = this.flowsMode;
+            return;
+        }
+        this.flowsMode = flowsMode;
         this.processesPerPage = AppValues.UPLOAD_FLOW_PROCESSES_PER_PAGE;
         this.processesCards = [];
         this.refreshNow();

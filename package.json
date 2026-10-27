@@ -91,6 +91,7 @@
     "@angular/language-service": "^21.2.25",
     "@graphql-codegen/add": "^6.0.1",
     "@graphql-codegen/cli": "^6.3.1",
+    "@graphql-codegen/fragment-matcher": "^6.0.1",
     "@graphql-codegen/typescript-apollo-angular": "^4.0.1",
     "@graphql-codegen/typescript-operations": "^5.1.0",
     "@ianvs/prettier-plugin-sort-imports": "^4.7.1",

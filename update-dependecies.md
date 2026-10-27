@@ -8,6 +8,7 @@ Packages that constrain each other through `peerDependencies`. The Angular frame
 - **bootstrap** peers on **@popperjs/core**
 - **apollo-angular** peers on **@apollo/client** (`^4.2.3`), **graphql** and **rxjs** (`^7.8.0`)
 - **graphql**: **@apollo/client** and **apollo-angular** accept 17, the **@graphql-codegen/\*** packages only up to 16
+- **@graphql-codegen/fragment-matcher** moves with **@graphql-codegen/cli**: its major follows the **@graphql-codegen/plugin-helpers** major the CLI uses (CLI 6 → plugin-helpers 6 → fragment-matcher 6)
 - **highlight.js** stays in the range **ngx-highlightjs** peers on (`^11.11.1`); the app also imports its core, languages and a theme directly
 - **marked** stays in the range **ngx-markdown** peers on (`^17.0.0 || ^18.0.0`)
 - **ngx-monaco-editor-v2**: each release peers on one **monaco-editor** minor (21.1 → `^0.55.1`); move the two together

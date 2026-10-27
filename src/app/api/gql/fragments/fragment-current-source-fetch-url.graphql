@@ -1,7 +1,21 @@
 fragment CurrentSourceFetchUrl on DatasetMetadata {
   currentPollingSource {
     fetch {
-      ...FetchStepData
+      # The same selection as FetchStepData, written inline: the lineage query nests this
+      # fragment seven datasets deep, and one more spread there exceeds the API's recursion limit of 32
+      ... on FetchStepUrl {
+        url
+      }
+
+      ... on FetchStepMqtt {
+        host
+        port
+      }
+
+      ... on FetchStepEthereumLogs {
+        nodeUrl
+        chainId
+      }
     }
   }
 }

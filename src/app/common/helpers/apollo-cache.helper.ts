@@ -8,9 +8,13 @@
 import { ApolloCache, InMemoryCache } from "@apollo/client/core";
 
 import { DatasetApi } from "@api/dataset.api";
+import generatedPossibleTypes from "@api/kamu.graphql.interface";
 
 export function apolloCache(): InMemoryCache {
     return new InMemoryCache({
+        // Without the members of each union and interface, a fragment declared on one
+        // (`MetadataEventData on MetadataEvent`) matches no object and its fields read back as missing
+        possibleTypes: generatedPossibleTypes.possibleTypes,
         typePolicies: {
             Query: {
                 fields: {

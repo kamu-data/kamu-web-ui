@@ -227,9 +227,8 @@ or misspelled field before any test runs. A type assertion switches that check o
 
 - `as const` on a literal and `satisfies T` on a typed local constant are fine: neither hides a
   field, and the rule allows both.
-- A value that cannot be typed honestly, such as a router snapshot with no public constructor or
-  a scalar codegen types wrongly (`uint64FromApi`), gets a named helper in
-  `base-test.helpers.spec.ts`, the one file the rule exempts.
+- A value that cannot be typed honestly, such as a router snapshot with no public constructor,
+  gets a named helper in `base-test.helpers.spec.ts`, the one file the rule exempts.
 
 ## Mocks and fixtures
 

@@ -62,8 +62,8 @@ describe("AddDataEventComponent", () => {
                 __typename: "DataSlice",
                 logicalHash: "zLogicalHashOfTheNextSlice",
                 physicalHash: "zPhysicalHashOfTheNextSlice",
-                size: 1024,
-                offsetInterval: { __typename: "OffsetInterval", start: 596126, end: 600000 },
+                size: "1024",
+                offsetInterval: { __typename: "OffsetInterval", start: "596126", end: "600000" },
             },
         } satisfies AddDataEventFragment;
 

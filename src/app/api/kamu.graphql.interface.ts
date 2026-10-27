@@ -104,7 +104,7 @@ export type Scalars = {
   /** Absolute URL */
   URL: { input: string; output: string; }
   /** Unsigned 64-bit integer, passed as a string to avoid precision loss */
-  Uint64: { input: number; output: number; }
+  Uint64: { input: string; output: string; }
   /** URL is a String implementing the [URL Standard](http://url.spec.whatwg.org/) */
   Url: { input: string; output: string; }
   /** Type of event a webhook subscription delivers (e.g. `DATASET.REF.UPDATED`) */
@@ -8948,10 +8948,10 @@ export type WebhookFlowSubProcessGroupDataFragment = { __typename?: 'WebhookFlow
     & WebhookFlowSubProcessDataFragment
   )> };
 
-export type AddDataEventFragment = { __typename?: 'AddData', prevCheckpoint?: string | null, prevOffset?: number | null, newWatermark?: string | null, newData?: (
+export type AddDataEventFragment = { __typename?: 'AddData', prevCheckpoint?: string | null, prevOffset?: string | null, newWatermark?: string | null, newData?: (
     { __typename?: 'DataSlice' }
     & DataSliceDataFragment
-  ) | null, newCheckpoint?: { __typename?: 'Checkpoint', physicalHash: string, size: number } | null, newSourceState?: { __typename?: 'SourceState', sourceName: string, kind: string, value: string } | null };
+  ) | null, newCheckpoint?: { __typename?: 'Checkpoint', physicalHash: string, size: string } | null, newSourceState?: { __typename?: 'SourceState', sourceName: string, kind: string, value: string } | null };
 
 export type AddPushSourceEventFragment = { __typename?: 'AddPushSource', sourceName: string, read:
     | (
@@ -9010,19 +9010,19 @@ export type AddPushSourceEventFragment = { __typename?: 'AddPushSource', sourceN
 
 export type DataSchemaInfoFragment = { __typename?: 'DataSchema', format: DataSchemaFormat, content: string };
 
-export type DataSliceDataFragment = { __typename?: 'DataSlice', logicalHash: string, physicalHash: string, size: number, offsetInterval: (
+export type DataSliceDataFragment = { __typename?: 'DataSlice', logicalHash: string, physicalHash: string, size: string, offsetInterval: (
     { __typename?: 'OffsetInterval' }
     & OffsetIntervalDataFragment
   ) };
 
 export type DisablePollingSourceEventFragment = { __typename?: 'DisablePollingSource', dummy?: string | null };
 
-export type ExecuteTransformEventFragment = { __typename?: 'ExecuteTransform', prevCheckpoint?: string | null, prevOffset?: number | null, newWatermark?: string | null, queryInputs: Array<{ __typename?: 'ExecuteTransformInput', datasetId: string, prevBlockHash?: string | null, newBlockHash?: string | null, prevOffset?: number | null, newOffset?: number | null }>, newData?: (
+export type ExecuteTransformEventFragment = { __typename?: 'ExecuteTransform', prevCheckpoint?: string | null, prevOffset?: string | null, newWatermark?: string | null, queryInputs: Array<{ __typename?: 'ExecuteTransformInput', datasetId: string, prevBlockHash?: string | null, newBlockHash?: string | null, prevOffset?: string | null, newOffset?: string | null }>, newData?: (
     { __typename?: 'DataSlice' }
     & DataSliceDataFragment
-  ) | null, newCheckpoint?: { __typename?: 'Checkpoint', physicalHash: string, size: number } | null };
+  ) | null, newCheckpoint?: { __typename?: 'Checkpoint', physicalHash: string, size: string } | null };
 
-export type OffsetIntervalDataFragment = { __typename?: 'OffsetInterval', start: number, end: number };
+export type OffsetIntervalDataFragment = { __typename?: 'OffsetInterval', start: string, end: string };
 
 export type SeedEventFragment = { __typename?: 'Seed', datasetId: string, datasetKind: DatasetKind };
 
@@ -9160,7 +9160,7 @@ export type FetchStepContainerDataFragment = { __typename?: 'FetchStepContainer'
     & EnvVarDataFragment
   )> | null };
 
-export type FetchStepEthereumLogsDataFragment = { __typename?: 'FetchStepEthereumLogs', chainId?: number | null, nodeUrl?: string | null, filter?: string | null, signature?: string | null };
+export type FetchStepEthereumLogsDataFragment = { __typename?: 'FetchStepEthereumLogs', chainId?: string | null, nodeUrl?: string | null, filter?: string | null, signature?: string | null };
 
 export type FetchStepFilesGlobDataFragment = { __typename?: 'FetchStepFilesGlob', path: string, order?: SourceOrdering | null, eventTime?:
     | (
@@ -9663,7 +9663,7 @@ export type EngineDescDataFragment = { __typename?: 'EngineDesc', name: string, 
 
 type FetchStepData_FetchStepContainer_Fragment = { __typename?: 'FetchStepContainer' };
 
-type FetchStepData_FetchStepEthereumLogs_Fragment = { __typename?: 'FetchStepEthereumLogs', nodeUrl?: string | null, chainId?: number | null };
+type FetchStepData_FetchStepEthereumLogs_Fragment = { __typename?: 'FetchStepEthereumLogs', nodeUrl?: string | null, chainId?: string | null };
 
 type FetchStepData_FetchStepFilesGlob_Fragment = { __typename?: 'FetchStepFilesGlob' };
 

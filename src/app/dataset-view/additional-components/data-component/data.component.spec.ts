@@ -148,7 +148,7 @@ describe("DataComponent", () => {
     });
 
     it("should check set query with offset", async () => {
-        vi.spyOn(location, "getState").mockReturnValue({ start: 0, end: 100 });
+        vi.spyOn(location, "getState").mockReturnValue({ start: "0", end: "100" });
         const mockQuery = "select * from 'kamu/mockNameRoot'";
         const mockEntry = {
             query: mockQuery,

@@ -95,7 +95,7 @@ export class DataComponent extends BaseComponent implements OnInit {
             this.sqlRequestCode = sqlQueryFromUrl;
         } else {
             this.sqlRequestCode += `'${this.dataTabData.datasetBasics.alias}'`;
-            const offset = this.location.getState() as MaybeNull<{ start?: number; end?: number }>;
+            const offset = this.location.getState() as MaybeNull<{ start?: string; end?: string }>;
             if (offset && typeof offset.start !== "undefined" && typeof offset.end !== "undefined") {
                 this.sqlRequestCode += `\nwhere ${this.offsetColumnName}>=${offset.start} and ${this.offsetColumnName}<=${offset.end}\norder by ${this.offsetColumnName} desc`;
                 return;

@@ -16,7 +16,11 @@ import {
     DynamicTableDataRow,
 } from "@common/components/dynamic-table/dynamic-table.interface";
 import { convertSecondsToHumanReadableFormat } from "@common/helpers/app.helpers";
-import { DataQueryResultSuccessViewFragment, MetadataBlockFragment } from "@api/kamu.graphql.interface";
+import {
+    DataQueryResultSuccessViewFragment,
+    MetadataBlockFragment,
+    OffsetIntervalDataFragment,
+} from "@api/kamu.graphql.interface";
 import { MaybeNull, MaybeUndefined } from "@interface/app.types";
 
 import { EventPropertyLogo } from "src/app/dataset-block/metadata-block/components/event-details/supported.events";
@@ -169,20 +173,25 @@ export class DataHelpers {
         }
     }
 
+    private static offsetIntervalLength(iv: OffsetIntervalDataFragment): bigint {
+        // BigInt keeps the count exact for any Uint64 offsets
+        return BigInt(iv.end) - BigInt(iv.start) + 1n;
+    }
+
     public static descriptionForMetadataBlock(block: MetadataBlockFragment): string {
         const event = block.event;
         switch (event.__typename) {
             case "AddData":
                 if (event.newData) {
                     const iv = event.newData.offsetInterval;
-                    return `Added ${iv.end - iv.start + 1} new records`;
+                    return `Added ${DataHelpers.offsetIntervalLength(iv)} new records`;
                 } else {
                     return `Watermark updated`;
                 }
             case "ExecuteTransform":
                 if (event.newData) {
                     const iv = event.newData.offsetInterval;
-                    return `Transformation produced ${iv.end - iv.start + 1} new records`;
+                    return `Transformation produced ${DataHelpers.offsetIntervalLength(iv)} new records`;
                 } else {
                     return `Transformation advanced`;
                 }

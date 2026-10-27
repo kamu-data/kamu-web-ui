@@ -43,7 +43,7 @@ describe("OffsetIntervalPropertyComponent", () => {
         datasets: { __typename: "Datasets", byId: mockDatasetMainDataResponse.datasets.byOwnerAndName },
     };
     const mockData = {
-        block: { __typename: "OffsetInterval" as const, start: 0, end: 596125 },
+        block: { __typename: "OffsetInterval" as const, start: "0", end: "596125" },
         datasetId: DATASET_ID,
     };
 
@@ -79,7 +79,7 @@ describe("OffsetIntervalPropertyComponent", () => {
             expect.objectContaining({
                 datasetName: TEST_DATASET_NAME,
                 tab: DatasetViewTypeEnum.Data,
-                state: { start: 0, end: 596125 },
+                state: { start: "0", end: "596125" },
             }),
         );
     });
@@ -87,7 +87,7 @@ describe("OffsetIntervalPropertyComponent", () => {
     it("should not load the dataset again when only the interval changes", () => {
         setComponentInput(fixture, "data", mockData);
         fixture.detectChanges();
-        setComponentInput(fixture, "data", { ...mockData, block: { ...mockData.block, end: 600000 } });
+        setComponentInput(fixture, "data", { ...mockData, block: { ...mockData.block, end: "600000" } });
         fixture.detectChanges();
 
         expect(requestDatasetInfoByIdSpy).toHaveBeenCalledTimes(1);
@@ -107,7 +107,7 @@ describe("OffsetIntervalPropertyComponent", () => {
             accountName: "accountName",
             datasetName: "datasetName",
             tab: DatasetViewTypeEnum.Data,
-            state: { start: 0, end: 596125 },
+            state: { start: "0", end: "596125" },
         });
     });
 

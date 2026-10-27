@@ -79,9 +79,9 @@ export class DatasetSettingsTransformOptionsTabComponent extends BaseComponent i
         this.form.patchValue(
             {
                 updatesEnabled: this.transformTabData.paused === false,
-                transformTrigger: this.buildInitialTransformTriggerFormValue(),
-                stopPolicy: this.buildInitialStopPolicyFormValue(),
-            } as TransformSettingsFormValue,
+                transformTrigger: this.buildInitialTransformTriggerFormValue() ?? undefined,
+                stopPolicy: this.buildInitialStopPolicyFormValue() ?? undefined,
+            },
             { emitEvent: true },
         );
         this.cdr.detectChanges();
@@ -168,7 +168,7 @@ export class DatasetSettingsTransformOptionsTabComponent extends BaseComponent i
     }
 
     public saveUpdates(): void {
-        const formValue = this.form.getRawValue() as TransformSettingsFormValue;
+        const formValue: TransformSettingsFormValue = this.form.getRawValue();
         const updatesEnabled = formValue.updatesEnabled;
 
         if (updatesEnabled) {

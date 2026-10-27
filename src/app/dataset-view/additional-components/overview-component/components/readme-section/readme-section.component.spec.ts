@@ -117,6 +117,16 @@ describe("ReadmeSectionComponent", () => {
         expect(component.readmeState).toEqual(modifiedReadmeContent);
     });
 
+    it("should count clearing typed text in a dataset without a README as a change", () => {
+        setComponentInput(fixture, "currentReadme", null);
+        fixture.detectChanges();
+        expect(component.readmeChanged).toBe(false);
+
+        component.readmeState = "";
+
+        expect(component.readmeChanged).toBe(true);
+    });
+
     it("should check Run and Copy buttons exist", async () => {
         setComponentInput(
             fixture,

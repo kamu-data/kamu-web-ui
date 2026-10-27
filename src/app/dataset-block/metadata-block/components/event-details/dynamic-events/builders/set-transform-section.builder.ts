@@ -5,11 +5,8 @@
  * included in the LICENSE file.
  */
 
-import {
-    DatasetBasicsFragment,
-    DatasetTransformFragment,
-    TransformInputDataFragment,
-} from "@api/kamu.graphql.interface";
+import { enumValueOf } from "@common/helpers/app.helpers";
+import { DatasetTransformFragment, TransformInputDataFragment } from "@api/kamu.graphql.interface";
 
 import { SET_TRANSFORM_SOURCE_DESCRIPTORS } from "src/app/dataset-block/metadata-block/components/event-details/components/set-transform-event/set-transform-event.source";
 import { EventSectionBuilder } from "src/app/dataset-block/metadata-block/components/event-details/dynamic-events/builders/event-section.builder";
@@ -28,16 +25,11 @@ export class SetTransformSectionBuilder extends EventSectionBuilder<DatasetTrans
         const result: EventSection[] = [];
         Object.keys(event).forEach((section) => {
             if (section !== "__typename") {
-                switch (section as SetTransformSection) {
+                switch (enumValueOf(SetTransformSection, section)) {
                     case SetTransformSection.TRANSFORM: {
                         result.push({
                             title: section,
-                            rows: this.buildEventRows(
-                                event,
-                                SET_TRANSFORM_SOURCE_DESCRIPTORS,
-                                section as keyof DatasetTransformFragment,
-                                false,
-                            ),
+                            rows: this.buildEventRows(event, SET_TRANSFORM_SOURCE_DESCRIPTORS, section, false),
                         });
                         break;
                     }
@@ -64,7 +56,7 @@ export class SetTransformSectionBuilder extends EventSectionBuilder<DatasetTrans
                                             SET_TRANSFORM_SOURCE_DESCRIPTORS,
                                             sectionType,
                                             key,
-                                            this.valueTransformMapper(key as keyof DatasetBasicsFragment, value, item),
+                                            this.valueTransformMapper(key, value, item),
                                         ),
                                     );
                                 }
@@ -92,14 +84,10 @@ export class SetTransformSectionBuilder extends EventSectionBuilder<DatasetTrans
         return kind.slice(0, 1) + kind.slice(1).toLowerCase();
     }
 
-    private valueTransformMapper(
-        key: keyof DatasetBasicsFragment,
-        value: unknown,
-        inputItem: TransformInputDataFragment,
-    ): unknown {
+    private valueTransformMapper(key: string, value: unknown, inputItem: TransformInputDataFragment): unknown {
         switch (key) {
             case "kind":
-                return this.kindDatasetCapitalize(value as string);
+                return typeof value === "string" ? this.kindDatasetCapitalize(value) : value;
             case "name":
                 return "dataset" in inputItem.inputDataset ? inputItem.inputDataset.dataset.id : value;
 

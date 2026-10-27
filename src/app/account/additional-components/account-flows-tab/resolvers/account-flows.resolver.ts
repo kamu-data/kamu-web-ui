@@ -7,6 +7,7 @@
 
 import { ActivatedRouteSnapshot, ResolveFn } from "@angular/router";
 
+import { enumValueOf } from "@common/helpers/app.helpers";
 import { FlowStatus } from "@api/kamu.graphql.interface";
 
 import {
@@ -23,13 +24,16 @@ export interface AccountFlowsType {
 
 export const accountFlowsResolverFn: ResolveFn<AccountFlowsType> = (route: ActivatedRouteSnapshot) => {
     const activeNav =
-        (route.queryParamMap.get(ProjectLinks.URL_QUERY_PARAM_ACCOUNT_NAV) as AccountFlowsNav) ??
+        enumValueOf(AccountFlowsNav, route.queryParamMap.get(ProjectLinks.URL_QUERY_PARAM_ACCOUNT_NAV)) ??
         AccountFlowsNav.ACTIVITY;
-    const currentNav = route.queryParamMap.get(ProjectLinks.URL_QUERY_PARAM_ACCOUNT_FLOW_STATUS);
-    const flowGroup = currentNav ? (currentNav.split(",") as FlowStatus[]) : [FlowStatus.Finished];
+    const currentNav = route.queryParamMap.get(ProjectLinks.URL_QUERY_PARAM_ACCOUNT_FLOW_STATUS) ?? "";
+    const statuses = currentNav.split(",").flatMap((status) => enumValueOf(FlowStatus, status) ?? []);
+    const flowGroup = statuses.length ? statuses : [FlowStatus.Finished];
     const datasetsFiltersMode =
-        (route.queryParamMap.get(ProjectLinks.URL_QUERY_PARAM_ACCOUNT_FLOW_FILTERS_MODE) as ProcessCardFilterMode) ??
-        ProcessCardFilterMode.RECENT_ACTIVITY;
+        enumValueOf(
+            ProcessCardFilterMode,
+            route.queryParamMap.get(ProjectLinks.URL_QUERY_PARAM_ACCOUNT_FLOW_FILTERS_MODE),
+        ) ?? ProcessCardFilterMode.RECENT_ACTIVITY;
 
     return {
         activeNav,

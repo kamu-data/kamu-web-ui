@@ -74,7 +74,7 @@ export class DatasetSettingsIngestConfigurationTabComponent extends BaseComponen
     }
 
     protected saveConfiguration(): void {
-        const formValue = this.form.getRawValue() as IngestConfigurationFormValue;
+        const formValue: IngestConfigurationFormValue = this.form.getRawValue();
 
         this.datasetFlowConfigService
             .setDatasetIngestFlowConfigs({

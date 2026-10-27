@@ -10,9 +10,10 @@ import { MatIconModule } from "@angular/material/icon";
 
 import { catchError, from, of, take } from "rxjs";
 
-import { NgbModal, NgbModalRef } from "@ng-bootstrap/ng-bootstrap";
+import { NgbModal } from "@ng-bootstrap/ng-bootstrap";
 
 import { BlockRowDataComponent } from "@common/components/block-row-data/block-row-data.component";
+import { openModal } from "@common/helpers/modal.helpers";
 import RoutingResolvers from "@common/resolvers/routing-resolvers";
 import { DatasetBasicsFragment, LicenseFragment } from "@api/kamu.graphql.interface";
 import { MaybeNullOrUndefined } from "@interface/app.types";
@@ -54,15 +55,14 @@ export class MetadataLicenseTabComponent {
     }
 
     public onEditLicense(): void {
-        const modalRef: NgbModalRef = this.ngbModalService.open(EditLicenseModalComponent);
-        const modalRefInstance = modalRef.componentInstance as EditLicenseModalComponent;
-        modalRefInstance.currentState = {
+        const { modalRef, instance } = openModal(this.ngbModalService, EditLicenseModalComponent);
+        instance.currentState = {
             schema: this.datasetMetadataTabData.overviewUpdate.schema,
             data: this.datasetMetadataTabData.overviewUpdate.content,
             overview: this.datasetMetadataTabData.overviewUpdate.overview,
             size: this.datasetMetadataTabData.overviewUpdate.size,
         };
-        modalRefInstance.datasetBasics = this.datasetBasics;
+        instance.datasetBasics = this.datasetBasics;
         from(modalRef.result)
             .pipe(
                 take(1),

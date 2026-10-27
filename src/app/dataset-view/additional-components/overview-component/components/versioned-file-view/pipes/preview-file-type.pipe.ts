@@ -7,13 +7,15 @@
 
 import { Pipe, PipeTransform } from "@angular/core";
 
+import { MaybeNullOrUndefined } from "@interface/app.types";
+
 export type PreviewFileExtensionsType = "pdf" | "image" | "json" | "text" | "video" | "audio" | "svg" | "unknown";
 
 @Pipe({
     name: "previewFileType",
 })
 export class PreviewFileTypePipe implements PipeTransform {
-    public transform(contentType: string): PreviewFileExtensionsType {
+    public transform(contentType: MaybeNullOrUndefined<string>): PreviewFileExtensionsType {
         if (!contentType) return "unknown";
         if (contentType === "application/pdf") return "pdf";
         if (contentType.includes("svg")) return "svg";

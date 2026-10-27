@@ -10,6 +10,7 @@ import { ActivatedRoute, ParamMap } from "@angular/router";
 
 import { NgbNavChangeEvent, NgbNavModule } from "@ng-bootstrap/ng-bootstrap";
 
+import { enumValueOf, requireValue } from "@common/helpers/app.helpers";
 import RoutingResolvers from "@common/resolvers/routing-resolvers";
 import AppValues from "@common/values/app.values";
 import { DatasetBasicsFragment, FlowStatus } from "@api/kamu.graphql.interface";
@@ -56,11 +57,11 @@ export class AccountFlowsTabComponent {
 
     public get accountName(): string {
         const paramMap: MaybeUndefined<ParamMap> = this.activatedRoute?.parent?.parent?.snapshot.paramMap;
-        return paramMap?.get(ProjectLinks.URL_PARAM_ACCOUNT_NAME) as string;
+        return requireValue(paramMap?.get(ProjectLinks.URL_PARAM_ACCOUNT_NAME), "Route has no account name");
     }
 
     public onNavChange(event: NgbNavChangeEvent): void {
-        const nextNav = event.nextId as AccountFlowsNav;
+        const nextNav = enumValueOf(AccountFlowsNav, event.nextId);
         this.navigationService.navigateToOwnerView(
             this.accountName,
             AccountTabs.FLOWS,

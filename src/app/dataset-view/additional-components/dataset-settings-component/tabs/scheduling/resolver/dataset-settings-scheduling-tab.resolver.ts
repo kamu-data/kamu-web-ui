@@ -7,6 +7,7 @@
 
 import { ResolveFn } from "@angular/router";
 
+import { enumValueOf } from "@common/helpers/app.helpers";
 import { DatasetFlowType } from "@api/kamu.graphql.interface";
 
 import { SettingsTabsEnum } from "src/app/dataset-view/additional-components/dataset-settings-component/dataset-settings.model";
@@ -16,7 +17,7 @@ import ProjectLinks from "src/app/project-links";
 
 export const datasetSettingsSchedulingTabResolverFn: ResolveFn<DatasetSettingsSchedulingTabData> = (route) => {
     return requestFlowTriggerTabData(
-        route.data[ProjectLinks.URL_PARAM_TAB] as SettingsTabsEnum,
+        enumValueOf(SettingsTabsEnum, route.data[ProjectLinks.URL_PARAM_TAB]),
         DatasetFlowType.Ingest,
         (trigger) => ({ schedule: trigger?.schedule ?? null }),
     );

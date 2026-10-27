@@ -11,7 +11,8 @@ import { FormBuilder, FormGroup } from "@angular/forms";
 
 import { catchError, combineLatest, from, of, take } from "rxjs";
 
-import { NgbModalRef } from "@ng-bootstrap/ng-bootstrap";
+import { openModal } from "@common/helpers/modal.helpers";
+import { formValueAs } from "@common/helpers/untyped-boundary.helpers";
 
 import {
     SourcesEvents,
@@ -77,8 +78,7 @@ export abstract class BaseSourceEventComponent extends BaseMainEventComponent im
     }
 
     public editSourceYaml(form: FormGroup, sourceEvent: SourcesEvents): void {
-        const modalRef: NgbModalRef = this.modalService.open(FinalYamlModalComponent, { size: "lg" });
-        const instance = modalRef.componentInstance as FinalYamlModalComponent;
+        const { modalRef, instance } = openModal(this.modalService, FinalYamlModalComponent, { size: "lg" });
         instance.yamlTemplate =
             this.errorMessage && this.changedEventYamlByHash
                 ? this.changedEventYamlByHash
@@ -92,7 +92,7 @@ export abstract class BaseSourceEventComponent extends BaseMainEventComponent im
             ),
             this.datasetCommitService.commitEventErrorOccurrences,
         ]).subscribe(([eventYaml, message]) => {
-            this.changedEventYamlByHash = eventYaml as string;
+            this.changedEventYamlByHash = typeof eventYaml === "string" ? eventYaml : null;
             if (!message) {
                 this.navigationServices.navigateToDatasetView({
                     accountName: this.getDatasetInfoFromUrl().accountName,
@@ -128,12 +128,12 @@ export abstract class BaseSourceEventComponent extends BaseMainEventComponent im
         this.processFormService.transformForm(form);
         if (event === SupportedEvents.SetPollingSource) {
             return this.yamlEventService.buildYamlSetPollingSourceEvent(
-                form.value as AddPollingSourceEditFormType,
+                formValueAs<AddPollingSourceEditFormType>(form),
                 this.showPreprocessStep ? this.preprocessStepValue : null,
             );
         }
         return this.yamlEventService.buildYamlAddPushSourceEvent(
-            form.value as AddPushSourceEditFormType,
+            formValueAs<AddPushSourceEditFormType>(form),
             this.showPreprocessStep ? this.preprocessStepValue : null,
         );
     }

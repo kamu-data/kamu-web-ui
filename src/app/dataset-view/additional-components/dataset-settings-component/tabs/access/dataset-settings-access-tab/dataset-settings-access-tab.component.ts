@@ -23,6 +23,7 @@ import { BaseComponent } from "@common/components/base.component";
 import { ModalService } from "@common/components/modal/modal.service";
 import { PaginationComponent } from "@common/components/pagination-component/pagination.component";
 import { promiseWithCatch } from "@common/helpers/app.helpers";
+import { openModal } from "@common/helpers/modal.helpers";
 import { DatasetLinkPipe } from "@common/pipes/dataset-link.pipe";
 import RoutingResolvers from "@common/resolvers/routing-resolvers";
 import AppValues from "@common/values/app.values";
@@ -138,13 +139,9 @@ export class DatasetSettingsAccessTabComponent extends BaseComponent implements 
             );
         const activeCollaboratorsIds = await firstValueFrom(activeCollaboratorsIds$);
 
-        const modalRef = this.ngbModalService.open(AddPeopleModalComponent);
-        const modalRefInstance = modalRef.componentInstance as AddPeopleModalComponent;
-        modalRefInstance.datasetBasics = this.datasetBasics;
-        modalRefInstance.activeCollaboratorsIds = [
-            this.loggedUserService.currentlyLoggedInUser.id,
-            ...activeCollaboratorsIds,
-        ];
+        const { modalRef, instance } = openModal(this.ngbModalService, AddPeopleModalComponent);
+        instance.datasetBasics = this.datasetBasics;
+        instance.activeCollaboratorsIds = [this.loggedUserService.currentlyLoggedInUser.id, ...activeCollaboratorsIds];
         from(modalRef.result)
             .pipe(
                 filter((data) => !!data),
@@ -165,9 +162,8 @@ export class DatasetSettingsAccessTabComponent extends BaseComponent implements 
     }
 
     public editCollaborator(collaborator: AccountWithRoleDataFragment): void {
-        const modalRef = this.ngbModalService.open(EditCollaboratorModalComponent);
-        const modalRefInstance = modalRef.componentInstance as EditCollaboratorModalComponent;
-        modalRefInstance.collaborator = collaborator;
+        const { modalRef, instance } = openModal(this.ngbModalService, EditCollaboratorModalComponent);
+        instance.collaborator = collaborator;
         from(modalRef.result)
             .pipe(
                 filter((data) => !!data),

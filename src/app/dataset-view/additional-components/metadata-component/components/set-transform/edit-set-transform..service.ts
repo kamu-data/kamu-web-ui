@@ -9,8 +9,7 @@ import { inject, Injectable } from "@angular/core";
 
 import { Observable } from "rxjs";
 
-import { parse } from "yaml";
-
+import { parseYamlAs } from "@common/helpers/untyped-boundary.helpers";
 import { MetadataManifestFormat } from "@api/kamu.graphql.interface";
 import { MaybeNull } from "@interface/app.types";
 import { DatasetInfo } from "@interface/navigation.interface";
@@ -32,7 +31,7 @@ export class EditSetTransformService {
     private blockService = inject(BlockService);
 
     public parseEventFromYaml(event: string): SetTransformYamlType {
-        const editFormParseValue = parse(event) as EditSetTransformParseType;
+        const editFormParseValue = parseYamlAs<EditSetTransformParseType>(event);
         return editFormParseValue.content.event;
     }
 

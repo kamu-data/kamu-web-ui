@@ -11,8 +11,7 @@ import { RouterLink } from "@angular/router";
 
 import { catchError, forkJoin, from, map, of, take } from "rxjs";
 
-import { NgbModalRef } from "@ng-bootstrap/ng-bootstrap";
-
+import { openModal } from "@common/helpers/modal.helpers";
 import { DatasetLinkPipe } from "@common/pipes/dataset-link.pipe";
 import RoutingResolvers from "@common/resolvers/routing-resolvers";
 import { GetDatasetSchemaQuery } from "@api/kamu.graphql.interface";
@@ -125,8 +124,7 @@ export class SetTransformComponent extends BaseMainEventComponent implements OnI
     }
 
     public onEditYaml(): void {
-        const modalRef: NgbModalRef = this.modalService.open(FinalYamlModalComponent, { size: "lg" });
-        const instance = modalRef.componentInstance as FinalYamlModalComponent;
+        const { modalRef, instance } = openModal(this.modalService, FinalYamlModalComponent, { size: "lg" });
         instance.yamlTemplate =
             this.errorMessage && this.changedEventYamlByHash
                 ? this.changedEventYamlByHash
@@ -141,8 +139,8 @@ export class SetTransformComponent extends BaseMainEventComponent implements OnI
                 take(1),
                 catchError(() => of(null)),
             )
-            .subscribe((eventYaml: string) => {
-                this.changedEventYamlByHash = eventYaml;
+            .subscribe((eventYaml: unknown) => {
+                this.changedEventYamlByHash = typeof eventYaml === "string" ? eventYaml : null;
             });
     }
 

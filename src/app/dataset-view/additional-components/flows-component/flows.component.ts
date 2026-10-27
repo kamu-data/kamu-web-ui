@@ -17,7 +17,7 @@ import { BehaviorSubject, combineLatest, filter, map, Observable, of, switchMap,
 
 import { environment } from "@env/environment";
 import { PaginationComponent } from "@common/components/pagination-component/pagination.component";
-import { trackBusyKey } from "@common/helpers/app.helpers";
+import { enumValueOf, oneOf, trackBusyKey } from "@common/helpers/app.helpers";
 import { DatasetLinkPipe } from "@common/pipes/dataset-link.pipe";
 import { SourceEventEditorLinkPipe } from "@common/pipes/source-event-editor-link.pipe";
 import RoutingResolvers from "@common/resolvers/routing-resolvers";
@@ -47,6 +47,7 @@ import { FlowsAssociatedChannelsComponent } from "src/app/dataset-view/additiona
 import { FlowsBlockActionsComponent } from "src/app/dataset-view/additional-components/flows-component/components/flows-block-actions/flows-block-actions.component";
 import {
     DatasetFlowsTabState,
+    FLOWS_SELECTED_CATEGORIES,
     FlowsCategoryUnion,
     FlowsSelectedCategory,
     FlowsSelectionState,
@@ -133,9 +134,13 @@ export class FlowsComponent extends FlowsTableProcessingBaseComponent implements
         this.refreshFlow();
     }
 
-    public ngOnChanges(changes: SimpleChanges): void {
-        const previousFlowsData = changes["flowsData"]?.previousValue as MaybeUndefined<DatasetOverviewTabData>;
-        if (previousFlowsData && previousFlowsData.datasetBasics.id !== this.flowsData.datasetBasics.id) {
+    public ngOnChanges(changes: SimpleChanges<FlowsComponent>): void {
+        const flowsDataChange = changes.flowsData;
+        if (
+            flowsDataChange &&
+            !flowsDataChange.firstChange &&
+            flowsDataChange.previousValue.datasetBasics.id !== this.flowsData.datasetBasics.id
+        ) {
             this.startOverForAnotherDataset();
         }
     }
@@ -167,7 +172,9 @@ export class FlowsComponent extends FlowsTableProcessingBaseComponent implements
     }
 
     private applyWebhookStateParam(): void {
-        const states = this.webhookStateParam ? (this.webhookStateParam.split(",") as FlowProcessEffectiveState[]) : [];
+        const states = (this.webhookStateParam ?? "")
+            .split(",")
+            .flatMap((state) => enumValueOf(FlowProcessEffectiveState, state) ?? []);
         this.flowsSelectionStateService.setWebhookFilterButtons(states);
         if (this.flowsSelectionState.webhookFilterButtons.length) {
             this.flowsSelectionStateService.setWebhooksCategory("webhooks");
@@ -320,7 +327,7 @@ export class FlowsComponent extends FlowsTableProcessingBaseComponent implements
             accountName: this.flowsData.datasetBasics.owner.accountName,
             datasetName: this.flowsData.datasetBasics.name,
             tab: DatasetViewTypeEnum.Flows,
-            category: event.value as FlowsSelectedCategory,
+            category: oneOf(FLOWS_SELECTED_CATEGORIES, event.value),
         });
         this.refreshFromFirstPage();
     }

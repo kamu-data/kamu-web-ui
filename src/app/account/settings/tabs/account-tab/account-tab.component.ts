@@ -63,9 +63,7 @@ export class AccountTabComponent extends BaseComponent implements OnInit {
     public ngOnInit(): void {
         this.changeUsernameForm = this.fb.nonNullable.group({
             username: [
-                this.isOwnerPage && !this.accountName
-                    ? this.loggedUserService.currentlyLoggedInUser.accountName
-                    : (this.accountName as string),
+                this.editedAccountName,
                 [Validators.required, Validators.pattern(AppValues.DATASET_NAME_PATTERN)],
             ],
         });
@@ -81,12 +79,8 @@ export class AccountTabComponent extends BaseComponent implements OnInit {
                 noButtonText: "Cancel",
                 handler: (ok) => {
                     if (ok) {
-                        const accountName =
-                            this.isOwnerPage && !this.accountName
-                                ? this.loggedUserService.currentlyLoggedInUser.accountName
-                                : (this.accountName as string);
                         this.accountService
-                            .deleteAccountByName(accountName)
+                            .deleteAccountByName(this.editedAccountName)
                             .pipe(takeUntilDestroyed(this.destroyRef))
                             .subscribe((success: boolean) => {
                                 if (success) {
@@ -114,13 +108,9 @@ export class AccountTabComponent extends BaseComponent implements OnInit {
                 noButtonText: "Cancel",
                 handler: (ok) => {
                     if (ok) {
-                        const accountName =
-                            this.isOwnerPage && !this.accountName
-                                ? this.loggedUserService.currentlyLoggedInUser.accountName
-                                : (this.accountName as string);
                         this.accountService
                             .changeAccountUsername({
-                                accountName,
+                                accountName: this.editedAccountName,
                                 newName: this.changeUsernameForm.controls.username.value,
                             })
                             .pipe(takeUntilDestroyed(this.destroyRef))
@@ -153,5 +143,10 @@ export class AccountTabComponent extends BaseComponent implements OnInit {
     public get accountName(): MaybeNullOrUndefined<string> {
         const paramMap: MaybeUndefined<ParamMap> = this.activatedRoute?.parent?.parent?.snapshot.paramMap;
         return paramMap?.get(ProjectLinks.URL_PARAM_ACCOUNT_NAME);
+    }
+
+    /** The account in the route, or the logged-in user's own account when the route names none. */
+    private get editedAccountName(): string {
+        return this.accountName ?? this.loggedUserService.currentlyLoggedInUser.accountName;
     }
 }

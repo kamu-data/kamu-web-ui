@@ -7,6 +7,7 @@
 
 import { HttpErrorResponse } from "@angular/common/http";
 
+import { isRecord } from "@common/helpers/app.helpers";
 import { ErrorTexts } from "@common/values/errors.text";
 import { MaybeNull } from "@interface/app.types";
 
@@ -24,7 +25,7 @@ export function httpErrorServerMessage(e: unknown): MaybeNull<string> {
     if (typeof body === "string") {
         return body || null;
     }
-    const message: unknown = (body as MaybeNull<{ message?: unknown }>)?.message;
+    const message: unknown = isRecord(body) ? body.message : undefined;
     return typeof message === "string" && message ? message : null;
 }
 

@@ -10,6 +10,7 @@ import { ActivatedRouteSnapshot, RedirectCommand, ResolveFn } from "@angular/rou
 
 import { map, of, switchMap } from "rxjs";
 
+import { requireValue } from "@common/helpers/app.helpers";
 import { datasetInfoFromRoute } from "@common/resolvers/resolver.helpers";
 
 import { DatasetFlowByIdResponse } from "src/app/dataset-flow/dataset-flow-details/dataset-flow-details.types";
@@ -24,7 +25,7 @@ export const flowDetailsResolverFn: ResolveFn<DatasetFlowByIdResponse> = (route:
     const datasetPermissionsService = inject(DatasetPermissionsService);
     const navigationService = inject(NavigationService);
 
-    const flowId = route.paramMap.get(ProjectLinks.URL_PARAM_FLOW_ID) as string;
+    const flowId = requireValue(route.paramMap.get(ProjectLinks.URL_PARAM_FLOW_ID), "Route has no flow id");
     const datasetInfo = datasetInfoFromRoute(route);
 
     return requestDatasetWithPermissions(datasetInfo).pipe(

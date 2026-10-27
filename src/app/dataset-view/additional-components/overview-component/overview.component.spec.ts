@@ -13,13 +13,12 @@ import { of } from "rxjs";
 
 import { OwlDateTimeModule, OwlNativeDateTimeModule } from "@danielmoncada/angular-datetime-picker";
 import { OwlMomentDateTimeModule } from "@danielmoncada/angular-datetime-picker-moment-adapter";
-import { NgbModal, NgbModalRef } from "@ng-bootstrap/ng-bootstrap";
+import { NgbModal } from "@ng-bootstrap/ng-bootstrap";
 import { Apollo } from "apollo-angular";
 import { provideMarkdown } from "ngx-markdown";
 import { provideToastr } from "ngx-toastr";
 
 import {
-    createSpyObj,
     emitClickOnElementByDataTestId,
     findElementByDataTestId,
     getElementByDataTestId,
@@ -117,29 +116,25 @@ describe("OverviewComponent", () => {
     });
 
     it("should open information modal window", async () => {
-        const mockModalRef = createSpyObj<NgbModalRef>({}, { componentInstance: {}, result: Promise.resolve() });
-
-        const openModalSpy = vi.spyOn(modalService, "open").mockReturnValue(mockModalRef);
+        const openModalSpy = vi.spyOn(modalService, "open");
         const navigateToDatasetViewSpy = vi
             .spyOn(navigationService, "navigateToDatasetView")
             .mockImplementation(() => {});
         component.openInformationModal();
         expect(openModalSpy).toHaveBeenCalledTimes(1);
-        await mockModalRef.result;
-        expect(navigateToDatasetViewSpy).toHaveBeenCalledTimes(1);
+        modalService.dismissAll();
+        await vi.waitFor(() => expect(navigateToDatasetViewSpy).toHaveBeenCalledTimes(1));
     });
 
     it("should open license modal window", async () => {
-        const mockModalRef = createSpyObj<NgbModalRef>({}, { componentInstance: {}, result: Promise.resolve() });
-
-        const openModalSpy = vi.spyOn(modalService, "open").mockReturnValue(mockModalRef);
+        const openModalSpy = vi.spyOn(modalService, "open");
         const navigateToDatasetViewSpy = vi
             .spyOn(navigationService, "navigateToDatasetView")
             .mockImplementation(() => {});
         component.openLicenseModal();
         expect(openModalSpy).toHaveBeenCalledTimes(1);
-        await mockModalRef.result;
-        expect(navigateToDatasetViewSpy).toHaveBeenCalledTimes(1);
+        modalService.dismissAll();
+        await vi.waitFor(() => expect(navigateToDatasetViewSpy).toHaveBeenCalledTimes(1));
     });
 
     it("should check Update now button is not visible", () => {

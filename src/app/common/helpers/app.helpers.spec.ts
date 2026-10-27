@@ -13,16 +13,21 @@ import { subDays } from "date-fns";
 
 import {
     addMarkdownRunButton,
+    enumValueOf,
     isEqual,
     isNil,
     isNull,
+    isRecord,
+    isStringArray,
     momentConvertDateToLocalWithFormat,
+    oneOf,
     promiseWithCatch,
     requireValue,
     trackBusy,
     trackBusyKey,
 } from "@common/helpers/app.helpers";
 import AppValues from "@common/values/app.values";
+import { FlowStatus } from "@api/kamu.graphql.interface";
 import { MaybeNullOrUndefined } from "@interface/app.types";
 
 describe("AppHelpers", () => {
@@ -32,6 +37,43 @@ describe("AppHelpers", () => {
 
     it("should check null requireValue", () => {
         expect(() => requireValue(null)).toThrowError();
+    });
+
+    it("should check undefined requireValue throws the given message", () => {
+        expect(() => requireValue(undefined, "Dataset not found")).toThrowError("Dataset not found");
+    });
+
+    it("should check falsy but present values pass requireValue", () => {
+        expect(requireValue(0)).toEqual(0);
+        expect(requireValue("")).toEqual("");
+        expect(requireValue(false)).toEqual(false);
+    });
+
+    it("should check isStringArray accepts arrays of strings only", () => {
+        expect(isStringArray(["a", "b"])).toBe(true);
+        expect(isStringArray([])).toBe(true);
+        expect(isStringArray(["a", 1])).toBe(false);
+        expect(isStringArray("a")).toBe(false);
+    });
+
+    it("should check isRecord accepts objects other than arrays", () => {
+        expect(isRecord({ a: 1 })).toBe(true);
+        expect(isRecord([])).toBe(false);
+        expect(isRecord(null)).toBe(false);
+        expect(isRecord("text")).toBe(false);
+    });
+
+    it("should check enumValueOf returns the member or undefined", () => {
+        expect(enumValueOf(FlowStatus, "RUNNING")).toEqual(FlowStatus.Running);
+        expect(enumValueOf(FlowStatus, "Running")).toBeUndefined();
+        expect(enumValueOf(FlowStatus, null)).toBeUndefined();
+    });
+
+    it("should check oneOf returns a listed value or undefined", () => {
+        const categories = ["all", "updates"] as const;
+        expect(oneOf(categories, "updates")).toEqual("updates");
+        expect(oneOf(categories, "webhooks")).toBeUndefined();
+        expect(oneOf(categories, undefined)).toBeUndefined();
     });
 
     it("should check promiseWithCatch with success", () => {

@@ -25,7 +25,7 @@ export abstract class BaseEditorComponent implements OnChanges {
     @Output() public templateChange = new EventEmitter<string>();
     @Output() public onEditorLoaded = new EventEmitter<null>();
 
-    public editorModel: monaco.editor.ITextModel;
+    public editorModel: MaybeNull<monaco.editor.ITextModel> = null;
     public getErrorDetails: (error: string) => EditorError = getDefaultError;
 
     private monacoService = inject(MonacoService);
@@ -46,6 +46,6 @@ export abstract class BaseEditorComponent implements OnChanges {
 
     public onInitEditor(editor: monaco.editor.IStandaloneCodeEditor): void {
         this.onEditorLoaded.emit();
-        this.editorModel = editor.getModel() as monaco.editor.ITextModel;
+        this.editorModel = editor.getModel();
     }
 }

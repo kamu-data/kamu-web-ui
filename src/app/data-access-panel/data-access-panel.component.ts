@@ -12,10 +12,11 @@ import { Router } from "@angular/router";
 
 import { Observable } from "rxjs";
 
-import { NgbModal, NgbModalRef } from "@ng-bootstrap/ng-bootstrap";
+import { NgbModal } from "@ng-bootstrap/ng-bootstrap";
 
 import { BaseComponent } from "@common/components/base.component";
 import { FeatureFlagDirective } from "@common/directives/feature-flag.directive";
+import { openModal } from "@common/helpers/modal.helpers";
 import { DatasetBasicsFragment, DatasetEndpointsDataFragment } from "@api/kamu.graphql.interface";
 import { MaybeUndefined } from "@interface/app.types";
 
@@ -47,12 +48,11 @@ export class DataAccessPanelComponent extends BaseComponent {
     private router = inject(Router);
 
     public openDataAccessModal(): void {
-        const modalRef: NgbModalRef = this.ngbModalService.open(DataAccessModalComponent, {
+        const { instance } = openModal(this.ngbModalService, DataAccessModalComponent, {
             size: "lg",
             centered: true,
         });
-        const modalRefInstance = modalRef.componentInstance as DataAccessModalComponent;
-        modalRefInstance.datasetBasics = this.datasetBasics;
+        instance.datasetBasics = this.datasetBasics;
     }
 
     public onClickGetData(): void {

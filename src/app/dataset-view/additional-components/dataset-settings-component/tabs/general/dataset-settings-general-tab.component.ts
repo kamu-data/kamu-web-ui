@@ -17,15 +17,7 @@ import {
     OnInit,
 } from "@angular/core";
 import { takeUntilDestroyed } from "@angular/core/rxjs-interop";
-import {
-    AbstractControl,
-    FormBuilder,
-    FormControl,
-    FormGroup,
-    FormsModule,
-    ReactiveFormsModule,
-    Validators,
-} from "@angular/forms";
+import { FormBuilder, FormControl, FormGroup, FormsModule, ReactiveFormsModule, Validators } from "@angular/forms";
 import { MatDividerModule } from "@angular/material/divider";
 import { MatRadioModule } from "@angular/material/radio";
 
@@ -146,7 +138,7 @@ export class DatasetSettingsGeneralTabComponent extends BaseComponent implements
         }
     }
 
-    public get datasetNameControl(): AbstractControl {
+    public get datasetNameControl(): FormControl<string> {
         return this.renameDatasetForm.controls.datasetName;
     }
 
@@ -179,7 +171,7 @@ export class DatasetSettingsGeneralTabComponent extends BaseComponent implements
                 accountId,
                 accountName,
                 datasetId,
-                newName: this.datasetNameControl.value as string,
+                newName: this.datasetNameControl.value,
             })
             .pipe(takeUntilDestroyed(this.destroyRef))
             .subscribe();

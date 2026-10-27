@@ -22,7 +22,7 @@ import { MaybeNullOrUndefined } from "@interface/app.types";
 
 import { EnginePropertyComponent } from "src/app/dataset-block/metadata-block/components/event-details/components/common/engine-property/engine-property.component";
 import { SqlQueryViewerComponent } from "src/app/dataset-block/metadata-block/components/event-details/components/common/sql-query-viewer/sql-query-viewer.component";
-import { DatasetOverviewTabData } from "src/app/dataset-view/dataset-view.interface";
+import { MetadataTabData } from "src/app/dataset-view/additional-components/metadata-component/metadata.constants";
 import { NavigationService } from "src/app/services/navigation.service";
 
 @Component({
@@ -45,14 +45,13 @@ import { NavigationService } from "src/app/services/navigation.service";
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class MetadataTransformationTabComponent {
-    @Input(RoutingResolvers.METADATA_TRANSFORMATION_TAB_KEY) public datasetMetadataTabData: DatasetOverviewTabData;
+    @Input(RoutingResolvers.METADATA_TRANSFORMATION_TAB_KEY) public datasetMetadataTabData: MetadataTabData;
 
     private navigationService = inject(NavigationService);
     public readonly DEFAULT_AVATAR_URL = AppValues.DEFAULT_AVATAR_URL;
 
     public get transformation(): MaybeNullOrUndefined<DatasetTransformFragment> {
-        return this.datasetMetadataTabData.overviewUpdate.overview.metadata
-            .currentTransform as DatasetTransformFragment;
+        return this.datasetMetadataTabData.metadataSummary.metadata.currentTransform;
     }
 
     public get canEditSetTransform(): boolean {

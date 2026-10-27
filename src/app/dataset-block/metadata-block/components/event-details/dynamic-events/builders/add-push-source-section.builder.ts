@@ -5,6 +5,7 @@
  * included in the LICENSE file.
  */
 
+import { enumValueOf } from "@common/helpers/app.helpers";
 import { AddPushSourceEventFragment } from "@api/kamu.graphql.interface";
 
 import { ADD_PUSH_SOURCE_DESCRIPTORS } from "src/app/dataset-block/metadata-block/components/event-details/components/add-push-source-event/add-push-source-event.source";
@@ -21,7 +22,7 @@ export class AddPushSourceSectionBuilder extends EventSectionBuilder<AddPushSour
         const result: EventSection[] = [];
         Object.entries(event).forEach(([section, data]) => {
             if (data && section !== "__typename") {
-                const section_enum: AddPushSourceSection = section as AddPushSourceSection;
+                const section_enum = enumValueOf(AddPushSourceSection, section);
                 switch (section_enum) {
                     case AddPushSourceSection.SOURCE_NAME: {
                         if (event.__typename) {
@@ -48,12 +49,7 @@ export class AddPushSourceSectionBuilder extends EventSectionBuilder<AddPushSour
                             section_enum === AddPushSourceSection.MERGE || section_enum === AddPushSourceSection.READ;
                         result.push({
                             title: section,
-                            rows: this.buildEventRows(
-                                event,
-                                ADD_PUSH_SOURCE_DESCRIPTORS,
-                                section as keyof AddPushSourceEventFragment,
-                                allowTypenameKey,
-                            ),
+                            rows: this.buildEventRows(event, ADD_PUSH_SOURCE_DESCRIPTORS, section, allowTypenameKey),
                         });
                         break;
                     }

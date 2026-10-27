@@ -15,9 +15,9 @@ import { Apollo } from "apollo-angular";
 import { expectPageNotFoundRedirect, runResolver } from "@common/helpers/base-test.helpers.spec";
 import { DatasetBasicsFragment } from "@api/kamu.graphql.interface";
 
-import { mockOverviewUpdate } from "src/app/dataset-view/additional-components/data-tabs.mock";
+import { mockMetadataDerivedUpdate } from "src/app/dataset-view/additional-components/data-tabs.mock";
+import { MetadataTabData } from "src/app/dataset-view/additional-components/metadata-component/metadata.constants";
 import { metadataTransformationTabResolverFn } from "src/app/dataset-view/additional-components/metadata-component/tabs/metadata-transformation-tab/resolvers/metadata-transformation-tab.resolver";
-import { DatasetOverviewTabData } from "src/app/dataset-view/dataset-view.interface";
 import { DatasetService } from "src/app/dataset-view/dataset.service";
 import { DatasetSubscriptionsService } from "src/app/dataset-view/dataset.subscriptions.service";
 import {
@@ -39,21 +39,21 @@ describe("metadataTransformationTabResolverFn", () => {
         vi.spyOn(datasetSubsService, "permissionsChanges", "get").mockReturnValue(
             of(mockFullPowerDatasetPermissionsFragment),
         );
-        vi.spyOn(datasetSubsService, "overviewChanges", "get").mockReturnValue(of(mockOverviewUpdate));
+        vi.spyOn(datasetSubsService, "metadataSchemaChanges", "get").mockReturnValue(of(mockMetadataDerivedUpdate));
     });
 
-    function resolve(datasetBasics: DatasetBasicsFragment): Promise<DatasetOverviewTabData | RedirectCommand> {
+    function resolve(datasetBasics: DatasetBasicsFragment): Promise<MetadataTabData | RedirectCommand> {
         vi.spyOn(datasetService, "datasetChanges", "get").mockReturnValue(of(datasetBasics));
         return runResolver(metadataTransformationTabResolverFn);
     }
 
-    it("should resolve the overview for a derivative dataset", async () => {
+    it("should resolve the metadata summary for a derivative dataset", async () => {
         const data = await resolve(mockDatasetBasicsDerivedFragment);
 
         expect(data).toEqual({
             datasetBasics: mockDatasetBasicsDerivedFragment,
             datasetPermissions: mockFullPowerDatasetPermissionsFragment,
-            overviewUpdate: mockOverviewUpdate,
+            metadataSummary: mockMetadataDerivedUpdate.metadataSummary,
         });
     });
 

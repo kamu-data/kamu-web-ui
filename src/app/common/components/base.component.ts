@@ -6,7 +6,7 @@
  */
 
 import { inject } from "@angular/core";
-import { ActivatedRoute, ParamMap, Params } from "@angular/router";
+import { ActivatedRoute, ParamMap } from "@angular/router";
 
 import { map, Observable } from "rxjs";
 
@@ -36,12 +36,12 @@ export abstract class BaseComponent extends UnsubscribeDestroyRefAdapter {
     }
 
     protected get datasetInfoFromUrlChanges(): Observable<DatasetInfo> {
-        return this.activatedRoute.params.pipe(
-            map((params: Params) => {
+        return this.activatedRoute.paramMap.pipe(
+            map((paramMap: ParamMap) => {
                 return {
                     // Both parameters are mandatory in URL, router would not activate this component otherwise
-                    accountName: requireValue(params[ProjectLinks.URL_PARAM_ACCOUNT_NAME] as string),
-                    datasetName: requireValue(params[ProjectLinks.URL_PARAM_DATASET_NAME] as string),
+                    accountName: requireValue(paramMap.get(ProjectLinks.URL_PARAM_ACCOUNT_NAME)),
+                    datasetName: requireValue(paramMap.get(ProjectLinks.URL_PARAM_DATASET_NAME)),
                 };
             }),
         );

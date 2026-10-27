@@ -11,6 +11,7 @@ import { BrowserProvider, Eip1193Provider } from "ethers";
 import { ToastrService } from "ngx-toastr";
 import { SiweMessage } from "siwe";
 
+import { isStringArray } from "@common/helpers/app.helpers";
 import { Web3WalletOwnershipVerificationRequest } from "@api/auth.api.model";
 import { MaybeNull } from "@interface/app.types";
 
@@ -37,8 +38,8 @@ export class Eip1193EthereumGateway implements EthereumGateway {
             return;
         }
         try {
-            const accounts = (await this.provider.send("eth_requestAccounts", [])) as string[];
-            if (accounts.length > 0) {
+            const accounts: unknown = await this.provider.send("eth_requestAccounts", []);
+            if (isStringArray(accounts) && accounts.length > 0) {
                 this.account = accounts[0];
             } else {
                 this.toastrService.error("No accounts returned.");

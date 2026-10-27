@@ -5,6 +5,8 @@
  * included in the LICENSE file.
  */
 
+import { isRecord } from "@common/helpers/app.helpers";
+
 import { UnsupportedPropertyComponent } from "src/app/dataset-block/metadata-block/components/event-details/components/common/unsupported-property/unsupported-property.component";
 import {
     DynamicEventTypesScalar,
@@ -34,11 +36,14 @@ export abstract class EventSectionBuilder<TEvent extends GenericDynamicEventType
     protected buildEventRows(
         event: TEvent,
         rowDescriptors: EventRowDescriptorsByField,
-        section: keyof TEvent,
+        section: string,
         allowTypenameKey: boolean,
     ): EventRow[] {
         const rows: EventRow[] = [];
-        const sectionObject: GenericEventSectionType = event[section] as GenericEventSectionType;
+        const sectionObject = event[section];
+        if (!isRecord(sectionObject)) {
+            throw new Error(`Expecting an object in event section "${section}"`);
+        }
         Object.entries(sectionObject).forEach(([key, value]) => {
             if (value && (key !== "__typename" || allowTypenameKey)) {
                 rows.push(this.buildEventRow(event, rowDescriptors, sectionObject, key, value));
@@ -56,11 +61,11 @@ export abstract class EventSectionBuilder<TEvent extends GenericDynamicEventType
         value: unknown,
     ): EventRow {
         const eventType = event.__typename;
-        if (event.__typename && eventType && "__typename" in sectionObject) {
-            const sectionType = sectionObject.__typename as string;
+        const sectionType = sectionObject.__typename;
+        if (eventType && typeof sectionType === "string") {
             const keyExists = Object.keys(rowDescriptors).includes(`${eventType}.${sectionType}.${key}`);
             if (keyExists) {
-                return this.buildSupportedRow(event.__typename, rowDescriptors, sectionType, key, value);
+                return this.buildSupportedRow(eventType, rowDescriptors, sectionType, key, value);
             } else {
                 return this.buildUnsupportedRow(key, value);
             }

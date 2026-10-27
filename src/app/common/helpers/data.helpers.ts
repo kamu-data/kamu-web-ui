@@ -12,11 +12,11 @@ import { ErrorPolicy, WatchQueryFetchPolicy } from "@apollo/client";
 import { differenceInSeconds } from "date-fns";
 
 import {
+    DynamicTableCellValue,
     DynamicTableColumnClassEnum,
     DynamicTableDataRow,
 } from "@common/components/dynamic-table/dynamic-table.interface";
-import { convertSecondsToHumanReadableFormat } from "@common/helpers/app.helpers";
-import { parseJsonAs } from "@common/helpers/untyped-boundary.helpers";
+import { convertSecondsToHumanReadableFormat, isRecord } from "@common/helpers/app.helpers";
 import {
     DataQueryResultSuccessViewFragment,
     MetadataBlockFragment,
@@ -258,31 +258,18 @@ export class DataHelpers {
 }
 export const getValidators = (validators: JsonFormValidators): ValidatorFn[] => {
     const validatorsToAdd: ValidatorFn[] = [];
-    Object.entries(validators).forEach(([key, value]) => {
-        switch (key) {
-            case "required":
-                if (value) {
-                    validatorsToAdd.push(Validators.required);
-                }
-                break;
-            case "pattern":
-                if (value) {
-                    validatorsToAdd.push(Validators.pattern(value as RegExp));
-                }
-                break;
-            case "maxLength":
-                if (value) {
-                    validatorsToAdd.push(Validators.maxLength(value as number));
-                }
-                break;
-            case "min": {
-                validatorsToAdd.push(Validators.min(value as number));
-                break;
-            }
-            default:
-                break;
-        }
-    });
+    if (validators.required) {
+        validatorsToAdd.push(Validators.required);
+    }
+    if (validators.pattern) {
+        validatorsToAdd.push(Validators.pattern(validators.pattern));
+    }
+    if (validators.maxLength) {
+        validatorsToAdd.push(Validators.maxLength(validators.maxLength));
+    }
+    if (validators.min !== undefined) {
+        validatorsToAdd.push(Validators.min(validators.min));
+    }
     return validatorsToAdd;
 };
 
@@ -306,7 +293,7 @@ export const noCacheFetchPolicy: {
 
 export const noWhitespaceValidator = (): ValidatorFn => {
     return (control: AbstractControl): MaybeNull<ValidationErrors> => {
-        const isSpace = ((control.value as string) || "").match(/\s/g);
+        const isSpace = typeof control.value === "string" && /\s/.test(control.value);
         return isSpace ? { whitespace: true } : null;
     };
 };
@@ -323,9 +310,10 @@ export function sliceSizeMapperReverse(sizeInBytes: number): { size: number; uni
 
 export function parseDataRows(successResult: DataQueryResultSuccessViewFragment): DynamicTableDataRow[] {
     const content: string = successResult.data.content;
-    const parsedData = parseJsonAs<object[]>(content);
+    const parsedJson: unknown = JSON.parse(content);
+    const parsedData: unknown[] = Array.isArray(parsedJson) ? parsedJson : [];
     if (parsedData.length) {
-        const columnNames = Object.keys(parsedData[0]);
+        const columnNames = isRecord(parsedData[0]) ? Object.keys(parsedData[0]) : [];
         const dataRowArray = parseDataFromJsonAoSFormat(parsedData, columnNames);
         return dataRowArray;
     } else {
@@ -333,22 +321,37 @@ export function parseDataRows(successResult: DataQueryResultSuccessViewFragment)
     }
 }
 
-export function parseDataFromJsonAoSFormat(data: object[], columnNames: string[]): DynamicTableDataRow[] {
-    return data.map((dataItem: object) => {
+/** Builds table rows from JSON rows; a row that is not an object, as in another data format, has empty cells. */
+export function parseDataFromJsonAoSFormat(data: unknown[], columnNames: string[]): DynamicTableDataRow[] {
+    return data.map((dataItem: unknown) => {
+        const row: Record<string, unknown> = isRecord(dataItem) ? dataItem : {};
         const arr = columnNames.map((key: string) => {
-            const keyObject = key as keyof typeof dataItem;
+            const value = jsonCellValue(row[key]);
+            const isOperation = key === "op" && (typeof value === "string" || typeof value === "number");
             return {
                 [key]: {
-                    value: key === "op" ? operationColumnMapper(dataItem[keyObject]) : dataItem[keyObject],
+                    value: isOperation ? operationColumnMapper(value) : value,
                     cssClass:
-                        key === "op"
-                            ? setOperationColumnClass(dataItem[keyObject])
+                        isOperation && typeof value === "number"
+                            ? setOperationColumnClass(value)
                             : DynamicTableColumnClassEnum.PRIMARY_COLOR,
                 },
             };
         });
         return arr.reduce((resultObj, obj) => Object.assign(resultObj, obj), {});
     });
+}
+
+function jsonCellValue(value: unknown): DynamicTableCellValue {
+    switch (typeof value) {
+        case "string":
+        case "number":
+        case "boolean":
+        case "object":
+            return value;
+        default:
+            return null;
+    }
 }
 
 export function operationColumnMapper(value: string | number): string {

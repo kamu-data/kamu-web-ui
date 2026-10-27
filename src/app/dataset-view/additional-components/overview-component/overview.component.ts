@@ -17,7 +17,7 @@ import { RouterLink } from "@angular/router";
 
 import { catchError, from, Observable, of, take, timer } from "rxjs";
 
-import { NgbModal, NgbModalRef, NgbTooltip } from "@ng-bootstrap/ng-bootstrap";
+import { NgbModal, NgbTooltip } from "@ng-bootstrap/ng-bootstrap";
 
 import { BaseDatasetDataComponent } from "@common/components/base-dataset-data.component";
 import { DisplayHashComponent } from "@common/components/display-hash/display-hash.component";
@@ -27,6 +27,7 @@ import { DynamicTableColumnDescriptor } from "@common/components/dynamic-table/d
 import { DragAndDropDirective } from "@common/directives/drag-and-drop.directive";
 import { FeatureFlagDirective } from "@common/directives/feature-flag.directive";
 import { isNil, promiseWithCatch } from "@common/helpers/app.helpers";
+import { openModal } from "@common/helpers/modal.helpers";
 import { DisplaySizePipe } from "@common/pipes/display-size.pipe";
 import { SourceEventEditorLinkPipe } from "@common/pipes/source-event-editor-link.pipe";
 import RoutingResolvers from "@common/resolvers/routing-resolvers";
@@ -333,15 +334,14 @@ export class OverviewComponent extends BaseDatasetDataComponent implements OnIni
     }
 
     public openInformationModal() {
-        const modalRef: NgbModalRef = this.ngbModalService.open(EditDetailsModalComponent);
-        const modalRefInstance = modalRef.componentInstance as EditDetailsModalComponent;
-        modalRefInstance.currentState = {
+        const { modalRef, instance } = openModal(this.ngbModalService, EditDetailsModalComponent);
+        instance.currentState = {
             schema: this.datasetOverviewTabData.overviewUpdate.schema,
             data: this.datasetOverviewTabData.overviewUpdate.content,
             overview: this.datasetOverviewTabData.overviewUpdate.overview,
             size: this.datasetOverviewTabData.overviewUpdate.size,
         };
-        modalRefInstance.datasetBasics = this.datasetOverviewTabData.datasetBasics;
+        instance.datasetBasics = this.datasetOverviewTabData.datasetBasics;
         from(modalRef.result)
             .pipe(
                 take(1),
@@ -357,15 +357,14 @@ export class OverviewComponent extends BaseDatasetDataComponent implements OnIni
     }
 
     public openLicenseModal(): void {
-        const modalRef: NgbModalRef = this.ngbModalService.open(EditLicenseModalComponent);
-        const modalRefInstance = modalRef.componentInstance as EditLicenseModalComponent;
-        modalRefInstance.currentState = {
+        const { modalRef, instance } = openModal(this.ngbModalService, EditLicenseModalComponent);
+        instance.currentState = {
             schema: this.datasetOverviewTabData.overviewUpdate.schema,
             data: this.datasetOverviewTabData.overviewUpdate.content,
             overview: this.datasetOverviewTabData.overviewUpdate.overview,
             size: this.datasetOverviewTabData.overviewUpdate.size,
         };
-        modalRefInstance.datasetBasics = this.datasetOverviewTabData.datasetBasics;
+        instance.datasetBasics = this.datasetOverviewTabData.datasetBasics;
         from(modalRef.result)
             .pipe(
                 take(1),
@@ -381,11 +380,9 @@ export class OverviewComponent extends BaseDatasetDataComponent implements OnIni
     }
 
     public openWatermarkModal(): void {
-        const modalRef: NgbModalRef = this.ngbModalService.open(EditWatermarkModalComponent);
-        const modalRefInstance = modalRef.componentInstance as EditWatermarkModalComponent;
-        modalRefInstance.currentWatermark =
-            this.datasetOverviewTabData.overviewUpdate.overview.metadata.currentWatermark;
-        modalRefInstance.datasetBasics = this.datasetOverviewTabData.datasetBasics;
+        const { instance } = openModal(this.ngbModalService, EditWatermarkModalComponent);
+        instance.currentWatermark = this.datasetOverviewTabData.overviewUpdate.overview.metadata.currentWatermark;
+        instance.datasetBasics = this.datasetOverviewTabData.datasetBasics;
     }
 
     public onAddReadme(): void {
@@ -418,9 +415,8 @@ export class OverviewComponent extends BaseDatasetDataComponent implements OnIni
     }
 
     public addData(): void {
-        const modalRef: NgbModalRef = this.ngbModalService.open(AddDataModalComponent);
-        const modalRefInstance = modalRef.componentInstance as AddDataModalComponent;
-        modalRefInstance.datasetBasics = this.datasetOverviewTabData.datasetBasics;
+        const { instance } = openModal(this.ngbModalService, AddDataModalComponent);
+        instance.datasetBasics = this.datasetOverviewTabData.datasetBasics;
     }
 
     public onFileDropped(files: FileList): void {

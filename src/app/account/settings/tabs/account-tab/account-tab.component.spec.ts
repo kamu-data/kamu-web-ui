@@ -41,6 +41,7 @@ describe("AccountTabComponent", () => {
         loggedUserService = TestBed.inject(LoggedUserService);
         navigationService = TestBed.inject(NavigationService);
         vi.spyOn(accountService, "deleteAccountByName").mockReturnValue(of(true));
+        vi.spyOn(loggedUserService, "currentlyLoggedInUser", "get").mockReturnValue(mockAccountDetails);
         component = fixture.componentInstance;
         fixture.detectChanges();
     });

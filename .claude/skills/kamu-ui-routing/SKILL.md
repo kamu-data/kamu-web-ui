@@ -100,6 +100,14 @@ its own routes file:
 - Tabs are child routes: an empty-path `redirectTo` the default tab with `pathMatch: "full"`,
   then one child per tab with `data: { [ProjectLinks.URL_PARAM_TAB]: XxxTabs.SOME_TAB }` and an
   `xxxActiveTabResolverFn` on the parent.
+- Guards and resolvers read the URL through typed accessors, never a cast:
+  - a path parameter, which the router guarantees: `requireValue(route.paramMap.get(...),
+    "Route has no …")`;
+  - a tab from route data, which the route config sets: `requireValue(enumValueOf(XxxTabs,
+    route.children[0]?.data[ProjectLinks.URL_PARAM_TAB]), "…")`;
+  - a query parameter, which the user can edit: `enumValueOf(...) ?? default`, and for a
+    comma-separated list `.flatMap((s) => enumValueOf(Enum, s) ?? [])`, so an unknown value is
+    dropped rather than passed on.
 - Routes whose data must refresh when only query parameters change set
   `runGuardsAndResolvers: "always"`, as their neighbours do.
 - Guards are functional `CanActivateFn`s in a `guards/` folder (`authenticatedGuard`,

@@ -10,8 +10,8 @@ import { FormControl } from "@angular/forms";
 import { MaybeNull } from "@interface/app.types";
 
 export interface LicenseFormType {
-    name: FormControl<MaybeNull<string>>;
-    shortName: FormControl<MaybeNull<string>>;
-    websiteUrl: FormControl<MaybeNull<string>>;
+    name: FormControl<string>;
+    shortName: FormControl<string>;
+    websiteUrl: FormControl<string>;
     spdxId: FormControl<MaybeNull<string>>;
 }

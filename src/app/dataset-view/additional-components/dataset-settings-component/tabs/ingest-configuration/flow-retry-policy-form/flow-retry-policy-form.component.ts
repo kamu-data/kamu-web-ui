@@ -15,6 +15,7 @@ import { TimeDeltaFormComponent } from "@common/components/time-delta-form/time-
 import { TimeDeltaFormType } from "@common/components/time-delta-form/time-delta-form.value";
 import { TooltipIconComponent } from "@common/components/tooltip-icon/tooltip-icon.component";
 import { FormValidationErrorsDirective } from "@common/directives/form-validation-errors.directive";
+import { requireValue } from "@common/helpers/app.helpers";
 import { FlowTooltipsTexts } from "@common/tooltips/flow-tooltips.text";
 import {
     FlowRetryBackoffType,
@@ -64,12 +65,14 @@ export class FlowRetryPolicyFormComponent extends BaseComponent implements OnIni
         minDelayForm.patchValue(FlowRetryPolicyFormComponent.DEFAULT_MIN_DELAY);
 
         const form = new FormGroup<FlowRetryPolicyFormType>({
-            retriesEnabled: new FormControl<boolean>(false, { validators: [Validators.required] }),
+            retriesEnabled: new FormControl<boolean>(false, { nonNullable: true, validators: [Validators.required] }),
             maxAttempts: new FormControl<number>(FlowRetryPolicyFormComponent.DEFAULT_MAX_ATTEMPTS, {
+                nonNullable: true,
                 validators: [Validators.required, Validators.min(1), Validators.max(100)],
             }),
             minDelay: minDelayForm,
             backoffType: new FormControl<FlowRetryBackoffType>(FlowRetryPolicyFormComponent.DEFAULT_BACKOFF_TYPE, {
+                nonNullable: true,
                 validators: [Validators.required],
             }),
         });
@@ -107,9 +110,10 @@ export class FlowRetryPolicyFormComponent extends BaseComponent implements OnIni
             return {
                 backoffType: formValue.backoffType,
                 maxAttempts: formValue.maxAttempts,
+                // The form only saves when valid, and its validators require both fields
                 minDelay: {
-                    every: formValue.minDelay.every,
-                    unit: formValue.minDelay.unit,
+                    every: requireValue(formValue.minDelay.every),
+                    unit: requireValue(formValue.minDelay.unit),
                 },
             };
         } else {
@@ -117,11 +121,11 @@ export class FlowRetryPolicyFormComponent extends BaseComponent implements OnIni
         }
     }
 
-    public get retriesEnabled(): FormControl<MaybeNull<boolean>> {
+    public get retriesEnabled(): FormControl<boolean> {
         return this.form.controls.retriesEnabled;
     }
 
-    public get maxAttempts(): FormControl<MaybeNull<number>> {
+    public get maxAttempts(): FormControl<number> {
         return this.form.controls.maxAttempts;
     }
 
@@ -129,7 +133,7 @@ export class FlowRetryPolicyFormComponent extends BaseComponent implements OnIni
         return this.form.controls.minDelay;
     }
 
-    public get backoffType(): FormControl<MaybeNull<FlowRetryBackoffType>> {
+    public get backoffType(): FormControl<FlowRetryBackoffType> {
         return this.form.controls.backoffType;
     }
 
@@ -138,19 +142,17 @@ export class FlowRetryPolicyFormComponent extends BaseComponent implements OnIni
     }
 
     private setupFormControlRelationships(): void {
-        this.retriesEnabled.valueChanges
-            .pipe(takeUntilDestroyed(this.destroyRef))
-            .subscribe((enabled: MaybeNull<boolean>) => {
-                if (enabled) {
-                    this.maxAttempts.enable();
-                    this.minDelay.enable();
-                    this.backoffType.enable();
-                } else {
-                    this.maxAttempts.disable();
-                    this.minDelay.disable();
-                    this.backoffType.disable();
-                }
-            });
+        this.retriesEnabled.valueChanges.pipe(takeUntilDestroyed(this.destroyRef)).subscribe((enabled: boolean) => {
+            if (enabled) {
+                this.maxAttempts.enable();
+                this.minDelay.enable();
+                this.backoffType.enable();
+            } else {
+                this.maxAttempts.disable();
+                this.minDelay.disable();
+                this.backoffType.disable();
+            }
+        });
     }
 
     public readonly BACKOFF_EXPLANATIONS: Record<FlowRetryBackoffType, string> = {

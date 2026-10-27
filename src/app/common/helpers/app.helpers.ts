@@ -16,7 +16,7 @@ import { JwtPayload } from "@common/guards/access-token-expired.types";
 import { parseJsonAs } from "@common/helpers/untyped-boundary.helpers";
 import AppValues from "@common/values/app.values";
 import { DataSchemaInfoFragment } from "@api/kamu.graphql.interface";
-import { MaybeNull, MaybeNullOrUndefined } from "@interface/app.types";
+import { MaybeNull, MaybeNullOrUndefined, MaybeUndefined } from "@interface/app.types";
 import { DatasetSchema } from "@interface/dataset-schema.interface";
 
 export function requireValue<T>(input: MaybeNullOrUndefined<T>, errorMessage?: string): T {
@@ -115,9 +115,11 @@ export function pluralize(word: string, count: number): string {
 // After the set time in the timeout, the class("clipboard-btn--success") is removed.
 // The result will be a change in the icon. The function looks like a swap
 export function changeCopyIcon(event: MouseEvent): void {
-    if (event.currentTarget !== null) {
-        const htmlButtonElement: HTMLButtonElement = event.currentTarget as HTMLButtonElement;
-        const iconsPair: HTMLCollectionOf<HTMLElement> = htmlButtonElement.children as HTMLCollectionOf<HTMLElement>;
+    const htmlButtonElement = event.currentTarget;
+    if (htmlButtonElement instanceof HTMLElement) {
+        const iconsPair = Array.from(htmlButtonElement.children).filter(
+            (child): child is HTMLElement => child instanceof HTMLElement,
+        );
         setTimeout(() => {
             iconsPair[0].style.display = "inline-block";
             iconsPair[1].style.display = "none";
@@ -175,6 +177,28 @@ export function isNil(x: unknown): boolean {
 
 export function isNull(x: unknown): boolean {
     return x === null;
+}
+
+/** Whether `x` is an object other than an array, to be read by key; class instances such as `Date` pass too. */
+export function isRecord(x: unknown): x is Record<string, unknown> {
+    return typeof x === "object" && x !== null && !Array.isArray(x);
+}
+
+/** The member of the string enum whose value is `value`, or `undefined` when there is none */
+export function enumValueOf<E extends Record<string, string>>(
+    enumObject: E,
+    value: unknown,
+): MaybeUndefined<E[keyof E]> {
+    return Object.values(enumObject).find((member): member is E[keyof E] => member === value);
+}
+
+export function isStringArray(x: unknown): x is string[] {
+    return Array.isArray(x) && x.every((item) => typeof item === "string");
+}
+
+/** `value` when it is one of `values`, such as the members of a string literal union, otherwise `undefined` */
+export function oneOf<T extends string>(values: readonly T[], value: unknown): MaybeUndefined<T> {
+    return values.find((member) => member === value);
 }
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any

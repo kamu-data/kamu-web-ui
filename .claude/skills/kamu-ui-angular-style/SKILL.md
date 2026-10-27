@@ -232,11 +232,22 @@ code added itself, or a third-party callback triggers none of them.
 - Unused parameters are prefixed `_`; `any` is avoided in favour of real or generated types.
 - No type assertions (`x as T`); eslint's `consistent-type-assertions` rejects them. Narrow
   instead: `requireValue()` for a value that must be there, a `__typename` switch for a GraphQL
-  union, `instanceof` for DOM elements and events. A value that arrives as `any` goes through
-  `@common/helpers/untyped-boundary.helpers`: `parseJsonAs<T>()` for `JSON.parse`,
-  `httpErrorBodyAs<T>()` for `HttpErrorResponse.error`. That file is the one place app code may
-  assert, and eslint exempts it. Files in `eslint.type-assertion-backlog.mjs` still hold older
-  assertions; remove a file from that list once it holds none, and add none to it.
+  union, `instanceof` for DOM elements and events, `enumValueOf(Enum, value)` for a string that
+  should be an enum member (it returns `undefined` for any other), `oneOf(VALUES, value)` for a
+  string literal union derived from an `as const` array, `isRecord()` for an object read by key,
+  `openModal(ngbModal, XModalComponent)` from `@common/helpers/modal.helpers` for a modal whose
+  inputs the caller sets, which returns its typed `instance` beside the `modalRef`.
+  A typed form's value comes from `getRawValue()`, whose type is not `Partial`; a control that
+  always holds a value is built `nonNullable`, and a getter returns the control's own type, not
+  `AbstractControl`. A form that adds and removes controls at runtime, such as the source event
+  editor, reaches them with `requireFormGroup` / `requireFormArray` / `requireFormControl` from
+  `@common/helpers/form.helpers`, which check the control's class. A value that arrives as `any`
+  goes through `@common/helpers/untyped-boundary.helpers`: `parseJsonAs<T>()` for `JSON.parse`,
+  `parseYamlAs<T>()` for YAML, `httpErrorBodyAs<T>()` for `HttpErrorResponse.error`,
+  `routeDataAs<T>()` for a value another route's resolver stored in route data,
+  `formValueAs<T>()` for the value of such a runtime-built form or of the untyped form behind a
+  `BaseFormControlComponent`, `validationErrorAs<T>()` for the detail a validator stored in its
+  errors. That file is the one place app code may assert, and eslint exempts it.
 
 ## Rejected approaches
 

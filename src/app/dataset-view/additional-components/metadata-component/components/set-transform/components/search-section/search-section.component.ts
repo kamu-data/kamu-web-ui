@@ -97,8 +97,8 @@ export class SearchSectionComponent extends BaseComponent {
         return typeof x !== "string" ? x.dataset.name : x;
     }
 
-    public onSelectItem(event: NgbTypeaheadSelectItemEvent): void {
-        const value = event.item as DatasetAutocompleteItem;
+    public onSelectItem(event: NgbTypeaheadSelectItemEvent<DatasetAutocompleteItem>): void {
+        const value = event.item;
         const id = value.dataset.id;
         const alias = value.dataset.alias;
         const inputDataset = inputDatasetKey({ datasetRef: id, alias });

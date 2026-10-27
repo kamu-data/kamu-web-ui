@@ -7,7 +7,7 @@
 
 import { Injectable } from "@angular/core";
 
-import { IDBPDatabase, openDB } from "idb";
+import { DBSchema, IDBPDatabase, openDB } from "idb";
 
 import { promiseWithCatch } from "@common/helpers/app.helpers";
 import { MaybeUndefined } from "@interface/app.types";
@@ -17,17 +17,24 @@ export interface DatasetEntry {
     timestamp: number;
 }
 
+interface QueryMicroDb extends DBSchema {
+    queries: {
+        key: string;
+        value: DatasetEntry;
+    };
+}
+
 @Injectable({
     providedIn: "root",
 })
 export class QueryMicroDbTrackerService {
-    private dbPromise: Promise<IDBPDatabase>;
+    private dbPromise: Promise<IDBPDatabase<QueryMicroDb>>;
     private readonly DB_NAME = "DatasetMicroDB";
     private readonly STORE_NAME = "queries";
     private readonly ONE_YEAR_MS = 365 * 24 * 60 * 60 * 1000; // 1 year in ms
 
     public constructor() {
-        this.dbPromise = openDB(this.DB_NAME, 1, {
+        this.dbPromise = openDB<QueryMicroDb>(this.DB_NAME, 1, {
             upgrade(db) {
                 if (!db.objectStoreNames.contains("queries")) {
                     db.createObjectStore("queries");
@@ -46,7 +53,7 @@ export class QueryMicroDbTrackerService {
         let cursor = await tx.store.openCursor();
 
         while (cursor) {
-            const entryTime = Number((cursor.value as DatasetEntry).timestamp);
+            const entryTime = Number(cursor.value.timestamp);
             const diff = now - entryTime;
             if (diff > this.ONE_YEAR_MS) {
                 await cursor.delete();
@@ -70,6 +77,6 @@ export class QueryMicroDbTrackerService {
     /* istanbul ignore next */
     public async getQuery(alias: string): Promise<MaybeUndefined<DatasetEntry>> {
         const db = await this.dbPromise;
-        return db.get(this.STORE_NAME, alias) as Promise<MaybeUndefined<DatasetEntry>>;
+        return db.get(this.STORE_NAME, alias);
     }
 }

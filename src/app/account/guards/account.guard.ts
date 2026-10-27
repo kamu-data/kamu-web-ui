@@ -8,7 +8,7 @@
 import { inject } from "@angular/core";
 import { CanActivateFn } from "@angular/router";
 
-import { requireValue } from "@common/helpers/app.helpers";
+import { enumValueOf, requireValue } from "@common/helpers/app.helpers";
 
 import { AccountTabs } from "src/app/account/account.constants";
 import ProjectLinks from "src/app/project-links";
@@ -19,8 +19,7 @@ export const accountGuard: CanActivateFn = (route, state) => {
 
     const path = state.url.split(/[?#]/)[0];
     const routeSegments = path.split("/").filter(Boolean);
-    const lastSegment = routeSegments[routeSegments.length - 1] as AccountTabs;
-    if (Object.values(AccountTabs).includes(lastSegment)) {
+    if (enumValueOf(AccountTabs, routeSegments[routeSegments.length - 1])) {
         return true;
     }
     // The guarded route has an empty path, so it inherits the account name of its parent

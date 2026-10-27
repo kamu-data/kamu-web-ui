@@ -14,6 +14,8 @@ import { RxReactiveFormsModule } from "@rxweb/reactive-form-validators";
 import { EditSchemaTableComponent } from "@common/components/edit-schema-table/edit-schema-table.component";
 import { SchemaValidationError } from "@common/components/edit-schema-table/validation/schema-validation";
 import { TooltipIconComponent } from "@common/components/tooltip-icon/tooltip-icon.component";
+import { requireFormControl } from "@common/helpers/form.helpers";
+import { validationErrorAs } from "@common/helpers/untyped-boundary.helpers";
 import { DataSchemaField } from "@interface/dataset-schema.interface";
 
 import { BaseField } from "src/app/dataset-view/additional-components/metadata-component/components/form-components/base-field";
@@ -39,12 +41,12 @@ export class SchemaFieldComponent extends BaseField implements OnInit {
     private readonly cdr = inject(ChangeDetectorRef);
 
     public get schemaControl(): FormControl<DataSchemaField[]> {
-        return this.form.get(this.controlName) as FormControl<DataSchemaField[]>;
+        return requireFormControl(this.form, this.controlName);
     }
 
     public get schemaErrors(): SchemaValidationError[] {
         const err = this.schemaControl.errors;
-        return (err?.["schemaErrors"] as SchemaValidationError[]) ?? [];
+        return validationErrorAs<SchemaValidationError[]>(err, "schemaErrors") ?? [];
     }
 
     public ngOnInit(): void {

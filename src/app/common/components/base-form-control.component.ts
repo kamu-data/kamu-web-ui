@@ -10,6 +10,7 @@ import { takeUntilDestroyed } from "@angular/core/rxjs-interop";
 import { AbstractControl, ControlValueAccessor, FormGroup, ValidationErrors, Validator } from "@angular/forms";
 
 import { BaseComponent } from "@common/components/base.component";
+import { formValueAs } from "@common/helpers/untyped-boundary.helpers";
 import { MaybeNull } from "@interface/app.types";
 
 /**
@@ -120,8 +121,8 @@ export abstract class BaseFormControlComponent<TValue>
     }
 
     private subscribeToFormChanges(): void {
-        this.form.valueChanges.pipe(takeUntilDestroyed(this.destroyRef)).subscribe((value) => {
-            this.onFormValueChange(value as TValue);
+        this.form.valueChanges.pipe(takeUntilDestroyed(this.destroyRef)).subscribe(() => {
+            this.onFormValueChange(formValueAs<TValue>(this.form));
         });
 
         this.form.statusChanges.pipe(takeUntilDestroyed(this.destroyRef)).subscribe(() => {

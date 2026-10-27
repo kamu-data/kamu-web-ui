@@ -123,7 +123,7 @@ describe("DatasetSettingsAccessTabComponent", () => {
         const ngbModalOpenSpy = vi.spyOn(ngbModal, "open");
         await component.addPeople();
         expect(ngbModalOpenSpy).toHaveBeenCalledTimes(1);
-        expect(ngbModalOpenSpy).toHaveBeenCalledWith(AddPeopleModalComponent);
+        expect(ngbModalOpenSpy).toHaveBeenCalledWith(AddPeopleModalComponent, {});
     });
 
     it("should check click on 'Edit' button", () => {
@@ -132,7 +132,7 @@ describe("DatasetSettingsAccessTabComponent", () => {
 
         expect(ngbModalOpenSpy).toHaveBeenCalledTimes(1);
 
-        expect(ngbModalOpenSpy).toHaveBeenCalledWith(EditCollaboratorModalComponent);
+        expect(ngbModalOpenSpy).toHaveBeenCalledWith(EditCollaboratorModalComponent, {});
     });
 
     it("should check remove collaborator", () => {

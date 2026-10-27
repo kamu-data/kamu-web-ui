@@ -43,7 +43,7 @@ import { FeatureFlagDirective } from "@common/directives/feature-flag.directive"
 import { parseCurrentSchema } from "@common/helpers/app.helpers";
 import { schemaAsDataRows } from "@common/helpers/data-schema.helpers";
 import AppValues from "@common/values/app.values";
-import { DatasetBasicsFragment, GetDatasetSchemaQuery } from "@api/kamu.graphql.interface";
+import { GetDatasetSchemaQuery } from "@api/kamu.graphql.interface";
 import { SearchApi } from "@api/search.api";
 import { MaybeNull } from "@interface/app.types";
 import { DataSchemaField, DatasetSchema } from "@interface/dataset-schema.interface";
@@ -150,8 +150,8 @@ export class SearchAndSchemasSectionComponent extends BaseComponent implements O
         return typeof x !== "string" ? x.dataset.name : x;
     }
 
-    public onSelectItem(event: NgbTypeaheadSelectItemEvent): void {
-        const value = event.item as DatasetAutocompleteItem;
+    public onSelectItem(event: NgbTypeaheadSelectItemEvent<DatasetAutocompleteItem>): void {
+        const value = event.item;
         const alias = value.dataset.alias;
         if (!this.inputDatasets.size) {
             this.sqlQueryEmit.emit(`${this.SQL_DEFAULT_TEMPLATE} '${alias}'`);
@@ -179,7 +179,7 @@ export class SearchAndSchemasSectionComponent extends BaseComponent implements O
             )
             .subscribe((data: GetDatasetSchemaQuery) => {
                 if (data.datasets.byId) {
-                    const datasetAlias = (data.datasets.byId as DatasetBasicsFragment).alias;
+                    const datasetAlias = data.datasets.byId.alias;
                     const schema: MaybeNull<DatasetSchema> = parseCurrentSchema(
                         data.datasets.byId.metadata.currentSchema,
                     );

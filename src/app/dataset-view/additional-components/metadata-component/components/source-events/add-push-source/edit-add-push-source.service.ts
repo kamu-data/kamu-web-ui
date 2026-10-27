@@ -11,8 +11,7 @@ import { FormGroup } from "@angular/forms";
 
 import { Observable } from "rxjs";
 
-import { parse } from "yaml";
-
+import { parseYamlAs } from "@common/helpers/untyped-boundary.helpers";
 import { MetadataManifestFormat } from "@api/kamu.graphql.interface";
 import { MaybeNullOrUndefined } from "@interface/app.types";
 import { DataSchemaField } from "@interface/dataset-schema.interface";
@@ -31,7 +30,7 @@ export class EditAddPushSourceService {
     private blockService = inject(BlockService);
 
     public parseEventFromYaml(event: string): AddPushSourceEditFormType {
-        const editFormParseValue = parse(event) as EditAddPushSourceParseType;
+        const editFormParseValue = parseYamlAs<EditAddPushSourceParseType>(event);
         return editFormParseValue.content.event;
     }
 

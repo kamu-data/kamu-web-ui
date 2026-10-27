@@ -11,6 +11,7 @@ import { MatIconModule } from "@angular/material/icon";
 
 import { AngularMultiSelectModule } from "angular2-multiselect-dropdown";
 
+import { enumValueOf, requireValue } from "@common/helpers/app.helpers";
 import { AccountFragment, DatasetBasicsFragment, FlowStatus } from "@api/kamu.graphql.interface";
 import { MaybeNull } from "@interface/app.types";
 
@@ -75,7 +76,12 @@ export class FlowTablePanelFiltersComponent implements OnInit {
                     ? this.hasDatasetColumn
                         ? [FlowStatus.Finished]
                         : null
-                    : [this.selectedStatusItems[0].status.toUpperCase() as FlowStatus],
+                    : [
+                          requireValue(
+                              enumValueOf(FlowStatus, this.selectedStatusItems[0].status.toUpperCase()),
+                              "Unknown flow status",
+                          ),
+                      ],
             onlySystemFlows: this.onlySystemFlows,
         });
     }

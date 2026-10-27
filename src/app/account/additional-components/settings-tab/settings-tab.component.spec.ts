@@ -11,8 +11,10 @@ import { Apollo } from "apollo-angular";
 import { provideToastr } from "ngx-toastr";
 
 import { SharedTestModule } from "@common/modules/shared-test.module";
+import { mockAccountDetails } from "@api/mock/auth.mock";
 
 import { SettingsTabComponent } from "src/app/account/additional-components/settings-tab/settings-tab.component";
+import { LoggedUserService } from "src/app/auth/logged-user.service";
 
 describe("SettingsTabComponent", () => {
     let component: SettingsTabComponent;
@@ -23,6 +25,7 @@ describe("SettingsTabComponent", () => {
             imports: [SharedTestModule, SettingsTabComponent],
             providers: [Apollo, provideToastr()],
         });
+        vi.spyOn(TestBed.inject(LoggedUserService), "currentlyLoggedInUser", "get").mockReturnValue(mockAccountDetails);
         fixture = TestBed.createComponent(SettingsTabComponent);
         component = fixture.componentInstance;
         fixture.detectChanges();

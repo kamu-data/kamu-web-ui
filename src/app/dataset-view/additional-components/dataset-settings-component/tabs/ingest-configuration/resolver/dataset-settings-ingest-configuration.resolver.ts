@@ -10,7 +10,7 @@ import { ActivatedRouteSnapshot, RedirectCommand, ResolveFn } from "@angular/rou
 
 import { map, of, switchMap } from "rxjs";
 
-import { isNil } from "@common/helpers/app.helpers";
+import { enumValueOf, isNil } from "@common/helpers/app.helpers";
 import { DatasetFlowType, GetDatasetFlowConfigsQuery } from "@api/kamu.graphql.interface";
 
 import { SettingsTabsEnum } from "src/app/dataset-view/additional-components/dataset-settings-component/dataset-settings.model";
@@ -24,7 +24,7 @@ export const datasetSettingsIngestConfigurationResolverFn: ResolveFn<DatasetSett
 ) => {
     const datasetFlowConfigService = inject(DatasetFlowConfigService);
 
-    return resolveSettingsTabAccess(route.data[ProjectLinks.URL_PARAM_TAB] as SettingsTabsEnum).pipe(
+    return resolveSettingsTabAccess(enumValueOf(SettingsTabsEnum, route.data[ProjectLinks.URL_PARAM_TAB])).pipe(
         switchMap((data) => {
             if (data instanceof RedirectCommand) {
                 return of(data);

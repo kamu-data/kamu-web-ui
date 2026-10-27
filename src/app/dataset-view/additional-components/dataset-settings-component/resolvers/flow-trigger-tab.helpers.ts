@@ -15,7 +15,7 @@ import {
     FlowTriggerDataFragment,
     FlowTriggerStopPolicyDataFragment,
 } from "@api/kamu.graphql.interface";
-import { MaybeNull, MaybeNullOrUndefined } from "@interface/app.types";
+import { MaybeNull, MaybeNullOrUndefined, MaybeUndefined } from "@interface/app.types";
 
 import { SettingsTabsEnum } from "src/app/dataset-view/additional-components/dataset-settings-component/dataset-settings.model";
 import { resolveSettingsTabAccess } from "src/app/dataset-view/additional-components/dataset-settings-component/resolvers/settings-tab-access.helpers";
@@ -34,7 +34,7 @@ export interface FlowTriggerTabData extends DatasetViewData {
  * through without loading the trigger. Call it from a resolver.
  */
 export function requestFlowTriggerTabData<TRule extends object>(
-    tab: SettingsTabsEnum,
+    tab: MaybeUndefined<SettingsTabsEnum>,
     flowType: DatasetFlowType,
     pickRule: (trigger: MaybeNullOrUndefined<FlowTriggerDataFragment>) => TRule,
 ): Observable<(FlowTriggerTabData & TRule) | RedirectCommand> {

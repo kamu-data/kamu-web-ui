@@ -10,9 +10,9 @@ import { provideHttpClientTesting } from "@angular/common/http/testing";
 import { ComponentFixture, TestBed } from "@angular/core/testing";
 import { ReactiveFormsModule } from "@angular/forms";
 import { MatIconModule } from "@angular/material/icon";
-import { ActivatedRoute } from "@angular/router";
+import { ActivatedRoute, convertToParamMap, Params } from "@angular/router";
 
-import { BehaviorSubject, of } from "rxjs";
+import { BehaviorSubject, map, of } from "rxjs";
 
 import { Apollo } from "apollo-angular";
 import { ApolloTestingModule } from "apollo-angular/testing";
@@ -37,7 +37,6 @@ import { MaybeUndefined } from "@interface/app.types";
 import { AppConfigService } from "src/app/app-config.service";
 import { LoginMethodsService } from "src/app/auth/login-methods.service";
 import { LoginComponent } from "src/app/auth/login/login.component";
-import { LoginPageQueryParams } from "src/app/auth/login/login.component.model";
 import { LoginService } from "src/app/auth/login/login.service";
 import ProjectLinks from "src/app/project-links";
 import { LocalStorageService } from "src/app/services/local-storage.service";
@@ -79,7 +78,7 @@ describe("LoginComponent", () => {
         PASSWORD_METHOD_ERROR = "password-method-error",
     }
 
-    const mockQueryParams: BehaviorSubject<LoginPageQueryParams> = new BehaviorSubject<LoginPageQueryParams>({});
+    const mockQueryParams: BehaviorSubject<Params> = new BehaviorSubject<Params>({});
 
     beforeEach(async () => {
         await TestBed.configureTestingModule({
@@ -89,7 +88,7 @@ describe("LoginComponent", () => {
                 {
                     provide: ActivatedRoute,
                     useValue: {
-                        queryParams: mockQueryParams.asObservable(),
+                        queryParamMap: mockQueryParams.pipe(map((params) => convertToParamMap(params))),
                         snapshot: {
                             queryParamMap: {
                                 get: (key: string) => {

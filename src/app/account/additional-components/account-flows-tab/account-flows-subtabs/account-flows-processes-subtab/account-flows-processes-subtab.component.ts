@@ -35,7 +35,7 @@ import { ToastrService } from "ngx-toastr";
 
 import { environment } from "@env/environment";
 import { BaseComponent } from "@common/components/base.component";
-import { trackBusyKey, unexpectedValueError } from "@common/helpers/app.helpers";
+import { enumValueOf, requireValue, trackBusyKey, unexpectedValueError } from "@common/helpers/app.helpers";
 import { MY_MOMENT_FORMATS } from "@common/helpers/data.helpers";
 import AppValues from "@common/values/app.values";
 import {
@@ -335,7 +335,7 @@ export class AccountFlowsProcessesSubtabComponent extends BaseComponent implemen
     }
 
     public onChangeFiltersMode(event: MatButtonToggleChange): void {
-        const nextNav = event.value as ProcessCardFilterMode;
+        const nextNav = requireValue(enumValueOf(ProcessCardFilterMode, event.value), "Unknown filters mode");
         this.resetRequestParams();
         this.accountFlowsFiltersService.resetFilters(nextNav);
         this.applyModeDefaults(nextNav);
@@ -364,7 +364,7 @@ export class AccountFlowsProcessesSubtabComponent extends BaseComponent implemen
     }
 
     public onFlowsModeChange(event: MatChipListboxChange): void {
-        this.flowsMode = event.value as ProcessCardGroup;
+        this.flowsMode = requireValue(enumValueOf(ProcessCardGroup, event.value), "Unknown flows mode");
         this.processesPerPage = AppValues.UPLOAD_FLOW_PROCESSES_PER_PAGE;
         this.processesCards = [];
         this.refreshNow();

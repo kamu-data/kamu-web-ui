@@ -12,9 +12,11 @@ import { TestBed } from "@angular/core/testing";
 import { Apollo } from "apollo-angular";
 import { provideToastr, ToastrService } from "ngx-toastr";
 
+import { requireValue } from "@common/helpers/app.helpers";
 import { stubMethod } from "@common/helpers/base-test.helpers.spec";
 
 import { LoggedUserService } from "src/app/auth/logged-user.service";
+import { mockQueryExplainerResponse } from "src/app/query-explainer/query-explainer.mocks";
 import { mockSqlQueryRestResponse } from "src/app/search/mock.data";
 import { SqlQueryService } from "src/app/services/sql-query.service";
 
@@ -63,6 +65,17 @@ describe("SqlQueryService", () => {
         expect(req.request.method).toBe("POST");
 
         req.flush(mockSqlQueryRestResponse);
+    });
+
+    it("should show the rows without a proof when a proof comes without its commitment", () => {
+        const emitSqlQueryResponseChangedSpy = stubMethod(service, "emitSqlQueryResponseChanged");
+
+        service.requestDataSqlRun({ query: QUERY }).subscribe();
+        expectQueryRequest().flush({ ...mockSqlQueryRestResponse, proof: mockQueryExplainerResponse.proof });
+
+        const response = requireValue(requireValue(emitSqlQueryResponseChangedSpy.mock.lastCall)[0]);
+        expect(response.content.length).toBeGreaterThan(0);
+        expect(response.proofResponse).toBeUndefined();
     });
 
     function runFailingQuery(): void {

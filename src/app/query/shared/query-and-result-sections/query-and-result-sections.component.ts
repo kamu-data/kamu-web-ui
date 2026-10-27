@@ -53,7 +53,7 @@ import { EngineSelectComponent } from "src/app/dataset-view/additional-component
 import { EngineService } from "src/app/dataset-view/additional-components/metadata-component/components/set-transform/components/engine-section/engine.service";
 import { SqlEditorComponent } from "src/app/editor/components/sql-editor/sql-editor.component";
 import ProjectLinks from "src/app/project-links";
-import { SqlQueryBasicResponse, SqlQueryResponseState } from "src/app/query/global-query/global-query.model";
+import { SqlQueryBasicResponse } from "src/app/query/global-query/global-query.model";
 import { LoadMoreComponent } from "src/app/query/shared/load-more/load-more.component";
 import { RequestTimerComponent } from "src/app/query/shared/request-timer/request-timer.component";
 import { FileUploadService } from "src/app/services/file-upload.service";
@@ -121,13 +121,13 @@ export class QueryAndResultSectionsComponent extends BaseComponent implements On
         return schema.map((f: DataSchemaField) => ({ columnName: f.name }));
     }
 
-    public ngOnChanges(changes: SimpleChanges): void {
+    public ngOnChanges(changes: SimpleChanges<QueryAndResultSectionsComponent>): void {
         if (
             changes.sqlQueryResponse &&
             changes.sqlQueryResponse.currentValue &&
             changes.sqlQueryResponse.currentValue !== changes.sqlQueryResponse.previousValue
         ) {
-            const currentResponse = changes.sqlQueryResponse.currentValue as SqlQueryResponseState;
+            const currentResponse = changes.sqlQueryResponse.currentValue;
             this.isAllDataLoaded = currentResponse.content.length < this.rowsLimit;
             this.currentData = this.skipRows
                 ? [...this.currentData, ...currentResponse.content]

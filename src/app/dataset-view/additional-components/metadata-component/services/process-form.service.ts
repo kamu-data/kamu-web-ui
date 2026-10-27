@@ -8,6 +8,7 @@
 import { Injectable } from "@angular/core";
 import { FormGroup } from "@angular/forms";
 
+import { formValueAs } from "@common/helpers/untyped-boundary.helpers";
 import AppValues from "@common/values/app.values";
 import { AddPushSource, SetPollingSource } from "@api/kamu.graphql.interface";
 
@@ -43,18 +44,18 @@ export class ProcessFormService {
     }
 
     private changeTypeChainIdControl(formGroup: FormGroup): void {
-        const form = formGroup.value as AddPollingSourceEditFormType;
+        const form = formValueAs<AddPollingSourceEditFormType>(formGroup);
         if (form.fetch.chainId) {
             form.fetch.chainId = +form.fetch.chainId;
         }
     }
 
     private processPipeCommandControl(formGroup: FormGroup): void {
-        const form = formGroup.value as AddPollingSourceEditFormType;
+        const form = formValueAs<AddPollingSourceEditFormType>(formGroup);
         if (form.prepare && form.prepare.length > 0) {
             form.prepare.map((item) => {
                 if (item.kind === PrepareKind.PIPE && typeof item.command === "string") {
-                    item.command = item.command.trim().match(AppValues.SPLIT_ARGUMENTS_PATTERN) as string[];
+                    item.command = item.command.trim().match(AppValues.SPLIT_ARGUMENTS_PATTERN) ?? [];
                 }
                 if (item.kind === PrepareKind.DECOMPRESS && !item.subPath) {
                     delete item.subPath;
@@ -64,14 +65,14 @@ export class ProcessFormService {
     }
 
     private processEmptyPrepareStep(formGroup: FormGroup): void {
-        const form = formGroup.value as AddPollingSourceEditFormType;
+        const form = formValueAs<AddPollingSourceEditFormType>(formGroup);
         if (form.prepare && !form.prepare.length) {
             delete form.prepare;
         }
     }
 
     private processEventTimeControl(formGroup: FormGroup): void {
-        const form = formGroup.value as OrderControlType;
+        const form = formValueAs<OrderControlType>(formGroup);
         if (
             form.fetch.eventTime &&
             [FetchKind.CONTAINER, FetchKind.MQTT, FetchKind.ETHEREUM_LOGS].includes(form.fetch.kind)
@@ -85,14 +86,14 @@ export class ProcessFormService {
     }
 
     private processFetchOrderControl(formGroup: FormGroup): void {
-        const form = formGroup.value as OrderControlType;
+        const form = formValueAs<OrderControlType>(formGroup);
         if (form.fetch.order === SourceOrder.NONE) {
             delete form.fetch.order;
         }
     }
 
     private removePushSourceEmptyControls(formGroup: FormGroup): void {
-        const form = formGroup.value as AddPushSource;
+        const form = formValueAs<AddPushSource>(formGroup);
         type FormKeys = AddPushSourceSection.READ | AddPushSourceSection.MERGE;
         const formKeys: FormKeys[] = [AddPushSourceSection.READ, AddPushSourceSection.MERGE];
         formKeys.forEach((formKey: FormKeys) => {
@@ -106,7 +107,7 @@ export class ProcessFormService {
     }
 
     private removePollingSourceEmptyControls(formGroup: FormGroup): void {
-        const form = formGroup.value as SetPollingSource;
+        const form = formValueAs<SetPollingSource>(formGroup);
         type FormKeys = SetPollingSourceSection.READ | SetPollingSourceSection.MERGE | SetPollingSourceSection.FETCH;
         const formKeys: FormKeys[] = [
             SetPollingSourceSection.READ,
@@ -122,26 +123,13 @@ export class ProcessFormService {
             });
         });
 
-        if (
-            // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
-            formGroup.value[SetPollingSourceSection.FETCH].kind !== FetchKind.CONTAINER &&
-            // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
-            formGroup.value[SetPollingSourceSection.FETCH].eventTime &&
-            // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
-            !formGroup.value[SetPollingSourceSection.FETCH].eventTime.timestampFormat
-        ) {
-            // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
-            delete formGroup.value[SetPollingSourceSection.FETCH].eventTime.timestampFormat;
+        const fetch = formValueAs<AddPollingSourceEditFormType>(formGroup).fetch;
+        if (fetch.kind !== FetchKind.CONTAINER && fetch.eventTime && !fetch.eventTime.timestampFormat) {
+            delete fetch.eventTime.timestampFormat;
         }
 
-        if (
-            // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
-            formGroup.value[SetPollingSourceSection.FETCH].kind === FetchKind.MQTT &&
-            // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
-            formGroup.value[SetPollingSourceSection.FETCH].topics
-        ) {
-            // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
-            (formGroup.value[SetPollingSourceSection.FETCH].topics as TopicsType[]).forEach((item: TopicsType) => {
+        if (fetch.kind === FetchKind.MQTT && fetch.topics) {
+            fetch.topics.forEach((item: TopicsType) => {
                 if (!item.qos) {
                     delete item.qos;
                 }

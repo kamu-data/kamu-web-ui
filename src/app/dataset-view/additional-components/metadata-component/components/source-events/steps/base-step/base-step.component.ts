@@ -12,6 +12,8 @@ import { ControlContainer, FormBuilder, FormGroup, FormGroupDirective, ReactiveF
 
 import { BaseComponent } from "@common/components/base.component";
 import { getValidators } from "@common/helpers/data.helpers";
+import { requireFormGroup } from "@common/helpers/form.helpers";
+import { formValueAs } from "@common/helpers/untyped-boundary.helpers";
 import { MaybeNull } from "@interface/app.types";
 import { DataSchemaField } from "@interface/dataset-schema.interface";
 import { DatasetInfo } from "@interface/navigation.interface";
@@ -88,16 +90,17 @@ export class BaseStepComponent extends BaseComponent implements OnInit {
     private editService = inject(EditPollingSourceService);
 
     public get sectionForm(): FormGroup {
-        return this.parentForm.get(this.sectionName) as FormGroup;
+        return requireFormGroup(this.parentForm, this.sectionName);
     }
 
     public get currentKind(): string {
-        return this.sectionForm.get(this.KIND_NAME_CONTROL)?.value as string;
+        const kind: unknown = this.sectionForm.get(this.KIND_NAME_CONTROL)?.value;
+        return typeof kind === "string" ? kind : "";
     }
 
     public ngOnInit(): void {
         this.parentForm = this.rootFormGroupDirective.form;
-        this.initForm(this.sectionForm.get(this.KIND_NAME_CONTROL)?.value as string);
+        this.initForm(this.currentKind);
         this.chooseFetchKind();
         this.initEditForm();
         this.cdr.detectChanges();
@@ -121,7 +124,7 @@ export class BaseStepComponent extends BaseComponent implements OnInit {
             .get(this.KIND_NAME_CONTROL)
             ?.valueChanges.pipe(takeUntilDestroyed(this.destroyRef))
             .subscribe((kind: string) => {
-                Object.keys(this.sectionForm.value as object)
+                Object.keys(formValueAs<object>(this.sectionForm))
                     .filter((key: string) => ![this.KIND_NAME_CONTROL, this.SCHEMA_NAME_CONTROL].includes(key))
                     .forEach((item: string) => {
                         if (item !== this.EVENT_TIME_CONTROL) this.sectionForm.removeControl(item);

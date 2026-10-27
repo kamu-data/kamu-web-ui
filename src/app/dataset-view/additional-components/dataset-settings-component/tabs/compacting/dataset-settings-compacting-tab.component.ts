@@ -7,7 +7,7 @@
 
 import { ChangeDetectionStrategy, Component, inject, Input } from "@angular/core";
 import { takeUntilDestroyed } from "@angular/core/rxjs-interop";
-import { AbstractControl, FormBuilder, FormsModule, ReactiveFormsModule, Validators } from "@angular/forms";
+import { FormBuilder, FormControl, FormsModule, ReactiveFormsModule, Validators } from "@angular/forms";
 import { MatDividerModule } from "@angular/material/divider";
 
 import { timer } from "rxjs";
@@ -53,7 +53,7 @@ export class DatasetSettingsCompactingTabComponent extends BaseComponent {
     private navigationService = inject(NavigationService);
 
     @Input(RoutingResolvers.DATASET_SETTINGS_COMPACTION_KEY) public compactingTabData: DatasetViewData;
-    public hardCompactionForm = this.fb.group({
+    public hardCompactionForm = this.fb.nonNullable.group({
         sliceUnit: [SliceUnit.MB, [Validators.required]],
         sliceSize: [300, [Validators.required, Validators.min(1)]],
         recordsCount: [10000, [Validators.required, Validators.min(1)]],
@@ -63,22 +63,22 @@ export class DatasetSettingsCompactingTabComponent extends BaseComponent {
     public readonly MAX_SLICE_RECORDS_TOOLTIP = CompactionTooltipsTexts.MAX_SLICE_RECORDS;
     public readonly RECURSIVE_TOOLTIP = CompactionTooltipsTexts.HARD_COMPACTION_RECURSIVE;
 
-    public get sliceUnit(): AbstractControl {
+    public get sliceUnit(): FormControl<SliceUnit> {
         return this.hardCompactionForm.controls.sliceUnit;
     }
 
-    public get recordsCount(): AbstractControl {
+    public get recordsCount(): FormControl<number> {
         return this.hardCompactionForm.controls.recordsCount;
     }
 
-    public get sliceSize(): AbstractControl {
+    public get sliceSize(): FormControl<number> {
         return this.hardCompactionForm.controls.sliceSize;
     }
 
     public get sliceSizeInBytes(): number {
         return (
-            (this.hardCompactionForm.controls.sliceSize.value as number) *
-            sliceSizeMapper[this.hardCompactionForm.controls.sliceUnit.value as SliceUnit]
+            this.hardCompactionForm.controls.sliceSize.value *
+            sliceSizeMapper[this.hardCompactionForm.controls.sliceUnit.value]
         );
     }
 
@@ -100,7 +100,7 @@ export class DatasetSettingsCompactingTabComponent extends BaseComponent {
                                 datasetId: this.datasetBasics.id,
                                 compactionConfigInput: {
                                     maxSliceSize: this.sliceSizeInBytes,
-                                    maxSliceRecords: this.recordsCount.value as number,
+                                    maxSliceRecords: this.recordsCount.value,
                                 },
                             })
                             .pipe(takeUntilDestroyed(this.destroyRef))

@@ -22,8 +22,10 @@ import {
 } from "src/app/account/additional-components/account-flows-tab/account-flows-tab.types";
 import { FlowsTableData } from "src/app/dataset-flow/flows-table/flows-table.types";
 
-export type FlowsSelectedCategory = "all" | "updates";
-export type WebhooksSelectedCategory = "webhooks";
+export const FLOWS_SELECTED_CATEGORIES = ["all", "updates"] as const;
+export type FlowsSelectedCategory = (typeof FLOWS_SELECTED_CATEGORIES)[number];
+export const WEBHOOKS_SELECTED_CATEGORIES = ["webhooks"] as const;
+export type WebhooksSelectedCategory = (typeof WEBHOOKS_SELECTED_CATEGORIES)[number];
 
 export interface RollupFiltersDescriptor {
     label: string;

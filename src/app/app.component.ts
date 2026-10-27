@@ -17,9 +17,9 @@ import {
 import { takeUntilDestroyed } from "@angular/core/rxjs-interop";
 import { MatIconRegistry } from "@angular/material/icon";
 import { DomSanitizer } from "@angular/platform-browser";
-import { NavigationEnd, Router, RouterEvent, RouterOutlet } from "@angular/router";
+import { NavigationEnd, Router, RouterOutlet } from "@angular/router";
 
-import { filter, map } from "rxjs/operators";
+import { filter } from "rxjs/operators";
 
 import { loadErrorMessages } from "@apollo/client/dev";
 
@@ -113,10 +113,9 @@ export class AppComponent extends BaseComponent implements OnInit {
         this.router.events
             .pipe(
                 filter((event) => event instanceof NavigationEnd),
-                map((event) => event as RouterEvent),
+                takeUntilDestroyed(this.destroyRef),
             )
-            .pipe(takeUntilDestroyed(this.destroyRef))
-            .subscribe((event: RouterEvent) => {
+            .subscribe((event: NavigationEnd) => {
                 this.isHeaderVisible = this.shouldHeaderBeVisible(event.url);
             });
 

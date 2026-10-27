@@ -96,7 +96,7 @@ export function getCollectionValueHelper(value: unknown): string {
     if (value === null || value === undefined || value === "") {
         return "-";
     }
-    return value as string;
+    return typeof value === "string" ? value : JSON.stringify(value);
 }
 
 export function resolveEntryIconHelper(element: CollectionEntryViewType): string {
@@ -111,5 +111,5 @@ export function resolveEntryIconHelper(element: CollectionEntryViewType): string
     if (element.nodeType === CollectionViewNode.Broken) {
         return "question";
     }
-    return previewFileTypePipe.transform(element.contentType as string);
+    return previewFileTypePipe.transform(element.contentType);
 }

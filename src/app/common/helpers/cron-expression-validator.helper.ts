@@ -10,7 +10,7 @@ import { AbstractControl, ValidationErrors } from "@angular/forms";
 import { MaybeNull } from "@interface/app.types";
 
 export function cronValidator(control: AbstractControl): MaybeNull<ValidationErrors> {
-    const cron = (control.value as string)?.trim();
+    const cron = typeof control.value === "string" ? control.value.trim() : "";
 
     if (!cron) {
         return null;

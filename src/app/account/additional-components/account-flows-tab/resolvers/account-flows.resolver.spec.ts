@@ -55,4 +55,36 @@ describe("accountFlowsResolverFn", () => {
             datasetsFiltersMode: ProcessCardFilterMode.RECENT_ACTIVITY,
         });
     });
+
+    it("should check accountFlowsResolverFn ignores unknown query values", async () => {
+        const route = routeSnapshot({
+            queryParams: {
+                [ProjectLinks.URL_QUERY_PARAM_ACCOUNT_NAV]: "no-such-nav",
+                [ProjectLinks.URL_QUERY_PARAM_ACCOUNT_FLOW_STATUS]: "RUNNING,no-such-status",
+                [ProjectLinks.URL_QUERY_PARAM_ACCOUNT_FLOW_FILTERS_MODE]: "no-such-mode",
+            },
+        });
+        const result = await runResolver(accountFlowsResolverFn, route);
+
+        expect(result).toEqual({
+            activeNav: AccountFlowsNav.ACTIVITY,
+            flowGroup: [FlowStatus.Running],
+            datasetsFiltersMode: ProcessCardFilterMode.RECENT_ACTIVITY,
+        });
+    });
+
+    it("should check accountFlowsResolverFn falls back when no status is known", async () => {
+        const route = routeSnapshot({
+            queryParams: {
+                [ProjectLinks.URL_QUERY_PARAM_ACCOUNT_FLOW_STATUS]: "no-such-status",
+            },
+        });
+        const result = await runResolver(accountFlowsResolverFn, route);
+
+        expect(result).toEqual({
+            activeNav: AccountFlowsNav.ACTIVITY,
+            flowGroup: [FlowStatus.Finished],
+            datasetsFiltersMode: ProcessCardFilterMode.RECENT_ACTIVITY,
+        });
+    });
 });

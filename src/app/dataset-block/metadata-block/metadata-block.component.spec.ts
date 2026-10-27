@@ -12,7 +12,7 @@ import { provideHttpClientTesting } from "@angular/common/http/testing";
 import { ComponentFixture, TestBed } from "@angular/core/testing";
 import { MatSlideToggleModule } from "@angular/material/slide-toggle";
 import { MatSlideToggleHarness } from "@angular/material/slide-toggle/testing";
-import { ActivatedRoute } from "@angular/router";
+import { ActivatedRoute, convertToParamMap } from "@angular/router";
 
 import { of } from "rxjs";
 
@@ -37,11 +37,13 @@ describe("MetadataBlockComponent", () => {
                 {
                     provide: ActivatedRoute,
                     useValue: {
-                        params: of({
-                            accountName: "accountName",
-                            datasetName: "datasetName",
-                            blockHash: "ewrwe213123",
-                        }),
+                        paramMap: of(
+                            convertToParamMap({
+                                accountName: "accountName",
+                                datasetName: "datasetName",
+                                blockHash: "ewrwe213123",
+                            }),
+                        ),
                         snapshot: {
                             paramMap: {
                                 get: (key: string) => {

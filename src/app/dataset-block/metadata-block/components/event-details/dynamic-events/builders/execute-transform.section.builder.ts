@@ -5,7 +5,8 @@
  * included in the LICENSE file.
  */
 
-import { DataSliceDataFragment, ExecuteTransformEventFragment } from "@api/kamu.graphql.interface";
+import { enumValueOf, isRecord } from "@common/helpers/app.helpers";
+import { ExecuteTransformEventFragment } from "@api/kamu.graphql.interface";
 
 import { EXECUTE_TRANSFORM_SOURCE_DESCRIPTORS } from "src/app/dataset-block/metadata-block/components/event-details/components/execute-transform-event/execute-transform-event.source";
 import { EventSectionBuilder } from "src/app/dataset-block/metadata-block/components/event-details/dynamic-events/builders/event-section.builder";
@@ -37,22 +38,20 @@ export class ExecuteTransformSectionBuilder extends EventSectionBuilder<ExecuteT
         const result: EventSection[] = [];
         Object.entries(event).forEach(([section, data]) => {
             if (data && section !== "__typename") {
-                switch (section as ExecuteTransformSection) {
+                switch (enumValueOf(ExecuteTransformSection, section)) {
                     case ExecuteTransformSection.NEW_CHECKPOINT: {
                         result.push({
                             title: this.sectionTitleMapper[section],
-                            rows: this.buildEventRows(
-                                event,
-                                EXECUTE_TRANSFORM_SOURCE_DESCRIPTORS,
-                                section as keyof ExecuteTransformEventFragment,
-                                false,
-                            ),
+                            rows: this.buildEventRows(event, EXECUTE_TRANSFORM_SOURCE_DESCRIPTORS, section, false),
                         });
                         break;
                     }
                     case ExecuteTransformSection.NEW_DATA: {
+                        if (!isRecord(data)) {
+                            throw new Error(`Expecting an object in event section "${section}"`);
+                        }
                         const rows: EventRow[] = [];
-                        Object.entries(data as DataSliceDataFragment).forEach(([key, value]) => {
+                        Object.entries(data).forEach(([key, value]) => {
                             if (event.__typename && key !== "__typename") {
                                 rows.push(
                                     this.buildSupportedRow(
@@ -60,7 +59,7 @@ export class ExecuteTransformSectionBuilder extends EventSectionBuilder<ExecuteT
                                         EXECUTE_TRANSFORM_SOURCE_DESCRIPTORS,
                                         "DataSlice",
                                         key,
-                                        this.valueTransformMapper(key as keyof DataSliceDataFragment, value),
+                                        this.valueTransformMapper(key, value),
                                     ),
                                 );
                             }
@@ -149,7 +148,7 @@ export class ExecuteTransformSectionBuilder extends EventSectionBuilder<ExecuteT
         return result;
     }
 
-    private valueTransformMapper(key: keyof DataSliceDataFragment, value: unknown): unknown {
+    private valueTransformMapper(key: string, value: unknown): unknown {
         switch (key) {
             case "offsetInterval":
                 return {

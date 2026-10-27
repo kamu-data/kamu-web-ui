@@ -22,10 +22,10 @@ import { FormsModule } from "@angular/forms";
 import { MatIconModule } from "@angular/material/icon";
 import { MatMenuModule } from "@angular/material/menu";
 import { MatProgressSpinnerModule } from "@angular/material/progress-spinner";
-import { ActivatedRoute, NavigationEnd, Params, Router, RouterEvent, RouterLink } from "@angular/router";
+import { ActivatedRoute, NavigationEnd, Params, Router, RouterLink } from "@angular/router";
 
 import { Observable, OperatorFunction } from "rxjs";
-import { debounceTime, distinctUntilChanged, filter, finalize, map, switchMap, take, tap } from "rxjs/operators";
+import { debounceTime, distinctUntilChanged, filter, finalize, switchMap, take, tap } from "rxjs/operators";
 
 import { NgbHighlight, NgbTypeahead, NgbTypeaheadSelectItemEvent } from "@ng-bootstrap/ng-bootstrap";
 
@@ -118,17 +118,17 @@ export class AppHeaderComponent extends BaseComponent implements OnInit {
         this.router.events
             .pipe(
                 filter((event) => event instanceof NavigationEnd),
-                map((event) => event as RouterEvent),
+                takeUntilDestroyed(this.destroyRef),
             )
-            .pipe(takeUntilDestroyed(this.destroyRef))
-            .subscribe((event: RouterEvent) => {
+            .subscribe((event: NavigationEnd) => {
                 const urlObj = new URL(event.url, window.location.origin);
-                this.searchQuery = (urlObj.searchParams.get(ProjectLinks.URL_QUERY_PARAM_QUERY) as string) ?? "";
+                this.searchQuery = urlObj.searchParams.get(ProjectLinks.URL_QUERY_PARAM_QUERY) ?? "";
                 this.cdr.detectChanges();
             });
         this.route.queryParams.pipe(takeUntilDestroyed(this.destroyRef)).subscribe((param: Params) => {
-            if (param.query) {
-                this.searchQuery = param.query as string;
+            const query: unknown = param.query;
+            if (typeof query === "string" && query) {
+                this.searchQuery = query;
             }
         });
     }
@@ -174,10 +174,10 @@ export class AppHeaderComponent extends BaseComponent implements OnInit {
         this.typeaheadInput?.nativeElement.focus();
     }
 
-    public onSelectItem(event: NgbTypeaheadSelectItemEvent): void {
+    public onSelectItem(event: NgbTypeaheadSelectItemEvent<DatasetAutocompleteItem>): void {
         this.isSearchActive = false;
         if (event.item) {
-            this.onSelectedDataset.emit(event.item as DatasetAutocompleteItem);
+            this.onSelectedDataset.emit(event.item);
             setTimeout(() => {
                 this.typeaheadInput?.nativeElement.blur();
             });
@@ -192,9 +192,9 @@ export class AppHeaderComponent extends BaseComponent implements OnInit {
         this.isSearchActive = true;
 
         event.stopPropagation();
+        const target = event.target;
         setTimeout(() => {
-            const inputEvent: Event = new Event("input");
-            (event.target as HTMLElement).dispatchEvent(inputEvent);
+            target?.dispatchEvent(new Event("input"));
         }, 0);
     }
 
@@ -204,7 +204,9 @@ export class AppHeaderComponent extends BaseComponent implements OnInit {
             if (this.isMobileView) {
                 this.triggerMenuClick();
             }
-            (event.target as HTMLElement).blur();
+            if (event.target instanceof HTMLElement) {
+                event.target.blur();
+            }
         }, AppValues.SHORT_DELAY_MS);
         if (!this.searchQuery) {
             this.navigationService.navigateToHome();

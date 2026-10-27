@@ -17,7 +17,7 @@ export class EventTypeFilterPipe implements PipeTransform {
         if (!filters.length) {
             return blocks;
         } else {
-            const result = [] as MetadataBlockFragment[];
+            const result: MetadataBlockFragment[] = [];
             filters.forEach((filter: string) =>
                 result.push(...blocks.filter((block) => block.event.__typename === filter)),
             );

@@ -10,6 +10,8 @@ import { ActivatedRouteSnapshot, ResolveFn } from "@angular/router";
 
 import { catchError, combineLatest, map, of, switchMap } from "rxjs";
 
+import { requireValue } from "@common/helpers/app.helpers";
+
 import { DatasetViewData } from "src/app/dataset-view/dataset-view.interface";
 import { DatasetService } from "src/app/dataset-view/dataset.service";
 import { DatasetSubscriptionsService } from "src/app/dataset-view/dataset.subscriptions.service";
@@ -21,8 +23,14 @@ export const datasetViewResolverFn: ResolveFn<DatasetViewData> = (route: Activat
     const datasetSubService = inject(DatasetSubscriptionsService);
     const navigationService = inject(NavigationService);
 
-    const accountName = route.paramMap.get(ProjectLinks.URL_PARAM_ACCOUNT_NAME) as string;
-    const datasetName = route.paramMap.get(ProjectLinks.URL_PARAM_DATASET_NAME) as string;
+    const accountName = requireValue(
+        route.paramMap.get(ProjectLinks.URL_PARAM_ACCOUNT_NAME),
+        "Route has no account name",
+    );
+    const datasetName = requireValue(
+        route.paramMap.get(ProjectLinks.URL_PARAM_DATASET_NAME),
+        "Route has no dataset name",
+    );
 
     return datasetService.requestDatasetMainData({ accountName, datasetName }).pipe(
         switchMap(() => {

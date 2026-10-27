@@ -10,9 +10,10 @@ import { inject, Injectable } from "@angular/core";
 import { Observable } from "rxjs";
 import { first, map } from "rxjs/operators";
 
-import { InMemoryCache, ObservableQuery } from "@apollo/client/core";
+import { ObservableQuery } from "@apollo/client/core";
 
 import { completeDataOrError, mutationData } from "@common/helpers/apollo-error.helpers";
+import { isRecord } from "@common/helpers/app.helpers";
 import {
     GithubLoginCredentials,
     LoginResponseType,
@@ -94,10 +95,8 @@ export class AuthApi {
             .mutate({
                 variables: { login_method: loginMethod, login_credentials_json: loginCredentialsJson, deviceCode },
                 update: (cache) => {
-                    if (!(cache instanceof InMemoryCache)) {
-                        return;
-                    }
-                    const datasetCachedKeys = Object.keys(cache.extract()).filter((item: string) =>
+                    const snapshot = cache.extract();
+                    const datasetCachedKeys = Object.keys(isRecord(snapshot) ? snapshot : {}).filter((item: string) =>
                         item.includes("Dataset:"),
                     );
                     datasetCachedKeys.forEach((key) => {

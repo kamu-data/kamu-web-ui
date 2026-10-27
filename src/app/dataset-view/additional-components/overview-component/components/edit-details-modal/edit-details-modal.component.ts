@@ -47,7 +47,7 @@ export class EditDetailsModalComponent extends BaseComponent implements OnInit {
         size: DatasetDataSizeFragment;
     };
     @Input({ required: true }) public datasetBasics: DatasetBasicsFragment;
-    public keywordsSet = new Set([] as string[]);
+    public keywordsSet = new Set<string>();
     public description = "";
     public initialDescription = "";
     public initialKeywords: string[] = [];

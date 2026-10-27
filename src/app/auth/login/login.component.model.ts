@@ -24,6 +24,6 @@ export interface GithubLoginState {
 }
 
 export interface LoginFormType {
-    login: FormControl<MaybeNull<string>>;
-    password: FormControl<MaybeNull<string>>;
+    login: FormControl<string>;
+    password: FormControl<string>;
 }

@@ -9,6 +9,7 @@ import { NgComponentOutlet } from "@angular/common";
 import { ChangeDetectionStrategy, Component, Input, Type } from "@angular/core";
 
 import { BaseComponent } from "@common/components/base.component";
+import { enumValueOf } from "@common/helpers/app.helpers";
 import { MetadataBlockFragment } from "@api/kamu.graphql.interface";
 import { MaybeUndefined } from "@interface/app.types";
 
@@ -39,9 +40,8 @@ export class EventDetailsComponent {
     @Input({ required: true }) public block: MetadataBlockFragment;
 
     public get eventComponent(): Type<BaseComponent> {
-        return (
-            this.componentEventTypeFactory[this.block.event.__typename as SupportedEvents] ?? UnsupportedEventComponent
-        );
+        const eventType = enumValueOf(SupportedEvents, this.block.event.__typename);
+        return (eventType && this.componentEventTypeFactory[eventType]) ?? UnsupportedEventComponent;
     }
 
     private componentEventTypeFactory: { [key in SupportedEvents]: MaybeUndefined<Type<BaseComponent>> } = {

@@ -23,6 +23,7 @@ import {
     getElementByDataTestId,
     registerMatSvgIcons,
     setComponentInput,
+    stubMethod,
 } from "@common/helpers/base-test.helpers.spec";
 import AppValues from "@common/values/app.values";
 import { AccountProvider, AccountType } from "@api/kamu.graphql.interface";
@@ -346,6 +347,33 @@ describe("AppHeaderComponent", () => {
         // Ensure focus lost on autocomplete after delay
         tick();
         expect(typeAheadInputElBlurSpy).toHaveBeenCalledWith();
+        flush();
+    }));
+
+    it("should open the highlighted suggestion on Enter, not search for it", fakeAsync(() => {
+        const MOCK_AUTOCOMPLETE_ITEM: DatasetAutocompleteItem = {
+            __typename: TypeNames.datasetType,
+            dummy: false,
+            dataset: mockDatasetBasicsDerivedFragment,
+        };
+        vi.spyOn(searchApi, "autocompleteDatasetSearch").mockReturnValue(of([MOCK_AUTOCOMPLETE_ITEM]));
+        const navigateToSearchSpy = stubMethod(navigationService, "navigateToSearch");
+        const navigateToHomeSpy = stubMethod(navigationService, "navigateToHome");
+        const selectedItems: DatasetAutocompleteItem[] = [];
+        component.onSelectedDataset.subscribe((item: DatasetAutocompleteItem) => selectedItems.push(item));
+
+        dispatchInputEvent(fixture, "searchInput", "query");
+        tick(AppValues.SHORT_DELAY_MS);
+        fixture.detectChanges();
+
+        const searchInput = getElementByDataTestId(fixture, "searchInput");
+        searchInput.dispatchEvent(new KeyboardEvent("keydown", { key: "Enter" }));
+        searchInput.dispatchEvent(new KeyboardEvent("keyup", { key: "Enter" }));
+        tick(AppValues.SHORT_DELAY_MS);
+
+        expect(selectedItems).toEqual([MOCK_AUTOCOMPLETE_ITEM]);
+        expect(navigateToSearchSpy).not.toHaveBeenCalled();
+        expect(navigateToHomeSpy).not.toHaveBeenCalled();
         flush();
     }));
 

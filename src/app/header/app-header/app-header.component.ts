@@ -99,7 +99,8 @@ export class AppHeaderComponent extends BaseComponent implements OnInit {
 
     public isSearchActive = false;
     public isCollapsedAppHeaderMenu = false;
-    public searchQuery = "";
+    // The typeahead writes the picked suggestion here, not its text
+    public searchQuery: string | DatasetAutocompleteItem = "";
     public searching = false;
     public readonly HOME_LINK = ProjectLinks.URL_SEARCH;
     public readonly URL_DATASET_CREATE = ProjectLinks.URL_DATASET_CREATE;
@@ -208,6 +209,10 @@ export class AppHeaderComponent extends BaseComponent implements OnInit {
                 event.target.blur();
             }
         }, AppValues.SHORT_DELAY_MS);
+        if (typeof this.searchQuery !== "string") {
+            // Enter picked a suggestion, which onSelectItem has already opened
+            return;
+        }
         if (!this.searchQuery) {
             this.navigationService.navigateToHome();
             return;

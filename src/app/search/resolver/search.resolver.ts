@@ -10,6 +10,7 @@ import { ActivatedRouteSnapshot, ResolveFn } from "@angular/router";
 
 import { of, switchMap } from "rxjs";
 
+import { positiveIntegerFromParam } from "@common/helpers/app.helpers";
 import { DatasetSearchResult } from "@interface/search.interface";
 
 import { AppConfigService } from "src/app/app-config.service";
@@ -24,16 +25,16 @@ export const searchResolverFn: ResolveFn<DatasetSearchResult> = (route: Activate
         appConfigService.semanticSearchThresholdScore !== undefined &&
         appConfigService.semanticSearchThresholdScore >= 0;
 
-    const page = route.queryParamMap.get(ProjectLinks.URL_QUERY_PARAM_PAGE) ?? 1;
+    const page = positiveIntegerFromParam(route.queryParamMap.get(ProjectLinks.URL_QUERY_PARAM_PAGE)) ?? 1;
     const query = route.queryParamMap.get(ProjectLinks.URL_QUERY_PARAM_QUERY) ?? "";
 
-    return searchService.searchDatasets(query, Number(page) - 1).pipe(
+    return searchService.searchDatasets(query, page - 1).pipe(
         switchMap((result: DatasetSearchResult) => {
             // Semantic search is not available:
-            // 1. If the text search contains results
+            // 1. If the text search has results, even when none are on the requested page
             // 2. If the query is empty
             // 3. If the UI configuration does not contain the option
-            return result.datasets.length || !query || !isSemanticSearchAvailable
+            return result.totalCount || !query || !isSemanticSearchAvailable
                 ? of(result)
                 : searchService.semanticSearchDatasets(query);
         }),

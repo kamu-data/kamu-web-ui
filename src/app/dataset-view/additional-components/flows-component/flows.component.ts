@@ -16,6 +16,7 @@ import { RouterLink } from "@angular/router";
 import { BehaviorSubject, combineLatest, filter, map, Observable, of, switchMap, take, tap, timer } from "rxjs";
 
 import { environment } from "@env/environment";
+import { PagePastEndComponent } from "@common/components/page-past-end/page-past-end.component";
 import { PaginationComponent } from "@common/components/pagination-component/pagination.component";
 import { enumValueOf, oneOf, trackBusyKey } from "@common/helpers/app.helpers";
 import { DatasetLinkPipe } from "@common/pipes/dataset-link.pipe";
@@ -82,6 +83,7 @@ import { ProcessDatasetCardInteractionService } from "src/app/services/process-d
         DatasetFlowProcessCardComponent,
         TileBaseWidgetComponent,
         PaginationComponent,
+        PagePastEndComponent,
         DatasetLinkPipe,
         SourceEventEditorLinkPipe,
     ],

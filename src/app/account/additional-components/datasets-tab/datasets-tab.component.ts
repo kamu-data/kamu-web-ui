@@ -8,6 +8,7 @@
 import { ChangeDetectionStrategy, Component, inject, Input } from "@angular/core";
 
 import { DatasetListItemComponent } from "@common/components/dataset-list-component/dataset-list-item/dataset-list-item.component";
+import { PagePastEndComponent } from "@common/components/page-past-end/page-past-end.component";
 import { PaginationComponent } from "@common/components/pagination-component/pagination.component";
 import { isNil } from "@common/helpers/app.helpers";
 import RoutingResolvers from "@common/resolvers/routing-resolvers";
@@ -24,6 +25,7 @@ import { NavigationService } from "src/app/services/navigation.service";
         //-----//
         DatasetListItemComponent,
         PaginationComponent,
+        PagePastEndComponent,
     ],
 })
 export class DatasetsTabComponent {

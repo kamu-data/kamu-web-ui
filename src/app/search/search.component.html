@@ -75,6 +75,12 @@
                             (pageChangeEvent)="onPageChange($event)"
                             data-test-id="pagination"
                         />
+                    } @else if (currentPage > 1) {
+                        <app-page-past-end
+                            itemsName="datasets"
+                            [totalPages]="data.pageInfo.totalPages"
+                            (pageChangeEvent)="onPageChange($event)"
+                        />
                     }
                 </div>
             </div>

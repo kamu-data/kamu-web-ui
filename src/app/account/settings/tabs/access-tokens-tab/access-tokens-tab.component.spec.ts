@@ -5,6 +5,7 @@
  * included in the LICENSE file.
  */
 
+import { TestbedHarnessEnvironment } from "@angular/cdk/testing/testbed";
 import { provideHttpClient } from "@angular/common/http";
 import { ComponentFixture, TestBed } from "@angular/core/testing";
 import { ActivatedRoute } from "@angular/router";
@@ -16,6 +17,7 @@ import { provideToastr } from "ngx-toastr";
 import type { Mock } from "vitest";
 
 import { ModalService } from "@common/components/modal/modal.service";
+import { PagePastEndHarness } from "@common/components/page-past-end/page-past-end.harness";
 import {
     emitClickOnElementByDataTestId,
     registerMatSvgIcons,
@@ -98,6 +100,19 @@ describe("AccessTokensTabComponent", () => {
         component.onPageChange(MOCK_PAGE);
         expect(navigateToSettingsSpy).toHaveBeenCalledTimes(1);
         expect(navigateToSettingsSpy).toHaveBeenCalledWith(AccountSettingsTabs.ACCESS_TOKENS, MOCK_PAGE);
+    });
+
+    it("should say a page past the last one has no access tokens and lead to the last page", async () => {
+        setComponentInput(fixture, "tokenConnectionData", {
+            ...structuredClone(mockAccessTokenConnectionData),
+            nodes: [],
+            pageInfo: { ...mockAccessTokenConnectionData.pageInfo, currentPage: 98, totalPages: 3 },
+        });
+
+        const pagePastEnd = await TestbedHarnessEnvironment.loader(fixture).getHarness(PagePastEndHarness);
+        expect(await pagePastEnd.getMessage()).toEqual("There are no access tokens on this page.");
+        await pagePastEnd.goToLastPage();
+        expect(navigateToSettingsSpy).toHaveBeenCalledWith(AccountSettingsTabs.ACCESS_TOKENS, 3);
     });
 
     it("should check add new token button", () => {

@@ -1,0 +1,11 @@
+<div class="text-center p-4">
+    <p class="mb-2" data-test-id="page-past-end-message">There are no {{ itemsName }} on this page.</p>
+    <button
+        type="button"
+        class="btn btn-link"
+        (click)="pageChangeEvent.emit(lastPage)"
+        data-test-id="page-past-end-last-page-button"
+    >
+        Go to the last page
+    </button>
+</div>

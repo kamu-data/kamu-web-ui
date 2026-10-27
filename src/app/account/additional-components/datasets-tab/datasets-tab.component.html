@@ -4,9 +4,17 @@
             <app-dataset-list-item [row]="row" [rowIndex]="rowIndex" [isClickableRow]="isClickableRow" />
         </div>
     } @empty {
-        <div class="text-center">
-            <h5>Datasets list is empty</h5>
-        </div>
+        @if (currentPage > 1) {
+            <app-page-past-end
+                itemsName="datasets"
+                [totalPages]="accountResolverResponse.datasetsResponse.pageInfo.totalPages"
+                (pageChangeEvent)="onPageChange($event)"
+            />
+        } @else {
+            <div class="text-center">
+                <h5>Datasets list is empty</h5>
+            </div>
+        }
     }
     @if (
         accountResolverResponse.datasetsResponse.datasets.length > 0 &&

@@ -107,7 +107,10 @@ its own routes file:
     route.children[0]?.data[ProjectLinks.URL_PARAM_TAB]), "…")`;
   - a query parameter, which the user can edit: `enumValueOf(...) ?? default`, and for a
     comma-separated list `.flatMap((s) => enumValueOf(Enum, s) ?? [])`, so an unknown value is
-    dropped rather than passed on.
+    dropped rather than passed on; a page or another count:
+    `positiveIntegerFromParam(...) ?? default` from `@common/helpers/app.helpers`, which a
+    component reads through `pageFromUrl()` and a routed input through a setter of
+    `MaybeUndefined<string>` (`SearchComponent.page`).
 - Routes whose data must refresh when only query parameters change set
   `runGuardsAndResolvers: "always"`, as their neighbours do.
 - Guards are functional `CanActivateFn`s in a `guards/` folder (`authenticatedGuard`,
@@ -149,6 +152,7 @@ The dev build (`npm run build`) does not optimize and its chunk sizes are not re
 | Statically importing a feature component into a parent routes file "just for one route" | Merges the whole feature, and everything it imports, into the parent chunk |
 | Fetching page data in `ngOnInit` instead of a resolver | The page renders empty first and the data does not refresh with `runGuardsAndResolvers`; resolvers keep loading and navigation in one place |
 | Relying on `webpackChunkName` to name chunks | Ignored by the esbuild builder; the file name decides |
+| `Number(param)`, `+param` or `numberAttribute` for a page in the URL | Each turns what the user typed into a number unchecked: `?page=abc` sent `NaN` to the API and the pager, and `?page=0` asked for page -1, which the API refused with a parse error before the app redirected home |
 | A guard or resolver that calls `navigateTo…()` and then returns `false`, `EMPTY` or `null` | Starts a second navigation from inside the first, which the router then cancels. A resolver returning `EMPTY` cancels the navigation on its own, so the 404 page appeared only because the second navigation won. A `UrlTree` or `RedirectCommand` redirects within the same navigation, and a spec can check where it leads |
 
 ## What lives elsewhere

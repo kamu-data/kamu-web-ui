@@ -69,7 +69,13 @@
         }
     </div>
 
-    @if (!dataSource.data.length) {
+    @if (!dataSource.data.length && currentPage > 1) {
+        <app-page-past-end
+            itemsName="collaborators"
+            [totalPages]="pageBasedInfo.totalPages"
+            (pageChangeEvent)="onPageChange($event)"
+        />
+    } @else if (!dataSource.data.length) {
         <div>
             <div class="box text-center p-5 mb-100">
                 <img

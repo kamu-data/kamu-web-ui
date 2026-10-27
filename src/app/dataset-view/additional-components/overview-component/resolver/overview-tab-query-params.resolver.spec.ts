@@ -32,4 +32,13 @@ describe("overviewTabQueryParamsResolver", () => {
             version: 2,
         });
     });
+
+    ["abc", "-1", "1.5"].forEach((invalidVersion: string) => {
+        it(`should read the version "${invalidVersion}" as the latest`, async () => {
+            const route = routeSnapshot({ queryParams: { [ProjectLinks.URL_QUERY_PARAM_VERSION]: invalidVersion } });
+
+            const result = await runResolver(overviewTabQueryParamsResolverFn, route);
+            expect(result).toEqual({ pathPrefix: "/", version: 0 });
+        });
+    });
 });

@@ -12,6 +12,12 @@
                     [pageInfo]="datasetHistoryTabData.pageInfo"
                     (pageChangeEvent)="onPageChange($event)"
                 />
+            } @else {
+                <app-page-past-end
+                    itemsName="commits"
+                    [totalPages]="datasetHistoryTabData.pageInfo.totalPages"
+                    (pageChangeEvent)="onPageChange($event)"
+                />
             }
         </div>
     </div>

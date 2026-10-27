@@ -19,6 +19,7 @@ import { NgbModal } from "@ng-bootstrap/ng-bootstrap";
 
 import { BaseComponent } from "@common/components/base.component";
 import { ModalService } from "@common/components/modal/modal.service";
+import { PagePastEndComponent } from "@common/components/page-past-end/page-past-end.component";
 import { PaginationComponent } from "@common/components/pagination-component/pagination.component";
 import { promiseWithCatch } from "@common/helpers/app.helpers";
 import { openModal } from "@common/helpers/modal.helpers";
@@ -59,6 +60,7 @@ export interface EnvVariableElement {
         MatSortModule,
         //-----//
         PaginationComponent,
+        PagePastEndComponent,
     ],
 })
 export class DatasetSettingsSecretsManagerTabComponent extends BaseComponent implements OnInit {

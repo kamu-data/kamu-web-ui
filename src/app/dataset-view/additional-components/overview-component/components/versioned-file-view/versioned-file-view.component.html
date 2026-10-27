@@ -21,6 +21,7 @@
                     <div class="fs-5 fw-500">Preview</div>
                     @if (fileDetails.fileInfo?.version) {
                         <button
+                            type="button"
                             class="border-1 bg-light border d-flex rounded-2 btn btn-sm justify-content-between align-items-center"
                             (click)="downloadFile(fileDetails)"
                         >
@@ -48,7 +49,7 @@
                     }
                     @case ("svg") {
                         <div class="text-center box p-4 mt-4 bg-light">
-                            <mat-icon svgIcon="custom-svg" class="preview-svg"></mat-icon>
+                            <mat-icon svgIcon="custom-svg" class="preview-svg" />
                         </div>
                     }
                     @case ("json") {

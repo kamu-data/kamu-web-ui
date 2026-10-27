@@ -1,10 +1,11 @@
 @if (block) {
     <div>
         <div appFeatureFlag="dataset.panel.history.blockActions" class="justify-content-end custom-button">
-            <button class="starred rounded-left-2 border rounded-start">
+            <button type="button" class="starred rounded-left-2 border rounded-start">
                 <span class="d-inline mr-2">Block Actions</span>
             </button>
             <button
+                type="button"
                 class="starred rounded-right-2 border rounded-end btn-group-item d-flex justify-content-center align-items-center"
                 mat-icon-button
                 mat-button
@@ -19,7 +20,7 @@
             <mat-menu #menu="matMenu" xPosition="before" [hasBackdrop]="false">
                 <div class="p-3 bg-white">Action 1</div>
                 <mat-divider />
-                <button mat-menu-item>Action 2</button>
+                <button type="button" mat-menu-item>Action 2</button>
             </mat-menu>
         </div>
         <div class="position-relative border border-1 p-2 rounded-3 mt-4">
@@ -35,7 +36,7 @@
                     <span>{{ block.sequenceNumber }}</span>
                 </app-block-row-data>
                 <app-block-row-data tooltip="System time when this block was written." label="System Time:">
-                    <app-display-time class="no-wrap" [data]="block.systemTime" [dataTestId]="'time-block-header'" />
+                    <app-display-time timeClass="no-wrap" [data]="block.systemTime" dataTestId="time-block-header" />
                 </app-block-row-data>
                 <app-block-row-data tooltip="Hash sum of the current block." label="Block Hash:">
                     <app-display-hash [value]="block.blockHash" [showCopyButton]="true" />

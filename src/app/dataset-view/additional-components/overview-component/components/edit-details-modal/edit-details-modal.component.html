@@ -29,7 +29,7 @@
             @for (keyword of keywords; track keyword) {
                 <mat-chip-row (removed)="removeKeyword(keyword)">
                     {{ keyword }}
-                    <button matChipRemove>
+                    <button type="button" matChipRemove>
                         <mat-icon>cancel</mat-icon>
                     </button>
                 </mat-chip-row>

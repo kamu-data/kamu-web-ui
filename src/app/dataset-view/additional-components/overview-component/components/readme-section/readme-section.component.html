@@ -11,6 +11,7 @@
             </div>
             @if (editable) {
                 <button
+                    type="button"
                     class="starred rounded-2 btn-sm btn btn-roup-item custom-edit d-flex justify-content-center align-items-center"
                     aria-label="Edit this file"
                     data-test-id="show-edit-tabs"
@@ -24,6 +25,7 @@
             <div class="edit-title d-flex align-items-center justify-content-between">
                 <div class="left-part">
                     <button
+                        type="button"
                         class="edit-button"
                         [class.active]="isEditView"
                         data-test-id="select-edit-tab"
@@ -32,6 +34,7 @@
                         Edit
                     </button>
                     <button
+                        type="button"
                         class="edit-button"
                         [class.active]="isPreviewView"
                         data-test-id="select-preview-tab"
@@ -41,10 +44,16 @@
                     </button>
                 </div>
                 <div class="right-part d-flex">
-                    <button class="button-changes mr-4" data-test-id="cancel-changes" (click)="onCancelChanges()">
+                    <button
+                        type="button"
+                        class="button-changes mr-4"
+                        data-test-id="cancel-changes"
+                        (click)="onCancelChanges()"
+                    >
                         Cancel changes
                     </button>
                     <button
+                        type="button"
                         class="button-changes"
                         data-test-id="save-changes"
                         [disabled]="!readmeChanged"

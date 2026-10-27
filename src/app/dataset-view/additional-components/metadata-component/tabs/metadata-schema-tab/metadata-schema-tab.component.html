@@ -1,6 +1,7 @@
 @if (canEditSchema) {
     <div class="d-flex justify-content-start mb-4">
         <button
+            type="button"
             appFeatureFlag="dataset.panel.metadata.editSchema"
             class="border-1 bg-light border edit-pschema-btn rounded-2 me-3 btn btn-sm justify-content-between align-items-center"
             data-test-id="'edit-schema'"
@@ -16,9 +17,9 @@
     <div class="position-relative border border-1 px-2 pt-2 container-bottom-padding rounded-3">
         <div class="mx-4">
             <app-block-row-data
-                [tooltip]="'A DDL-formatted schema. Schema can be used to coerce values into more appropriate data types.'"
-                [label]="'Schema:'"
-                [rowClass]="'d-flex justify-content-end'"
+                tooltip="A DDL-formatted schema. Schema can be used to coerce values into more appropriate data types."
+                label="Schema:"
+                rowClass="d-flex justify-content-end"
             >
                 <mat-slide-toggle
                     data-test-id="schema-yaml-toggle"
@@ -39,7 +40,7 @@
                         { columnName: 'description' },
                     ]"
                     [dataRows]="schemaData(schema.fields)"
-                    [idTable]="'schema-block-table'"
+                    idTable="schema-block-table"
                     tableClass="font-monospace"
                 />
             }

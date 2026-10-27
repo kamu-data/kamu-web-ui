@@ -13,6 +13,7 @@
                 </div>
                 <div class="dataset-info--sub-block d-flex flex-row align-items-center">
                     <button
+                        type="button"
                         class="change-version-btn"
                         (click)="navigateToAdjacentVersion(fileDetails, -1)"
                         [disabled]="previousVersionBtnDisabled(fileDetails)"
@@ -23,6 +24,7 @@
                         {{ version ? version : fileDetails?.fileInfo?.version }}</span
                     >
                     <button
+                        type="button"
                         class="change-version-btn"
                         (click)="navigateToAdjacentVersion(fileDetails, 1)"
                         [disabled]="nextVersionBtnDisabled(fileDetails)"
@@ -74,7 +76,7 @@
                     <app-display-hash
                         [value]="fileDetails.fileInfo.contentHash"
                         [showCopyButton]="true"
-                        [class]="'text-decoration-none text-dark mr-4 hashBlock'"
+                        hashClass="text-decoration-none text-dark mr-4 hashBlock"
                     />
                 } @else {
                     -

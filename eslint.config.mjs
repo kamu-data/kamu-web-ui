@@ -1,4 +1,6 @@
 // eslint.config.js
+import angularTemplatePlugin from "@angular-eslint/eslint-plugin-template";
+import angularTemplateParser from "@angular-eslint/template-parser";
 import tsPlugin from "@typescript-eslint/eslint-plugin";
 import tsParser from "@typescript-eslint/parser";
 import vitestPlugin from "@vitest/eslint-plugin";
@@ -152,12 +154,67 @@ export default [
   // untyped-boundary.helpers for the app (values that arrive as `any`, such as parsed JSON).
   {
     files: ["src/app/**/*.ts"],
-    ignores: [
-      "src/app/common/helpers/base-test.helpers.spec.ts",
-      "src/app/common/helpers/untyped-boundary.helpers.ts",
-    ],
+    ignores: ["src/app/common/helpers/base-test.helpers.spec.ts", "src/app/common/helpers/untyped-boundary.helpers.ts"],
     rules: {
       "@typescript-eslint/consistent-type-assertions": ["error", { assertionStyle: "never" }],
+    },
+  },
+  // Templates make no unchecked claims either: a non-null assertion or $any() switches off the
+  // template type-check for that value
+  {
+    files: ["src/app/**/*.html"],
+    languageOptions: {
+      parser: angularTemplateParser,
+    },
+    plugins: {
+      "@angular-eslint/template": angularTemplatePlugin,
+    },
+    rules: {
+      "@angular-eslint/template/no-non-null-assertion": "error",
+      "@angular-eslint/template/no-any": "error",
+      "@angular-eslint/template/banana-in-box": "error",
+      // A button without a type submits the form around it
+      "@angular-eslint/template/button-has-type": "error",
+      "@angular-eslint/template/eqeqeq": "error",
+      // A static class or style next to its binding is merged by Angular, not overridden
+      "@angular-eslint/template/no-duplicate-attributes": ["error", { allowStylePrecedenceDuplicates: true }],
+      "@angular-eslint/template/no-negated-async": "error",
+      "@angular-eslint/template/no-empty-control-flow": "error",
+      "@angular-eslint/template/no-nested-tags": "error",
+      "@angular-eslint/template/prefer-control-flow": "error",
+      "@angular-eslint/template/prefer-at-else": "error",
+      "@angular-eslint/template/prefer-at-empty": "error",
+      "@angular-eslint/template/prefer-built-in-pipes": "error",
+      "@angular-eslint/template/conditional-complexity": "error",
+      "@angular-eslint/template/elements-content": "error",
+      "@angular-eslint/template/valid-aria": "error",
+      "@angular-eslint/template/role-has-required-aria": "error",
+      "@angular-eslint/template/no-positive-tabindex": "error",
+      "@angular-eslint/template/table-scope": "error",
+      "@angular-eslint/template/no-distracting-elements": "error",
+      "@angular-eslint/template/mouse-events-have-key-events": "error",
+      "@angular-eslint/template/prefer-self-closing-tags": "error",
+      "@angular-eslint/template/prefer-static-string-properties": "error",
+    },
+  },
+  // A template with more than 10 branches renders several things that belong in components of their
+  // own. The listed templates are over the limit until they are split; remove one once it is under.
+  {
+    files: ["src/app/**/*.html"],
+    ignores: [
+      "src/app/account/additional-components/account-flows-tab/account-flows-subtabs/account-flows-processes-subtab/account-flows-processes-subtab.component.html",
+      "src/app/data-access-panel/data-access-modal/data-access-modal.component.html",
+      "src/app/dataset-view/additional-components/flows-component/flows.component.html",
+      "src/app/dataset-view/additional-components/metadata-component/components/source-events/steps/base-step/base-step.component.html",
+      "src/app/dataset-view/additional-components/metadata-component/tabs/common/source-event-common-data/source-event-common-data.component.html",
+      "src/app/dataset-view/additional-components/metadata-component/tabs/metadata-polling-source-tab/metadata-polling-source-tab.component.html",
+      "src/app/dataset-view/additional-components/overview-component/components/collection-view/collection-view.component.html",
+      "src/app/dataset-view/additional-components/overview-component/components/versioned-file-view/versioned-file-view.component.html",
+      "src/app/dataset-view/additional-components/overview-component/overview.component.html",
+      "src/app/header/app-header/app-header.component.html",
+    ],
+    rules: {
+      "@angular-eslint/template/cyclomatic-complexity": ["error", { maxComplexity: 10 }],
     },
   },
   // License header plugin for specific files

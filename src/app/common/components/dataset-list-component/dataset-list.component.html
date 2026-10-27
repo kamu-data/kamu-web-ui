@@ -10,7 +10,7 @@
                 <p class="m-auto position-absolute">Sort:</p>
                 <select title="Sort options" id="sort-options" class="border-0">
                     @for (keys of sortOptions; track keys) {
-                        <option value="{{ keys?.value }}" [selected]="keys.active">
+                        <option [value]="keys?.value" [selected]="keys.active">
                             {{ keys?.label }}
                         </option>
                     }

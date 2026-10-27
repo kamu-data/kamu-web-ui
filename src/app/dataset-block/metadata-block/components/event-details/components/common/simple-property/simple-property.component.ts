@@ -19,8 +19,6 @@ import { BasePropertyComponent } from "src/app/dataset-block/metadata-block/comp
 export class SimplePropertyComponent extends BasePropertyComponent {
     @Input({ required: true }) public data: MaybeNull<string | number | boolean>;
 
-    @Input() public class?: string;
-
     public static acceptsData(data: unknown): data is SimplePropertyComponent["data"] {
         return data === null || typeof data === "string" || typeof data === "number" || typeof data === "boolean";
     }

@@ -4,7 +4,7 @@
         @if (tableSource(dataJsonAoS).length) {
             <app-dynamic-table
                 [hasTableHeader]="true"
-                [idTable]="'query-explainer-table'"
+                idTable="query-explainer-table"
                 [dataRows]="tableSource(dataJsonAoS)"
                 [attr.data-test-id]="'query-explainer-table'"
                 [columnDescriptors]="inferTableSchema(schemaFields(dataJsonAoS))"

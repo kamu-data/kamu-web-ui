@@ -19,6 +19,7 @@ import { ApolloTestingModule } from "apollo-angular/testing";
 import type { Mock } from "vitest";
 
 import { SpinnerComponent } from "@common/components/spinner/spinner/spinner.component";
+import { requireValue } from "@common/helpers/app.helpers";
 import {
     checkButtonDisabled,
     checkVisible,
@@ -27,6 +28,7 @@ import {
     getElementByDataTestId,
     registerMatSvgIcons,
     setFieldValue,
+    stubMethod,
 } from "@common/helpers/base-test.helpers.spec";
 import { AuthApi } from "@api/auth.api";
 import { PasswordLoginCredentials } from "@api/auth.api.model";
@@ -175,6 +177,21 @@ describe("LoginComponent", () => {
             beforeEach(() => {
                 emitClickOnElementByDataTestId(fixture, Elements.SELECT_METHOD_PASSWORD);
                 fixture.detectChanges();
+            });
+
+            it("should submit the password login form from the keyboard", () => {
+                const loginServicePasswordSubmit = stubMethod(loginService, "passwordLogin");
+                setFieldValue(fixture, Elements.INPUT_LOGIN, TEST_LOGIN);
+                setFieldValue(fixture, Elements.INPUT_PASSWORD, TEST_PASSWORD);
+                fixture.detectChanges();
+
+                const submitButton = getElementByDataTestId(fixture, Elements.SUBMIT_PASSWORD, HTMLButtonElement);
+                requireValue(submitButton.form).requestSubmit();
+
+                expect(loginServicePasswordSubmit).toHaveBeenCalledWith(
+                    { login: TEST_LOGIN, password: TEST_PASSWORD },
+                    "",
+                );
             });
 
             it("Submit good password login form", () => {

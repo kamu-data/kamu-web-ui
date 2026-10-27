@@ -11,7 +11,6 @@
                     type="radio"
                     formControlName="kind"
                     [name]="KIND_NAME_CONTROL"
-                    type="radio"
                     [value]="EventTimeSourceKind.FROM_METADATA"
                 />
                 <label class="form-check-label" for=""> From metadata </label>
@@ -23,7 +22,6 @@
                     type="radio"
                     formControlName="kind"
                     [name]="KIND_NAME_CONTROL"
-                    type="radio"
                     [value]="EventTimeSourceKind.FROM_SYSTEM_TIME"
                 />
                 <label class="form-check-label" for=""> From system time </label>
@@ -35,7 +33,6 @@
                     type="radio"
                     [name]="KIND_NAME_CONTROL"
                     formControlName="kind"
-                    type="radio"
                     [value]="EventTimeSourceKind.FROM_PATH"
                 />
                 <label class="form-check-label" for=""> From path </label>
@@ -46,9 +43,9 @@
                     <app-input-field
                         [form]="eventTimeGroup"
                         [controlName]="PATTERN_NAME_CONTROL"
-                        [label]="'Pattern'"
+                        label="Pattern"
                         [requiredField]="true"
-                        [placeholder]="'Enter pattern...'"
+                        placeholder="Enter pattern..."
                         [tooltip]="PATTERN_TOOLTIP"
                     />
                 </div>
@@ -56,8 +53,8 @@
                     <app-typeahead-field
                         [form]="eventTimeGroup"
                         [controlName]="TIMESTAMP_FORMAT_NAME_CONTROL"
-                        [label]="'Timestamp format'"
-                        [placeholder]="'--Select timestamp format--'"
+                        label="Timestamp format"
+                        placeholder="--Select timestamp format--"
                         [data]="FORMATS"
                         [tooltip]="TIMESTAMP_TOOLTIP"
                     />

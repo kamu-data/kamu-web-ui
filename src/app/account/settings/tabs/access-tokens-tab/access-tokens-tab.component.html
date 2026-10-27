@@ -2,8 +2,7 @@
     <ng-container
         [ngTemplateOutlet]="createTokenTemplate"
         [ngTemplateOutletContext]="{ $implicit: TokenCreateStep.INITIAL }"
-    >
-    </ng-container>
+    />
 }
 
 @if (currentCreateStep === TokenCreateStep.GENERATE) {
@@ -20,7 +19,7 @@
         <div
             class="text-danger fs-12"
             [input]="tokenName"
-            [fieldLabel]="'Name'"
+            fieldLabel="Name"
             [appFieldError]="['required', 'maxlength']"
             [group]="createTokenForm"
         ></div>
@@ -63,7 +62,7 @@
                         </div>
                     </div>
                     <div>
-                        <button class="done-button" data-test-id="done-button" (click)="onDone()">
+                        <button type="button" class="done-button" data-test-id="done-button" (click)="onDone()">
                             <span class="fs-12 me-2 d-block"> Done</span>
                         </button>
                     </div>
@@ -77,8 +76,7 @@
     <ng-container
         [ngTemplateOutlet]="createTokenTemplate"
         [ngTemplateOutletContext]="{ $implicit: TokenCreateStep.FINISH }"
-    >
-    </ng-container>
+    />
 }
 
 <ng-template #createTokenTemplate let-currentStep>
@@ -90,6 +88,7 @@
     <div class="d-flex justify-content-between align-items-center mt-60">
         <div class="d-flex flex-row align-items-center">
             <button
+                type="button"
                 (click)="addNewToken()"
                 class="new-token-button d-flex justify-content-between align-items-center"
                 data-test-id="new-token-button"
@@ -168,7 +167,7 @@
                 <th mat-header-cell *matHeaderCellDef mat-sort-header>Actions</th>
                 <td mat-cell *matCellDef="let element; let i = index">
                     @if (!element.revokedAt) {
-                        <button class="revoke-token-button" (click)="deleteToken(element.id)">
+                        <button type="button" class="revoke-token-button" (click)="deleteToken(element.id)">
                             <span class="fs-12 me-2 d-block"> Revoke</span>
                         </button>
                     }
@@ -190,7 +189,7 @@
                 [currentPage]="currentPage"
                 [pageInfo]="pageBasedInfo"
                 (pageChangeEvent)="onPageChange($event)"
-            ></app-pagination>
+            />
         }
     </div>
 </ng-template>

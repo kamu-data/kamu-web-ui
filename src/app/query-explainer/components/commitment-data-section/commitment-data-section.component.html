@@ -12,7 +12,7 @@
                 </span>
                 <app-copy-to-clipboard
                     [text]="commitmentData.sqlQueryExplainerResponse.commitment.inputHash"
-                    [dataTestId]="'copyToClipboard-query-explainer-input-hash'"
+                    dataTestId="copyToClipboard-query-explainer-input-hash"
                 />
             </div>
         </div>
@@ -28,7 +28,7 @@
                 >
                 <app-copy-to-clipboard
                     [text]="commitmentData.sqlQueryExplainerResponse.commitment.outputHash"
-                    [dataTestId]="'copyToClipboard-query-explainer-output-hash'"
+                    dataTestId="copyToClipboard-query-explainer-output-hash"
                 />
             </div>
         </div>
@@ -43,7 +43,7 @@
                 </span>
                 <app-copy-to-clipboard
                     [text]="commitmentData.sqlQueryExplainerResponse.commitment.subQueriesHash"
-                    [dataTestId]="'copyToClipboard-query-explainer-sub-queries-hash'"
+                    dataTestId="copyToClipboard-query-explainer-sub-queries-hash"
                 />
             </div>
         </div>
@@ -56,7 +56,7 @@
             <div class="mt-2">
                 <a
                     target="_blank"
-                    [href]="'https://www.w3.org/community/reports/credentials/CG-FINAL-di-eddsa-2020-20220724/#dfn-ed25519signature2020'"
+                    href="https://www.w3.org/community/reports/credentials/CG-FINAL-di-eddsa-2020-20220724/#dfn-ed25519signature2020"
                 >
                     {{ commitmentData.sqlQueryExplainerResponse.proof.type }}
                 </a>

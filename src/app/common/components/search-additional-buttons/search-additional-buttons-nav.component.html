@@ -3,6 +3,7 @@
         <li class="nav-item mr-2 pt-2" [appFeatureFlag]="searchAdditionalData.id">
             <div class="btn-group-parent nav">
                 <button
+                    type="button"
                     (click)="onClickButton(searchAdditionalData.value)"
                     [classList]="
                         searchAdditionalData.additionalOptions && searchAdditionalData.additionalOptions.options
@@ -10,11 +11,12 @@
                             : 'starred rounded-2 btn-sm btn btn-group-item d-flex justify-content-between align-items-center'
                     "
                 >
-                    <mat-icon class="mat-icon-svg-size" [svgIcon]="searchAdditionalData.icon"></mat-icon>
+                    <mat-icon class="mat-icon-svg-size" [svgIcon]="searchAdditionalData.icon" />
                     <span class="d-inline mr-2">{{ searchAdditionalData.textButton }}</span>
                     <span class="counter">{{ searchAdditionalData.counter }}</span>
                 </button>
                 <button
+                    type="button"
                     class="additional-options-btn mat-menu-trigger starred rounded-right-2 border-1 border btn-sm btn btn-group-item d-flex justify-content-center align-items-center mat-button mat-icon-button mat-button-base"
                     [matMenuTriggerFor]="menu2"
                     [attr.data-test-id]="'additional-options-trigger-' + searchAdditionalData.value"
@@ -38,6 +40,7 @@
                             <div class="select-menu-list">
                                 @for (option of searchAdditionalData.additionalOptions.options; track option) {
                                     <button
+                                        type="button"
                                         class="select-menu-item flex-items-start"
                                         (click)="onClickMenuItem(option.action, option.value)"
                                         [attr.aria-checked]="option.isSelected"
@@ -66,7 +69,7 @@
                             }
                         } @else {
                             <div>
-                                <mat-spinner [diameter]="25" class="mx-auto mt-2"></mat-spinner>
+                                <mat-spinner [diameter]="25" class="mx-auto mt-2" />
                             </div>
                         }
                     </div>

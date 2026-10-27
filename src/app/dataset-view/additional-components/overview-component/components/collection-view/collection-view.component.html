@@ -1,6 +1,6 @@
 @if (loadingCollection$ | async) {
     <div>
-        <mat-progress-bar data-test-id="collection-loader" mode="indeterminate" class="w-100 mt-4"></mat-progress-bar>
+        <mat-progress-bar data-test-id="collection-loader" mode="indeterminate" class="w-100 mt-4" />
         <div class="mt-4 text-center text-muted">Loading...</div>
     </div>
 }
@@ -29,7 +29,7 @@
                                     class="up-row cursor-pointer"
                                 >
                                     <div class="d-flex align-items-center" [title]="pathPrefix">
-                                        <mat-icon svgIcon="shift" class="file-icon"></mat-icon>
+                                        <mat-icon svgIcon="shift" class="file-icon" />
                                         <span class="ms-2 truncate-path d-block fw-500">{{ pathPrefix }}</span>
                                     </div>
                                 </th>
@@ -188,6 +188,6 @@
 <!-- Background loading state (Infinite Scroll) -->
 @if (loadingOnScroll$ | async) {
     <div class="py-4">
-        <mat-progress-spinner class="mx-auto" [diameter]="30" mode="indeterminate"></mat-progress-spinner>
+        <mat-progress-spinner class="mx-auto" [diameter]="30" mode="indeterminate" />
     </div>
 }

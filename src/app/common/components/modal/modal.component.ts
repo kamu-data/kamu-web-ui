@@ -19,9 +19,7 @@ import { ModalCommandInterface, ModalComponentType, ModalMappingsComponent } fro
 
 @Component({
     selector: "modal",
-    template: `
-        <div class="modal__container" #container tabindex="1" [ngClass]="{ modal__invisible: !isVisible }"></div>
-    `,
+    templateUrl: "./modal.component.html",
     imports: [NgClass],
 })
 export class ModalComponent extends BaseComponent implements OnInit {

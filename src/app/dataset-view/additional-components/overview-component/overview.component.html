@@ -31,6 +31,7 @@
                 @if (canEditDatasetInfo) {
                     <div data-test-id="dataset-edit-info-block">
                         <button
+                            type="button"
                             class="btn-sm btn custom-edit"
                             aria-label="Edit dataset details"
                             data-test-id="edit-dataset-details"
@@ -124,7 +125,7 @@
                         <mat-button-toggle
                             [value]="button.value"
                             [matTooltip]="button.tooltip"
-                            [matTooltipPosition]="'above'"
+                            matTooltipPosition="above"
                         >
                             <mat-icon [svgIcon]="button.icon" />
                         </mat-button-toggle>
@@ -138,6 +139,7 @@
                 <div class="d-flex justify-content-end mt-2 mb-3">
                     @if (showAddDataButton) {
                         <button
+                            type="button"
                             appFeatureFlag="dataset.panel.overview.addData"
                             class="border-1 bg-light border rounded-2 px-2 btn btn-sm d-flex justify-content-between align-items-center me-3"
                             data-test-id="add-more-data"
@@ -150,6 +152,7 @@
                     }
                     @if (visibleUpdateButton) {
                         <button
+                            type="button"
                             appFeatureFlag="dataset.panel.overview.update"
                             class="border-1 bg-light border rounded-2 px-2 btn btn-sm d-flex justify-content-between align-items-center"
                             data-test-id="refresh-now-button"
@@ -191,7 +194,7 @@
                                     ? datasetOverviewTabData.overviewUpdate.content
                                     : []
                             "
-                            [idTable]="'overview-data-table'"
+                            idTable="overview-data-table"
                         />
                     } @else {
                         @if (!showDragAndDropBlock) {
@@ -219,6 +222,7 @@
                                 <p class="upload-file-hint">You can add up to 50 MB to this dataset</p>
                                 <div class="add-data-button-container">
                                     <button
+                                        type="button"
                                         class="border-1 add-data-button bg-light border rounded-2 px-2 btn btn-sm d-flex justify-content-between align-items-center"
                                     >
                                         <span class="fs-12 mx-2 d-block w-100"> Add data</span>
@@ -287,7 +291,7 @@
                             <app-display-hash
                                 [value]="datasetOverviewTabData.datasetBasics.id"
                                 [showCopyButton]="true"
-                                [class]="'text-decoration-none text-dark mr-4 hashBlock'"
+                                hashClass="text-decoration-none text-dark mr-4 hashBlock"
                             />
                         </div>
                     </div>
@@ -361,6 +365,7 @@
                                 @if (canEditLicense) {
                                     <div>
                                         <button
+                                            type="button"
                                             class="btn-sm btn custom-edit ms-3"
                                             aria-label="Edit dataset details"
                                             data-test-id="edit-dataset-license"
@@ -415,6 +420,7 @@
                             <div class="dataset-info--sub-block">
                                 <app-display-time
                                     class="dataset-info--text"
+                                    timeClass="dataset-info--text"
                                     [title]="datasetOverviewTabData.overviewUpdate.overview.createdAt"
                                     [data]="datasetOverviewTabData.overviewUpdate.overview.createdAt"
                                 />
@@ -430,6 +436,7 @@
                             <div class="dataset-info--sub-block">
                                 <app-display-time
                                     class="dataset-info--text"
+                                    timeClass="dataset-info--text"
                                     [title]="datasetOverviewTabData.overviewUpdate.overview.lastUpdatedAt"
                                     [data]="datasetOverviewTabData.overviewUpdate.overview.lastUpdatedAt"
                                 />
@@ -456,6 +463,7 @@
                                 @if (canEditWatermark) {
                                     <div>
                                         <button
+                                            type="button"
                                             class="btn-sm btn custom-edit ms-4"
                                             aria-label="Edit watermark details"
                                             data-test-id="edit-dataset-watermark"

@@ -4,6 +4,7 @@
         <h1 class="text-center text-muted mt-4">Select your Login Method</h1>
         <div class="inner-container">
             <button
+                type="button"
                 data-test-id="select-method-github"
                 (click)="onSelectedLoginMethod(AccountProvider.OauthGithub)"
                 class="login__btn"
@@ -14,6 +15,7 @@
                 <mat-icon class="github-logo" svgIcon="github-logo" />
             </button>
             <button
+                type="button"
                 data-test-id="select-method-web3-wallet"
                 (click)="onWeb3WalletLogin()"
                 class="login__btn"
@@ -23,6 +25,7 @@
                 <mat-icon class="metamask-logo" svgIcon="metamask" />
             </button>
             <button
+                type="button"
                 data-test-id="select-method-password"
                 (click)="onSelectedLoginMethod(AccountProvider.Password)"
                 class="login__btn"
@@ -31,21 +34,21 @@
                 Login with Password
             </button>
             @if (enableTermsOfService) {
-                <ng-container *ngTemplateOutlet="termsOfServiceFragment"></ng-container>
+                <ng-container *ngTemplateOutlet="termsOfServiceFragment" />
             }
         </div>
     </div>
 }
-@if (selectedLoginMethod == AccountProvider.OauthGithub) {
+@if (selectedLoginMethod === AccountProvider.OauthGithub) {
     <div class="d-flex justify-content-center align-items-center">
         <app-spinner data-test-id="github-spinner" />
     </div>
 }
-@if (selectedLoginMethod == AccountProvider.Password) {
+@if (selectedLoginMethod === AccountProvider.Password) {
     <div class="d-flex justify-content-center flex-column container-form" data-test-id="password-method-block">
         <img [src]="APP_LOGO" class="logo" alt="Application logo" />
         <h1 class="text-center text-muted mt-4">Login to Kamu</h1>
-        <form [formGroup]="passwordLoginForm">
+        <form [formGroup]="passwordLoginForm" (ngSubmit)="onPasswordLogin()">
             <div>
                 <label for="login" class="fs-12" [class.error-color]="passwordLoginError$ | async">Login</label>
                 <span class="text-danger">*</span><br />
@@ -63,10 +66,10 @@
                 <div
                     class="text-danger fs-12"
                     [input]="login"
-                    [fieldLabel]="'Login'"
+                    fieldLabel="Login"
                     [appFieldError]="['required']"
                     [group]="passwordLoginForm"
-                    [dataTestId]="'input-login-error-required'"
+                    dataTestId="input-login-error-required"
                 ></div>
             </div>
             <div class="mt-4">
@@ -85,16 +88,16 @@
                 <div
                     class="text-danger fs-12"
                     [input]="password"
-                    [fieldLabel]="'Password'"
+                    fieldLabel="Password"
                     [appFieldError]="['required']"
                     [group]="passwordLoginForm"
-                    [dataTestId]="'input-password-error-required'"
+                    dataTestId="input-password-error-required"
                 ></div>
             </div>
             <button
+                type="submit"
                 [disabled]="passwordLoginForm.invalid"
                 data-test-id="submit-password"
-                (click)="onPasswordLogin()"
                 class="button-sign-in mt-4"
             >
                 Login
@@ -106,7 +109,7 @@
             }
             @if (enableTermsOfService) {
                 <div class="mt-30">
-                    <ng-container *ngTemplateOutlet="termsOfServiceFragment"></ng-container>
+                    <ng-container *ngTemplateOutlet="termsOfServiceFragment" />
                 </div>
             }
         </form>

@@ -3,60 +3,60 @@
         <span class="position-absolute text-muted group-box-label text-uppercase">Read</span>
         @if (sourceEvent.read.__typename) {
             <div class="mx-4">
-                <app-block-row-data [tooltip]="'Determines where data is sourced from.'" [label]="'Type:'">
+                <app-block-row-data tooltip="Determines where data is sourced from." label="Type:">
                     <span>{{ ReadSectionMapping[sourceEvent.read.__typename] }}</span>
                 </app-block-row-data>
             </div>
         }
         @if (sourceEvent.read.schema) {
             <div class="mx-4">
-                <app-block-row-data [tooltip]="SOURCES_TOOLTIPS.SCHEMA" [label]="'Schema:'">
+                <app-block-row-data [tooltip]="SOURCES_TOOLTIPS.SCHEMA" label="Schema:">
                     <app-odf-schema-property [data]="sourceEvent.read.schema" />
                 </app-block-row-data>
             </div>
         }
         @if (sourceEvent.read.__typename === "ReadStepCsv") {
             <div class="mx-4">
-                <app-block-row-data [tooltip]="SOURCES_TOOLTIPS.HEADER" [label]="'Header:'">
+                <app-block-row-data [tooltip]="SOURCES_TOOLTIPS.HEADER" label="Header:">
                     <span>{{ sourceEvent.read.header }}</span>
                 </app-block-row-data>
                 @if (sourceEvent.read.separator) {
-                    <app-block-row-data [tooltip]="SOURCES_TOOLTIPS.SEPARATOR" [label]="'Separator:'">
+                    <app-block-row-data [tooltip]="SOURCES_TOOLTIPS.SEPARATOR" label="Separator:">
                         <app-separator-property [data]="sourceEvent.read.separator" />
                     </app-block-row-data>
                 }
                 @if (sourceEvent.read.quote) {
-                    <app-block-row-data [tooltip]="SOURCES_TOOLTIPS.QUOTE" [label]="'Quote character:'">
+                    <app-block-row-data [tooltip]="SOURCES_TOOLTIPS.QUOTE" label="Quote character:">
                         <span>{{ sourceEvent.read.quote }}</span>
                     </app-block-row-data>
                 }
                 @if (sourceEvent.read.encoding) {
-                    <app-block-row-data [tooltip]="SOURCES_TOOLTIPS.ENCODING" [label]="'Encoding:'">
+                    <app-block-row-data [tooltip]="SOURCES_TOOLTIPS.ENCODING" label="Encoding:">
                         <span>{{ sourceEvent.read.encoding }}</span>
                     </app-block-row-data>
                 }
                 @if (sourceEvent.read.escape) {
-                    <app-block-row-data [tooltip]="SOURCES_TOOLTIPS.ESCAPE" [label]="'Escape character:'">
+                    <app-block-row-data [tooltip]="SOURCES_TOOLTIPS.ESCAPE" label="Escape character:">
                         <span>{{ sourceEvent.read.escape }}</span>
                     </app-block-row-data>
                 }
                 @if (sourceEvent.read.inferSchema) {
-                    <app-block-row-data [tooltip]="SOURCES_TOOLTIPS.INFER_SCHEMA" [label]="'Infer schema:'">
+                    <app-block-row-data [tooltip]="SOURCES_TOOLTIPS.INFER_SCHEMA" label="Infer schema:">
                         <span>{{ sourceEvent.read.inferSchema }}</span>
                     </app-block-row-data>
                 }
                 @if (sourceEvent.read.nullValue) {
-                    <app-block-row-data [tooltip]="SOURCES_TOOLTIPS.NULL_VALUE" [label]="'Null value:'">
+                    <app-block-row-data [tooltip]="SOURCES_TOOLTIPS.NULL_VALUE" label="Null value:">
                         <span>{{ sourceEvent.read.nullValue }}</span>
                     </app-block-row-data>
                 }
                 @if (sourceEvent.read.dateFormat) {
-                    <app-block-row-data [tooltip]="SOURCES_TOOLTIPS.DATE_FORMAT" [label]="'Date format:'">
+                    <app-block-row-data [tooltip]="SOURCES_TOOLTIPS.DATE_FORMAT" label="Date format:">
                         <span>{{ sourceEvent.read.dateFormat }}</span>
                     </app-block-row-data>
                 }
                 @if (sourceEvent.read.timestampFormat) {
-                    <app-block-row-data [tooltip]="SOURCES_TOOLTIPS.TIMESTAMP_FORMAT" [label]="'Timestamp format:'">
+                    <app-block-row-data [tooltip]="SOURCES_TOOLTIPS.TIMESTAMP_FORMAT" label="Timestamp format:">
                         <span>{{ sourceEvent.read.timestampFormat }}</span>
                     </app-block-row-data>
                 }
@@ -66,22 +66,22 @@
         @if (sourceEvent.read.__typename === "ReadStepJson") {
             <div class="mx-4">
                 @if (sourceEvent.read.encoding) {
-                    <app-block-row-data [tooltip]="SOURCES_TOOLTIPS.ENCODING" [label]="'Encoding:'">
+                    <app-block-row-data [tooltip]="SOURCES_TOOLTIPS.ENCODING" label="Encoding:">
                         <span>{{ sourceEvent.read.encoding }}</span>
                     </app-block-row-data>
                 }
                 @if (sourceEvent.read.dateFormat) {
-                    <app-block-row-data [tooltip]="SOURCES_TOOLTIPS.DATE_FORMAT" [label]="'Date format:'">
+                    <app-block-row-data [tooltip]="SOURCES_TOOLTIPS.DATE_FORMAT" label="Date format:">
                         <span>{{ sourceEvent.read.dateFormat }}</span>
                     </app-block-row-data>
                 }
                 @if (sourceEvent.read.timestampFormat) {
-                    <app-block-row-data [tooltip]="SOURCES_TOOLTIPS.TIMESTAMP_FORMAT" [label]="'Timestamp format:'">
+                    <app-block-row-data [tooltip]="SOURCES_TOOLTIPS.TIMESTAMP_FORMAT" label="Timestamp format:">
                         <span>{{ sourceEvent.read.timestampFormat }}</span>
                     </app-block-row-data>
                 }
                 @if (sourceEvent.read.subPath) {
-                    <app-block-row-data [tooltip]="SOURCES_TOOLTIPS.SUB_PATH" [label]="'SubPath:'">
+                    <app-block-row-data [tooltip]="SOURCES_TOOLTIPS.SUB_PATH" label="SubPath:">
                         <span>{{ sourceEvent.read.subPath }}</span>
                     </app-block-row-data>
                 }
@@ -91,7 +91,7 @@
         @if (sourceEvent.read.__typename === "ReadStepEsriShapefile") {
             <div class="mx-4">
                 @if (sourceEvent.read.subPath) {
-                    <app-block-row-data [tooltip]="SOURCES_TOOLTIPS.SUB_PATH" [label]="'SubPath:'">
+                    <app-block-row-data [tooltip]="SOURCES_TOOLTIPS.SUB_PATH" label="SubPath:">
                         <span>{{ sourceEvent.read.subPath }}</span>
                     </app-block-row-data>
                 }
@@ -102,12 +102,12 @@
         <div class="position-relative border border-1 p-2 rounded-3">
             <span class="position-absolute text-muted group-box-label text-uppercase">Preprocess</span>
             <div class="mx-4">
-                <app-block-row-data [tooltip]="SOURCES_TOOLTIPS.ENGINE" [label]="'Engine:'">
+                <app-block-row-data [tooltip]="SOURCES_TOOLTIPS.ENGINE" label="Engine:">
                     <app-engine-property [data]="sourceEvent.preprocess.engine" />
                 </app-block-row-data>
             </div>
             <div class="mx-4">
-                <app-block-row-data [tooltip]="SOURCES_TOOLTIPS.QUERIES" [label]="'Queries:'"> </app-block-row-data>
+                <app-block-row-data [tooltip]="SOURCES_TOOLTIPS.QUERIES" label="Queries:" />
                 <div class="row my-4">
                     <app-sql-query-viewer [data]="sourceEvent.preprocess.queries" />
                 </div>
@@ -118,15 +118,15 @@
         <span class="position-absolute text-muted group-box-label text-uppercase">Merge</span>
         @if (sourceEvent.merge.__typename) {
             <div class="mx-4">
-                <app-block-row-data [tooltip]="SOURCES_TOOLTIPS.MERGE_STRATEGY_APPEND" [label]="'Strategy:'">
+                <app-block-row-data [tooltip]="SOURCES_TOOLTIPS.MERGE_STRATEGY_APPEND" label="Strategy:">
                     <app-merge-strategy-property [data]="sourceEvent.merge.__typename" />
                 </app-block-row-data>
             </div>
         }
 
-        @if (sourceEvent.merge.__typename == "MergeStrategyLedger") {
+        @if (sourceEvent.merge.__typename === "MergeStrategyLedger") {
             <div class="mx-4">
-                <app-block-row-data [tooltip]="SOURCES_TOOLTIPS.PRIMARY_KEYS" [label]="'Primary key:'">
+                <app-block-row-data [tooltip]="SOURCES_TOOLTIPS.PRIMARY_KEYS" label="Primary key:">
                     <app-cards-property [data]="sourceEvent.merge.primaryKey" />
                 </app-block-row-data>
             </div>
@@ -134,13 +134,13 @@
         @if (sourceEvent.merge.__typename === "MergeStrategySnapshot") {
             <div class="mx-4">
                 @if (sourceEvent.merge.primaryKey.length) {
-                    <app-block-row-data [tooltip]="SOURCES_TOOLTIPS.PRIMARY_KEYS" [label]="'Primary key:'">
+                    <app-block-row-data [tooltip]="SOURCES_TOOLTIPS.PRIMARY_KEYS" label="Primary key:">
                         <app-cards-property [data]="sourceEvent.merge.primaryKey" />
                     </app-block-row-data>
                 }
                 @let compareColumns = sourceEvent.merge.compareColumns ?? [];
                 @if (compareColumns.length) {
-                    <app-block-row-data [tooltip]="SOURCES_TOOLTIPS.COMPARE_COLUMNS" [label]="'Compare columns:'">
+                    <app-block-row-data [tooltip]="SOURCES_TOOLTIPS.COMPARE_COLUMNS" label="Compare columns:">
                         <app-cards-property [data]="compareColumns" />
                     </app-block-row-data>
                 }
@@ -148,14 +148,14 @@
         }
         @if (sourceEvent.merge.__typename === "MergeStrategyChangelogStream") {
             <div class="mx-4">
-                <app-block-row-data [tooltip]="SOURCES_TOOLTIPS.PRIMARY_KEYS" [label]="'Primary key:'">
+                <app-block-row-data [tooltip]="SOURCES_TOOLTIPS.PRIMARY_KEYS" label="Primary key:">
                     <app-cards-property [data]="sourceEvent.merge.primaryKey" />
                 </app-block-row-data>
             </div>
         }
         @if (sourceEvent.merge.__typename === "MergeStrategyUpsertStream") {
             <div class="mx-4">
-                <app-block-row-data [tooltip]="SOURCES_TOOLTIPS.PRIMARY_KEYS" [label]="'Primary key:'">
+                <app-block-row-data [tooltip]="SOURCES_TOOLTIPS.PRIMARY_KEYS" label="Primary key:">
                     <app-cards-property [data]="sourceEvent.merge.primaryKey" />
                 </app-block-row-data>
             </div>

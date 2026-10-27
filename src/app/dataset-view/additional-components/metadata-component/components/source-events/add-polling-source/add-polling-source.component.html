@@ -34,7 +34,7 @@
                                 [defaultKind]="FETCH_DEFAULT_KIND"
                                 [sectionName]="steps.FETCH"
                                 [eventYamlByHash]="eventYamlByHash"
-                                [description]="'Determines where data is sourced from'"
+                                description="Determines where data is sourced from"
                             />
                             <app-stepper-navigation
                                 [prevStep]="null"
@@ -73,7 +73,7 @@
                                 [sectionName]="steps.READ"
                                 [eventYamlByHash]="eventYamlByHash"
                                 [datasetInfo]="datasetInfo"
-                                [description]="'Defines how data is read into structured format'"
+                                description="Defines how data is read into structured format"
                             />
                             <app-stepper-navigation
                                 [prevStep]="steps.PREPARE"
@@ -109,7 +109,7 @@
                                 [defaultKind]="MERGE_DEFAULT_KIND"
                                 [sectionName]="steps.MERGE"
                                 [eventYamlByHash]="eventYamlByHash"
-                                [description]="'Determines how newly-ingested data should be merged with existing history'"
+                                description="Determines how newly-ingested data should be merged with existing history"
                             >
                                 @if (errorMessage) {
                                     <div class="alert alert-danger mt-4" role="alert">

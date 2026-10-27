@@ -5,7 +5,7 @@
             <div>
                 <span class="label label--secondary v-align-middle webhook">Webhook</span>
                 @if (summary.runningSince) {
-                    <img [src]="'assets/images/gear.gif'" class="dynamic-icon ms-2" />
+                    <img src="assets/images/gear.gif" class="dynamic-icon ms-2" />
                 }
                 @if (summary.runningSince) {
                     <span class="ms-1 fs-12 text-muted">{{ durationProcessRunning(summary.runningSince) }}</span>

@@ -46,7 +46,7 @@
                                 [defaultKind]="READ_DEFAULT_KIND"
                                 [sectionName]="steps.READ"
                                 [eventYamlByHash]="eventYamlByHash"
-                                [description]="'Defines how data is read into structured format'"
+                                description="Defines how data is read into structured format"
                             />
                             <app-stepper-navigation
                                 [prevStep]="steps.SOURCE_NAME"
@@ -82,7 +82,7 @@
                                 [defaultKind]="MERGE_DEFAULT_KIND"
                                 [sectionName]="steps.MERGE"
                                 [eventYamlByHash]="eventYamlByHash"
-                                [description]="'Determines how newly-ingested data should be merged with existing history'"
+                                description="Determines how newly-ingested data should be merged with existing history"
                             >
                                 @if (errorMessage) {
                                     <div class="alert alert-danger mt-4" role="alert">

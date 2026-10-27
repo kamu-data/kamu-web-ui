@@ -1,7 +1,7 @@
 <div [id]="idTable" style="width: 100%; overflow: auto" class="dynamic-table">
     <table mat-table [dataSource]="dataSource">
         @for (columnDescriptor of columnDescriptors; track columnDescriptor.columnName; let colIndex = $index) {
-            <ng-container matColumnDef="{{ columnDescriptor.columnName }}">
+            <ng-container [matColumnDef]="columnDescriptor.columnName">
                 <th mat-header-cell *matHeaderCellDef [attr.data-test-id]="'column-header-name-' + colIndex">
                     {{ columnDescriptor.columnName }}
                 </th>
@@ -13,7 +13,7 @@
                             : element[columnDescriptor.columnName].value
                     "
                     [ngClass]="[colIndex < 2 ? tableClass : '', element[columnDescriptor.columnName].cssClass]"
-                    [class]="'truncate-cell copyable-cell'"
+                    class="truncate-cell copyable-cell"
                     *matCellDef="let element; index as rowIndex"
                     [attr.data-test-id]="'column-name-' + columnDescriptor.columnName + '-' + rowIndex"
                     [cdkCopyToClipboard]="element[columnDescriptor.columnName].value"
@@ -38,7 +38,7 @@
                                 [matTooltip]="
                                     extraDescription(element, columnDescriptor.showInfoBadge?.extraElementKey)
                                 "
-                                [matTooltipPosition]="'after'"
+                                matTooltipPosition="after"
                                 class="cell-content ms-1 mt-1 position-relative"
                                 [attr.data-test-id]="'show-info-' + columnDescriptor.columnName + '-' + rowIndex"
                             >

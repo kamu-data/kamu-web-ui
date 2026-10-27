@@ -1,4 +1,4 @@
-<div [id]="'subprocesses-table'" class="dynamic-table">
+<div id="subprocesses-table" class="dynamic-table">
     <table
         mat-table
         [dataSource]="subprocesses | subprocessStatusFilter: webhookTableFilters"
@@ -48,7 +48,7 @@
                         [attr.data-test-id]="'subscription-toggle-' + element.id"
                         (click)="pauseWebhook(element.id)"
                     >
-                        <mat-icon class="mat-icon-size text-muted mt-1" [title]="'pause'">pause</mat-icon>
+                        <mat-icon class="mat-icon-size text-muted mt-1" title="pause">pause</mat-icon>
                     </button>
                 } @else {
                     <button
@@ -58,13 +58,13 @@
                         [attr.data-test-id]="'subscription-toggle-' + element.id"
                         (click)="resumeWebhook(element.id)"
                     >
-                        <mat-icon class="mat-icon-size text-muted mt-1" [title]="'resume'">play_arrow</mat-icon>
+                        <mat-icon class="mat-icon-size text-muted mt-1" title="resume">play_arrow</mat-icon>
                     </button>
                 }
 
                 <mat-icon
                     class="mat-icon-size ms-2 text-muted mt-1"
-                    [title]="'edit'"
+                    title="edit"
                     (click)="navigateToWebhookSettings(element.id)"
                     >edit</mat-icon
                 >

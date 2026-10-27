@@ -12,13 +12,13 @@
                         color="primary"
                     >
                         <mat-radio-button [value]="ScheduleType.TIME_DELTA" data-test-id="trigger-time-delta">
-                            <app-time-delta-form [form]="form.controls.timeDelta"></app-time-delta-form>
+                            <app-time-delta-form [form]="form.controls.timeDelta" />
                         </mat-radio-button>
                         <mat-radio-button
                             [value]="ScheduleType.CRON_5_COMPONENT_EXPRESSION"
                             data-test-id="trigger-cron"
                         >
-                            <app-cron-expression-form [form]="form.controls.cron"></app-cron-expression-form>
+                            <app-cron-expression-form [form]="form.controls.cron" />
                         </mat-radio-button>
                     </mat-radio-group>
 

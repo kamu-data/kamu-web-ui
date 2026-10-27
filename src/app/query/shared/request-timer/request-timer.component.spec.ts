@@ -32,7 +32,7 @@ describe("RequestTimerComponent", () => {
     it("should check rennder result time", fakeAsync(() => {
         const testClass = "mock-class";
         const resultTime = "00:00:01.00";
-        setComponentInput(fixture, "class", testClass);
+        setComponentInput(fixture, "timerClass", testClass);
         setComponentInput(fixture, "sqlLoading", true);
         fixture.detectChanges();
         tick(1000);
@@ -44,12 +44,12 @@ describe("RequestTimerComponent", () => {
         flush();
     }));
 
-    it("should keep the timer running when only the class changes", fakeAsync(() => {
-        setComponentInput(fixture, "class", "mock-class");
+    it("should keep the timer running when only the timer class changes", fakeAsync(() => {
+        setComponentInput(fixture, "timerClass", "mock-class");
         setComponentInput(fixture, "sqlLoading", true);
         fixture.detectChanges();
         tick(1000);
-        setComponentInput(fixture, "class", "another-class");
+        setComponentInput(fixture, "timerClass", "another-class");
         fixture.detectChanges();
         tick(1000);
         setComponentInput(fixture, "sqlLoading", false);
@@ -60,7 +60,7 @@ describe("RequestTimerComponent", () => {
     }));
 
     it("should show a reset time when the tab is hidden during a request", fakeAsync(() => {
-        setComponentInput(fixture, "class", "mock-class");
+        setComponentInput(fixture, "timerClass", "mock-class");
         setComponentInput(fixture, "sqlLoading", true);
         fixture.detectChanges();
         tick(1000);

@@ -70,7 +70,6 @@
                 type="button"
                 class="signed-commit-badge verified signed-commit-badge-small"
                 placement="left"
-                ngbPopover="Verified"
                 [popoverTitle]="popTitle"
                 [ngbPopover]="popContent"
             >
@@ -96,8 +95,8 @@
                 Updated
                 <app-display-time
                     [data]="row.lastUpdatedAt"
-                    class="text-small no-wrap"
-                    [dataTestId]="'time-dataset-list-item'"
+                    timeClass="text-small no-wrap"
+                    dataTestId="time-dataset-list-item"
                 />
             </p>
             <p appFeatureFlag="search.rating">

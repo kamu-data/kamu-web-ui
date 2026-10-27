@@ -378,9 +378,7 @@ describe("AccountFlowsProcessesSubtabComponent", () => {
                 FlowProcessEffectiveState.PausedManual,
                 FlowProcessEffectiveState.StoppedAuto,
             ]);
-            expect(
-                requireValue(getAccountAllCardsSpy.mock.lastCall ?? null)[0].filters.lastAttemptBetween,
-            ).toBeDefined();
+            expect(requireValue(getAccountAllCardsSpy.mock.lastCall)[0].filters.lastAttemptBetween).toBeDefined();
             discardPeriodicTasks();
         }));
     });
@@ -643,6 +641,19 @@ describe("AccountFlowsProcessesSubtabComponent", () => {
 
         expect(component.flowsMode).toEqual(ProcessCardGroup.DATASETS);
         expect(getAccountPrimaryCardsSpy).toHaveBeenCalledTimes(1);
+        discardPeriodicTasks();
+    }));
+
+    it("should keep the flows mode selected when its chip is clicked again", fakeAsync(async () => {
+        fixture.detectChanges();
+        tick(0);
+        const processesSubtab = await loadHarness();
+
+        await processesSubtab.clickFlowsModeChip("All flows");
+        tick(300);
+
+        expect(component.flowsMode).toEqual(ProcessCardGroup.ALL);
+        expect(await processesSubtab.getSelectedFlowsMode()).toEqual(["All flows"]);
         discardPeriodicTasks();
     }));
 

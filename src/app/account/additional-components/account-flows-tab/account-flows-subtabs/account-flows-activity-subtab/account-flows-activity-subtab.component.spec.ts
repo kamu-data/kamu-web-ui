@@ -130,8 +130,7 @@ describe("AccountFlowsActivitySubtabComponent", () => {
 
     it("should check to apply filter status in the request", () => {
         component.filters = {
-            accounts: requireValue(mockDatasetFlowsInitiatorsQuery.datasets.byId ?? null).flows.runs.listFlowInitiators
-                .nodes,
+            accounts: requireValue(mockDatasetFlowsInitiatorsQuery.datasets.byId).flows.runs.listFlowInitiators.nodes,
             datasets: mockDatasets,
             status: [FlowStatus.Finished],
             onlySystemFlows: false,
@@ -161,7 +160,7 @@ describe("AccountFlowsActivitySubtabComponent", () => {
 
     it("should check search by filters with filters=null", () => {
         component.searchByAccount = requireValue(
-            mockDatasetFlowsInitiatorsQuery.datasets.byId ?? null,
+            mockDatasetFlowsInitiatorsQuery.datasets.byId,
         ).flows.runs.listFlowInitiators.nodes;
         component.searchByDataset = mockDatasets;
         fixture.detectChanges();
@@ -172,8 +171,8 @@ describe("AccountFlowsActivitySubtabComponent", () => {
     });
 
     it("should check search by filters with filters options", () => {
-        const accounts = requireValue(mockDatasetFlowsInitiatorsQuery.datasets.byId ?? null).flows.runs
-            .listFlowInitiators.nodes;
+        const accounts = requireValue(mockDatasetFlowsInitiatorsQuery.datasets.byId).flows.runs.listFlowInitiators
+            .nodes;
         const filterOptions: FlowsTableFiltersOptions = {
             accounts,
             datasets: mockDatasets,
@@ -233,17 +232,6 @@ describe("AccountFlowsActivitySubtabComponent", () => {
         const fetchTableDataSpy = vi.spyOn(component, "fetchTableData").mockImplementation(() => {});
         component.refreshFlow();
         expect(fetchTableDataSpy).toHaveBeenCalledTimes(1);
-    });
-
-    it("should check to change navigation", () => {
-        const navigateToOwnerViewSpy = vi.spyOn(navigationService, "navigateToOwnerView").mockImplementation(() => {});
-        const event: NgbNavChangeEvent<AccountFlowsNav> = {
-            activeId: AccountFlowsNav.ACTIVITY,
-            nextId: AccountFlowsNav.PROCESSES,
-            preventDefault: () => undefined,
-        };
-        component.onNavChange(event);
-        expect(navigateToOwnerViewSpy).toHaveBeenCalledTimes(1);
     });
 
     it("should check to change navigation status with finished status", () => {

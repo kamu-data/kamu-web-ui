@@ -52,6 +52,18 @@ export class AccountFlowsProcessesSubtabHarness extends ComponentHarness {
         await chips.selectChips({ text: chipText });
     }
 
+    public async clickFlowsModeChip(chipText: string): Promise<void> {
+        const chips = await this.locatorFlowsModeChips();
+        const [chip] = await chips.getChips({ text: chipText });
+        await chip.toggle();
+    }
+
+    public async getSelectedFlowsMode(): Promise<string[]> {
+        const chips = await this.locatorFlowsModeChips();
+        const selected = await chips.getChips({ selected: true });
+        return Promise.all(selected.map((chip) => chip.getText()));
+    }
+
     public async selectFiltersMode(mode: ProcessCardFilterMode): Promise<void> {
         const toggle = await this.getFiltersModeToggle(mode);
         await toggle.check();

@@ -1,5 +1,5 @@
 <div class="d-flex justify-content-between align-items-center mb-4 mt-50px">
-    <mat-chip-listbox [(ngModel)]="flowsMode" (change)="onFlowsModeChange($event)" data-test-id="flows-mode-chips">
+    <mat-chip-listbox [ngModel]="flowsMode" (change)="onFlowsModeChange($event)" data-test-id="flows-mode-chips">
         <mat-chip-option [value]="ProcessCardGroup.ALL">All flows</mat-chip-option>
         <mat-chip-option [value]="ProcessCardGroup.DATASETS">Datasets</mat-chip-option>
         <mat-chip-option [value]="ProcessCardGroup.WEBHOOKS">Webhooks</mat-chip-option>

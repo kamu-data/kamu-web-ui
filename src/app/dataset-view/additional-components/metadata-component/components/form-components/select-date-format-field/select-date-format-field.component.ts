@@ -12,6 +12,8 @@ import { FormBuilder, FormGroup, ReactiveFormsModule } from "@angular/forms";
 import { RxReactiveFormsModule, RxwebValidators } from "@rxweb/reactive-form-validators";
 
 import { TooltipIconComponent } from "@common/components/tooltip-icon/tooltip-icon.component";
+import { enumValueOf } from "@common/helpers/app.helpers";
+import { requireFormGroup } from "@common/helpers/form.helpers";
 
 import { BaseField } from "src/app/dataset-view/additional-components/metadata-component/components/form-components/base-field";
 import { InputFieldComponent } from "src/app/dataset-view/additional-components/metadata-component/components/form-components/input-field/input-field.component";
@@ -58,11 +60,13 @@ export class SelectDateFormatFieldComponent extends BaseField implements OnInit 
     }
 
     public get eventTimeGroup(): FormGroup {
-        return this.form.get(this.controlName) as FormGroup;
+        return requireFormGroup(this.form, this.controlName);
     }
 
     private chooseEventTimeSource(): void {
-        this.currentSource = this.eventTimeGroup.get(this.KIND_NAME_CONTROL)?.value as EventTimeSourceKind;
+        this.currentSource =
+            enumValueOf(EventTimeSourceKind, this.eventTimeGroup.get(this.KIND_NAME_CONTROL)?.value) ??
+            EventTimeSourceKind.FROM_METADATA;
         this.eventTimeGroup
             .get(this.KIND_NAME_CONTROL)
             ?.valueChanges.pipe(takeUntilDestroyed(this.destroyRef))

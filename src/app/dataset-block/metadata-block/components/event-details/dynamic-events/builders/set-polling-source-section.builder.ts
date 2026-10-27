@@ -5,6 +5,7 @@
  * included in the LICENSE file.
  */
 
+import { enumValueOf } from "@common/helpers/app.helpers";
 import { SetPollingSourceEventFragment } from "@api/kamu.graphql.interface";
 
 import { SET_POLLING_SOURCE_DESCRIPTORS } from "src/app/dataset-block/metadata-block/components/event-details/components/set-polling-source-event/set-polling-source-event.source";
@@ -20,7 +21,7 @@ export class SetPollingSourceSectionBuilder extends EventSectionBuilder<SetPolli
         const result: EventSection[] = [];
         Object.entries(event).forEach(([section, data]) => {
             if (data && section !== "__typename") {
-                const section_enum: SetPollingSourceSection = section as SetPollingSourceSection;
+                const section_enum = enumValueOf(SetPollingSourceSection, section);
                 switch (section_enum) {
                     case SetPollingSourceSection.READ:
                     case SetPollingSourceSection.FETCH:
@@ -32,12 +33,7 @@ export class SetPollingSourceSectionBuilder extends EventSectionBuilder<SetPolli
                             section_enum === SetPollingSourceSection.FETCH;
                         result.push({
                             title: section,
-                            rows: this.buildEventRows(
-                                event,
-                                SET_POLLING_SOURCE_DESCRIPTORS,
-                                section as keyof SetPollingSourceEventFragment,
-                                allowTypenameKey,
-                            ),
+                            rows: this.buildEventRows(event, SET_POLLING_SOURCE_DESCRIPTORS, section, allowTypenameKey),
                         });
                         break;
                     }

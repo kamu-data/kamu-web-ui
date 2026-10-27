@@ -10,7 +10,7 @@ import { ChangeDetectionStrategy, Component, inject, OnInit } from "@angular/cor
 import { takeUntilDestroyed } from "@angular/core/rxjs-interop";
 import { AbstractControl, FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators } from "@angular/forms";
 import { MatIconModule } from "@angular/material/icon";
-import { ActivatedRoute, Params } from "@angular/router";
+import { ActivatedRoute, ParamMap } from "@angular/router";
 
 import { Observable, shareReplay } from "rxjs";
 
@@ -18,9 +18,8 @@ import { BaseComponent } from "@common/components/base.component";
 import { SpinnerComponent } from "@common/components/spinner/spinner/spinner.component";
 import { FormValidationErrorsDirective } from "@common/directives/form-validation-errors.directive";
 import AppValues from "@common/values/app.values";
-import { PasswordLoginCredentials } from "@api/auth.api.model";
 import { AccountProvider } from "@api/kamu.graphql.interface";
-import { MaybeNull, MaybeUndefined } from "@interface/app.types";
+import { MaybeNull } from "@interface/app.types";
 
 import { AppConfigService } from "src/app/app-config.service";
 import { LoginMethodsService } from "src/app/auth/login-methods.service";
@@ -65,7 +64,7 @@ export class LoginComponent extends BaseComponent implements OnInit {
     public readonly AccountProvider = AccountProvider;
 
     public selectedLoginMethod?: AccountProvider = undefined;
-    public passwordLoginForm: FormGroup<LoginFormType> = this.fb.group({
+    public passwordLoginForm: FormGroup<LoginFormType> = this.fb.nonNullable.group({
         login: ["", [Validators.required]],
         password: ["", [Validators.required]],
     });
@@ -84,11 +83,8 @@ export class LoginComponent extends BaseComponent implements OnInit {
                 throw new Error(LoginComponent.ERROR_ZERO_METHODS_IN_CONFIG);
             }
 
-            this.route.queryParams.pipe(takeUntilDestroyed(this.destroyRef)).subscribe((queryParams: Params) => {
-                const deviceCode: MaybeUndefined<string> = queryParams[
-                    ProjectLinks.URL_QUERY_PARAM_DEVICE_CODE
-                ] as MaybeUndefined<string>;
-                this.localStorageService.setDeviceCode(deviceCode ?? null);
+            this.route.queryParamMap.pipe(takeUntilDestroyed(this.destroyRef)).subscribe((queryParamMap: ParamMap) => {
+                this.localStorageService.setDeviceCode(queryParamMap.get(ProjectLinks.URL_QUERY_PARAM_DEVICE_CODE));
             });
         }
     }
@@ -117,7 +113,7 @@ export class LoginComponent extends BaseComponent implements OnInit {
     }
 
     public onPasswordLogin(): void {
-        this.loginService.passwordLogin(this.passwordLoginForm.value as PasswordLoginCredentials, this.redirectUrl);
+        this.loginService.passwordLogin(this.passwordLoginForm.getRawValue(), this.redirectUrl);
     }
 
     public resetPasswordLoginError(): void {

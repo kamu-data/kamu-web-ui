@@ -24,11 +24,7 @@ import { DatasetRequestBySql } from "@interface/dataset.interface";
 import { AppConfigService } from "src/app/app-config.service";
 import { LoggedUserService } from "src/app/auth/logged-user.service";
 import { DataSqlErrorUpdate } from "src/app/dataset-view/dataset.subscriptions.interface";
-import {
-    QueryExplainerCommitmentType,
-    QueryExplainerInputType,
-    SqlQueryExplanationResponse,
-} from "src/app/query-explainer/query-explainer.types";
+import { QueryExplainerInputType, SqlQueryExplanationResponse } from "src/app/query-explainer/query-explainer.types";
 import { SqlQueryBasicResponse } from "src/app/query/global-query/global-query.model";
 import { LocalStorageService } from "src/app/services/local-storage.service";
 
@@ -115,30 +111,31 @@ export class SqlQueryService {
 
         return this.http.post<SqlQueryExplanationResponse>(url.href, body, { headers }).pipe(
             map((result: SqlQueryExplanationResponse) => {
-                const involvedDatasetsId = result.input.datasets?.map((item) => item.id) as string[];
-                const columnNames: string[] = result.output?.schema.fields.map((item) => item.name) as string[];
+                const involvedDatasetsId = result.input.datasets?.map((item) => item.id) ?? [];
+                const columnNames: string[] = result.output?.schema.fields.map((item) => item.name) ?? [];
                 const content: DynamicTableDataRow[] = parseDataFromJsonAoSFormat(
-                    result.output?.data as object[],
+                    result.output?.data ?? [],
                     columnNames,
                 );
                 const schema: DataSchemaField[] = extractSchemaFieldsFromData(content[0] ?? []);
-                const sqlQueryResponse: SqlQueryBasicResponse = !result.proof
-                    ? {
-                          content,
-                          schema,
-                          involvedDatasetsId,
-                      }
-                    : {
-                          content,
-                          schema,
-                          involvedDatasetsId,
-                          proofResponse: {
-                              input: result.input,
-                              commitment: result.commitment as QueryExplainerCommitmentType,
-                              proof: result.proof,
-                              subQueries: [],
-                          },
-                      };
+                const sqlQueryResponse: SqlQueryBasicResponse =
+                    !result.proof || !result.commitment
+                        ? {
+                              content,
+                              schema,
+                              involvedDatasetsId,
+                          }
+                        : {
+                              content,
+                              schema,
+                              involvedDatasetsId,
+                              proofResponse: {
+                                  input: result.input,
+                                  commitment: result.commitment,
+                                  proof: result.proof,
+                                  subQueries: [],
+                              },
+                          };
 
                 this.emitSqlQueryResponseChanged(sqlQueryResponse);
                 this.resetSqlError();

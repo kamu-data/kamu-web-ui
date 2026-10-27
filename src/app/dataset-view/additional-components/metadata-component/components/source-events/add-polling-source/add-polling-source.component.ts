@@ -11,6 +11,8 @@ import { FormArray, FormGroup, FormsModule, ReactiveFormsModule } from "@angular
 import { MatStepperModule } from "@angular/material/stepper";
 import { RouterLink } from "@angular/router";
 
+import { enumValueOf, requireValue } from "@common/helpers/app.helpers";
+import { requireFormArray, requireFormGroup } from "@common/helpers/form.helpers";
 import { DatasetLinkPipe } from "@common/pipes/dataset-link.pipe";
 import RoutingResolvers from "@common/resolvers/routing-resolvers";
 import { DatasetInfo } from "@interface/navigation.interface";
@@ -85,19 +87,19 @@ export class AddPollingSourceComponent extends BaseSourceEventComponent implemen
     private editService = inject(EditPollingSourceService);
 
     public get fetchForm(): FormGroup {
-        return this.pollingSourceForm.get(SetPollingSourceSection.FETCH) as FormGroup;
+        return requireFormGroup(this.pollingSourceForm, SetPollingSourceSection.FETCH);
     }
 
     public get prepareForm(): FormArray {
-        return this.pollingSourceForm.get(SetPollingSourceSection.PREPARE) as FormArray;
+        return requireFormArray(this.pollingSourceForm, SetPollingSourceSection.PREPARE);
     }
 
     public get readForm(): FormGroup {
-        return this.pollingSourceForm.get(SetPollingSourceSection.READ) as FormGroup;
+        return requireFormGroup(this.pollingSourceForm, SetPollingSourceSection.READ);
     }
 
     public get mergeForm(): FormGroup {
-        return this.pollingSourceForm.get(SetPollingSourceSection.MERGE) as FormGroup;
+        return requireFormGroup(this.pollingSourceForm, SetPollingSourceSection.MERGE);
     }
 
     public ngOnInit(): void {
@@ -108,7 +110,7 @@ export class AddPollingSourceComponent extends BaseSourceEventComponent implemen
     }
 
     public changeStep(step: SourcesSection): void {
-        this.currentStep = step as SetPollingSourceSection;
+        this.currentStep = requireValue(enumValueOf(SetPollingSourceSection, step), "Unknown source event step");
     }
 
     public onSaveEvent(): void {

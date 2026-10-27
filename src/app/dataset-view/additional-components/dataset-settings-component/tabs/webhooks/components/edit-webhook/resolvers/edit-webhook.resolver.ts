@@ -10,6 +10,8 @@ import { ActivatedRouteSnapshot, RedirectCommand, ResolveFn } from "@angular/rou
 
 import { catchError, map, of, switchMap } from "rxjs";
 
+import { requireValue } from "@common/helpers/app.helpers";
+
 import { SettingsTabsEnum } from "src/app/dataset-view/additional-components/dataset-settings-component/dataset-settings.model";
 import { resolveSettingsTabAccess } from "src/app/dataset-view/additional-components/dataset-settings-component/resolvers/settings-tab-access.helpers";
 import { EditWebhooksType } from "src/app/dataset-view/additional-components/dataset-settings-component/tabs/webhooks/components/edit-webhook/edit-webhooks.types";
@@ -21,7 +23,7 @@ export const editWebhookResolverFn: ResolveFn<EditWebhooksType> = (route: Activa
     const datasetWebhooksService = inject(DatasetWebhooksService);
     const navigationService = inject(NavigationService);
 
-    const webhookId = route.paramMap.get(ProjectLinks.URL_PARAM_WEBHOOK_ID) as string;
+    const webhookId = requireValue(route.paramMap.get(ProjectLinks.URL_PARAM_WEBHOOK_ID), "Route has no webhook id");
 
     return resolveSettingsTabAccess(SettingsTabsEnum.WEBHOOKS).pipe(
         switchMap((data) => {

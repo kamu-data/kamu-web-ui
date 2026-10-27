@@ -87,20 +87,15 @@ export class SqlEditorComponent extends BaseEditorComponent implements OnInit, O
 
     public ngOnInit(): void {
         /* istanbul ignore next */
-        fromEvent(document, "mousedown")
+        fromEvent<MouseEvent>(document, "mousedown")
             .pipe(
                 takeWhile(() => this.alive),
-                filter((event) => {
-                    const className = (event.target as HTMLDivElement).className;
-                    if (className && typeof className === "string") {
-                        return className == "cell-border-bottom";
-                    }
-                    return false;
-                }),
+                filter(
+                    (event) => event.target instanceof HTMLElement && event.target.className === "cell-border-bottom",
+                ),
             )
-            .subscribe((event) => {
-                const mouseEvent = event as MouseEvent;
-                this.div = (event.target as HTMLDivElement).parentElement;
+            .subscribe((mouseEvent) => {
+                this.div = mouseEvent.target instanceof HTMLElement ? mouseEvent.target.parentElement : null;
                 this.rectOld = this.div?.getBoundingClientRect();
                 this.origin = { x: mouseEvent.screenX, y: mouseEvent.screenY };
                 fromEvent(document, "mouseup")
@@ -112,8 +107,8 @@ export class SqlEditorComponent extends BaseEditorComponent implements OnInit, O
                         }
                     });
                 if (!this.moveSubscription && this.div) {
-                    this.moveSubscription = fromEvent(document, "mousemove").subscribe((moveEvent) => {
-                        const incrTop = (moveEvent as MouseEvent).screenY - this.origin.y;
+                    this.moveSubscription = fromEvent<MouseEvent>(document, "mousemove").subscribe((moveEvent) => {
+                        const incrTop = moveEvent.screenY - this.origin.y;
                         if (this.rectOld && this.div) {
                             const heigth = this.rectOld.height + incrTop;
                             this.div.style.height =

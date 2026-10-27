@@ -58,7 +58,8 @@ export class ReadmeSectionComponent extends BaseComponent implements OnChanges {
 
     public editMode: typeof EditMode = EditMode;
     public viewMode = EditMode.Edit;
-    public readmeState = "";
+    /** The edited text; `null` while a dataset without a README has not been typed into. */
+    public readmeState: MaybeNull<string> = "";
 
     public get readmeChanged(): boolean {
         return this.currentReadme !== this.readmeState;
@@ -68,9 +69,9 @@ export class ReadmeSectionComponent extends BaseComponent implements OnChanges {
     private datasetCommitService = inject(DatasetCommitService);
     private loggedUserService = inject(LoggedUserService);
 
-    public ngOnChanges(changes: SimpleChanges): void {
+    public ngOnChanges(changes: SimpleChanges<ReadmeSectionComponent>): void {
         if (changes.currentReadme && changes.currentReadme.currentValue !== changes.currentReadme.previousValue) {
-            this.readmeState = changes.currentReadme.currentValue as string;
+            this.readmeState = changes.currentReadme.currentValue ?? null;
             this.editingInProgress = false;
         }
     }
@@ -103,7 +104,7 @@ export class ReadmeSectionComponent extends BaseComponent implements OnChanges {
                 accountId: this.loggedUserService.currentlyLoggedInUser.id,
                 accountName: this.datasetBasics.owner.accountName,
                 datasetName: this.datasetBasics.name,
-                content: this.readmeState,
+                content: this.readmeState ?? "",
             })
             .pipe(takeUntilDestroyed(this.destroyRef))
             .subscribe(() => {

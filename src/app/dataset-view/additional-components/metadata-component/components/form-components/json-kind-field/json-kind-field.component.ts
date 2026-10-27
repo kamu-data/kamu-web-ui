@@ -11,7 +11,9 @@ import { FormControl, ReactiveFormsModule } from "@angular/forms";
 import { RxReactiveFormsModule } from "@rxweb/reactive-form-validators";
 
 import { TooltipIconComponent } from "@common/components/tooltip-icon/tooltip-icon.component";
+import { enumValueOf } from "@common/helpers/app.helpers";
 import { SourcesTooltipsTexts } from "@common/tooltips/sources.text";
+import { MaybeUndefined } from "@interface/app.types";
 
 import { BaseField } from "src/app/dataset-view/additional-components/metadata-component/components/form-components/base-field";
 import { InputFieldComponent } from "src/app/dataset-view/additional-components/metadata-component/components/form-components/input-field/input-field.component";
@@ -47,7 +49,7 @@ export class JsonKindFieldComponent extends BaseField implements OnInit {
         this.form.addControl(this.READ_SUB_PATH_CONTROL, new FormControl(""));
     }
 
-    public get currentJsonKind(): ReadKind {
-        return this.form.get(this.READ_JSON_KIND_CONTROL)?.value as ReadKind;
+    public get currentJsonKind(): MaybeUndefined<ReadKind> {
+        return enumValueOf(ReadKind, this.form.get(this.READ_JSON_KIND_CONTROL)?.value);
     }
 }

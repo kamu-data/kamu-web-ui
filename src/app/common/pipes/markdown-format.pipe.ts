@@ -14,16 +14,17 @@ export type MarkdownSupportedFormats = "yaml" | "sql" | "json";
 })
 export class MarkdownFormatPipe implements PipeTransform {
     public transform(value: string | object, format: MarkdownSupportedFormats): string {
+        const text = typeof value === "string" ? value : JSON.stringify(value, null, 2);
         switch (format) {
             case "yaml":
-                return "```yaml\n" + (value as string) + "\n```";
+                return "```yaml\n" + text + "\n```";
             case "sql":
-                return "```sql\n" + (value as string) + "\n```";
+                return "```sql\n" + text + "\n```";
             case "json":
                 return "```json\n" + JSON.stringify(value, null, 2) + "\n```";
             /* istanbul ignore next */
             default:
-                return value as string;
+                return text;
         }
     }
 }

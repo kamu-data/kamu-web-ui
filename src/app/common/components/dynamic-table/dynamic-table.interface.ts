@@ -5,9 +5,14 @@
  * included in the LICENSE file.
  */
 
+import { MaybeNull } from "@interface/app.types";
+
+/** A value a JSON document can hold. */
+export type DynamicTableCellValue = MaybeNull<string | number | boolean | object>;
+
 export interface DynamicTableDataRow {
     [key: string]: {
-        value: string | number | object;
+        value: DynamicTableCellValue;
         cssClass: string;
     };
 }

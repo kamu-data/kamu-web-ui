@@ -100,9 +100,9 @@ export class AddPeopleModalComponent extends BaseComponent {
     }
 
     public saveChanges(): void {
-        if (this.selectedCollaborator?.id) {
+        if (this.selectedCollaborator?.id && this.role) {
             const result: CollaboratorModalResultType = {
-                role: this.role as DatasetAccessRole,
+                role: this.role,
                 accountId: this.selectedCollaborator.id,
             };
             this.activeModal.close(result);

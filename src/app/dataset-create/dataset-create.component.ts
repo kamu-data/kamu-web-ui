@@ -123,15 +123,15 @@ export class DatasetCreateComponent extends BaseComponent {
 
     public onFileSelected(event: Event): Promise<MaybeNull<string>> {
         return new Promise<string>((resolve) => {
-            const input = event.target as HTMLInputElement;
-            if (!input.files?.length) {
+            const input = event.target;
+            if (!(input instanceof HTMLInputElement) || !input.files?.length) {
                 resolve("");
             } else {
                 const file = input.files[0];
                 const fileReader: FileReader = new FileReader();
                 fileReader.onload = () => {
                     this.yamlTemplate += DatasetCreateComponent.INITIAL_YAML_HINT;
-                    this.yamlTemplate += fileReader.result as string;
+                    this.yamlTemplate += typeof fileReader.result === "string" ? fileReader.result : "";
                     resolve(this.yamlTemplate);
                     this.cdr.detectChanges();
                 };

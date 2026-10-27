@@ -20,6 +20,7 @@ import {
     DynamicTableColumnDescriptor,
     DynamicTableDataRow,
 } from "@common/components/dynamic-table/dynamic-table.interface";
+import { openModal } from "@common/helpers/modal.helpers";
 import { MaybeUndefined } from "@interface/app.types";
 
 @Component({
@@ -87,24 +88,24 @@ export class DynamicTableComponent implements OnInit, OnChanges {
 
     public extraDescription(element: DynamicTableDataRow, key: MaybeUndefined<string>): string {
         if (key === undefined) return "";
-        return key in element ? (element[key].value as string) : "";
+        const value = key in element ? element[key].value : "";
+        return typeof value === "string" || typeof value === "number" ? String(value) : "";
     }
 
     public shouldShowInfoBadge(columnDescriptor: DynamicTableColumnDescriptor, element: DynamicTableDataRow): boolean {
         if (!columnDescriptor.showInfoBadge) return false;
         const key = columnDescriptor.showInfoBadge.extraElementKey;
-        return Boolean(this.extraDescription(element, key));
+        return key !== undefined && key in element && Boolean(element[key].value);
     }
 
     public showMoreModal(element: DynamicTableDataRow, key: MaybeUndefined<string>): void {
         if (key === undefined) return;
 
-        const modalRef = this.ngbModalService.open(AttributesSchemaModalComponent, {
+        const { instance } = openModal(this.ngbModalService, AttributesSchemaModalComponent, {
             size: "lg",
             centered: true,
             scrollable: true,
         });
-        const modalRefInstance = modalRef.componentInstance as AttributesSchemaModalComponent;
-        modalRefInstance.element = element[key].value;
+        instance.element = element[key].value;
     }
 }

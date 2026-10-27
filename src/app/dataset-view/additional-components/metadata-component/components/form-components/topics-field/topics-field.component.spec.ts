@@ -36,7 +36,7 @@ describe("TopicsFieldComponent", () => {
 
     it("should name the missing form array", () => {
         setComponentInput(fixture, "controlName", "missing");
-        expect(() => component.items).toThrowError(`Form array "missing" is missing from the parent form`);
+        expect(() => component.items).toThrowError(`Expecting form control "missing" to be a FormArray`);
     });
 
     it("should check add item", () => {

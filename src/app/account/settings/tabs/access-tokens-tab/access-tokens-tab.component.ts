@@ -86,7 +86,7 @@ export class AccessTokensTabComponent extends BaseComponent {
     public composedToken = "";
     public currentCreateStep = TokenCreateStep.INITIAL;
     public pageBasedInfo: DatasetPageInfoFragment;
-    public createTokenForm: FormGroup<CreateTokenFormType> = this.fb.group({
+    public createTokenForm: FormGroup<CreateTokenFormType> = this.fb.nonNullable.group({
         name: ["", [Validators.required, Validators.maxLength(100)]],
     });
     public showRevokedToken = false;
@@ -159,7 +159,7 @@ export class AccessTokensTabComponent extends BaseComponent {
 
     public onGenerateToken(): void {
         this.accessTokenService
-            .createAccessTokens(this.accountId, this.createTokenForm.controls.name.value as string)
+            .createAccessTokens(this.accountId, this.createTokenForm.controls.name.value)
             .pipe(takeUntilDestroyed(this.destroyRef))
             .subscribe((newToken: MaybeNull<CreatedAccessTokenDataFragment>) => {
                 if (newToken) {

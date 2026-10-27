@@ -7,12 +7,14 @@
 
 import { ResolveFn } from "@angular/router";
 
+import { enumValueOf } from "@common/helpers/app.helpers";
+
 import { SettingsTabsEnum } from "src/app/dataset-view/additional-components/dataset-settings-component/dataset-settings.model";
 import { resolveSettingsTabAccess } from "src/app/dataset-view/additional-components/dataset-settings-component/resolvers/settings-tab-access.helpers";
 import { DatasetViewData } from "src/app/dataset-view/dataset-view.interface";
 import ProjectLinks from "src/app/project-links";
 
 export const datasetSettingsGeneralTabResolverFn: ResolveFn<DatasetViewData> = (route) => {
-    const activeTab = route.data[ProjectLinks.URL_PARAM_TAB] as SettingsTabsEnum;
+    const activeTab = enumValueOf(SettingsTabsEnum, route.data[ProjectLinks.URL_PARAM_TAB]);
     return resolveSettingsTabAccess(activeTab);
 };

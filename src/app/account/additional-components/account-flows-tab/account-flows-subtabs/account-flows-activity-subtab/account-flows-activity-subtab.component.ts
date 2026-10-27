@@ -16,7 +16,7 @@ import { NgbNavChangeEvent, NgbNavModule } from "@ng-bootstrap/ng-bootstrap";
 
 import { environment } from "@env/environment";
 import { PaginationComponent } from "@common/components/pagination-component/pagination.component";
-import { requireValue } from "@common/helpers/app.helpers";
+import { enumValueOf, requireValue } from "@common/helpers/app.helpers";
 import AppValues from "@common/values/app.values";
 import {
     AccountFlowFilters,
@@ -194,12 +194,12 @@ export class AccountFlowsActivitySubtabComponent extends FlowsTableProcessingBas
     }
 
     public onNavChange(event: NgbNavChangeEvent): void {
-        const nextNav = event.nextId as AccountFlowsNav;
+        const nextNav = enumValueOf(AccountFlowsNav, event.nextId);
         this.navigationService.navigateToOwnerView(this.accountName, AccountTabs.FLOWS, undefined, nextNav);
     }
 
     public onNavStatusChange(event: NgbNavChangeEvent): void {
-        const currentNav = event.nextId as FlowStatus;
+        const currentNav = requireValue(enumValueOf(FlowStatus, event.nextId), "Unknown flow status tab");
         const nextNav = currentNav === FlowStatus.Running ? [FlowStatus.Running, FlowStatus.Retrying] : [currentNav];
         this.currentPage = 1;
         this.filterByStatus = nextNav;

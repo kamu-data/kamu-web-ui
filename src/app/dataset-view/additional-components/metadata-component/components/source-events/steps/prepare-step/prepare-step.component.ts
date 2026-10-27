@@ -19,6 +19,7 @@ import { MatIconModule } from "@angular/material/icon";
 
 import { BaseComponent } from "@common/components/base.component";
 import { FormValidationErrorsDirective } from "@common/directives/form-validation-errors.directive";
+import { requireFormArray } from "@common/helpers/form.helpers";
 import { MaybeNull } from "@interface/app.types";
 
 import {
@@ -88,7 +89,7 @@ export class PrepareStepComponent extends BaseComponent implements OnInit {
     }
 
     public get sectionForm(): FormArray {
-        return this.parentForm.get(this.sectionName) as FormArray;
+        return requireFormArray(this.parentForm, this.sectionName);
     }
 
     public addPipe(): void {

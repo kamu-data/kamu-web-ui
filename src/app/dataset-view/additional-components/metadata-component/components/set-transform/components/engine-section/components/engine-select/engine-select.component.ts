@@ -45,7 +45,7 @@ export class EngineSelectComponent {
 
     @HostListener("document:click", ["$event"])
     public clickOut(event: Event) {
-        if (!this.dropdown.nativeElement.contains(event.target as Element)) {
+        if (!(event.target instanceof Node) || !this.dropdown.nativeElement.contains(event.target)) {
             this.showDropdown = false;
         }
     }

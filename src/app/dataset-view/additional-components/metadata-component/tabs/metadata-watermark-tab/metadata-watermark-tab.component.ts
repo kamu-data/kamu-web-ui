@@ -10,10 +10,11 @@ import { MatIconModule } from "@angular/material/icon";
 
 import { catchError, from, of, take } from "rxjs";
 
-import { NgbModal, NgbModalRef } from "@ng-bootstrap/ng-bootstrap";
+import { NgbModal } from "@ng-bootstrap/ng-bootstrap";
 
 import { BlockRowDataComponent } from "@common/components/block-row-data/block-row-data.component";
 import { DisplayTimeComponent } from "@common/components/display-time/display-time.component";
+import { openModal } from "@common/helpers/modal.helpers";
 import RoutingResolvers from "@common/resolvers/routing-resolvers";
 import { DatasetBasicsFragment } from "@api/kamu.graphql.interface";
 import { MaybeNullOrUndefined } from "@interface/app.types";
@@ -54,10 +55,9 @@ export class MetadataWatermarkTabComponent {
     }
 
     public onEditWatermark(): void {
-        const modalRef: NgbModalRef = this.ngbModalService.open(EditWatermarkModalComponent);
-        const modalRefInstance = modalRef.componentInstance as EditWatermarkModalComponent;
-        modalRefInstance.currentWatermark = this.watermark;
-        modalRefInstance.datasetBasics = this.datasetMetadataTabData.datasetBasics;
+        const { modalRef, instance } = openModal(this.ngbModalService, EditWatermarkModalComponent);
+        instance.currentWatermark = this.watermark;
+        instance.datasetBasics = this.datasetMetadataTabData.datasetBasics;
         from(modalRef.result)
             .pipe(
                 take(1),

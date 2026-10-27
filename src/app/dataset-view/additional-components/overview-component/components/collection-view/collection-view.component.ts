@@ -266,11 +266,9 @@ export class CollectionViewComponent extends UnsubscribeDestroyRefAdapter implem
                     this.datasetAsCollectionService.cacheEntries.clear();
                     this.isAllDataLoaded = false;
                 }
-                const cacheKeyExists = this.datasetAsCollectionService.cacheEntries.has(this.pathPrefix);
-                if (cacheKeyExists) {
-                    this.dataSource.data = this.datasetAsCollectionService.cacheEntries.get(
-                        this.pathPrefix,
-                    ) as CollectionEntryViewType[];
+                const cachedEntries = this.datasetAsCollectionService.cacheEntries.get(this.pathPrefix);
+                if (cachedEntries) {
+                    this.dataSource.data = cachedEntries;
                     this.cdr.detectChanges();
                 } else {
                     this.dataSource.data = [];

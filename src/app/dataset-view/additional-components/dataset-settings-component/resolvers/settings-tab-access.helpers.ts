@@ -10,6 +10,8 @@ import { RedirectCommand } from "@angular/router";
 
 import { combineLatest, map, Observable } from "rxjs";
 
+import { MaybeUndefined } from "@interface/app.types";
+
 import { AppConfigService } from "src/app/app-config.service";
 import { isSettingsTabAccessibleHelper } from "src/app/dataset-view/additional-components/dataset-settings-component/dataset-settings.helpers";
 import { SettingsTabsEnum } from "src/app/dataset-view/additional-components/dataset-settings-component/dataset-settings.model";
@@ -19,10 +21,12 @@ import { DatasetSubscriptionsService } from "src/app/dataset-view/dataset.subscr
 import { NavigationService } from "src/app/services/navigation.service";
 
 /**
- * Emits the current dataset with the user's permissions when the settings tab is accessible to
- * them, otherwise the page-not-found redirect. Call it from a resolver.
+ * Emits the current dataset with the user's permissions when the settings tab is known and
+ * accessible to them, otherwise the page-not-found redirect. Call it from a resolver.
  */
-export function resolveSettingsTabAccess(tab: SettingsTabsEnum): Observable<DatasetViewData | RedirectCommand> {
+export function resolveSettingsTabAccess(
+    tab: MaybeUndefined<SettingsTabsEnum>,
+): Observable<DatasetViewData | RedirectCommand> {
     const datasetService = inject(DatasetService);
     const datasetSubService = inject(DatasetSubscriptionsService);
     const navigationService = inject(NavigationService);
@@ -34,13 +38,15 @@ export function resolveSettingsTabAccess(tab: SettingsTabsEnum): Observable<Data
         datasetSubService.overviewChanges,
     ]).pipe(
         map(([datasetBasics, datasetPermissions, overviewUpdate]) => {
-            const isAccessible = isSettingsTabAccessibleHelper(
-                tab,
-                appConfigService.featureFlags,
-                datasetBasics,
-                datasetPermissions,
-                overviewUpdate.overview.metadata,
-            );
+            const isAccessible =
+                tab !== undefined &&
+                isSettingsTabAccessibleHelper(
+                    tab,
+                    appConfigService.featureFlags,
+                    datasetBasics,
+                    datasetPermissions,
+                    overviewUpdate.overview.metadata,
+                );
             return isAccessible ? { datasetBasics, datasetPermissions } : navigationService.pageNotFoundRedirect();
         }),
     );

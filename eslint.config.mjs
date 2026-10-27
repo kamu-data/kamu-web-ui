@@ -4,8 +4,6 @@ import tsParser from "@typescript-eslint/parser";
 import vitestPlugin from "@vitest/eslint-plugin";
 import licenseHeaderPlugin from "eslint-plugin-license-header";
 
-import { typeAssertionBacklog } from "./eslint.type-assertion-backlog.mjs";
-
 // Code that needs part of a query result types it with a named sub-fragment, not a type cut out of a
 // bigger generated one
 const fragmentSliceRestrictions = [
@@ -157,7 +155,6 @@ export default [
     ignores: [
       "src/app/common/helpers/base-test.helpers.spec.ts",
       "src/app/common/helpers/untyped-boundary.helpers.ts",
-      ...typeAssertionBacklog,
     ],
     rules: {
       "@typescript-eslint/consistent-type-assertions": ["error", { assertionStyle: "never" }],

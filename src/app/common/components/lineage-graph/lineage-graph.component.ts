@@ -27,13 +27,7 @@ import { MatIconModule } from "@angular/material/icon";
 
 import { timer } from "rxjs";
 
-import {
-    GraphComponent,
-    LayoutService,
-    NgxGraphStateChangeEvent,
-    NgxGraphStates,
-    NodeDimension,
-} from "@swimlane/ngx-graph";
+import { GraphComponent, LayoutService, NgxGraphStateChangeEvent, NgxGraphStates } from "@swimlane/ngx-graph";
 
 import { DisplayTimeComponent } from "@common/components/display-time/display-time.component";
 import {
@@ -42,6 +36,7 @@ import {
     LineageGraphConfig,
 } from "@common/components/lineage-graph/ligeage-graph.settings";
 import { WidgetHeightService } from "@common/components/lineage-graph/widget-height.service";
+import { isRecord } from "@common/helpers/app.helpers";
 import { DisplayDatasetIdPipe } from "@common/pipes/display-dataset-id.pipe";
 import { DisplaySizePipe } from "@common/pipes/display-size.pipe";
 import AppValues from "@common/values/app.values";
@@ -95,7 +90,7 @@ export class LineageGraphComponent implements OnInit, OnChanges {
     public view: [number, number];
     public showSidePanel = true;
 
-    @ViewChild("containerRef", { static: false }) private element: MaybeUndefined<ElementRef>;
+    @ViewChild("containerRef", { static: false }) private element: MaybeUndefined<ElementRef<HTMLDivElement>>;
     @ViewChild(GraphComponent) private graphComponent: MaybeUndefined<GraphComponent>;
     @HostListener("window:resize")
     public checkWindowSize(): void {
@@ -126,7 +121,7 @@ export class LineageGraphComponent implements OnInit, OnChanges {
 
     public changeLineageGraphView(): void {
         if (this.element?.nativeElement) {
-            const containerGraph = this.element.nativeElement as HTMLDivElement;
+            const containerGraph = this.element.nativeElement;
             const styleElement: CSSStyleDeclaration = getComputedStyle(containerGraph);
             this.view = [
                 containerGraph.clientWidth -
@@ -178,18 +173,20 @@ export class LineageGraphComponent implements OnInit, OnChanges {
             return;
         }
         // ngx-graph declares graphDims as any; it holds the padded bounding box of the laid-out nodes
-        const graphDims = graph.graphDims as NodeDimension;
-        if (!graphDims.width || !graphDims.height) {
+        const graphDims: unknown = graph.graphDims;
+        if (!isRecord(graphDims) || typeof graphDims.width !== "number" || typeof graphDims.height !== "number") {
+            return;
+        }
+        const graphWidth = graphDims.width;
+        const graphHeight = graphDims.height;
+        if (!graphWidth || !graphHeight) {
             return;
         }
         const leftInset = LINEAGE_CONFIG.miniMapMaxWidth + LINEAGE_CONFIG.overlayGap;
         const rightInset = this.showSidePanel ? LINEAGE_CONFIG.sidePanelWidth + LINEAGE_CONFIG.overlayGap : 0;
         const freeWidth = Math.max(graph.dims.width - leftInset - rightInset, 1);
         const zoomLevel = Math.min(
-            Math.max(
-                Math.min(freeWidth / graphDims.width, graph.dims.height / graphDims.height, 1),
-                LINEAGE_CONFIG.minZoomLevel,
-            ),
+            Math.max(Math.min(freeWidth / graphWidth, graph.dims.height / graphHeight, 1), LINEAGE_CONFIG.minZoomLevel),
             LINEAGE_CONFIG.maxZoomLevel,
         );
         // zoom() scales in place; zoomTo() would either relayout or, with layout: false, make the next update
@@ -197,8 +194,8 @@ export class LineageGraphComponent implements OnInit, OnChanges {
         graph.zoom(zoomLevel / graph.zoomLevel);
         // panTo() puts the given graph point at the view centre; shift it so the graph lands in the free area
         graph.panTo(
-            graph.minimapOffsetX + graphDims.width / 2 + (rightInset - leftInset) / 2 / zoomLevel,
-            graph.minimapOffsetY + graphDims.height / 2,
+            graph.minimapOffsetX + graphWidth / 2 + (rightInset - leftInset) / 2 / zoomLevel,
+            graph.minimapOffsetY + graphHeight / 2,
         );
         // ngx-graph throttles updateMinimap(), and the delayed call after a layout does not re-render its
         // OnPush view, which leaves the minimap scaled for the graph before node sizes were measured

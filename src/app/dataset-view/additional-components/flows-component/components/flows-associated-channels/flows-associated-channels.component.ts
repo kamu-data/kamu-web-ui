@@ -12,6 +12,7 @@ import { MatButtonToggleChange, MatButtonToggleModule } from "@angular/material/
 import { MatChipListboxChange, MatChipsModule } from "@angular/material/chips";
 import { MatIconModule } from "@angular/material/icon";
 
+import { enumValueOf, oneOf } from "@common/helpers/app.helpers";
 import {
     DatasetBasicsFragment,
     FlowProcessEffectiveState,
@@ -24,6 +25,7 @@ import { SubscriptionsTableComponent } from "src/app/dataset-view/additional-com
 import {
     FlowsSelectionState,
     RollupFiltersOptions,
+    WEBHOOKS_SELECTED_CATEGORIES,
     WebhooksSelectedCategory,
 } from "src/app/dataset-view/additional-components/flows-component/flows.helpers";
 
@@ -90,11 +92,14 @@ export class FlowsAssociatedChannelsComponent {
     }
 
     public onSelectionWebhooksChange(event: MatChipListboxChange): void {
-        this.selectionWebhooksClicked.emit(event.value as MaybeUndefined<WebhooksSelectedCategory>);
+        this.selectionWebhooksClicked.emit(oneOf(WEBHOOKS_SELECTED_CATEGORIES, event.value));
     }
 
     public onToggleWebhookFilter(event: MatButtonToggleChange): void {
-        this.toggleWebhookFilterClicked.emit(event.value as FlowProcessEffectiveState[]);
+        const states: unknown = event.value;
+        this.toggleWebhookFilterClicked.emit(
+            Array.isArray(states) ? states.flatMap((state) => enumValueOf(FlowProcessEffectiveState, state) ?? []) : [],
+        );
     }
 
     public removeSelectedWebhook(subscriptionName: string): void {

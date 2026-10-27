@@ -5,11 +5,10 @@
  * included in the LICENSE file.
  */
 
-import { ComponentFixture, fakeAsync, flush, TestBed, tick } from "@angular/core/testing";
+import { ComponentFixture, TestBed } from "@angular/core/testing";
 import { FormControl, FormGroup } from "@angular/forms";
 
-import { requireValue } from "@common/helpers/app.helpers";
-import { findElement, setComponentInput } from "@common/helpers/base-test.helpers.spec";
+import { getElementByDataTestId, setComponentInput } from "@common/helpers/base-test.helpers.spec";
 import { SharedTestModule } from "@common/modules/shared-test.module";
 
 import { CacheFieldComponent } from "src/app/dataset-view/additional-components/metadata-component/components/form-components/cache-field/cache-field.component";
@@ -36,25 +35,16 @@ describe("CacheFieldComponent", () => {
         expect(component).toBeTruthy();
     });
 
-    it("should check checked and unchecked value", fakeAsync(() => {
-        const cacheCheckbox = requireValue(findElement(fixture, '[data-test-id="cache-control"]'));
+    it("should check checked and unchecked value", () => {
+        const cacheCheckbox = getElementByDataTestId(fixture, "cache-control", HTMLInputElement);
         const onCheckedCacheSpy = vi.spyOn(component, "onCheckedCache");
 
-        cacheCheckbox.triggerEventHandler("change", {
-            target: { checked: true },
-        });
-        tick();
-        fixture.detectChanges();
+        cacheCheckbox.click();
         expect(onCheckedCacheSpy).toHaveBeenCalledTimes(1);
         expect(component.form.controls.cache).toBeDefined();
 
-        cacheCheckbox.triggerEventHandler("change", {
-            target: { checked: false },
-        });
-        tick();
-        fixture.detectChanges();
+        cacheCheckbox.click();
         expect(onCheckedCacheSpy).toHaveBeenCalledTimes(2);
         expect(component.form.controls.cache).toBeUndefined();
-        flush();
-    }));
+    });
 });

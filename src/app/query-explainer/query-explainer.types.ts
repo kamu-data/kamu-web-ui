@@ -7,7 +7,6 @@
 
 import { HttpHeaders } from "@angular/common/http";
 
-import { DynamicTableDataRow } from "@common/components/dynamic-table/dynamic-table.interface";
 import { DataSchemaFormat, QueryDialect } from "@api/kamu.graphql.interface";
 import { UploadPrepareResponse } from "@interface/ingest-via-file-upload.types";
 
@@ -53,7 +52,8 @@ export interface QueryExplainerDataJsonAosResponse {
 }
 
 export interface QueryExplainerOutputType {
-    data: object[] | [string[]] | DynamicTableDataRow[];
+    /** Rows in `dataFormat`: objects for JsonAoS, arrays for JsonAoA. */
+    data: unknown[];
     dataFormat: keyof typeof QueryExplainerDataFormat;
     schema: QueryExplainerSchemaType;
     schemaFormat: keyof typeof DataSchemaFormat;

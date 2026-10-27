@@ -55,8 +55,8 @@ export class AddDataModalComponent extends BaseComponent {
 
     public onFileSelected(event: Event): void {
         this.ngbActiveModal.close();
-        const input = event.target as HTMLInputElement;
-        if (input.files?.length) {
+        const input = event.target;
+        if (input instanceof HTMLInputElement && input.files?.length) {
             const file: File = input.files[0];
             const fileSizeMb = file.size * Math.pow(10, -6);
             if (fileSizeMb <= this.configService.ingestUploadFileLimitMb) {

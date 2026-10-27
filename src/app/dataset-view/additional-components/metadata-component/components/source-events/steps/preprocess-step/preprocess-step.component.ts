@@ -60,8 +60,9 @@ export class PreprocessStepComponent extends BaseComponent implements OnInit {
     }
 
     public onCheckedPreprocessStep(event: Event): void {
-        const input = event.target as HTMLInputElement;
-        this.showPreprocessStepEmitter.emit(input.checked);
+        if (event.target instanceof HTMLInputElement) {
+            this.showPreprocessStepEmitter.emit(event.target.checked);
+        }
     }
 
     private initDefaultQueriesSection(query = ""): void {

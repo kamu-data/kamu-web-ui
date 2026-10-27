@@ -103,8 +103,10 @@ export class ModalComponent extends BaseComponent implements OnInit {
 
         if (e.key === "Tab") {
             // tab
-            const element = this.container.element.nativeElement as HTMLElement;
-            setTimeout(() => element.focus());
+            const element: unknown = this.container.element.nativeElement;
+            if (element instanceof HTMLElement) {
+                setTimeout(() => element.focus());
+            }
         }
     }
 }

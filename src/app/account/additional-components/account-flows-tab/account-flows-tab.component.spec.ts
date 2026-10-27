@@ -6,7 +6,7 @@
  */
 
 import { ComponentFixture, discardPeriodicTasks, fakeAsync, TestBed, tick } from "@angular/core/testing";
-import { ActivatedRoute } from "@angular/router";
+import { ActivatedRoute, convertToParamMap } from "@angular/router";
 
 import { of } from "rxjs";
 
@@ -26,6 +26,7 @@ import {
     ProcessCardFilterMode,
 } from "src/app/account/additional-components/account-flows-tab/account-flows-tab.types";
 import { LoggedUserService } from "src/app/auth/logged-user.service";
+import ProjectLinks from "src/app/project-links";
 import { NavigationService } from "src/app/services/navigation.service";
 
 describe("AccountFlowsTabComponent", () => {
@@ -44,6 +45,15 @@ describe("AccountFlowsTabComponent", () => {
                 {
                     provide: ActivatedRoute,
                     useValue: {
+                        parent: {
+                            parent: {
+                                snapshot: {
+                                    paramMap: convertToParamMap({
+                                        [ProjectLinks.URL_PARAM_ACCOUNT_NAME]: mockAccountDetails.accountName,
+                                    }),
+                                },
+                            },
+                        },
                         snapshot: {
                             queryParamMap: {
                                 get: (key: string) => {

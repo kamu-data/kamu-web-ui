@@ -16,15 +16,25 @@ import {
     OutputRefSubscription,
     SimpleChanges,
 } from "@angular/core";
-import { AbstractControl, FormArray, FormGroup, ValidationErrors } from "@angular/forms";
+import { AbstractControl, FormArray, FormGroup } from "@angular/forms";
 
 import { Subscription, tap } from "rxjs";
 
 import { NgSelectComponent } from "@ng-select/ng-select";
 
 import { ValidationError, ValidationErrorTuple } from "@common/directives/form-validation-errors.types";
+import { validationErrorAs } from "@common/helpers/untyped-boundary.helpers";
 import AppValues from "@common/values/app.values";
 import { MaybeNull, MaybeUndefined } from "@interface/app.types";
+
+/** What Angular's validators, and the app's "range" validator, store in their errors. */
+interface StandardErrorDetails {
+    requiredLength?: number;
+    requiredPattern?: string;
+    min?: number;
+    max?: number;
+    message?: string;
+}
 
 @Directive({
     selector: "[appFieldError]",
@@ -57,7 +67,8 @@ export class FormValidationErrorsDirective implements OnDestroy, OnChanges, OnIn
     /* istanbul ignore next */
     public getStandardErrorMessage(error: ValidationError): string {
         const label = this.fieldLabel || "Input";
-        const errorDetails = this.fieldControl?.getError(error) as ValidationErrors;
+        const errors = this.fieldControl?.errors ?? null;
+        const errorDetails = validationErrorAs<StandardErrorDetails>(errors, error);
 
         switch (error) {
             case "required":
@@ -69,8 +80,7 @@ export class FormValidationErrorsDirective implements OnDestroy, OnChanges, OnIn
             case "invalid":
                 return `A valid ${label} is required`;
             case "pattern": {
-                const keyPattern = errorDetails?.requiredPattern as string;
-                return `${label} ${this.patternMessages[keyPattern]}`;
+                return `${label} ${this.patternMessages[errorDetails?.requiredPattern ?? ""]}`;
             }
             case "passwordsMismatch":
                 return "Passwords mismatch";
@@ -83,9 +93,9 @@ export class FormValidationErrorsDirective implements OnDestroy, OnChanges, OnIn
             case "whitespace":
                 return `${label} can't contain spaces`;
             case "range":
-                return `${errorDetails.message}`;
+                return errorDetails?.message ?? "";
             case "invalidCronExpression":
-                return `${errorDetails as unknown as string}`;
+                return validationErrorAs<string>(errors, error) ?? "";
             case "noneOf":
                 return `${label} already exists`;
 
@@ -172,7 +182,9 @@ export class FormValidationErrorsDirective implements OnDestroy, OnChanges, OnIn
         this.initFieldControl();
         if (changes.input && changes.input.firstChange) {
             if (this.input) {
-                (this.input as HTMLInputElement).onblur = () => this.updateErrorMessage();
+                if (!(this.input instanceof NgSelectComponent)) {
+                    this.input.onblur = () => this.updateErrorMessage();
+                }
             } else {
                 throw new Error(`appFieldError directive [input] parameter couldn't bind to any input element`);
             }

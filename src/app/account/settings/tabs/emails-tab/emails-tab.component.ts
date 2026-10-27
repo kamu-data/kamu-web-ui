@@ -47,7 +47,7 @@ export class EmailsTabComponent implements OnInit {
     private navigationService = inject(NavigationService);
 
     public get emailAddress(): FormControl<string> {
-        return this.changeEmailForm.get("emailAddress") as FormControl<string>;
+        return this.changeEmailForm.controls.emailAddress;
     }
 
     public ngOnInit(): void {

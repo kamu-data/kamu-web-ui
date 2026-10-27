@@ -62,7 +62,7 @@ export class EditWatermarkModalComponent extends BaseComponent implements OnInit
     }
 
     public get isDateValid(): boolean {
-        return isAfter(this.currentWatermark as string, this.date);
+        return this.currentWatermark ? isAfter(this.currentWatermark, this.date) : false;
     }
 
     public get currentTimeZone(): string {

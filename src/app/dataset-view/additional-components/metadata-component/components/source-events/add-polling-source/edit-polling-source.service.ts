@@ -12,8 +12,9 @@ import { FormArray, FormBuilder, FormControl, FormGroup } from "@angular/forms";
 import { Observable } from "rxjs";
 
 import { RxwebValidators } from "@rxweb/reactive-form-validators";
-import { parse } from "yaml";
 
+import { requireFormArray, requireFormGroup } from "@common/helpers/form.helpers";
+import { parseYamlAs } from "@common/helpers/untyped-boundary.helpers";
 import { MetadataManifestFormat } from "@api/kamu.graphql.interface";
 import { MaybeNull } from "@interface/app.types";
 import { DataSchemaField } from "@interface/dataset-schema.interface";
@@ -44,7 +45,7 @@ export class EditPollingSourceService {
     private blockService = inject(BlockService);
 
     public parseEventFromYaml(event: string): AddPollingSourceEditFormType {
-        const editFormParseValue = parse(event) as EditFormParseType;
+        const editFormParseValue = parseYamlAs<EditFormParseType>(event);
         const parsedEvent = editFormParseValue.content.event;
         return {
             ...parsedEvent,
@@ -132,13 +133,13 @@ export class EditPollingSourceService {
     private patchMergeStep(sectionForm: FormGroup, editFormValue: AddPollingSourceEditFormType): void {
         sectionForm.patchValue(editFormValue.merge);
         if (editFormValue.merge.kind !== MergeKind.APPEND) {
-            const primaryKey = sectionForm.controls.primaryKey as FormArray;
+            const primaryKey = requireFormArray(sectionForm, "primaryKey");
             editFormValue.merge.primaryKey?.forEach((item) => {
                 primaryKey.push(this.fb.control(item));
             });
         }
         if (editFormValue.merge.kind === MergeKind.SNAPSHOT) {
-            const compareColumns = sectionForm.controls.compareColumns as FormArray;
+            const compareColumns = requireFormArray(sectionForm, "compareColumns");
             editFormValue.merge.compareColumns?.forEach((item) => {
                 compareColumns.push(this.fb.control(item));
             });
@@ -147,7 +148,7 @@ export class EditPollingSourceService {
 
     private initFetchCommonControls(sectionForm: FormGroup, editFormValue: AddPollingSourceEditFormType): void {
         sectionForm.patchValue(editFormValue.fetch);
-        const eventTimeGroup = sectionForm.controls.eventTime as FormGroup;
+        const eventTimeGroup = requireFormGroup(sectionForm, "eventTime");
         const pattern = editFormValue.fetch.eventTime?.pattern;
         const timestampFormat = editFormValue.fetch.eventTime?.timestampFormat;
         eventTimeGroup.addControl(this.PATTERN_CONTROL, this.fb.control(pattern));
@@ -155,22 +156,22 @@ export class EditPollingSourceService {
     }
 
     private initFetchUrlControls(sectionForm: FormGroup, editFormValue: AddPollingSourceEditFormType): void {
-        const headers = sectionForm.controls.headers as FormArray;
-        if ((headers.value as NameValue[]).length == 0 && editFormValue.fetch.headers) {
+        const headers = requireFormArray(sectionForm, "headers");
+        if (headers.length === 0 && editFormValue.fetch.headers) {
             this.initNameValueControl(editFormValue.fetch.headers, headers);
         }
     }
 
     private initFetchContainerControls(sectionForm: FormGroup, editFormValue: AddPollingSourceEditFormType): void {
-        const env = sectionForm.controls.env as FormArray;
+        const env = requireFormArray(sectionForm, "env");
         if (editFormValue.fetch.env) {
             this.initNameValueControl(editFormValue.fetch.env, env);
         }
-        const command = sectionForm.controls.command as FormArray;
+        const command = requireFormArray(sectionForm, "command");
         editFormValue.fetch.command?.forEach((item) => {
             command.push(this.fb.control(item, RxwebValidators.required()));
         });
-        const args = sectionForm.controls.args as FormArray;
+        const args = requireFormArray(sectionForm, "args");
         editFormValue.fetch.args?.forEach((item) => {
             args.push(this.fb.control(item, RxwebValidators.required()));
         });
@@ -188,7 +189,7 @@ export class EditPollingSourceService {
     }
 
     private initFetchMqttControls(sectionForm: FormGroup, editFormValue: AddPollingSourceEditFormType): void {
-        const topics = sectionForm.controls.topics as FormArray;
+        const topics = requireFormArray(sectionForm, "topics");
         if (editFormValue.fetch.topics) {
             this.initTopicsControl(editFormValue.fetch.topics, topics);
         }

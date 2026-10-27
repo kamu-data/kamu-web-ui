@@ -10,6 +10,7 @@ import { ActivatedRouteSnapshot, ResolveFn } from "@angular/router";
 
 import { catchError, map, of } from "rxjs";
 
+import { requireValue } from "@common/helpers/app.helpers";
 import { DatasetInfo } from "@interface/navigation.interface";
 
 import { BlockService } from "src/app/dataset-block/metadata-block/block.service";
@@ -23,11 +24,11 @@ export const blockMetadataResolverFn: ResolveFn<MetadataBlockInfo> = (route: Act
     const navigationService = inject(NavigationService);
     const datasetService = inject(DatasetService);
 
-    const blockHash = route.paramMap.get(ProjectLinks.URL_PARAM_BLOCK_HASH) as string;
-    const datasetInfo = {
-        accountName: route.paramMap.get(ProjectLinks.URL_PARAM_ACCOUNT_NAME),
-        datasetName: route.paramMap.get(ProjectLinks.URL_PARAM_DATASET_NAME),
-    } as DatasetInfo;
+    const blockHash = requireValue(route.paramMap.get(ProjectLinks.URL_PARAM_BLOCK_HASH), "Route has no block hash");
+    const datasetInfo: DatasetInfo = {
+        accountName: requireValue(route.paramMap.get(ProjectLinks.URL_PARAM_ACCOUNT_NAME), "Route has no account name"),
+        datasetName: requireValue(route.paramMap.get(ProjectLinks.URL_PARAM_DATASET_NAME), "Route has no dataset name"),
+    };
 
     return blockService.requestMetadataBlock(datasetInfo, blockHash).pipe(
         map((data) => {

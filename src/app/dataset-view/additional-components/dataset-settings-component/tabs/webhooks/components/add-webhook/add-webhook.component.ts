@@ -15,7 +15,7 @@ import { BaseComponent } from "@common/components/base.component";
 import { CopyToClipboardComponent } from "@common/components/copy-to-clipboard/copy-to-clipboard.component";
 import RoutingResolvers from "@common/resolvers/routing-resolvers";
 import AppValues from "@common/values/app.values";
-import { DatasetBasicsFragment, WebhookSubscriptionInput } from "@api/kamu.graphql.interface";
+import { DatasetBasicsFragment } from "@api/kamu.graphql.interface";
 import { MaybeNull, MaybeUndefined } from "@interface/app.types";
 
 import { WebhookFormComponent } from "src/app/dataset-view/additional-components/dataset-settings-component/tabs/webhooks/components/common/webhook-form/webhook-form.component";
@@ -77,10 +77,7 @@ export class AddWebhookComponent extends BaseComponent implements OnInit {
 
     public addWebhook(): void {
         this.datasetWebhooksService
-            .datasetWebhookCreateSubscription(
-                this.datasetBasics.id,
-                this.createOrEditSubscriptionForm.value as WebhookSubscriptionInput,
-            )
+            .datasetWebhookCreateSubscription(this.datasetBasics.id, this.createOrEditSubscriptionForm.getRawValue())
 
             .subscribe((result: MaybeNull<CreateWebhookSubscriptionSuccess>) => {
                 if (result) {

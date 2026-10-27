@@ -24,7 +24,7 @@ import { SearchAndSchemasSectionComponent } from "src/app/query/global-query/sea
 import { QueryAndResultSectionsComponent } from "src/app/query/shared/query-and-result-sections/query-and-result-sections.component";
 import { CancelRequestService } from "src/app/services/cancel-request.service";
 import { NavigationService } from "src/app/services/navigation.service";
-import { DatasetEntry, QueryMicroDbTrackerService } from "src/app/services/query-micro-db-tracker.service";
+import { QueryMicroDbTrackerService } from "src/app/services/query-micro-db-tracker.service";
 import { SqlQueryService } from "src/app/services/sql-query.service";
 
 @Component({
@@ -72,12 +72,12 @@ export class GlobalQueryComponent extends BaseComponent implements OnInit {
     }
 
     private async buildSqlRequestCode(): Promise<void> {
-        try {
-            const entry = (await this.queryMicroDbTrackerService.getQuery(
-                AppValues.MICRO_DB_GLOBAL_QUERY_SQL,
-            )) as DatasetEntry;
+        const entry = await this.queryMicroDbTrackerService
+            .getQuery(AppValues.MICRO_DB_GLOBAL_QUERY_SQL)
+            .catch(() => undefined);
+        if (entry) {
             this.sqlRequestCode = entry.query;
-        } catch {
+        } else {
             promiseWithCatch(
                 this.queryMicroDbTrackerService
                     .saveQuery(AppValues.MICRO_DB_GLOBAL_QUERY_SQL, this.sqlRequestCode)

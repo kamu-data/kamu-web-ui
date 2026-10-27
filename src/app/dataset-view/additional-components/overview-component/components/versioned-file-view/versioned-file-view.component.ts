@@ -21,7 +21,7 @@ import { MatIconModule, MatIconRegistry } from "@angular/material/icon";
 import { MatProgressBarModule } from "@angular/material/progress-bar";
 import { DomSanitizer, SafeUrl } from "@angular/platform-browser";
 
-import { BehaviorSubject, combineLatest, Observable } from "rxjs";
+import { BehaviorSubject, combineLatest, Observable, ReplaySubject } from "rxjs";
 import { switchMap, tap } from "rxjs/operators";
 
 import { NgbAlert } from "@ng-bootstrap/ng-bootstrap";
@@ -62,7 +62,7 @@ export class VersionedFileViewComponent extends BaseComponent implements OnInit,
     @Input({ required: true }) public datasetBasics: DatasetBasicsFragment;
     @Input({ required: true }) public version: number;
 
-    public datasetBasics$ = new BehaviorSubject<MaybeNull<DatasetBasicsFragment>>(null);
+    public datasetBasics$ = new ReplaySubject<DatasetBasicsFragment>(1);
     public version$ = new BehaviorSubject<MaybeNull<number>>(null);
 
     public fileInfo$: Observable<VersionedFileView>;
@@ -88,7 +88,7 @@ export class VersionedFileViewComponent extends BaseComponent implements OnInit,
 
         this.fileInfo$ = combineLatest([this.datasetBasics$, this.version$]).pipe(
             switchMap(([dataset, version]) => {
-                const datasetId = dataset?.id as string;
+                const datasetId = dataset.id;
                 if (this.isRedirectToLatestVersion || !version) {
                     this.isRedirectToLatestVersion = false;
                     return this.datasetAsVersionedFileService.requestDatasetAsVersionedFile(datasetId);
@@ -99,12 +99,12 @@ export class VersionedFileViewComponent extends BaseComponent implements OnInit,
         );
     }
 
-    public ngOnChanges(changes: SimpleChanges): void {
+    public ngOnChanges(changes: SimpleChanges<VersionedFileViewComponent>): void {
         if (changes.datasetBasics) {
-            this.datasetBasics$.next(changes.datasetBasics.currentValue as DatasetBasicsFragment);
+            this.datasetBasics$.next(changes.datasetBasics.currentValue);
         }
         if (changes.version && changes.version.previousValue !== changes.version.currentValue) {
-            this.version$.next(changes.version.currentValue as number);
+            this.version$.next(changes.version.currentValue);
         }
     }
 

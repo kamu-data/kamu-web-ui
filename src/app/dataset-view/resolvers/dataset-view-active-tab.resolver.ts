@@ -7,10 +7,15 @@
 
 import { ActivatedRouteSnapshot, ResolveFn } from "@angular/router";
 
+import { enumValueOf, requireValue } from "@common/helpers/app.helpers";
+
 import { DatasetViewTypeEnum } from "src/app/dataset-view/dataset-view.interface";
 import ProjectLinks from "src/app/project-links";
 
 export const datasetViewActiveTabResolverFn: ResolveFn<DatasetViewTypeEnum> = (route: ActivatedRouteSnapshot) => {
-    const activeTab = route.children[0].data[ProjectLinks.URL_PARAM_TAB] as DatasetViewTypeEnum;
+    const activeTab = requireValue(
+        enumValueOf(DatasetViewTypeEnum, route.children[0].data[ProjectLinks.URL_PARAM_TAB]),
+        "Route has no DatasetViewTypeEnum tab",
+    );
     return activeTab;
 };

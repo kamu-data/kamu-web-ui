@@ -11,10 +11,11 @@ import { takeUntilDestroyed } from "@angular/core/rxjs-interop";
 
 import { filter, finalize, fromEvent, map, Observable, takeUntil } from "rxjs";
 
-import { NgbModal, NgbModalRef } from "@ng-bootstrap/ng-bootstrap";
+import { NgbModal } from "@ng-bootstrap/ng-bootstrap";
 
 import { BaseComponent } from "@common/components/base.component";
-import { promiseWithCatch } from "@common/helpers/app.helpers";
+import { isRecord, promiseWithCatch } from "@common/helpers/app.helpers";
+import { openModal } from "@common/helpers/modal.helpers";
 import RoutingResolvers from "@common/resolvers/routing-resolvers";
 import AppValues from "@common/values/app.values";
 import { DatasetBasicsFragment, DatasetKind } from "@api/kamu.graphql.interface";
@@ -31,7 +32,7 @@ import { SearchAndSchemasSectionComponent } from "src/app/query/global-query/sea
 import { QueryAndResultSectionsComponent } from "src/app/query/shared/query-and-result-sections/query-and-result-sections.component";
 import { CancelRequestService } from "src/app/services/cancel-request.service";
 import { NavigationService } from "src/app/services/navigation.service";
-import { DatasetEntry, QueryMicroDbTrackerService } from "src/app/services/query-micro-db-tracker.service";
+import { QueryMicroDbTrackerService } from "src/app/services/query-micro-db-tracker.service";
 import { SqlQueryService } from "src/app/services/sql-query.service";
 
 @Component({
@@ -95,17 +96,17 @@ export class DataComponent extends BaseComponent implements OnInit {
             this.sqlRequestCode = sqlQueryFromUrl;
         } else {
             this.sqlRequestCode += `'${this.dataTabData.datasetBasics.alias}'`;
-            const offset = this.location.getState() as MaybeNull<{ start?: string; end?: string }>;
-            if (offset && typeof offset.start !== "undefined" && typeof offset.end !== "undefined") {
+            const offset: unknown = this.location.getState();
+            if (isRecord(offset) && typeof offset.start === "string" && typeof offset.end === "string") {
                 this.sqlRequestCode += `\nwhere ${this.offsetColumnName}>=${offset.start} and ${this.offsetColumnName}<=${offset.end}\norder by ${this.offsetColumnName} desc`;
                 return;
             }
-            try {
-                const entry = (await this.queryMicroDbTrackerService.getQuery(
-                    this.datasetBasics.alias,
-                )) as DatasetEntry;
+            const entry = await this.queryMicroDbTrackerService
+                .getQuery(this.datasetBasics.alias)
+                .catch(() => undefined);
+            if (entry) {
                 this.sqlRequestCode = entry.query;
-            } catch {
+            } else {
                 promiseWithCatch(
                     this.queryMicroDbTrackerService.saveQuery(this.datasetBasics.alias, this.sqlRequestCode).then(),
                 );
@@ -142,10 +143,9 @@ export class DataComponent extends BaseComponent implements OnInit {
                 datasetName: this.dataTabData.datasetBasics.name,
             });
         } else {
-            const modalRef: NgbModalRef = this.ngbModalService.open(AddDataModalComponent);
-            const modalRefInstance = modalRef.componentInstance as AddDataModalComponent;
-            modalRefInstance.datasetBasics = this.dataTabData.datasetBasics;
-            modalRefInstance.overview = overviewUpdate;
+            const { instance } = openModal(this.ngbModalService, AddDataModalComponent);
+            instance.datasetBasics = this.dataTabData.datasetBasics;
+            instance.overview = overviewUpdate;
         }
     }
 

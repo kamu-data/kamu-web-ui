@@ -25,10 +25,7 @@ import {
 } from "src/app/dataset-view/additional-components/dataset-settings-component/dataset-settings.model";
 import { DatasetFlowTriggerService } from "src/app/dataset-view/additional-components/dataset-settings-component/services/dataset-flow-trigger.service";
 import { DatasetSettingsSchedulingTabData } from "src/app/dataset-view/additional-components/dataset-settings-component/tabs/scheduling/dataset-settings-scheduling-tab.data";
-import {
-    SchedulingSettingsFormType,
-    SchedulingSettingsFormValue,
-} from "src/app/dataset-view/additional-components/dataset-settings-component/tabs/scheduling/dataset-settings-scheduling-tab.types";
+import { SchedulingSettingsFormType } from "src/app/dataset-view/additional-components/dataset-settings-component/tabs/scheduling/dataset-settings-scheduling-tab.types";
 import { IngestTriggerFormComponent } from "src/app/dataset-view/additional-components/dataset-settings-component/tabs/scheduling/ingest-trigger-form/ingest-trigger-form.component";
 import { IngestTriggerFormValue } from "src/app/dataset-view/additional-components/dataset-settings-component/tabs/scheduling/ingest-trigger-form/ingest-trigger-form.types";
 import { FlowStopPolicyFormComponent } from "src/app/dataset-view/additional-components/dataset-settings-component/tabs/shared/flow-stop-policy-form/flow-stop-policy-form.component";
@@ -79,9 +76,9 @@ export class DatasetSettingsSchedulingTabComponent extends BaseComponent impleme
         this.form.patchValue(
             {
                 updatesEnabled: this.schedulingTabData.paused === false,
-                ingestTrigger: this.buildInitialIngestTriggerFormValue(),
-                stopPolicy: this.buildInitialStopPolicyFormValue(),
-            } as SchedulingSettingsFormValue,
+                ingestTrigger: this.buildInitialIngestTriggerFormValue() ?? undefined,
+                stopPolicy: this.buildInitialStopPolicyFormValue() ?? undefined,
+            },
             { emitEvent: true },
         );
         this.cdr.detectChanges();

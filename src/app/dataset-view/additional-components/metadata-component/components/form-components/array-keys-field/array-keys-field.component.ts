@@ -12,7 +12,7 @@ import { RxReactiveFormsModule } from "@rxweb/reactive-form-validators";
 import { NgxTrimDirectiveModule } from "ngx-trim-directive";
 
 import { TooltipIconComponent } from "@common/components/tooltip-icon/tooltip-icon.component";
-import { requireValue } from "@common/helpers/app.helpers";
+import { requireFormArray } from "@common/helpers/form.helpers";
 
 import { BaseField } from "src/app/dataset-view/additional-components/metadata-component/components/form-components/base-field";
 
@@ -38,10 +38,7 @@ export class ArrayKeysFieldComponent extends BaseField {
     private fb = inject(FormBuilder);
 
     public get items(): FormArray {
-        return requireValue(
-            this.form.get(this.controlName),
-            `Form array "${this.controlName}" is missing from the parent form`,
-        ) as FormArray;
+        return requireFormArray(this.form, this.controlName);
     }
 
     public addPrimaryKey(): void {

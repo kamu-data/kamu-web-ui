@@ -21,6 +21,7 @@ import { BaseComponent } from "@common/components/base.component";
 import { ModalService } from "@common/components/modal/modal.service";
 import { PaginationComponent } from "@common/components/pagination-component/pagination.component";
 import { promiseWithCatch } from "@common/helpers/app.helpers";
+import { openModal } from "@common/helpers/modal.helpers";
 import RoutingResolvers from "@common/resolvers/routing-resolvers";
 import {
     DatasetBasicsFragment,
@@ -96,12 +97,11 @@ export class DatasetSettingsSecretsManagerTabComponent extends BaseComponent imp
     }
 
     public onAddOrEditRow(envVar?: ViewDatasetEnvVarDataFragment): void {
-        const modalRef = this.ngbModalService.open(EditKeyValueModalComponent);
-        const modalRefInstance = modalRef.componentInstance as EditKeyValueModalComponent;
-        modalRefInstance.datasetBasics = this.datasetBasics;
-        modalRefInstance.keyValueForm.reset();
+        const { modalRef, instance } = openModal(this.ngbModalService, EditKeyValueModalComponent);
+        instance.datasetBasics = this.datasetBasics;
+        instance.keyValueForm.reset();
         if (envVar) {
-            modalRefInstance.row = envVar;
+            instance.row = envVar;
         }
         from(modalRef.result)
             .pipe(

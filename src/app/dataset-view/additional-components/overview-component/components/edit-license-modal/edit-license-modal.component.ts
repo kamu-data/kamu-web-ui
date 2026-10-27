@@ -18,12 +18,7 @@ import { BaseComponent } from "@common/components/base.component";
 import { DynamicTableDataRow } from "@common/components/dynamic-table/dynamic-table.interface";
 import { FormValidationErrorsDirective } from "@common/directives/form-validation-errors.directive";
 import AppValues from "@common/values/app.values";
-import {
-    DatasetBasicsFragment,
-    DatasetDataSizeFragment,
-    DatasetOverviewFragment,
-    SetLicense,
-} from "@api/kamu.graphql.interface";
+import { DatasetBasicsFragment, DatasetDataSizeFragment, DatasetOverviewFragment } from "@api/kamu.graphql.interface";
 import { MaybeNull } from "@interface/app.types";
 import { DatasetSchema } from "@interface/dataset-schema.interface";
 
@@ -60,9 +55,9 @@ export class EditLicenseModalComponent extends BaseComponent implements OnInit {
         size: DatasetDataSizeFragment;
     };
     public licenseForm: FormGroup<LicenseFormType> = this.fb.group({
-        name: ["", [Validators.required]],
-        shortName: ["", [Validators.required]],
-        websiteUrl: ["", [Validators.required, Validators.pattern(AppValues.URL_PATTERN)]],
+        name: this.fb.nonNullable.control("", [Validators.required]),
+        shortName: this.fb.nonNullable.control("", [Validators.required]),
+        websiteUrl: this.fb.nonNullable.control("", [Validators.required, Validators.pattern(AppValues.URL_PATTERN)]),
         spdxId: [""],
     });
 
@@ -84,9 +79,7 @@ export class EditLicenseModalComponent extends BaseComponent implements OnInit {
                 accountId: this.loggedUserService.currentlyLoggedInUser.id,
                 accountName: this.datasetBasics.owner.accountName,
                 datasetName: this.datasetBasics.name,
-                event: this.yamlEventService.buildYamlSetLicenseEvent(
-                    this.licenseForm.value as Omit<SetLicense, "__typename">,
-                ),
+                event: this.yamlEventService.buildYamlSetLicenseEvent(this.licenseForm.getRawValue()),
             })
             .pipe(
                 finalize(() => this.activeModal.close()),

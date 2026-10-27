@@ -12,6 +12,8 @@ import { RouterLink } from "@angular/router";
 
 import { RxwebValidators } from "@rxweb/reactive-form-validators";
 
+import { enumValueOf, requireValue } from "@common/helpers/app.helpers";
+import { requireFormGroup } from "@common/helpers/form.helpers";
 import { DatasetLinkPipe } from "@common/pipes/dataset-link.pipe";
 import RoutingResolvers from "@common/resolvers/routing-resolvers";
 import { DatasetInfo } from "@interface/navigation.interface";
@@ -109,15 +111,15 @@ export class AddPushSourceComponent extends BaseSourceEventComponent implements 
     }
 
     public get readPushForm(): FormGroup {
-        return this.addPushSourceForm.get(AddPushSourceSection.READ) as FormGroup;
+        return requireFormGroup(this.addPushSourceForm, AddPushSourceSection.READ);
     }
 
     public get mergePushForm(): FormGroup {
-        return this.addPushSourceForm.get(AddPushSourceSection.MERGE) as FormGroup;
+        return requireFormGroup(this.addPushSourceForm, AddPushSourceSection.MERGE);
     }
 
     public changeStep(step: SourcesSection): void {
-        this.currentStep = step as AddPushSourceSection;
+        this.currentStep = requireValue(enumValueOf(AddPushSourceSection, step), "Unknown source event step");
     }
 
     public onEditYaml(): void {

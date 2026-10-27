@@ -7,8 +7,6 @@
 
 import { FormControl } from "@angular/forms";
 
-import { MaybeNull } from "@interface/app.types";
-
 export interface CreateTokenFormType {
-    name: FormControl<MaybeNull<string>>;
+    name: FormControl<string>;
 }

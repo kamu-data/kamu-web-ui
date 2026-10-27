@@ -31,8 +31,7 @@ export class CacheFieldComponent extends BaseField {
     private fb = inject(FormBuilder);
 
     public onCheckedCache(event: Event) {
-        const input = event.target as HTMLInputElement;
-        if (input.checked) {
+        if (event.target instanceof HTMLInputElement && event.target.checked) {
             this.form.addControl(this.controlName, this.fb.control(true));
         } else {
             this.form.removeControl(this.controlName);

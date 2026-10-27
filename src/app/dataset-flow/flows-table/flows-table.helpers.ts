@@ -210,10 +210,9 @@ export class FlowTableHelpers {
                         }
 
                     case "FlowAbortedResult":
-                        return `Aborted at ${format(
-                            element.timing.lastAttemptFinishedAt as string,
-                            AppValues.CRON_EXPRESSION_DATE_FORMAT,
-                        )}`;
+                        return element.timing.lastAttemptFinishedAt
+                            ? `Aborted at ${format(element.timing.lastAttemptFinishedAt, AppValues.CRON_EXPRESSION_DATE_FORMAT)}`
+                            : "Aborted";
 
                     case "FlowFailedError": {
                         switch (element.outcome.reason.__typename) {
@@ -292,7 +291,14 @@ export class FlowTableHelpers {
             case FlowStatus.Waiting:
                 switch (node.startCondition?.__typename) {
                     case "FlowStartConditionExecutor":
-                        return `waiting for ${excludeAgoWord(formatDistanceToNowStrict(node.timing.awaitingExecutorSince as string, { addSuffix: true }))}`;
+                        return FlowTableHelpers.distanceText(
+                            "waiting for",
+                            node.timing.awaitingExecutorSince,
+                            "waiting",
+                            {
+                                withoutAgo: true,
+                            },
+                        );
                     case "FlowStartConditionThrottling":
                     case "FlowStartConditionSchedule": {
                         return `wake up time: ${formatDistanceToNowStrict(node.startCondition.wakeUpAt, { addSuffix: true })}`;
@@ -304,32 +310,21 @@ export class FlowTableHelpers {
                         return "initializing...";
                 }
             case FlowStatus.Running:
-                return (
-                    "running for " +
-                    excludeAgoWord(formatDistanceToNowStrict(node.timing.runningSince as string, { addSuffix: true }))
-                );
+                return FlowTableHelpers.distanceText("running for", node.timing.runningSince, "running", {
+                    withoutAgo: true,
+                });
             case FlowStatus.Retrying:
-                return (
-                    "retrying " +
-                    excludeAgoWord(formatDistanceToNowStrict(node.timing.scheduledAt as string, { addSuffix: true }))
-                );
+                return FlowTableHelpers.distanceText("retrying", node.timing.scheduledAt, "retrying", {
+                    withoutAgo: true,
+                });
             case FlowStatus.Finished:
                 switch (node.outcome?.__typename) {
                     case "FlowSuccessResult":
-                        return (
-                            "finished " +
-                            formatDistanceToNowStrict(node.timing.lastAttemptFinishedAt as string, { addSuffix: true })
-                        );
+                        return FlowTableHelpers.distanceText("finished", node.timing.lastAttemptFinishedAt, "finished");
                     case "FlowAbortedResult":
-                        return (
-                            "aborted " +
-                            formatDistanceToNowStrict(node.timing.lastAttemptFinishedAt as string, { addSuffix: true })
-                        );
+                        return FlowTableHelpers.distanceText("aborted", node.timing.lastAttemptFinishedAt, "aborted");
                     case "FlowFailedError":
-                        return (
-                            "failed " +
-                            formatDistanceToNowStrict(node.timing.runningSince as string, { addSuffix: true })
-                        );
+                        return FlowTableHelpers.distanceText("failed", node.timing.runningSince, "failed");
                     /* istanbul ignore next */
                     default:
                         throw new Error("Unknown flow outsome");
@@ -422,9 +417,7 @@ export class FlowTableHelpers {
             case FlowStatus.Waiting:
                 switch (node.startCondition?.__typename) {
                     case "FlowStartConditionExecutor":
-                        return `waiting for: ${excludeAgoWord(
-                            format(node.timing.awaitingExecutorSince as string, AppValues.CRON_EXPRESSION_DATE_FORMAT),
-                        )}`;
+                        return FlowTableHelpers.timeText("waiting for", node.timing.awaitingExecutorSince);
                     case "FlowStartConditionThrottling":
                     case "FlowStartConditionSchedule": {
                         return `Wake up time: ${format(node.startCondition.wakeUpAt, AppValues.CRON_EXPRESSION_DATE_FORMAT)}`;
@@ -441,39 +434,46 @@ export class FlowTableHelpers {
             case FlowStatus.Finished:
                 switch (node.outcome?.__typename) {
                     case "FlowSuccessResult":
-                        return `Completed time: ${format(
-                            node.timing.lastAttemptFinishedAt as string,
-                            AppValues.CRON_EXPRESSION_DATE_FORMAT,
-                        )}`;
+                        return FlowTableHelpers.timeText("Completed time", node.timing.lastAttemptFinishedAt);
                     case "FlowAbortedResult":
-                        return `Aborted time: ${format(
-                            node.timing.lastAttemptFinishedAt as string,
-                            AppValues.CRON_EXPRESSION_DATE_FORMAT,
-                        )}`;
+                        return FlowTableHelpers.timeText("Aborted time", node.timing.lastAttemptFinishedAt);
                     case "FlowFailedError":
-                        return `Start running time: ${format(
-                            node.timing.runningSince as string,
-                            AppValues.CRON_EXPRESSION_DATE_FORMAT,
-                        )}`;
+                        return FlowTableHelpers.timeText("Start running time", node.timing.runningSince);
                     /* istanbul ignore next */
                     default:
                         throw new Error("Unknown flow outcome");
                 }
 
             case FlowStatus.Running:
-                return `Start running time: ${format(
-                    node.timing.runningSince as string,
-                    AppValues.CRON_EXPRESSION_DATE_FORMAT,
-                )}`;
+                return FlowTableHelpers.timeText("Start running time", node.timing.runningSince);
 
             case FlowStatus.Retrying:
-                return `Planned retry time: ${format(
-                    node.timing.scheduledAt as string,
-                    AppValues.CRON_EXPRESSION_DATE_FORMAT,
-                )}`;
+                return FlowTableHelpers.timeText("Planned retry time", node.timing.scheduledAt);
             /* istanbul ignore next */
             default:
                 throw new Error("Unknown flow status");
         }
+    }
+
+    /**
+     * `prefix` and the distance from now to `time`, or `fallback` when there is no time: a state can
+     * lack the timing record it implies, and date-fns would read the missing time as 1970.
+     */
+    private static distanceText(
+        prefix: string,
+        time: MaybeNullOrUndefined<string>,
+        fallback: string,
+        options?: { withoutAgo: boolean },
+    ): string {
+        if (!time) {
+            return fallback;
+        }
+        const distance = formatDistanceToNowStrict(time, { addSuffix: true });
+        return `${prefix} ${options?.withoutAgo ? excludeAgoWord(distance) : distance}`;
+    }
+
+    /** `label` and `time` in the cron date format, or "unknown" when there is no time */
+    private static timeText(label: string, time: MaybeNullOrUndefined<string>): string {
+        return `${label}: ${time ? format(time, AppValues.CRON_EXPRESSION_DATE_FORMAT) : "unknown"}`;
     }
 }

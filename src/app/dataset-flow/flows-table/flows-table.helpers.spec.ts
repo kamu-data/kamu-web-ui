@@ -13,6 +13,7 @@ import { mockFlowSummaryDataFragments } from "@api/mock/dataset-flow.mock";
 import { FlowTableHelpers } from "src/app/dataset-flow/flows-table/flows-table.helpers";
 import {
     durationBlockTextResults,
+    durationBlockTextWithoutTimingResults,
     expectationsDescriptionEndOfMessage,
     expectationsDesriptionColumnOptions,
     expectationsFlowTypeDescriptions,
@@ -24,6 +25,7 @@ import {
     mockFlowSummaryDataFragmentTooltipAndDurationText,
     mockTableFlowSummaryDataFragments,
     tooltipTextResults,
+    tooltipTextWithoutTimingResults,
 } from "src/app/dataset-flow/flows-table/flows-table.helpers.mock";
 
 describe("FlowTableHelpers", () => {
@@ -128,6 +130,33 @@ describe("FlowTableHelpers", () => {
         });
     });
 
+    function withoutTiming(item: FlowSummaryDataFragment): FlowSummaryDataFragment {
+        return {
+            ...item,
+            timing: {
+                ...item.timing,
+                scheduledAt: null,
+                awaitingExecutorSince: null,
+                runningSince: null,
+                lastAttemptFinishedAt: null,
+            },
+        };
+    }
+
+    mockFlowSummaryDataFragmentTooltipAndDurationText.forEach((item: FlowSummaryDataFragment, index: number) => {
+        it(`should check duration block text leaves out a missing time with status=${item.status} and outcome=${item.outcome?.__typename}`, () => {
+            expect(FlowTableHelpers.durationBlockText(withoutTiming(item))).toEqual(
+                durationBlockTextWithoutTimingResults[index],
+            );
+        });
+    });
+
+    mockFlowSummaryDataFragmentTooltipAndDurationText.forEach((item: FlowSummaryDataFragment, index: number) => {
+        it(`should check tooltip text shows a missing time as unknown with status=${item.status} and outcome=${item.outcome?.__typename}`, () => {
+            expect(FlowTableHelpers.tooltipText(withoutTiming(item))).toEqual(tooltipTextWithoutTimingResults[index]);
+        });
+    });
+
     it(`should check description end of message with description FlowDescriptionDatasetPollingIngest typename and FetchStepUrl`, () => {
         expect(FlowTableHelpers.descriptionSubMessage(mockTableFlowSummaryDataFragments[0])).toEqual(
             `Polling data from url: ${mockFlowPollingSourceFragmentFetchUrl.fetch.url}`,
@@ -172,6 +201,12 @@ describe("FlowTableHelpers", () => {
 
     it(`should check description end of message with description FlowDescriptionDatasetPollingIngest typename and aborted outcome `, () => {
         expect(FlowTableHelpers.descriptionSubMessage(mockTableFlowSummaryDataFragments[6])).toContain("Aborted at");
+    });
+
+    it(`should check description end of message with aborted outcome and no finish time`, () => {
+        expect(FlowTableHelpers.descriptionSubMessage(withoutTiming(mockTableFlowSummaryDataFragments[6]))).toEqual(
+            "Aborted",
+        );
     });
 
     it(`should check description end of message with description FlowDescriptionDatasetPollingIngest typename and failed recoverable outcome `, () => {

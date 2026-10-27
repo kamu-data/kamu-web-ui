@@ -78,9 +78,7 @@ describe("DatasetFlowsService", () => {
                 datasetId: MOCK_DATASET_ID,
             })
             .subscribe((data: DatasetFlowProcessesDataFragment) => {
-                expect(data).toEqual(
-                    requireValue(mockDatasetFlowsProcessesQuery.datasets.byId?.flows.processes ?? null),
-                );
+                expect(data).toEqual(requireValue(mockDatasetFlowsProcessesQuery.datasets.byId?.flows.processes));
             });
 
         expect(subscription$.closed).toBe(true);

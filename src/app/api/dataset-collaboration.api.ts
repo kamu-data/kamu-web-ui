@@ -9,9 +9,10 @@ import { inject, Injectable } from "@angular/core";
 
 import { first, map, Observable } from "rxjs";
 
-import { ApolloLink, ObservableQuery } from "@apollo/client/core";
+import { ObservableQuery } from "@apollo/client/core";
 import { onlyCompleteData } from "apollo-angular";
 
+import { mutationData } from "@common/helpers/apollo-error.helpers";
 import { noCacheFetchPolicy } from "@common/helpers/data.helpers";
 import {
     DatasetAccessRole,
@@ -45,8 +46,8 @@ export class DatasetCollaborationApi {
             onlyCompleteData(),
             first(),
 
-            map((result: ObservableQuery.Result<DatasetListCollaboratorsQuery>) => {
-                return result.data as DatasetListCollaboratorsQuery;
+            map((result: ObservableQuery.Result<DatasetListCollaboratorsQuery, "complete">) => {
+                return result.data;
             }),
         );
     }
@@ -60,8 +61,8 @@ export class DatasetCollaborationApi {
         return this.searchCollaboratorGQL.watch({ variables: params, ...noCacheFetchPolicy }).valueChanges.pipe(
             onlyCompleteData(),
             first(),
-            map((result: ObservableQuery.Result<SearchCollaboratorQuery>) => {
-                return result.data as SearchCollaboratorQuery;
+            map((result: ObservableQuery.Result<SearchCollaboratorQuery, "complete">) => {
+                return result.data;
             }),
         );
     }
@@ -71,32 +72,22 @@ export class DatasetCollaborationApi {
         accountId: string;
         role: DatasetAccessRole;
     }): Observable<SetRoleCollaboratorMutation> {
-        return this.setRoleCollaboratorGQL.mutate({ variables: params }).pipe(
-            first(),
-            map((result: ApolloLink.Result<SetRoleCollaboratorMutation>) => {
-                return result.data as SetRoleCollaboratorMutation;
-            }),
-        );
+        return this.setRoleCollaboratorGQL.mutate({ variables: params }).pipe(first(), mutationData());
     }
 
     public unsetRoleCollaborator(params: {
         datasetId: string;
         accountIds: string[];
     }): Observable<UnsetRoleCollaboratorMutation> {
-        return this.unsetRoleCollaboratorGQL.mutate({ variables: { ...params } }).pipe(
-            first(),
-            map((result: ApolloLink.Result<UnsetRoleCollaboratorMutation>) => {
-                return result.data as UnsetRoleCollaboratorMutation;
-            }),
-        );
+        return this.unsetRoleCollaboratorGQL.mutate({ variables: { ...params } }).pipe(first(), mutationData());
     }
 
     public getDatasetUserRole(datasetId: string): Observable<DatasetUserRoleQuery> {
         return this.datasetUserRoleGQL.watch({ variables: { datasetId }, ...noCacheFetchPolicy }).valueChanges.pipe(
             onlyCompleteData(),
             first(),
-            map((result: ObservableQuery.Result<DatasetUserRoleQuery>) => {
-                return result.data as DatasetUserRoleQuery;
+            map((result: ObservableQuery.Result<DatasetUserRoleQuery, "complete">) => {
+                return result.data;
             }),
         );
     }

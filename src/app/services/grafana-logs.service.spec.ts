@@ -32,7 +32,7 @@ describe("GrafanaLogsService", () => {
                 eventTime: "2024-03-13T13:54:32.269040795+00:00",
                 taskId: "0",
                 taskStatus: TaskStatus.Running,
-                task: { outcome: null },
+                task: { __typename: "Task", outcome: null },
                 nextAttemptAt: null,
             },
 
@@ -42,7 +42,7 @@ describe("GrafanaLogsService", () => {
                 eventTime: "2024-03-13T13:54:32.269040795+00:00",
                 taskId: "0",
                 taskStatus: TaskStatus.Finished,
-                task: { outcome: null },
+                task: { __typename: "Task", outcome: null },
                 nextAttemptAt: null,
             },
         ]);

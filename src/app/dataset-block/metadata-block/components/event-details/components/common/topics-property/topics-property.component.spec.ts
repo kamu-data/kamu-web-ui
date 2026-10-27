@@ -27,7 +27,9 @@ describe("TopicsPropertyComponent", () => {
 
         fixture = TestBed.createComponent(TopicsPropertyComponent);
         component = fixture.componentInstance;
-        setComponentInput(fixture, "data", [{ path: "test.com", qos: MqttQos.AtMostOnce }]);
+        setComponentInput(fixture, "data", [
+            { __typename: "MqttTopicSubscription", path: "test.com", qos: MqttQos.AtMostOnce },
+        ]);
         fixture.detectChanges();
     });
 

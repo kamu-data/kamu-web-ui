@@ -9,9 +9,10 @@ import { inject, Injectable } from "@angular/core";
 
 import { first, map, Observable } from "rxjs";
 
-import { ApolloLink, ObservableQuery } from "@apollo/client/core";
+import { ObservableQuery } from "@apollo/client/core";
 import { onlyCompleteData } from "apollo-angular";
 
+import { mutationData } from "@common/helpers/apollo-error.helpers";
 import { noCacheFetchPolicy } from "@common/helpers/data.helpers";
 import {
     CreateAccessTokenGQL,
@@ -43,27 +44,17 @@ export class AccessTokenApi {
             .valueChanges.pipe(
                 onlyCompleteData(),
                 first(),
-                map((result: ObservableQuery.Result<ListAccessTokensQuery>) => {
-                    return result.data as ListAccessTokensQuery;
+                map((result: ObservableQuery.Result<ListAccessTokensQuery, "complete">) => {
+                    return result.data;
                 }),
             );
     }
 
     public createAccessToken(accountId: string, tokenName: string): Observable<CreateAccessTokenMutation> {
-        return this.createAccessTokenGQL.mutate({ variables: { accountId, tokenName } }).pipe(
-            first(),
-            map((result: ApolloLink.Result<CreateAccessTokenMutation>) => {
-                return result.data as CreateAccessTokenMutation;
-            }),
-        );
+        return this.createAccessTokenGQL.mutate({ variables: { accountId, tokenName } }).pipe(first(), mutationData());
     }
 
     public revokeAccessToken(accountId: string, tokenId: string): Observable<RevokeAccessTokenMutation> {
-        return this.revokeAccessTokenGQL.mutate({ variables: { accountId, tokenId } }).pipe(
-            first(),
-            map((result: ApolloLink.Result<RevokeAccessTokenMutation>) => {
-                return result.data as RevokeAccessTokenMutation;
-            }),
-        );
+        return this.revokeAccessTokenGQL.mutate({ variables: { accountId, tokenId } }).pipe(first(), mutationData());
     }
 }

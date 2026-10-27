@@ -11,6 +11,7 @@ import { map, Observable } from "rxjs";
 
 import { ToastrService } from "ngx-toastr";
 
+import { requireValue } from "@common/helpers/app.helpers";
 import { EnvironmentVariablesApi } from "@api/environment-variables.api";
 import {
     DeleteEnvVariableMutation,
@@ -38,8 +39,7 @@ export class DatasetEnvironmentVariablesService {
             .pipe(
                 map(
                     (result: ListEnvVariablesQuery) =>
-                        result.datasets.byOwnerAndName?.envVars
-                            .listEnvVariables as ViewDatasetEnvVarConnectionDataFragment,
+                        requireValue(result.datasets.byOwnerAndName, "Dataset not found").envVars.listEnvVariables,
                 ),
             );
     }

@@ -11,11 +11,11 @@ import { map, Observable } from "rxjs";
 
 import { ToastrService } from "ngx-toastr";
 
+import { requireValue } from "@common/helpers/app.helpers";
 import { DatasetFlowApi } from "@api/dataset-flow.api";
 import {
     AccountFragment,
     CancelFlowRunMutation,
-    DatasetBasicsFragment,
     DatasetFlowFilters,
     DatasetFlowProcessesDataFragment,
     DatasetFlowsInitiatorsQuery,
@@ -30,8 +30,6 @@ import {
     FlowConfigCompactionInput,
     FlowConfigIngestInput,
     FlowConfigResetInput,
-    FlowConnectionDataFragment,
-    FlowConnectionWidgetDataFragment,
     GetDatasetListFlowsQuery,
     GetFlowByIdQuery,
 } from "@api/kamu.graphql.interface";
@@ -50,7 +48,7 @@ export class DatasetFlowsService {
     public datasetFlowsProcesses(params: { datasetId: string }): Observable<DatasetFlowProcessesDataFragment> {
         return this.datasetFlowApi.getDatasetFlowsProcesses(params).pipe(
             map((data: DatasetFlowsProcessesQuery) => {
-                return data.datasets.byId?.flows.processes as DatasetFlowProcessesDataFragment;
+                return requireValue(data.datasets.byId, "Dataset not found").flows.processes;
             }),
         );
     }
@@ -174,10 +172,11 @@ export class DatasetFlowsService {
     }): Observable<FlowsTableData> {
         return this.datasetFlowApi.getDatasetListFlows(params).pipe(
             map((data: GetDatasetListFlowsQuery) => {
+                const dataset = requireValue(data.datasets.byId, "Dataset not found");
                 return {
-                    connectionDataForTable: data.datasets.byId?.flows.runs.table as FlowConnectionDataFragment,
-                    connectionDataForWidget: data.datasets.byId?.flows.runs.tiles as FlowConnectionWidgetDataFragment,
-                    involvedDatasets: [data.datasets.byId] as DatasetBasicsFragment[],
+                    connectionDataForTable: dataset.flows.runs.table,
+                    connectionDataForWidget: dataset.flows.runs.tiles,
+                    involvedDatasets: [dataset],
                 };
             }),
         );

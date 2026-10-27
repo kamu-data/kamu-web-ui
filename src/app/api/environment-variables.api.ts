@@ -9,10 +9,11 @@ import { inject, Injectable } from "@angular/core";
 
 import { first, map, Observable } from "rxjs";
 
-import { ApolloLink, ObservableQuery } from "@apollo/client/core";
+import { ObservableQuery } from "@apollo/client/core";
 import { onlyCompleteData } from "apollo-angular";
 
 import { updateCacheHelper } from "@common/helpers/apollo-cache.helper";
+import { mutationData } from "@common/helpers/apollo-error.helpers";
 import { noCacheFetchPolicy } from "@common/helpers/data.helpers";
 import {
     DeleteEnvVariableGQL,
@@ -43,8 +44,8 @@ export class EnvironmentVariablesApi {
         return this.listEnvVariablesGQL.watch({ variables: { ...params }, ...noCacheFetchPolicy }).valueChanges.pipe(
             onlyCompleteData(),
             first(),
-            map((result: ObservableQuery.Result<ListEnvVariablesQuery>) => {
-                return result.data as ListEnvVariablesQuery;
+            map((result: ObservableQuery.Result<ListEnvVariablesQuery, "complete">) => {
+                return result.data;
             }),
         );
     }
@@ -72,12 +73,7 @@ export class EnvironmentVariablesApi {
                     });
                 },
             })
-            .pipe(
-                first(),
-                map((result: ApolloLink.Result<UpsertEnvVariableMutation>) => {
-                    return result.data as UpsertEnvVariableMutation;
-                }),
-            );
+            .pipe(first(), mutationData());
     }
 
     public deleteEnvironmentVariable(params: {
@@ -91,17 +87,12 @@ export class EnvironmentVariablesApi {
                 update: (cache, { data }) => {
                     const id = cache.identify({
                         __typename: "ViewDatasetEnvVar",
-                        key: (data as DeleteEnvVariableMutation).datasets.byId?.envVars.deleteEnvVariable.envVarKey,
+                        key: data?.datasets.byId?.envVars.deleteEnvVariable.envVarKey,
                     });
                     cache.evict({ id });
                 },
             })
-            .pipe(
-                first(),
-                map((result: ApolloLink.Result<DeleteEnvVariableMutation>) => {
-                    return result.data as DeleteEnvVariableMutation;
-                }),
-            );
+            .pipe(first(), mutationData());
     }
 
     public exposedEnvVariableValue(params: {
@@ -114,8 +105,8 @@ export class EnvironmentVariablesApi {
             .valueChanges.pipe(
                 onlyCompleteData(),
                 first(),
-                map((result: ObservableQuery.Result<ExposedEnvVariableValueQuery>) => {
-                    return result.data as ExposedEnvVariableValueQuery;
+                map((result: ObservableQuery.Result<ExposedEnvVariableValueQuery, "complete">) => {
+                    return result.data;
                 }),
             );
     }

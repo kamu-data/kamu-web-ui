@@ -7,6 +7,7 @@
 
 import { Injectable } from "@angular/core";
 
+import { parseJsonAs } from "@common/helpers/untyped-boundary.helpers";
 import AppValues from "@common/values/app.values";
 import { MaybeNull } from "@interface/app.types";
 
@@ -18,7 +19,7 @@ import { GithubLoginState } from "src/app/auth/login/login.component.model";
 export class SessionStorageService {
     public get isSidePanelVisible(): boolean {
         const value = sessionStorage.getItem(AppValues.SESSION_STORAGE_SIDE_PANEL_VISIBLE);
-        return value ? (JSON.parse(value) as boolean) : false;
+        return value ? parseJsonAs<boolean>(value) : false;
     }
 
     public setSidePanelVisible(value: boolean): void {
@@ -33,7 +34,7 @@ export class SessionStorageService {
     public takeGithubLoginState(): MaybeNull<GithubLoginState> {
         const value = sessionStorage.getItem(AppValues.SESSION_STORAGE_GITHUB_LOGIN_STATE);
         sessionStorage.removeItem(AppValues.SESSION_STORAGE_GITHUB_LOGIN_STATE);
-        return value ? (JSON.parse(value) as GithubLoginState) : null;
+        return value ? parseJsonAs<GithubLoginState>(value) : null;
     }
 
     public reset() {

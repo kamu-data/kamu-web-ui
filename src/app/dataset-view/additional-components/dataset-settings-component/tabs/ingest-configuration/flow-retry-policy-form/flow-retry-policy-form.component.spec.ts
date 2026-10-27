@@ -12,7 +12,7 @@ import { ComponentFixture, TestBed } from "@angular/core/testing";
 import { FormGroup, FormsModule, ReactiveFormsModule } from "@angular/forms";
 
 import { SharedTestModule } from "@common/modules/shared-test.module";
-import { FlowRetryBackoffType, TimeUnit } from "@api/kamu.graphql.interface";
+import { FlowRetryBackoffType, FlowRetryPolicyDataFragment, TimeUnit } from "@api/kamu.graphql.interface";
 
 import { FlowRetryPolicyFormComponent } from "src/app/dataset-view/additional-components/dataset-settings-component/tabs/ingest-configuration/flow-retry-policy-form/flow-retry-policy-form.component";
 import { FlowRetryPolicyFormHarness } from "src/app/dataset-view/additional-components/dataset-settings-component/tabs/ingest-configuration/flow-retry-policy-form/flow-retry-policy-form.harness";
@@ -192,9 +192,10 @@ describe("FlowRetryPolicyFormComponent", () => {
     });
 
     it("should build form value from FlowRetryPolicy", () => {
-        const mockRetryPolicy = {
+        const mockRetryPolicy: FlowRetryPolicyDataFragment = {
+            __typename: "FlowRetryPolicy",
             maxAttempts: 10,
-            minDelay: { every: 30, unit: TimeUnit.Minutes },
+            minDelay: { __typename: "TimeDelta", every: 30, unit: TimeUnit.Minutes },
             backoffType: FlowRetryBackoffType.ExponentialWithJitter,
         };
 
@@ -202,7 +203,7 @@ describe("FlowRetryPolicyFormComponent", () => {
         expect(formValue).toEqual({
             retriesEnabled: true,
             maxAttempts: 10,
-            minDelay: { every: 30, unit: TimeUnit.Minutes },
+            minDelay: { __typename: "TimeDelta", every: 30, unit: TimeUnit.Minutes },
             backoffType: FlowRetryBackoffType.ExponentialWithJitter,
         });
     });

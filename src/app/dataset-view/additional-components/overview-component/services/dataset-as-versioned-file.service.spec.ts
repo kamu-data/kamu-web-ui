@@ -173,7 +173,7 @@ describe("DatasetAsVersionedFileService", () => {
 
     it("should check #getVersionedFileContentUrl method", () => {
         const mockResult = requireValue(
-            mockVersionedFileContentUrlQuery.datasets.byId?.asVersionedFile?.asOf?.contentUrl.url ?? null,
+            mockVersionedFileContentUrlQuery.datasets.byId?.asVersionedFile?.asOf?.contentUrl.url,
         );
         const getVersionedFileContentUrlSpy = vi
             .spyOn(datasetApi, "getVersionedFileContentUrl")

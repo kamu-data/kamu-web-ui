@@ -53,10 +53,7 @@ describe("FlowTableHelpers", () => {
                 activeBatchingRule: {
                     __typename: "FlowTriggerBatchingRuleBuffering",
                     minRecordsToAwait: 500,
-                    maxBatchingInterval: {
-                        every: 5,
-                        unit: TimeUnit.Hours,
-                    },
+                    maxBatchingInterval: { __typename: "TimeDelta", every: 5, unit: TimeUnit.Hours },
                 },
                 batchingDeadline: "2022-08-05T21:17:30.613911358+00:00",
                 accumulatedRecordsCount: 100,

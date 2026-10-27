@@ -11,11 +11,11 @@ import { Observable } from "rxjs";
 import { first, map } from "rxjs/operators";
 
 import { StoreObject } from "@apollo/client/cache";
-import { ApolloLink, ObservableQuery } from "@apollo/client/core";
+import { ObservableQuery } from "@apollo/client/core";
 import { onlyCompleteData } from "apollo-angular";
 
 import { resetCacheHelper, updateCacheHelper } from "@common/helpers/apollo-cache.helper";
-import { completeDataOrError } from "@common/helpers/apollo-error.helpers";
+import { completeDataOrError, mutationData } from "@common/helpers/apollo-error.helpers";
 import { noCacheFetchPolicy } from "@common/helpers/data.helpers";
 import AppValues from "@common/values/app.values";
 import {
@@ -131,24 +131,14 @@ export class DatasetApi {
         datasetAlias: string;
         datasetVisibility: DatasetVisibility;
     }): Observable<CreateDatasetAsCollectionMutation> {
-        return this.createDatasetAsCollectionGQL.mutate({ variables: { ...params } }).pipe(
-            first(),
-            map((result: ApolloLink.Result<CreateDatasetAsCollectionMutation>) => {
-                return result.data as CreateDatasetAsCollectionMutation;
-            }),
-        );
+        return this.createDatasetAsCollectionGQL.mutate({ variables: { ...params } }).pipe(first(), mutationData());
     }
 
     public createDatasetAsVersionedFile(params: {
         datasetAlias: string;
         datasetVisibility: DatasetVisibility;
     }): Observable<CreateDatasetAsVersionedFileMutation> {
-        return this.createDatasetAsVersionedFileGQL.mutate({ variables: { ...params } }).pipe(
-            first(),
-            map((result: ApolloLink.Result<CreateDatasetAsVersionedFileMutation>) => {
-                return result.data as CreateDatasetAsVersionedFileMutation;
-            }),
-        );
+        return this.createDatasetAsVersionedFileGQL.mutate({ variables: { ...params } }).pipe(first(), mutationData());
     }
 
     public getBlocksByEventType(params: {
@@ -168,8 +158,8 @@ export class DatasetApi {
             .valueChanges.pipe(
                 onlyCompleteData(),
                 first(),
-                map((result: ObservableQuery.Result<DatasetBlocksEncodedByEventTypeQuery>) => {
-                    return result.data as DatasetBlocksEncodedByEventTypeQuery;
+                map((result: ObservableQuery.Result<DatasetBlocksEncodedByEventTypeQuery, "complete">) => {
+                    return result.data;
                 }),
             );
     }
@@ -190,8 +180,8 @@ export class DatasetApi {
             .valueChanges.pipe(
                 onlyCompleteData(),
                 first(),
-                map((result: ObservableQuery.Result<DatasetBlocksSchemaByEventTypeQuery>) => {
-                    return result.data as DatasetBlocksSchemaByEventTypeQuery;
+                map((result: ObservableQuery.Result<DatasetBlocksSchemaByEventTypeQuery, "complete">) => {
+                    return result.data;
                 }),
             );
     }
@@ -214,8 +204,8 @@ export class DatasetApi {
             .valueChanges.pipe(
                 onlyCompleteData(),
                 first(),
-                map((result: ObservableQuery.Result<GetDatasetMainDataQuery>) => {
-                    return result.data as GetDatasetMainDataQuery;
+                map((result: ObservableQuery.Result<GetDatasetMainDataQuery, "complete">) => {
+                    return result.data;
                 }),
             );
     }
@@ -232,8 +222,8 @@ export class DatasetApi {
             .valueChanges.pipe(
                 onlyCompleteData(),
                 first(),
-                map((result: ObservableQuery.Result<GetDatasetDataSqlRunQuery>) => {
-                    return result.data as GetDatasetDataSqlRunQuery;
+                map((result: ObservableQuery.Result<GetDatasetDataSqlRunQuery, "complete">) => {
+                    return result.data;
                 }),
             );
     }
@@ -252,8 +242,8 @@ export class DatasetApi {
             .valueChanges.pipe(
                 onlyCompleteData(),
                 first(),
-                map((result: ObservableQuery.Result<GetDatasetBasicsWithPermissionsQuery>) => {
-                    return result.data as GetDatasetBasicsWithPermissionsQuery;
+                map((result: ObservableQuery.Result<GetDatasetBasicsWithPermissionsQuery, "complete">) => {
+                    return result.data;
                 }),
             );
     }
@@ -276,8 +266,8 @@ export class DatasetApi {
             .valueChanges.pipe(
                 onlyCompleteData(),
                 first(),
-                map((result: ObservableQuery.Result<GetDatasetHistoryQuery>) => {
-                    return result.data as GetDatasetHistoryQuery;
+                map((result: ObservableQuery.Result<GetDatasetHistoryQuery, "complete">) => {
+                    return result.data;
                 }),
             );
     }
@@ -293,8 +283,8 @@ export class DatasetApi {
             .valueChanges.pipe(
                 onlyCompleteData(),
                 first(),
-                map((result: ObservableQuery.Result<GetDatasetLineageQuery>) => {
-                    return result.data as GetDatasetLineageQuery;
+                map((result: ObservableQuery.Result<GetDatasetLineageQuery, "complete">) => {
+                    return result.data;
                 }),
             );
     }
@@ -309,8 +299,8 @@ export class DatasetApi {
             .valueChanges.pipe(
                 completeDataOrError(),
                 first(),
-                map((result: ObservableQuery.Result<GetDatasetSchemaQuery>) => {
-                    return result.data as GetDatasetSchemaQuery;
+                map((result: ObservableQuery.Result<GetDatasetSchemaQuery, "complete">) => {
+                    return result.data;
                 }),
             );
     }
@@ -325,8 +315,8 @@ export class DatasetApi {
             .valueChanges.pipe(
                 onlyCompleteData(),
                 first(),
-                map((result: ObservableQuery.Result<DatasetsByAccountNameQuery>) => {
-                    return result.data as DatasetsByAccountNameQuery;
+                map((result: ObservableQuery.Result<DatasetsByAccountNameQuery, "complete">) => {
+                    return result.data;
                 }),
             );
     }
@@ -337,8 +327,8 @@ export class DatasetApi {
             .valueChanges.pipe(
                 onlyCompleteData(),
                 first(),
-                map((result: ObservableQuery.Result<DatasetsTotalCountByAccountNameQuery>) => {
-                    return result.data as DatasetsTotalCountByAccountNameQuery;
+                map((result: ObservableQuery.Result<DatasetsTotalCountByAccountNameQuery, "complete">) => {
+                    return result.data;
                 }),
             );
     }
@@ -359,8 +349,8 @@ export class DatasetApi {
             .valueChanges.pipe(
                 onlyCompleteData(),
                 first(),
-                map((result: ObservableQuery.Result<GetMetadataBlockQuery>) => {
-                    return result.data as GetMetadataBlockQuery;
+                map((result: ObservableQuery.Result<GetMetadataBlockQuery, "complete">) => {
+                    return result.data;
                 }),
             );
     }
@@ -375,8 +365,8 @@ export class DatasetApi {
             .valueChanges.pipe(
                 onlyCompleteData(),
                 first(),
-                map((result: ObservableQuery.Result<DatasetByIdQuery>) => {
-                    return result.data as DatasetByIdQuery;
+                map((result: ObservableQuery.Result<DatasetByIdQuery, "complete">) => {
+                    return result.data;
                 }),
             );
     }
@@ -395,8 +385,8 @@ export class DatasetApi {
             .valueChanges.pipe(
                 onlyCompleteData(),
                 first(),
-                map((result: ObservableQuery.Result<DatasetSystemTimeBlockByHashQuery>) => {
-                    return result.data as DatasetSystemTimeBlockByHashQuery;
+                map((result: ObservableQuery.Result<DatasetSystemTimeBlockByHashQuery, "complete">) => {
+                    return result.data;
                 }),
             );
     }
@@ -415,8 +405,8 @@ export class DatasetApi {
             .valueChanges.pipe(
                 onlyCompleteData(),
                 first(),
-                map((result: ObservableQuery.Result<DatasetByAccountAndDatasetNameQuery>) => {
-                    return result.data as DatasetByAccountAndDatasetNameQuery;
+                map((result: ObservableQuery.Result<DatasetByAccountAndDatasetNameQuery, "complete">) => {
+                    return result.data;
                 }),
             );
     }
@@ -425,12 +415,7 @@ export class DatasetApi {
         snapshot: string;
         datasetVisibility: DatasetVisibility;
     }): Observable<CreateDatasetFromSnapshotMutation> {
-        return this.createDatasetFromSnapshotGQL.mutate({ variables: { ...params } }).pipe(
-            first(),
-            map((result: ApolloLink.Result<CreateDatasetFromSnapshotMutation>) => {
-                return result.data as CreateDatasetFromSnapshotMutation;
-            }),
-        );
+        return this.createDatasetFromSnapshotGQL.mutate({ variables: { ...params } }).pipe(first(), mutationData());
     }
 
     public createEmptyDataset(params: {
@@ -444,12 +429,7 @@ export class DatasetApi {
                     ...params,
                 },
             })
-            .pipe(
-                first(),
-                map((result: ApolloLink.Result<CreateEmptyDatasetMutation>) => {
-                    return result.data as CreateEmptyDatasetMutation;
-                }),
-            );
+            .pipe(first(), mutationData());
     }
 
     public commitEvent(params: {
@@ -464,12 +444,7 @@ export class DatasetApi {
                     event: params.event,
                 },
             })
-            .pipe(
-                first(),
-                map((result: ApolloLink.Result<CommitEventToDatasetMutation>) => {
-                    return result.data as CommitEventToDatasetMutation;
-                }),
-            );
+            .pipe(first(), mutationData());
     }
 
     public updateReadme(params: {
@@ -484,12 +459,7 @@ export class DatasetApi {
                     content: params.content,
                 },
             })
-            .pipe(
-                first(),
-                map((result: ApolloLink.Result<UpdateReadmeMutation>) => {
-                    return result.data as UpdateReadmeMutation;
-                }),
-            );
+            .pipe(first(), mutationData());
     }
 
     public deleteDataset(params: { accountId: string; datasetId: string }): Observable<DeleteDatasetMutation> {
@@ -503,12 +473,7 @@ export class DatasetApi {
                     resetCacheHelper(cache, params);
                 },
             })
-            .pipe(
-                first(),
-                map((result: ApolloLink.Result<DeleteDatasetMutation>) => {
-                    return result.data as DeleteDatasetMutation;
-                }),
-            );
+            .pipe(first(), mutationData());
     }
 
     public renameDataset(params: {
@@ -530,12 +495,7 @@ export class DatasetApi {
                     });
                 },
             })
-            .pipe(
-                first(),
-                map((result: ApolloLink.Result<RenameDatasetMutation>) => {
-                    return result.data as RenameDatasetMutation;
-                }),
-            );
+            .pipe(first(), mutationData());
     }
 
     public setWatermark(params: {
@@ -550,12 +510,7 @@ export class DatasetApi {
                     watermark: params.watermark,
                 },
             })
-            .pipe(
-                first(),
-                map((result: ApolloLink.Result<UpdateWatermarkMutation>) => {
-                    return result.data as UpdateWatermarkMutation;
-                }),
-            );
+            .pipe(first(), mutationData());
     }
 
     public setVisibilityDataset(params: {
@@ -577,12 +532,7 @@ export class DatasetApi {
                     });
                 },
             })
-            .pipe(
-                first(),
-                map((result: ApolloLink.Result<SetVisibilityDatasetMutation>) => {
-                    return result.data as SetVisibilityDatasetMutation;
-                }),
-            );
+            .pipe(first(), mutationData());
     }
 
     public datasetHeadBlockHash(accountName: string, datasetName: string): Observable<DatasetHeadBlockHashQuery> {
@@ -597,8 +547,8 @@ export class DatasetApi {
             .valueChanges.pipe(
                 onlyCompleteData(),
                 first(),
-                map((result: ObservableQuery.Result<DatasetHeadBlockHashQuery>) => {
-                    return result.data as DatasetHeadBlockHashQuery;
+                map((result: ObservableQuery.Result<DatasetHeadBlockHashQuery, "complete">) => {
+                    return result.data;
                 }),
             );
     }
@@ -615,8 +565,8 @@ export class DatasetApi {
             .valueChanges.pipe(
                 onlyCompleteData(),
                 first(),
-                map((result: ObservableQuery.Result<DatasetPushSyncStatusesQuery>) => {
-                    return result.data as DatasetPushSyncStatusesQuery;
+                map((result: ObservableQuery.Result<DatasetPushSyncStatusesQuery, "complete">) => {
+                    return result.data;
                 }),
             );
     }
@@ -633,8 +583,8 @@ export class DatasetApi {
             .valueChanges.pipe(
                 onlyCompleteData(),
                 first(),
-                map((result: ObservableQuery.Result<DatasetListDownstreamsQuery>) => {
-                    return result.data as DatasetListDownstreamsQuery;
+                map((result: ObservableQuery.Result<DatasetListDownstreamsQuery, "complete">) => {
+                    return result.data;
                 }),
             );
     }
@@ -653,8 +603,8 @@ export class DatasetApi {
             .valueChanges.pipe(
                 onlyCompleteData(),
                 first(),
-                map((result: ObservableQuery.Result<DatasetAsVersionedFileQuery>) => {
-                    return result.data as DatasetAsVersionedFileQuery;
+                map((result: ObservableQuery.Result<DatasetAsVersionedFileQuery, "complete">) => {
+                    return result.data;
                 }),
             );
     }
@@ -677,8 +627,8 @@ export class DatasetApi {
             .valueChanges.pipe(
                 onlyCompleteData(),
                 first(),
-                map((result: ObservableQuery.Result<DatasetAsVersionedFileByVersionQuery>) => {
-                    return result.data as DatasetAsVersionedFileByVersionQuery;
+                map((result: ObservableQuery.Result<DatasetAsVersionedFileByVersionQuery, "complete">) => {
+                    return result.data;
                 }),
             );
     }
@@ -702,8 +652,8 @@ export class DatasetApi {
             .valueChanges.pipe(
                 onlyCompleteData(),
                 first(),
-                map((result: ObservableQuery.Result<DatasetAsVersionedFileByBlockHashQuery>) => {
-                    return result.data as DatasetAsVersionedFileByBlockHashQuery;
+                map((result: ObservableQuery.Result<DatasetAsVersionedFileByBlockHashQuery, "complete">) => {
+                    return result.data;
                 }),
             );
     }
@@ -723,8 +673,8 @@ export class DatasetApi {
             .valueChanges.pipe(
                 onlyCompleteData(),
                 first(),
-                map((result: ObservableQuery.Result<VersionedFileContentUrlQuery>) => {
-                    return result.data as VersionedFileContentUrlQuery;
+                map((result: ObservableQuery.Result<VersionedFileContentUrlQuery, "complete">) => {
+                    return result.data;
                 }),
             );
     }
@@ -749,8 +699,8 @@ export class DatasetApi {
             .valueChanges.pipe(
                 onlyCompleteData(),
                 first(),
-                map((result: ObservableQuery.Result<DatasetAsCollectionQuery>) => {
-                    return result.data as DatasetAsCollectionQuery;
+                map((result: ObservableQuery.Result<DatasetAsCollectionQuery, "complete">) => {
+                    return result.data;
                 }),
             );
     }

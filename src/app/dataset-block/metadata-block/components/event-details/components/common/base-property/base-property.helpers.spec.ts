@@ -18,7 +18,9 @@ import { datasetByIdChanges } from "src/app/dataset-block/metadata-block/compone
 describe("datasetByIdChanges", () => {
     const FIRST_DATASET_ID = "did:odf:first";
     const SECOND_DATASET_ID = "did:odf:second";
-    const mockMissingDatasetByIdQuery: DatasetByIdQuery = { datasets: { __typename: "Datasets", byId: null } };
+    const mockMissingDatasetByIdQuery: DatasetByIdQuery = {
+        datasets: { __typename: "Datasets", byId: null },
+    };
 
     let datasetIds$: Subject<MaybeNull<string>>;
     let requestSpy: Mock;

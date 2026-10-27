@@ -105,10 +105,10 @@ describe("SetPollingSourceEventComponent", () => {
         expect(port.innerText).toEqual(fetchStep.port.toString());
 
         const username = getElementByDataTestId(fixture, "setPollingSource-FetchStepMqtt-username");
-        expect(username.innerText).toEqual(requireValue(fetchStep.username ?? null));
+        expect(username.innerText).toEqual(requireValue(fetchStep.username));
 
         const password = getElementByDataTestId(fixture, "setPollingSource-FetchStepMqtt-password");
-        expect(password.innerText).toEqual(requireValue(fetchStep.password ?? null));
+        expect(password.innerText).toEqual(requireValue(fetchStep.password));
     });
 
     it("should keep the rendered property components on later change detection", () => {

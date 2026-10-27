@@ -117,7 +117,7 @@ export type Scalars = {
 
 /** A page of `ViewAccessToken` items */
 export type AccessTokenConnection = {
-  __typename?: 'AccessTokenConnection';
+  __typename: 'AccessTokenConnection';
   /** Items of this page, each wrapped in an edge */
   edges: Array<AccessTokenEdge>;
   /** A shorthand for `edges { node { ... } }` */
@@ -130,14 +130,14 @@ export type AccessTokenConnection = {
 
 /** An edge wrapping a single `ViewAccessToken` item */
 export type AccessTokenEdge = {
-  __typename?: 'AccessTokenEdge';
+  __typename: 'AccessTokenEdge';
   /** The item itself */
   node: ViewAccessToken;
 };
 
 /** User or organization account */
 export type Account = {
-  __typename?: 'Account';
+  __typename: 'Account';
   /**
    * Access to the access token management.
    * Available only to the account itself.
@@ -215,7 +215,7 @@ export type AccountOwnedDatasetsArgs = {
 
 /** Access tokens of an account */
 export type AccountAccessTokens = {
-  __typename?: 'AccountAccessTokens';
+  __typename: 'AccountAccessTokens';
   /** Lists access tokens of this account, including revoked ones */
   listAccessTokens: AccessTokenConnection;
 };
@@ -229,7 +229,7 @@ export type AccountAccessTokensListAccessTokensArgs = {
 
 /** Mutations managing access tokens of an account */
 export type AccountAccessTokensMut = {
-  __typename?: 'AccountAccessTokensMut';
+  __typename: 'AccountAccessTokensMut';
   /** Creates a new access token with the given name for this account */
   createAccessToken: CreateTokenResult;
   /** Revokes the access token with the given ID */
@@ -250,7 +250,7 @@ export type AccountAccessTokensMutRevokeAccessTokenArgs = {
 
 /** A page of `Account` items */
 export type AccountConnection = {
-  __typename?: 'AccountConnection';
+  __typename: 'AccountConnection';
   /** Items of this page, each wrapped in an edge */
   edges: Array<AccountEdge>;
   /** A shorthand for `edges { node { ... } }` */
@@ -273,14 +273,14 @@ export type AccountDatasetRelationOperation = {
 
 /** An edge wrapping a single `Account` item */
 export type AccountEdge = {
-  __typename?: 'AccountEdge';
+  __typename: 'AccountEdge';
   /** The item itself */
   node: Account;
 };
 
 /** Account was not created: a unique field value is already taken */
 export type AccountFieldNonUnique = CreateAccountResult & {
-  __typename?: 'AccountFieldNonUnique';
+  __typename: 'AccountFieldNonUnique';
   /** Name of the field whose value is already taken */
   field: Scalars['String']['output'];
   /** Human-readable outcome message */
@@ -304,7 +304,7 @@ export type AccountFlowProcessCard = DatasetFlowProcess | WebhookFlowSubProcess;
 
 /** A page of `AccountFlowProcessCard` items */
 export type AccountFlowProcessCardConnection = {
-  __typename?: 'AccountFlowProcessCardConnection';
+  __typename: 'AccountFlowProcessCardConnection';
   /** Items of this page, each wrapped in an edge */
   edges: Array<AccountFlowProcessCardEdge>;
   /** A shorthand for `edges { node { ... } }` */
@@ -317,14 +317,14 @@ export type AccountFlowProcessCardConnection = {
 
 /** An edge wrapping a single `AccountFlowProcessCard` item */
 export type AccountFlowProcessCardEdge = {
-  __typename?: 'AccountFlowProcessCardEdge';
+  __typename: 'AccountFlowProcessCardEdge';
   /** The item itself */
   node: AccountFlowProcessCard;
 };
 
 /** Recurring flow processes of the datasets owned by an account */
 export type AccountFlowProcesses = {
-  __typename?: 'AccountFlowProcesses';
+  __typename: 'AccountFlowProcesses';
   /** Page of dataset and webhook delivery processes together */
   allCards: AccountFlowProcessCardConnection;
   /** State counts of dataset and webhook delivery processes together */
@@ -386,7 +386,7 @@ export type AccountFlowProcessesWebhookRollupArgs = {
 
 /** Flow run queries across datasets owned by an account */
 export type AccountFlowRuns = {
-  __typename?: 'AccountFlowRuns';
+  __typename: 'AccountFlowRuns';
   /** Lists the account's datasets that have at least one flow */
   listDatasetsWithFlow: DatasetConnection;
   /** Lists flows of the account's datasets, paginated and optionally filtered */
@@ -404,7 +404,7 @@ export type AccountFlowRunsListFlowsArgs = {
 
 /** Flow queries scoped to an account */
 export type AccountFlows = {
-  __typename?: 'AccountFlows';
+  __typename: 'AccountFlows';
   /** Returns interface for flow processes summary queries */
   processes: AccountFlowProcesses;
   /** Returns interface for flow runs queries */
@@ -419,7 +419,7 @@ export type AccountLookupFilter = {
 
 /** Mutations of a single account */
 export type AccountMut = {
-  __typename?: 'AccountMut';
+  __typename: 'AccountMut';
   /**
    * Access to the access token management of this account.
    * Available only to the account itself.
@@ -496,14 +496,14 @@ export enum AccountProvider {
 
 /** Quotas of an account */
 export type AccountQuotas = {
-  __typename?: 'AccountQuotas';
+  __typename: 'AccountQuotas';
   /** User-level quotas */
   user: AccountQuotasUsage;
 };
 
 /** Mutations of account quotas */
 export type AccountQuotasMut = {
-  __typename?: 'AccountQuotasMut';
+  __typename: 'AccountQuotasMut';
   /** Setting quotas at the account level. */
   setAccountQuotas: SetAccountQuotasResult;
 };
@@ -516,14 +516,14 @@ export type AccountQuotasMutSetAccountQuotasArgs = {
 
 /** User-level quotas of an account */
 export type AccountQuotasUsage = {
-  __typename?: 'AccountQuotasUsage';
+  __typename: 'AccountQuotasUsage';
   /** User-level quotas */
   storage: AccountQuotasUsageStorage;
 };
 
 /** Storage quotas of an account */
 export type AccountQuotasUsageStorage = {
-  __typename?: 'AccountQuotasUsageStorage';
+  __typename: 'AccountQuotasUsageStorage';
   /**
    * Total bytes limit for this account, or `null` when the storage of this
    * account is unlimited.
@@ -541,14 +541,14 @@ export enum AccountType {
 
 /** Resource usage of an account */
 export type AccountUsage = {
-  __typename?: 'AccountUsage';
+  __typename: 'AccountUsage';
   /** Aggregated storage statistics of datasets owned by the account */
   storage: TotalDatasetsStatistic;
 };
 
 /** Collaborator of a dataset with their role */
 export type AccountWithRole = {
-  __typename?: 'AccountWithRole';
+  __typename: 'AccountWithRole';
   /** Collaborator account */
   account: Account;
   /** Role of the account in the dataset */
@@ -557,7 +557,7 @@ export type AccountWithRole = {
 
 /** A page of `AccountWithRole` items */
 export type AccountWithRoleConnection = {
-  __typename?: 'AccountWithRoleConnection';
+  __typename: 'AccountWithRoleConnection';
   /** Items of this page, each wrapped in an edge */
   edges: Array<AccountWithRoleEdge>;
   /** A shorthand for `edges { node { ... } }` */
@@ -570,14 +570,14 @@ export type AccountWithRoleConnection = {
 
 /** An edge wrapping a single `AccountWithRole` item */
 export type AccountWithRoleEdge = {
-  __typename?: 'AccountWithRoleEdge';
+  __typename: 'AccountWithRoleEdge';
   /** The item itself */
   node: AccountWithRole;
 };
 
 /** Account lookup queries */
 export type Accounts = {
-  __typename?: 'Accounts';
+  __typename: 'Accounts';
   /** Returns an account by its ID, if found */
   byId?: Maybe<Account>;
   /**
@@ -623,7 +623,7 @@ export type AccountsByNamesArgs = {
 
 /** Mutations of accounts */
 export type AccountsMut = {
-  __typename?: 'AccountsMut';
+  __typename: 'AccountsMut';
   /** Returns a mutable account by its id */
   byId?: Maybe<AccountMut>;
   /**
@@ -690,7 +690,7 @@ export type AccountsMutCreateWalletAccountsArgs = {
  * Schema: https://opendatafabric.org/schemas/datasets/v1alpha1/AddData
  */
 export type AddData = {
-  __typename?: 'AddData';
+  __typename: 'AddData';
   /** ODF extensions. */
   extra?: Maybe<Scalars['ExtraAttributes']['output']>;
   /**
@@ -728,7 +728,7 @@ export type AddData = {
  * Schema: https://opendatafabric.org/schemas/legacy/v0/AddPushSource
  */
 export type AddPushSource = {
-  __typename?: 'AddPushSource';
+  __typename: 'AddPushSource';
   /** Determines how newly-ingested data should be merged with existing history. */
   merge: MergeStrategy;
   /** Pre-processing query that shapes the data. */
@@ -741,21 +741,21 @@ export type AddPushSource = {
 
 /** Administrative queries, available only to administrators */
 export type Admin = {
-  __typename?: 'Admin';
+  __typename: 'Admin';
   /** Checks that the caller has administrator access, returns "OK" */
   selfTest: Scalars['String']['output'];
 };
 
 /** Administrative mutations, available only to administrators */
 export type AdminMut = {
-  __typename?: 'AdminMut';
+  __typename: 'AdminMut';
   /** Search index administration */
   search: AdminSearchMut;
 };
 
 /** Search index administration */
 export type AdminSearchMut = {
-  __typename?: 'AdminSearchMut';
+  __typename: 'AdminSearchMut';
   /** Drops and fully rebuilds the given search indices, all of them if none are given */
   resetSearchIndices: Scalars['String']['output'];
 };
@@ -776,7 +776,7 @@ export type ApplyManifestInput = {
 
 /** Account-dataset relations were applied */
 export type ApplyRolesMatrixResult = {
-  __typename?: 'ApplyRolesMatrixResult';
+  __typename: 'ApplyRolesMatrixResult';
   /** Human-readable outcome message */
   message: Scalars['String']['output'];
 };
@@ -787,7 +787,7 @@ export type ApplyRolesMatrixResult = {
  * Schema: https://opendatafabric.org/schemas/datasets/v1alpha1/AttachmentEmbedded
  */
 export type AttachmentEmbedded = {
-  __typename?: 'AttachmentEmbedded';
+  __typename: 'AttachmentEmbedded';
   /** Content of the attachment. */
   content: Scalars['String']['output'];
   /** Path to an attachment if it was materialized into a file. */
@@ -807,14 +807,14 @@ export type Attachments = AttachmentsEmbedded;
  * Schema: https://opendatafabric.org/schemas/datasets/v1alpha1/Attachments#/$defs/Embedded
  */
 export type AttachmentsEmbedded = {
-  __typename?: 'AttachmentsEmbedded';
+  __typename: 'AttachmentsEmbedded';
   /** List of embedded items. */
   items: Array<AttachmentEmbedded>;
 };
 
 /** Authentication and authorization queries */
 export type Auth = {
-  __typename?: 'Auth';
+  __typename: 'Auth';
   /** Login methods enabled on this node */
   enabledProviders: Array<AccountProvider>;
   /** Dataset roles granted to the given accounts */
@@ -831,7 +831,7 @@ export type AuthRelationsArgs = {
 
 /** Authentication mutations */
 export type AuthMut = {
-  __typename?: 'AuthMut';
+  __typename: 'AuthMut';
   /** Returns the account that the given access token belongs to */
   accountDetails: Account;
   /** Logs in with the given provider credentials and issues an access token */
@@ -856,7 +856,7 @@ export type AuthMutLoginArgs = {
 
 /** Role an account has in a dataset */
 export type AuthRelation = {
-  __typename?: 'AuthRelation';
+  __typename: 'AuthRelation';
   /** Account the role is granted to */
   account: Account;
   /** Dataset the role applies to */
@@ -867,7 +867,7 @@ export type AuthRelation = {
 
 /** A page of `AuthRelation` items */
 export type AuthRelationConnection = {
-  __typename?: 'AuthRelationConnection';
+  __typename: 'AuthRelationConnection';
   /** Items of this page, each wrapped in an edge */
   edges: Array<AuthRelationEdge>;
   /** A shorthand for `edges { node { ... } }` */
@@ -880,14 +880,14 @@ export type AuthRelationConnection = {
 
 /** An edge wrapping a single `AuthRelation` item */
 export type AuthRelationEdge = {
-  __typename?: 'AuthRelationEdge';
+  __typename: 'AuthRelationEdge';
   /** The item itself */
   node: AuthRelation;
 };
 
 /** Web3 wallet authentication mutations */
 export type AuthWeb3Mut = {
-  __typename?: 'AuthWeb3Mut';
+  __typename: 'AuthWeb3Mut';
   /** Issues a nonce for the wallet to sign in a Sign-In with Ethereum message */
   eip4361AuthNonce: Eip4361AuthNonceResponse;
 };
@@ -900,7 +900,7 @@ export type AuthWeb3MutEip4361AuthNonceArgs = {
 
 /** Resource handle found for one reference of a batch */
 export type BatchResourceHandleSuccess = {
-  __typename?: 'BatchResourceHandleSuccess';
+  __typename: 'BatchResourceHandleSuccess';
   /** Handle of the resource the reference resolved to */
   handle: ResourceHandle;
   /** Zero-based position of the reference in the request */
@@ -912,7 +912,7 @@ export type BatchResourceHandlesOutcome = BatchResourceHandlesResult | ResourceA
 
 /** Resource handles found and references that could not be resolved */
 export type BatchResourceHandlesResult = {
-  __typename?: 'BatchResourceHandlesResult';
+  __typename: 'BatchResourceHandlesResult';
   /**
    * Handles found, one per resolved reference; with `includeDeleting` a
    * name may match several, which share its `requestIndex`
@@ -924,7 +924,7 @@ export type BatchResourceHandlesResult = {
 
 /** Manifest rendered for one reference of a batch */
 export type BatchResourceManifestSuccess = {
-  __typename?: 'BatchResourceManifestSuccess';
+  __typename: 'BatchResourceManifestSuccess';
   /** Manifest of the resource the reference resolved to */
   manifest: ResourceRenderManifestResult;
   /** Zero-based position of the reference in the request */
@@ -936,7 +936,7 @@ export type BatchResourceManifestsOutcome = BatchResourceManifestsResult | Resou
 
 /** Rendered manifests and references that could not be resolved */
 export type BatchResourceManifestsResult = {
-  __typename?: 'BatchResourceManifestsResult';
+  __typename: 'BatchResourceManifestsResult';
   /**
    * Manifests rendered, one per resolved reference; with `includeDeleting`
    * a name may match several, which share its `requestIndex`
@@ -948,7 +948,7 @@ export type BatchResourceManifestsResult = {
 
 /** Reference of a batch that could not be resolved */
 export type BatchResourceProblem = {
-  __typename?: 'BatchResourceProblem';
+  __typename: 'BatchResourceProblem';
   /** Why the reference could not be resolved */
   problem: ResourceLookupProblem;
   /** Zero-based position of the reference in the request */
@@ -957,7 +957,7 @@ export type BatchResourceProblem = {
 
 /** Resource found for one reference of a batch */
 export type BatchResourceSuccess = {
-  __typename?: 'BatchResourceSuccess';
+  __typename: 'BatchResourceSuccess';
   /** Zero-based position of the reference in the request */
   requestIndex: Scalars['Int']['output'];
   /** Resource the reference resolved to */
@@ -969,7 +969,7 @@ export type BatchResourcesOutcome = BatchResourcesResult | ResourceAccountResolu
 
 /** Resources found and references that could not be resolved */
 export type BatchResourcesResult = {
-  __typename?: 'BatchResourcesResult';
+  __typename: 'BatchResourcesResult';
   /** References that could not be resolved */
   problems: Array<BatchResourceProblem>;
   /**
@@ -981,7 +981,7 @@ export type BatchResourcesResult = {
 
 /** Named reference to a metadata block */
 export type BlockRef = {
-  __typename?: 'BlockRef';
+  __typename: 'BlockRef';
   /** Hash of the block the reference points to */
   blockHash: Scalars['Multihash']['output'];
   /** Name of the reference, e.g. `head` */
@@ -990,7 +990,7 @@ export type BlockRef = {
 
 /** Build details of the running server; fields are null when unknown */
 export type BuildInfo = {
-  __typename?: 'BuildInfo';
+  __typename: 'BuildInfo';
   /** Version of the application */
   appVersion: Scalars['String']['output'];
   /** Time the binary was built */
@@ -1027,7 +1027,7 @@ export type CancelFlowRunResult = {
 
 /** Flow run was cancelled */
 export type CancelFlowRunSuccess = CancelFlowRunResult & {
-  __typename?: 'CancelFlowRunSuccess';
+  __typename: 'CancelFlowRunSuccess';
   /** Flow after cancellation */
   flow: Flow;
   /** Human-readable success message */
@@ -1040,7 +1040,7 @@ export type CancelFlowRunSuccess = CancelFlowRunResult & {
  * Schema: https://opendatafabric.org/schemas/datasets/v1alpha1/Checkpoint
  */
 export type Checkpoint = {
-  __typename?: 'Checkpoint';
+  __typename: 'Checkpoint';
   /** Hash sum of the checkpoint file. */
   physicalHash: Scalars['Multihash']['output'];
   /** Size of checkpoint file in bytes. */
@@ -1049,7 +1049,7 @@ export type Checkpoint = {
 
 /** Kamu CLI commands to sync a dataset with this node */
 export type CliProtocolDesc = {
-  __typename?: 'CliProtocolDesc';
+  __typename: 'CliProtocolDesc';
   /** Command that pulls the dataset from this node */
   pullCommand: Scalars['String']['output'];
   /** Command that pushes a local dataset to this node */
@@ -1058,7 +1058,7 @@ export type CliProtocolDesc = {
 
 /** Mutations that manage account access to datasets in bulk */
 export type CollaborationMut = {
-  __typename?: 'CollaborationMut';
+  __typename: 'CollaborationMut';
   /** Batch application of relations between accounts and datasets */
   applyAccountDatasetRelations: ApplyRolesMatrixResult;
 };
@@ -1071,7 +1071,7 @@ export type CollaborationMutApplyAccountDatasetRelationsArgs = {
 
 /** Collection archetype view of a dataset: a set of entries linking to other datasets by path */
 export type Collection = {
-  __typename?: 'Collection';
+  __typename: 'Collection';
   /**
    * State projection of the state of a collection at the specified point in
    * time
@@ -1089,7 +1089,7 @@ export type CollectionAsOfArgs = {
 
 /** Entry of a collection that links a path to a dataset */
 export type CollectionEntry = {
-  __typename?: 'CollectionEntry';
+  __typename: 'CollectionEntry';
   /** Resolves the reference to linked dataset */
   asDataset?: Maybe<Dataset>;
   /** Event time when this entry was created */
@@ -1110,7 +1110,7 @@ export type CollectionEntry = {
 
 /** A page of `CollectionEntry` items */
 export type CollectionEntryConnection = {
-  __typename?: 'CollectionEntryConnection';
+  __typename: 'CollectionEntryConnection';
   /** Items of this page, each wrapped in an edge */
   edges: Array<CollectionEntryEdge>;
   /** A shorthand for `edges { node { ... } }` */
@@ -1123,7 +1123,7 @@ export type CollectionEntryConnection = {
 
 /** An edge wrapping a single `CollectionEntry` item */
 export type CollectionEntryEdge = {
-  __typename?: 'CollectionEntryEdge';
+  __typename: 'CollectionEntryEdge';
   /** The item itself */
   node: CollectionEntry;
 };
@@ -1140,7 +1140,7 @@ export type CollectionEntryInput = {
 
 /** Mutations of a collection dataset */
 export type CollectionMut = {
-  __typename?: 'CollectionMut';
+  __typename: 'CollectionMut';
   /** Links new entry to this collection */
   addEntry: CollectionUpdateResult;
   /** Moves or renames an entry */
@@ -1183,7 +1183,7 @@ export type CollectionMutUpdateEntriesArgs = {
 
 /** State of a collection at a specific point in its history */
 export type CollectionProjection = {
-  __typename?: 'CollectionProjection';
+  __typename: 'CollectionProjection';
   /**
    * Returns the state of entries as they existed at a specified point in
    * time
@@ -1218,7 +1218,7 @@ export type CollectionProjectionEntryArgs = {
 
 /** Dataset head did not match the expected one, likely due to a concurrent update */
 export type CollectionUpdateErrorCasFailed = CollectionUpdateResult & {
-  __typename?: 'CollectionUpdateErrorCasFailed';
+  __typename: 'CollectionUpdateErrorCasFailed';
   /** Current head block hash of the dataset, null if it has none */
   actualHead?: Maybe<Scalars['Multihash']['output']>;
   /** Head block hash the caller expected */
@@ -1231,7 +1231,7 @@ export type CollectionUpdateErrorCasFailed = CollectionUpdateResult & {
 
 /** Entry referenced by an operation does not exist */
 export type CollectionUpdateErrorNotFound = CollectionUpdateResult & {
-  __typename?: 'CollectionUpdateErrorNotFound';
+  __typename: 'CollectionUpdateErrorNotFound';
   /** Always false */
   isSuccess: Scalars['Boolean']['output'];
   /** Human-readable error message */
@@ -1242,7 +1242,7 @@ export type CollectionUpdateErrorNotFound = CollectionUpdateResult & {
 
 /** Update would exceed the storage quota of the account */
 export type CollectionUpdateErrorQuotaExceeded = CollectionUpdateResult & {
-  __typename?: 'CollectionUpdateErrorQuotaExceeded';
+  __typename: 'CollectionUpdateErrorQuotaExceeded';
   /** Size of the rejected data, in bytes; null if no quota is configured */
   incoming?: Maybe<Scalars['Int']['output']>;
   /** Always false */
@@ -1305,7 +1305,7 @@ export type CollectionUpdateResult = {
 
 /** Collection entries were updated */
 export type CollectionUpdateSuccess = CollectionUpdateResult & {
-  __typename?: 'CollectionUpdateSuccess';
+  __typename: 'CollectionUpdateSuccess';
   /** Always true */
   isSuccess: Scalars['Boolean']['output'];
   /** Always empty */
@@ -1318,7 +1318,7 @@ export type CollectionUpdateSuccess = CollectionUpdateResult & {
 
 /** Operations did not change the collection */
 export type CollectionUpdateUpToDate = CollectionUpdateResult & {
-  __typename?: 'CollectionUpdateUpToDate';
+  __typename: 'CollectionUpdateUpToDate';
   /** Always true */
   isSuccess: Scalars['Boolean']['output'];
   /** Always empty */
@@ -1343,7 +1343,7 @@ export type CommitResult = {
 
 /** Event could not be appended to the metadata chain */
 export type CommitResultAppendError = CommitResult & UpdateReadmeResult & {
-  __typename?: 'CommitResultAppendError';
+  __typename: 'CommitResultAppendError';
   /** Always false */
   isSuccess: Scalars['Boolean']['output'];
   /** Reason the append failed */
@@ -1352,7 +1352,7 @@ export type CommitResultAppendError = CommitResult & UpdateReadmeResult & {
 
 /** Event was committed to the metadata chain */
 export type CommitResultSuccess = CommitResult & UpdateReadmeResult & {
-  __typename?: 'CommitResultSuccess';
+  __typename: 'CommitResultSuccess';
   /** Always true */
   isSuccess: Scalars['Boolean']['output'];
   /** Human-readable outcome message */
@@ -1368,21 +1368,21 @@ export type CompareChainsResult = CompareChainsResultError | CompareChainsResult
 
 /** Metadata chains could not be compared */
 export type CompareChainsResultError = {
-  __typename?: 'CompareChainsResultError';
+  __typename: 'CompareChainsResultError';
   /** Reason of the failure */
   reason: CompareChainsResultReason;
 };
 
 /** Reason the metadata chains could not be compared */
 export type CompareChainsResultReason = {
-  __typename?: 'CompareChainsResultReason';
+  __typename: 'CompareChainsResultReason';
   /** Description of the problem */
   message: Scalars['String']['output'];
 };
 
 /** Metadata chains were compared successfully */
 export type CompareChainsResultStatus = {
-  __typename?: 'CompareChainsResultStatus';
+  __typename: 'CompareChainsResultStatus';
   /** State of the remote chain relative to the local one */
   message: CompareChainsStatus;
 };
@@ -1411,7 +1411,7 @@ export enum CompressionFormat {
 
 /** Access token was not created: the account already has a token with this name */
 export type CreateAccessTokenResultDuplicate = CreateTokenResult & {
-  __typename?: 'CreateAccessTokenResultDuplicate';
+  __typename: 'CreateAccessTokenResultDuplicate';
   /** Human-readable outcome message */
   message: Scalars['String']['output'];
   /** Name that is already taken */
@@ -1420,7 +1420,7 @@ export type CreateAccessTokenResultDuplicate = CreateTokenResult & {
 
 /** Access token was created */
 export type CreateAccessTokenResultSuccess = CreateTokenResult & {
-  __typename?: 'CreateAccessTokenResultSuccess';
+  __typename: 'CreateAccessTokenResultSuccess';
   /** Human-readable outcome message */
   message: Scalars['String']['output'];
   /** The created token */
@@ -1435,7 +1435,7 @@ export type CreateAccountResult = {
 
 /** Account was created */
 export type CreateAccountSuccess = CreateAccountResult & {
-  __typename?: 'CreateAccountSuccess';
+  __typename: 'CreateAccountSuccess';
   /** The created account */
   account: Account;
   /** Human-readable outcome message */
@@ -1460,7 +1460,7 @@ export type CreateDatasetResult = {
 
 /** Snapshot or the events in it are invalid */
 export type CreateDatasetResultInvalidSnapshot = CreateDatasetFromSnapshotResult & {
-  __typename?: 'CreateDatasetResultInvalidSnapshot';
+  __typename: 'CreateDatasetResultInvalidSnapshot';
   /** Always false */
   isSuccess: Scalars['Boolean']['output'];
   /** Reason the snapshot was rejected */
@@ -1469,7 +1469,7 @@ export type CreateDatasetResultInvalidSnapshot = CreateDatasetFromSnapshotResult
 
 /** Derivative dataset references inputs that do not exist */
 export type CreateDatasetResultMissingInputs = CreateDatasetFromSnapshotResult & {
-  __typename?: 'CreateDatasetResultMissingInputs';
+  __typename: 'CreateDatasetResultMissingInputs';
   /** Always false */
   isSuccess: Scalars['Boolean']['output'];
   /** Human-readable error message */
@@ -1480,7 +1480,7 @@ export type CreateDatasetResultMissingInputs = CreateDatasetFromSnapshotResult &
 
 /** Dataset with the requested name already exists */
 export type CreateDatasetResultNameCollision = CreateDatasetFromSnapshotResult & CreateDatasetResult & {
-  __typename?: 'CreateDatasetResultNameCollision';
+  __typename: 'CreateDatasetResultNameCollision';
   /** Owner account of the existing dataset, null in single-tenant mode */
   accountName?: Maybe<Scalars['AccountName']['output']>;
   /** Name that is already taken */
@@ -1493,7 +1493,7 @@ export type CreateDatasetResultNameCollision = CreateDatasetFromSnapshotResult &
 
 /** Dataset was created */
 export type CreateDatasetResultSuccess = CreateDatasetFromSnapshotResult & CreateDatasetResult & {
-  __typename?: 'CreateDatasetResultSuccess';
+  __typename: 'CreateDatasetResultSuccess';
   /** Created dataset */
   dataset: Dataset;
   /** Always true */
@@ -1516,7 +1516,7 @@ export type CreateWalletAccountsResult = {
 
 /** Wallet accounts exist for all given addresses */
 export type CreateWalletAccountsSuccess = CreateWalletAccountsResult & {
-  __typename?: 'CreateWalletAccountsSuccess';
+  __typename: 'CreateWalletAccountsSuccess';
   /** Accounts of the given wallets, including already existing ones */
   accounts: Array<Account>;
   /** Human-readable outcome message */
@@ -1531,7 +1531,7 @@ export type CreateWebhookSubscriptionResult = {
 
 /** Webhook subscription was created */
 export type CreateWebhookSubscriptionResultSuccess = CreateWebhookSubscriptionResult & {
-  __typename?: 'CreateWebhookSubscriptionResultSuccess';
+  __typename: 'CreateWebhookSubscriptionResultSuccess';
   /** Human-readable success message */
   message: Scalars['String']['output'];
   /** Secret for verifying delivery signatures, returned only once */
@@ -1542,7 +1542,7 @@ export type CreateWebhookSubscriptionResultSuccess = CreateWebhookSubscriptionRe
 
 /** Newly created access token, including its secret value */
 export type CreatedAccessToken = {
-  __typename?: 'CreatedAccessToken';
+  __typename: 'CreatedAccessToken';
   /** Access token account owner */
   account: Account;
   /** Composed original token */
@@ -1555,14 +1555,14 @@ export type CreatedAccessToken = {
 
 /** Cron schedule of a trigger */
 export type Cron5ComponentExpression = {
-  __typename?: 'Cron5ComponentExpression';
+  __typename: 'Cron5ComponentExpression';
   /** Cron expression: min hour dayOfMonth month dayOfWeek */
   cron5ComponentExpression: Scalars['String']['output'];
 };
 
 /** Batch of records encoded in the requested format */
 export type DataBatch = {
-  __typename?: 'DataBatch';
+  __typename: 'DataBatch';
   /** Encoded records */
   content: Scalars['String']['output'];
   /** Format the content is encoded in */
@@ -1594,7 +1594,7 @@ export enum DataBatchFormat {
 
 /** Queries that operate on data across datasets */
 export type DataQueries = {
-  __typename?: 'DataQueries';
+  __typename: 'DataQueries';
   /** Lists engines known to the system and recommended for use */
   knownEngines: Array<EngineDesc>;
   /** Executes a specified query and returns its result */
@@ -1617,7 +1617,7 @@ export type DataQueryResult = DataQueryResultError | DataQueryResultSuccess;
 
 /** Query could not be executed */
 export type DataQueryResultError = {
-  __typename?: 'DataQueryResultError';
+  __typename: 'DataQueryResultError';
   /** Category of the problem */
   errorKind: DataQueryResultErrorKind;
   /** Description of the problem */
@@ -1632,7 +1632,7 @@ export enum DataQueryResultErrorKind {
 
 /** Query executed successfully */
 export type DataQueryResultSuccess = {
-  __typename?: 'DataQueryResultSuccess';
+  __typename: 'DataQueryResultSuccess';
   /** Records of the result */
   data: DataBatch;
   /**
@@ -1648,7 +1648,7 @@ export type DataQueryResultSuccess = {
 
 /** Schema of data rendered in the requested format */
 export type DataSchema = {
-  __typename?: 'DataSchema';
+  __typename: 'DataSchema';
   /** Schema rendered in the format */
   content: Scalars['String']['output'];
   /** Format the content is rendered in */
@@ -1675,7 +1675,7 @@ export enum DataSchemaFormat {
  * Schema: https://opendatafabric.org/schemas/datasets/v1alpha1/DataSlice
  */
 export type DataSlice = {
-  __typename?: 'DataSlice';
+  __typename: 'DataSlice';
   /** Logical hash sum of the data in this slice. */
   logicalHash: Scalars['Multihash']['output'];
   /** Data slice produced by the transaction. */
@@ -1694,7 +1694,7 @@ export type DataTypeInput = {
 
 /** Dataset with its metadata, data and related information */
 export type Dataset = {
-  __typename?: 'Dataset';
+  __typename: 'Dataset';
   /** Returns dataset alias (user + name) */
   alias: Scalars['DatasetAlias']['output'];
   /** Downcast a dataset to a collection interface */
@@ -1752,7 +1752,7 @@ export type DatasetAccessResult = {
 
 /** Dataset was found and is readable by the caller */
 export type DatasetAccessResultAccessible = DatasetAccessResult & {
-  __typename?: 'DatasetAccessResultAccessible';
+  __typename: 'DatasetAccessResultAccessible';
   /** Accessible dataset */
   dataset: Dataset;
   /** Human-readable access status */
@@ -1761,7 +1761,7 @@ export type DatasetAccessResultAccessible = DatasetAccessResult & {
 
 /** Dataset does not exist or is not readable by the caller */
 export type DatasetAccessResultNotAccessible = DatasetAccessResult & {
-  __typename?: 'DatasetAccessResultNotAccessible';
+  __typename: 'DatasetAccessResultNotAccessible';
   /** Identifier of the requested dataset */
   id: Scalars['DatasetID']['output'];
   /** Human-readable access status */
@@ -1788,7 +1788,7 @@ export enum DatasetArchetype {
 
 /** Access sharing of a dataset with other accounts */
 export type DatasetCollaboration = {
-  __typename?: 'DatasetCollaboration';
+  __typename: 'DatasetCollaboration';
   /** Accounts (and their roles) that have access to the dataset */
   accountRoles: AccountWithRoleConnection;
 };
@@ -1802,7 +1802,7 @@ export type DatasetCollaborationAccountRolesArgs = {
 
 /** Mutations that manage account access to a dataset */
 export type DatasetCollaborationMut = {
-  __typename?: 'DatasetCollaborationMut';
+  __typename: 'DatasetCollaborationMut';
   /** Grant account access as the specified role for the dataset */
   setRole: SetRoleResult;
   /** Revoking account accesses for the dataset */
@@ -1824,7 +1824,7 @@ export type DatasetCollaborationMutUnsetRolesArgs = {
 
 /** Permissions for managing access of other accounts to a dataset */
 export type DatasetCollaborationPermissions = {
-  __typename?: 'DatasetCollaborationPermissions';
+  __typename: 'DatasetCollaborationPermissions';
   /** Whether the account can grant and revoke access to the dataset */
   canUpdate: Scalars['Boolean']['output'];
   /** Whether the account can see who has access to the dataset */
@@ -1833,7 +1833,7 @@ export type DatasetCollaborationPermissions = {
 
 /** A page of `Dataset` items */
 export type DatasetConnection = {
-  __typename?: 'DatasetConnection';
+  __typename: 'DatasetConnection';
   /** Items of this page, each wrapped in an edge */
   edges: Array<DatasetEdge>;
   /** A shorthand for `edges { node { ... } }` */
@@ -1846,7 +1846,7 @@ export type DatasetConnection = {
 
 /** Data stored in a dataset and its statistics */
 export type DatasetData = {
-  __typename?: 'DatasetData';
+  __typename: 'DatasetData';
   /** An estimated size of linked objects */
   estimatedLinkedObjectsSizeBytes: Scalars['Int']['output'];
   /**
@@ -1890,14 +1890,14 @@ export type DatasetDataTailArgs = {
 
 /** An edge wrapping a single `Dataset` item */
 export type DatasetEdge = {
-  __typename?: 'DatasetEdge';
+  __typename: 'DatasetEdge';
   /** The item itself */
   node: Dataset;
 };
 
 /** Ways to access a dataset over the supported protocols */
 export type DatasetEndpoints = {
-  __typename?: 'DatasetEndpoints';
+  __typename: 'DatasetEndpoints';
   /** Commands to pull and push the dataset with the kamu CLI */
   cli: CliProtocolDesc;
   /** Arrow Flight SQL endpoint */
@@ -1920,7 +1920,7 @@ export type DatasetEndpoints = {
 
 /** Environment variables of a dataset */
 export type DatasetEnvVars = {
-  __typename?: 'DatasetEnvVars';
+  __typename: 'DatasetEnvVars';
   /** Returns the value of a variable, decrypting it if it is secret */
   exposedValue: Scalars['String']['output'];
   /** Lists environment variables of the dataset */
@@ -1942,7 +1942,7 @@ export type DatasetEnvVarsListEnvVariablesArgs = {
 
 /** Mutations that manage environment variables of a dataset */
 export type DatasetEnvVarsMut = {
-  __typename?: 'DatasetEnvVarsMut';
+  __typename: 'DatasetEnvVarsMut';
   /** Deletes an environment variable by its key */
   deleteEnvVariable: DeleteDatasetEnvVarResult;
   /** Creates or updates an environment variable, optionally as a secret */
@@ -1965,7 +1965,7 @@ export type DatasetEnvVarsMutUpsertEnvVariableArgs = {
 
 /** Permissions for environment variables of a dataset */
 export type DatasetEnvVarsPermissions = {
-  __typename?: 'DatasetEnvVarsPermissions';
+  __typename: 'DatasetEnvVarsPermissions';
   /** Whether the account can change the environment variables */
   canUpdate: Scalars['Boolean']['output'];
   /** Whether the account can see the environment variables */
@@ -1974,7 +1974,7 @@ export type DatasetEnvVarsPermissions = {
 
 /** Flow configuration queries of a dataset */
 export type DatasetFlowConfigs = {
-  __typename?: 'DatasetFlowConfigs';
+  __typename: 'DatasetFlowConfigs';
   /** Returns defined configuration for a flow of specified type */
   byType?: Maybe<FlowConfiguration>;
 };
@@ -1987,7 +1987,7 @@ export type DatasetFlowConfigsByTypeArgs = {
 
 /** Mutations that change flow configurations of a dataset */
 export type DatasetFlowConfigsMut = {
-  __typename?: 'DatasetFlowConfigsMut';
+  __typename: 'DatasetFlowConfigsMut';
   /** Sets the compaction flow configuration of a root dataset */
   setCompactionConfig: SetFlowConfigResult;
   /** Sets the ingest flow configuration of a root dataset */
@@ -2020,7 +2020,7 @@ export type DatasetFlowFilters = {
 
 /** Recurring flow process of a dataset */
 export type DatasetFlowProcess = {
-  __typename?: 'DatasetFlowProcess';
+  __typename: 'DatasetFlowProcess';
   /** Dataset the process belongs to */
   dataset: Dataset;
   /** Kind of flow this process runs */
@@ -2031,7 +2031,7 @@ export type DatasetFlowProcess = {
 
 /** A page of `DatasetFlowProcess` items */
 export type DatasetFlowProcessConnection = {
-  __typename?: 'DatasetFlowProcessConnection';
+  __typename: 'DatasetFlowProcessConnection';
   /** Items of this page, each wrapped in an edge */
   edges: Array<DatasetFlowProcessEdge>;
   /** A shorthand for `edges { node { ... } }` */
@@ -2044,14 +2044,14 @@ export type DatasetFlowProcessConnection = {
 
 /** An edge wrapping a single `DatasetFlowProcess` item */
 export type DatasetFlowProcessEdge = {
-  __typename?: 'DatasetFlowProcessEdge';
+  __typename: 'DatasetFlowProcessEdge';
   /** The item itself */
   node: DatasetFlowProcess;
 };
 
 /** Recurring flow processes of a dataset */
 export type DatasetFlowProcesses = {
-  __typename?: 'DatasetFlowProcesses';
+  __typename: 'DatasetFlowProcesses';
   /**
    * Main update process: ingest for a root dataset, transform for a
    * derivative
@@ -2063,7 +2063,7 @@ export type DatasetFlowProcesses = {
 
 /** Flow run queries of a dataset */
 export type DatasetFlowRuns = {
-  __typename?: 'DatasetFlowRuns';
+  __typename: 'DatasetFlowRuns';
   /** Returns a flow of this dataset by its ID */
   getFlow: GetFlowResult;
   /** Lists accounts that have started flows of this dataset */
@@ -2089,7 +2089,7 @@ export type DatasetFlowRunsListFlowsArgs = {
 
 /** Mutations that trigger or cancel flow runs of a dataset */
 export type DatasetFlowRunsMut = {
-  __typename?: 'DatasetFlowRunsMut';
+  __typename: 'DatasetFlowRunsMut';
   /** Cancels a scheduled or running flow of this dataset */
   cancelFlowRun: CancelFlowRunResult;
   /** Manually triggers a compaction flow of a root dataset */
@@ -2130,7 +2130,7 @@ export type DatasetFlowRunsMutTriggerResetFlowArgs = {
 
 /** Flow trigger queries of a dataset */
 export type DatasetFlowTriggers = {
-  __typename?: 'DatasetFlowTriggers';
+  __typename: 'DatasetFlowTriggers';
   /** Returns defined trigger for a flow of specified type */
   byType?: Maybe<FlowTrigger>;
 };
@@ -2143,7 +2143,7 @@ export type DatasetFlowTriggersByTypeArgs = {
 
 /** Mutations that manage flow triggers of a dataset */
 export type DatasetFlowTriggersMut = {
-  __typename?: 'DatasetFlowTriggersMut';
+  __typename: 'DatasetFlowTriggersMut';
   /** Pauses the trigger of a flow type */
   pauseFlow: Scalars['Boolean']['output'];
   /** Pauses triggers of all flow types of the dataset */
@@ -2192,7 +2192,7 @@ export enum DatasetFlowType {
 
 /** Flow queries scoped to a dataset */
 export type DatasetFlows = {
-  __typename?: 'DatasetFlows';
+  __typename: 'DatasetFlows';
   /** Returns interface for flow configurations queries */
   configs: DatasetFlowConfigs;
   /** Returns interface for flow processes queries */
@@ -2205,7 +2205,7 @@ export type DatasetFlows = {
 
 /** Flow mutations scoped to a dataset */
 export type DatasetFlowsMut = {
-  __typename?: 'DatasetFlowsMut';
+  __typename: 'DatasetFlowsMut';
   /** Flow configuration mutations */
   configs: DatasetFlowConfigsMut;
   /** Mutations that trigger or cancel flow runs */
@@ -2216,7 +2216,7 @@ export type DatasetFlowsMut = {
 
 /** Permissions for flows of a dataset */
 export type DatasetFlowsPermissions = {
-  __typename?: 'DatasetFlowsPermissions';
+  __typename: 'DatasetFlowsPermissions';
   /** Whether the account can trigger and configure the flows */
   canRun: Scalars['Boolean']['output'];
   /** Whether the account can see the flows and their history */
@@ -2225,7 +2225,7 @@ export type DatasetFlowsPermissions = {
 
 /** Permissions for general management of a dataset */
 export type DatasetGeneralPermissions = {
-  __typename?: 'DatasetGeneralPermissions';
+  __typename: 'DatasetGeneralPermissions';
   /** Whether the account can delete the dataset */
   canDelete: Scalars['Boolean']['output'];
   /** Whether the account can rename the dataset */
@@ -2246,7 +2246,7 @@ export enum DatasetKind {
 
 /** Metadata of a dataset and its current state derived from the metadata chain */
 export type DatasetMetadata = {
-  __typename?: 'DatasetMetadata';
+  __typename: 'DatasetMetadata';
   /** Access to the temporal metadata chain of the dataset */
   chain: MetadataChain;
   /**
@@ -2308,7 +2308,7 @@ export type DatasetMetadataMetadataProjectionArgs = {
 
 /** Mutations of the dataset metadata */
 export type DatasetMetadataMut = {
-  __typename?: 'DatasetMetadataMut';
+  __typename: 'DatasetMetadataMut';
   /** Access to the mutable metadata chain of the dataset */
   chain: MetadataChainMut;
   /** Updates or clears the dataset readme */
@@ -2323,14 +2323,14 @@ export type DatasetMetadataMutUpdateReadmeArgs = {
 
 /** Permissions for metadata of a dataset */
 export type DatasetMetadataPermissions = {
-  __typename?: 'DatasetMetadataPermissions';
+  __typename: 'DatasetMetadataPermissions';
   /** Whether the account can commit new metadata events */
   canCommit: Scalars['Boolean']['output'];
 };
 
 /** Mutations of a single dataset */
 export type DatasetMut = {
-  __typename?: 'DatasetMut';
+  __typename: 'DatasetMut';
   /** Downcast a dataset to a collection interface */
   asCollection?: Maybe<CollectionMut>;
   /** Downcast a dataset to a versioned file interface */
@@ -2377,7 +2377,7 @@ export type DatasetMutSetWatermarkArgs = {
 
 /** Actions the current account is allowed to perform on a dataset */
 export type DatasetPermissions = {
-  __typename?: 'DatasetPermissions';
+  __typename: 'DatasetPermissions';
   /** Permissions for managing access of other accounts */
   collaboration: DatasetCollaborationPermissions;
   /** Permissions for dataset environment variables */
@@ -2394,7 +2394,7 @@ export type DatasetPermissions = {
 
 /** Sync state of a dataset relative to one of its push remotes */
 export type DatasetPushStatus = {
-  __typename?: 'DatasetPushStatus';
+  __typename: 'DatasetPushStatus';
   /** Remote dataset the local one is pushed to */
   remote: Scalars['DatasetRefRemote']['output'];
   /** Result of comparing the remote metadata chain with the local one */
@@ -2403,7 +2403,7 @@ export type DatasetPushStatus = {
 
 /** Sync states of a dataset relative to all its push remotes */
 export type DatasetPushStatuses = {
-  __typename?: 'DatasetPushStatuses';
+  __typename: 'DatasetPushStatuses';
   /** Sync state per push remote */
   statuses: Array<DatasetPushStatus>;
 };
@@ -2429,7 +2429,7 @@ export type DatasetRoleUnsetOperation = {
 
 /** Input dataset of a query and the state it was queried at */
 export type DatasetState = {
-  __typename?: 'DatasetState';
+  __typename: 'DatasetState';
   /** Alias to be used in the query */
   alias: Scalars['String']['output'];
   /**
@@ -2461,7 +2461,7 @@ export type DatasetVisibilityOutput = PrivateDatasetVisibility | PublicDatasetVi
 
 /** Webhook subscription queries of a dataset */
 export type DatasetWebhooks = {
-  __typename?: 'DatasetWebhooks';
+  __typename: 'DatasetWebhooks';
   /** Returns a webhook subscription by ID */
   subscription?: Maybe<WebhookSubscription>;
   /** Lists all webhook subscriptions for the dataset */
@@ -2476,7 +2476,7 @@ export type DatasetWebhooksSubscriptionArgs = {
 
 /** Webhook subscription mutations of a dataset */
 export type DatasetWebhooksMut = {
-  __typename?: 'DatasetWebhooksMut';
+  __typename: 'DatasetWebhooksMut';
   /** Creates a webhook subscription for this dataset */
   createSubscription: CreateWebhookSubscriptionResult;
   /** Returns a webhook subscription management API by ID */
@@ -2497,7 +2497,7 @@ export type DatasetWebhooksMutSubscriptionArgs = {
 
 /** Permissions for webhooks of a dataset */
 export type DatasetWebhooksPermissions = {
-  __typename?: 'DatasetWebhooksPermissions';
+  __typename: 'DatasetWebhooksPermissions';
   /** Whether the account can change the webhook subscriptions */
   canUpdate: Scalars['Boolean']['output'];
   /** Whether the account can see the webhook subscriptions */
@@ -2506,7 +2506,7 @@ export type DatasetWebhooksPermissions = {
 
 /** Queries for looking up and listing datasets */
 export type Datasets = {
-  __typename?: 'Datasets';
+  __typename: 'Datasets';
   /** Returns datasets belonging to the specified account */
   byAccountId: DatasetConnection;
   /** Returns datasets belonging to the specified account */
@@ -2582,7 +2582,7 @@ export type DatasetsByRefsArgs = {
 
 /** Mutations that look up and create datasets */
 export type DatasetsMut = {
-  __typename?: 'DatasetsMut';
+  __typename: 'DatasetsMut';
   /** Returns a mutable dataset by its ID, if found */
   byId?: Maybe<DatasetMut>;
   /**
@@ -2669,7 +2669,7 @@ export type DeleteAccountResult = {
 
 /** Account was deleted */
 export type DeleteAccountSuccess = DeleteAccountResult & {
-  __typename?: 'DeleteAccountSuccess';
+  __typename: 'DeleteAccountSuccess';
   /** Human-readable outcome message */
   message: Scalars['String']['output'];
 };
@@ -2682,7 +2682,7 @@ export type DeleteDatasetEnvVarResult = {
 
 /** Environment variable with the given key does not exist */
 export type DeleteDatasetEnvVarResultNotFound = DeleteDatasetEnvVarResult & {
-  __typename?: 'DeleteDatasetEnvVarResultNotFound';
+  __typename: 'DeleteDatasetEnvVarResultNotFound';
   /** Key that was not found */
   envVarKey: Scalars['String']['output'];
   /** Human-readable error message */
@@ -2691,7 +2691,7 @@ export type DeleteDatasetEnvVarResultNotFound = DeleteDatasetEnvVarResult & {
 
 /** Environment variable was deleted */
 export type DeleteDatasetEnvVarResultSuccess = DeleteDatasetEnvVarResult & {
-  __typename?: 'DeleteDatasetEnvVarResultSuccess';
+  __typename: 'DeleteDatasetEnvVarResultSuccess';
   /** Key of the deleted environment variable */
   envVarKey: Scalars['String']['output'];
   /** Human-readable outcome message */
@@ -2706,7 +2706,7 @@ export type DeleteResult = {
 
 /** Dataset was not deleted because downstream datasets still use it as input */
 export type DeleteResultDanglingReference = DeleteResult & {
-  __typename?: 'DeleteResultDanglingReference';
+  __typename: 'DeleteResultDanglingReference';
   /** Downstream datasets that reference this dataset as input */
   danglingChildRefs: Array<Scalars['DatasetRef']['output']>;
   /** Human-readable error message */
@@ -2717,7 +2717,7 @@ export type DeleteResultDanglingReference = DeleteResult & {
 
 /** Dataset was deleted */
 export type DeleteResultSuccess = DeleteResult & {
-  __typename?: 'DeleteResultSuccess';
+  __typename: 'DeleteResultSuccess';
   /** Alias of the deleted dataset */
   deletedDataset: Scalars['DatasetAlias']['output'];
   /** Human-readable outcome message */
@@ -2730,7 +2730,7 @@ export type DeleteResultSuccess = DeleteResult & {
  * Schema: https://opendatafabric.org/schemas/legacy/v0/DisablePollingSource
  */
 export type DisablePollingSource = {
-  __typename?: 'DisablePollingSource';
+  __typename: 'DisablePollingSource';
   dummy?: Maybe<Scalars['String']['output']>;
 };
 
@@ -2740,21 +2740,21 @@ export type DisablePollingSource = {
  * Schema: https://opendatafabric.org/schemas/legacy/v0/DisablePushSource
  */
 export type DisablePushSource = {
-  __typename?: 'DisablePushSource';
+  __typename: 'DisablePushSource';
   /** Identifies the source to be disabled. */
   sourceName: Scalars['String']['output'];
 };
 
 /** Nonce issued for a Sign-In with Ethereum login */
 export type Eip4361AuthNonceResponse = {
-  __typename?: 'Eip4361AuthNonceResponse';
+  __typename: 'Eip4361AuthNonceResponse';
   /** Nonce to include in the signed message */
   value: Scalars['Eip4361AuthNonce']['output'];
 };
 
 /** Metadata block serialized in a manifest format */
 export type EncodedBlock = {
-  __typename?: 'EncodedBlock';
+  __typename: 'EncodedBlock';
   /** Serialized block */
   content: Scalars['String']['output'];
   /** Format the block is serialized in */
@@ -2763,7 +2763,7 @@ export type EncodedBlock = {
 
 /** Data processing engine available on the node */
 export type EngineDesc = {
-  __typename?: 'EngineDesc';
+  __typename: 'EngineDesc';
   /**
    * Language and dialect this engine is using for queries
    * Indented for configuring code highlighting and completions.
@@ -2787,7 +2787,7 @@ export type EngineDesc = {
  * Schema: https://opendatafabric.org/schemas/sources/v1alpha1/EnvVar
  */
 export type EnvVar = {
-  __typename?: 'EnvVar';
+  __typename: 'EnvVar';
   /** Name of the variable. */
   name: Scalars['String']['output'];
   /** Value of the variable. */
@@ -2807,7 +2807,7 @@ export type EventTimeSource = EventTimeSourceFromMetadata | EventTimeSourceFromP
  * Schema: https://opendatafabric.org/schemas/sources/v1alpha1/EventTimeSource#/$defs/FromMetadata
  */
 export type EventTimeSourceFromMetadata = {
-  __typename?: 'EventTimeSourceFromMetadata';
+  __typename: 'EventTimeSourceFromMetadata';
   dummy?: Maybe<Scalars['String']['output']>;
 };
 
@@ -2817,7 +2817,7 @@ export type EventTimeSourceFromMetadata = {
  * Schema: https://opendatafabric.org/schemas/sources/v1alpha1/EventTimeSource#/$defs/FromPath
  */
 export type EventTimeSourceFromPath = {
-  __typename?: 'EventTimeSourceFromPath';
+  __typename: 'EventTimeSourceFromPath';
   /** Regular expression where first group contains the timestamp string. */
   pattern: Scalars['String']['output'];
   /** Format of the expected timestamp in java.text.SimpleDateFormat form. */
@@ -2830,7 +2830,7 @@ export type EventTimeSourceFromPath = {
  * Schema: https://opendatafabric.org/schemas/sources/v1alpha1/EventTimeSource#/$defs/FromSystemTime
  */
 export type EventTimeSourceFromSystemTime = {
-  __typename?: 'EventTimeSourceFromSystemTime';
+  __typename: 'EventTimeSourceFromSystemTime';
   dummy?: Maybe<Scalars['String']['output']>;
 };
 
@@ -2840,7 +2840,7 @@ export type EventTimeSourceFromSystemTime = {
  * Schema: https://opendatafabric.org/schemas/datasets/v1alpha1/ExecuteTransform
  */
 export type ExecuteTransform = {
-  __typename?: 'ExecuteTransform';
+  __typename: 'ExecuteTransform';
   /**
    * Describes checkpoint written during this transaction, if any. If an engine operation
    * resulted in no updates to the checkpoint, but checkpoint is still relevant for subsequent
@@ -2875,7 +2875,7 @@ export type ExecuteTransform = {
  * Schema: https://opendatafabric.org/schemas/datasets/v1alpha1/ExecuteTransformInput
  */
 export type ExecuteTransformInput = {
-  __typename?: 'ExecuteTransformInput';
+  __typename: 'ExecuteTransformInput';
   /** Input dataset identifier. */
   datasetId: Scalars['DatasetID']['output'];
   /**
@@ -2919,7 +2919,7 @@ export type FetchStep = FetchStepContainer | FetchStepEthereumLogs | FetchStepFi
  * Schema: https://opendatafabric.org/schemas/legacy/v0/FetchStep#/$defs/Container
  */
 export type FetchStepContainer = {
-  __typename?: 'FetchStepContainer';
+  __typename: 'FetchStepContainer';
   /** Arguments to the entrypoint. The OCI image's CMD is used if this is not provided. */
   args?: Maybe<Array<Scalars['String']['output']>>;
   /**
@@ -2939,7 +2939,7 @@ export type FetchStepContainer = {
  * Schema: https://opendatafabric.org/schemas/legacy/v0/FetchStep#/$defs/EthereumLogs
  */
 export type FetchStepEthereumLogs = {
-  __typename?: 'FetchStepEthereumLogs';
+  __typename: 'FetchStepEthereumLogs';
   /**
    * Identifier of the chain to scan logs from. This parameter may be used for RPC endpoint
    * lookup as well as asserting that provided `nodeUrl` corresponds to the expected chain.
@@ -2969,7 +2969,7 @@ export type FetchStepEthereumLogs = {
  * Schema: https://opendatafabric.org/schemas/legacy/v0/FetchStep#/$defs/FilesGlob
  */
 export type FetchStepFilesGlob = {
-  __typename?: 'FetchStepFilesGlob';
+  __typename: 'FetchStepFilesGlob';
   /** Describes the caching settings used for this source. */
   cache?: Maybe<SourceCaching>;
   /** Describes how event time is extracted from the source metadata. */
@@ -2990,7 +2990,7 @@ export type FetchStepFilesGlob = {
  * Schema: https://opendatafabric.org/schemas/legacy/v0/FetchStep#/$defs/Mqtt
  */
 export type FetchStepMqtt = {
-  __typename?: 'FetchStepMqtt';
+  __typename: 'FetchStepMqtt';
   /** Hostname of the MQTT broker. */
   host: Scalars['String']['output'];
   /** Password to use for auth with the broker (can be templated). */
@@ -3009,7 +3009,7 @@ export type FetchStepMqtt = {
  * Schema: https://opendatafabric.org/schemas/legacy/v0/FetchStep#/$defs/Url
  */
 export type FetchStepUrl = {
-  __typename?: 'FetchStepUrl';
+  __typename: 'FetchStepUrl';
   /** Describes the caching settings used for this source. */
   cache?: Maybe<SourceCaching>;
   /** Describes how event time is extracted from the source metadata. */
@@ -3022,14 +3022,14 @@ export type FetchStepUrl = {
 
 /** Arrow Flight SQL endpoint */
 export type FlightSqlDesc = {
-  __typename?: 'FlightSqlDesc';
+  __typename: 'FlightSqlDesc';
   /** Arrow Flight SQL server URL */
   url: Scalars['String']['output'];
 };
 
 /** One run of a flow, possibly over several task attempts */
 export type Flow = {
-  __typename?: 'Flow';
+  __typename: 'Flow';
   /** Flow config snapshot */
   configSnapshot?: Maybe<FlowConfigRule>;
   /** Associated dataset ID, if any */
@@ -3067,7 +3067,7 @@ export type Flow = {
 
 /** Flow was aborted before completion */
 export type FlowAbortedResult = {
-  __typename?: 'FlowAbortedResult';
+  __typename: 'FlowAbortedResult';
   /** Fixed status text */
   message: Scalars['String']['output'];
 };
@@ -3077,14 +3077,14 @@ export type FlowActivationCause = FlowActivationCauseAutoPolling | FlowActivatio
 
 /** Flow was started by a schedule or after a restart */
 export type FlowActivationCauseAutoPolling = {
-  __typename?: 'FlowActivationCauseAutoPolling';
+  __typename: 'FlowActivationCauseAutoPolling';
   /** Placeholder without meaning, always true */
   dummy: Scalars['Boolean']['output'];
 };
 
 /** Flow was started by an update of a dataset */
 export type FlowActivationCauseDatasetUpdate = {
-  __typename?: 'FlowActivationCauseDatasetUpdate';
+  __typename: 'FlowActivationCauseDatasetUpdate';
   /** Null when the dataset was deleted or is not readable by the caller */
   dataset?: Maybe<Dataset>;
   /** Identifier of the updated dataset */
@@ -3098,21 +3098,21 @@ export type FlowActivationCauseDatasetUpdateSource = FlowActivationCauseDatasetU
 
 /** Dataset was changed outside of the flow system */
 export type FlowActivationCauseDatasetUpdateSourceExternallyDetectedChange = {
-  __typename?: 'FlowActivationCauseDatasetUpdateSourceExternallyDetectedChange';
+  __typename: 'FlowActivationCauseDatasetUpdateSourceExternallyDetectedChange';
   /** Placeholder without meaning, always true */
   dummy: Scalars['Boolean']['output'];
 };
 
 /** Dataset was updated by data pushed over HTTP */
 export type FlowActivationCauseDatasetUpdateSourceHttpIngest = {
-  __typename?: 'FlowActivationCauseDatasetUpdateSourceHttpIngest';
+  __typename: 'FlowActivationCauseDatasetUpdateSourceHttpIngest';
   /** Name of the push source, null for the default source */
   sourceName?: Maybe<Scalars['String']['output']>;
 };
 
 /** Dataset was updated by a push over the smart transfer protocol */
 export type FlowActivationCauseDatasetUpdateSourceSmartProtocolPush = {
-  __typename?: 'FlowActivationCauseDatasetUpdateSourceSmartProtocolPush';
+  __typename: 'FlowActivationCauseDatasetUpdateSourceSmartProtocolPush';
   /** Account that pushed the data, null if unknown */
   accountName?: Maybe<Scalars['AccountName']['output']>;
   /** Whether the push was forced, possibly rewriting history */
@@ -3121,21 +3121,21 @@ export type FlowActivationCauseDatasetUpdateSourceSmartProtocolPush = {
 
 /** Dataset was updated by another flow */
 export type FlowActivationCauseDatasetUpdateSourceUpstreamFlow = {
-  __typename?: 'FlowActivationCauseDatasetUpdateSourceUpstreamFlow';
+  __typename: 'FlowActivationCauseDatasetUpdateSourceUpstreamFlow';
   /** Identifier of the flow that updated the dataset */
   flowId: Scalars['FlowID']['output'];
 };
 
 /** Flow was started because the previous ingest left more data to fetch */
 export type FlowActivationCauseIterationFinished = {
-  __typename?: 'FlowActivationCauseIterationFinished';
+  __typename: 'FlowActivationCauseIterationFinished';
   /** Placeholder without meaning, always true */
   dummy: Scalars['Boolean']['output'];
 };
 
 /** Flow was started manually by a user */
 export type FlowActivationCauseManual = {
-  __typename?: 'FlowActivationCauseManual';
+  __typename: 'FlowActivationCauseManual';
   /** Account that started the flow */
   initiator: Account;
 };
@@ -3194,14 +3194,14 @@ export type FlowConfigResetPropagationMode = FlowConfigResetPropagationModeCusto
 
 /** Reset the dataset head to a given block */
 export type FlowConfigResetPropagationModeCustom = {
-  __typename?: 'FlowConfigResetPropagationModeCustom';
+  __typename: 'FlowConfigResetPropagationModeCustom';
   /** Hash of the block that becomes the new head */
   newHeadHash: Scalars['Multihash']['output'];
 };
 
 /** Reset the dataset head to its seed block */
 export type FlowConfigResetPropagationModeToSeed = {
-  __typename?: 'FlowConfigResetPropagationModeToSeed';
+  __typename: 'FlowConfigResetPropagationModeToSeed';
   /** Placeholder without meaning, always null */
   dummy?: Maybe<Scalars['String']['output']>;
 };
@@ -3211,7 +3211,7 @@ export type FlowConfigRule = FlowConfigRuleCompaction | FlowConfigRuleIngest | F
 
 /** Settings of a compaction flow */
 export type FlowConfigRuleCompaction = {
-  __typename?: 'FlowConfigRuleCompaction';
+  __typename: 'FlowConfigRuleCompaction';
   /** Maximum number of records in a compacted data slice */
   maxSliceRecords: Scalars['Int']['output'];
   /** Maximum size of a compacted data slice, in bytes */
@@ -3220,7 +3220,7 @@ export type FlowConfigRuleCompaction = {
 
 /** Settings of an ingest flow */
 export type FlowConfigRuleIngest = {
-  __typename?: 'FlowConfigRuleIngest';
+  __typename: 'FlowConfigRuleIngest';
   /**
    * Whether to run the next ingest right away when the source has more
    * data
@@ -3232,7 +3232,7 @@ export type FlowConfigRuleIngest = {
 
 /** Settings of a reset flow */
 export type FlowConfigRuleReset = {
-  __typename?: 'FlowConfigRuleReset';
+  __typename: 'FlowConfigRuleReset';
   /** Block the dataset head is moved to */
   mode: FlowConfigResetPropagationMode;
   /**
@@ -3244,7 +3244,7 @@ export type FlowConfigRuleReset = {
 
 /** Configuration used by the flow was changed */
 export type FlowConfigSnapshotModified = FlowEvent & {
-  __typename?: 'FlowConfigSnapshotModified';
+  __typename: 'FlowConfigSnapshotModified';
   /** New configuration of the flow */
   configSnapshot: FlowConfigRule;
   /** Unique identifier of the event */
@@ -3255,7 +3255,7 @@ export type FlowConfigSnapshotModified = FlowEvent & {
 
 /** Settings that define how a flow runs */
 export type FlowConfiguration = {
-  __typename?: 'FlowConfiguration';
+  __typename: 'FlowConfiguration';
   /** Retry policy for failed runs, null to use the flow type's default */
   retryPolicy?: Maybe<FlowRetryPolicy>;
   /** Settings specific to the flow type */
@@ -3264,7 +3264,7 @@ export type FlowConfiguration = {
 
 /** A page of `Flow` items */
 export type FlowConnection = {
-  __typename?: 'FlowConnection';
+  __typename: 'FlowConnection';
   /** Items of this page, each wrapped in an edge */
   edges: Array<FlowEdge>;
   /** A shorthand for `edges { node { ... } }` */
@@ -3280,7 +3280,7 @@ export type FlowDescription = FlowDescriptionDatasetExecuteTransform | FlowDescr
 
 /** Flow that runs the transformation of a derivative dataset */
 export type FlowDescriptionDatasetExecuteTransform = {
-  __typename?: 'FlowDescriptionDatasetExecuteTransform';
+  __typename: 'FlowDescriptionDatasetExecuteTransform';
   /** Transformation the flow runs */
   transform: SetTransform;
   /** Result of the transformation, null until the flow succeeds */
@@ -3289,14 +3289,14 @@ export type FlowDescriptionDatasetExecuteTransform = {
 
 /** Flow that compacts data slices of a dataset */
 export type FlowDescriptionDatasetHardCompaction = {
-  __typename?: 'FlowDescriptionDatasetHardCompaction';
+  __typename: 'FlowDescriptionDatasetHardCompaction';
   /** Result of the compaction, null until the flow succeeds */
   compactionResult?: Maybe<FlowDescriptionDatasetReorganizationResult>;
 };
 
 /** Flow that ingests data from the dataset's polling source */
 export type FlowDescriptionDatasetPollingIngest = {
-  __typename?: 'FlowDescriptionDatasetPollingIngest';
+  __typename: 'FlowDescriptionDatasetPollingIngest';
   /** Result of the ingest, null until the flow succeeds */
   ingestResult?: Maybe<FlowDescriptionUpdateResult>;
   /** Polling source the data is fetched from */
@@ -3305,7 +3305,7 @@ export type FlowDescriptionDatasetPollingIngest = {
 
 /** Flow that ingests data pushed into the dataset */
 export type FlowDescriptionDatasetPushIngest = {
-  __typename?: 'FlowDescriptionDatasetPushIngest';
+  __typename: 'FlowDescriptionDatasetPushIngest';
   /** Result of the ingest, null until the flow succeeds */
   ingestResult?: Maybe<FlowDescriptionUpdateResult>;
   /** Human-readable description of what started the flow */
@@ -3319,21 +3319,21 @@ export type FlowDescriptionDatasetReorganizationResult = FlowDescriptionReorgani
 
 /** Flow that moves the dataset head to an earlier block */
 export type FlowDescriptionDatasetReset = {
-  __typename?: 'FlowDescriptionDatasetReset';
+  __typename: 'FlowDescriptionDatasetReset';
   /** Result of the reset, null until the flow succeeds */
   resetResult?: Maybe<FlowDescriptionResetResult>;
 };
 
 /** Flow that drops the dataset's data while keeping its metadata */
 export type FlowDescriptionDatasetResetToMetadata = {
-  __typename?: 'FlowDescriptionDatasetResetToMetadata';
+  __typename: 'FlowDescriptionDatasetResetToMetadata';
   /** Result of the reset, null until the flow succeeds */
   resetToMetadataResult?: Maybe<FlowDescriptionDatasetReorganizationResult>;
 };
 
 /** Dataset needed no changes */
 export type FlowDescriptionReorganizationNothingToDo = {
-  __typename?: 'FlowDescriptionReorganizationNothingToDo';
+  __typename: 'FlowDescriptionReorganizationNothingToDo';
   /** Placeholder without meaning, always null */
   dummy?: Maybe<Scalars['String']['output']>;
   /** Fixed status text */
@@ -3342,7 +3342,7 @@ export type FlowDescriptionReorganizationNothingToDo = {
 
 /** Dataset history was rewritten */
 export type FlowDescriptionReorganizationSuccess = {
-  __typename?: 'FlowDescriptionReorganizationSuccess';
+  __typename: 'FlowDescriptionReorganizationSuccess';
   /** Hash of the new head block */
   newHead: Scalars['Multihash']['output'];
   /** Number of metadata blocks before the rewrite */
@@ -3353,21 +3353,21 @@ export type FlowDescriptionReorganizationSuccess = {
 
 /** Dataset head was moved */
 export type FlowDescriptionResetResult = {
-  __typename?: 'FlowDescriptionResetResult';
+  __typename: 'FlowDescriptionResetResult';
   /** Hash of the new head block */
   newHead: Scalars['Multihash']['output'];
 };
 
 /** System garbage collection flow */
 export type FlowDescriptionSystemGc = {
-  __typename?: 'FlowDescriptionSystemGC';
+  __typename: 'FlowDescriptionSystemGC';
   /** Placeholder without meaning, always true */
   dummy: Scalars['Boolean']['output'];
 };
 
 /** Dataset flow whose details could not be determined */
 export type FlowDescriptionUnknown = {
-  __typename?: 'FlowDescriptionUnknown';
+  __typename: 'FlowDescriptionUnknown';
   /** Why the details are unavailable */
   message: Scalars['String']['output'];
 };
@@ -3377,7 +3377,7 @@ export type FlowDescriptionUpdateResult = FlowDescriptionUpdateResultSuccess | F
 
 /** Dataset was updated with new data */
 export type FlowDescriptionUpdateResultSuccess = {
-  __typename?: 'FlowDescriptionUpdateResultSuccess';
+  __typename: 'FlowDescriptionUpdateResultSuccess';
   /** Whether the source has more data to fetch */
   hasMore: Scalars['Boolean']['output'];
   /** Number of metadata blocks added */
@@ -3390,21 +3390,21 @@ export type FlowDescriptionUpdateResultSuccess = {
 
 /** Dataset was updated, but the added data could not be determined */
 export type FlowDescriptionUpdateResultUnknown = {
-  __typename?: 'FlowDescriptionUpdateResultUnknown';
+  __typename: 'FlowDescriptionUpdateResultUnknown';
   /** Why the added data could not be determined */
   message: Scalars['String']['output'];
 };
 
 /** Dataset was already up to date, nothing was added */
 export type FlowDescriptionUpdateResultUpToDate = {
-  __typename?: 'FlowDescriptionUpdateResultUpToDate';
+  __typename: 'FlowDescriptionUpdateResultUpToDate';
   /** The value indicates whether the api cache was used */
   uncacheable: Scalars['Boolean']['output'];
 };
 
 /** Flow that delivers an event to a webhook subscription */
 export type FlowDescriptionWebhookDeliver = {
-  __typename?: 'FlowDescriptionWebhookDeliver';
+  __typename: 'FlowDescriptionWebhookDeliver';
   /** Type of the delivered event */
   eventType: Scalars['String']['output'];
   /** Label of the webhook subscription */
@@ -3415,7 +3415,7 @@ export type FlowDescriptionWebhookDeliver = {
 
 /** A flow that was activated by the completion of another flow */
 export type FlowDownstreamLink = {
-  __typename?: 'FlowDownstreamLink';
+  __typename: 'FlowDownstreamLink';
   /** When the downstream flow received the activation */
   activatedAt: Scalars['DateTime']['output'];
   /** Null only when `datasetId` is null */
@@ -3433,7 +3433,7 @@ export type FlowDownstreamLink = {
 
 /** An edge wrapping a single `Flow` item */
 export type FlowEdge = {
-  __typename?: 'FlowEdge';
+  __typename: 'FlowEdge';
   /** The item itself */
   node: Flow;
 };
@@ -3448,7 +3448,7 @@ export type FlowEvent = {
 
 /** Flow was aborted */
 export type FlowEventAborted = FlowEvent & {
-  __typename?: 'FlowEventAborted';
+  __typename: 'FlowEventAborted';
   /** Unique identifier of the event */
   eventId: Scalars['EventID']['output'];
   /** Time the event occurred */
@@ -3457,7 +3457,7 @@ export type FlowEventAborted = FlowEvent & {
 
 /** Another reason to run was added to a waiting flow */
 export type FlowEventActivationCauseAdded = FlowEvent & {
-  __typename?: 'FlowEventActivationCauseAdded';
+  __typename: 'FlowEventActivationCauseAdded';
   /** Added reason to run the flow */
   activationCause: FlowActivationCause;
   /** Unique identifier of the event */
@@ -3468,7 +3468,7 @@ export type FlowEventActivationCauseAdded = FlowEvent & {
 
 /** Flow completed with an outcome */
 export type FlowEventCompleted = FlowEvent & {
-  __typename?: 'FlowEventCompleted';
+  __typename: 'FlowEventCompleted';
   /**
    * Flows activated by this flow's completion. Filled asynchronously, so
    * the list may lag briefly behind the completion
@@ -3482,7 +3482,7 @@ export type FlowEventCompleted = FlowEvent & {
 
 /** Flow was created */
 export type FlowEventInitiated = FlowEvent & {
-  __typename?: 'FlowEventInitiated';
+  __typename: 'FlowEventInitiated';
   /** Reason the flow was started */
   activationCause: FlowActivationCause;
   /** Unique identifier of the event */
@@ -3493,7 +3493,7 @@ export type FlowEventInitiated = FlowEvent & {
 
 /** Retry policy used by the flow was changed */
 export type FlowEventRetryPolicyModified = FlowEvent & {
-  __typename?: 'FlowEventRetryPolicyModified';
+  __typename: 'FlowEventRetryPolicyModified';
   /** Unique identifier of the event */
   eventId: Scalars['EventID']['output'];
   /** Time the event occurred */
@@ -3504,7 +3504,7 @@ export type FlowEventRetryPolicyModified = FlowEvent & {
 
 /** Flow's planned activation time was set */
 export type FlowEventScheduledForActivation = FlowEvent & {
-  __typename?: 'FlowEventScheduledForActivation';
+  __typename: 'FlowEventScheduledForActivation';
   /** Unique identifier of the event */
   eventId: Scalars['EventID']['output'];
   /** Time the event occurred */
@@ -3515,7 +3515,7 @@ export type FlowEventScheduledForActivation = FlowEvent & {
 
 /** Flow's start condition was set */
 export type FlowEventStartConditionUpdated = FlowEvent & {
-  __typename?: 'FlowEventStartConditionUpdated';
+  __typename: 'FlowEventStartConditionUpdated';
   /** Unique identifier of the event */
   eventId: Scalars['EventID']['output'];
   /** Time the event occurred */
@@ -3526,7 +3526,7 @@ export type FlowEventStartConditionUpdated = FlowEvent & {
 
 /** Task of the flow was scheduled, started or finished */
 export type FlowEventTaskChanged = FlowEvent & {
-  __typename?: 'FlowEventTaskChanged';
+  __typename: 'FlowEventTaskChanged';
   /** Unique identifier of the event */
   eventId: Scalars['EventID']['output'];
   /** Time the event occurred */
@@ -3543,14 +3543,14 @@ export type FlowEventTaskChanged = FlowEvent & {
 
 /** Flow failed */
 export type FlowFailedError = {
-  __typename?: 'FlowFailedError';
+  __typename: 'FlowFailedError';
   /** Why the flow failed */
   reason: TaskFailureReason;
 };
 
 /** Flow type is not applicable to this kind of dataset */
 export type FlowIncompatibleDatasetKind = SetFlowConfigResult & SetFlowTriggerResult & TriggerFlowResult & {
-  __typename?: 'FlowIncompatibleDatasetKind';
+  __typename: 'FlowIncompatibleDatasetKind';
   /** Kind of the target dataset */
   actualDatasetKind: DatasetKind;
   /** Dataset kind the flow type requires */
@@ -3561,7 +3561,7 @@ export type FlowIncompatibleDatasetKind = SetFlowConfigResult & SetFlowTriggerRe
 
 /** Provided flow configuration input is invalid */
 export type FlowInvalidConfigInputError = SetFlowConfigResult & {
-  __typename?: 'FlowInvalidConfigInputError';
+  __typename: 'FlowInvalidConfigInputError';
   /** Human-readable error message */
   message: Scalars['String']['output'];
   /** Explanation of what is invalid in the input */
@@ -3570,7 +3570,7 @@ export type FlowInvalidConfigInputError = SetFlowConfigResult & {
 
 /** Provided flow run configuration is invalid */
 export type FlowInvalidRunConfigurations = TriggerFlowResult & {
-  __typename?: 'FlowInvalidRunConfigurations';
+  __typename: 'FlowInvalidRunConfigurations';
   /** Explanation of what is invalid in the configuration */
   error: Scalars['String']['output'];
   /** Human-readable error message */
@@ -3579,7 +3579,7 @@ export type FlowInvalidRunConfigurations = TriggerFlowResult & {
 
 /** Provided trigger rule is invalid */
 export type FlowInvalidTriggerInputError = SetFlowTriggerResult & {
-  __typename?: 'FlowInvalidTriggerInputError';
+  __typename: 'FlowInvalidTriggerInputError';
   /** Human-readable error message */
   message: Scalars['String']['output'];
   /** Explanation of what is invalid in the rule */
@@ -3588,7 +3588,7 @@ export type FlowInvalidTriggerInputError = SetFlowTriggerResult & {
 
 /** Provided trigger stop policy is invalid */
 export type FlowInvalidTriggerStopPolicyInputError = SetFlowTriggerResult & {
-  __typename?: 'FlowInvalidTriggerStopPolicyInputError';
+  __typename: 'FlowInvalidTriggerStopPolicyInputError';
   /** Human-readable error message */
   message: Scalars['String']['output'];
   /** Explanation of what is invalid in the stop policy */
@@ -3597,7 +3597,7 @@ export type FlowInvalidTriggerStopPolicyInputError = SetFlowTriggerResult & {
 
 /** Flow does not exist or does not belong to this dataset */
 export type FlowNotFound = CancelFlowRunResult & GetFlowResult & {
-  __typename?: 'FlowNotFound';
+  __typename: 'FlowNotFound';
   /** Identifier of the flow that was requested */
   flowId: Scalars['FlowID']['output'];
   /** Human-readable error message */
@@ -3609,7 +3609,7 @@ export type FlowOutcome = FlowAbortedResult | FlowFailedError | FlowSuccessResul
 
 /** Dataset does not satisfy the preconditions of the flow */
 export type FlowPreconditionsNotMet = SetFlowConfigResult & SetFlowTriggerResult & TriggerFlowResult & {
-  __typename?: 'FlowPreconditionsNotMet';
+  __typename: 'FlowPreconditionsNotMet';
   /** Human-readable error message */
   message: Scalars['String']['output'];
   /** Description of the unmet precondition */
@@ -3667,7 +3667,7 @@ export type FlowProcessFiltersTimeRange = {
 
 /** Counts of flow processes in a group by effective state */
 export type FlowProcessGroupRollup = {
-  __typename?: 'FlowProcessGroupRollup';
+  __typename: 'FlowProcessGroupRollup';
   /** Number of processes running without failures */
   active: Scalars['Int']['output'];
   /** Number of processes with failures below the stop threshold */
@@ -3710,7 +3710,7 @@ export type FlowProcessOrdering = {
 
 /** Health and timing of a recurring flow process */
 export type FlowProcessSummary = {
-  __typename?: 'FlowProcessSummary';
+  __typename: 'FlowProcessSummary';
   /** Time the process was stopped automatically, null if it was not */
   autoStoppedAt?: Maybe<Scalars['DateTime']['output']>;
   /** Why the process was stopped automatically, null if it was not */
@@ -3771,7 +3771,7 @@ export enum FlowRetryBackoffType {
 
 /** How a flow retries after a recoverable failure */
 export type FlowRetryPolicy = {
-  __typename?: 'FlowRetryPolicy';
+  __typename: 'FlowRetryPolicy';
   /** How the delay grows with each retry */
   backoffType: FlowRetryBackoffType;
   /** Maximum number of retries after the first attempt */
@@ -3807,14 +3807,14 @@ export type FlowStartCondition = FlowStartConditionExecutor | FlowStartCondition
 
 /** Flow waits for its task to be picked up by an executor */
 export type FlowStartConditionExecutor = {
-  __typename?: 'FlowStartConditionExecutor';
+  __typename: 'FlowStartConditionExecutor';
   /** Identifier of the scheduled task */
   taskId: Scalars['TaskID']['output'];
 };
 
 /** Flow waits for enough new input data */
 export type FlowStartConditionReactive = {
-  __typename?: 'FlowStartConditionReactive';
+  __typename: 'FlowStartConditionReactive';
   /** Number of new input records accumulated so far */
   accumulatedRecordsCount: Scalars['Int']['output'];
   /** Batching rule in effect for this flow */
@@ -3829,14 +3829,14 @@ export type FlowStartConditionReactive = {
 
 /** Flow waits for its scheduled time */
 export type FlowStartConditionSchedule = {
-  __typename?: 'FlowStartConditionSchedule';
+  __typename: 'FlowStartConditionSchedule';
   /** Time the flow is scheduled to run */
   wakeUpAt: Scalars['DateTime']['output'];
 };
 
 /** Flow was delayed because its previous run was too recent */
 export type FlowStartConditionThrottling = {
-  __typename?: 'FlowStartConditionThrottling';
+  __typename: 'FlowStartConditionThrottling';
   /** Minimum interval between runs, in seconds */
   intervalSec: Scalars['Int']['output'];
   /** Time the flow would have run without throttling */
@@ -3859,14 +3859,14 @@ export enum FlowStatus {
 
 /** Flow completed successfully */
 export type FlowSuccessResult = {
-  __typename?: 'FlowSuccessResult';
+  __typename: 'FlowSuccessResult';
   /** Fixed status text */
   message: Scalars['String']['output'];
 };
 
 /** Key moments in the lifecycle of a flow */
 export type FlowTimingRecords = {
-  __typename?: 'FlowTimingRecords';
+  __typename: 'FlowTimingRecords';
   /** Recorded time of last task scheduling */
   awaitingExecutorSince?: Maybe<Scalars['DateTime']['output']>;
   /** Recorded time of flow completion (success or failure) */
@@ -3891,7 +3891,7 @@ export type FlowTimingRecords = {
 
 /** Rule that defines when a flow runs automatically */
 export type FlowTrigger = {
-  __typename?: 'FlowTrigger';
+  __typename: 'FlowTrigger';
   /** Whether the trigger is inactive: paused by a user or auto-stopped */
   paused: Scalars['Boolean']['output'];
   /** Reactive rule, null if the trigger runs on a schedule */
@@ -3910,7 +3910,7 @@ export type FlowTriggerBatchingRule = FlowTriggerBatchingRuleBuffering | FlowTri
  * passes
  */
 export type FlowTriggerBatchingRuleBuffering = {
-  __typename?: 'FlowTriggerBatchingRuleBuffering';
+  __typename: 'FlowTriggerBatchingRuleBuffering';
   /** Longest wait after the first new data before the flow runs anyway */
   maxBatchingInterval: TimeDelta;
   /** Number of new input records that runs the flow */
@@ -3930,7 +3930,7 @@ export type FlowTriggerBatchingRuleBufferingInput = {
 
 /** Run the flow as soon as new input data appears */
 export type FlowTriggerBatchingRuleImmediate = {
-  __typename?: 'FlowTriggerBatchingRuleImmediate';
+  __typename: 'FlowTriggerBatchingRuleImmediate';
   /** Placeholder without meaning, always true */
   dummy: Scalars['Boolean']['output'];
 };
@@ -3958,7 +3958,7 @@ export enum FlowTriggerBreakingChangeRule {
 
 /** Rule that runs a flow in reaction to changes of its inputs */
 export type FlowTriggerReactiveRule = {
-  __typename?: 'FlowTriggerReactiveRule';
+  __typename: 'FlowTriggerReactiveRule';
   /** How to react when an input's history is rewritten */
   forBreakingChange: FlowTriggerBreakingChangeRule;
   /** How new input data is batched before the flow runs */
@@ -3995,7 +3995,7 @@ export type FlowTriggerStopPolicy = FlowTriggerStopPolicyAfterConsecutiveFailure
 
 /** Trigger stops after a number of failed runs in a row */
 export type FlowTriggerStopPolicyAfterConsecutiveFailures = {
-  __typename?: 'FlowTriggerStopPolicyAfterConsecutiveFailures';
+  __typename: 'FlowTriggerStopPolicyAfterConsecutiveFailures';
   /** Number of failed runs in a row that stops the trigger */
   maxFailures: Scalars['Int']['output'];
 };
@@ -4015,7 +4015,7 @@ export type FlowTriggerStopPolicyInput =
 
 /** Trigger never stops because of failures */
 export type FlowTriggerStopPolicyNever = {
-  __typename?: 'FlowTriggerStopPolicyNever';
+  __typename: 'FlowTriggerStopPolicyNever';
   /** Placeholder without meaning, always true */
   dummy: Scalars['Boolean']['output'];
 };
@@ -4028,14 +4028,14 @@ export type FlowTriggerStopPolicyNeverInput = {
 
 /** Flow type is not supported for this operation */
 export type FlowTypeIsNotSupported = SetFlowTriggerResult & {
-  __typename?: 'FlowTypeIsNotSupported';
+  __typename: 'FlowTypeIsNotSupported';
   /** Human-readable error message */
   message: Scalars['String']['output'];
 };
 
 /** Fragment of a field that matched a full-text search */
 export type FullTextSearchHighlight = {
-  __typename?: 'FullTextSearchHighlight';
+  __typename: 'FullTextSearchHighlight';
   /** Most relevant fragment of the field with the matches highlighted */
   bestFragment: Scalars['String']['output'];
   /** Name of the matching field */
@@ -4044,7 +4044,7 @@ export type FullTextSearchHighlight = {
 
 /** Object matching a full-text search */
 export type FullTextSearchHit = {
-  __typename?: 'FullTextSearchHit';
+  __typename: 'FullTextSearchHit';
   /** Fragments of the fields that matched the prompt, if any */
   highlights?: Maybe<Array<FullTextSearchHighlight>>;
   /** Identifier of the matching object */
@@ -4062,7 +4062,7 @@ export type FullTextSearchHit = {
 
 /** Results of a full-text search */
 export type FullTextSearchResponse = {
-  __typename?: 'FullTextSearchResponse';
+  __typename: 'FullTextSearchResponse';
   /** Matching objects on the requested page */
   hits: Array<FullTextSearchHit>;
   /** Whether the search timed out and returned partial results */
@@ -4081,7 +4081,7 @@ export type GetFlowResult = {
 
 /** Flow was found */
 export type GetFlowSuccess = GetFlowResult & {
-  __typename?: 'GetFlowSuccess';
+  __typename: 'GetFlowSuccess';
   /** Flow that was requested */
   flow: Flow;
   /** Human-readable success message */
@@ -4097,21 +4097,21 @@ export type InitiatorFilterInput =
 
 /** JDBC connection details */
 export type JdbcDesc = {
-  __typename?: 'JdbcDesc';
+  __typename: 'JdbcDesc';
   /** JDBC connection URL for the Arrow Flight SQL driver */
   url: Scalars['String']['output'];
 };
 
 /** Kafka protocol endpoint */
 export type KafkaProtocolDesc = {
-  __typename?: 'KafkaProtocolDesc';
+  __typename: 'KafkaProtocolDesc';
   /** Kafka connection URL */
   url: Scalars['String']['output'];
 };
 
 /** Key-value pair of strings */
 export type KeyValue = {
-  __typename?: 'KeyValue';
+  __typename: 'KeyValue';
   /** Key of the pair */
   key: Scalars['String']['output'];
   /** Value of the pair */
@@ -4120,14 +4120,14 @@ export type KeyValue = {
 
 /** Link to a dataset page in the web UI */
 export type LinkProtocolDesc = {
-  __typename?: 'LinkProtocolDesc';
+  __typename: 'LinkProtocolDesc';
   /** URL of the dataset page */
   url: Scalars['String']['output'];
 };
 
 /** Result of a successful login */
 export type LoginResponse = {
-  __typename?: 'LoginResponse';
+  __typename: 'LoginResponse';
   /** Access token to authenticate subsequent requests */
   accessToken: Scalars['String']['output'];
   /** Account that logged in */
@@ -4157,7 +4157,7 @@ export type MergeStrategy = MergeStrategyAppend | MergeStrategyChangelogStream |
  * Schema: https://opendatafabric.org/schemas/sources/v1alpha1/MergeStrategy#/$defs/Append
  */
 export type MergeStrategyAppend = {
-  __typename?: 'MergeStrategyAppend';
+  __typename: 'MergeStrategyAppend';
   dummy?: Maybe<Scalars['String']['output']>;
 };
 
@@ -4171,7 +4171,7 @@ export type MergeStrategyAppend = {
  * Schema: https://opendatafabric.org/schemas/sources/v1alpha1/MergeStrategy#/$defs/ChangelogStream
  */
 export type MergeStrategyChangelogStream = {
-  __typename?: 'MergeStrategyChangelogStream';
+  __typename: 'MergeStrategyChangelogStream';
   /** Names of the columns that uniquely identify the record throughout its lifetime */
   primaryKey: Array<Scalars['String']['output']>;
 };
@@ -4187,7 +4187,7 @@ export type MergeStrategyChangelogStream = {
  * Schema: https://opendatafabric.org/schemas/sources/v1alpha1/MergeStrategy#/$defs/Ledger
  */
 export type MergeStrategyLedger = {
-  __typename?: 'MergeStrategyLedger';
+  __typename: 'MergeStrategyLedger';
   /** Names of the columns that uniquely identify the record throughout its lifetime */
   primaryKey: Array<Scalars['String']['output']>;
 };
@@ -4220,7 +4220,7 @@ export type MergeStrategyLedger = {
  * Schema: https://opendatafabric.org/schemas/sources/v1alpha1/MergeStrategy#/$defs/Snapshot
  */
 export type MergeStrategySnapshot = {
-  __typename?: 'MergeStrategySnapshot';
+  __typename: 'MergeStrategySnapshot';
   /** Names of the columns to compared to determine if a row has changed between two snapshots. */
   compareColumns?: Maybe<Array<Scalars['String']['output']>>;
   /** Names of the columns that uniquely identify the record throughout its lifetime. */
@@ -4238,14 +4238,14 @@ export type MergeStrategySnapshot = {
  * Schema: https://opendatafabric.org/schemas/sources/v1alpha1/MergeStrategy#/$defs/UpsertStream
  */
 export type MergeStrategyUpsertStream = {
-  __typename?: 'MergeStrategyUpsertStream';
+  __typename: 'MergeStrategyUpsertStream';
   /** Names of the columns that uniquely identify the record throughout its lifetime */
   primaryKey: Array<Scalars['String']['output']>;
 };
 
 /** A page of `MetadataBlockExtended` items */
 export type MetadataBlockConnection = {
-  __typename?: 'MetadataBlockConnection';
+  __typename: 'MetadataBlockConnection';
   /** Items of this page, each wrapped in an edge */
   edges: Array<MetadataBlockEdge>;
   /** A shorthand for `edges { node { ... } }` */
@@ -4258,14 +4258,14 @@ export type MetadataBlockConnection = {
 
 /** An edge wrapping a single `MetadataBlockExtended` item */
 export type MetadataBlockEdge = {
-  __typename?: 'MetadataBlockEdge';
+  __typename: 'MetadataBlockEdge';
   /** The item itself */
   node: MetadataBlockExtended;
 };
 
 /** Metadata block with its hash and author */
 export type MetadataBlockExtended = {
-  __typename?: 'MetadataBlockExtended';
+  __typename: 'MetadataBlockExtended';
   /** Author of the block, reported as the dataset owner */
   author: Account;
   /** Hash of this block */
@@ -4290,7 +4290,7 @@ export type MetadataBlockExtendedEncodedArgs = {
 
 /** Chain of metadata blocks of a dataset */
 export type MetadataChain = {
-  __typename?: 'MetadataChain';
+  __typename: 'MetadataChain';
   /** Returns a metadata block corresponding to the specified hash */
   blockByHash?: Maybe<MetadataBlockExtended>;
   /**
@@ -4326,7 +4326,7 @@ export type MetadataChainBlocksArgs = {
 
 /** Mutations of the dataset metadata chain */
 export type MetadataChainMut = {
-  __typename?: 'MetadataChainMut';
+  __typename: 'MetadataChainMut';
   /** Commits new event to the metadata chain */
   commitEvent: CommitResult;
 };
@@ -4375,7 +4375,7 @@ export enum MetadataManifestFormat {
 
 /** Manifest could not be parsed */
 export type MetadataManifestMalformed = CommitResult & CreateDatasetFromSnapshotResult & {
-  __typename?: 'MetadataManifestMalformed';
+  __typename: 'MetadataManifestMalformed';
   /** Always false */
   isSuccess: Scalars['Boolean']['output'];
   /** Description of the problem */
@@ -4384,7 +4384,7 @@ export type MetadataManifestMalformed = CommitResult & CreateDatasetFromSnapshot
 
 /** Manifest version is not supported by this node */
 export type MetadataManifestUnsupportedVersion = CommitResult & CreateDatasetFromSnapshotResult & {
-  __typename?: 'MetadataManifestUnsupportedVersion';
+  __typename: 'MetadataManifestUnsupportedVersion';
   /** Always false */
   isSuccess: Scalars['Boolean']['output'];
   /** Description of the problem with the supported version range */
@@ -4399,14 +4399,14 @@ export type ModifyPasswordResult = {
 
 /** Password was changed */
 export type ModifyPasswordSuccess = ModifyPasswordResult & {
-  __typename?: 'ModifyPasswordSuccess';
+  __typename: 'ModifyPasswordSuccess';
   /** Human-readable outcome message */
   message: Scalars['String']['output'];
 };
 
 /** Password was not changed: the old password is wrong */
 export type ModifyPasswordWrongOldPassword = ModifyPasswordResult & {
-  __typename?: 'ModifyPasswordWrongOldPassword';
+  __typename: 'ModifyPasswordWrongOldPassword';
   /** Human-readable outcome message */
   message: Scalars['String']['output'];
 };
@@ -4428,7 +4428,7 @@ export enum MqttQos {
  * Schema: https://opendatafabric.org/schemas/sources/v1alpha1/MqttTopicSubscription
  */
 export type MqttTopicSubscription = {
-  __typename?: 'MqttTopicSubscription';
+  __typename: 'MqttTopicSubscription';
   /** Name of the topic (may include patterns). */
   path: Scalars['String']['output'];
   /**
@@ -4441,7 +4441,7 @@ export type MqttTopicSubscription = {
 
 /** Root of all mutations */
 export type Mutation = {
-  __typename?: 'Mutation';
+  __typename: 'Mutation';
   /**
    * Account-related functionality group.
    *
@@ -4475,7 +4475,7 @@ export type NameLookupResult = Account;
 
 /** A page of `NameLookupResult` items */
 export type NameLookupResultConnection = {
-  __typename?: 'NameLookupResultConnection';
+  __typename: 'NameLookupResultConnection';
   /** Items of this page, each wrapped in an edge */
   edges: Array<NameLookupResultEdge>;
   /** A shorthand for `edges { node { ... } }` */
@@ -4488,14 +4488,14 @@ export type NameLookupResultConnection = {
 
 /** An edge wrapping a single `NameLookupResult` item */
 export type NameLookupResultEdge = {
-  __typename?: 'NameLookupResultEdge';
+  __typename: 'NameLookupResultEdge';
   /** The item itself */
   node: NameLookupResult;
 };
 
 /** Request did not change the dataset */
 export type NoChanges = CommitResult & UpdateReadmeResult & {
-  __typename?: 'NoChanges';
+  __typename: 'NoChanges';
   /** Always true */
   isSuccess: Scalars['Boolean']['output'];
   /** Explanation of why nothing changed */
@@ -4504,7 +4504,7 @@ export type NoChanges = CommitResult & UpdateReadmeResult & {
 
 /** `OData` API endpoints for a dataset */
 export type OdataProtocolDesc = {
-  __typename?: 'OdataProtocolDesc';
+  __typename: 'OdataProtocolDesc';
   /** URL of the `OData` collection of the dataset */
   collectionUrl: Scalars['String']['output'];
   /** URL of the `OData` service of the dataset owner */
@@ -4517,7 +4517,7 @@ export type OdataProtocolDesc = {
  * Schema: https://opendatafabric.org/schemas/datasets/v1alpha1/OffsetInterval
  */
 export type OffsetInterval = {
-  __typename?: 'OffsetInterval';
+  __typename: 'OffsetInterval';
   /** End of the closed interval [start; end]. */
   end: Scalars['Uint64']['output'];
   /** Start of the closed interval [start; end]. */
@@ -4534,7 +4534,7 @@ export enum OrderingDirection {
 
 /** Position of a page within a page-based listing */
 export type PageBasedInfo = {
-  __typename?: 'PageBasedInfo';
+  __typename: 'PageBasedInfo';
   /** Index of the current page */
   currentPage: Scalars['Int']['output'];
   /** When paginating forwards, are there more items? */
@@ -4556,7 +4556,7 @@ export type PauseWebhookSubscriptionResult = {
 
 /** Webhook subscription was paused */
 export type PauseWebhookSubscriptionResultSuccess = PauseWebhookSubscriptionResult & {
-  __typename?: 'PauseWebhookSubscriptionResultSuccess';
+  __typename: 'PauseWebhookSubscriptionResultSuccess';
   /** Human-readable success message */
   message: Scalars['String']['output'];
   /** Always true */
@@ -4565,7 +4565,7 @@ export type PauseWebhookSubscriptionResultSuccess = PauseWebhookSubscriptionResu
 
 /** Operation is not allowed in the current subscription status */
 export type PauseWebhookSubscriptionResultUnexpected = PauseWebhookSubscriptionResult & {
-  __typename?: 'PauseWebhookSubscriptionResultUnexpected';
+  __typename: 'PauseWebhookSubscriptionResultUnexpected';
   /** Human-readable error message */
   message: Scalars['String']['output'];
   /** Current status of the subscription */
@@ -4574,7 +4574,7 @@ export type PauseWebhookSubscriptionResultUnexpected = PauseWebhookSubscriptionR
 
 /** PostgreSQL protocol endpoint */
 export type PostgreSqlDesl = {
-  __typename?: 'PostgreSqlDesl';
+  __typename: 'PostgreSqlDesl';
   /** PostgreSQL connection URL */
   url: Scalars['String']['output'];
 };
@@ -4592,7 +4592,7 @@ export type PrepStep = PrepStepDecompress | PrepStepPipe;
  * Schema: https://opendatafabric.org/schemas/sources/v1alpha1/PrepStep#/$defs/Decompress
  */
 export type PrepStepDecompress = {
-  __typename?: 'PrepStepDecompress';
+  __typename: 'PrepStepDecompress';
   /** Name of a compression algorithm used on data. */
   format: CompressionFormat;
   /** Path to a data file within a multi-file archive. Can contain glob patterns. */
@@ -4605,14 +4605,14 @@ export type PrepStepDecompress = {
  * Schema: https://opendatafabric.org/schemas/sources/v1alpha1/PrepStep#/$defs/Pipe
  */
 export type PrepStepPipe = {
-  __typename?: 'PrepStepPipe';
+  __typename: 'PrepStepPipe';
   /** Command to execute and its arguments. */
   command: Array<Scalars['String']['output']>;
 };
 
 /** Dataset is visible only to its owner and collaborators */
 export type PrivateDatasetVisibility = {
-  __typename?: 'PrivateDatasetVisibility';
+  __typename: 'PrivateDatasetVisibility';
   /** Placeholder field without meaning, always null */
   dummy?: Maybe<Scalars['String']['output']>;
 };
@@ -4625,7 +4625,7 @@ export type PrivateDatasetVisibilityInput = {
 
 /** Dataset is readable by all authenticated users */
 export type PublicDatasetVisibility = {
-  __typename?: 'PublicDatasetVisibility';
+  __typename: 'PublicDatasetVisibility';
   /** Whether anonymous (unauthenticated) users can read the dataset too */
   anonymousAvailable: Scalars['Boolean']['output'];
 };
@@ -4638,7 +4638,7 @@ export type PublicDatasetVisibilityInput = {
 
 /** Root of all read-only queries */
 export type Query = {
-  __typename?: 'Query';
+  __typename: 'Query';
   /**
    * Account-related functionality group.
    *
@@ -4696,7 +4696,7 @@ export type ReactivateWebhookSubscriptionResult = {
 
 /** Webhook subscription was reactivated */
 export type ReactivateWebhookSubscriptionResultSuccess = ReactivateWebhookSubscriptionResult & {
-  __typename?: 'ReactivateWebhookSubscriptionResultSuccess';
+  __typename: 'ReactivateWebhookSubscriptionResultSuccess';
   /** Human-readable success message */
   message: Scalars['String']['output'];
   /** Always true */
@@ -4705,7 +4705,7 @@ export type ReactivateWebhookSubscriptionResultSuccess = ReactivateWebhookSubscr
 
 /** Operation is not allowed in the current subscription status */
 export type ReactivateWebhookSubscriptionResultUnexpected = ReactivateWebhookSubscriptionResult & {
-  __typename?: 'ReactivateWebhookSubscriptionResultUnexpected';
+  __typename: 'ReactivateWebhookSubscriptionResultUnexpected';
   /** Human-readable error message */
   message: Scalars['String']['output'];
   /** Current status of the subscription */
@@ -4737,7 +4737,7 @@ export type ReadStepSchemaArgs = {
  * Schema: https://opendatafabric.org/schemas/sources/v1alpha1/ReadStep#/$defs/Csv
  */
 export type ReadStepCsv = ReadStep & {
-  __typename?: 'ReadStepCsv';
+  __typename: 'ReadStepCsv';
   /**
    * Sets the string that indicates a date format. The `rfc3339` is the only
    * required format, the other format strings are implementation-specific.
@@ -4827,7 +4827,7 @@ export type ReadStepCsvSchemaArgs = {
  * Schema: https://opendatafabric.org/schemas/sources/v1alpha1/ReadStep#/$defs/EsriShapefile
  */
 export type ReadStepEsriShapefile = ReadStep & {
-  __typename?: 'ReadStepEsriShapefile';
+  __typename: 'ReadStepEsriShapefile';
   /**
    * DEPRECATED: A DDL-formatted schema. Schema can be used to coerce values
    * into more appropriate data types.
@@ -4861,7 +4861,7 @@ export type ReadStepEsriShapefileSchemaArgs = {
  * Schema: https://opendatafabric.org/schemas/sources/v1alpha1/ReadStep#/$defs/GeoJson
  */
 export type ReadStepGeoJson = ReadStep & {
-  __typename?: 'ReadStepGeoJson';
+  __typename: 'ReadStepGeoJson';
   /**
    * DEPRECATED: A DDL-formatted schema. Schema can be used to coerce values
    * into more appropriate data types.
@@ -4889,7 +4889,7 @@ export type ReadStepGeoJsonSchemaArgs = {
  * Schema: https://opendatafabric.org/schemas/sources/v1alpha1/ReadStep#/$defs/Json
  */
 export type ReadStepJson = ReadStep & {
-  __typename?: 'ReadStepJson';
+  __typename: 'ReadStepJson';
   /**
    * Sets the string that indicates a date format. The `rfc3339` is the only
    * required format, the other format strings are implementation-specific.
@@ -4944,7 +4944,7 @@ export type ReadStepJsonSchemaArgs = {
  * Schema: https://opendatafabric.org/schemas/sources/v1alpha1/ReadStep#/$defs/NdGeoJson
  */
 export type ReadStepNdGeoJson = ReadStep & {
-  __typename?: 'ReadStepNdGeoJson';
+  __typename: 'ReadStepNdGeoJson';
   /**
    * DEPRECATED: A DDL-formatted schema. Schema can be used to coerce values
    * into more appropriate data types.
@@ -4972,7 +4972,7 @@ export type ReadStepNdGeoJsonSchemaArgs = {
  * Schema: https://opendatafabric.org/schemas/sources/v1alpha1/ReadStep#/$defs/NdJson
  */
 export type ReadStepNdJson = ReadStep & {
-  __typename?: 'ReadStepNdJson';
+  __typename: 'ReadStepNdJson';
   /**
    * Sets the string that indicates a date format. The `rfc3339` is the only
    * required format, the other format strings are implementation-specific.
@@ -5019,7 +5019,7 @@ export type ReadStepNdJsonSchemaArgs = {
  * Schema: https://opendatafabric.org/schemas/sources/v1alpha1/ReadStep#/$defs/Parquet
  */
 export type ReadStepParquet = ReadStep & {
-  __typename?: 'ReadStepParquet';
+  __typename: 'ReadStepParquet';
   /**
    * DEPRECATED: A DDL-formatted schema. Schema can be used to coerce values
    * into more appropriate data types.
@@ -5047,7 +5047,7 @@ export type RemoveWebhookSubscriptionResult = {
 
 /** Webhook subscription was removed */
 export type RemoveWebhookSubscriptionResultSuccess = RemoveWebhookSubscriptionResult & {
-  __typename?: 'RemoveWebhookSubscriptionResultSuccess';
+  __typename: 'RemoveWebhookSubscriptionResultSuccess';
   /** Human-readable success message */
   message: Scalars['String']['output'];
   /** Always true */
@@ -5056,7 +5056,7 @@ export type RemoveWebhookSubscriptionResultSuccess = RemoveWebhookSubscriptionRe
 
 /** Account was not renamed: the new name is already taken */
 export type RenameAccountNameNotUnique = RenameAccountResult & {
-  __typename?: 'RenameAccountNameNotUnique';
+  __typename: 'RenameAccountNameNotUnique';
   /** Human-readable outcome message */
   message: Scalars['String']['output'];
 };
@@ -5069,7 +5069,7 @@ export type RenameAccountResult = {
 
 /** Account was renamed */
 export type RenameAccountSuccess = RenameAccountResult & {
-  __typename?: 'RenameAccountSuccess';
+  __typename: 'RenameAccountSuccess';
   /** Human-readable outcome message */
   message: Scalars['String']['output'];
   /** New name of the account */
@@ -5084,7 +5084,7 @@ export type RenameResult = {
 
 /** Another dataset with the requested name already exists */
 export type RenameResultNameCollision = RenameResult & {
-  __typename?: 'RenameResultNameCollision';
+  __typename: 'RenameResultNameCollision';
   /** Alias of the existing dataset that holds the name */
   collidingAlias: Scalars['DatasetAlias']['output'];
   /** Human-readable error message */
@@ -5093,7 +5093,7 @@ export type RenameResultNameCollision = RenameResult & {
 
 /** New name equals the current one, nothing was changed */
 export type RenameResultNoChanges = RenameResult & {
-  __typename?: 'RenameResultNoChanges';
+  __typename: 'RenameResultNoChanges';
   /** Human-readable outcome message */
   message: Scalars['String']['output'];
   /** Current name of the dataset */
@@ -5102,7 +5102,7 @@ export type RenameResultNoChanges = RenameResult & {
 
 /** Dataset was renamed */
 export type RenameResultSuccess = RenameResult & {
-  __typename?: 'RenameResultSuccess';
+  __typename: 'RenameResultSuccess';
   /** Human-readable outcome message */
   message: Scalars['String']['output'];
   /** Name of the dataset after the rename */
@@ -5117,7 +5117,7 @@ export type RenameResultSuccess = RenameResult & {
  * Schema: https://opendatafabric.org/schemas/sources/v1alpha1/RequestHeader
  */
 export type RequestHeader = {
-  __typename?: 'RequestHeader';
+  __typename: 'RequestHeader';
   /** Name of the header. */
   name: Scalars['String']['output'];
   /** Value of the header. */
@@ -5131,7 +5131,7 @@ export type RequestHeader = {
  * Schema: https://opendatafabric.org/schemas/resources/v1alpha1/Resource
  */
 export type Resource = {
-  __typename?: 'Resource';
+  __typename: 'Resource';
   /** Container for identity and ownership information of a resource. */
   headers: ResourceHeaders;
   /** Identifies the controlling entity, a bounded context that this resource belongs to, and the version. Url should follow the pattern `{base-url}/{context}/{version}/{name}` e.g. `https://opendatafabric.org/schemas/datasets/v1/Dataset`. */
@@ -5150,7 +5150,7 @@ export type Resource = {
  * resources gets a top-level GraphQL error, never this type.
  */
 export type ResourceAccountResolutionProblem = {
-  __typename?: 'ResourceAccountResolutionProblem';
+  __typename: 'ResourceAccountResolutionProblem';
   /** Reason the account could not be resolved */
   code: ResourceAccountResolutionProblemCode;
   /** Human-readable description of the problem */
@@ -5171,7 +5171,7 @@ export enum ResourceAccountResolutionProblemCode {
 
 /** Outcome of applying one manifest of a batch */
 export type ResourceApplyManifestItemResult = {
-  __typename?: 'ResourceApplyManifestItemResult';
+  __typename: 'ResourceApplyManifestItemResult';
   /** Result of applying this manifest */
   outcome: ResourceApplyOutcome;
   /** Zero-based position of the manifest in the request */
@@ -5180,7 +5180,7 @@ export type ResourceApplyManifestItemResult = {
 
 /** All manifests of the batch were accepted */
 export type ResourceApplyManifestsResult = {
-  __typename?: 'ResourceApplyManifestsResult';
+  __typename: 'ResourceApplyManifestsResult';
   /** Outcome for each manifest of the batch */
   items: Array<ResourceApplyManifestItemResult>;
 };
@@ -5200,14 +5200,14 @@ export type ResourceApplyOutcome = ResourceAccountResolutionProblem | ResourceAp
 
 /** The manifest text could not be parsed (malformed JSON/YAML). */
 export type ResourceApplyParseManifestProblem = {
-  __typename?: 'ResourceApplyParseManifestProblem';
+  __typename: 'ResourceApplyParseManifestProblem';
   /** Human-readable description of the parse error */
   message: Scalars['String']['output'];
 };
 
 /** The resource type refused the requested change */
 export type ResourceApplyRejection = {
-  __typename?: 'ResourceApplyRejection';
+  __typename: 'ResourceApplyRejection';
   /** Kind of rule the change violated */
   category: ResourceApplyRejectionCategory;
   /** Human-readable reason for the rejection */
@@ -5231,7 +5231,7 @@ export enum ResourceApplyRejectionCategory {
  * than a pre-computed change list: clients decide how to diff and display it.
  */
 export type ResourceApplySuccess = {
-  __typename?: 'ResourceApplySuccess';
+  __typename: 'ResourceApplySuccess';
   /**
    * Canonical manifest the apply produced (or would produce). Always present
    * on an accepted apply.
@@ -5252,7 +5252,7 @@ export type ResourceApplySuccess = {
 
 /** Non-fatal issue found while applying a manifest */
 export type ResourceApplyWarning = {
-  __typename?: 'ResourceApplyWarning';
+  __typename: 'ResourceApplyWarning';
   /** Machine-readable warning code, e.g. `missing_description` */
   code: Scalars['String']['output'];
   /** Human-readable description of the warning */
@@ -5263,7 +5263,7 @@ export type ResourceApplyWarning = {
 
 /** A page of `ResourceSummary` items */
 export type ResourceConnection = {
-  __typename?: 'ResourceConnection';
+  __typename: 'ResourceConnection';
   /** Items of this page, each wrapped in an edge */
   edges: Array<ResourceEdge>;
   /** A shorthand for `edges { node { ... } }` */
@@ -5282,7 +5282,7 @@ export type ResourceDeleteOutcome = ResourceAccountResolutionProblem | ResourceD
  * resolved
  */
 export type ResourceDeleteResult = {
-  __typename?: 'ResourceDeleteResult';
+  __typename: 'ResourceDeleteResult';
   /** References that could not be resolved */
   problems: Array<BatchResourceProblem>;
   /** Resources whose deletion was requested */
@@ -5291,7 +5291,7 @@ export type ResourceDeleteResult = {
 
 /** Resource whose deletion was requested for one reference of a batch */
 export type ResourceDeleteSuccess = {
-  __typename?: 'ResourceDeleteSuccess';
+  __typename: 'ResourceDeleteSuccess';
   /** `DELETING` while controllers clean up, `DELETED` once they finished */
   phase: ResourcePhase;
   /** Zero-based position of the reference in the request */
@@ -5302,14 +5302,14 @@ export type ResourceDeleteSuccess = {
 
 /** An edge wrapping a single `ResourceSummary` item */
 export type ResourceEdge = {
-  __typename?: 'ResourceEdge';
+  __typename: 'ResourceEdge';
   /** The item itself */
   node: ResourceSummary;
 };
 
 /** A reference that named neither an id nor a name. */
 export type ResourceEmptyRefProblem = {
-  __typename?: 'ResourceEmptyRefProblem';
+  __typename: 'ResourceEmptyRefProblem';
   /** Human-readable description of the problem */
   message: Scalars['String']['output'];
 };
@@ -5320,7 +5320,7 @@ export type ResourceEmptyRefProblem = {
  * Schema: https://opendatafabric.org/schemas/resources/v1alpha1/ResourceHandle
  */
 export type ResourceHandle = {
-  __typename?: 'ResourceHandle';
+  __typename: 'ResourceHandle';
   /** Account that owns the target resource. */
   account: ResourceOwnerHandle;
   /** DID of the resource, if applicable. */
@@ -5335,7 +5335,7 @@ export type ResourceHandle = {
 
 /** A page of `ResourceHandle` items */
 export type ResourceHandleConnection = {
-  __typename?: 'ResourceHandleConnection';
+  __typename: 'ResourceHandleConnection';
   /** Items of this page, each wrapped in an edge */
   edges: Array<ResourceHandleEdge>;
   /** A shorthand for `edges { node { ... } }` */
@@ -5348,7 +5348,7 @@ export type ResourceHandleConnection = {
 
 /** An edge wrapping a single `ResourceHandle` item */
 export type ResourceHandleEdge = {
-  __typename?: 'ResourceHandleEdge';
+  __typename: 'ResourceHandleEdge';
   /** The item itself */
   node: ResourceHandle;
 };
@@ -5385,7 +5385,7 @@ export enum ResourceHeaderValidationProblemCode {
  * Schema: https://opendatafabric.org/schemas/resources/v1alpha1/ResourceHeaders
  */
 export type ResourceHeaders = {
-  __typename?: 'ResourceHeaders';
+  __typename: 'ResourceHeaders';
   /** Link to the account that owns the resource. */
   account: ResourceOwnerHandle;
   /**
@@ -5438,7 +5438,7 @@ export type ResourceHeaders = {
 
 /** No resource exists with the referenced ID */
 export type ResourceIdNotFoundProblem = {
-  __typename?: 'ResourceIDNotFoundProblem';
+  __typename: 'ResourceIDNotFoundProblem';
   /** ID that was not found */
   id: Scalars['ResourceID']['output'];
   /** Human-readable description of the problem */
@@ -5447,7 +5447,7 @@ export type ResourceIdNotFoundProblem = {
 
 /** A header field value (e.g. name, label key) failed validation. */
 export type ResourceInvalidHeaderProblem = {
-  __typename?: 'ResourceInvalidHeaderProblem';
+  __typename: 'ResourceInvalidHeaderProblem';
   /** Which header rule was violated */
   code: ResourceHeaderValidationProblemCode;
   /** Human-readable description of the violation */
@@ -5456,7 +5456,7 @@ export type ResourceInvalidHeaderProblem = {
 
 /** A selector's `labels` could not be resolved into a matchable filter. */
 export type ResourceInvalidLabelFilterProblem = {
-  __typename?: 'ResourceInvalidLabelFilterProblem';
+  __typename: 'ResourceInvalidLabelFilterProblem';
   /** Reason the label filter was rejected */
   code: ResourceLabelFilterProblemCode;
   /** Human-readable description of the problem */
@@ -5465,7 +5465,7 @@ export type ResourceInvalidLabelFilterProblem = {
 
 /** The `spec` field failed domain validation. */
 export type ResourceInvalidSpecProblem = {
-  __typename?: 'ResourceInvalidSpecProblem';
+  __typename: 'ResourceInvalidSpecProblem';
   /** Human-readable description of the validation failure */
   message: Scalars['String']['output'];
   /** Schema URI of the resource type whose spec was rejected */
@@ -5518,7 +5518,7 @@ export enum ResourceListColumnDataType {
 
 /** Type-specific column to show when listing resources */
 export type ResourceListColumnDescriptor = {
-  __typename?: 'ResourceListColumnDescriptor';
+  __typename: 'ResourceListColumnDescriptor';
   /** Data type of the column's values */
   dataType: ResourceListColumnDataType;
   /** Column title to display */
@@ -5531,7 +5531,7 @@ export type ResourceListColumnDescriptor = {
 
 /** Value of one list column for a resource; exactly one value field is set */
 export type ResourceListColumnValueView = {
-  __typename?: 'ResourceListColumnValueView';
+  __typename: 'ResourceListColumnValueView';
   /** Value of a `BOOL` column, null otherwise */
   boolValue?: Maybe<Scalars['Boolean']['output']>;
   /** Key of the column this value belongs to */
@@ -5570,7 +5570,7 @@ export enum ResourceManifestFormat {
  * entry rather than letting the `id` silently win.
  */
 export type ResourceNameMismatchProblem = {
-  __typename?: 'ResourceNameMismatchProblem';
+  __typename: 'ResourceNameMismatchProblem';
   /** Actual name of the resource with that ID */
   actualName: Scalars['ResourceName']['output'];
   /** Name given in the reference */
@@ -5583,7 +5583,7 @@ export type ResourceNameMismatchProblem = {
 
 /** No resource of the referenced type has the referenced name */
 export type ResourceNameNotFoundProblem = {
-  __typename?: 'ResourceNameNotFoundProblem';
+  __typename: 'ResourceNameNotFoundProblem';
   /** Human-readable description of the problem */
   message: Scalars['String']['output'];
   /** Name that was not found */
@@ -5598,7 +5598,7 @@ export type ResourceNameNotFoundProblem = {
  * Schema: https://opendatafabric.org/schemas/auth/v1alpha1/ResourceOwnerHandle
  */
 export type ResourceOwnerHandle = {
-  __typename?: 'ResourceOwnerHandle';
+  __typename: 'ResourceOwnerHandle';
   /** DID of the account. */
   did: Scalars['AccountID']['output'];
   /** ID of the account resource. */
@@ -5639,7 +5639,7 @@ export enum ResourcePhase {
 
 /** Number of resources in each phase */
 export type ResourcePhaseCounts = {
-  __typename?: 'ResourcePhaseCounts';
+  __typename: 'ResourcePhaseCounts';
   /** Resources whose last reconcile failed after an earlier success */
   degraded: Scalars['Uint64']['output'];
   /** Resources whose deletion waits for their controllers to clean up */
@@ -5692,7 +5692,7 @@ export type ResourceRefInput = {
 
 /** Resource rendered as a manifest document */
 export type ResourceRenderManifestResult = {
-  __typename?: 'ResourceRenderManifestResult';
+  __typename: 'ResourceRenderManifestResult';
   /** Format the manifest text is in */
   format: ResourceManifestFormat;
   /** Manifest text */
@@ -5701,7 +5701,7 @@ export type ResourceRenderManifestResult = {
 
 /** The resource with the referenced ID is of a different type than requested */
 export type ResourceSchemaMismatchProblem = {
-  __typename?: 'ResourceSchemaMismatchProblem';
+  __typename: 'ResourceSchemaMismatchProblem';
   /** Schema URI of the resource's actual type */
   actualSchema: Scalars['TypeUri']['output'];
   /** Schema URI of the requested type */
@@ -5757,7 +5757,7 @@ export type ResourceSelectorInput = {
  * Schema: https://opendatafabric.org/schemas/resources/v1alpha1/ResourceStatus
  */
 export type ResourceStatus = {
-  __typename?: 'ResourceStatus';
+  __typename: 'ResourceStatus';
   /** Detailed conditions describing the state of the resource that are added by controllers. */
   conditions: Scalars['ResourceConditions']['output'];
   /** Time when the controller seen the resource state as defined in `observedGeneration`. */
@@ -5777,7 +5777,7 @@ export type ResourceStatus = {
 
 /** Condensed reconciliation status of a resource */
 export type ResourceStatusSummary = {
-  __typename?: 'ResourceStatusSummary';
+  __typename: 'ResourceStatusSummary';
   /** Time the controller observed `observedGeneration` */
   observedAt?: Maybe<Scalars['DateTime']['output']>;
   /** Generation last seen by the controller, null if never observed */
@@ -5792,7 +5792,7 @@ export type ResourceStatusSummary = {
 
 /** Condensed view of a resource for listings */
 export type ResourceSummary = {
-  __typename?: 'ResourceSummary';
+  __typename: 'ResourceSummary';
   /** Time the resource was created */
   createdAt: Scalars['DateTime']['output'];
   /** Description from the resource annotations, null if not set */
@@ -5815,7 +5815,7 @@ export type ResourceSummary = {
 
 /** Resource counts for one resource type */
 export type ResourceTypeCountSummary = {
-  __typename?: 'ResourceTypeCountSummary';
+  __typename: 'ResourceTypeCountSummary';
   /** Number of resources of this type in each phase */
   phaseCounts: ResourcePhaseCounts;
   /** Schema URI of the resource type */
@@ -5828,7 +5828,7 @@ export type ResourceTypeCountSummary = {
 
 /** Registered resource type with its selectors and list columns */
 export type ResourceTypeDescriptor = {
-  __typename?: 'ResourceTypeDescriptor';
+  __typename: 'ResourceTypeDescriptor';
   /** Main selector name of the type, e.g. `variablesets` */
   canonicalSelector: Scalars['ResourceSelectorName']['output'];
   /** Type-specific columns to show when listing resources */
@@ -5856,7 +5856,7 @@ export type ResourceTypeSelectorInput = {
  * field never carries a short selector masquerading as a URI.
  */
 export type ResourceUnsupportedDescriptorProblem = {
-  __typename?: 'ResourceUnsupportedDescriptorProblem';
+  __typename: 'ResourceUnsupportedDescriptorProblem';
   /** Human-readable description of the problem */
   message: Scalars['String']['output'];
   /** Schema URI that matched no registered type */
@@ -5870,7 +5870,7 @@ export type ResourceUnsupportedDescriptorProblem = {
  * selector).
  */
 export type ResourceUnsupportedSelectorProblem = {
-  __typename?: 'ResourceUnsupportedSelectorProblem';
+  __typename: 'ResourceUnsupportedSelectorProblem';
   /** Human-readable description of the problem */
   message: Scalars['String']['output'];
   /** Selector as supplied by the caller */
@@ -5882,14 +5882,14 @@ export type ResourceUnsupportedSelectorProblem = {
  * within one type, so the reference identifies nothing as posed.
  */
 export type ResourceUntypedNameProblem = {
-  __typename?: 'ResourceUntypedNameProblem';
+  __typename: 'ResourceUntypedNameProblem';
   /** Human-readable description of the problem */
   message: Scalars['String']['output'];
 };
 
 /** Queries over declarative resources and their types */
 export type Resources = {
-  __typename?: 'Resources';
+  __typename: 'Resources';
   /** Returns resources by refs */
   byRefs: BatchResourcesOutcome;
   /**
@@ -5960,7 +5960,7 @@ export type ResourcesSummaryArgs = {
 
 /** Mutations that create, update and delete declarative resources */
 export type ResourcesMut = {
-  __typename?: 'ResourcesMut';
+  __typename: 'ResourcesMut';
   /**
    * Creates or updates a resource from a manifest, or only plans the
    * change when `dryRun` is set
@@ -6002,7 +6002,7 @@ export type ResourcesMutDeleteArgs = {
 
 /** Resource counts of an account, per type */
 export type ResourcesSummary = {
-  __typename?: 'ResourcesSummary';
+  __typename: 'ResourcesSummary';
   /** Counts for each resource type */
   resourceCounts: Array<ResourceTypeCountSummary>;
 };
@@ -6012,7 +6012,7 @@ export type ResourcesSummaryOutcome = ResourceAccountResolutionProblem | Resourc
 
 /** REST API endpoints for a dataset */
 export type RestProtocolDesc = {
-  __typename?: 'RestProtocolDesc';
+  __typename: 'RestProtocolDesc';
   /** URL of the endpoint that ingests data into the dataset */
   pushUrl: Scalars['String']['output'];
   /** Example URL of the SQL query endpoint */
@@ -6029,7 +6029,7 @@ export type ResumeWebhookSubscriptionResult = {
 
 /** Webhook subscription was resumed */
 export type ResumeWebhookSubscriptionResultSuccess = ResumeWebhookSubscriptionResult & {
-  __typename?: 'ResumeWebhookSubscriptionResultSuccess';
+  __typename: 'ResumeWebhookSubscriptionResultSuccess';
   /** Human-readable success message */
   message: Scalars['String']['output'];
   /** Always true */
@@ -6038,7 +6038,7 @@ export type ResumeWebhookSubscriptionResultSuccess = ResumeWebhookSubscriptionRe
 
 /** Operation is not allowed in the current subscription status */
 export type ResumeWebhookSubscriptionResultUnexpected = ResumeWebhookSubscriptionResult & {
-  __typename?: 'ResumeWebhookSubscriptionResultUnexpected';
+  __typename: 'ResumeWebhookSubscriptionResultUnexpected';
   /** Human-readable error message */
   message: Scalars['String']['output'];
   /** Current status of the subscription */
@@ -6053,7 +6053,7 @@ export type RevokeResult = {
 
 /** Access token was already revoked earlier */
 export type RevokeResultAlreadyRevoked = RevokeResult & {
-  __typename?: 'RevokeResultAlreadyRevoked';
+  __typename: 'RevokeResultAlreadyRevoked';
   /** Human-readable outcome message */
   message: Scalars['String']['output'];
   /** Identifier of the token */
@@ -6062,7 +6062,7 @@ export type RevokeResultAlreadyRevoked = RevokeResult & {
 
 /** Access token was revoked */
 export type RevokeResultSuccess = RevokeResult & {
-  __typename?: 'RevokeResultSuccess';
+  __typename: 'RevokeResultSuccess';
   /** Human-readable outcome message */
   message: Scalars['String']['output'];
   /** Identifier of the revoked token */
@@ -6077,7 +6077,7 @@ export type RotateWebhookSubscriptionSecretResult = {
 
 /** Subscription secret was rotated */
 export type RotateWebhookSubscriptionSecretSuccess = RotateWebhookSubscriptionSecretResult & {
-  __typename?: 'RotateWebhookSubscriptionSecretSuccess';
+  __typename: 'RotateWebhookSubscriptionSecretSuccess';
   /** Human-readable success message */
   message: Scalars['String']['output'];
   /** New secret for verifying delivery signatures, returned only once */
@@ -6086,7 +6086,7 @@ export type RotateWebhookSubscriptionSecretSuccess = RotateWebhookSubscriptionSe
 
 /** Search over datasets and other objects managed by the node */
 export type Search = {
-  __typename?: 'Search';
+  __typename: 'Search';
   /**
    * Perform lightweight search among resource names.
    * Useful for autocomplete.
@@ -6188,7 +6188,7 @@ export type SearchResult = Dataset;
 
 /** A page of `SearchResult` items */
 export type SearchResultConnection = {
-  __typename?: 'SearchResultConnection';
+  __typename: 'SearchResultConnection';
   /** Items of this page, each wrapped in an edge */
   edges: Array<SearchResultEdge>;
   /** A shorthand for `edges { node { ... } }` */
@@ -6201,14 +6201,14 @@ export type SearchResultConnection = {
 
 /** An edge wrapping a single `SearchResult` item */
 export type SearchResultEdge = {
-  __typename?: 'SearchResultEdge';
+  __typename: 'SearchResultEdge';
   /** The item itself */
   node: SearchResult;
 };
 
 /** Object found by a search, with its relevance score */
 export type SearchResultEx = {
-  __typename?: 'SearchResultEx';
+  __typename: 'SearchResultEx';
   /** Found object */
   item: SearchResult;
   /** Relevance score, higher is more relevant */
@@ -6217,7 +6217,7 @@ export type SearchResultEx = {
 
 /** A page of `SearchResultEx` items */
 export type SearchResultExConnection = {
-  __typename?: 'SearchResultExConnection';
+  __typename: 'SearchResultExConnection';
   /** Items of this page, each wrapped in an edge */
   edges: Array<SearchResultExEdge>;
   /** A shorthand for `edges { node { ... } }` */
@@ -6230,7 +6230,7 @@ export type SearchResultExConnection = {
 
 /** An edge wrapping a single `SearchResultEx` item */
 export type SearchResultExEdge = {
-  __typename?: 'SearchResultExEdge';
+  __typename: 'SearchResultExEdge';
   /** The item itself */
   node: SearchResultEx;
 };
@@ -6241,7 +6241,7 @@ export type SearchResultExEdge = {
  * Schema: https://opendatafabric.org/schemas/datasets/v1alpha1/Seed
  */
 export type Seed = {
-  __typename?: 'Seed';
+  __typename: 'Seed';
   /** Unique identity of the dataset. */
   datasetId: Scalars['DatasetID']['output'];
   /** Type of the dataset. */
@@ -6264,7 +6264,7 @@ export type SetAccountQuotasResult = {
 
 /** Account quotas were not set: the input is invalid */
 export type SetAccountQuotasResultInvalidInput = SetAccountQuotasResult & {
-  __typename?: 'SetAccountQuotasResultInvalidInput';
+  __typename: 'SetAccountQuotasResultInvalidInput';
   /** Always false */
   isSuccess: Scalars['Boolean']['output'];
   /** Description of what is wrong with the input */
@@ -6273,7 +6273,7 @@ export type SetAccountQuotasResultInvalidInput = SetAccountQuotasResult & {
 
 /** Account quotas were set */
 export type SetAccountQuotasResultSuccess = SetAccountQuotasResult & {
-  __typename?: 'SetAccountQuotasResultSuccess';
+  __typename: 'SetAccountQuotasResultSuccess';
   /** Always true */
   isSuccess: Scalars['Boolean']['output'];
   /** Human-readable outcome message, empty on success */
@@ -6292,13 +6292,13 @@ export type SetAccountQuotasStorageInput = {
  * Schema: https://opendatafabric.org/schemas/datasets/v1alpha1/SetAttachments
  */
 export type SetAttachments = {
-  __typename?: 'SetAttachments';
+  __typename: 'SetAttachments';
   /** One of the supported attachment sources. */
   attachments: Attachments;
 };
 
 export type SetDataSchema = {
-  __typename?: 'SetDataSchema';
+  __typename: 'SetDataSchema';
   schema: DataSchema;
 };
 
@@ -6315,7 +6315,7 @@ export type SetDatasetVisibilityResult = {
 
 /** Dataset visibility was changed */
 export type SetDatasetVisibilityResultSuccess = SetDatasetVisibilityResult & {
-  __typename?: 'SetDatasetVisibilityResultSuccess';
+  __typename: 'SetDatasetVisibilityResultSuccess';
   /** Human-readable outcome message */
   message: Scalars['String']['output'];
 };
@@ -6328,7 +6328,7 @@ export type SetFlowConfigResult = {
 
 /** Flow configuration was set */
 export type SetFlowConfigSuccess = SetFlowConfigResult & {
-  __typename?: 'SetFlowConfigSuccess';
+  __typename: 'SetFlowConfigSuccess';
   /** Configuration that is now in effect */
   config: FlowConfiguration;
   /** Human-readable success message */
@@ -6343,7 +6343,7 @@ export type SetFlowTriggerResult = {
 
 /** Flow trigger was set */
 export type SetFlowTriggerSuccess = SetFlowTriggerResult & {
-  __typename?: 'SetFlowTriggerSuccess';
+  __typename: 'SetFlowTriggerSuccess';
   /** Human-readable success message */
   message: Scalars['String']['output'];
   /** Trigger that is now in effect */
@@ -6356,7 +6356,7 @@ export type SetFlowTriggerSuccess = SetFlowTriggerResult & {
  * Schema: https://opendatafabric.org/schemas/datasets/v1alpha1/SetInfo
  */
 export type SetInfo = {
-  __typename?: 'SetInfo';
+  __typename: 'SetInfo';
   /** Brief single-sentence summary of a dataset. */
   description?: Maybe<Scalars['String']['output']>;
   /** Keywords, search terms, or tags used to describe the dataset. */
@@ -6369,7 +6369,7 @@ export type SetInfo = {
  * Schema: https://opendatafabric.org/schemas/datasets/v1alpha1/SetLicense
  */
 export type SetLicense = {
-  __typename?: 'SetLicense';
+  __typename: 'SetLicense';
   /** Full name of the license. */
   name: Scalars['String']['output'];
   /** Abbreviated name of the license. */
@@ -6386,7 +6386,7 @@ export type SetLicense = {
  * Schema: https://opendatafabric.org/schemas/legacy/v0/SetPollingSource
  */
 export type SetPollingSource = {
-  __typename?: 'SetPollingSource';
+  __typename: 'SetPollingSource';
   /** Determines where data is sourced from. */
   fetch: FetchStep;
   /** Determines how newly-ingested data should be merged with existing history. */
@@ -6407,7 +6407,7 @@ export type SetRoleResult = {
 
 /** Role was granted */
 export type SetRoleResultSuccess = SetRoleResult & {
-  __typename?: 'SetRoleResultSuccess';
+  __typename: 'SetRoleResultSuccess';
   /** Human-readable outcome message */
   message: Scalars['String']['output'];
 };
@@ -6418,7 +6418,7 @@ export type SetRoleResultSuccess = SetRoleResult & {
  * Schema: https://opendatafabric.org/schemas/datasets/v1alpha1/SetTransform
  */
 export type SetTransform = {
-  __typename?: 'SetTransform';
+  __typename: 'SetTransform';
   /** Datasets that will be used as sources. */
   inputs: Array<TransformInput>;
   /** Transformation that will be applied to produce new data. */
@@ -6431,7 +6431,7 @@ export type SetTransform = {
  * Schema: https://opendatafabric.org/schemas/datasets/v1alpha1/SetVocab
  */
 export type SetVocab = {
-  __typename?: 'SetVocab';
+  __typename: 'SetVocab';
   /** Name of the event time column. */
   eventTimeColumn?: Maybe<Scalars['String']['output']>;
   /** Name of the offset column. */
@@ -6444,7 +6444,7 @@ export type SetVocab = {
 
 /** Watermark cannot be set manually on a derivative dataset */
 export type SetWatermarkIsDerivative = SetWatermarkResult & {
-  __typename?: 'SetWatermarkIsDerivative';
+  __typename: 'SetWatermarkIsDerivative';
   /** Human-readable error message */
   message: Scalars['String']['output'];
 };
@@ -6457,14 +6457,14 @@ export type SetWatermarkResult = {
 
 /** Watermark already had the requested value */
 export type SetWatermarkUpToDate = SetWatermarkResult & {
-  __typename?: 'SetWatermarkUpToDate';
+  __typename: 'SetWatermarkUpToDate';
   /** Human-readable outcome message */
   message: Scalars['String']['output'];
 };
 
 /** Watermark was advanced */
 export type SetWatermarkUpdated = SetWatermarkResult & {
-  __typename?: 'SetWatermarkUpdated';
+  __typename: 'SetWatermarkUpdated';
   /** Human-readable outcome message */
   message: Scalars['String']['output'];
   /** Hash of the new metadata chain head */
@@ -6484,7 +6484,7 @@ export type SourceCaching = SourceCachingForever;
  * Schema: https://opendatafabric.org/schemas/sources/v1alpha1/SourceCaching#/$defs/Forever
  */
 export type SourceCachingForever = {
-  __typename?: 'SourceCachingForever';
+  __typename: 'SourceCachingForever';
   dummy?: Maybe<Scalars['String']['output']>;
 };
 
@@ -6504,7 +6504,7 @@ export enum SourceOrdering {
  * Schema: https://opendatafabric.org/schemas/sources/v1alpha1/SourceState
  */
 export type SourceState = {
-  __typename?: 'SourceState';
+  __typename: 'SourceState';
   /** Identifies the type of the state. Standard types include: `odf/etag`, `odf/last-modified`. */
   kind: Scalars['String']['output'];
   /** Identifies the source that the state corresponds to. */
@@ -6532,7 +6532,7 @@ export type SpecViewOptsInput = {
  * Schema: https://opendatafabric.org/schemas/datasets/v1alpha1/SqlQueryStep
  */
 export type SqlQueryStep = {
-  __typename?: 'SqlQueryStep';
+  __typename: 'SqlQueryStep';
   /**
    * Name of the temporary view that will be created from result of the query. Step without this
    * alias will be treated as an output of the transformation.
@@ -6544,7 +6544,7 @@ export type SqlQueryStep = {
 
 /** File is larger than the upload size limit */
 export type StartUploadVersionErrorTooLarge = StartUploadVersionResult & {
-  __typename?: 'StartUploadVersionErrorTooLarge';
+  __typename: 'StartUploadVersionErrorTooLarge';
   /** Always false */
   isSuccess: Scalars['Boolean']['output'];
   /** Human-readable error message */
@@ -6565,7 +6565,7 @@ export type StartUploadVersionResult = {
 
 /** Upload was started; describes how to send the content */
 export type StartUploadVersionSuccess = StartUploadVersionResult & {
-  __typename?: 'StartUploadVersionSuccess';
+  __typename: 'StartUploadVersionSuccess';
   /** HTTP headers to include in the upload request */
   headers: Array<KeyValue>;
   /** Always true */
@@ -6584,7 +6584,7 @@ export type StartUploadVersionSuccess = StartUploadVersionResult & {
 
 /** Unit of work executed on behalf of a flow */
 export type Task = {
-  __typename?: 'Task';
+  __typename: 'Task';
   /** Whether the task was ordered to be cancelled */
   cancellationRequested: Scalars['Boolean']['output'];
   /** Time when cancellation of task was requested */
@@ -6611,7 +6611,7 @@ export type TaskFailureReason = TaskFailureReasonGeneral | TaskFailureReasonInpu
 
 /** Task failed for a reason without a dedicated type */
 export type TaskFailureReasonGeneral = {
-  __typename?: 'TaskFailureReasonGeneral';
+  __typename: 'TaskFailureReasonGeneral';
   /** Human-readable description of the failure */
   message: Scalars['String']['output'];
   /** Whether the failure is transient and the task may be retried */
@@ -6620,7 +6620,7 @@ export type TaskFailureReasonGeneral = {
 
 /** Transform failed because an input dataset was compacted */
 export type TaskFailureReasonInputDatasetCompacted = {
-  __typename?: 'TaskFailureReasonInputDatasetCompacted';
+  __typename: 'TaskFailureReasonInputDatasetCompacted';
   /** Input dataset that was compacted */
   inputDataset: Dataset;
   /** Human-readable description of the failure */
@@ -6629,7 +6629,7 @@ export type TaskFailureReasonInputDatasetCompacted = {
 
 /** Webhook could not be delivered to its target */
 export type TaskFailureReasonWebhookDeliveryProblem = {
-  __typename?: 'TaskFailureReasonWebhookDeliveryProblem';
+  __typename: 'TaskFailureReasonWebhookDeliveryProblem';
   /** Description of the delivery problem */
   message: Scalars['String']['output'];
   /** URL the delivery was sent to */
@@ -6641,21 +6641,21 @@ export type TaskOutcome = TaskOutcomeCancelled | TaskOutcomeFailed | TaskOutcome
 
 /** Task was cancelled before completing */
 export type TaskOutcomeCancelled = {
-  __typename?: 'TaskOutcomeCancelled';
+  __typename: 'TaskOutcomeCancelled';
   /** Human-readable cancellation message */
   message: Scalars['String']['output'];
 };
 
 /** Task failed */
 export type TaskOutcomeFailed = {
-  __typename?: 'TaskOutcomeFailed';
+  __typename: 'TaskOutcomeFailed';
   /** Why the task failed */
   reason: TaskFailureReason;
 };
 
 /** Task completed successfully */
 export type TaskOutcomeSuccess = {
-  __typename?: 'TaskOutcomeSuccess';
+  __typename: 'TaskOutcomeSuccess';
   /** Human-readable success message */
   message: Scalars['String']['output'];
 };
@@ -6676,7 +6676,7 @@ export enum TaskStatus {
  * Schema: https://opendatafabric.org/schemas/datasets/v1alpha1/TemporalTable
  */
 export type TemporalTable = {
-  __typename?: 'TemporalTable';
+  __typename: 'TemporalTable';
   /** Name of the dataset to be converted into a temporal table. */
   name: Scalars['String']['output'];
   /** Column names used as the primary key for creating a table. */
@@ -6685,7 +6685,7 @@ export type TemporalTable = {
 
 /** Time interval expressed as a number of units */
 export type TimeDelta = {
-  __typename?: 'TimeDelta';
+  __typename: 'TimeDelta';
   /** Number of units in the interval */
   every: Scalars['Int']['output'];
   /** Unit of the interval */
@@ -6714,7 +6714,7 @@ export enum TimeUnit {
 
 /** Storage usage summed over a set of datasets */
 export type TotalDatasetsStatistic = {
-  __typename?: 'TotalDatasetsStatistic';
+  __typename: 'TotalDatasetsStatistic';
   /** Size of checkpoint files in bytes */
   totalCheckpointsSizeBytes: Scalars['Int']['output'];
   /** Size of data files in bytes */
@@ -6737,7 +6737,7 @@ export type TotalDatasetsStatistic = {
 export type Transform = TransformSql;
 
 export type TransformInput = {
-  __typename?: 'TransformInput';
+  __typename: 'TransformInput';
   alias: Scalars['String']['output'];
   datasetRef: Scalars['DatasetRef']['output'];
   inputDataset: TransformInputDataset;
@@ -6753,13 +6753,13 @@ export type TransformInputDataset = {
 };
 
 export type TransformInputDatasetAccessible = TransformInputDataset & {
-  __typename?: 'TransformInputDatasetAccessible';
+  __typename: 'TransformInputDatasetAccessible';
   dataset: Dataset;
   message: Scalars['String']['output'];
 };
 
 export type TransformInputDatasetNotAccessible = TransformInputDataset & {
-  __typename?: 'TransformInputDatasetNotAccessible';
+  __typename: 'TransformInputDatasetNotAccessible';
   datasetRef: Scalars['DatasetRef']['output'];
   message: Scalars['String']['output'];
 };
@@ -6770,7 +6770,7 @@ export type TransformInputDatasetNotAccessible = TransformInputDataset & {
  * Schema: https://opendatafabric.org/schemas/datasets/v1alpha1/Transform#/$defs/Sql
  */
 export type TransformSql = {
-  __typename?: 'TransformSql';
+  __typename: 'TransformSql';
   engine: Scalars['String']['output'];
   queries: Array<SqlQueryStep>;
   temporalTables?: Maybe<Array<TemporalTable>>;
@@ -6785,7 +6785,7 @@ export type TriggerFlowResult = {
 
 /** Flow was triggered */
 export type TriggerFlowSuccess = TriggerFlowResult & {
-  __typename?: 'TriggerFlowSuccess';
+  __typename: 'TriggerFlowSuccess';
   /** Flow that was scheduled to run */
   flow: Flow;
   /** Human-readable success message */
@@ -6800,14 +6800,14 @@ export type UnsetRoleResult = {
 
 /** Roles were revoked */
 export type UnsetRoleResultSuccess = UnsetRoleResult & {
-  __typename?: 'UnsetRoleResultSuccess';
+  __typename: 'UnsetRoleResultSuccess';
   /** Human-readable outcome message */
   message: Scalars['String']['output'];
 };
 
 /** Email was not updated: it is already used by another account */
 export type UpdateEmailNonUnique = UpdateEmailResult & {
-  __typename?: 'UpdateEmailNonUnique';
+  __typename: 'UpdateEmailNonUnique';
   /** Human-readable outcome message */
   message: Scalars['String']['output'];
 };
@@ -6820,7 +6820,7 @@ export type UpdateEmailResult = {
 
 /** Account email was updated */
 export type UpdateEmailSuccess = UpdateEmailResult & {
-  __typename?: 'UpdateEmailSuccess';
+  __typename: 'UpdateEmailSuccess';
   /** Human-readable outcome message */
   message: Scalars['String']['output'];
   /** New email of the account */
@@ -6835,7 +6835,7 @@ export type UpdateReadmeResult = {
 
 /** Dataset head did not match the expected one, likely due to a concurrent update */
 export type UpdateVersionErrorCasFailed = UpdateVersionResult & {
-  __typename?: 'UpdateVersionErrorCasFailed';
+  __typename: 'UpdateVersionErrorCasFailed';
   /** Current head block hash of the dataset */
   actualHead: Scalars['Multihash']['output'];
   /** Head block hash the caller expected */
@@ -6848,7 +6848,7 @@ export type UpdateVersionErrorCasFailed = UpdateVersionResult & {
 
 /** Extra data does not match the dataset schema */
 export type UpdateVersionErrorInvalidExtraData = UpdateVersionResult & {
-  __typename?: 'UpdateVersionErrorInvalidExtraData';
+  __typename: 'UpdateVersionErrorInvalidExtraData';
   /** Always false */
   isSuccess: Scalars['Boolean']['output'];
   /** Reason the extra data was rejected */
@@ -6857,7 +6857,7 @@ export type UpdateVersionErrorInvalidExtraData = UpdateVersionResult & {
 
 /** Update would exceed the storage quota of the account */
 export type UpdateVersionErrorQuotaExceeded = UpdateVersionResult & {
-  __typename?: 'UpdateVersionErrorQuotaExceeded';
+  __typename: 'UpdateVersionErrorQuotaExceeded';
   /** Size of the rejected content, in bytes; null if no quota is configured */
   incoming?: Maybe<Scalars['Int']['output']>;
   /** Always false */
@@ -6880,7 +6880,7 @@ export type UpdateVersionResult = {
 
 /** New file version was created */
 export type UpdateVersionSuccess = UpdateVersionResult & {
-  __typename?: 'UpdateVersionSuccess';
+  __typename: 'UpdateVersionSuccess';
   /** Hash of the file content of the new version */
   contentHash: Scalars['Multihash']['output'];
   /** Always true */
@@ -6903,7 +6903,7 @@ export type UpdateWebhookSubscriptionResult = {
 
 /** Webhook subscription was updated */
 export type UpdateWebhookSubscriptionResultSuccess = UpdateWebhookSubscriptionResult & {
-  __typename?: 'UpdateWebhookSubscriptionResultSuccess';
+  __typename: 'UpdateWebhookSubscriptionResultSuccess';
   /** Human-readable success message */
   message: Scalars['String']['output'];
   /** Always true */
@@ -6912,7 +6912,7 @@ export type UpdateWebhookSubscriptionResultSuccess = UpdateWebhookSubscriptionRe
 
 /** Operation is not allowed in the current subscription status */
 export type UpdateWebhookSubscriptionResultUnexpected = UpdateWebhookSubscriptionResult & {
-  __typename?: 'UpdateWebhookSubscriptionResultUnexpected';
+  __typename: 'UpdateWebhookSubscriptionResultUnexpected';
   /** Human-readable error message */
   message: Scalars['String']['output'];
   /** Current status of the subscription */
@@ -6927,7 +6927,7 @@ export type UpsertDatasetEnvVarResult = {
 
 /** Environment variable was created */
 export type UpsertDatasetEnvVarResultCreated = UpsertDatasetEnvVarResult & {
-  __typename?: 'UpsertDatasetEnvVarResultCreated';
+  __typename: 'UpsertDatasetEnvVarResultCreated';
   /** Created environment variable */
   envVar: ViewDatasetEnvVar;
   /** Human-readable outcome message */
@@ -6936,7 +6936,7 @@ export type UpsertDatasetEnvVarResultCreated = UpsertDatasetEnvVarResult & {
 
 /** Environment variable was updated */
 export type UpsertDatasetEnvVarResultUpdated = UpsertDatasetEnvVarResult & {
-  __typename?: 'UpsertDatasetEnvVarResultUpdated';
+  __typename: 'UpsertDatasetEnvVarResultUpdated';
   /** Updated environment variable */
   envVar: ViewDatasetEnvVar;
   /** Human-readable outcome message */
@@ -6945,14 +6945,14 @@ export type UpsertDatasetEnvVarResultUpdated = UpsertDatasetEnvVarResult & {
 
 /** Environment variable already had the requested value */
 export type UpsertDatasetEnvVarUpToDate = UpsertDatasetEnvVarResult & {
-  __typename?: 'UpsertDatasetEnvVarUpToDate';
+  __typename: 'UpsertDatasetEnvVarUpToDate';
   /** Human-readable outcome message */
   message: Scalars['String']['output'];
 };
 
 /** Versioned file archetype view of a dataset, where each version is a file */
 export type VersionedFile = {
-  __typename?: 'VersionedFile';
+  __typename: 'VersionedFile';
   /** Returns the specified entry by block or version number */
   asOf?: Maybe<VersionedFileEntry>;
   /** Returns the latest version entry, if any */
@@ -6978,7 +6978,7 @@ export type VersionedFileVersionsArgs = {
 
 /** Information needed to download file content directly from storage */
 export type VersionedFileContentDownload = {
-  __typename?: 'VersionedFileContentDownload';
+  __typename: 'VersionedFileContentDownload';
   /** Download URL expiration timestamp */
   expiresAt?: Maybe<Scalars['DateTime']['output']>;
   /** Headers to include in the request */
@@ -6989,7 +6989,7 @@ export type VersionedFileContentDownload = {
 
 /** Single version of a versioned file */
 export type VersionedFileEntry = {
-  __typename?: 'VersionedFileEntry';
+  __typename: 'VersionedFileEntry';
   /**
    * Returns encoded content in-band. Should be used for small files only and
    * will return an error if called on large data.
@@ -7015,7 +7015,7 @@ export type VersionedFileEntry = {
 
 /** A page of `VersionedFileEntry` items */
 export type VersionedFileEntryConnection = {
-  __typename?: 'VersionedFileEntryConnection';
+  __typename: 'VersionedFileEntryConnection';
   /** Items of this page, each wrapped in an edge */
   edges: Array<VersionedFileEntryEdge>;
   /** A shorthand for `edges { node { ... } }` */
@@ -7028,14 +7028,14 @@ export type VersionedFileEntryConnection = {
 
 /** An edge wrapping a single `VersionedFileEntry` item */
 export type VersionedFileEntryEdge = {
-  __typename?: 'VersionedFileEntryEdge';
+  __typename: 'VersionedFileEntryEdge';
   /** The item itself */
   node: VersionedFileEntry;
 };
 
 /** Mutations of a versioned file dataset */
 export type VersionedFileMut = {
-  __typename?: 'VersionedFileMut';
+  __typename: 'VersionedFileMut';
   /**
    * Finalizes the content upload by incorporating the content into the
    * dataset as a new version
@@ -7091,7 +7091,7 @@ export type VersionedFileMutUploadNewVersionArgs = {
 
 /** Access token as seen when listing tokens, without its secret value */
 export type ViewAccessToken = {
-  __typename?: 'ViewAccessToken';
+  __typename: 'ViewAccessToken';
   /** Access token account owner */
   account: Account;
   /** Date of token creation */
@@ -7106,7 +7106,7 @@ export type ViewAccessToken = {
 
 /** Environment variable of a dataset */
 export type ViewDatasetEnvVar = {
-  __typename?: 'ViewDatasetEnvVar';
+  __typename: 'ViewDatasetEnvVar';
   /** Date of the dataset environment variable creation */
   createdAt: Scalars['DateTime']['output'];
   /** Whether the value is stored encrypted and hidden from listings */
@@ -7119,7 +7119,7 @@ export type ViewDatasetEnvVar = {
 
 /** A page of `ViewDatasetEnvVar` items */
 export type ViewDatasetEnvVarConnection = {
-  __typename?: 'ViewDatasetEnvVarConnection';
+  __typename: 'ViewDatasetEnvVarConnection';
   /** Items of this page, each wrapped in an edge */
   edges: Array<ViewDatasetEnvVarEdge>;
   /** A shorthand for `edges { node { ... } }` */
@@ -7132,21 +7132,21 @@ export type ViewDatasetEnvVarConnection = {
 
 /** An edge wrapping a single `ViewDatasetEnvVar` item */
 export type ViewDatasetEnvVarEdge = {
-  __typename?: 'ViewDatasetEnvVarEdge';
+  __typename: 'ViewDatasetEnvVarEdge';
   /** The item itself */
   node: ViewDatasetEnvVar;
 };
 
 /** WebSocket endpoint */
 export type WebSocketProtocolDesc = {
-  __typename?: 'WebSocketProtocolDesc';
+  __typename: 'WebSocketProtocolDesc';
   /** WebSocket connection URL */
   url: Scalars['String']['output'];
 };
 
 /** Webhook delivery process of a single subscription */
 export type WebhookFlowSubProcess = {
-  __typename?: 'WebhookFlowSubProcess';
+  __typename: 'WebhookFlowSubProcess';
   /** Identifier of the webhook subscription */
   id: Scalars['WebhookSubscriptionID']['output'];
   /** Subscription label, or its target URL when the label is empty */
@@ -7159,7 +7159,7 @@ export type WebhookFlowSubProcess = {
 
 /** A page of `WebhookFlowSubProcess` items */
 export type WebhookFlowSubProcessConnection = {
-  __typename?: 'WebhookFlowSubProcessConnection';
+  __typename: 'WebhookFlowSubProcessConnection';
   /** Items of this page, each wrapped in an edge */
   edges: Array<WebhookFlowSubProcessEdge>;
   /** A shorthand for `edges { node { ... } }` */
@@ -7172,14 +7172,14 @@ export type WebhookFlowSubProcessConnection = {
 
 /** An edge wrapping a single `WebhookFlowSubProcess` item */
 export type WebhookFlowSubProcessEdge = {
-  __typename?: 'WebhookFlowSubProcessEdge';
+  __typename: 'WebhookFlowSubProcessEdge';
   /** The item itself */
   node: WebhookFlowSubProcess;
 };
 
 /** Webhook delivery processes of a dataset */
 export type WebhookFlowSubProcessGroup = {
-  __typename?: 'WebhookFlowSubProcessGroup';
+  __typename: 'WebhookFlowSubProcessGroup';
   /** Aggregated state counts across the dataset's webhook processes */
   rollup: FlowProcessGroupRollup;
   /** Webhook delivery processes of the dataset, ordered by name */
@@ -7188,7 +7188,7 @@ export type WebhookFlowSubProcessGroup = {
 
 /** Subscription that delivers dataset events to a target URL */
 export type WebhookSubscription = {
-  __typename?: 'WebhookSubscription';
+  __typename: 'WebhookSubscription';
   /**
    * Associated dataset ID
    * Not present for system subscriptions
@@ -7208,7 +7208,7 @@ export type WebhookSubscription = {
 
 /** Another subscription of the dataset already uses this label */
 export type WebhookSubscriptionDuplicateLabel = CreateWebhookSubscriptionResult & UpdateWebhookSubscriptionResult & {
-  __typename?: 'WebhookSubscriptionDuplicateLabel';
+  __typename: 'WebhookSubscriptionDuplicateLabel';
   /** Label that is already taken */
   label: Scalars['String']['output'];
   /** Human-readable error message */
@@ -7227,7 +7227,7 @@ export type WebhookSubscriptionInput = {
 
 /** Target URL is not acceptable for webhook delivery */
 export type WebhookSubscriptionInvalidTargetUrl = CreateWebhookSubscriptionResult & UpdateWebhookSubscriptionResult & {
-  __typename?: 'WebhookSubscriptionInvalidTargetUrl';
+  __typename: 'WebhookSubscriptionInvalidTargetUrl';
   /** Explanation of why the URL was rejected */
   innerMessage: Scalars['String']['output'];
   /** Human-readable error message */
@@ -7236,7 +7236,7 @@ export type WebhookSubscriptionInvalidTargetUrl = CreateWebhookSubscriptionResul
 
 /** Mutations of a single webhook subscription */
 export type WebhookSubscriptionMut = {
-  __typename?: 'WebhookSubscriptionMut';
+  __typename: 'WebhookSubscriptionMut';
   /** Pauses deliveries of an enabled subscription */
   pause: PauseWebhookSubscriptionResult;
   /** Re-enables a subscription that was marked unreachable */
@@ -7259,7 +7259,7 @@ export type WebhookSubscriptionMutUpdateArgs = {
 
 /** No event types were provided for the subscription */
 export type WebhookSubscriptionNoEventTypesProvided = CreateWebhookSubscriptionResult & UpdateWebhookSubscriptionResult & {
-  __typename?: 'WebhookSubscriptionNoEventTypesProvided';
+  __typename: 'WebhookSubscriptionNoEventTypesProvided';
   /** Human-readable error message */
   message: Scalars['String']['output'];
   /** Number of event types provided, always zero */
@@ -7282,7 +7282,7 @@ export enum WebhookSubscriptionStatus {
 
 /** Global webhook information */
 export type Webhooks = {
-  __typename?: 'Webhooks';
+  __typename: 'Webhooks';
   /** List of supported event types */
   eventTypes: Array<Scalars['String']['output']>;
 };
@@ -7293,24 +7293,24 @@ export type CreateAccessTokenMutationVariables = Exact<{
 }>;
 
 
-export type CreateAccessTokenMutation = { __typename?: 'Mutation', accounts: { __typename?: 'AccountsMut', byId?: { __typename?: 'AccountMut', accessTokens: { __typename?: 'AccountAccessTokensMut', createAccessToken:
-          | { __typename?: 'CreateAccessTokenResultDuplicate', message: string, tokenName: string }
-          | { __typename?: 'CreateAccessTokenResultSuccess', message: string, token: (
-              { __typename?: 'CreatedAccessToken' }
+export type CreateAccessTokenMutation = { accounts: { __typename: 'AccountsMut', byId?: { __typename: 'AccountMut', accessTokens: { __typename: 'AccountAccessTokensMut', createAccessToken:
+          | { __typename: 'CreateAccessTokenResultDuplicate', message: string, tokenName: string }
+          | { __typename: 'CreateAccessTokenResultSuccess', message: string, token: (
+              { __typename: 'CreatedAccessToken' }
               & CreatedAccessTokenDataFragment
             ) }
          } } | null } };
 
-export type AccessTokenConnectionDataFragment = { __typename?: 'AccessTokenConnection', totalCount: number, nodes: Array<(
-    { __typename?: 'ViewAccessToken' }
+export type AccessTokenConnectionDataFragment = { __typename: 'AccessTokenConnection', totalCount: number, nodes: Array<(
+    { __typename: 'ViewAccessToken' }
     & AccessTokenDataFragment
   )>, pageInfo: (
-    { __typename?: 'PageBasedInfo' }
+    { __typename: 'PageBasedInfo' }
     & DatasetPageInfoFragment
   ) };
 
-export type CreatedAccessTokenDataFragment = { __typename?: 'CreatedAccessToken', id: string, name: string, composed: string, account: (
-    { __typename?: 'Account' }
+export type CreatedAccessTokenDataFragment = { __typename: 'CreatedAccessToken', id: string, name: string, composed: string, account: (
+    { __typename: 'Account' }
     & AccountFragment
   ) };
 
@@ -7321,8 +7321,8 @@ export type ListAccessTokensQueryVariables = Exact<{
 }>;
 
 
-export type ListAccessTokensQuery = { __typename?: 'Query', accounts: { __typename?: 'Accounts', byId?: { __typename?: 'Account', accessTokens: { __typename?: 'AccountAccessTokens', listAccessTokens: (
-          { __typename?: 'AccessTokenConnection' }
+export type ListAccessTokensQuery = { accounts: { __typename: 'Accounts', byId?: { __typename: 'Account', accessTokens: { __typename: 'AccountAccessTokens', listAccessTokens: (
+          { __typename: 'AccessTokenConnection' }
           & AccessTokenConnectionDataFragment
         ) } } | null } };
 
@@ -7332,9 +7332,9 @@ export type RevokeAccessTokenMutationVariables = Exact<{
 }>;
 
 
-export type RevokeAccessTokenMutation = { __typename?: 'Mutation', accounts: { __typename?: 'AccountsMut', byId?: { __typename?: 'AccountMut', accessTokens: { __typename?: 'AccountAccessTokensMut', revokeAccessToken:
-          | { __typename?: 'RevokeResultAlreadyRevoked', tokenId: string, message: string }
-          | { __typename?: 'RevokeResultSuccess', tokenId: string, message: string }
+export type RevokeAccessTokenMutation = { accounts: { __typename: 'AccountsMut', byId?: { __typename: 'AccountMut', accessTokens: { __typename: 'AccountAccessTokensMut', revokeAccessToken:
+          | { __typename: 'RevokeResultAlreadyRevoked', tokenId: string, message: string }
+          | { __typename: 'RevokeResultSuccess', tokenId: string, message: string }
          } } | null } };
 
 export type AccountByNameQueryVariables = Exact<{
@@ -7342,8 +7342,8 @@ export type AccountByNameQueryVariables = Exact<{
 }>;
 
 
-export type AccountByNameQuery = { __typename?: 'Query', accounts: { __typename?: 'Accounts', byName?: (
-      { __typename?: 'Account' }
+export type AccountByNameQuery = { accounts: { __typename: 'Accounts', byName?: (
+      { __typename: 'Account' }
       & AccountFragment
     ) | null } };
 
@@ -7353,9 +7353,9 @@ export type AccountChangeEmailMutationVariables = Exact<{
 }>;
 
 
-export type AccountChangeEmailMutation = { __typename?: 'Mutation', accounts: { __typename?: 'AccountsMut', byName?: { __typename?: 'AccountMut', updateEmail:
-        | { __typename?: 'UpdateEmailNonUnique', message: string }
-        | { __typename?: 'UpdateEmailSuccess', newEmail: string, message: string }
+export type AccountChangeEmailMutation = { accounts: { __typename: 'AccountsMut', byName?: { __typename: 'AccountMut', updateEmail:
+        | { __typename: 'UpdateEmailNonUnique', message: string }
+        | { __typename: 'UpdateEmailSuccess', newEmail: string, message: string }
        } | null } };
 
 export type AccountFlowsAsCardsQueryVariables = Exact<{
@@ -7367,11 +7367,11 @@ export type AccountFlowsAsCardsQueryVariables = Exact<{
 }>;
 
 
-export type AccountFlowsAsCardsQuery = { __typename?: 'Query', accounts: { __typename?: 'Accounts', byName?: { __typename?: 'Account', flows: { __typename?: 'AccountFlows', processes: { __typename?: 'AccountFlowProcesses', allCards: (
-            { __typename?: 'AccountFlowProcessCardConnection' }
+export type AccountFlowsAsCardsQuery = { accounts: { __typename: 'Accounts', byName?: { __typename: 'Account', flows: { __typename: 'AccountFlows', processes: { __typename: 'AccountFlowProcesses', allCards: (
+            { __typename: 'AccountFlowProcessCardConnection' }
             & AccountFlowProcessCardConnectionDataFragment
           ), fullRollup: (
-            { __typename?: 'FlowProcessGroupRollup' }
+            { __typename: 'FlowProcessGroupRollup' }
             & FlowProcessGroupRollupDataFragment
           ) } } } | null } };
 
@@ -7380,8 +7380,8 @@ export type AccountListDatasetsWithFlowsQueryVariables = Exact<{
 }>;
 
 
-export type AccountListDatasetsWithFlowsQuery = { __typename?: 'Query', accounts: { __typename?: 'Accounts', byName?: { __typename?: 'Account', flows: { __typename?: 'AccountFlows', runs: { __typename?: 'AccountFlowRuns', listDatasetsWithFlow: (
-            { __typename?: 'DatasetConnection' }
+export type AccountListDatasetsWithFlowsQuery = { accounts: { __typename: 'Accounts', byName?: { __typename: 'Account', flows: { __typename: 'AccountFlows', runs: { __typename: 'AccountFlowRuns', listDatasetsWithFlow: (
+            { __typename: 'DatasetConnection' }
             & DatasetConnectionDataFragment
           ) } } } | null } };
 
@@ -7395,11 +7395,11 @@ export type AccountListFlowsQueryVariables = Exact<{
 }>;
 
 
-export type AccountListFlowsQuery = { __typename?: 'Query', accounts: { __typename?: 'Accounts', byName?: { __typename?: 'Account', flows: { __typename?: 'AccountFlows', runs: { __typename?: 'AccountFlowRuns', table: (
-            { __typename?: 'FlowConnection' }
+export type AccountListFlowsQuery = { accounts: { __typename: 'Accounts', byName?: { __typename: 'Account', flows: { __typename: 'AccountFlows', runs: { __typename: 'AccountFlowRuns', table: (
+            { __typename: 'FlowConnection' }
             & FlowConnectionDataFragment
           ), tiles: (
-            { __typename?: 'FlowConnection' }
+            { __typename: 'FlowConnection' }
             & FlowConnectionWidgetDataFragment
           ) } } } | null } };
 
@@ -7412,11 +7412,11 @@ export type AccountPrimaryCardsQueryVariables = Exact<{
 }>;
 
 
-export type AccountPrimaryCardsQuery = { __typename?: 'Query', accounts: { __typename?: 'Accounts', byName?: { __typename?: 'Account', flows: { __typename?: 'AccountFlows', processes: { __typename?: 'AccountFlowProcesses', primaryCards: (
-            { __typename?: 'DatasetFlowProcessConnection' }
+export type AccountPrimaryCardsQuery = { accounts: { __typename: 'Accounts', byName?: { __typename: 'Account', flows: { __typename: 'AccountFlows', processes: { __typename: 'AccountFlowProcesses', primaryCards: (
+            { __typename: 'DatasetFlowProcessConnection' }
             & DatasetFlowProcessConnectionDataFragment
           ), primaryRollup: (
-            { __typename?: 'FlowProcessGroupRollup' }
+            { __typename: 'FlowProcessGroupRollup' }
             & FlowProcessGroupRollupDataFragment
           ) } } } | null } };
 
@@ -7425,7 +7425,7 @@ export type AccountStorageQuotaQueryVariables = Exact<{
 }>;
 
 
-export type AccountStorageQuotaQuery = { __typename?: 'Query', accounts: { __typename?: 'Accounts', byName?: { __typename?: 'Account', quotas: { __typename?: 'AccountQuotas', user: { __typename?: 'AccountQuotasUsage', storage: { __typename?: 'AccountQuotasUsageStorage', limitTotalBytes?: number | null } } }, usage: { __typename?: 'AccountUsage', storage: { __typename?: 'TotalDatasetsStatistic', totalSizeBytes: number, totalDataSizeBytes: number, totalCheckpointsSizeBytes: number, totalLinkedObjectsSizeBytes: number } } } | null } };
+export type AccountStorageQuotaQuery = { accounts: { __typename: 'Accounts', byName?: { __typename: 'Account', quotas: { __typename: 'AccountQuotas', user: { __typename: 'AccountQuotasUsage', storage: { __typename: 'AccountQuotasUsageStorage', limitTotalBytes?: number | null } } }, usage: { __typename: 'AccountUsage', storage: { __typename: 'TotalDatasetsStatistic', totalSizeBytes: number, totalDataSizeBytes: number, totalCheckpointsSizeBytes: number, totalLinkedObjectsSizeBytes: number } } } | null } };
 
 export type AccountWebhookCardsQueryVariables = Exact<{
   name: Scalars['AccountName']['input'];
@@ -7436,11 +7436,11 @@ export type AccountWebhookCardsQueryVariables = Exact<{
 }>;
 
 
-export type AccountWebhookCardsQuery = { __typename?: 'Query', accounts: { __typename?: 'Accounts', byName?: { __typename?: 'Account', flows: { __typename?: 'AccountFlows', processes: { __typename?: 'AccountFlowProcesses', webhookCards: (
-            { __typename?: 'WebhookFlowSubProcessConnection' }
+export type AccountWebhookCardsQuery = { accounts: { __typename: 'Accounts', byName?: { __typename: 'Account', flows: { __typename: 'AccountFlows', processes: { __typename: 'AccountFlowProcesses', webhookCards: (
+            { __typename: 'WebhookFlowSubProcessConnection' }
             & WebhookFlowSubProcessConnectionDataFragment
           ), webhookRollup: (
-            { __typename?: 'FlowProcessGroupRollup' }
+            { __typename: 'FlowProcessGroupRollup' }
             & FlowProcessGroupRollupDataFragment
           ) } } } | null } };
 
@@ -7449,8 +7449,8 @@ export type AccountWithEmailQueryVariables = Exact<{
 }>;
 
 
-export type AccountWithEmailQuery = { __typename?: 'Query', accounts: { __typename?: 'Accounts', byName?: (
-      { __typename?: 'Account' }
+export type AccountWithEmailQuery = { accounts: { __typename: 'Accounts', byName?: (
+      { __typename: 'Account' }
       & AccountWithEmailFragment
     ) | null } };
 
@@ -7460,9 +7460,9 @@ export type ChangeAccountUsernameMutationVariables = Exact<{
 }>;
 
 
-export type ChangeAccountUsernameMutation = { __typename?: 'Mutation', accounts: { __typename?: 'AccountsMut', byName?: { __typename?: 'AccountMut', rename:
-        | { __typename?: 'RenameAccountNameNotUnique', message: string }
-        | { __typename?: 'RenameAccountSuccess', newName: string, message: string }
+export type ChangeAccountUsernameMutation = { accounts: { __typename: 'AccountsMut', byName?: { __typename: 'AccountMut', rename:
+        | { __typename: 'RenameAccountNameNotUnique', message: string }
+        | { __typename: 'RenameAccountSuccess', newName: string, message: string }
        } | null } };
 
 export type ChangeAdminPasswordMutationVariables = Exact<{
@@ -7471,9 +7471,9 @@ export type ChangeAdminPasswordMutationVariables = Exact<{
 }>;
 
 
-export type ChangeAdminPasswordMutation = { __typename?: 'Mutation', accounts: { __typename?: 'AccountsMut', byName?: { __typename?: 'AccountMut', modifyPassword:
-        | { __typename?: 'ModifyPasswordSuccess', message: string }
-        | { __typename?: 'ModifyPasswordWrongOldPassword' }
+export type ChangeAdminPasswordMutation = { accounts: { __typename: 'AccountsMut', byName?: { __typename: 'AccountMut', modifyPassword:
+        | { __typename: 'ModifyPasswordSuccess', message: string }
+        | { __typename: 'ModifyPasswordWrongOldPassword' }
        } | null } };
 
 export type ChangeUserPasswordMutationVariables = Exact<{
@@ -7483,9 +7483,9 @@ export type ChangeUserPasswordMutationVariables = Exact<{
 }>;
 
 
-export type ChangeUserPasswordMutation = { __typename?: 'Mutation', accounts: { __typename?: 'AccountsMut', byName?: { __typename?: 'AccountMut', modifyPasswordWithConfirmation:
-        | { __typename?: 'ModifyPasswordSuccess', message: string }
-        | { __typename?: 'ModifyPasswordWrongOldPassword', message: string }
+export type ChangeUserPasswordMutation = { accounts: { __typename: 'AccountsMut', byName?: { __typename: 'AccountMut', modifyPasswordWithConfirmation:
+        | { __typename: 'ModifyPasswordSuccess', message: string }
+        | { __typename: 'ModifyPasswordWrongOldPassword', message: string }
        } | null } };
 
 export type DeleteAccountByNameMutationVariables = Exact<{
@@ -7493,39 +7493,39 @@ export type DeleteAccountByNameMutationVariables = Exact<{
 }>;
 
 
-export type DeleteAccountByNameMutation = { __typename?: 'Mutation', accounts: { __typename?: 'AccountsMut', byName?: { __typename?: 'AccountMut', delete: { __typename?: 'DeleteAccountSuccess', message: string } } | null } };
+export type DeleteAccountByNameMutation = { accounts: { __typename: 'AccountsMut', byName?: { __typename: 'AccountMut', delete: { __typename: 'DeleteAccountSuccess', message: string } } | null } };
 
-export type AccountBasicsFragment = { __typename?: 'Account', id: string, accountName: string, accountProvider: AccountProvider, avatarUrl?: string | null };
+export type AccountBasicsFragment = { __typename: 'Account', id: string, accountName: string, accountProvider: AccountProvider, avatarUrl?: string | null };
 
-export type DatasetConnectionDataFragment = { __typename?: 'DatasetConnection', nodes: Array<(
-    { __typename?: 'Dataset' }
+export type DatasetConnectionDataFragment = { __typename: 'DatasetConnection', nodes: Array<(
+    { __typename: 'Dataset' }
     & DatasetWithFlowsDataFragment
   )> };
 
-export type DatasetFlowProcessConnectionDataFragment = { __typename?: 'DatasetFlowProcessConnection', totalCount: number, nodes: Array<{ __typename?: 'DatasetFlowProcess', flowType: DatasetFlowType, dataset: (
-      { __typename?: 'Dataset' }
+export type DatasetFlowProcessConnectionDataFragment = { __typename: 'DatasetFlowProcessConnection', totalCount: number, nodes: Array<{ __typename: 'DatasetFlowProcess', flowType: DatasetFlowType, dataset: (
+      { __typename: 'Dataset' }
       & DatasetBasicsFragment
     ), summary: (
-      { __typename?: 'FlowProcessSummary' }
+      { __typename: 'FlowProcessSummary' }
       & FlowProcessSummaryDataFragment
     ) }>, pageInfo: (
-    { __typename?: 'PageBasedInfo' }
+    { __typename: 'PageBasedInfo' }
     & DatasetPageInfoFragment
   ) };
 
-type AccountFlowProcessCardData_DatasetFlowProcess_Fragment = { __typename?: 'DatasetFlowProcess', flowType: DatasetFlowType, dataset: (
-    { __typename?: 'Dataset' }
+type AccountFlowProcessCardData_DatasetFlowProcess_Fragment = { __typename: 'DatasetFlowProcess', flowType: DatasetFlowType, dataset: (
+    { __typename: 'Dataset' }
     & DatasetBasicsFragment
   ), summary: (
-    { __typename?: 'FlowProcessSummary' }
+    { __typename: 'FlowProcessSummary' }
     & FlowProcessSummaryDataFragment
   ) };
 
-type AccountFlowProcessCardData_WebhookFlowSubProcess_Fragment = { __typename?: 'WebhookFlowSubProcess', id: string, name: string, parentDataset?: (
-    { __typename?: 'Dataset' }
+type AccountFlowProcessCardData_WebhookFlowSubProcess_Fragment = { __typename: 'WebhookFlowSubProcess', id: string, name: string, parentDataset?: (
+    { __typename: 'Dataset' }
     & DatasetBasicsFragment
   ) | null, summary: (
-    { __typename?: 'FlowProcessSummary' }
+    { __typename: 'FlowProcessSummary' }
     & FlowProcessSummaryDataFragment
   ) };
 
@@ -7534,43 +7534,43 @@ export type AccountFlowProcessCardDataFragment =
   | AccountFlowProcessCardData_WebhookFlowSubProcess_Fragment
 ;
 
-export type AccountFlowProcessCardConnectionDataFragment = { __typename?: 'AccountFlowProcessCardConnection', totalCount: number, nodes: Array<
+export type AccountFlowProcessCardConnectionDataFragment = { __typename: 'AccountFlowProcessCardConnection', totalCount: number, nodes: Array<
     | (
-      { __typename?: 'DatasetFlowProcess' }
+      { __typename: 'DatasetFlowProcess' }
       & AccountFlowProcessCardData_DatasetFlowProcess_Fragment
     )
     | (
-      { __typename?: 'WebhookFlowSubProcess' }
+      { __typename: 'WebhookFlowSubProcess' }
       & AccountFlowProcessCardData_WebhookFlowSubProcess_Fragment
     )
   >, pageInfo: (
-    { __typename?: 'PageBasedInfo' }
+    { __typename: 'PageBasedInfo' }
     & DatasetPageInfoFragment
   ) };
 
-export type AccountSummaryFragment = { __typename?: 'Account', accountName: string, avatarUrl?: string | null };
+export type AccountSummaryFragment = { __typename: 'Account', accountName: string, avatarUrl?: string | null };
 
-export type WebhookFlowSubProcessConnectionDataFragment = { __typename?: 'WebhookFlowSubProcessConnection', totalCount: number, nodes: Array<{ __typename?: 'WebhookFlowSubProcess', id: string, name: string, parentDataset?: (
-      { __typename?: 'Dataset' }
+export type WebhookFlowSubProcessConnectionDataFragment = { __typename: 'WebhookFlowSubProcessConnection', totalCount: number, nodes: Array<{ __typename: 'WebhookFlowSubProcess', id: string, name: string, parentDataset?: (
+      { __typename: 'Dataset' }
       & DatasetBasicsFragment
     ) | null, summary: (
-      { __typename?: 'FlowProcessSummary' }
+      { __typename: 'FlowProcessSummary' }
       & FlowProcessSummaryDataFragment
     ) }>, pageInfo: (
-    { __typename?: 'PageBasedInfo' }
+    { __typename: 'PageBasedInfo' }
     & DatasetPageInfoFragment
   ) };
 
-export type AccountWithEmailFragment = { __typename?: 'Account', id: string, accountName: string, displayName: string, avatarUrl?: string | null, email: string };
+export type AccountWithEmailFragment = { __typename: 'Account', id: string, accountName: string, displayName: string, avatarUrl?: string | null, email: string };
 
-export type AccountFragment = { __typename?: 'Account', id: string, accountName: string, displayName: string, accountType: AccountType, avatarUrl?: string | null, isAdmin?: boolean | null, accountProvider: AccountProvider };
+export type AccountFragment = { __typename: 'Account', id: string, accountName: string, displayName: string, accountType: AccountType, avatarUrl?: string | null, isAdmin?: boolean | null, accountProvider: AccountProvider };
 
 export type DatasetWithFlowsDataFragment = (
-  { __typename?: 'Dataset', metadata: { __typename?: 'DatasetMetadata', currentPollingSource?: (
-      { __typename?: 'SetPollingSource' }
+  { __typename: 'Dataset', metadata: { __typename: 'DatasetMetadata', currentPollingSource?: (
+      { __typename: 'SetPollingSource' }
       & SetPollingSourceFetchDataFragment
     ) | null, currentTransform?: (
-      { __typename?: 'SetTransform' }
+      { __typename: 'SetTransform' }
       & SetTransformEngineDataFragment
     ) | null } }
   & DatasetBasicsFragment
@@ -7581,7 +7581,7 @@ export type LoginWeb3WalletMutationVariables = Exact<{
 }>;
 
 
-export type LoginWeb3WalletMutation = { __typename?: 'Mutation', auth: { __typename?: 'AuthMut', web3: { __typename?: 'AuthWeb3Mut', eip4361AuthNonce: { __typename?: 'Eip4361AuthNonceResponse', value: string } } } };
+export type LoginWeb3WalletMutation = { auth: { __typename: 'AuthMut', web3: { __typename: 'AuthWeb3Mut', eip4361AuthNonce: { __typename: 'Eip4361AuthNonceResponse', value: string } } } };
 
 export type LoginMutationVariables = Exact<{
   login_method: AccountProvider;
@@ -7590,8 +7590,8 @@ export type LoginMutationVariables = Exact<{
 }>;
 
 
-export type LoginMutation = { __typename?: 'Mutation', auth: { __typename?: 'AuthMut', login: { __typename?: 'LoginResponse', accessToken: string, account: (
-        { __typename?: 'Account' }
+export type LoginMutation = { auth: { __typename: 'AuthMut', login: { __typename: 'LoginResponse', accessToken: string, account: (
+        { __typename: 'Account' }
         & AccountFragment
       ) } } };
 
@@ -7600,8 +7600,8 @@ export type FetchAccountDetailsMutationVariables = Exact<{
 }>;
 
 
-export type FetchAccountDetailsMutation = { __typename?: 'Mutation', auth: { __typename?: 'AuthMut', accountDetails: (
-      { __typename?: 'Account' }
+export type FetchAccountDetailsMutation = { auth: { __typename: 'AuthMut', accountDetails: (
+      { __typename: 'Account' }
       & AccountFragment
     ) } };
 
@@ -7611,7 +7611,7 @@ export type SetVisibilityDatasetMutationVariables = Exact<{
 }>;
 
 
-export type SetVisibilityDatasetMutation = { __typename?: 'Mutation', datasets: { __typename?: 'DatasetsMut', byId?: { __typename?: 'DatasetMut', setVisibility: { __typename?: 'SetDatasetVisibilityResultSuccess', message: string } } | null } };
+export type SetVisibilityDatasetMutation = { datasets: { __typename: 'DatasetsMut', byId?: { __typename: 'DatasetMut', setVisibility: { __typename: 'SetDatasetVisibilityResultSuccess', message: string } } | null } };
 
 export type CommitEventToDatasetMutationVariables = Exact<{
   datasetId: Scalars['DatasetID']['input'];
@@ -7619,7 +7619,7 @@ export type CommitEventToDatasetMutationVariables = Exact<{
 }>;
 
 
-export type CommitEventToDatasetMutation = { __typename?: 'Mutation', datasets: { __typename?: 'DatasetsMut', byId?: { __typename?: 'DatasetMut', metadata: { __typename?: 'DatasetMetadataMut', chain: { __typename?: 'MetadataChainMut', commitEvent:
+export type CommitEventToDatasetMutation = { datasets: { __typename: 'DatasetsMut', byId?: { __typename: 'DatasetMut', metadata: { __typename: 'DatasetMetadataMut', chain: { __typename: 'MetadataChainMut', commitEvent:
             | { __typename: 'CommitResultAppendError', message: string }
             | { __typename: 'CommitResultSuccess', message: string, oldHead?: string | null, newHead: string }
             | { __typename: 'MetadataManifestMalformed', message: string }
@@ -7634,10 +7634,10 @@ export type CreateEmptyDatasetMutationVariables = Exact<{
 }>;
 
 
-export type CreateEmptyDatasetMutation = { __typename?: 'Mutation', datasets: { __typename?: 'DatasetsMut', createEmpty:
-      | { __typename?: 'CreateDatasetResultNameCollision', message: string, accountName?: string | null, datasetName: string }
-      | { __typename?: 'CreateDatasetResultSuccess', message: string, dataset: (
-          { __typename?: 'Dataset' }
+export type CreateEmptyDatasetMutation = { datasets: { __typename: 'DatasetsMut', createEmpty:
+      | { __typename: 'CreateDatasetResultNameCollision', message: string, accountName?: string | null, datasetName: string }
+      | { __typename: 'CreateDatasetResultSuccess', message: string, dataset: (
+          { __typename: 'Dataset' }
           & DatasetBasicsFragment
         ) }
      } };
@@ -7648,16 +7648,16 @@ export type CreateDatasetFromSnapshotMutationVariables = Exact<{
 }>;
 
 
-export type CreateDatasetFromSnapshotMutation = { __typename?: 'Mutation', datasets: { __typename?: 'DatasetsMut', createFromSnapshot:
-      | { __typename?: 'CreateDatasetResultInvalidSnapshot', message: string }
-      | { __typename?: 'CreateDatasetResultMissingInputs', missingInputs: Array<string>, message: string }
-      | { __typename?: 'CreateDatasetResultNameCollision', message: string, accountName?: string | null, datasetName: string }
-      | { __typename?: 'CreateDatasetResultSuccess', message: string, dataset: (
-          { __typename?: 'Dataset' }
+export type CreateDatasetFromSnapshotMutation = { datasets: { __typename: 'DatasetsMut', createFromSnapshot:
+      | { __typename: 'CreateDatasetResultInvalidSnapshot', message: string }
+      | { __typename: 'CreateDatasetResultMissingInputs', missingInputs: Array<string>, message: string }
+      | { __typename: 'CreateDatasetResultNameCollision', message: string, accountName?: string | null, datasetName: string }
+      | { __typename: 'CreateDatasetResultSuccess', message: string, dataset: (
+          { __typename: 'Dataset' }
           & DatasetBasicsFragment
         ) }
-      | { __typename?: 'MetadataManifestMalformed', message: string }
-      | { __typename?: 'MetadataManifestUnsupportedVersion', message: string }
+      | { __typename: 'MetadataManifestMalformed', message: string }
+      | { __typename: 'MetadataManifestUnsupportedVersion', message: string }
      } };
 
 export type UpdateReadmeMutationVariables = Exact<{
@@ -7666,7 +7666,7 @@ export type UpdateReadmeMutationVariables = Exact<{
 }>;
 
 
-export type UpdateReadmeMutation = { __typename?: 'Mutation', datasets: { __typename?: 'DatasetsMut', byId?: { __typename?: 'DatasetMut', metadata: { __typename?: 'DatasetMetadataMut', updateReadme:
+export type UpdateReadmeMutation = { datasets: { __typename: 'DatasetsMut', byId?: { __typename: 'DatasetMut', metadata: { __typename: 'DatasetMetadataMut', updateReadme:
           | { __typename: 'CommitResultAppendError', message: string }
           | { __typename: 'CommitResultSuccess', oldHead?: string | null, message: string }
           | { __typename: 'NoChanges', message: string }
@@ -7678,10 +7678,10 @@ export type UpdateWatermarkMutationVariables = Exact<{
 }>;
 
 
-export type UpdateWatermarkMutation = { __typename?: 'Mutation', datasets: { __typename?: 'DatasetsMut', byId?: { __typename?: 'DatasetMut', setWatermark:
-        | { __typename?: 'SetWatermarkIsDerivative', message: string }
-        | { __typename?: 'SetWatermarkUpToDate', message: string }
-        | { __typename?: 'SetWatermarkUpdated', newHead: string, message: string }
+export type UpdateWatermarkMutation = { datasets: { __typename: 'DatasetsMut', byId?: { __typename: 'DatasetMut', setWatermark:
+        | { __typename: 'SetWatermarkIsDerivative', message: string }
+        | { __typename: 'SetWatermarkUpToDate', message: string }
+        | { __typename: 'SetWatermarkUpdated', newHead: string, message: string }
        } | null } };
 
 export type CreateDatasetAsCollectionMutationVariables = Exact<{
@@ -7690,16 +7690,16 @@ export type CreateDatasetAsCollectionMutationVariables = Exact<{
 }>;
 
 
-export type CreateDatasetAsCollectionMutation = { __typename?: 'Mutation', datasets: { __typename?: 'DatasetsMut', createCollection:
-      | { __typename?: 'CreateDatasetResultInvalidSnapshot', message: string }
-      | { __typename?: 'CreateDatasetResultMissingInputs', message: string }
-      | { __typename?: 'CreateDatasetResultNameCollision', message: string }
-      | { __typename?: 'CreateDatasetResultSuccess', message: string, dataset: (
-          { __typename?: 'Dataset' }
+export type CreateDatasetAsCollectionMutation = { datasets: { __typename: 'DatasetsMut', createCollection:
+      | { __typename: 'CreateDatasetResultInvalidSnapshot', message: string }
+      | { __typename: 'CreateDatasetResultMissingInputs', message: string }
+      | { __typename: 'CreateDatasetResultNameCollision', message: string }
+      | { __typename: 'CreateDatasetResultSuccess', message: string, dataset: (
+          { __typename: 'Dataset' }
           & DatasetBasicsFragment
         ) }
-      | { __typename?: 'MetadataManifestMalformed', message: string }
-      | { __typename?: 'MetadataManifestUnsupportedVersion', message: string }
+      | { __typename: 'MetadataManifestMalformed', message: string }
+      | { __typename: 'MetadataManifestUnsupportedVersion', message: string }
      } };
 
 export type DatasetAsCollectionQueryVariables = Exact<{
@@ -7711,23 +7711,23 @@ export type DatasetAsCollectionQueryVariables = Exact<{
 }>;
 
 
-export type DatasetAsCollectionQuery = { __typename?: 'Query', datasets: { __typename?: 'Datasets', byId?: { __typename?: 'Dataset', name: string, asCollection?: { __typename?: 'Collection', latest: { __typename?: 'CollectionProjection', entries: (
-            { __typename?: 'CollectionEntryConnection' }
+export type DatasetAsCollectionQuery = { datasets: { __typename: 'Datasets', byId?: { __typename: 'Dataset', name: string, asCollection?: { __typename: 'Collection', latest: { __typename: 'CollectionProjection', entries: (
+            { __typename: 'CollectionEntryConnection' }
             & CollectionEntryConnectionDataFragment
           ) } } | null } | null } };
 
-export type CollectionEntryConnectionDataFragment = { __typename?: 'CollectionEntryConnection', totalCount: number, nodes: Array<(
-    { __typename?: 'CollectionEntry' }
+export type CollectionEntryConnectionDataFragment = { __typename: 'CollectionEntryConnection', totalCount: number, nodes: Array<(
+    { __typename: 'CollectionEntry' }
     & CollectionEntryDataFragment
   )>, pageInfo: (
-    { __typename?: 'PageBasedInfo' }
+    { __typename: 'PageBasedInfo' }
     & DatasetPageInfoFragment
   ) };
 
-export type CollectionEntryDataFragment = { __typename?: 'CollectionEntry', systemTime: string, path: string, ref: string, extraData: Record<string, any>, asDataset?: { __typename?: 'Dataset', alias: string, head: string, owner: (
-      { __typename?: 'Account' }
+export type CollectionEntryDataFragment = { __typename: 'CollectionEntry', systemTime: string, path: string, ref: string, extraData: Record<string, any>, asDataset?: { __typename: 'Dataset', alias: string, head: string, owner: (
+      { __typename: 'Account' }
       & AccountSummaryFragment
-    ), data: { __typename?: 'DatasetData', estimatedSizeBytes: number }, asVersionedFile?: { __typename?: 'VersionedFile', latest?: { __typename?: 'VersionedFileEntry', systemTime: string, contentType: string, contentLength: number, contentHash: string } | null } | null } | null };
+    ), data: { __typename: 'DatasetData', estimatedSizeBytes: number }, asVersionedFile?: { __typename: 'VersionedFile', latest?: { __typename: 'VersionedFileEntry', systemTime: string, contentType: string, contentLength: number, contentHash: string } | null } | null } | null };
 
 export type CreateDatasetAsVersionedFileMutationVariables = Exact<{
   datasetAlias: Scalars['DatasetAlias']['input'];
@@ -7735,16 +7735,16 @@ export type CreateDatasetAsVersionedFileMutationVariables = Exact<{
 }>;
 
 
-export type CreateDatasetAsVersionedFileMutation = { __typename?: 'Mutation', datasets: { __typename?: 'DatasetsMut', createVersionedFile:
-      | { __typename?: 'CreateDatasetResultInvalidSnapshot', message: string }
-      | { __typename?: 'CreateDatasetResultMissingInputs', message: string }
-      | { __typename?: 'CreateDatasetResultNameCollision', message: string }
-      | { __typename?: 'CreateDatasetResultSuccess', message: string, dataset: (
-          { __typename?: 'Dataset' }
+export type CreateDatasetAsVersionedFileMutation = { datasets: { __typename: 'DatasetsMut', createVersionedFile:
+      | { __typename: 'CreateDatasetResultInvalidSnapshot', message: string }
+      | { __typename: 'CreateDatasetResultMissingInputs', message: string }
+      | { __typename: 'CreateDatasetResultNameCollision', message: string }
+      | { __typename: 'CreateDatasetResultSuccess', message: string, dataset: (
+          { __typename: 'Dataset' }
           & DatasetBasicsFragment
         ) }
-      | { __typename?: 'MetadataManifestMalformed', message: string }
-      | { __typename?: 'MetadataManifestUnsupportedVersion', message: string }
+      | { __typename: 'MetadataManifestMalformed', message: string }
+      | { __typename: 'MetadataManifestUnsupportedVersion', message: string }
      } };
 
 export type DatasetAsVersionedFileByBlockHashQueryVariables = Exact<{
@@ -7753,8 +7753,8 @@ export type DatasetAsVersionedFileByBlockHashQueryVariables = Exact<{
 }>;
 
 
-export type DatasetAsVersionedFileByBlockHashQuery = { __typename?: 'Query', datasets: { __typename?: 'Datasets', byId?: { __typename?: 'Dataset', name: string, asVersionedFile?: { __typename?: 'VersionedFile', asOf?: (
-          { __typename?: 'VersionedFileEntry' }
+export type DatasetAsVersionedFileByBlockHashQuery = { datasets: { __typename: 'Datasets', byId?: { __typename: 'Dataset', name: string, asVersionedFile?: { __typename: 'VersionedFile', asOf?: (
+          { __typename: 'VersionedFileEntry' }
           & VersionedFileEntryDataFragment
         ) | null } | null } | null } };
 
@@ -7764,8 +7764,8 @@ export type DatasetAsVersionedFileByVersionQueryVariables = Exact<{
 }>;
 
 
-export type DatasetAsVersionedFileByVersionQuery = { __typename?: 'Query', datasets: { __typename?: 'Datasets', byId?: { __typename?: 'Dataset', name: string, asVersionedFile?: { __typename?: 'VersionedFile', versions: { __typename?: 'VersionedFileEntryConnection', totalCount: number }, asOf?: (
-          { __typename?: 'VersionedFileEntry' }
+export type DatasetAsVersionedFileByVersionQuery = { datasets: { __typename: 'Datasets', byId?: { __typename: 'Dataset', name: string, asVersionedFile?: { __typename: 'VersionedFile', versions: { __typename: 'VersionedFileEntryConnection', totalCount: number }, asOf?: (
+          { __typename: 'VersionedFileEntry' }
           & VersionedFileEntryDataFragment
         ) | null } | null } | null } };
 
@@ -7774,12 +7774,12 @@ export type DatasetAsVersionedFileQueryVariables = Exact<{
 }>;
 
 
-export type DatasetAsVersionedFileQuery = { __typename?: 'Query', datasets: { __typename?: 'Datasets', byId?: { __typename?: 'Dataset', name: string, asVersionedFile?: { __typename?: 'VersionedFile', versions: { __typename?: 'VersionedFileEntryConnection', totalCount: number }, latest?: (
-          { __typename?: 'VersionedFileEntry' }
+export type DatasetAsVersionedFileQuery = { datasets: { __typename: 'Datasets', byId?: { __typename: 'Dataset', name: string, asVersionedFile?: { __typename: 'VersionedFile', versions: { __typename: 'VersionedFileEntryConnection', totalCount: number }, latest?: (
+          { __typename: 'VersionedFileEntry' }
           & VersionedFileEntryDataFragment
         ) | null } | null } | null } };
 
-export type VersionedFileEntryDataFragment = { __typename?: 'VersionedFileEntry', systemTime: string, eventTime: string, version: number, contentType: string, contentLength: number, contentHash: string, contentUrl: { __typename?: 'VersionedFileContentDownload', url: string, expiresAt?: string | null } };
+export type VersionedFileEntryDataFragment = { __typename: 'VersionedFileEntry', systemTime: string, eventTime: string, version: number, contentType: string, contentLength: number, contentHash: string, contentUrl: { __typename: 'VersionedFileContentDownload', url: string, expiresAt?: string | null } };
 
 export type VersionedFileContentUrlQueryVariables = Exact<{
   datasetId: Scalars['DatasetID']['input'];
@@ -7787,7 +7787,7 @@ export type VersionedFileContentUrlQueryVariables = Exact<{
 }>;
 
 
-export type VersionedFileContentUrlQuery = { __typename?: 'Query', datasets: { __typename?: 'Datasets', byId?: { __typename?: 'Dataset', asVersionedFile?: { __typename?: 'VersionedFile', asOf?: { __typename?: 'VersionedFileEntry', contentUrl: { __typename?: 'VersionedFileContentDownload', url: string } } | null } | null } | null } };
+export type VersionedFileContentUrlQuery = { datasets: { __typename: 'Datasets', byId?: { __typename: 'Dataset', asVersionedFile?: { __typename: 'VersionedFile', asOf?: { __typename: 'VersionedFileEntry', contentUrl: { __typename: 'VersionedFileContentDownload', url: string } } | null } | null } | null } };
 
 export type GetDatasetBasicsWithPermissionsQueryVariables = Exact<{
   accountName: Scalars['AccountName']['input'];
@@ -7795,8 +7795,8 @@ export type GetDatasetBasicsWithPermissionsQueryVariables = Exact<{
 }>;
 
 
-export type GetDatasetBasicsWithPermissionsQuery = { __typename?: 'Query', datasets: { __typename?: 'Datasets', byOwnerAndName?: (
-      { __typename?: 'Dataset' }
+export type GetDatasetBasicsWithPermissionsQuery = { datasets: { __typename: 'Datasets', byOwnerAndName?: (
+      { __typename: 'Dataset' }
       & DatasetBasicsFragment
       & DatasetPermissionsFragment
     ) | null } };
@@ -7809,7 +7809,7 @@ export type DatasetBlocksEncodedByEventTypeQueryVariables = Exact<{
 }>;
 
 
-export type DatasetBlocksEncodedByEventTypeQuery = { __typename?: 'Query', datasets: { __typename?: 'Datasets', byOwnerAndName?: { __typename?: 'Dataset', metadata: { __typename?: 'DatasetMetadata', metadataProjection: Array<{ __typename?: 'MetadataBlockExtended', encoded?: { __typename?: 'EncodedBlock', content: string } | null, event:
+export type DatasetBlocksEncodedByEventTypeQuery = { datasets: { __typename: 'Datasets', byOwnerAndName?: { __typename: 'Dataset', metadata: { __typename: 'DatasetMetadata', metadataProjection: Array<{ __typename: 'MetadataBlockExtended', encoded?: { __typename: 'EncodedBlock', content: string } | null, event:
             | { __typename: 'AddData' }
             | { __typename: 'AddPushSource', sourceName: string }
             | { __typename: 'DisablePollingSource' }
@@ -7832,26 +7832,26 @@ export type DatasetBlocksSchemaByEventTypeQueryVariables = Exact<{
 }>;
 
 
-export type DatasetBlocksSchemaByEventTypeQuery = { __typename?: 'Query', datasets: { __typename?: 'Datasets', byOwnerAndName?: { __typename?: 'Dataset', metadata: { __typename?: 'DatasetMetadata', metadataProjection: Array<{ __typename?: 'MetadataBlockExtended', event:
-            | { __typename?: 'AddData' }
+export type DatasetBlocksSchemaByEventTypeQuery = { datasets: { __typename: 'Datasets', byOwnerAndName?: { __typename: 'Dataset', metadata: { __typename: 'DatasetMetadata', metadataProjection: Array<{ __typename: 'MetadataBlockExtended', event:
+            | { __typename: 'AddData' }
             | (
-              { __typename?: 'AddPushSource' }
+              { __typename: 'AddPushSource' }
               & AddPushSourceEventFragment
             )
-            | { __typename?: 'DisablePollingSource' }
-            | { __typename?: 'DisablePushSource' }
-            | { __typename?: 'ExecuteTransform' }
-            | { __typename?: 'Seed' }
-            | { __typename?: 'SetAttachments' }
-            | { __typename?: 'SetDataSchema' }
-            | { __typename?: 'SetInfo' }
-            | { __typename?: 'SetLicense' }
+            | { __typename: 'DisablePollingSource' }
+            | { __typename: 'DisablePushSource' }
+            | { __typename: 'ExecuteTransform' }
+            | { __typename: 'Seed' }
+            | { __typename: 'SetAttachments' }
+            | { __typename: 'SetDataSchema' }
+            | { __typename: 'SetInfo' }
+            | { __typename: 'SetLicense' }
             | (
-              { __typename?: 'SetPollingSource' }
+              { __typename: 'SetPollingSource' }
               & SetPollingSourceEventFragment
             )
-            | { __typename?: 'SetTransform' }
-            | { __typename?: 'SetVocab' }
+            | { __typename: 'SetTransform' }
+            | { __typename: 'SetVocab' }
            }> } } | null } };
 
 export type DatasetByAccountAndDatasetNameQueryVariables = Exact<{
@@ -7860,8 +7860,8 @@ export type DatasetByAccountAndDatasetNameQueryVariables = Exact<{
 }>;
 
 
-export type DatasetByAccountAndDatasetNameQuery = { __typename?: 'Query', datasets: { __typename?: 'Datasets', byOwnerAndName?: (
-      { __typename?: 'Dataset' }
+export type DatasetByAccountAndDatasetNameQuery = { datasets: { __typename: 'Datasets', byOwnerAndName?: (
+      { __typename: 'Dataset' }
       & DatasetBasicsFragment
     ) | null } };
 
@@ -7870,8 +7870,8 @@ export type DatasetByIdQueryVariables = Exact<{
 }>;
 
 
-export type DatasetByIdQuery = { __typename?: 'Query', datasets: { __typename?: 'Datasets', byId?: (
-      { __typename?: 'Dataset' }
+export type DatasetByIdQuery = { datasets: { __typename: 'Datasets', byId?: (
+      { __typename: 'Dataset' }
       & DatasetBasicsFragment
     ) | null } };
 
@@ -7882,24 +7882,24 @@ export type DatasetListCollaboratorsQueryVariables = Exact<{
 }>;
 
 
-export type DatasetListCollaboratorsQuery = { __typename?: 'Query', datasets: { __typename?: 'Datasets', byId?: (
-      { __typename?: 'Dataset', collaboration: { __typename?: 'DatasetCollaboration', accountRoles: (
-          { __typename?: 'AccountWithRoleConnection' }
+export type DatasetListCollaboratorsQuery = { datasets: { __typename: 'Datasets', byId?: (
+      { __typename: 'Dataset', collaboration: { __typename: 'DatasetCollaboration', accountRoles: (
+          { __typename: 'AccountWithRoleConnection' }
           & AccountWithRoleConnectionDataFragment
         ) } }
       & DatasetBasicsFragment
     ) | null } };
 
-export type AccountWithRoleConnectionDataFragment = { __typename?: 'AccountWithRoleConnection', totalCount: number, nodes: Array<(
-    { __typename?: 'AccountWithRole' }
+export type AccountWithRoleConnectionDataFragment = { __typename: 'AccountWithRoleConnection', totalCount: number, nodes: Array<(
+    { __typename: 'AccountWithRole' }
     & AccountWithRoleDataFragment
   )>, pageInfo: (
-    { __typename?: 'PageBasedInfo' }
+    { __typename: 'PageBasedInfo' }
     & DatasetPageInfoFragment
   ) };
 
-export type AccountWithRoleDataFragment = { __typename?: 'AccountWithRole', role: DatasetAccessRole, account: (
-    { __typename?: 'Account' }
+export type AccountWithRoleDataFragment = { __typename: 'AccountWithRole', role: DatasetAccessRole, account: (
+    { __typename: 'Account' }
     & AccountFragment
   ) };
 
@@ -7910,7 +7910,7 @@ export type SetRoleCollaboratorMutationVariables = Exact<{
 }>;
 
 
-export type SetRoleCollaboratorMutation = { __typename?: 'Mutation', datasets: { __typename?: 'DatasetsMut', byId?: { __typename?: 'DatasetMut', collaboration: { __typename?: 'DatasetCollaborationMut', setRole: { __typename?: 'SetRoleResultSuccess', message: string } } } | null } };
+export type SetRoleCollaboratorMutation = { datasets: { __typename: 'DatasetsMut', byId?: { __typename: 'DatasetMut', collaboration: { __typename: 'DatasetCollaborationMut', setRole: { __typename: 'SetRoleResultSuccess', message: string } } } | null } };
 
 export type UnsetRoleCollaboratorMutationVariables = Exact<{
   datasetId: Scalars['DatasetID']['input'];
@@ -7918,7 +7918,7 @@ export type UnsetRoleCollaboratorMutationVariables = Exact<{
 }>;
 
 
-export type UnsetRoleCollaboratorMutation = { __typename?: 'Mutation', datasets: { __typename?: 'DatasetsMut', byId?: { __typename?: 'DatasetMut', collaboration: { __typename?: 'DatasetCollaborationMut', unsetRoles: { __typename?: 'UnsetRoleResultSuccess', message: string } } } | null } };
+export type UnsetRoleCollaboratorMutation = { datasets: { __typename: 'DatasetsMut', byId?: { __typename: 'DatasetMut', collaboration: { __typename: 'DatasetCollaborationMut', unsetRoles: { __typename: 'UnsetRoleResultSuccess', message: string } } } | null } };
 
 export type GetDatasetDataSqlRunQueryVariables = Exact<{
   query: Scalars['String']['input'];
@@ -7927,7 +7927,7 @@ export type GetDatasetDataSqlRunQueryVariables = Exact<{
 }>;
 
 
-export type GetDatasetDataSqlRunQuery = { __typename?: 'Query', data: { __typename?: 'DataQueries', query:
+export type GetDatasetDataSqlRunQuery = { data: { __typename: 'DataQueries', query:
       | { __typename: 'DataQueryResultError', errorMessage: string, errorKind: DataQueryResultErrorKind }
       | (
         { __typename: 'DataQueryResultSuccess', limit: number }
@@ -7941,7 +7941,7 @@ export type DatasetHeadBlockHashQueryVariables = Exact<{
 }>;
 
 
-export type DatasetHeadBlockHashQuery = { __typename?: 'Query', datasets: { __typename?: 'Datasets', byOwnerAndName?: { __typename?: 'Dataset', metadata: { __typename?: 'DatasetMetadata', chain: { __typename?: 'MetadataChain', refs: Array<{ __typename?: 'BlockRef', name: string, blockHash: string }> } } } | null } };
+export type DatasetHeadBlockHashQuery = { datasets: { __typename: 'Datasets', byOwnerAndName?: { __typename: 'Dataset', metadata: { __typename: 'DatasetMetadata', chain: { __typename: 'MetadataChain', refs: Array<{ __typename: 'BlockRef', name: string, blockHash: string }> } } } | null } };
 
 export type GetDatasetHistoryQueryVariables = Exact<{
   accountName: Scalars['AccountName']['input'];
@@ -7951,12 +7951,12 @@ export type GetDatasetHistoryQueryVariables = Exact<{
 }>;
 
 
-export type GetDatasetHistoryQuery = { __typename?: 'Query', datasets: { __typename?: 'Datasets', byOwnerAndName?: (
-      { __typename?: 'Dataset', metadata: { __typename?: 'DatasetMetadata', chain: { __typename?: 'MetadataChain', blocks: { __typename?: 'MetadataBlockConnection', totalCount: number, nodes: Array<(
-              { __typename?: 'MetadataBlockExtended' }
+export type GetDatasetHistoryQuery = { datasets: { __typename: 'Datasets', byOwnerAndName?: (
+      { __typename: 'Dataset', metadata: { __typename: 'DatasetMetadata', chain: { __typename: 'MetadataChain', blocks: { __typename: 'MetadataBlockConnection', totalCount: number, nodes: Array<(
+              { __typename: 'MetadataBlockExtended' }
               & MetadataBlockFragment
             )>, pageInfo: (
-              { __typename?: 'PageBasedInfo' }
+              { __typename: 'PageBasedInfo' }
               & DatasetPageInfoFragment
             ) } } } }
       & DatasetBasicsFragment
@@ -7968,8 +7968,8 @@ export type GetDatasetLineageQueryVariables = Exact<{
 }>;
 
 
-export type GetDatasetLineageQuery = { __typename?: 'Query', datasets: { __typename?: 'Datasets', byOwnerAndName?: (
-      { __typename?: 'Dataset' }
+export type GetDatasetLineageQuery = { datasets: { __typename: 'Datasets', byOwnerAndName?: (
+      { __typename: 'Dataset' }
       & DatasetBasicsFragment
       & DatasetLineageFragment
     ) | null } };
@@ -7979,9 +7979,9 @@ export type DatasetListDownstreamsQueryVariables = Exact<{
 }>;
 
 
-export type DatasetListDownstreamsQuery = { __typename?: 'Query', datasets: { __typename?: 'Datasets', byId?: { __typename?: 'Dataset', metadata: { __typename?: 'DatasetMetadata', currentDownstreamDependencies: Array<
-          | { __typename?: 'DatasetAccessResultAccessible', dataset: { __typename?: 'Dataset', name: string, owner: { __typename?: 'Account', accountName: string, avatarUrl?: string | null } } }
-          | { __typename?: 'DatasetAccessResultNotAccessible' }
+export type DatasetListDownstreamsQuery = { datasets: { __typename: 'Datasets', byId?: { __typename: 'Dataset', metadata: { __typename: 'DatasetMetadata', currentDownstreamDependencies: Array<
+          | { __typename: 'DatasetAccessResultAccessible', dataset: { __typename: 'Dataset', name: string, owner: { __typename: 'Account', accountName: string, avatarUrl?: string | null } } }
+          | { __typename: 'DatasetAccessResultNotAccessible' }
         > } } | null } };
 
 export type GetDatasetMainDataQueryVariables = Exact<{
@@ -7991,8 +7991,8 @@ export type GetDatasetMainDataQueryVariables = Exact<{
 }>;
 
 
-export type GetDatasetMainDataQuery = { __typename?: 'Query', datasets: { __typename?: 'Datasets', byOwnerAndName?: (
-      { __typename?: 'Dataset' }
+export type GetDatasetMainDataQuery = { datasets: { __typename: 'Datasets', byOwnerAndName?: (
+      { __typename: 'Dataset' }
       & DatasetBasicsFragment
       & DatasetOverviewFragment
       & DatasetDataFragment
@@ -8006,9 +8006,9 @@ export type DatasetProtocolsQueryVariables = Exact<{
 }>;
 
 
-export type DatasetProtocolsQuery = { __typename?: 'Query', datasets: { __typename?: 'Datasets', byOwnerAndName?: (
-      { __typename?: 'Dataset', endpoints: (
-        { __typename?: 'DatasetEndpoints' }
+export type DatasetProtocolsQuery = { datasets: { __typename: 'Datasets', byOwnerAndName?: (
+      { __typename: 'Dataset', endpoints: (
+        { __typename: 'DatasetEndpoints' }
         & DatasetEndpointsDataFragment
       ) }
       & DatasetBasicsFragment
@@ -8019,9 +8019,9 @@ export type DatasetPushSyncStatusesQueryVariables = Exact<{
 }>;
 
 
-export type DatasetPushSyncStatusesQuery = { __typename?: 'Query', datasets: { __typename?: 'Datasets', byId?: { __typename?: 'Dataset', metadata: { __typename?: 'DatasetMetadata', pushSyncStatuses: { __typename?: 'DatasetPushStatuses', statuses: Array<{ __typename?: 'DatasetPushStatus', remote: string, result:
-              | { __typename?: 'CompareChainsResultError', reason: { __typename?: 'CompareChainsResultReason', message: string } }
-              | { __typename?: 'CompareChainsResultStatus', message: CompareChainsStatus }
+export type DatasetPushSyncStatusesQuery = { datasets: { __typename: 'Datasets', byId?: { __typename: 'Dataset', metadata: { __typename: 'DatasetMetadata', pushSyncStatuses: { __typename: 'DatasetPushStatuses', statuses: Array<{ __typename: 'DatasetPushStatus', remote: string, result:
+              | { __typename: 'CompareChainsResultError', reason: { __typename: 'CompareChainsResultReason', message: string } }
+              | { __typename: 'CompareChainsResultStatus', message: CompareChainsStatus }
              }> } } } | null } };
 
 export type GetDatasetSchemaQueryVariables = Exact<{
@@ -8029,9 +8029,9 @@ export type GetDatasetSchemaQueryVariables = Exact<{
 }>;
 
 
-export type GetDatasetSchemaQuery = { __typename?: 'Query', datasets: { __typename?: 'Datasets', byId?: (
-      { __typename?: 'Dataset', metadata: { __typename?: 'DatasetMetadata', currentSchema?: (
-          { __typename?: 'DataSchema' }
+export type GetDatasetSchemaQuery = { datasets: { __typename: 'Datasets', byId?: (
+      { __typename: 'Dataset', metadata: { __typename: 'DatasetMetadata', currentSchema?: (
+          { __typename: 'DataSchema' }
           & DataSchemaInfoFragment
         ) | null } }
       & DatasetBasicsFragment
@@ -8043,8 +8043,8 @@ export type DatasetSystemTimeBlockByHashQueryVariables = Exact<{
 }>;
 
 
-export type DatasetSystemTimeBlockByHashQuery = { __typename?: 'Query', datasets: { __typename?: 'Datasets', byId?: (
-      { __typename?: 'Dataset', metadata: { __typename?: 'DatasetMetadata', chain: { __typename?: 'MetadataChain', blockByHash?: { __typename?: 'MetadataBlockExtended', systemTime: string } | null } } }
+export type DatasetSystemTimeBlockByHashQuery = { datasets: { __typename: 'Datasets', byId?: (
+      { __typename: 'Dataset', metadata: { __typename: 'DatasetMetadata', chain: { __typename: 'MetadataChain', blockByHash?: { __typename: 'MetadataBlockExtended', systemTime: string } | null } } }
       & DatasetBasicsFragment
     ) | null } };
 
@@ -8053,7 +8053,7 @@ export type DatasetUserRoleQueryVariables = Exact<{
 }>;
 
 
-export type DatasetUserRoleQuery = { __typename?: 'Query', datasets: { __typename?: 'Datasets', byId?: { __typename?: 'Dataset', role?: DatasetAccessRole | null } | null } };
+export type DatasetUserRoleQuery = { datasets: { __typename: 'Datasets', byId?: { __typename: 'Dataset', role?: DatasetAccessRole | null } | null } };
 
 export type DatasetsByAccountNameQueryVariables = Exact<{
   accountName: Scalars['AccountName']['input'];
@@ -8062,11 +8062,11 @@ export type DatasetsByAccountNameQueryVariables = Exact<{
 }>;
 
 
-export type DatasetsByAccountNameQuery = { __typename?: 'Query', datasets: { __typename?: 'Datasets', byAccountName: { __typename?: 'DatasetConnection', totalCount: number, nodes: Array<(
+export type DatasetsByAccountNameQuery = { datasets: { __typename: 'Datasets', byAccountName: { __typename: 'DatasetConnection', totalCount: number, nodes: Array<(
         { __typename: 'Dataset' }
         & DatasetSearchOverviewFragment
       )>, pageInfo: (
-        { __typename?: 'PageBasedInfo' }
+        { __typename: 'PageBasedInfo' }
         & DatasetPageInfoFragment
       ) } } };
 
@@ -8075,28 +8075,28 @@ export type DatasetsTotalCountByAccountNameQueryVariables = Exact<{
 }>;
 
 
-export type DatasetsTotalCountByAccountNameQuery = { __typename?: 'Query', datasets: { __typename?: 'Datasets', byAccountName: { __typename?: 'DatasetConnection', totalCount: number } } };
+export type DatasetsTotalCountByAccountNameQuery = { datasets: { __typename: 'Datasets', byAccountName: { __typename: 'DatasetConnection', totalCount: number } } };
 
 export type DeleteDatasetMutationVariables = Exact<{
   datasetId: Scalars['DatasetID']['input'];
 }>;
 
 
-export type DeleteDatasetMutation = { __typename?: 'Mutation', datasets: { __typename?: 'DatasetsMut', byId?: { __typename?: 'DatasetMut', delete:
-        | { __typename?: 'DeleteResultDanglingReference', message: string, danglingChildRefs: Array<string>, notDeletedDataset: string }
-        | { __typename?: 'DeleteResultSuccess', message: string, deletedDataset: string }
+export type DeleteDatasetMutation = { datasets: { __typename: 'DatasetsMut', byId?: { __typename: 'DatasetMut', delete:
+        | { __typename: 'DeleteResultDanglingReference', message: string, danglingChildRefs: Array<string>, notDeletedDataset: string }
+        | { __typename: 'DeleteResultSuccess', message: string, deletedDataset: string }
        } | null } };
 
 export type GetEnabledLoginMethodsQueryVariables = Exact<{ [key: string]: never; }>;
 
 
-export type GetEnabledLoginMethodsQuery = { __typename?: 'Query', auth: { __typename?: 'Auth', enabledProviders: Array<AccountProvider> } };
+export type GetEnabledLoginMethodsQuery = { auth: { __typename: 'Auth', enabledProviders: Array<AccountProvider> } };
 
 export type EnginesQueryVariables = Exact<{ [key: string]: never; }>;
 
 
-export type EnginesQuery = { __typename?: 'Query', data: { __typename?: 'DataQueries', knownEngines: Array<(
-      { __typename?: 'EngineDesc' }
+export type EnginesQuery = { data: { __typename: 'DataQueries', knownEngines: Array<(
+      { __typename: 'EngineDesc' }
       & EngineDescDataFragment
     )> } };
 
@@ -8106,9 +8106,9 @@ export type DeleteEnvVariableMutationVariables = Exact<{
 }>;
 
 
-export type DeleteEnvVariableMutation = { __typename?: 'Mutation', datasets: { __typename?: 'DatasetsMut', byId?: { __typename?: 'DatasetMut', envVars: { __typename?: 'DatasetEnvVarsMut', deleteEnvVariable:
-          | { __typename?: 'DeleteDatasetEnvVarResultNotFound', message: string, envVarKey: string }
-          | { __typename?: 'DeleteDatasetEnvVarResultSuccess', message: string, envVarKey: string }
+export type DeleteEnvVariableMutation = { datasets: { __typename: 'DatasetsMut', byId?: { __typename: 'DatasetMut', envVars: { __typename: 'DatasetEnvVarsMut', deleteEnvVariable:
+          | { __typename: 'DeleteDatasetEnvVarResultNotFound', message: string, envVarKey: string }
+          | { __typename: 'DeleteDatasetEnvVarResultSuccess', message: string, envVarKey: string }
          } } | null } };
 
 export type ExposedEnvVariableValueQueryVariables = Exact<{
@@ -8118,17 +8118,17 @@ export type ExposedEnvVariableValueQueryVariables = Exact<{
 }>;
 
 
-export type ExposedEnvVariableValueQuery = { __typename?: 'Query', datasets: { __typename?: 'Datasets', byOwnerAndName?: { __typename?: 'Dataset', envVars: { __typename?: 'DatasetEnvVars', exposedValue: string } } | null } };
+export type ExposedEnvVariableValueQuery = { datasets: { __typename: 'Datasets', byOwnerAndName?: { __typename: 'Dataset', envVars: { __typename: 'DatasetEnvVars', exposedValue: string } } | null } };
 
-export type ViewDatasetEnvVarConnectionDataFragment = { __typename?: 'ViewDatasetEnvVarConnection', totalCount: number, nodes: Array<(
-    { __typename?: 'ViewDatasetEnvVar' }
+export type ViewDatasetEnvVarConnectionDataFragment = { __typename: 'ViewDatasetEnvVarConnection', totalCount: number, nodes: Array<(
+    { __typename: 'ViewDatasetEnvVar' }
     & ViewDatasetEnvVarDataFragment
   )>, pageInfo: (
-    { __typename?: 'PageBasedInfo' }
+    { __typename: 'PageBasedInfo' }
     & DatasetPageInfoFragment
   ) };
 
-export type ViewDatasetEnvVarDataFragment = { __typename?: 'ViewDatasetEnvVar', key: string, value?: string | null, isSecret: boolean };
+export type ViewDatasetEnvVarDataFragment = { __typename: 'ViewDatasetEnvVar', key: string, value?: string | null, isSecret: boolean };
 
 export type ListEnvVariablesQueryVariables = Exact<{
   accountName: Scalars['AccountName']['input'];
@@ -8138,9 +8138,9 @@ export type ListEnvVariablesQueryVariables = Exact<{
 }>;
 
 
-export type ListEnvVariablesQuery = { __typename?: 'Query', datasets: { __typename?: 'Datasets', byOwnerAndName?: (
-      { __typename?: 'Dataset', envVars: { __typename?: 'DatasetEnvVars', listEnvVariables: (
-          { __typename?: 'ViewDatasetEnvVarConnection' }
+export type ListEnvVariablesQuery = { datasets: { __typename: 'Datasets', byOwnerAndName?: (
+      { __typename: 'Dataset', envVars: { __typename: 'DatasetEnvVars', listEnvVariables: (
+          { __typename: 'ViewDatasetEnvVarConnection' }
           & ViewDatasetEnvVarConnectionDataFragment
         ) } }
       & DatasetBasicsFragment
@@ -8154,16 +8154,16 @@ export type UpsertEnvVariableMutationVariables = Exact<{
 }>;
 
 
-export type UpsertEnvVariableMutation = { __typename?: 'Mutation', datasets: { __typename?: 'DatasetsMut', byId?: { __typename?: 'DatasetMut', envVars: { __typename?: 'DatasetEnvVarsMut', upsertEnvVariable:
-          | { __typename?: 'UpsertDatasetEnvVarResultCreated', message: string, envVar: (
-              { __typename?: 'ViewDatasetEnvVar' }
+export type UpsertEnvVariableMutation = { datasets: { __typename: 'DatasetsMut', byId?: { __typename: 'DatasetMut', envVars: { __typename: 'DatasetEnvVarsMut', upsertEnvVariable:
+          | { __typename: 'UpsertDatasetEnvVarResultCreated', message: string, envVar: (
+              { __typename: 'ViewDatasetEnvVar' }
               & ViewDatasetEnvVarDataFragment
             ) }
-          | { __typename?: 'UpsertDatasetEnvVarResultUpdated', message: string, envVar: (
-              { __typename?: 'ViewDatasetEnvVar' }
+          | { __typename: 'UpsertDatasetEnvVarResultUpdated', message: string, envVar: (
+              { __typename: 'ViewDatasetEnvVar' }
               & ViewDatasetEnvVarDataFragment
             ) }
-          | { __typename?: 'UpsertDatasetEnvVarUpToDate', message: string }
+          | { __typename: 'UpsertDatasetEnvVarUpToDate', message: string }
          } } | null } };
 
 export type GetDatasetFlowConfigsQueryVariables = Exact<{
@@ -8172,19 +8172,19 @@ export type GetDatasetFlowConfigsQueryVariables = Exact<{
 }>;
 
 
-export type GetDatasetFlowConfigsQuery = { __typename?: 'Query', datasets: { __typename?: 'Datasets', byId?: (
-      { __typename?: 'Dataset', flows: { __typename?: 'DatasetFlows', configs: { __typename: 'DatasetFlowConfigs', byType?: { __typename: 'FlowConfiguration', rule:
-              | { __typename?: 'FlowConfigRuleCompaction', maxSliceSize: number, maxSliceRecords: number }
+export type GetDatasetFlowConfigsQuery = { datasets: { __typename: 'Datasets', byId?: (
+      { __typename: 'Dataset', flows: { __typename: 'DatasetFlows', configs: { __typename: 'DatasetFlowConfigs', byType?: { __typename: 'FlowConfiguration', rule:
+              | { __typename: 'FlowConfigRuleCompaction', maxSliceSize: number, maxSliceRecords: number }
               | (
-                { __typename?: 'FlowConfigRuleIngest' }
+                { __typename: 'FlowConfigRuleIngest' }
                 & FlowConfigRuleIngestDataFragment
               )
-              | { __typename?: 'FlowConfigRuleReset', oldHeadHash?: string | null, mode:
-                  | { __typename?: 'FlowConfigResetPropagationModeCustom' }
-                  | { __typename?: 'FlowConfigResetPropagationModeToSeed', dummy?: string | null }
+              | { __typename: 'FlowConfigRuleReset', oldHeadHash?: string | null, mode:
+                  | { __typename: 'FlowConfigResetPropagationModeCustom' }
+                  | { __typename: 'FlowConfigResetPropagationModeToSeed', dummy?: string | null }
                  }
             , retryPolicy?: (
-              { __typename?: 'FlowRetryPolicy' }
+              { __typename: 'FlowRetryPolicy' }
               & FlowRetryPolicyDataFragment
             ) | null } | null } } }
       & DatasetBasicsFragment
@@ -8196,11 +8196,11 @@ export type SetCompactionFlowConfigMutationVariables = Exact<{
 }>;
 
 
-export type SetCompactionFlowConfigMutation = { __typename?: 'Mutation', datasets: { __typename?: 'DatasetsMut', byId?: { __typename?: 'DatasetMut', flows: { __typename?: 'DatasetFlowsMut', configs: { __typename?: 'DatasetFlowConfigsMut', setCompactionConfig:
-            | { __typename?: 'FlowIncompatibleDatasetKind', message: string, actualDatasetKind: DatasetKind, expectedDatasetKind: DatasetKind }
-            | { __typename?: 'FlowInvalidConfigInputError', message: string, reason: string }
-            | { __typename?: 'FlowPreconditionsNotMet', message: string, preconditions: string }
-            | { __typename?: 'SetFlowConfigSuccess', message: string }
+export type SetCompactionFlowConfigMutation = { datasets: { __typename: 'DatasetsMut', byId?: { __typename: 'DatasetMut', flows: { __typename: 'DatasetFlowsMut', configs: { __typename: 'DatasetFlowConfigsMut', setCompactionConfig:
+            | { __typename: 'FlowIncompatibleDatasetKind', message: string, actualDatasetKind: DatasetKind, expectedDatasetKind: DatasetKind }
+            | { __typename: 'FlowInvalidConfigInputError', message: string, reason: string }
+            | { __typename: 'FlowPreconditionsNotMet', message: string, preconditions: string }
+            | { __typename: 'SetFlowConfigSuccess', message: string }
            } } } | null } };
 
 export type SetIngestFlowConfigMutationVariables = Exact<{
@@ -8210,17 +8210,17 @@ export type SetIngestFlowConfigMutationVariables = Exact<{
 }>;
 
 
-export type SetIngestFlowConfigMutation = { __typename?: 'Mutation', datasets: { __typename?: 'DatasetsMut', byId?: { __typename?: 'DatasetMut', flows: { __typename?: 'DatasetFlowsMut', configs: { __typename?: 'DatasetFlowConfigsMut', setIngestConfig:
-            | { __typename?: 'FlowIncompatibleDatasetKind', message: string, actualDatasetKind: DatasetKind, expectedDatasetKind: DatasetKind }
-            | { __typename?: 'FlowInvalidConfigInputError', message: string, reason: string }
-            | { __typename?: 'FlowPreconditionsNotMet', message: string, preconditions: string }
-            | { __typename?: 'SetFlowConfigSuccess', message: string }
+export type SetIngestFlowConfigMutation = { datasets: { __typename: 'DatasetsMut', byId?: { __typename: 'DatasetMut', flows: { __typename: 'DatasetFlowsMut', configs: { __typename: 'DatasetFlowConfigsMut', setIngestConfig:
+            | { __typename: 'FlowIncompatibleDatasetKind', message: string, actualDatasetKind: DatasetKind, expectedDatasetKind: DatasetKind }
+            | { __typename: 'FlowInvalidConfigInputError', message: string, reason: string }
+            | { __typename: 'FlowPreconditionsNotMet', message: string, preconditions: string }
+            | { __typename: 'SetFlowConfigSuccess', message: string }
            } } } | null } };
 
-export type FlowConfigRuleIngestDataFragment = { __typename?: 'FlowConfigRuleIngest', fetchUncacheable: boolean, fetchNextIteration: boolean };
+export type FlowConfigRuleIngestDataFragment = { __typename: 'FlowConfigRuleIngest', fetchUncacheable: boolean, fetchNextIteration: boolean };
 
-export type FlowRetryPolicyDataFragment = { __typename?: 'FlowRetryPolicy', maxAttempts: number, backoffType: FlowRetryBackoffType, minDelay: (
-    { __typename?: 'TimeDelta' }
+export type FlowRetryPolicyDataFragment = { __typename: 'FlowRetryPolicy', maxAttempts: number, backoffType: FlowRetryBackoffType, minDelay: (
+    { __typename: 'TimeDelta' }
     & TimeDeltaDataFragment
   ) };
 
@@ -8230,7 +8230,7 @@ export type PauseDatasetFlowTriggerMutationVariables = Exact<{
 }>;
 
 
-export type PauseDatasetFlowTriggerMutation = { __typename?: 'Mutation', datasets: { __typename?: 'DatasetsMut', byId?: { __typename?: 'DatasetMut', flows: { __typename?: 'DatasetFlowsMut', triggers: { __typename?: 'DatasetFlowTriggersMut', pauseFlow: boolean } } } | null } };
+export type PauseDatasetFlowTriggerMutation = { datasets: { __typename: 'DatasetsMut', byId?: { __typename: 'DatasetMut', flows: { __typename: 'DatasetFlowsMut', triggers: { __typename: 'DatasetFlowTriggersMut', pauseFlow: boolean } } } | null } };
 
 export type SetDatasetFlowTriggerMutationVariables = Exact<{
   datasetId: Scalars['DatasetID']['input'];
@@ -8240,13 +8240,13 @@ export type SetDatasetFlowTriggerMutationVariables = Exact<{
 }>;
 
 
-export type SetDatasetFlowTriggerMutation = { __typename?: 'Mutation', datasets: { __typename?: 'DatasetsMut', byId?: { __typename?: 'DatasetMut', flows: { __typename?: 'DatasetFlowsMut', triggers: { __typename?: 'DatasetFlowTriggersMut', setTrigger:
-            | { __typename?: 'FlowIncompatibleDatasetKind', expectedDatasetKind: DatasetKind, actualDatasetKind: DatasetKind, message: string }
-            | { __typename?: 'FlowInvalidTriggerInputError', reason: string, message: string }
-            | { __typename?: 'FlowInvalidTriggerStopPolicyInputError', message: string }
-            | { __typename?: 'FlowPreconditionsNotMet', message: string }
-            | { __typename?: 'FlowTypeIsNotSupported', message: string }
-            | { __typename?: 'SetFlowTriggerSuccess', message: string }
+export type SetDatasetFlowTriggerMutation = { datasets: { __typename: 'DatasetsMut', byId?: { __typename: 'DatasetMut', flows: { __typename: 'DatasetFlowsMut', triggers: { __typename: 'DatasetFlowTriggersMut', setTrigger:
+            | { __typename: 'FlowIncompatibleDatasetKind', expectedDatasetKind: DatasetKind, actualDatasetKind: DatasetKind, message: string }
+            | { __typename: 'FlowInvalidTriggerInputError', reason: string, message: string }
+            | { __typename: 'FlowInvalidTriggerStopPolicyInputError', message: string }
+            | { __typename: 'FlowPreconditionsNotMet', message: string }
+            | { __typename: 'FlowTypeIsNotSupported', message: string }
+            | { __typename: 'SetFlowTriggerSuccess', message: string }
            } } } | null } };
 
 export type GetDatasetFlowTriggerQueryVariables = Exact<{
@@ -8255,46 +8255,46 @@ export type GetDatasetFlowTriggerQueryVariables = Exact<{
 }>;
 
 
-export type GetDatasetFlowTriggerQuery = { __typename?: 'Query', datasets: { __typename?: 'Datasets', byId?: { __typename?: 'Dataset', flows: { __typename?: 'DatasetFlows', triggers: { __typename?: 'DatasetFlowTriggers', byType?: (
-            { __typename?: 'FlowTrigger' }
+export type GetDatasetFlowTriggerQuery = { datasets: { __typename: 'Datasets', byId?: { __typename: 'Dataset', flows: { __typename: 'DatasetFlows', triggers: { __typename: 'DatasetFlowTriggers', byType?: (
+            { __typename: 'FlowTrigger' }
             & FlowTriggerDataFragment
           ) | null } } } | null } };
 
-export type FlowTriggerDataFragment = { __typename?: 'FlowTrigger', paused: boolean, schedule?:
+export type FlowTriggerDataFragment = { __typename: 'FlowTrigger', paused: boolean, schedule?:
     | (
-      { __typename?: 'Cron5ComponentExpression' }
+      { __typename: 'Cron5ComponentExpression' }
       & FlowTriggerScheduleRuleData_Cron5ComponentExpression_Fragment
     )
     | (
-      { __typename?: 'TimeDelta' }
+      { __typename: 'TimeDelta' }
       & FlowTriggerScheduleRuleData_TimeDelta_Fragment
     )
    | null, reactive?: (
-    { __typename?: 'FlowTriggerReactiveRule' }
+    { __typename: 'FlowTriggerReactiveRule' }
     & FlowTriggerReactiveRuleDataFragment
   ) | null, stopPolicy:
     | (
-      { __typename?: 'FlowTriggerStopPolicyAfterConsecutiveFailures' }
+      { __typename: 'FlowTriggerStopPolicyAfterConsecutiveFailures' }
       & FlowTriggerStopPolicyData_FlowTriggerStopPolicyAfterConsecutiveFailures_Fragment
     )
     | (
-      { __typename?: 'FlowTriggerStopPolicyNever' }
+      { __typename: 'FlowTriggerStopPolicyNever' }
       & FlowTriggerStopPolicyData_FlowTriggerStopPolicyNever_Fragment
     )
    };
 
-export type FlowTriggerReactiveRuleDataFragment = { __typename?: 'FlowTriggerReactiveRule', forBreakingChange: FlowTriggerBreakingChangeRule, forNewData:
+export type FlowTriggerReactiveRuleDataFragment = { __typename: 'FlowTriggerReactiveRule', forBreakingChange: FlowTriggerBreakingChangeRule, forNewData:
     | { __typename: 'FlowTriggerBatchingRuleBuffering', minRecordsToAwait: number, maxBatchingInterval: (
-        { __typename?: 'TimeDelta' }
+        { __typename: 'TimeDelta' }
         & TimeDeltaDataFragment
       ) }
     | { __typename: 'FlowTriggerBatchingRuleImmediate' }
    };
 
-type FlowTriggerScheduleRuleData_Cron5ComponentExpression_Fragment = { __typename?: 'Cron5ComponentExpression', cron5ComponentExpression: string };
+type FlowTriggerScheduleRuleData_Cron5ComponentExpression_Fragment = { __typename: 'Cron5ComponentExpression', cron5ComponentExpression: string };
 
 type FlowTriggerScheduleRuleData_TimeDelta_Fragment = (
-  { __typename?: 'TimeDelta' }
+  { __typename: 'TimeDelta' }
   & TimeDeltaDataFragment
 );
 
@@ -8312,7 +8312,7 @@ export type FlowTriggerStopPolicyDataFragment =
   | FlowTriggerStopPolicyData_FlowTriggerStopPolicyNever_Fragment
 ;
 
-export type TimeDeltaDataFragment = { __typename?: 'TimeDelta', every: number, unit: TimeUnit };
+export type TimeDeltaDataFragment = { __typename: 'TimeDelta', every: number, unit: TimeUnit };
 
 export type CancelFlowRunMutationVariables = Exact<{
   datasetId: Scalars['DatasetID']['input'];
@@ -8320,12 +8320,12 @@ export type CancelFlowRunMutationVariables = Exact<{
 }>;
 
 
-export type CancelFlowRunMutation = { __typename?: 'Mutation', datasets: { __typename?: 'DatasetsMut', byId?: { __typename?: 'DatasetMut', flows: { __typename?: 'DatasetFlowsMut', runs: { __typename?: 'DatasetFlowRunsMut', cancelFlowRun:
-            | { __typename?: 'CancelFlowRunSuccess', message: string, flow: (
-                { __typename?: 'Flow' }
+export type CancelFlowRunMutation = { datasets: { __typename: 'DatasetsMut', byId?: { __typename: 'DatasetMut', flows: { __typename: 'DatasetFlowsMut', runs: { __typename: 'DatasetFlowRunsMut', cancelFlowRun:
+            | { __typename: 'CancelFlowRunSuccess', message: string, flow: (
+                { __typename: 'Flow' }
                 & FlowSummaryDataFragment
               ) }
-            | { __typename?: 'FlowNotFound', flowId: string, message: string }
+            | { __typename: 'FlowNotFound', flowId: string, message: string }
            } } } | null } };
 
 export type GetFlowByIdQueryVariables = Exact<{
@@ -8334,44 +8334,44 @@ export type GetFlowByIdQueryVariables = Exact<{
 }>;
 
 
-export type GetFlowByIdQuery = { __typename?: 'Query', datasets: { __typename?: 'Datasets', byId?: { __typename?: 'Dataset', flows: { __typename?: 'DatasetFlows', runs: { __typename?: 'DatasetFlowRuns', getFlow:
-            | { __typename?: 'FlowNotFound', message: string, flowId: string }
-            | { __typename?: 'GetFlowSuccess', flow: (
-                { __typename?: 'Flow', history: Array<
+export type GetFlowByIdQuery = { datasets: { __typename: 'Datasets', byId?: { __typename: 'Dataset', flows: { __typename: 'DatasetFlows', runs: { __typename: 'DatasetFlowRuns', getFlow:
+            | { __typename: 'FlowNotFound', message: string, flowId: string }
+            | { __typename: 'GetFlowSuccess', flow: (
+                { __typename: 'Flow', history: Array<
                   | (
-                    { __typename?: 'FlowConfigSnapshotModified' }
+                    { __typename: 'FlowConfigSnapshotModified' }
                     & FlowHistoryData_FlowConfigSnapshotModified_Fragment
                   )
                   | (
-                    { __typename?: 'FlowEventAborted' }
+                    { __typename: 'FlowEventAborted' }
                     & FlowHistoryData_FlowEventAborted_Fragment
                   )
                   | (
-                    { __typename?: 'FlowEventActivationCauseAdded' }
+                    { __typename: 'FlowEventActivationCauseAdded' }
                     & FlowHistoryData_FlowEventActivationCauseAdded_Fragment
                   )
                   | (
-                    { __typename?: 'FlowEventCompleted' }
+                    { __typename: 'FlowEventCompleted' }
                     & FlowHistoryData_FlowEventCompleted_Fragment
                   )
                   | (
-                    { __typename?: 'FlowEventInitiated' }
+                    { __typename: 'FlowEventInitiated' }
                     & FlowHistoryData_FlowEventInitiated_Fragment
                   )
                   | (
-                    { __typename?: 'FlowEventRetryPolicyModified' }
+                    { __typename: 'FlowEventRetryPolicyModified' }
                     & FlowHistoryData_FlowEventRetryPolicyModified_Fragment
                   )
                   | (
-                    { __typename?: 'FlowEventScheduledForActivation' }
+                    { __typename: 'FlowEventScheduledForActivation' }
                     & FlowHistoryData_FlowEventScheduledForActivation_Fragment
                   )
                   | (
-                    { __typename?: 'FlowEventStartConditionUpdated' }
+                    { __typename: 'FlowEventStartConditionUpdated' }
                     & FlowHistoryData_FlowEventStartConditionUpdated_Fragment
                   )
                   | (
-                    { __typename?: 'FlowEventTaskChanged' }
+                    { __typename: 'FlowEventTaskChanged' }
                     & FlowHistoryData_FlowEventTaskChanged_Fragment
                   )
                 > }
@@ -8384,8 +8384,8 @@ export type DatasetFlowsInitiatorsQueryVariables = Exact<{
 }>;
 
 
-export type DatasetFlowsInitiatorsQuery = { __typename?: 'Query', datasets: { __typename?: 'Datasets', byId?: { __typename?: 'Dataset', flows: { __typename?: 'DatasetFlows', runs: { __typename?: 'DatasetFlowRuns', listFlowInitiators: { __typename?: 'AccountConnection', totalCount: number, nodes: Array<(
-              { __typename?: 'Account' }
+export type DatasetFlowsInitiatorsQuery = { datasets: { __typename: 'Datasets', byId?: { __typename: 'Dataset', flows: { __typename: 'DatasetFlows', runs: { __typename: 'DatasetFlowRuns', listFlowInitiators: { __typename: 'AccountConnection', totalCount: number, nodes: Array<(
+              { __typename: 'Account' }
               & AccountFragment
             )> } } } } | null } };
 
@@ -8398,12 +8398,12 @@ export type GetDatasetListFlowsQueryVariables = Exact<{
 }>;
 
 
-export type GetDatasetListFlowsQuery = { __typename?: 'Query', datasets: { __typename?: 'Datasets', byId?: (
-      { __typename?: 'Dataset', flows: { __typename?: 'DatasetFlows', runs: { __typename?: 'DatasetFlowRuns', table: (
-            { __typename?: 'FlowConnection' }
+export type GetDatasetListFlowsQuery = { datasets: { __typename: 'Datasets', byId?: (
+      { __typename: 'Dataset', flows: { __typename: 'DatasetFlows', runs: { __typename: 'DatasetFlowRuns', table: (
+            { __typename: 'FlowConnection' }
             & FlowConnectionDataFragment
           ), tiles: (
-            { __typename?: 'FlowConnection' }
+            { __typename: 'FlowConnection' }
             & FlowConnectionWidgetDataFragment
           ) } } }
       & DatasetBasicsFragment
@@ -8414,19 +8414,19 @@ export type DatasetPauseFlowsMutationVariables = Exact<{
 }>;
 
 
-export type DatasetPauseFlowsMutation = { __typename?: 'Mutation', datasets: { __typename?: 'DatasetsMut', byId?: { __typename?: 'DatasetMut', flows: { __typename?: 'DatasetFlowsMut', triggers: { __typename?: 'DatasetFlowTriggersMut', pauseFlows: boolean } } } | null } };
+export type DatasetPauseFlowsMutation = { datasets: { __typename: 'DatasetsMut', byId?: { __typename: 'DatasetMut', flows: { __typename: 'DatasetFlowsMut', triggers: { __typename: 'DatasetFlowTriggersMut', pauseFlows: boolean } } } | null } };
 
 export type DatasetResumeFlowsMutationVariables = Exact<{
   datasetId: Scalars['DatasetID']['input'];
 }>;
 
 
-export type DatasetResumeFlowsMutation = { __typename?: 'Mutation', datasets: { __typename?: 'DatasetsMut', byId?: { __typename?: 'DatasetMut', flows: { __typename?: 'DatasetFlowsMut', triggers: { __typename?: 'DatasetFlowTriggersMut', resumeFlows: boolean } } } | null } };
+export type DatasetResumeFlowsMutation = { datasets: { __typename: 'DatasetsMut', byId?: { __typename: 'DatasetMut', flows: { __typename: 'DatasetFlowsMut', triggers: { __typename: 'DatasetFlowTriggersMut', resumeFlows: boolean } } } | null } };
 
 type FlowActivationCauseData_FlowActivationCauseAutoPolling_Fragment = { __typename: 'FlowActivationCauseAutoPolling' };
 
 type FlowActivationCauseData_FlowActivationCauseDatasetUpdate_Fragment = { __typename: 'FlowActivationCauseDatasetUpdate', datasetId: string, dataset?: (
-    { __typename?: 'Dataset' }
+    { __typename: 'Dataset' }
     & DatasetBasicsFragment
   ) | null, source:
     | { __typename: 'FlowActivationCauseDatasetUpdateSourceExternallyDetectedChange' }
@@ -8438,7 +8438,7 @@ type FlowActivationCauseData_FlowActivationCauseDatasetUpdate_Fragment = { __typ
 type FlowActivationCauseData_FlowActivationCauseIterationFinished_Fragment = { __typename: 'FlowActivationCauseIterationFinished' };
 
 type FlowActivationCauseData_FlowActivationCauseManual_Fragment = { __typename: 'FlowActivationCauseManual', initiator: (
-    { __typename?: 'Account' }
+    { __typename: 'Account' }
     & AccountFragment
   ) };
 
@@ -8449,55 +8449,55 @@ export type FlowActivationCauseDataFragment =
   | FlowActivationCauseData_FlowActivationCauseManual_Fragment
 ;
 
-export type FlowConnectionDataFragment = { __typename?: 'FlowConnection', totalCount: number, nodes: Array<(
-    { __typename?: 'Flow' }
+export type FlowConnectionDataFragment = { __typename: 'FlowConnection', totalCount: number, nodes: Array<(
+    { __typename: 'Flow' }
     & FlowSummaryDataWithTriggerFragment
   )>, pageInfo: (
-    { __typename?: 'PageBasedInfo' }
+    { __typename: 'PageBasedInfo' }
     & DatasetPageInfoFragment
   ) };
 
-type FlowDescriptionData_FlowDescriptionDatasetExecuteTransform_Fragment = { __typename?: 'FlowDescriptionDatasetExecuteTransform', transform: (
-    { __typename?: 'SetTransform' }
+type FlowDescriptionData_FlowDescriptionDatasetExecuteTransform_Fragment = { __typename: 'FlowDescriptionDatasetExecuteTransform', transform: (
+    { __typename: 'SetTransform' }
     & SetTransformEngineDataFragment
   ), transformResult?:
-    | { __typename?: 'FlowDescriptionUpdateResultSuccess', numBlocks: number, numRecords: number, updatedWatermark?: string | null }
-    | { __typename?: 'FlowDescriptionUpdateResultUnknown', message: string }
-    | { __typename?: 'FlowDescriptionUpdateResultUpToDate', uncacheable: boolean }
+    | { __typename: 'FlowDescriptionUpdateResultSuccess', numBlocks: number, numRecords: number, updatedWatermark?: string | null }
+    | { __typename: 'FlowDescriptionUpdateResultUnknown', message: string }
+    | { __typename: 'FlowDescriptionUpdateResultUpToDate', uncacheable: boolean }
    | null };
 
-type FlowDescriptionData_FlowDescriptionDatasetHardCompaction_Fragment = { __typename?: 'FlowDescriptionDatasetHardCompaction', compactionResult?:
-    | { __typename?: 'FlowDescriptionReorganizationNothingToDo', message: string, dummy?: string | null }
-    | { __typename?: 'FlowDescriptionReorganizationSuccess', originalBlocksCount: number, resultingBlocksCount: number, newHead: string }
+type FlowDescriptionData_FlowDescriptionDatasetHardCompaction_Fragment = { __typename: 'FlowDescriptionDatasetHardCompaction', compactionResult?:
+    | { __typename: 'FlowDescriptionReorganizationNothingToDo', message: string, dummy?: string | null }
+    | { __typename: 'FlowDescriptionReorganizationSuccess', originalBlocksCount: number, resultingBlocksCount: number, newHead: string }
    | null };
 
-type FlowDescriptionData_FlowDescriptionDatasetPollingIngest_Fragment = { __typename?: 'FlowDescriptionDatasetPollingIngest', pollingSource: (
-    { __typename?: 'SetPollingSource' }
+type FlowDescriptionData_FlowDescriptionDatasetPollingIngest_Fragment = { __typename: 'FlowDescriptionDatasetPollingIngest', pollingSource: (
+    { __typename: 'SetPollingSource' }
     & SetPollingSourceFetchDataFragment
   ), ingestResult?:
-    | { __typename?: 'FlowDescriptionUpdateResultSuccess', numBlocks: number, numRecords: number, updatedWatermark?: string | null }
-    | { __typename?: 'FlowDescriptionUpdateResultUnknown', message: string }
-    | { __typename?: 'FlowDescriptionUpdateResultUpToDate', uncacheable: boolean }
+    | { __typename: 'FlowDescriptionUpdateResultSuccess', numBlocks: number, numRecords: number, updatedWatermark?: string | null }
+    | { __typename: 'FlowDescriptionUpdateResultUnknown', message: string }
+    | { __typename: 'FlowDescriptionUpdateResultUpToDate', uncacheable: boolean }
    | null };
 
-type FlowDescriptionData_FlowDescriptionDatasetPushIngest_Fragment = { __typename?: 'FlowDescriptionDatasetPushIngest', sourceName?: string | null, ingestResult?:
-    | { __typename?: 'FlowDescriptionUpdateResultSuccess', numBlocks: number, numRecords: number, updatedWatermark?: string | null }
-    | { __typename?: 'FlowDescriptionUpdateResultUnknown', message: string }
-    | { __typename?: 'FlowDescriptionUpdateResultUpToDate', uncacheable: boolean }
+type FlowDescriptionData_FlowDescriptionDatasetPushIngest_Fragment = { __typename: 'FlowDescriptionDatasetPushIngest', sourceName?: string | null, ingestResult?:
+    | { __typename: 'FlowDescriptionUpdateResultSuccess', numBlocks: number, numRecords: number, updatedWatermark?: string | null }
+    | { __typename: 'FlowDescriptionUpdateResultUnknown', message: string }
+    | { __typename: 'FlowDescriptionUpdateResultUpToDate', uncacheable: boolean }
    | null };
 
-type FlowDescriptionData_FlowDescriptionDatasetReset_Fragment = { __typename?: 'FlowDescriptionDatasetReset', resetResult?: { __typename?: 'FlowDescriptionResetResult', newHead: string } | null };
+type FlowDescriptionData_FlowDescriptionDatasetReset_Fragment = { __typename: 'FlowDescriptionDatasetReset', resetResult?: { __typename: 'FlowDescriptionResetResult', newHead: string } | null };
 
-type FlowDescriptionData_FlowDescriptionDatasetResetToMetadata_Fragment = { __typename?: 'FlowDescriptionDatasetResetToMetadata', resetToMetadataResult?:
-    | { __typename?: 'FlowDescriptionReorganizationNothingToDo', message: string, dummy?: string | null }
-    | { __typename?: 'FlowDescriptionReorganizationSuccess', originalBlocksCount: number, resultingBlocksCount: number, newHead: string }
+type FlowDescriptionData_FlowDescriptionDatasetResetToMetadata_Fragment = { __typename: 'FlowDescriptionDatasetResetToMetadata', resetToMetadataResult?:
+    | { __typename: 'FlowDescriptionReorganizationNothingToDo', message: string, dummy?: string | null }
+    | { __typename: 'FlowDescriptionReorganizationSuccess', originalBlocksCount: number, resultingBlocksCount: number, newHead: string }
    | null };
 
-type FlowDescriptionData_FlowDescriptionSystemGc_Fragment = { __typename?: 'FlowDescriptionSystemGC', dummy: boolean };
+type FlowDescriptionData_FlowDescriptionSystemGc_Fragment = { __typename: 'FlowDescriptionSystemGC', dummy: boolean };
 
-type FlowDescriptionData_FlowDescriptionUnknown_Fragment = { __typename?: 'FlowDescriptionUnknown' };
+type FlowDescriptionData_FlowDescriptionUnknown_Fragment = { __typename: 'FlowDescriptionUnknown' };
 
-type FlowDescriptionData_FlowDescriptionWebhookDeliver_Fragment = { __typename?: 'FlowDescriptionWebhookDeliver', targetUrl: string, label: string, eventType: string };
+type FlowDescriptionData_FlowDescriptionWebhookDeliver_Fragment = { __typename: 'FlowDescriptionWebhookDeliver', targetUrl: string, label: string, eventType: string };
 
 export type FlowDescriptionDataFragment =
   | FlowDescriptionData_FlowDescriptionDatasetExecuteTransform_Fragment
@@ -8511,16 +8511,16 @@ export type FlowDescriptionDataFragment =
   | FlowDescriptionData_FlowDescriptionWebhookDeliver_Fragment
 ;
 
-export type FlowDownstreamLinkDataFragment = { __typename?: 'FlowDownstreamLink', flowId: string, activatedAt: string, datasetId?: string | null, dataset?:
+export type FlowDownstreamLinkDataFragment = { __typename: 'FlowDownstreamLink', flowId: string, activatedAt: string, datasetId?: string | null, dataset?:
     | { __typename: 'DatasetAccessResultAccessible', dataset: (
-        { __typename?: 'Dataset' }
+        { __typename: 'Dataset' }
         & DatasetBasicsFragment
       ) }
     | (
       { __typename: 'DatasetAccessResultNotAccessible' }
       & DatasetAccessResultNotAccessibleDataFragment
     )
-   | null, flow?: { __typename?: 'Flow', flowId: string, status: FlowStatus, outcome?:
+   | null, flow?: { __typename: 'Flow', flowId: string, status: FlowStatus, outcome?:
       | { __typename: 'FlowAbortedResult' }
       | { __typename: 'FlowFailedError' }
       | { __typename: 'FlowSuccessResult' }
@@ -8536,41 +8536,41 @@ export type FlowDownstreamLinkDataFragment = { __typename?: 'FlowDownstreamLink'
       | { __typename: 'FlowDescriptionWebhookDeliver' }
      } | null };
 
-export type FlowEventRetryPolicyModifiedDataFragment = { __typename?: 'FlowEventRetryPolicyModified', retryPolicy?: (
-    { __typename?: 'FlowRetryPolicy' }
+export type FlowEventRetryPolicyModifiedDataFragment = { __typename: 'FlowEventRetryPolicyModified', retryPolicy?: (
+    { __typename: 'FlowRetryPolicy' }
     & FlowRetryPolicyDataFragment
   ) | null };
 
-export type FlowEventStartConditionUpdatedDataFragment = { __typename?: 'FlowEventStartConditionUpdated', startCondition:
+export type FlowEventStartConditionUpdatedDataFragment = { __typename: 'FlowEventStartConditionUpdated', startCondition:
     | (
-      { __typename?: 'FlowStartConditionExecutor' }
+      { __typename: 'FlowStartConditionExecutor' }
       & FlowStartConditionData_FlowStartConditionExecutor_Fragment
     )
     | (
-      { __typename?: 'FlowStartConditionReactive' }
+      { __typename: 'FlowStartConditionReactive' }
       & FlowStartConditionData_FlowStartConditionReactive_Fragment
     )
     | (
-      { __typename?: 'FlowStartConditionSchedule' }
+      { __typename: 'FlowStartConditionSchedule' }
       & FlowStartConditionData_FlowStartConditionSchedule_Fragment
     )
     | (
-      { __typename?: 'FlowStartConditionThrottling' }
+      { __typename: 'FlowStartConditionThrottling' }
       & FlowStartConditionData_FlowStartConditionThrottling_Fragment
     )
    };
 
-export type FlowEventTaskChangedDataFragment = { __typename: 'FlowEventTaskChanged', eventId: string, eventTime: string, taskId: string, taskStatus: TaskStatus, nextAttemptAt?: string | null, task: { __typename?: 'Task', outcome?:
+export type FlowEventTaskChangedDataFragment = { __typename: 'FlowEventTaskChanged', eventId: string, eventTime: string, taskId: string, taskStatus: TaskStatus, nextAttemptAt?: string | null, task: { __typename: 'Task', outcome?:
       | (
-        { __typename?: 'TaskOutcomeCancelled' }
+        { __typename: 'TaskOutcomeCancelled' }
         & TaskOutcomeData_TaskOutcomeCancelled_Fragment
       )
       | (
-        { __typename?: 'TaskOutcomeFailed' }
+        { __typename: 'TaskOutcomeFailed' }
         & TaskOutcomeData_TaskOutcomeFailed_Fragment
       )
       | (
-        { __typename?: 'TaskOutcomeSuccess' }
+        { __typename: 'TaskOutcomeSuccess' }
         & TaskOutcomeData_TaskOutcomeSuccess_Fragment
       )
      | null } };
@@ -8585,43 +8585,43 @@ type FlowHistoryData_FlowEventAborted_Fragment = { __typename: 'FlowEventAborted
 
 type FlowHistoryData_FlowEventActivationCauseAdded_Fragment = { __typename: 'FlowEventActivationCauseAdded', eventId: string, eventTime: string, activationCause:
     | (
-      { __typename?: 'FlowActivationCauseAutoPolling' }
+      { __typename: 'FlowActivationCauseAutoPolling' }
       & FlowActivationCauseData_FlowActivationCauseAutoPolling_Fragment
     )
     | (
-      { __typename?: 'FlowActivationCauseDatasetUpdate' }
+      { __typename: 'FlowActivationCauseDatasetUpdate' }
       & FlowActivationCauseData_FlowActivationCauseDatasetUpdate_Fragment
     )
     | (
-      { __typename?: 'FlowActivationCauseIterationFinished' }
+      { __typename: 'FlowActivationCauseIterationFinished' }
       & FlowActivationCauseData_FlowActivationCauseIterationFinished_Fragment
     )
     | (
-      { __typename?: 'FlowActivationCauseManual' }
+      { __typename: 'FlowActivationCauseManual' }
       & FlowActivationCauseData_FlowActivationCauseManual_Fragment
     )
    };
 
 type FlowHistoryData_FlowEventCompleted_Fragment = { __typename: 'FlowEventCompleted', eventId: string, eventTime: string, downstreamFlows: Array<(
-    { __typename?: 'FlowDownstreamLink' }
+    { __typename: 'FlowDownstreamLink' }
     & FlowDownstreamLinkDataFragment
   )> };
 
 type FlowHistoryData_FlowEventInitiated_Fragment = { __typename: 'FlowEventInitiated', eventId: string, eventTime: string, activationCause:
     | (
-      { __typename?: 'FlowActivationCauseAutoPolling' }
+      { __typename: 'FlowActivationCauseAutoPolling' }
       & FlowActivationCauseData_FlowActivationCauseAutoPolling_Fragment
     )
     | (
-      { __typename?: 'FlowActivationCauseDatasetUpdate' }
+      { __typename: 'FlowActivationCauseDatasetUpdate' }
       & FlowActivationCauseData_FlowActivationCauseDatasetUpdate_Fragment
     )
     | (
-      { __typename?: 'FlowActivationCauseIterationFinished' }
+      { __typename: 'FlowActivationCauseIterationFinished' }
       & FlowActivationCauseData_FlowActivationCauseIterationFinished_Fragment
     )
     | (
-      { __typename?: 'FlowActivationCauseManual' }
+      { __typename: 'FlowActivationCauseManual' }
       & FlowActivationCauseData_FlowActivationCauseManual_Fragment
     )
    };
@@ -8655,36 +8655,36 @@ export type FlowHistoryDataFragment =
   | FlowHistoryData_FlowEventTaskChanged_Fragment
 ;
 
-export type FlowItemWidgetDataFragment = { __typename?: 'Flow', flowId: string, datasetId?: string | null, status: FlowStatus, initiator?: { __typename?: 'Account', accountName: string } | null, outcome?:
+export type FlowItemWidgetDataFragment = { __typename: 'Flow', flowId: string, datasetId?: string | null, status: FlowStatus, initiator?: { __typename: 'Account', accountName: string } | null, outcome?:
     | (
-      { __typename?: 'FlowAbortedResult' }
+      { __typename: 'FlowAbortedResult' }
       & FlowOutcomeData_FlowAbortedResult_Fragment
     )
     | (
-      { __typename?: 'FlowFailedError' }
+      { __typename: 'FlowFailedError' }
       & FlowOutcomeData_FlowFailedError_Fragment
     )
     | (
-      { __typename?: 'FlowSuccessResult' }
+      { __typename: 'FlowSuccessResult' }
       & FlowOutcomeData_FlowSuccessResult_Fragment
     )
    | null, timing: (
-    { __typename?: 'FlowTimingRecords' }
+    { __typename: 'FlowTimingRecords' }
     & FlowTimingRecordsDataFragment
   ) };
 
-type FlowOutcomeData_FlowAbortedResult_Fragment = { __typename?: 'FlowAbortedResult', message: string };
+type FlowOutcomeData_FlowAbortedResult_Fragment = { __typename: 'FlowAbortedResult', message: string };
 
-type FlowOutcomeData_FlowFailedError_Fragment = { __typename?: 'FlowFailedError', reason:
-    | { __typename?: 'TaskFailureReasonGeneral', message: string, recoverable: boolean }
-    | { __typename?: 'TaskFailureReasonInputDatasetCompacted', message: string, inputDataset: (
-        { __typename?: 'Dataset' }
+type FlowOutcomeData_FlowFailedError_Fragment = { __typename: 'FlowFailedError', reason:
+    | { __typename: 'TaskFailureReasonGeneral', message: string, recoverable: boolean }
+    | { __typename: 'TaskFailureReasonInputDatasetCompacted', message: string, inputDataset: (
+        { __typename: 'Dataset' }
         & DatasetBasicsFragment
       ) }
-    | { __typename?: 'TaskFailureReasonWebhookDeliveryProblem', message: string, targetUrl: string }
+    | { __typename: 'TaskFailureReasonWebhookDeliveryProblem', message: string, targetUrl: string }
    };
 
-type FlowOutcomeData_FlowSuccessResult_Fragment = { __typename?: 'FlowSuccessResult', message: string };
+type FlowOutcomeData_FlowSuccessResult_Fragment = { __typename: 'FlowSuccessResult', message: string };
 
 export type FlowOutcomeDataFragment =
   | FlowOutcomeData_FlowAbortedResult_Fragment
@@ -8696,7 +8696,7 @@ type FlowStartConditionData_FlowStartConditionExecutor_Fragment = { __typename: 
 
 type FlowStartConditionData_FlowStartConditionReactive_Fragment = { __typename: 'FlowStartConditionReactive', batchingDeadline: string, accumulatedRecordsCount: number, watermarkModified: boolean, activeBatchingRule:
     | { __typename: 'FlowTriggerBatchingRuleBuffering', minRecordsToAwait: number, maxBatchingInterval: (
-        { __typename?: 'TimeDelta' }
+        { __typename: 'TimeDelta' }
         & TimeDeltaDataFragment
       ) }
     | { __typename: 'FlowTriggerBatchingRuleImmediate' }
@@ -8714,103 +8714,103 @@ export type FlowStartConditionDataFragment =
 ;
 
 export type FlowSummaryDataWithTriggerFragment = (
-  { __typename?: 'Flow', relatedTrigger?: { __typename?: 'FlowTrigger', paused: boolean, schedule?:
+  { __typename: 'Flow', relatedTrigger?: { __typename: 'FlowTrigger', paused: boolean, schedule?:
       | { __typename: 'Cron5ComponentExpression' }
       | { __typename: 'TimeDelta' }
      | null } | null }
   & FlowSummaryDataFragment
 );
 
-export type FlowSummaryDataFragment = { __typename?: 'Flow', flowId: string, datasetId?: string | null, status: FlowStatus, taskIds: Array<string>, description:
+export type FlowSummaryDataFragment = { __typename: 'Flow', flowId: string, datasetId?: string | null, status: FlowStatus, taskIds: Array<string>, description:
     | (
-      { __typename?: 'FlowDescriptionDatasetExecuteTransform' }
+      { __typename: 'FlowDescriptionDatasetExecuteTransform' }
       & FlowDescriptionData_FlowDescriptionDatasetExecuteTransform_Fragment
     )
     | (
-      { __typename?: 'FlowDescriptionDatasetHardCompaction' }
+      { __typename: 'FlowDescriptionDatasetHardCompaction' }
       & FlowDescriptionData_FlowDescriptionDatasetHardCompaction_Fragment
     )
     | (
-      { __typename?: 'FlowDescriptionDatasetPollingIngest' }
+      { __typename: 'FlowDescriptionDatasetPollingIngest' }
       & FlowDescriptionData_FlowDescriptionDatasetPollingIngest_Fragment
     )
     | (
-      { __typename?: 'FlowDescriptionDatasetPushIngest' }
+      { __typename: 'FlowDescriptionDatasetPushIngest' }
       & FlowDescriptionData_FlowDescriptionDatasetPushIngest_Fragment
     )
     | (
-      { __typename?: 'FlowDescriptionDatasetReset' }
+      { __typename: 'FlowDescriptionDatasetReset' }
       & FlowDescriptionData_FlowDescriptionDatasetReset_Fragment
     )
     | (
-      { __typename?: 'FlowDescriptionDatasetResetToMetadata' }
+      { __typename: 'FlowDescriptionDatasetResetToMetadata' }
       & FlowDescriptionData_FlowDescriptionDatasetResetToMetadata_Fragment
     )
     | (
-      { __typename?: 'FlowDescriptionSystemGC' }
+      { __typename: 'FlowDescriptionSystemGC' }
       & FlowDescriptionData_FlowDescriptionSystemGc_Fragment
     )
     | (
-      { __typename?: 'FlowDescriptionUnknown' }
+      { __typename: 'FlowDescriptionUnknown' }
       & FlowDescriptionData_FlowDescriptionUnknown_Fragment
     )
     | (
-      { __typename?: 'FlowDescriptionWebhookDeliver' }
+      { __typename: 'FlowDescriptionWebhookDeliver' }
       & FlowDescriptionData_FlowDescriptionWebhookDeliver_Fragment
     )
   , initiator?: (
-    { __typename?: 'Account' }
+    { __typename: 'Account' }
     & AccountFragment
   ) | null, outcome?:
     | (
-      { __typename?: 'FlowAbortedResult' }
+      { __typename: 'FlowAbortedResult' }
       & FlowOutcomeData_FlowAbortedResult_Fragment
     )
     | (
-      { __typename?: 'FlowFailedError' }
+      { __typename: 'FlowFailedError' }
       & FlowOutcomeData_FlowFailedError_Fragment
     )
     | (
-      { __typename?: 'FlowSuccessResult' }
+      { __typename: 'FlowSuccessResult' }
       & FlowOutcomeData_FlowSuccessResult_Fragment
     )
    | null, timing: (
-    { __typename?: 'FlowTimingRecords' }
+    { __typename: 'FlowTimingRecords' }
     & FlowTimingRecordsDataFragment
   ), startCondition?:
     | (
-      { __typename?: 'FlowStartConditionExecutor' }
+      { __typename: 'FlowStartConditionExecutor' }
       & FlowStartConditionData_FlowStartConditionExecutor_Fragment
     )
     | (
-      { __typename?: 'FlowStartConditionReactive' }
+      { __typename: 'FlowStartConditionReactive' }
       & FlowStartConditionData_FlowStartConditionReactive_Fragment
     )
     | (
-      { __typename?: 'FlowStartConditionSchedule' }
+      { __typename: 'FlowStartConditionSchedule' }
       & FlowStartConditionData_FlowStartConditionSchedule_Fragment
     )
     | (
-      { __typename?: 'FlowStartConditionThrottling' }
+      { __typename: 'FlowStartConditionThrottling' }
       & FlowStartConditionData_FlowStartConditionThrottling_Fragment
     )
    | null, configSnapshot?:
-    | { __typename?: 'FlowConfigRuleCompaction' }
+    | { __typename: 'FlowConfigRuleCompaction' }
     | (
-      { __typename?: 'FlowConfigRuleIngest' }
+      { __typename: 'FlowConfigRuleIngest' }
       & FlowConfigRuleIngestDataFragment
     )
-    | { __typename?: 'FlowConfigRuleReset' }
-   | null, retryPolicy?: { __typename?: 'FlowRetryPolicy', maxAttempts: number } | null };
+    | { __typename: 'FlowConfigRuleReset' }
+   | null, retryPolicy?: { __typename: 'FlowRetryPolicy', maxAttempts: number } | null };
 
-export type FlowTimingRecordsDataFragment = { __typename?: 'FlowTimingRecords', initiatedAt: string, firstAttemptScheduledAt?: string | null, scheduledAt?: string | null, awaitingExecutorSince?: string | null, runningSince?: string | null, lastAttemptFinishedAt?: string | null };
+export type FlowTimingRecordsDataFragment = { __typename: 'FlowTimingRecords', initiatedAt: string, firstAttemptScheduledAt?: string | null, scheduledAt?: string | null, awaitingExecutorSince?: string | null, runningSince?: string | null, lastAttemptFinishedAt?: string | null };
 
 type TaskOutcomeData_TaskOutcomeCancelled_Fragment = { __typename: 'TaskOutcomeCancelled' };
 
 type TaskOutcomeData_TaskOutcomeFailed_Fragment = { __typename: 'TaskOutcomeFailed', reason:
     | { __typename: 'TaskFailureReasonGeneral', message: string, recoverable: boolean }
     | { __typename: 'TaskFailureReasonInputDatasetCompacted', message: string, inputDataset: (
-        { __typename?: 'Dataset' }
+        { __typename: 'Dataset' }
         & DatasetBasicsFragment
       ) }
     | { __typename: 'TaskFailureReasonWebhookDeliveryProblem', message: string, targetUrl: string }
@@ -8824,8 +8824,8 @@ export type TaskOutcomeDataFragment =
   | TaskOutcomeData_TaskOutcomeSuccess_Fragment
 ;
 
-export type FlowConnectionWidgetDataFragment = { __typename?: 'FlowConnection', totalCount: number, nodes: Array<(
-    { __typename?: 'Flow' }
+export type FlowConnectionWidgetDataFragment = { __typename: 'FlowConnection', totalCount: number, nodes: Array<(
+    { __typename: 'Flow' }
     & FlowItemWidgetDataFragment
   )> };
 
@@ -8835,12 +8835,12 @@ export type DatasetTriggerCompactionFlowMutationVariables = Exact<{
 }>;
 
 
-export type DatasetTriggerCompactionFlowMutation = { __typename?: 'Mutation', datasets: { __typename?: 'DatasetsMut', byId?: { __typename?: 'DatasetMut', flows: { __typename?: 'DatasetFlowsMut', runs: { __typename?: 'DatasetFlowRunsMut', triggerCompactionFlow:
-            | { __typename?: 'FlowIncompatibleDatasetKind', expectedDatasetKind: DatasetKind, actualDatasetKind: DatasetKind, message: string }
-            | { __typename?: 'FlowInvalidRunConfigurations', error: string, message: string }
-            | { __typename?: 'FlowPreconditionsNotMet', message: string }
-            | { __typename?: 'TriggerFlowSuccess', message: string, flow: (
-                { __typename?: 'Flow' }
+export type DatasetTriggerCompactionFlowMutation = { datasets: { __typename: 'DatasetsMut', byId?: { __typename: 'DatasetMut', flows: { __typename: 'DatasetFlowsMut', runs: { __typename: 'DatasetFlowRunsMut', triggerCompactionFlow:
+            | { __typename: 'FlowIncompatibleDatasetKind', expectedDatasetKind: DatasetKind, actualDatasetKind: DatasetKind, message: string }
+            | { __typename: 'FlowInvalidRunConfigurations', error: string, message: string }
+            | { __typename: 'FlowPreconditionsNotMet', message: string }
+            | { __typename: 'TriggerFlowSuccess', message: string, flow: (
+                { __typename: 'Flow' }
                 & FlowSummaryDataFragment
               ) }
            } } } | null } };
@@ -8851,12 +8851,12 @@ export type DatasetTriggerIngestFlowMutationVariables = Exact<{
 }>;
 
 
-export type DatasetTriggerIngestFlowMutation = { __typename?: 'Mutation', datasets: { __typename?: 'DatasetsMut', byId?: { __typename?: 'DatasetMut', flows: { __typename?: 'DatasetFlowsMut', runs: { __typename?: 'DatasetFlowRunsMut', triggerIngestFlow:
-            | { __typename?: 'FlowIncompatibleDatasetKind', expectedDatasetKind: DatasetKind, actualDatasetKind: DatasetKind, message: string }
-            | { __typename?: 'FlowInvalidRunConfigurations', error: string, message: string }
-            | { __typename?: 'FlowPreconditionsNotMet', message: string }
-            | { __typename?: 'TriggerFlowSuccess', message: string, flow: (
-                { __typename?: 'Flow' }
+export type DatasetTriggerIngestFlowMutation = { datasets: { __typename: 'DatasetsMut', byId?: { __typename: 'DatasetMut', flows: { __typename: 'DatasetFlowsMut', runs: { __typename: 'DatasetFlowRunsMut', triggerIngestFlow:
+            | { __typename: 'FlowIncompatibleDatasetKind', expectedDatasetKind: DatasetKind, actualDatasetKind: DatasetKind, message: string }
+            | { __typename: 'FlowInvalidRunConfigurations', error: string, message: string }
+            | { __typename: 'FlowPreconditionsNotMet', message: string }
+            | { __typename: 'TriggerFlowSuccess', message: string, flow: (
+                { __typename: 'Flow' }
                 & FlowSummaryDataFragment
               ) }
            } } } | null } };
@@ -8867,12 +8867,12 @@ export type DatasetTriggerResetFlowMutationVariables = Exact<{
 }>;
 
 
-export type DatasetTriggerResetFlowMutation = { __typename?: 'Mutation', datasets: { __typename?: 'DatasetsMut', byId?: { __typename?: 'DatasetMut', flows: { __typename?: 'DatasetFlowsMut', runs: { __typename?: 'DatasetFlowRunsMut', triggerResetFlow:
-            | { __typename?: 'FlowIncompatibleDatasetKind', expectedDatasetKind: DatasetKind, actualDatasetKind: DatasetKind, message: string }
-            | { __typename?: 'FlowInvalidRunConfigurations', error: string, message: string }
-            | { __typename?: 'FlowPreconditionsNotMet', message: string }
-            | { __typename?: 'TriggerFlowSuccess', message: string, flow: (
-                { __typename?: 'Flow' }
+export type DatasetTriggerResetFlowMutation = { datasets: { __typename: 'DatasetsMut', byId?: { __typename: 'DatasetMut', flows: { __typename: 'DatasetFlowsMut', runs: { __typename: 'DatasetFlowRunsMut', triggerResetFlow:
+            | { __typename: 'FlowIncompatibleDatasetKind', expectedDatasetKind: DatasetKind, actualDatasetKind: DatasetKind, message: string }
+            | { __typename: 'FlowInvalidRunConfigurations', error: string, message: string }
+            | { __typename: 'FlowPreconditionsNotMet', message: string }
+            | { __typename: 'TriggerFlowSuccess', message: string, flow: (
+                { __typename: 'Flow' }
                 & FlowSummaryDataFragment
               ) }
            } } } | null } };
@@ -8882,12 +8882,12 @@ export type DatasetTriggerResetToMetadataFlowMutationVariables = Exact<{
 }>;
 
 
-export type DatasetTriggerResetToMetadataFlowMutation = { __typename?: 'Mutation', datasets: { __typename?: 'DatasetsMut', byId?: { __typename?: 'DatasetMut', flows: { __typename?: 'DatasetFlowsMut', runs: { __typename?: 'DatasetFlowRunsMut', triggerResetToMetadataFlow:
-            | { __typename?: 'FlowIncompatibleDatasetKind', expectedDatasetKind: DatasetKind, actualDatasetKind: DatasetKind, message: string }
-            | { __typename?: 'FlowInvalidRunConfigurations', error: string, message: string }
-            | { __typename?: 'FlowPreconditionsNotMet', message: string }
-            | { __typename?: 'TriggerFlowSuccess', message: string, flow: (
-                { __typename?: 'Flow' }
+export type DatasetTriggerResetToMetadataFlowMutation = { datasets: { __typename: 'DatasetsMut', byId?: { __typename: 'DatasetMut', flows: { __typename: 'DatasetFlowsMut', runs: { __typename: 'DatasetFlowRunsMut', triggerResetToMetadataFlow:
+            | { __typename: 'FlowIncompatibleDatasetKind', expectedDatasetKind: DatasetKind, actualDatasetKind: DatasetKind, message: string }
+            | { __typename: 'FlowInvalidRunConfigurations', error: string, message: string }
+            | { __typename: 'FlowPreconditionsNotMet', message: string }
+            | { __typename: 'TriggerFlowSuccess', message: string, flow: (
+                { __typename: 'Flow' }
                 & FlowSummaryDataFragment
               ) }
            } } } | null } };
@@ -8897,12 +8897,12 @@ export type DatasetTriggerTransformFlowMutationVariables = Exact<{
 }>;
 
 
-export type DatasetTriggerTransformFlowMutation = { __typename?: 'Mutation', datasets: { __typename?: 'DatasetsMut', byId?: { __typename?: 'DatasetMut', flows: { __typename?: 'DatasetFlowsMut', runs: { __typename?: 'DatasetFlowRunsMut', triggerTransformFlow:
-            | { __typename?: 'FlowIncompatibleDatasetKind', expectedDatasetKind: DatasetKind, actualDatasetKind: DatasetKind, message: string }
-            | { __typename?: 'FlowInvalidRunConfigurations', error: string, message: string }
-            | { __typename?: 'FlowPreconditionsNotMet', message: string }
-            | { __typename?: 'TriggerFlowSuccess', message: string, flow: (
-                { __typename?: 'Flow' }
+export type DatasetTriggerTransformFlowMutation = { datasets: { __typename: 'DatasetsMut', byId?: { __typename: 'DatasetMut', flows: { __typename: 'DatasetFlowsMut', runs: { __typename: 'DatasetFlowRunsMut', triggerTransformFlow:
+            | { __typename: 'FlowIncompatibleDatasetKind', expectedDatasetKind: DatasetKind, actualDatasetKind: DatasetKind, message: string }
+            | { __typename: 'FlowInvalidRunConfigurations', error: string, message: string }
+            | { __typename: 'FlowPreconditionsNotMet', message: string }
+            | { __typename: 'TriggerFlowSuccess', message: string, flow: (
+                { __typename: 'Flow' }
                 & FlowSummaryDataFragment
               ) }
            } } } | null } };
@@ -8912,240 +8912,240 @@ export type DatasetFlowsProcessesQueryVariables = Exact<{
 }>;
 
 
-export type DatasetFlowsProcessesQuery = { __typename?: 'Query', datasets: { __typename?: 'Datasets', byId?: { __typename?: 'Dataset', flows: { __typename?: 'DatasetFlows', processes: (
-          { __typename?: 'DatasetFlowProcesses' }
+export type DatasetFlowsProcessesQuery = { datasets: { __typename: 'Datasets', byId?: { __typename: 'Dataset', flows: { __typename: 'DatasetFlows', processes: (
+          { __typename: 'DatasetFlowProcesses' }
           & DatasetFlowProcessesDataFragment
         ) } } | null } };
 
-export type DatasetFlowProcessDataFragment = { __typename?: 'DatasetFlowProcess', flowType: DatasetFlowType, summary: (
-    { __typename?: 'FlowProcessSummary' }
+export type DatasetFlowProcessDataFragment = { __typename: 'DatasetFlowProcess', flowType: DatasetFlowType, summary: (
+    { __typename: 'FlowProcessSummary' }
     & FlowProcessSummaryDataFragment
   ) };
 
-export type DatasetFlowProcessesDataFragment = { __typename?: 'DatasetFlowProcesses', primary: (
-    { __typename?: 'DatasetFlowProcess' }
+export type DatasetFlowProcessesDataFragment = { __typename: 'DatasetFlowProcesses', primary: (
+    { __typename: 'DatasetFlowProcess' }
     & DatasetFlowProcessDataFragment
   ), webhooks: (
-    { __typename?: 'WebhookFlowSubProcessGroup' }
+    { __typename: 'WebhookFlowSubProcessGroup' }
     & WebhookFlowSubProcessGroupDataFragment
   ) };
 
-export type FlowProcessSummaryDataFragment = { __typename?: 'FlowProcessSummary', effectiveState: FlowProcessEffectiveState, consecutiveFailures: number, lastSuccessAt?: string | null, lastAttemptAt?: string | null, lastFailureAt?: string | null, nextPlannedAt?: string | null, autoStoppedReason?: FlowProcessAutoStopReason | null, autoStoppedAt?: string | null, runningSince?: string | null, pausedAt?: string | null, stopPolicy:
+export type FlowProcessSummaryDataFragment = { __typename: 'FlowProcessSummary', effectiveState: FlowProcessEffectiveState, consecutiveFailures: number, lastSuccessAt?: string | null, lastAttemptAt?: string | null, lastFailureAt?: string | null, nextPlannedAt?: string | null, autoStoppedReason?: FlowProcessAutoStopReason | null, autoStoppedAt?: string | null, runningSince?: string | null, pausedAt?: string | null, stopPolicy:
     | { __typename: 'FlowTriggerStopPolicyAfterConsecutiveFailures', maxFailures: number }
     | { __typename: 'FlowTriggerStopPolicyNever', dummy: boolean }
    };
 
-export type WebhookFlowSubProcessDataFragment = { __typename?: 'WebhookFlowSubProcess', id: string, name: string, summary: (
-    { __typename?: 'FlowProcessSummary' }
+export type WebhookFlowSubProcessDataFragment = { __typename: 'WebhookFlowSubProcess', id: string, name: string, summary: (
+    { __typename: 'FlowProcessSummary' }
     & FlowProcessSummaryDataFragment
   ) };
 
-export type WebhookFlowSubProcessGroupDataFragment = { __typename?: 'WebhookFlowSubProcessGroup', rollup: (
-    { __typename?: 'FlowProcessGroupRollup' }
+export type WebhookFlowSubProcessGroupDataFragment = { __typename: 'WebhookFlowSubProcessGroup', rollup: (
+    { __typename: 'FlowProcessGroupRollup' }
     & FlowProcessGroupRollupDataFragment
   ), subprocesses: Array<(
-    { __typename?: 'WebhookFlowSubProcess' }
+    { __typename: 'WebhookFlowSubProcess' }
     & WebhookFlowSubProcessDataFragment
   )> };
 
-export type AddDataEventFragment = { __typename?: 'AddData', prevCheckpoint?: string | null, prevOffset?: string | null, newWatermark?: string | null, newData?: (
-    { __typename?: 'DataSlice' }
+export type AddDataEventFragment = { __typename: 'AddData', prevCheckpoint?: string | null, prevOffset?: string | null, newWatermark?: string | null, newData?: (
+    { __typename: 'DataSlice' }
     & DataSliceDataFragment
-  ) | null, newCheckpoint?: { __typename?: 'Checkpoint', physicalHash: string, size: string } | null, newSourceState?: { __typename?: 'SourceState', sourceName: string, kind: string, value: string } | null };
+  ) | null, newCheckpoint?: { __typename: 'Checkpoint', physicalHash: string, size: string } | null, newSourceState?: { __typename: 'SourceState', sourceName: string, kind: string, value: string } | null };
 
-export type AddPushSourceEventFragment = { __typename?: 'AddPushSource', sourceName: string, read:
+export type AddPushSourceEventFragment = { __typename: 'AddPushSource', sourceName: string, read:
     | (
-      { __typename?: 'ReadStepCsv' }
+      { __typename: 'ReadStepCsv' }
       & ReadStepCsvDataFragment
     )
     | (
-      { __typename?: 'ReadStepEsriShapefile' }
+      { __typename: 'ReadStepEsriShapefile' }
       & ReadStepEsriShapefileDataFragment
     )
     | (
-      { __typename?: 'ReadStepGeoJson' }
+      { __typename: 'ReadStepGeoJson' }
       & ReadStepGeoJsonDataFragment
     )
     | (
-      { __typename?: 'ReadStepJson' }
+      { __typename: 'ReadStepJson' }
       & ReadStepJsonDataFragment
     )
     | (
-      { __typename?: 'ReadStepNdGeoJson' }
+      { __typename: 'ReadStepNdGeoJson' }
       & ReadStepNdGeoJsonDataFragment
     )
     | (
-      { __typename?: 'ReadStepNdJson' }
+      { __typename: 'ReadStepNdJson' }
       & ReadStepNdJsonDataFragment
     )
     | (
-      { __typename?: 'ReadStepParquet' }
+      { __typename: 'ReadStepParquet' }
       & ReadStepParquetDataFragment
     )
   , merge:
     | (
-      { __typename?: 'MergeStrategyAppend' }
+      { __typename: 'MergeStrategyAppend' }
       & MergeStrategyAppendDataFragment
     )
     | (
-      { __typename?: 'MergeStrategyChangelogStream' }
+      { __typename: 'MergeStrategyChangelogStream' }
       & MergeStrategyChangelogStreamDataFragment
     )
     | (
-      { __typename?: 'MergeStrategyLedger' }
+      { __typename: 'MergeStrategyLedger' }
       & MergeStrategyLedgerDataFragment
     )
     | (
-      { __typename?: 'MergeStrategySnapshot' }
+      { __typename: 'MergeStrategySnapshot' }
       & MergeStrategySnapshotDataFragment
     )
     | (
-      { __typename?: 'MergeStrategyUpsertStream' }
+      { __typename: 'MergeStrategyUpsertStream' }
       & MergeStrategyUpsertStreamDataFragment
     )
   , preprocess?: (
-    { __typename?: 'TransformSql' }
+    { __typename: 'TransformSql' }
     & PreprocessStepDataFragment
   ) | null };
 
-export type DataSchemaInfoFragment = { __typename?: 'DataSchema', format: DataSchemaFormat, content: string };
+export type DataSchemaInfoFragment = { __typename: 'DataSchema', format: DataSchemaFormat, content: string };
 
-export type DataSliceDataFragment = { __typename?: 'DataSlice', logicalHash: string, physicalHash: string, size: string, offsetInterval: (
-    { __typename?: 'OffsetInterval' }
+export type DataSliceDataFragment = { __typename: 'DataSlice', logicalHash: string, physicalHash: string, size: string, offsetInterval: (
+    { __typename: 'OffsetInterval' }
     & OffsetIntervalDataFragment
   ) };
 
-export type DisablePollingSourceEventFragment = { __typename?: 'DisablePollingSource', dummy?: string | null };
+export type DisablePollingSourceEventFragment = { __typename: 'DisablePollingSource', dummy?: string | null };
 
-export type ExecuteTransformEventFragment = { __typename?: 'ExecuteTransform', prevCheckpoint?: string | null, prevOffset?: string | null, newWatermark?: string | null, queryInputs: Array<{ __typename?: 'ExecuteTransformInput', datasetId: string, prevBlockHash?: string | null, newBlockHash?: string | null, prevOffset?: string | null, newOffset?: string | null }>, newData?: (
-    { __typename?: 'DataSlice' }
+export type ExecuteTransformEventFragment = { __typename: 'ExecuteTransform', prevCheckpoint?: string | null, prevOffset?: string | null, newWatermark?: string | null, queryInputs: Array<{ __typename: 'ExecuteTransformInput', datasetId: string, prevBlockHash?: string | null, newBlockHash?: string | null, prevOffset?: string | null, newOffset?: string | null }>, newData?: (
+    { __typename: 'DataSlice' }
     & DataSliceDataFragment
-  ) | null, newCheckpoint?: { __typename?: 'Checkpoint', physicalHash: string, size: string } | null };
+  ) | null, newCheckpoint?: { __typename: 'Checkpoint', physicalHash: string, size: string } | null };
 
-export type OffsetIntervalDataFragment = { __typename?: 'OffsetInterval', start: string, end: string };
+export type OffsetIntervalDataFragment = { __typename: 'OffsetInterval', start: string, end: string };
 
-export type SeedEventFragment = { __typename?: 'Seed', datasetId: string, datasetKind: DatasetKind };
+export type SeedEventFragment = { __typename: 'Seed', datasetId: string, datasetKind: DatasetKind };
 
-export type SetAttachmentsEventFragment = { __typename?: 'SetAttachments', attachments: { __typename?: 'AttachmentsEmbedded', items: Array<{ __typename?: 'AttachmentEmbedded', path: string, content: string }> } };
+export type SetAttachmentsEventFragment = { __typename: 'SetAttachments', attachments: { __typename: 'AttachmentsEmbedded', items: Array<{ __typename: 'AttachmentEmbedded', path: string, content: string }> } };
 
-export type SetDataSchemaEventFragment = { __typename?: 'SetDataSchema', schema: (
-    { __typename?: 'DataSchema' }
+export type SetDataSchemaEventFragment = { __typename: 'SetDataSchema', schema: (
+    { __typename: 'DataSchema' }
     & DataSchemaInfoFragment
   ) };
 
-export type SetLicenseEventFragment = { __typename?: 'SetLicense', shortName: string, name: string, spdxId?: string | null, websiteUrl: string };
+export type SetLicenseEventFragment = { __typename: 'SetLicense', shortName: string, name: string, spdxId?: string | null, websiteUrl: string };
 
-export type SetPollingSourceFetchDataFragment = { __typename?: 'SetPollingSource', fetch:
+export type SetPollingSourceFetchDataFragment = { __typename: 'SetPollingSource', fetch:
     | (
-      { __typename?: 'FetchStepContainer' }
+      { __typename: 'FetchStepContainer' }
       & FetchStepContainerDataFragment
     )
-    | { __typename?: 'FetchStepEthereumLogs' }
+    | { __typename: 'FetchStepEthereumLogs' }
     | (
-      { __typename?: 'FetchStepFilesGlob' }
+      { __typename: 'FetchStepFilesGlob' }
       & FetchStepFilesGlobDataFragment
     )
-    | { __typename?: 'FetchStepMqtt' }
+    | { __typename: 'FetchStepMqtt' }
     | (
-      { __typename?: 'FetchStepUrl' }
+      { __typename: 'FetchStepUrl' }
       & FetchStepUrlDataFragment
     )
    };
 
-export type SetPollingSourceEventFragment = { __typename?: 'SetPollingSource', fetch:
+export type SetPollingSourceEventFragment = { __typename: 'SetPollingSource', fetch:
     | (
-      { __typename?: 'FetchStepContainer' }
+      { __typename: 'FetchStepContainer' }
       & FetchStepContainerDataFragment
     )
     | (
-      { __typename?: 'FetchStepEthereumLogs' }
+      { __typename: 'FetchStepEthereumLogs' }
       & FetchStepEthereumLogsDataFragment
     )
     | (
-      { __typename?: 'FetchStepFilesGlob' }
+      { __typename: 'FetchStepFilesGlob' }
       & FetchStepFilesGlobDataFragment
     )
     | (
-      { __typename?: 'FetchStepMqtt' }
+      { __typename: 'FetchStepMqtt' }
       & FetchStepMqttDataFragment
     )
     | (
-      { __typename?: 'FetchStepUrl' }
+      { __typename: 'FetchStepUrl' }
       & FetchStepUrlDataFragment
     )
   , read:
     | (
-      { __typename?: 'ReadStepCsv' }
+      { __typename: 'ReadStepCsv' }
       & ReadStepCsvDataFragment
     )
     | (
-      { __typename?: 'ReadStepEsriShapefile' }
+      { __typename: 'ReadStepEsriShapefile' }
       & ReadStepEsriShapefileDataFragment
     )
     | (
-      { __typename?: 'ReadStepGeoJson' }
+      { __typename: 'ReadStepGeoJson' }
       & ReadStepGeoJsonDataFragment
     )
     | (
-      { __typename?: 'ReadStepJson' }
+      { __typename: 'ReadStepJson' }
       & ReadStepJsonDataFragment
     )
     | (
-      { __typename?: 'ReadStepNdGeoJson' }
+      { __typename: 'ReadStepNdGeoJson' }
       & ReadStepNdGeoJsonDataFragment
     )
     | (
-      { __typename?: 'ReadStepNdJson' }
+      { __typename: 'ReadStepNdJson' }
       & ReadStepNdJsonDataFragment
     )
     | (
-      { __typename?: 'ReadStepParquet' }
+      { __typename: 'ReadStepParquet' }
       & ReadStepParquetDataFragment
     )
   , merge:
     | (
-      { __typename?: 'MergeStrategyAppend' }
+      { __typename: 'MergeStrategyAppend' }
       & MergeStrategyAppendDataFragment
     )
     | (
-      { __typename?: 'MergeStrategyChangelogStream' }
+      { __typename: 'MergeStrategyChangelogStream' }
       & MergeStrategyChangelogStreamDataFragment
     )
     | (
-      { __typename?: 'MergeStrategyLedger' }
+      { __typename: 'MergeStrategyLedger' }
       & MergeStrategyLedgerDataFragment
     )
     | (
-      { __typename?: 'MergeStrategySnapshot' }
+      { __typename: 'MergeStrategySnapshot' }
       & MergeStrategySnapshotDataFragment
     )
     | (
-      { __typename?: 'MergeStrategyUpsertStream' }
+      { __typename: 'MergeStrategyUpsertStream' }
       & MergeStrategyUpsertStreamDataFragment
     )
   , prepare?: Array<
     | (
-      { __typename?: 'PrepStepDecompress' }
+      { __typename: 'PrepStepDecompress' }
       & PrepStepDecompressDataFragment
     )
     | (
-      { __typename?: 'PrepStepPipe' }
+      { __typename: 'PrepStepPipe' }
       & PrepStepPipeDataFragment
     )
   > | null, preprocess?: (
-    { __typename?: 'TransformSql' }
+    { __typename: 'TransformSql' }
     & PreprocessStepDataFragment
   ) | null };
 
-export type SetTransformEngineDataFragment = { __typename?: 'SetTransform', inputs: Array<{ __typename: 'TransformInput' }>, transform: { __typename?: 'TransformSql', engine: string } };
+export type SetTransformEngineDataFragment = { __typename: 'SetTransform', inputs: Array<{ __typename: 'TransformInput' }>, transform: { __typename: 'TransformSql', engine: string } };
 
-export type SetVocabEventFragment = { __typename?: 'SetVocab', offsetColumn?: string | null, operationTypeColumn?: string | null, systemTimeColumn?: string | null, eventTimeColumn?: string | null };
+export type SetVocabEventFragment = { __typename: 'SetVocab', offsetColumn?: string | null, operationTypeColumn?: string | null, systemTimeColumn?: string | null, eventTimeColumn?: string | null };
 
-export type EnvVarDataFragment = { __typename?: 'EnvVar', name: string, value?: string | null };
+export type EnvVarDataFragment = { __typename: 'EnvVar', name: string, value?: string | null };
 
 type EventTimeSourceData_EventTimeSourceFromMetadata_Fragment = { __typename: 'EventTimeSourceFromMetadata' };
 
-type EventTimeSourceData_EventTimeSourceFromPath_Fragment = { __typename?: 'EventTimeSourceFromPath', pattern: string, timestampFormat?: string | null };
+type EventTimeSourceData_EventTimeSourceFromPath_Fragment = { __typename: 'EventTimeSourceFromPath', pattern: string, timestampFormat?: string | null };
 
 type EventTimeSourceData_EventTimeSourceFromSystemTime_Fragment = { __typename: 'EventTimeSourceFromSystemTime' };
 
@@ -9155,165 +9155,165 @@ export type EventTimeSourceDataFragment =
   | EventTimeSourceData_EventTimeSourceFromSystemTime_Fragment
 ;
 
-export type FetchStepContainerDataFragment = { __typename?: 'FetchStepContainer', image: string, command?: Array<string> | null, args?: Array<string> | null, env?: Array<(
-    { __typename?: 'EnvVar' }
+export type FetchStepContainerDataFragment = { __typename: 'FetchStepContainer', image: string, command?: Array<string> | null, args?: Array<string> | null, env?: Array<(
+    { __typename: 'EnvVar' }
     & EnvVarDataFragment
   )> | null };
 
-export type FetchStepEthereumLogsDataFragment = { __typename?: 'FetchStepEthereumLogs', chainId?: string | null, nodeUrl?: string | null, filter?: string | null, signature?: string | null };
+export type FetchStepEthereumLogsDataFragment = { __typename: 'FetchStepEthereumLogs', chainId?: string | null, nodeUrl?: string | null, filter?: string | null, signature?: string | null };
 
-export type FetchStepFilesGlobDataFragment = { __typename?: 'FetchStepFilesGlob', path: string, order?: SourceOrdering | null, eventTime?:
+export type FetchStepFilesGlobDataFragment = { __typename: 'FetchStepFilesGlob', path: string, order?: SourceOrdering | null, eventTime?:
     | (
-      { __typename?: 'EventTimeSourceFromMetadata' }
+      { __typename: 'EventTimeSourceFromMetadata' }
       & EventTimeSourceData_EventTimeSourceFromMetadata_Fragment
     )
     | (
-      { __typename?: 'EventTimeSourceFromPath' }
+      { __typename: 'EventTimeSourceFromPath' }
       & EventTimeSourceData_EventTimeSourceFromPath_Fragment
     )
     | (
-      { __typename?: 'EventTimeSourceFromSystemTime' }
+      { __typename: 'EventTimeSourceFromSystemTime' }
       & EventTimeSourceData_EventTimeSourceFromSystemTime_Fragment
     )
    | null, cache?: { __typename: 'SourceCachingForever' } | null };
 
-export type FetchStepMqttDataFragment = { __typename?: 'FetchStepMqtt', host: string, port: number, username?: string | null, password?: string | null, topics: Array<(
-    { __typename?: 'MqttTopicSubscription' }
+export type FetchStepMqttDataFragment = { __typename: 'FetchStepMqtt', host: string, port: number, username?: string | null, password?: string | null, topics: Array<(
+    { __typename: 'MqttTopicSubscription' }
     & MqttTopicSubscriptionDataFragment
   )> };
 
-export type FetchStepUrlDataFragment = { __typename?: 'FetchStepUrl', url: string, eventTime?:
+export type FetchStepUrlDataFragment = { __typename: 'FetchStepUrl', url: string, eventTime?:
     | (
-      { __typename?: 'EventTimeSourceFromMetadata' }
+      { __typename: 'EventTimeSourceFromMetadata' }
       & EventTimeSourceData_EventTimeSourceFromMetadata_Fragment
     )
     | (
-      { __typename?: 'EventTimeSourceFromPath' }
+      { __typename: 'EventTimeSourceFromPath' }
       & EventTimeSourceData_EventTimeSourceFromPath_Fragment
     )
     | (
-      { __typename?: 'EventTimeSourceFromSystemTime' }
+      { __typename: 'EventTimeSourceFromSystemTime' }
       & EventTimeSourceData_EventTimeSourceFromSystemTime_Fragment
     )
    | null, headers?: Array<(
-    { __typename?: 'RequestHeader' }
+    { __typename: 'RequestHeader' }
     & RequestHeaderDataFragment
   )> | null, cache?: { __typename: 'SourceCachingForever' } | null };
 
-export type MqttTopicSubscriptionDataFragment = { __typename?: 'MqttTopicSubscription', path: string, qos?: MqttQos | null };
+export type MqttTopicSubscriptionDataFragment = { __typename: 'MqttTopicSubscription', path: string, qos?: MqttQos | null };
 
-export type RequestHeaderDataFragment = { __typename?: 'RequestHeader', name: string, value: string };
+export type RequestHeaderDataFragment = { __typename: 'RequestHeader', name: string, value: string };
 
 export type MergeStrategyAppendDataFragment = { __typename: 'MergeStrategyAppend' };
 
-export type MergeStrategyChangelogStreamDataFragment = { __typename?: 'MergeStrategyChangelogStream', primaryKey: Array<string> };
+export type MergeStrategyChangelogStreamDataFragment = { __typename: 'MergeStrategyChangelogStream', primaryKey: Array<string> };
 
-export type MergeStrategyLedgerDataFragment = { __typename?: 'MergeStrategyLedger', primaryKey: Array<string> };
+export type MergeStrategyLedgerDataFragment = { __typename: 'MergeStrategyLedger', primaryKey: Array<string> };
 
-export type MergeStrategySnapshotDataFragment = { __typename?: 'MergeStrategySnapshot', primaryKey: Array<string>, compareColumns?: Array<string> | null };
+export type MergeStrategySnapshotDataFragment = { __typename: 'MergeStrategySnapshot', primaryKey: Array<string>, compareColumns?: Array<string> | null };
 
-export type MergeStrategyUpsertStreamDataFragment = { __typename?: 'MergeStrategyUpsertStream', primaryKey: Array<string> };
+export type MergeStrategyUpsertStreamDataFragment = { __typename: 'MergeStrategyUpsertStream', primaryKey: Array<string> };
 
-export type PrepStepDecompressDataFragment = { __typename?: 'PrepStepDecompress', format: CompressionFormat, subPath?: string | null };
+export type PrepStepDecompressDataFragment = { __typename: 'PrepStepDecompress', format: CompressionFormat, subPath?: string | null };
 
-export type PrepStepPipeDataFragment = { __typename?: 'PrepStepPipe', command: Array<string> };
+export type PrepStepPipeDataFragment = { __typename: 'PrepStepPipe', command: Array<string> };
 
-export type PreprocessStepDataFragment = { __typename?: 'TransformSql', engine: string, version?: string | null, queries: Array<(
-    { __typename?: 'SqlQueryStep' }
+export type PreprocessStepDataFragment = { __typename: 'TransformSql', engine: string, version?: string | null, queries: Array<(
+    { __typename: 'SqlQueryStep' }
     & SqlQueryStepDataFragment
   )>, temporalTables?: Array<(
-    { __typename?: 'TemporalTable' }
+    { __typename: 'TemporalTable' }
     & TemporalTableDataFragment
   )> | null };
 
-export type ReadStepCsvDataFragment = { __typename?: 'ReadStepCsv', separator?: string | null, encoding?: string | null, quote?: string | null, escape?: string | null, header?: boolean | null, inferSchema?: boolean | null, nullValue?: string | null, dateFormat?: string | null, timestampFormat?: string | null, schema?: (
-    { __typename?: 'DataSchema' }
+export type ReadStepCsvDataFragment = { __typename: 'ReadStepCsv', separator?: string | null, encoding?: string | null, quote?: string | null, escape?: string | null, header?: boolean | null, inferSchema?: boolean | null, nullValue?: string | null, dateFormat?: string | null, timestampFormat?: string | null, schema?: (
+    { __typename: 'DataSchema' }
     & DataSchemaInfoFragment
   ) | null };
 
-export type ReadStepEsriShapefileDataFragment = { __typename?: 'ReadStepEsriShapefile', subPath?: string | null, schema?: (
-    { __typename?: 'DataSchema' }
+export type ReadStepEsriShapefileDataFragment = { __typename: 'ReadStepEsriShapefile', subPath?: string | null, schema?: (
+    { __typename: 'DataSchema' }
     & DataSchemaInfoFragment
   ) | null };
 
-export type ReadStepGeoJsonDataFragment = { __typename?: 'ReadStepGeoJson', schema?: (
-    { __typename?: 'DataSchema' }
+export type ReadStepGeoJsonDataFragment = { __typename: 'ReadStepGeoJson', schema?: (
+    { __typename: 'DataSchema' }
     & DataSchemaInfoFragment
   ) | null };
 
-export type ReadStepJsonDataFragment = { __typename?: 'ReadStepJson', subPath?: string | null, dateFormat?: string | null, encoding?: string | null, timestampFormat?: string | null, schema?: (
-    { __typename?: 'DataSchema' }
+export type ReadStepJsonDataFragment = { __typename: 'ReadStepJson', subPath?: string | null, dateFormat?: string | null, encoding?: string | null, timestampFormat?: string | null, schema?: (
+    { __typename: 'DataSchema' }
     & DataSchemaInfoFragment
   ) | null };
 
-export type ReadStepNdGeoJsonDataFragment = { __typename?: 'ReadStepNdGeoJson', schema?: (
-    { __typename?: 'DataSchema' }
+export type ReadStepNdGeoJsonDataFragment = { __typename: 'ReadStepNdGeoJson', schema?: (
+    { __typename: 'DataSchema' }
     & DataSchemaInfoFragment
   ) | null };
 
-export type ReadStepNdJsonDataFragment = { __typename?: 'ReadStepNdJson', dateFormat?: string | null, encoding?: string | null, timestampFormat?: string | null, schema?: (
-    { __typename?: 'DataSchema' }
+export type ReadStepNdJsonDataFragment = { __typename: 'ReadStepNdJson', dateFormat?: string | null, encoding?: string | null, timestampFormat?: string | null, schema?: (
+    { __typename: 'DataSchema' }
     & DataSchemaInfoFragment
   ) | null };
 
-export type ReadStepParquetDataFragment = { __typename?: 'ReadStepParquet', schema?: (
-    { __typename?: 'DataSchema' }
+export type ReadStepParquetDataFragment = { __typename: 'ReadStepParquet', schema?: (
+    { __typename: 'DataSchema' }
     & DataSchemaInfoFragment
   ) | null };
 
-export type AccessTokenDataFragment = { __typename?: 'ViewAccessToken', id: string, name: string, createdAt: string, revokedAt?: string | null, account: (
-    { __typename?: 'Account' }
+export type AccessTokenDataFragment = { __typename: 'ViewAccessToken', id: string, name: string, createdAt: string, revokedAt?: string | null, account: (
+    { __typename: 'Account' }
     & AccountFragment
   ) };
 
-export type BlockRefDataFragment = { __typename?: 'BlockRef', name: string, blockHash: string };
+export type BlockRefDataFragment = { __typename: 'BlockRef', name: string, blockHash: string };
 
-export type CurrentSourceFetchUrlFragment = { __typename?: 'DatasetMetadata', currentPollingSource?: { __typename?: 'SetPollingSource', fetch:
+export type CurrentSourceFetchUrlFragment = { __typename: 'DatasetMetadata', currentPollingSource?: { __typename: 'SetPollingSource', fetch:
       | (
-        { __typename?: 'FetchStepContainer' }
+        { __typename: 'FetchStepContainer' }
         & FetchStepData_FetchStepContainer_Fragment
       )
       | (
-        { __typename?: 'FetchStepEthereumLogs' }
+        { __typename: 'FetchStepEthereumLogs' }
         & FetchStepData_FetchStepEthereumLogs_Fragment
       )
       | (
-        { __typename?: 'FetchStepFilesGlob' }
+        { __typename: 'FetchStepFilesGlob' }
         & FetchStepData_FetchStepFilesGlob_Fragment
       )
       | (
-        { __typename?: 'FetchStepMqtt' }
+        { __typename: 'FetchStepMqtt' }
         & FetchStepData_FetchStepMqtt_Fragment
       )
       | (
-        { __typename?: 'FetchStepUrl' }
+        { __typename: 'FetchStepUrl' }
         & FetchStepData_FetchStepUrl_Fragment
       )
      } | null };
 
-export type DataQueryResultSuccessViewFragment = { __typename?: 'DataQueryResultSuccess', schema: { __typename?: 'DataSchema', format: DataSchemaFormat, content: string }, data: { __typename?: 'DataBatch', format: DataBatchFormat, content: string }, datasets: Array<{ __typename?: 'DatasetState', id: string, alias: string, blockHash?: string | null }> };
+export type DataQueryResultSuccessViewFragment = { __typename: 'DataQueryResultSuccess', schema: { __typename: 'DataSchema', format: DataSchemaFormat, content: string }, data: { __typename: 'DataBatch', format: DataBatchFormat, content: string }, datasets: Array<{ __typename: 'DatasetState', id: string, alias: string, blockHash?: string | null }> };
 
-export type DatasetAccessResultNotAccessibleDataFragment = { __typename?: 'DatasetAccessResultNotAccessible', id: string };
+export type DatasetAccessResultNotAccessibleDataFragment = { __typename: 'DatasetAccessResultNotAccessible', id: string };
 
-export type DatasetBasicsFragment = { __typename?: 'Dataset', id: string, kind: DatasetKind, name: string, alias: string, owner: (
-    { __typename?: 'Account' }
+export type DatasetBasicsFragment = { __typename: 'Dataset', id: string, kind: DatasetKind, name: string, alias: string, owner: (
+    { __typename: 'Account' }
     & AccountBasicsFragment
   ), visibility:
     | (
-      { __typename?: 'PrivateDatasetVisibility' }
+      { __typename: 'PrivateDatasetVisibility' }
       & DatasetVisibilityOutputData_PrivateDatasetVisibility_Fragment
     )
     | (
-      { __typename?: 'PublicDatasetVisibility' }
+      { __typename: 'PublicDatasetVisibility' }
       & DatasetVisibilityOutputData_PublicDatasetVisibility_Fragment
     )
    };
 
-export type DatasetCurrentInfoFragment = { __typename?: 'SetInfo', description?: string | null, keywords?: Array<string> | null };
+export type DatasetCurrentInfoFragment = { __typename: 'SetInfo', description?: string | null, keywords?: Array<string> | null };
 
-export type DatasetDataSizeFragment = { __typename?: 'DatasetData', numRecordsTotal: number, estimatedSizeBytes: number };
+export type DatasetDataSizeFragment = { __typename: 'DatasetData', numRecordsTotal: number, estimatedSizeBytes: number };
 
-export type DatasetDataFragment = { __typename?: 'Dataset', data: (
+export type DatasetDataFragment = { __typename: 'Dataset', data: (
     { __typename: 'DatasetData', tail:
       | { __typename: 'DataQueryResultError', errorMessage: string, errorKind: DataQueryResultErrorKind }
       | (
@@ -9324,77 +9324,77 @@ export type DatasetDataFragment = { __typename?: 'Dataset', data: (
     & DatasetDataSizeFragment
   ) };
 
-export type DatasetDescriptionFragment = { __typename?: 'Dataset', metadata: { __typename?: 'DatasetMetadata', currentInfo: (
-      { __typename?: 'SetInfo' }
+export type DatasetDescriptionFragment = { __typename: 'Dataset', metadata: { __typename: 'DatasetMetadata', currentInfo: (
+      { __typename: 'SetInfo' }
       & DatasetCurrentInfoFragment
     ), currentLicense?: (
-      { __typename?: 'SetLicense' }
+      { __typename: 'SetLicense' }
       & LicenseFragment
     ) | null } };
 
-export type DatasetDetailsFragment = { __typename?: 'Dataset', createdAt: string, lastUpdatedAt: string, data: { __typename?: 'DatasetData', estimatedSizeBytes: number, numRecordsTotal: number }, metadata: { __typename?: 'DatasetMetadata', currentWatermark?: string | null, currentLicense?: (
-      { __typename?: 'SetLicense' }
+export type DatasetDetailsFragment = { __typename: 'Dataset', createdAt: string, lastUpdatedAt: string, data: { __typename: 'DatasetData', estimatedSizeBytes: number, numRecordsTotal: number }, metadata: { __typename: 'DatasetMetadata', currentWatermark?: string | null, currentLicense?: (
+      { __typename: 'SetLicense' }
       & LicenseFragment
     ) | null } };
 
-export type DatasetEndpointsDataFragment = { __typename?: 'DatasetEndpoints', cli: (
-    { __typename?: 'CliProtocolDesc' }
+export type DatasetEndpointsDataFragment = { __typename: 'DatasetEndpoints', cli: (
+    { __typename: 'CliProtocolDesc' }
     & CliProtocolDescDataFragment
   ), webLink: (
-    { __typename?: 'LinkProtocolDesc' }
+    { __typename: 'LinkProtocolDesc' }
     & LinkProtocolDescDataFragment
   ), rest: (
-    { __typename?: 'RestProtocolDesc' }
+    { __typename: 'RestProtocolDesc' }
     & RestProtocolDescDataFragment
   ), flightsql: (
-    { __typename?: 'FlightSqlDesc' }
+    { __typename: 'FlightSqlDesc' }
     & FlightSqlDescDataFragment
   ), jdbc: (
-    { __typename?: 'JdbcDesc' }
+    { __typename: 'JdbcDesc' }
     & JdbcDescDataFragment
   ), postgresql: (
-    { __typename?: 'PostgreSqlDesl' }
+    { __typename: 'PostgreSqlDesl' }
     & PostgreSqlDeslDataFragment
   ), kafka: (
-    { __typename?: 'KafkaProtocolDesc' }
+    { __typename: 'KafkaProtocolDesc' }
     & KafkaProtocolDescDataFragment
   ), websocket: (
-    { __typename?: 'WebSocketProtocolDesc' }
+    { __typename: 'WebSocketProtocolDesc' }
     & WebSocketProtocolDescDataFragment
   ), odata: (
-    { __typename?: 'OdataProtocolDesc' }
+    { __typename: 'OdataProtocolDesc' }
     & OdataProtocolDescDataFragment
   ) };
 
-export type CliProtocolDescDataFragment = { __typename?: 'CliProtocolDesc', pullCommand: string, pushCommand: string };
+export type CliProtocolDescDataFragment = { __typename: 'CliProtocolDesc', pullCommand: string, pushCommand: string };
 
-export type LinkProtocolDescDataFragment = { __typename?: 'LinkProtocolDesc', url: string };
+export type LinkProtocolDescDataFragment = { __typename: 'LinkProtocolDesc', url: string };
 
-export type RestProtocolDescDataFragment = { __typename?: 'RestProtocolDesc', tailUrl: string, queryUrl: string, pushUrl: string };
+export type RestProtocolDescDataFragment = { __typename: 'RestProtocolDesc', tailUrl: string, queryUrl: string, pushUrl: string };
 
-export type FlightSqlDescDataFragment = { __typename?: 'FlightSqlDesc', url: string };
+export type FlightSqlDescDataFragment = { __typename: 'FlightSqlDesc', url: string };
 
-export type JdbcDescDataFragment = { __typename?: 'JdbcDesc', url: string };
+export type JdbcDescDataFragment = { __typename: 'JdbcDesc', url: string };
 
-export type PostgreSqlDeslDataFragment = { __typename?: 'PostgreSqlDesl', url: string };
+export type PostgreSqlDeslDataFragment = { __typename: 'PostgreSqlDesl', url: string };
 
-export type KafkaProtocolDescDataFragment = { __typename?: 'KafkaProtocolDesc', url: string };
+export type KafkaProtocolDescDataFragment = { __typename: 'KafkaProtocolDesc', url: string };
 
-export type WebSocketProtocolDescDataFragment = { __typename?: 'WebSocketProtocolDesc', url: string };
+export type WebSocketProtocolDescDataFragment = { __typename: 'WebSocketProtocolDesc', url: string };
 
-export type OdataProtocolDescDataFragment = { __typename?: 'OdataProtocolDesc', serviceUrl: string, collectionUrl: string };
+export type OdataProtocolDescDataFragment = { __typename: 'OdataProtocolDesc', serviceUrl: string, collectionUrl: string };
 
-export type DatasetLastUpdateFragment = { __typename?: 'Dataset', metadata: { __typename?: 'DatasetMetadata', chain: { __typename?: 'MetadataChain', blocks: { __typename?: 'MetadataBlockConnection', totalCount: number, nodes: Array<(
-          { __typename?: 'MetadataBlockExtended' }
+export type DatasetLastUpdateFragment = { __typename: 'Dataset', metadata: { __typename: 'DatasetMetadata', chain: { __typename: 'MetadataChain', blocks: { __typename: 'MetadataBlockConnection', totalCount: number, nodes: Array<(
+          { __typename: 'MetadataBlockExtended' }
           & MetadataBlockFragment
         )>, pageInfo: (
-          { __typename?: 'PageBasedInfo' }
+          { __typename: 'PageBasedInfo' }
           & DatasetPageInfoFragment
         ) } } } };
 
 export type DatasetLineageMetadataDataFragment = (
-  { __typename?: 'DatasetMetadata', currentWatermark?: string | null, currentPushSources: Array<{ __typename?: 'AddPushSource', sourceName: string }>, currentLicense?: (
-    { __typename?: 'SetLicense' }
+  { __typename: 'DatasetMetadata', currentWatermark?: string | null, currentPushSources: Array<{ __typename: 'AddPushSource', sourceName: string }>, currentLicense?: (
+    { __typename: 'SetLicense' }
     & LicenseFragment
   ) | null }
   & CurrentSourceFetchUrlFragment
@@ -9402,44 +9402,44 @@ export type DatasetLineageMetadataDataFragment = (
 
 export type DatasetLineageFragment = (
   { __typename: 'Dataset', metadata: (
-    { __typename?: 'DatasetMetadata', currentWatermark?: string | null, currentPushSources: Array<{ __typename?: 'AddPushSource', sourceName: string }>, currentLicense?: (
-      { __typename?: 'SetLicense' }
+    { __typename: 'DatasetMetadata', currentWatermark?: string | null, currentPushSources: Array<{ __typename: 'AddPushSource', sourceName: string }>, currentLicense?: (
+      { __typename: 'SetLicense' }
       & LicenseFragment
     ) | null, currentUpstreamDependencies: Array<
       | { __typename: 'DatasetAccessResultAccessible', dataset: (
-          { __typename?: 'Dataset', metadata: (
-            { __typename?: 'DatasetMetadata', currentWatermark?: string | null, currentPushSources: Array<{ __typename?: 'AddPushSource', sourceName: string }>, currentLicense?: (
-              { __typename?: 'SetLicense' }
+          { __typename: 'Dataset', metadata: (
+            { __typename: 'DatasetMetadata', currentWatermark?: string | null, currentPushSources: Array<{ __typename: 'AddPushSource', sourceName: string }>, currentLicense?: (
+              { __typename: 'SetLicense' }
               & LicenseFragment
             ) | null, currentUpstreamDependencies: Array<
               | { __typename: 'DatasetAccessResultAccessible', dataset: (
-                  { __typename?: 'Dataset', metadata: (
-                    { __typename?: 'DatasetMetadata', currentWatermark?: string | null, currentPushSources: Array<{ __typename?: 'AddPushSource', sourceName: string }>, currentLicense?: (
-                      { __typename?: 'SetLicense' }
+                  { __typename: 'Dataset', metadata: (
+                    { __typename: 'DatasetMetadata', currentWatermark?: string | null, currentPushSources: Array<{ __typename: 'AddPushSource', sourceName: string }>, currentLicense?: (
+                      { __typename: 'SetLicense' }
                       & LicenseFragment
                     ) | null, currentUpstreamDependencies: Array<
                       | { __typename: 'DatasetAccessResultAccessible', dataset: (
-                          { __typename?: 'Dataset', metadata: (
-                            { __typename?: 'DatasetMetadata', currentWatermark?: string | null, currentPushSources: Array<{ __typename?: 'AddPushSource', sourceName: string }>, currentLicense?: (
-                              { __typename?: 'SetLicense' }
+                          { __typename: 'Dataset', metadata: (
+                            { __typename: 'DatasetMetadata', currentWatermark?: string | null, currentPushSources: Array<{ __typename: 'AddPushSource', sourceName: string }>, currentLicense?: (
+                              { __typename: 'SetLicense' }
                               & LicenseFragment
                             ) | null, currentUpstreamDependencies: Array<
                               | { __typename: 'DatasetAccessResultAccessible', dataset: (
-                                  { __typename?: 'Dataset', metadata: (
-                                    { __typename?: 'DatasetMetadata', currentWatermark?: string | null, currentPushSources: Array<{ __typename?: 'AddPushSource', sourceName: string }>, currentLicense?: (
-                                      { __typename?: 'SetLicense' }
+                                  { __typename: 'Dataset', metadata: (
+                                    { __typename: 'DatasetMetadata', currentWatermark?: string | null, currentPushSources: Array<{ __typename: 'AddPushSource', sourceName: string }>, currentLicense?: (
+                                      { __typename: 'SetLicense' }
                                       & LicenseFragment
                                     ) | null, currentUpstreamDependencies: Array<
                                       | { __typename: 'DatasetAccessResultAccessible', dataset: (
-                                          { __typename?: 'Dataset', metadata: (
-                                            { __typename?: 'DatasetMetadata', currentWatermark?: string | null, currentPushSources: Array<{ __typename?: 'AddPushSource', sourceName: string }>, currentLicense?: (
-                                              { __typename?: 'SetLicense' }
+                                          { __typename: 'Dataset', metadata: (
+                                            { __typename: 'DatasetMetadata', currentWatermark?: string | null, currentPushSources: Array<{ __typename: 'AddPushSource', sourceName: string }>, currentLicense?: (
+                                              { __typename: 'SetLicense' }
                                               & LicenseFragment
                                             ) | null, currentUpstreamDependencies: Array<
                                               | { __typename: 'DatasetAccessResultAccessible', dataset: (
-                                                  { __typename?: 'Dataset', metadata: (
-                                                    { __typename?: 'DatasetMetadata', currentWatermark?: string | null, currentPushSources: Array<{ __typename?: 'AddPushSource', sourceName: string }>, currentLicense?: (
-                                                      { __typename?: 'SetLicense' }
+                                                  { __typename: 'Dataset', metadata: (
+                                                    { __typename: 'DatasetMetadata', currentWatermark?: string | null, currentPushSources: Array<{ __typename: 'AddPushSource', sourceName: string }>, currentLicense?: (
+                                                      { __typename: 'SetLicense' }
                                                       & LicenseFragment
                                                     ) | null }
                                                     & CurrentSourceFetchUrlFragment
@@ -9497,15 +9497,15 @@ export type DatasetLineageFragment = (
       )
     >, currentDownstreamDependencies: Array<
       | { __typename: 'DatasetAccessResultAccessible', dataset: (
-          { __typename?: 'Dataset', metadata: { __typename?: 'DatasetMetadata', currentPushSources: Array<{ __typename?: 'AddPushSource', sourceName: string }>, currentDownstreamDependencies: Array<
+          { __typename: 'Dataset', metadata: { __typename: 'DatasetMetadata', currentPushSources: Array<{ __typename: 'AddPushSource', sourceName: string }>, currentDownstreamDependencies: Array<
               | { __typename: 'DatasetAccessResultAccessible', dataset: (
-                  { __typename?: 'Dataset', metadata: { __typename?: 'DatasetMetadata', currentPushSources: Array<{ __typename?: 'AddPushSource', sourceName: string }>, currentDownstreamDependencies: Array<
+                  { __typename: 'Dataset', metadata: { __typename: 'DatasetMetadata', currentPushSources: Array<{ __typename: 'AddPushSource', sourceName: string }>, currentDownstreamDependencies: Array<
                       | { __typename: 'DatasetAccessResultAccessible', dataset: (
-                          { __typename?: 'Dataset', metadata: { __typename?: 'DatasetMetadata', currentPushSources: Array<{ __typename?: 'AddPushSource', sourceName: string }>, currentDownstreamDependencies: Array<
+                          { __typename: 'Dataset', metadata: { __typename: 'DatasetMetadata', currentPushSources: Array<{ __typename: 'AddPushSource', sourceName: string }>, currentDownstreamDependencies: Array<
                               | { __typename: 'DatasetAccessResultAccessible', dataset: (
-                                  { __typename?: 'Dataset', metadata: { __typename?: 'DatasetMetadata', currentPushSources: Array<{ __typename?: 'AddPushSource', sourceName: string }>, currentDownstreamDependencies: Array<
+                                  { __typename: 'Dataset', metadata: { __typename: 'DatasetMetadata', currentPushSources: Array<{ __typename: 'AddPushSource', sourceName: string }>, currentDownstreamDependencies: Array<
                                       | { __typename: 'DatasetAccessResultAccessible', dataset: (
-                                          { __typename?: 'Dataset', metadata: { __typename?: 'DatasetMetadata', currentPushSources: Array<{ __typename?: 'AddPushSource', sourceName: string }> } }
+                                          { __typename: 'Dataset', metadata: { __typename: 'DatasetMetadata', currentPushSources: Array<{ __typename: 'AddPushSource', sourceName: string }> } }
                                           & DatasetStreamLineageBasicsFragment
                                         ) }
                                       | (
@@ -9547,59 +9547,59 @@ export type DatasetLineageFragment = (
 );
 
 export type DatasetLineageBasicsFragment = (
-  { __typename?: 'Dataset', createdAt: string, lastUpdatedAt: string, data: (
-    { __typename?: 'DatasetData' }
+  { __typename: 'Dataset', createdAt: string, lastUpdatedAt: string, data: (
+    { __typename: 'DatasetData' }
     & DatasetDataSizeFragment
   ), metadata: (
-    { __typename?: 'DatasetMetadata' }
+    { __typename: 'DatasetMetadata' }
     & DatasetLineageMetadataDataFragment
-  ), owner: { __typename?: 'Account', avatarUrl?: string | null } }
+  ), owner: { __typename: 'Account', avatarUrl?: string | null } }
   & DatasetBasicsFragment
 );
 
 export type DatasetStreamLineageBasicsFragment = (
-  { __typename?: 'Dataset', createdAt: string, lastUpdatedAt: string, data: (
-    { __typename?: 'DatasetData' }
+  { __typename: 'Dataset', createdAt: string, lastUpdatedAt: string, data: (
+    { __typename: 'DatasetData' }
     & DatasetDataSizeFragment
-  ), owner: { __typename?: 'Account', avatarUrl?: string | null } }
+  ), owner: { __typename: 'Account', avatarUrl?: string | null } }
   & DatasetBasicsFragment
 );
 
 export type DatasetMetadataSummaryFragment = (
-  { __typename?: 'Dataset', metadata: { __typename?: 'DatasetMetadata', currentWatermark?: string | null, currentDownstreamDependenciesCount: number, chain: { __typename?: 'MetadataChain', refs: Array<(
-        { __typename?: 'BlockRef' }
+  { __typename: 'Dataset', metadata: { __typename: 'DatasetMetadata', currentWatermark?: string | null, currentDownstreamDependenciesCount: number, chain: { __typename: 'MetadataChain', refs: Array<(
+        { __typename: 'BlockRef' }
         & BlockRefDataFragment
       )> }, currentInfo: (
-      { __typename?: 'SetInfo' }
+      { __typename: 'SetInfo' }
       & DatasetCurrentInfoFragment
     ), currentLicense?: (
-      { __typename?: 'SetLicense' }
+      { __typename: 'SetLicense' }
       & LicenseFragment
     ) | null, currentPollingSource?: (
-      { __typename?: 'SetPollingSource' }
+      { __typename: 'SetPollingSource' }
       & SetPollingSourceEventFragment
     ) | null, currentTransform?: (
-      { __typename?: 'SetTransform' }
+      { __typename: 'SetTransform' }
       & DatasetTransformFragment
     ) | null, currentSchema?: (
-      { __typename?: 'DataSchema' }
+      { __typename: 'DataSchema' }
       & DataSchemaInfoFragment
     ) | null, currentVocab?: (
-      { __typename?: 'SetVocab' }
+      { __typename: 'SetVocab' }
       & SetVocabEventFragment
     ) | null, currentPushSources: Array<(
-      { __typename?: 'AddPushSource' }
+      { __typename: 'AddPushSource' }
       & AddPushSourceEventFragment
     )> } }
   & DatasetReadmeFragment
   & DatasetLastUpdateFragment
 );
 
-export type DatasetOverviewMetadataDataFragment = { __typename?: 'DatasetMetadata', currentArchetype?: DatasetArchetype | null, currentPollingSource?: { __typename: 'SetPollingSource' } | null, currentTransform?: { __typename: 'SetTransform' } | null, currentPushSources: Array<{ __typename: 'AddPushSource' }> };
+export type DatasetOverviewMetadataDataFragment = { __typename: 'DatasetMetadata', currentArchetype?: DatasetArchetype | null, currentPollingSource?: { __typename: 'SetPollingSource' } | null, currentTransform?: { __typename: 'SetTransform' } | null, currentPushSources: Array<{ __typename: 'AddPushSource' }> };
 
 export type DatasetOverviewFragment = (
-  { __typename?: 'Dataset', metadata: (
-    { __typename?: 'DatasetMetadata' }
+  { __typename: 'Dataset', metadata: (
+    { __typename: 'DatasetMetadata' }
     & DatasetOverviewMetadataDataFragment
   ) }
   & DatasetDescriptionFragment
@@ -9608,68 +9608,68 @@ export type DatasetOverviewFragment = (
   & DatasetLastUpdateFragment
 );
 
-export type DatasetPageInfoFragment = { __typename?: 'PageBasedInfo', hasNextPage: boolean, hasPreviousPage: boolean, currentPage: number, totalPages?: number | null };
+export type DatasetPageInfoFragment = { __typename: 'PageBasedInfo', hasNextPage: boolean, hasPreviousPage: boolean, currentPage: number, totalPages?: number | null };
 
-export type DatasetPermissionsFragment = { __typename?: 'Dataset', permissions: { __typename?: 'DatasetPermissions', collaboration: { __typename?: 'DatasetCollaborationPermissions', canView: boolean, canUpdate: boolean }, envVars: { __typename?: 'DatasetEnvVarsPermissions', canView: boolean, canUpdate: boolean }, flows: { __typename?: 'DatasetFlowsPermissions', canView: boolean, canRun: boolean }, general: { __typename?: 'DatasetGeneralPermissions', canRename: boolean, canSetVisibility: boolean, canDelete: boolean }, metadata: { __typename?: 'DatasetMetadataPermissions', canCommit: boolean }, webhooks: { __typename?: 'DatasetWebhooksPermissions', canView: boolean, canUpdate: boolean } } };
+export type DatasetPermissionsFragment = { __typename: 'Dataset', permissions: { __typename: 'DatasetPermissions', collaboration: { __typename: 'DatasetCollaborationPermissions', canView: boolean, canUpdate: boolean }, envVars: { __typename: 'DatasetEnvVarsPermissions', canView: boolean, canUpdate: boolean }, flows: { __typename: 'DatasetFlowsPermissions', canView: boolean, canRun: boolean }, general: { __typename: 'DatasetGeneralPermissions', canRename: boolean, canSetVisibility: boolean, canDelete: boolean }, metadata: { __typename: 'DatasetMetadataPermissions', canCommit: boolean }, webhooks: { __typename: 'DatasetWebhooksPermissions', canView: boolean, canUpdate: boolean } } };
 
-export type DatasetReadmeFragment = { __typename?: 'Dataset', metadata: { __typename?: 'DatasetMetadata', currentReadme?: string | null } };
+export type DatasetReadmeFragment = { __typename: 'Dataset', metadata: { __typename: 'DatasetMetadata', currentReadme?: string | null } };
 
 export type DatasetSearchOverviewFragment = (
-  { __typename?: 'Dataset', createdAt: string, lastUpdatedAt: string, metadata: { __typename?: 'DatasetMetadata', currentInfo: (
-      { __typename?: 'SetInfo' }
+  { __typename: 'Dataset', createdAt: string, lastUpdatedAt: string, metadata: { __typename: 'DatasetMetadata', currentInfo: (
+      { __typename: 'SetInfo' }
       & DatasetCurrentInfoFragment
     ), currentLicense?: (
-      { __typename?: 'SetLicense' }
+      { __typename: 'SetLicense' }
       & LicenseFragment
     ) | null, currentDownstreamDependencies: Array<
-      | { __typename?: 'DatasetAccessResultAccessible', dataset: (
-          { __typename?: 'Dataset' }
+      | { __typename: 'DatasetAccessResultAccessible', dataset: (
+          { __typename: 'Dataset' }
           & DatasetBasicsFragment
         ) }
       | (
-        { __typename?: 'DatasetAccessResultNotAccessible' }
+        { __typename: 'DatasetAccessResultNotAccessible' }
         & DatasetAccessResultNotAccessibleDataFragment
       )
     > } }
   & DatasetBasicsFragment
 );
 
-export type DatasetTransformContentFragment = { __typename?: 'TransformSql', engine: string, version?: string | null, queries: Array<(
-    { __typename?: 'SqlQueryStep' }
+export type DatasetTransformContentFragment = { __typename: 'TransformSql', engine: string, version?: string | null, queries: Array<(
+    { __typename: 'SqlQueryStep' }
     & SqlQueryStepDataFragment
   )>, temporalTables?: Array<(
-    { __typename?: 'TemporalTable' }
+    { __typename: 'TemporalTable' }
     & TemporalTableDataFragment
   )> | null };
 
-export type DatasetTransformFragment = { __typename?: 'SetTransform', inputs: Array<(
-    { __typename?: 'TransformInput' }
+export type DatasetTransformFragment = { __typename: 'SetTransform', inputs: Array<(
+    { __typename: 'TransformInput' }
     & TransformInputDataFragment
   )>, transform: (
-    { __typename?: 'TransformSql' }
+    { __typename: 'TransformSql' }
     & DatasetTransformContentFragment
   ) };
 
 type DatasetVisibilityOutputData_PrivateDatasetVisibility_Fragment = { __typename: 'PrivateDatasetVisibility' };
 
-type DatasetVisibilityOutputData_PublicDatasetVisibility_Fragment = { __typename?: 'PublicDatasetVisibility', anonymousAvailable: boolean };
+type DatasetVisibilityOutputData_PublicDatasetVisibility_Fragment = { __typename: 'PublicDatasetVisibility', anonymousAvailable: boolean };
 
 export type DatasetVisibilityOutputDataFragment =
   | DatasetVisibilityOutputData_PrivateDatasetVisibility_Fragment
   | DatasetVisibilityOutputData_PublicDatasetVisibility_Fragment
 ;
 
-export type EngineDescDataFragment = { __typename?: 'EngineDesc', name: string, dialect: QueryDialect, latestImage: string };
+export type EngineDescDataFragment = { __typename: 'EngineDesc', name: string, dialect: QueryDialect, latestImage: string };
 
-type FetchStepData_FetchStepContainer_Fragment = { __typename?: 'FetchStepContainer' };
+type FetchStepData_FetchStepContainer_Fragment = { __typename: 'FetchStepContainer' };
 
-type FetchStepData_FetchStepEthereumLogs_Fragment = { __typename?: 'FetchStepEthereumLogs', nodeUrl?: string | null, chainId?: string | null };
+type FetchStepData_FetchStepEthereumLogs_Fragment = { __typename: 'FetchStepEthereumLogs', nodeUrl?: string | null, chainId?: string | null };
 
-type FetchStepData_FetchStepFilesGlob_Fragment = { __typename?: 'FetchStepFilesGlob' };
+type FetchStepData_FetchStepFilesGlob_Fragment = { __typename: 'FetchStepFilesGlob' };
 
-type FetchStepData_FetchStepMqtt_Fragment = { __typename?: 'FetchStepMqtt', host: string, port: number };
+type FetchStepData_FetchStepMqtt_Fragment = { __typename: 'FetchStepMqtt', host: string, port: number };
 
-type FetchStepData_FetchStepUrl_Fragment = { __typename?: 'FetchStepUrl', url: string };
+type FetchStepData_FetchStepUrl_Fragment = { __typename: 'FetchStepUrl', url: string };
 
 export type FetchStepDataFragment =
   | FetchStepData_FetchStepContainer_Fragment
@@ -9679,64 +9679,64 @@ export type FetchStepDataFragment =
   | FetchStepData_FetchStepUrl_Fragment
 ;
 
-export type FlowProcessGroupRollupDataFragment = { __typename?: 'FlowProcessGroupRollup', total: number, active: number, failing: number, paused: number, stopped: number, unconfigured: number, worstConsecutiveFailures: number };
+export type FlowProcessGroupRollupDataFragment = { __typename: 'FlowProcessGroupRollup', total: number, active: number, failing: number, paused: number, stopped: number, unconfigured: number, worstConsecutiveFailures: number };
 
-export type LicenseFragment = { __typename?: 'SetLicense', shortName: string, name: string, spdxId?: string | null, websiteUrl: string };
+export type LicenseFragment = { __typename: 'SetLicense', shortName: string, name: string, spdxId?: string | null, websiteUrl: string };
 
-export type MetadataBlockFragment = { __typename?: 'MetadataBlockExtended', blockHash: string, prevBlockHash?: string | null, systemTime: string, sequenceNumber: number, author: (
-    { __typename?: 'Account' }
+export type MetadataBlockFragment = { __typename: 'MetadataBlockExtended', blockHash: string, prevBlockHash?: string | null, systemTime: string, sequenceNumber: number, author: (
+    { __typename: 'Account' }
     & AccountBasicsFragment
   ), event:
     | (
-      { __typename?: 'AddData' }
+      { __typename: 'AddData' }
       & MetadataEventData_AddData_Fragment
     )
     | (
-      { __typename?: 'AddPushSource' }
+      { __typename: 'AddPushSource' }
       & MetadataEventData_AddPushSource_Fragment
     )
     | (
-      { __typename?: 'DisablePollingSource' }
+      { __typename: 'DisablePollingSource' }
       & MetadataEventData_DisablePollingSource_Fragment
     )
     | (
-      { __typename?: 'DisablePushSource' }
+      { __typename: 'DisablePushSource' }
       & MetadataEventData_DisablePushSource_Fragment
     )
     | (
-      { __typename?: 'ExecuteTransform' }
+      { __typename: 'ExecuteTransform' }
       & MetadataEventData_ExecuteTransform_Fragment
     )
     | (
-      { __typename?: 'Seed' }
+      { __typename: 'Seed' }
       & MetadataEventData_Seed_Fragment
     )
     | (
-      { __typename?: 'SetAttachments' }
+      { __typename: 'SetAttachments' }
       & MetadataEventData_SetAttachments_Fragment
     )
     | (
-      { __typename?: 'SetDataSchema' }
+      { __typename: 'SetDataSchema' }
       & MetadataEventData_SetDataSchema_Fragment
     )
     | (
-      { __typename?: 'SetInfo' }
+      { __typename: 'SetInfo' }
       & MetadataEventData_SetInfo_Fragment
     )
     | (
-      { __typename?: 'SetLicense' }
+      { __typename: 'SetLicense' }
       & MetadataEventData_SetLicense_Fragment
     )
     | (
-      { __typename?: 'SetPollingSource' }
+      { __typename: 'SetPollingSource' }
       & MetadataEventData_SetPollingSource_Fragment
     )
     | (
-      { __typename?: 'SetTransform' }
+      { __typename: 'SetTransform' }
       & MetadataEventData_SetTransform_Fragment
     )
     | (
-      { __typename?: 'SetVocab' }
+      { __typename: 'SetVocab' }
       & MetadataEventData_SetVocab_Fragment
     )
    };
@@ -9819,19 +9819,19 @@ export type MetadataEventDataFragment =
   | MetadataEventData_SetVocab_Fragment
 ;
 
-export type SqlQueryStepDataFragment = { __typename?: 'SqlQueryStep', alias?: string | null, query: string };
+export type SqlQueryStepDataFragment = { __typename: 'SqlQueryStep', alias?: string | null, query: string };
 
-export type TemporalTableDataFragment = { __typename?: 'TemporalTable', name: string, primaryKey: Array<string> };
+export type TemporalTableDataFragment = { __typename: 'TemporalTable', name: string, primaryKey: Array<string> };
 
-export type TransformInputDataFragment = { __typename?: 'TransformInput', datasetRef: string, alias: string, inputDataset:
-    | { __typename?: 'TransformInputDatasetAccessible', message: string, dataset: (
-        { __typename?: 'Dataset' }
+export type TransformInputDataFragment = { __typename: 'TransformInput', datasetRef: string, alias: string, inputDataset:
+    | { __typename: 'TransformInputDatasetAccessible', message: string, dataset: (
+        { __typename: 'Dataset' }
         & DatasetBasicsFragment
       ) }
-    | { __typename?: 'TransformInputDatasetNotAccessible', message: string, datasetRef: string }
+    | { __typename: 'TransformInputDatasetNotAccessible', message: string, datasetRef: string }
    };
 
-export type WebhookSubscriptionDataFragment = { __typename?: 'WebhookSubscription', id: string, label: string, datasetId?: string | null, targetUrl: string, eventTypes: Array<string>, status: WebhookSubscriptionStatus };
+export type WebhookSubscriptionDataFragment = { __typename: 'WebhookSubscription', id: string, label: string, datasetId?: string | null, targetUrl: string, eventTypes: Array<string>, status: WebhookSubscriptionStatus };
 
 export type GetMetadataBlockQueryVariables = Exact<{
   accountName: Scalars['AccountName']['input'];
@@ -9840,9 +9840,9 @@ export type GetMetadataBlockQueryVariables = Exact<{
 }>;
 
 
-export type GetMetadataBlockQuery = { __typename?: 'Query', datasets: { __typename?: 'Datasets', byOwnerAndName?: (
-      { __typename?: 'Dataset', metadata: { __typename?: 'DatasetMetadata', currentDownstreamDependenciesCount: number, chain: { __typename?: 'MetadataChain', blockByHashEncoded?: string | null, blockByHash?: (
-            { __typename?: 'MetadataBlockExtended' }
+export type GetMetadataBlockQuery = { datasets: { __typename: 'Datasets', byOwnerAndName?: (
+      { __typename: 'Dataset', metadata: { __typename: 'DatasetMetadata', currentDownstreamDependenciesCount: number, chain: { __typename: 'MetadataChain', blockByHashEncoded?: string | null, blockByHash?: (
+            { __typename: 'MetadataBlockExtended' }
             & MetadataBlockFragment
           ) | null } } }
       & DatasetBasicsFragment
@@ -9854,7 +9854,7 @@ export type RenameDatasetMutationVariables = Exact<{
 }>;
 
 
-export type RenameDatasetMutation = { __typename?: 'Mutation', datasets: { __typename?: 'DatasetsMut', byId?: { __typename?: 'DatasetMut', rename:
+export type RenameDatasetMutation = { datasets: { __typename: 'DatasetsMut', byId?: { __typename: 'DatasetMut', rename:
         | { __typename: 'RenameResultNameCollision', message: string, collidingAlias: string }
         | { __typename: 'RenameResultNoChanges', preservedName: string, message: string }
         | { __typename: 'RenameResultSuccess', message: string, oldName: string, newName: string }
@@ -9868,8 +9868,8 @@ export type SearchCollaboratorQueryVariables = Exact<{
 }>;
 
 
-export type SearchCollaboratorQuery = { __typename?: 'Query', search: { __typename?: 'Search', nameLookup: { __typename?: 'NameLookupResultConnection', nodes: Array<(
-        { __typename?: 'Account' }
+export type SearchCollaboratorQuery = { search: { __typename: 'Search', nameLookup: { __typename: 'NameLookupResultConnection', nodes: Array<(
+        { __typename: 'Account' }
         & AccountFragment
       )> } } };
 
@@ -9880,7 +9880,7 @@ export type SearchDatasetsAutocompleteQueryVariables = Exact<{
 }>;
 
 
-export type SearchDatasetsAutocompleteQuery = { __typename?: 'Query', search: { __typename?: 'Search', query: { __typename?: 'SearchResultConnection', nodes: Array<(
+export type SearchDatasetsAutocompleteQuery = { search: { __typename: 'Search', query: { __typename: 'SearchResultConnection', nodes: Array<(
         { __typename: 'Dataset' }
         & DatasetBasicsFragment
       )> } } };
@@ -9892,11 +9892,11 @@ export type SearchDatasetsOverviewQueryVariables = Exact<{
 }>;
 
 
-export type SearchDatasetsOverviewQuery = { __typename?: 'Query', search: { __typename?: 'Search', query: { __typename?: 'SearchResultConnection', totalCount: number, nodes: Array<(
+export type SearchDatasetsOverviewQuery = { search: { __typename: 'Search', query: { __typename: 'SearchResultConnection', totalCount: number, nodes: Array<(
         { __typename: 'Dataset' }
         & DatasetSearchOverviewFragment
       )>, pageInfo: (
-        { __typename?: 'PageBasedInfo' }
+        { __typename: 'PageBasedInfo' }
         & DatasetPageInfoFragment
       ) } } };
 
@@ -9906,11 +9906,11 @@ export type SemanticSearchDatasetsOverviewQueryVariables = Exact<{
 }>;
 
 
-export type SemanticSearchDatasetsOverviewQuery = { __typename?: 'Query', search: { __typename?: 'Search', queryNaturalLanguage: { __typename?: 'SearchResultExConnection', totalCount: number, nodes: Array<{ __typename?: 'SearchResultEx', score: number, item: (
-          { __typename?: 'Dataset' }
+export type SemanticSearchDatasetsOverviewQuery = { search: { __typename: 'Search', queryNaturalLanguage: { __typename: 'SearchResultExConnection', totalCount: number, nodes: Array<{ __typename: 'SearchResultEx', score: number, item: (
+          { __typename: 'Dataset' }
           & DatasetSearchOverviewFragment
         ) }>, pageInfo: (
-        { __typename?: 'PageBasedInfo' }
+        { __typename: 'PageBasedInfo' }
         & DatasetPageInfoFragment
       ) } } };
 
@@ -9920,8 +9920,8 @@ export type DatasetWebhookByIdQueryVariables = Exact<{
 }>;
 
 
-export type DatasetWebhookByIdQuery = { __typename?: 'Query', datasets: { __typename?: 'Datasets', byId?: { __typename?: 'Dataset', webhooks: { __typename?: 'DatasetWebhooks', subscription?: (
-          { __typename?: 'WebhookSubscription' }
+export type DatasetWebhookByIdQuery = { datasets: { __typename: 'Datasets', byId?: { __typename: 'Dataset', webhooks: { __typename: 'DatasetWebhooks', subscription?: (
+          { __typename: 'WebhookSubscription' }
           & WebhookSubscriptionDataFragment
         ) | null } } | null } };
 
@@ -9931,7 +9931,7 @@ export type DatasetWebhookCreateSubscriptionMutationVariables = Exact<{
 }>;
 
 
-export type DatasetWebhookCreateSubscriptionMutation = { __typename?: 'Mutation', datasets: { __typename?: 'DatasetsMut', byId?: { __typename?: 'DatasetMut', webhooks: { __typename?: 'DatasetWebhooksMut', createSubscription:
+export type DatasetWebhookCreateSubscriptionMutation = { datasets: { __typename: 'DatasetsMut', byId?: { __typename: 'DatasetMut', webhooks: { __typename: 'DatasetWebhooksMut', createSubscription:
           | { __typename: 'CreateWebhookSubscriptionResultSuccess', secret: string, subscriptionId: string, message: string }
           | { __typename: 'WebhookSubscriptionDuplicateLabel', message: string, label: string }
           | { __typename: 'WebhookSubscriptionInvalidTargetUrl', innerMessage: string, message: string }
@@ -9944,9 +9944,9 @@ export type DatasetWebhookPauseSubscriptionMutationVariables = Exact<{
 }>;
 
 
-export type DatasetWebhookPauseSubscriptionMutation = { __typename?: 'Mutation', datasets: { __typename?: 'DatasetsMut', byId?: { __typename?: 'DatasetMut', webhooks: { __typename?: 'DatasetWebhooksMut', subscription?: { __typename?: 'WebhookSubscriptionMut', pause:
-            | { __typename?: 'PauseWebhookSubscriptionResultSuccess', paused: boolean, message: string }
-            | { __typename?: 'PauseWebhookSubscriptionResultUnexpected', status: WebhookSubscriptionStatus, message: string }
+export type DatasetWebhookPauseSubscriptionMutation = { datasets: { __typename: 'DatasetsMut', byId?: { __typename: 'DatasetMut', webhooks: { __typename: 'DatasetWebhooksMut', subscription?: { __typename: 'WebhookSubscriptionMut', pause:
+            | { __typename: 'PauseWebhookSubscriptionResultSuccess', paused: boolean, message: string }
+            | { __typename: 'PauseWebhookSubscriptionResultUnexpected', status: WebhookSubscriptionStatus, message: string }
            } | null } } | null } };
 
 export type DatasetWebhookReactivateSubscriptionMutationVariables = Exact<{
@@ -9955,9 +9955,9 @@ export type DatasetWebhookReactivateSubscriptionMutationVariables = Exact<{
 }>;
 
 
-export type DatasetWebhookReactivateSubscriptionMutation = { __typename?: 'Mutation', datasets: { __typename?: 'DatasetsMut', byId?: { __typename?: 'DatasetMut', webhooks: { __typename?: 'DatasetWebhooksMut', subscription?: { __typename?: 'WebhookSubscriptionMut', reactivate:
-            | { __typename?: 'ReactivateWebhookSubscriptionResultSuccess', message: string }
-            | { __typename?: 'ReactivateWebhookSubscriptionResultUnexpected', status: WebhookSubscriptionStatus, message: string }
+export type DatasetWebhookReactivateSubscriptionMutation = { datasets: { __typename: 'DatasetsMut', byId?: { __typename: 'DatasetMut', webhooks: { __typename: 'DatasetWebhooksMut', subscription?: { __typename: 'WebhookSubscriptionMut', reactivate:
+            | { __typename: 'ReactivateWebhookSubscriptionResultSuccess', message: string }
+            | { __typename: 'ReactivateWebhookSubscriptionResultUnexpected', status: WebhookSubscriptionStatus, message: string }
            } | null } } | null } };
 
 export type DatasetWebhookRemoveSubscriptionMutationVariables = Exact<{
@@ -9966,7 +9966,7 @@ export type DatasetWebhookRemoveSubscriptionMutationVariables = Exact<{
 }>;
 
 
-export type DatasetWebhookRemoveSubscriptionMutation = { __typename?: 'Mutation', datasets: { __typename?: 'DatasetsMut', byId?: { __typename?: 'DatasetMut', webhooks: { __typename?: 'DatasetWebhooksMut', subscription?: { __typename?: 'WebhookSubscriptionMut', remove: { __typename?: 'RemoveWebhookSubscriptionResultSuccess', removed: boolean, message: string } } | null } } | null } };
+export type DatasetWebhookRemoveSubscriptionMutation = { datasets: { __typename: 'DatasetsMut', byId?: { __typename: 'DatasetMut', webhooks: { __typename: 'DatasetWebhooksMut', subscription?: { __typename: 'WebhookSubscriptionMut', remove: { __typename: 'RemoveWebhookSubscriptionResultSuccess', removed: boolean, message: string } } | null } } | null } };
 
 export type DatasetWebhookResumeSubscriptionMutationVariables = Exact<{
   datasetId: Scalars['DatasetID']['input'];
@@ -9974,9 +9974,9 @@ export type DatasetWebhookResumeSubscriptionMutationVariables = Exact<{
 }>;
 
 
-export type DatasetWebhookResumeSubscriptionMutation = { __typename?: 'Mutation', datasets: { __typename?: 'DatasetsMut', byId?: { __typename?: 'DatasetMut', webhooks: { __typename?: 'DatasetWebhooksMut', subscription?: { __typename?: 'WebhookSubscriptionMut', resume:
-            | { __typename?: 'ResumeWebhookSubscriptionResultSuccess', resumed: boolean, message: string }
-            | { __typename?: 'ResumeWebhookSubscriptionResultUnexpected', status: WebhookSubscriptionStatus, message: string }
+export type DatasetWebhookResumeSubscriptionMutation = { datasets: { __typename: 'DatasetsMut', byId?: { __typename: 'DatasetMut', webhooks: { __typename: 'DatasetWebhooksMut', subscription?: { __typename: 'WebhookSubscriptionMut', resume:
+            | { __typename: 'ResumeWebhookSubscriptionResultSuccess', resumed: boolean, message: string }
+            | { __typename: 'ResumeWebhookSubscriptionResultUnexpected', status: WebhookSubscriptionStatus, message: string }
            } | null } } | null } };
 
 export type DatasetWebhookRotateSecretMutationVariables = Exact<{
@@ -9985,15 +9985,15 @@ export type DatasetWebhookRotateSecretMutationVariables = Exact<{
 }>;
 
 
-export type DatasetWebhookRotateSecretMutation = { __typename?: 'Mutation', datasets: { __typename?: 'DatasetsMut', byId?: { __typename?: 'DatasetMut', webhooks: { __typename?: 'DatasetWebhooksMut', subscription?: { __typename?: 'WebhookSubscriptionMut', rotateSecret: { __typename?: 'RotateWebhookSubscriptionSecretSuccess', newSecret: string, message: string } } | null } } | null } };
+export type DatasetWebhookRotateSecretMutation = { datasets: { __typename: 'DatasetsMut', byId?: { __typename: 'DatasetMut', webhooks: { __typename: 'DatasetWebhooksMut', subscription?: { __typename: 'WebhookSubscriptionMut', rotateSecret: { __typename: 'RotateWebhookSubscriptionSecretSuccess', newSecret: string, message: string } } | null } } | null } };
 
 export type DatasetWebhookSubscriptionsQueryVariables = Exact<{
   datasetId: Scalars['DatasetID']['input'];
 }>;
 
 
-export type DatasetWebhookSubscriptionsQuery = { __typename?: 'Query', datasets: { __typename?: 'Datasets', byId?: { __typename?: 'Dataset', webhooks: { __typename?: 'DatasetWebhooks', subscriptions: Array<(
-          { __typename?: 'WebhookSubscription' }
+export type DatasetWebhookSubscriptionsQuery = { datasets: { __typename: 'Datasets', byId?: { __typename: 'Dataset', webhooks: { __typename: 'DatasetWebhooks', subscriptions: Array<(
+          { __typename: 'WebhookSubscription' }
           & WebhookSubscriptionDataFragment
         )> } } | null } };
 
@@ -10004,18 +10004,18 @@ export type DatasetWebhookUpdateSubscriptionMutationVariables = Exact<{
 }>;
 
 
-export type DatasetWebhookUpdateSubscriptionMutation = { __typename?: 'Mutation', datasets: { __typename?: 'DatasetsMut', byId?: { __typename?: 'DatasetMut', webhooks: { __typename?: 'DatasetWebhooksMut', subscription?: { __typename?: 'WebhookSubscriptionMut', update:
-            | { __typename?: 'UpdateWebhookSubscriptionResultSuccess', updated: boolean, message: string }
-            | { __typename?: 'UpdateWebhookSubscriptionResultUnexpected', status: WebhookSubscriptionStatus, message: string }
-            | { __typename?: 'WebhookSubscriptionDuplicateLabel', label: string, message: string }
-            | { __typename?: 'WebhookSubscriptionInvalidTargetUrl', innerMessage: string, message: string }
-            | { __typename?: 'WebhookSubscriptionNoEventTypesProvided', numEventTypes: number, message: string }
+export type DatasetWebhookUpdateSubscriptionMutation = { datasets: { __typename: 'DatasetsMut', byId?: { __typename: 'DatasetMut', webhooks: { __typename: 'DatasetWebhooksMut', subscription?: { __typename: 'WebhookSubscriptionMut', update:
+            | { __typename: 'UpdateWebhookSubscriptionResultSuccess', updated: boolean, message: string }
+            | { __typename: 'UpdateWebhookSubscriptionResultUnexpected', status: WebhookSubscriptionStatus, message: string }
+            | { __typename: 'WebhookSubscriptionDuplicateLabel', label: string, message: string }
+            | { __typename: 'WebhookSubscriptionInvalidTargetUrl', innerMessage: string, message: string }
+            | { __typename: 'WebhookSubscriptionNoEventTypesProvided', numEventTypes: number, message: string }
            } | null } } | null } };
 
 export type WebhookEventTypesQueryVariables = Exact<{ [key: string]: never; }>;
 
 
-export type WebhookEventTypesQuery = { __typename?: 'Query', webhooks: { __typename?: 'Webhooks', eventTypes: Array<string> } };
+export type WebhookEventTypesQuery = { webhooks: { __typename: 'Webhooks', eventTypes: Array<string> } };
 
 export const AccountFragmentDoc = gql`
     fragment Account on Account {

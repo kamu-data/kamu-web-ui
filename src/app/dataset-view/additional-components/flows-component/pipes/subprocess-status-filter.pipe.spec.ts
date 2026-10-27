@@ -13,7 +13,7 @@ import { SubprocessStatusFilterPipe } from "src/app/dataset-view/additional-comp
 
 describe("SubprocessStatusFilterPipe", () => {
     const subprocesses = requireValue(
-        mockDatasetFlowsProcessesQuery.datasets.byId?.flows.processes.webhooks.subprocesses ?? null,
+        mockDatasetFlowsProcessesQuery.datasets.byId?.flows.processes.webhooks.subprocesses,
     );
 
     it("create an instance", () => {

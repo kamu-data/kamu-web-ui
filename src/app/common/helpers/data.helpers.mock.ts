@@ -17,7 +17,6 @@ export const metadataBlockSetVocab: MetadataBlockFragment = {
     sequenceNumber: 14,
     systemTime: "2022-08-05T21:19:28.817281255+00:00",
     author: {
-        __typename: "Account",
         ...mockOwnerFieldsWithAvatar,
     },
     event: {

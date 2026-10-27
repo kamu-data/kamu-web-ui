@@ -11,7 +11,7 @@ export class TileBaseWidgetHelpers {
     public static tileWidgetClass(node: FlowItemWidgetDataFragment): string {
         switch (node.status) {
             case FlowStatus.Finished: {
-                return node.outcome ? flowOutcomeMapperClass[node.outcome.__typename as string] : "";
+                return node.outcome ? flowOutcomeMapperClass[node.outcome.__typename] : "";
             }
             case FlowStatus.Running: {
                 return "running-class";

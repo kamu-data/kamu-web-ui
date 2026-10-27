@@ -36,7 +36,9 @@ describe("DatasetNameByIdPropertyComponent", () => {
     const mockOtherDatasetByIdQuery: DatasetByIdQuery = {
         datasets: { __typename: "Datasets", byId: mockDatasetMainDataResponse.datasets.byOwnerAndName },
     };
-    const mockMissingDatasetByIdQuery: DatasetByIdQuery = { datasets: { __typename: "Datasets", byId: null } };
+    const mockMissingDatasetByIdQuery: DatasetByIdQuery = {
+        datasets: { __typename: "Datasets", byId: null },
+    };
 
     beforeEach(async () => {
         await TestBed.configureTestingModule({

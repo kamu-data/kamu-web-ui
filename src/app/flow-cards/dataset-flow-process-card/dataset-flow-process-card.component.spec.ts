@@ -28,7 +28,7 @@ describe("DatasetFlowProcessCardComponent", () => {
     let fixture: ComponentFixture<DatasetFlowProcessCardComponent>;
 
     const mockSummary = requireValue(
-        mockAccountFlowsAsCardsQuery.accounts.byName?.flows.processes.allCards.nodes[0].summary ?? null,
+        mockAccountFlowsAsCardsQuery.accounts.byName?.flows.processes.allCards.nodes[0].summary,
     );
 
     function createCard(

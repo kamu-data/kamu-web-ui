@@ -61,6 +61,7 @@ describe("AppHeaderComponent", () => {
         fixture = TestBed.createComponent(AppHeaderComponent);
         component = fixture.componentInstance;
         setComponentInput(fixture, "loggedAccount", {
+            __typename: "Account",
             id: "",
             accountName: "",
             displayName: AppValues.DEFAULT_USER_DISPLAY_NAME,
@@ -85,6 +86,7 @@ describe("AppHeaderComponent", () => {
 
     function loginUser(): void {
         setComponentInput(fixture, "loggedAccount", {
+            __typename: "Account",
             id: "someId",
             accountName: "ssss",
             displayName: "testName",

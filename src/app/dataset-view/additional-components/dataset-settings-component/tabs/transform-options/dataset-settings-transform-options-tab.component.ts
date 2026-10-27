@@ -104,6 +104,7 @@ export class DatasetSettingsTransformOptionsTabComponent extends BaseComponent i
                         throw new Error("Max batching interval for buffering rule cannot be more than 1 day");
                     }
                     maxBatchingInterval = {
+                        __typename: "TimeDelta",
                         every: 24,
                         unit: TimeUnit.Hours,
                     };

@@ -74,7 +74,7 @@ describe("FlowsTableComponent", () => {
         setComponentInput(
             fixture,
             "accountFlowInitiators",
-            requireValue(mockDatasetFlowsInitiatorsQuery.datasets.byId?.flows.runs.listFlowInitiators.nodes ?? null),
+            requireValue(mockDatasetFlowsInitiatorsQuery.datasets.byId?.flows.runs.listFlowInitiators.nodes),
         );
         fixture.detectChanges();
     });
@@ -131,6 +131,7 @@ describe("FlowsTableComponent", () => {
         component.abortFlow({
             ...mockFlowSummaryDataFragments[0],
             relatedTrigger: {
+                __typename: "FlowTrigger",
                 paused: false,
                 schedule: {
                     __typename: "TimeDelta",
@@ -155,6 +156,7 @@ describe("FlowsTableComponent", () => {
         component.abortFlow({
             ...mockFlowSummaryDataFragments[0],
             relatedTrigger: {
+                __typename: "FlowTrigger",
                 paused: true,
                 schedule: {
                     __typename: "TimeDelta",

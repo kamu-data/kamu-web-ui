@@ -70,6 +70,7 @@ import { SqlQueryBasicResponse } from "src/app/query/global-query/global-query.m
 export const MOCK_DATASET_HEAD_BLOCK_HASH = "f16207c1039f6d9f5e107a2285ccfe04bc88cb65ddd2b217ceb62b717774b2f85f1f5";
 
 export const mockPageBasedInfo: DatasetPageInfoFragment = {
+    __typename: "PageBasedInfo",
     currentPage: 1,
     hasNextPage: true,
     hasPreviousPage: true,
@@ -82,6 +83,7 @@ export const mockDatasetInfo: DatasetInfo = {
 };
 
 export const mockOwnerFieldsWithAvatar: AccountBasicsFragment = {
+    __typename: "Account",
     id: "did:odf:fed016b61ed2ab1b63a006b61ed2ab1b63a00b016d65607000000e0821aafbf163e6f",
     accountName: "kamu",
     avatarUrl: TEST_AVATAR_URL,
@@ -100,6 +102,7 @@ export const mockPrivateDatasetVisibility: DatasetVisibilityOutputDataFragment =
 export const mockAutocompleteItems: DatasetAutocompleteItem[] = [
     {
         dataset: {
+            __typename: "Dataset",
             id: "id1",
             kind: DatasetKind.Root,
             name: "mockName1",
@@ -113,6 +116,7 @@ export const mockAutocompleteItems: DatasetAutocompleteItem[] = [
 
     {
         dataset: {
+            __typename: "Dataset",
             id: "id2",
             kind: DatasetKind.Derivative,
             name: "mockName2",
@@ -156,7 +160,6 @@ export const mockDatasetSearchResult: DatasetSearchResult = {
             kind: DatasetKind.Root,
             name: "alberta.case-details",
             owner: {
-                __typename: "Account",
                 ...mockOwnerFieldsWithAvatar,
             },
             alias: mockOwnerFieldsWithAvatar.accountName + "/alberta.case-details",
@@ -164,6 +167,7 @@ export const mockDatasetSearchResult: DatasetSearchResult = {
             lastUpdatedAt: "2022-08-05T21:19:28.817281255+00:00",
             visibility: mockPublicDatasetVisibility,
             metadata: {
+                __typename: "DatasetMetadata",
                 currentInfo: mockMetadataCurrentInfo,
                 currentLicense: mockMetadataCurrentLicense,
                 currentDownstreamDependencies: [],
@@ -171,17 +175,12 @@ export const mockDatasetSearchResult: DatasetSearchResult = {
         },
     ],
     totalCount: 1,
-    pageInfo: {
-        currentPage: 1,
-        hasNextPage: false,
-        hasPreviousPage: false,
-    },
+    pageInfo: { __typename: "PageBasedInfo", currentPage: 1, hasNextPage: false, hasPreviousPage: false },
     currentPage: 1,
     searchMode: SearchMode.TEXT_SEARCH,
 };
 
 export const mockSearchDatasetOverviewQuery: SearchDatasetsOverviewQuery = {
-    __typename: "Query",
     search: {
         __typename: "Search",
         query: {
@@ -189,131 +188,83 @@ export const mockSearchDatasetOverviewQuery: SearchDatasetsOverviewQuery = {
             totalCount: 1,
             nodes: [
                 {
-                    __typename: "Dataset",
                     ...mockDatasetSearchResult.datasets[0],
                 },
             ],
-            pageInfo: {
-                currentPage: 1,
-                hasNextPage: true,
-                hasPreviousPage: false,
-            },
+            pageInfo: { __typename: "PageBasedInfo", currentPage: 1, hasNextPage: true, hasPreviousPage: false },
         },
     },
 };
 
 export const mockDatasetBasicsRootFragment: DatasetBasicsFragment = {
+    __typename: "Dataset",
     id: "id",
     kind: DatasetKind.Root,
     name: "mockNameRoot",
-    owner: { __typename: "Account", ...mockOwnerFieldsWithAvatar },
+    owner: { ...mockOwnerFieldsWithAvatar },
     alias: mockOwnerFieldsWithAvatar.accountName + "/mockNameRoot",
     visibility: mockPublicDatasetVisibility,
 };
 
 export const mockDatasetBasicsDerivedFragment: DatasetBasicsFragment = {
+    __typename: "Dataset",
     id: "id",
     kind: DatasetKind.Derivative,
     name: "mockNameDerived",
-    owner: { __typename: "Account", ...mockOwnerFieldsWithAvatar },
+    owner: { ...mockOwnerFieldsWithAvatar },
     alias: mockOwnerFieldsWithAvatar.accountName + "/mockNameDerived",
     visibility: mockPublicDatasetVisibility,
 };
 
 export const mockFullPowerDatasetPermissionsFragment: DatasetPermissionsFragment = {
+    __typename: "Dataset",
     permissions: {
-        collaboration: {
-            canUpdate: true,
-            canView: true,
-        },
-        envVars: {
-            canUpdate: true,
-            canView: true,
-        },
-        flows: {
-            canRun: true,
-            canView: true,
-        },
-        general: {
-            canDelete: true,
-            canRename: true,
-            canSetVisibility: true,
-        },
-        metadata: {
-            canCommit: true,
-        },
-        webhooks: {
-            canUpdate: false,
-            canView: true,
-        },
+        __typename: "DatasetPermissions",
+        collaboration: { __typename: "DatasetCollaborationPermissions", canUpdate: true, canView: true },
+        envVars: { __typename: "DatasetEnvVarsPermissions", canUpdate: true, canView: true },
+        flows: { __typename: "DatasetFlowsPermissions", canRun: true, canView: true },
+        general: { __typename: "DatasetGeneralPermissions", canDelete: true, canRename: true, canSetVisibility: true },
+        metadata: { __typename: "DatasetMetadataPermissions", canCommit: true },
+        webhooks: { __typename: "DatasetWebhooksPermissions", canUpdate: false, canView: true },
     },
 };
 
 export const mockNotScheduleDatasetPermissionsFragment: DatasetPermissionsFragment = {
+    __typename: "Dataset",
     permissions: {
-        collaboration: {
-            canUpdate: true,
-            canView: true,
-        },
-        envVars: {
-            canUpdate: true,
-            canView: true,
-        },
-        flows: {
-            canRun: false,
-            canView: true,
-        },
-        general: {
-            canDelete: true,
-            canRename: true,
-            canSetVisibility: true,
-        },
-        metadata: {
-            canCommit: true,
-        },
-        webhooks: {
-            canUpdate: false,
-            canView: true,
-        },
+        __typename: "DatasetPermissions",
+        collaboration: { __typename: "DatasetCollaborationPermissions", canUpdate: true, canView: true },
+        envVars: { __typename: "DatasetEnvVarsPermissions", canUpdate: true, canView: true },
+        flows: { __typename: "DatasetFlowsPermissions", canRun: false, canView: true },
+        general: { __typename: "DatasetGeneralPermissions", canDelete: true, canRename: true, canSetVisibility: true },
+        metadata: { __typename: "DatasetMetadataPermissions", canCommit: true },
+        webhooks: { __typename: "DatasetWebhooksPermissions", canUpdate: false, canView: true },
     },
 };
 
 export const mockReadonlyDatasetPermissionsFragment: DatasetPermissionsFragment = {
+    __typename: "Dataset",
     permissions: {
-        collaboration: {
-            canUpdate: false,
-            canView: false,
-        },
-        envVars: {
-            canUpdate: false,
-            canView: true,
-        },
-        flows: {
-            canRun: false,
-            canView: false,
-        },
+        __typename: "DatasetPermissions",
+        collaboration: { __typename: "DatasetCollaborationPermissions", canUpdate: false, canView: false },
+        envVars: { __typename: "DatasetEnvVarsPermissions", canUpdate: false, canView: true },
+        flows: { __typename: "DatasetFlowsPermissions", canRun: false, canView: false },
         general: {
+            __typename: "DatasetGeneralPermissions",
             canDelete: false,
             canRename: false,
             canSetVisibility: false,
         },
-        metadata: {
-            canCommit: false,
-        },
-        webhooks: {
-            canUpdate: false,
-            canView: true,
-        },
+        metadata: { __typename: "DatasetMetadataPermissions", canCommit: false },
+        webhooks: { __typename: "DatasetWebhooksPermissions", canUpdate: false, canView: true },
     },
 };
 
 export const mockNoWebhooksDatasetPermissionsFragment: DatasetPermissionsFragment = {
+    __typename: "Dataset",
     permissions: {
         ...mockFullPowerDatasetPermissionsFragment.permissions,
-        webhooks: {
-            canUpdate: false,
-            canView: false,
-        },
+        webhooks: { __typename: "DatasetWebhooksPermissions", canUpdate: false, canView: false },
     },
 };
 
@@ -336,7 +287,6 @@ export const mockDatasetMainDataResponse: GetDatasetMainDataQuery = {
             kind: DatasetKind.Root,
             name: "alberta.case-details",
             owner: {
-                __typename: "Account",
                 ...mockOwnerFieldsWithAvatar,
             },
             alias: "kamu/alberta.case-details",
@@ -432,12 +382,7 @@ export const mockDatasetMainDataResponse: GetDatasetMainDataQuery = {
                     "# Confirmed positive cases of COVID-19 in Alberta\n\nThis dataset compiles daily snapshots of publicly reported data on 2019 Novel Coronavirus (COVID-19) testing in Alberta.\n\nData includes:\n- approximation of onset date\n- age group\n- patient gender\n- case acquisition information\n- patient outcome\n- reporting Public Health Unit (PHU)\n- postal code, website, longitude, and latitude of PHU\n\nThis dataset is subject to change. Please review the daily epidemiologic summaries for information on variables, methodology, and technical considerations.\n\n**Related dataset(s)**:\n- [Daily aggregate count of confirmed positive cases of COVID-19 in Alberta](#todo)\n",
                 chain: {
                     __typename: "MetadataChain",
-                    refs: [
-                        {
-                            name: "head",
-                            blockHash: MOCK_DATASET_HEAD_BLOCK_HASH,
-                        },
-                    ],
+                    refs: [{ __typename: "BlockRef", name: "head", blockHash: MOCK_DATASET_HEAD_BLOCK_HASH }],
                     blocks: {
                         __typename: "MetadataBlockConnection",
                         nodes: [
@@ -448,7 +393,6 @@ export const mockDatasetMainDataResponse: GetDatasetMainDataQuery = {
                                 systemTime: "2023-09-03T01:09:31.587025138+00:00",
                                 sequenceNumber: 6,
                                 author: {
-                                    __typename: "Account",
                                     ...mockOwnerFieldsWithAvatar,
                                 },
                                 event: {
@@ -512,30 +456,17 @@ export const mockDatasetMainDataResponse: GetDatasetMainDataQuery = {
             permissions: {
                 __typename: "DatasetPermissions",
 
-                collaboration: {
-                    canUpdate: true,
-                    canView: true,
-                },
-                envVars: {
-                    canUpdate: true,
-                    canView: true,
-                },
-                flows: {
-                    canRun: false,
-                    canView: true,
-                },
+                collaboration: { __typename: "DatasetCollaborationPermissions", canUpdate: true, canView: true },
+                envVars: { __typename: "DatasetEnvVarsPermissions", canUpdate: true, canView: true },
+                flows: { __typename: "DatasetFlowsPermissions", canRun: false, canView: true },
                 general: {
+                    __typename: "DatasetGeneralPermissions",
                     canDelete: true,
                     canRename: true,
                     canSetVisibility: true,
                 },
-                metadata: {
-                    canCommit: true,
-                },
-                webhooks: {
-                    canUpdate: true,
-                    canView: true,
-                },
+                metadata: { __typename: "DatasetMetadataPermissions", canCommit: true },
+                webhooks: { __typename: "DatasetWebhooksPermissions", canUpdate: true, canView: true },
             },
 
             createdAt: "2023-09-03T01:08:55.104604199+00:00",
@@ -553,7 +484,6 @@ export const mockDatasetLineageResponse: GetDatasetLineageQuery = {
             kind: DatasetKind.Root,
             name: "covid19.canada.daily-cases",
             owner: {
-                __typename: "Account",
                 ...mockOwnerFieldsWithAvatar,
             },
             alias: "kamu/covid19.canada.daily-cases",
@@ -629,7 +559,6 @@ export const mockDatasetLineageResponse: GetDatasetLineageQuery = {
                                                 estimatedSizeBytes: 16494158,
                                             },
                                             owner: {
-                                                __typename: "Account",
                                                 ...mockOwnerFieldsWithAvatar,
                                             },
                                             id: "did:odf:fed0174642a09caa34103a8a625acf548c56768a04aabe00ba2629cb18ac193433b07",
@@ -692,7 +621,6 @@ export const mockDatasetLineageResponse: GetDatasetLineageQuery = {
                                                                 estimatedSizeBytes: 22514744,
                                                             },
                                                             owner: {
-                                                                __typename: "Account",
                                                                 ...mockOwnerFieldsWithAvatar,
                                                             },
                                                             id: "did:odf:fed0180891d1a8dd7744447baab2a269542a7185052bdfe9e60d2641449ba24f4ea22",
@@ -716,7 +644,6 @@ export const mockDatasetLineageResponse: GetDatasetLineageQuery = {
                                                 estimatedSizeBytes: 13914917,
                                             },
                                             owner: {
-                                                __typename: "Account",
                                                 ...mockOwnerFieldsWithAvatar,
                                             },
                                             id: "did:odf:fed01af38acc0c8391a79e3b596b2548782f74b2f7796d7b9a11e38e61231a472cb02",
@@ -740,7 +667,6 @@ export const mockDatasetLineageResponse: GetDatasetLineageQuery = {
                                 estimatedSizeBytes: 39010479,
                             },
                             owner: {
-                                __typename: "Account",
                                 ...mockOwnerFieldsWithAvatar,
                             },
                             id: "did:odf:fed01c8788dc7825dc95dfaa6c67f989b758d3ebcb1efcb9f47ea914470bd1f7f2bbb",
@@ -788,7 +714,6 @@ export const mockDatasetHistoryResponse: GetDatasetHistoryQuery = {
                                 sequenceNumber: 12,
                                 systemTime: "2022-08-05T21:19:28.817281255+00:00",
                                 author: {
-                                    __typename: "Account",
                                     ...mockOwnerFieldsWithAvatar,
                                 },
                                 event: {
@@ -823,7 +748,6 @@ export const mockDatasetHistoryResponse: GetDatasetHistoryQuery = {
                                 sequenceNumber: 12,
                                 systemTime: "2022-08-05T21:17:30.613911358+00:00",
                                 author: {
-                                    __typename: "Account",
                                     ...mockOwnerFieldsWithAvatar,
                                 },
                                 event: {
@@ -841,7 +765,6 @@ export const mockDatasetHistoryResponse: GetDatasetHistoryQuery = {
                                 sequenceNumber: 12,
                                 systemTime: "2022-08-05T21:17:30.613911358+00:00",
                                 author: {
-                                    __typename: "Account",
                                     ...mockOwnerFieldsWithAvatar,
                                 },
                                 event: {
@@ -866,7 +789,6 @@ export const mockDatasetHistoryResponse: GetDatasetHistoryQuery = {
                                 systemTime: "2022-08-05T21:17:30.613911358+00:00",
                                 sequenceNumber: 12,
                                 author: {
-                                    __typename: "Account",
                                     ...mockOwnerFieldsWithAvatar,
                                 },
                                 event: {
@@ -891,7 +813,6 @@ export const mockDatasetHistoryResponse: GetDatasetHistoryQuery = {
                                 sequenceNumber: 12,
                                 systemTime: "2022-08-05T21:17:30.613911358+00:00",
                                 author: {
-                                    __typename: "Account",
                                     ...mockOwnerFieldsWithAvatar,
                                 },
                                 event: {
@@ -909,7 +830,6 @@ export const mockDatasetHistoryResponse: GetDatasetHistoryQuery = {
                                 sequenceNumber: 12,
                                 systemTime: "2022-08-05T21:17:30.613911358+00:00",
                                 author: {
-                                    __typename: "Account",
                                     ...mockOwnerFieldsWithAvatar,
                                 },
                                 event: {
@@ -934,7 +854,6 @@ export const mockDatasetHistoryResponse: GetDatasetHistoryQuery = {
                                 systemTime: "2023-06-02T08:44:54.984731027+00:00",
                                 sequenceNumber: 1,
                                 author: {
-                                    __typename: "Account",
                                     ...mockOwnerFieldsWithAvatar,
                                 },
                                 event: {
@@ -967,7 +886,6 @@ export const mockDatasetHistoryResponse: GetDatasetHistoryQuery = {
                                 systemTime: "2022-08-05T21:17:30.613911358+00:00",
                                 sequenceNumber: 12,
                                 author: {
-                                    __typename: "Account",
                                     ...mockOwnerFieldsWithAvatar,
                                 },
                                 event: {
@@ -991,7 +909,6 @@ export const mockDatasetHistoryResponse: GetDatasetHistoryQuery = {
             kind: DatasetKind.Root,
             name: "alberta.case-details",
             owner: {
-                __typename: "Account",
                 ...mockOwnerFieldsWithAvatar,
             },
             alias: mockOwnerFieldsWithAvatar.accountName + "/alberta.case-details",
@@ -1036,6 +953,7 @@ export const mockDatasetDataSqlRunInvalidSqlResponse: GetDatasetDataSqlRunQuery 
 
 export const mockCreateEmptyDatasetResponse: CreateEmptyDatasetMutation = {
     datasets: {
+        __typename: "DatasetsMut",
         createEmpty: {
             __typename: "CreateDatasetResultSuccess",
             message: "Success",
@@ -1046,6 +964,7 @@ export const mockCreateEmptyDatasetResponse: CreateEmptyDatasetMutation = {
 
 export const mockCreateEmptyDatasetNameCollisionResponse: CreateEmptyDatasetMutation = {
     datasets: {
+        __typename: "DatasetsMut",
         createEmpty: {
             __typename: "CreateDatasetResultNameCollision",
             message: "Dataset with name 'my-test' already exists",
@@ -1057,6 +976,7 @@ export const mockCreateEmptyDatasetNameCollisionResponse: CreateEmptyDatasetMuta
 
 export const mockCreateDatasetFromSnapshotResponse: CreateDatasetFromSnapshotMutation = {
     datasets: {
+        __typename: "DatasetsMut",
         createFromSnapshot: {
             __typename: "CreateDatasetResultSuccess",
             message: "Success",
@@ -1067,6 +987,7 @@ export const mockCreateDatasetFromSnapshotResponse: CreateDatasetFromSnapshotMut
 
 export const mockCreateDatasetFromSnapshotMailformedResponse: CreateDatasetFromSnapshotMutation = {
     datasets: {
+        __typename: "DatasetsMut",
         createFromSnapshot: {
             __typename: "MetadataManifestMalformed",
             message: "Some manifest format error",
@@ -1076,9 +997,13 @@ export const mockCreateDatasetFromSnapshotMailformedResponse: CreateDatasetFromS
 
 export const mockCommitEventResponse: CommitEventToDatasetMutation = {
     datasets: {
+        __typename: "DatasetsMut",
         byId: {
+            __typename: "DatasetMut",
             metadata: {
+                __typename: "DatasetMetadataMut",
                 chain: {
+                    __typename: "MetadataChainMut",
                     commitEvent: {
                         __typename: "CommitResultSuccess",
                         message: "Success",
@@ -1174,6 +1099,7 @@ export const mockCommitEventToDatasetMutation: CommitEventToDatasetMutation = {
 export const mockUpdateWatermarkSuccessResponse: UpdateWatermarkMutation = {
     datasets: {
         byId: {
+            __typename: "DatasetMut",
             setWatermark: {
                 __typename: "SetWatermarkUpdated",
                 message: "Success",
@@ -1251,7 +1177,9 @@ export const MOCK_NEW_DATASET_NAME = "newName";
 
 export const mockRenameSuccessResponse: RenameDatasetMutation = {
     datasets: {
+        __typename: "DatasetsMut",
         byId: {
+            __typename: "DatasetMut",
             rename: {
                 __typename: "RenameResultSuccess",
                 message: "Success",
@@ -1344,7 +1272,6 @@ export const mockHistoryEditPollingSourceService: DatasetHistoryUpdate = {
             systemTime: "2023-06-02T08:44:28.324101693+00:00",
             sequenceNumber: 0,
             author: {
-                __typename: "Account",
                 ...mockOwnerFieldsWithAvatar,
             },
             event: {
@@ -1360,7 +1287,6 @@ export const mockHistoryEditPollingSourceService: DatasetHistoryUpdate = {
             systemTime: "2023-06-02T08:44:28.324101693+00:00",
             sequenceNumber: 0,
             author: {
-                __typename: "Account",
                 ...mockOwnerFieldsWithAvatar,
             },
             event: {
@@ -1376,7 +1302,6 @@ export const mockHistoryEditPollingSourceService: DatasetHistoryUpdate = {
             systemTime: "2023-06-02T08:44:54.984731027+00:00",
             sequenceNumber: 1,
             author: {
-                __typename: "Account",
                 ...mockOwnerFieldsWithAvatar,
             },
             event: {
@@ -1414,7 +1339,6 @@ export const mockHistoryEditPollingSourceService: DatasetHistoryUpdate = {
             systemTime: "2023-06-02T08:44:28.324101693+00:00",
             sequenceNumber: 0,
             author: {
-                __typename: "Account",
                 ...mockOwnerFieldsWithAvatar,
             },
             event: {
@@ -1442,7 +1366,6 @@ export const mockHistoryEditAddPushSourceService: DatasetHistoryUpdate = {
             systemTime: "2023-06-02T08:44:28.324101693+00:00",
             sequenceNumber: 0,
             author: {
-                __typename: "Account",
                 ...mockOwnerFieldsWithAvatar,
             },
             event: {
@@ -1458,7 +1381,6 @@ export const mockHistoryEditAddPushSourceService: DatasetHistoryUpdate = {
             systemTime: "2023-06-02T08:44:28.324101693+00:00",
             sequenceNumber: 0,
             author: {
-                __typename: "Account",
                 ...mockOwnerFieldsWithAvatar,
             },
             event: {
@@ -1474,7 +1396,6 @@ export const mockHistoryEditAddPushSourceService: DatasetHistoryUpdate = {
             systemTime: "2023-06-02T08:44:54.984731027+00:00",
             sequenceNumber: 1,
             author: {
-                __typename: "Account",
                 ...mockOwnerFieldsWithAvatar,
             },
             event: {
@@ -1503,7 +1424,6 @@ export const mockHistoryEditAddPushSourceService: DatasetHistoryUpdate = {
             systemTime: "2023-06-02T08:44:28.324101693+00:00",
             sequenceNumber: 0,
             author: {
-                __typename: "Account",
                 ...mockOwnerFieldsWithAvatar,
             },
             event: {
@@ -1628,13 +1548,10 @@ export const mockDatasetHeadBlockHashQuery: DatasetHeadBlockHashQuery = {
     datasets: {
         byOwnerAndName: {
             metadata: {
+                __typename: "DatasetMetadata",
                 chain: {
-                    refs: [
-                        {
-                            name: "head",
-                            blockHash: MOCK_DATASET_HEAD_BLOCK_HASH,
-                        },
-                    ],
+                    __typename: "MetadataChain",
+                    refs: [{ __typename: "BlockRef", name: "head", blockHash: MOCK_DATASET_HEAD_BLOCK_HASH }],
                 },
             },
             __typename: "Dataset",
@@ -2114,6 +2031,7 @@ export const mockDatasetAsCollectionQuery: DatasetAsCollectionQuery = {
 };
 
 export const mockCollectionEntryConnection: CollectionEntryConnectionDataFragment = {
+    __typename: "CollectionEntryConnection",
     pageInfo: {
         hasNextPage: false,
         hasPreviousPage: false,

@@ -515,6 +515,7 @@ describe("DatasetApi", () => {
         const mockDatasetAlias = "my-collection";
         const mockResponse: CreateDatasetAsCollectionMutation = {
             datasets: {
+                __typename: "DatasetsMut",
                 createCollection: {
                     message: "Success",
                     dataset: mockDatasetBasicsDerivedFragment,
@@ -546,6 +547,7 @@ describe("DatasetApi", () => {
         const mockDatasetAlias = "my-versioned-file";
         const mockResponse: CreateDatasetAsVersionedFileMutation = {
             datasets: {
+                __typename: "DatasetsMut",
                 createVersionedFile: {
                     message: "Success",
                     dataset: mockDatasetBasicsDerivedFragment,

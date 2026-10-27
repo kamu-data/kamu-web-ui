@@ -208,6 +208,7 @@ export const mockDatasetWebhookResumeSubscriptionMutationError: DatasetWebhookRe
 
 export const mockDatasetWebhookReactivateSubscriptionMutation: DatasetWebhookReactivateSubscriptionMutation = {
     datasets: {
+        __typename: "DatasetsMut",
         byId: {
             webhooks: {
                 subscription: {

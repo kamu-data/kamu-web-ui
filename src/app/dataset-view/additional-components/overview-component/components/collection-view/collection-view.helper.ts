@@ -28,6 +28,7 @@ export function sortCollectionEntryData(
         if (node.asDataset) {
             const latest = node.asDataset.asVersionedFile?.latest;
             const owner: AccountSummaryFragment = {
+                __typename: "Account",
                 accountName: node.asDataset.owner.accountName,
                 avatarUrl: node.asDataset.owner.avatarUrl,
             };

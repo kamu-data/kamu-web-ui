@@ -17,6 +17,7 @@ import {
     AccountWithEmailFragment,
     AccountWithEmailQuery,
 } from "@api/kamu.graphql.interface";
+import { MaybeNull } from "@interface/app.types";
 
 @Injectable({
     providedIn: "root",
@@ -39,10 +40,10 @@ export class AccountEmailService {
         this.emitRenameAccountEmailErrorOccurred("");
     }
 
-    public fetchAccountWithEmail(accountName: string): Observable<AccountWithEmailFragment> {
+    public fetchAccountWithEmail(accountName: string): Observable<MaybeNull<AccountWithEmailFragment>> {
         return this.accountApi.fetchAccountWithEmail(accountName).pipe(
             map((data: AccountWithEmailQuery) => {
-                return data.accounts.byName as AccountWithEmailFragment;
+                return data.accounts.byName ?? null;
             }),
         );
     }
@@ -50,11 +51,12 @@ export class AccountEmailService {
     public changeEmailAddress(params: { accountName: string; newEmail: string }): Observable<boolean> {
         return this.accountApi.changeAccountEmail(params).pipe(
             map((data: AccountChangeEmailMutation) => {
-                if (data.accounts.byName?.updateEmail.__typename === "UpdateEmailSuccess") {
-                    this.toastrService.success(data.accounts.byName.updateEmail.message);
+                const updateEmail = data.accounts.byName?.updateEmail;
+                if (updateEmail?.__typename === "UpdateEmailSuccess") {
+                    this.toastrService.success(updateEmail.message);
                     return true;
                 } else {
-                    this.emitRenameAccountEmailErrorOccurred(data.accounts.byName?.updateEmail.message as string);
+                    this.emitRenameAccountEmailErrorOccurred(updateEmail?.message ?? "");
                     return false;
                 }
             }),

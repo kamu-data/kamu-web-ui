@@ -240,7 +240,7 @@ describe("datasetSettingsIngestConfigurationResolverFn", () => {
         expect(data).toEqual({
             datasetBasics: mockDatasetBasicsRootFragment,
             datasetPermissions: mockFullPowerDatasetPermissionsFragment,
-            ingestionRule: { fetchUncacheable: false, fetchNextIteration: false },
+            ingestionRule: { __typename: "FlowConfigRuleIngest", fetchUncacheable: false, fetchNextIteration: false },
             retryPolicy: null,
         });
     });

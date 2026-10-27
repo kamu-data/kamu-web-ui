@@ -230,6 +230,13 @@ code added itself, or a third-party callback triggers none of them.
 - No `console.log` (eslint `no-console`); no `eslint-disable` comments — fix the cause, or ask
   the user first (AGENTS.md, "Validation").
 - Unused parameters are prefixed `_`; `any` is avoided in favour of real or generated types.
+- No type assertions (`x as T`); eslint's `consistent-type-assertions` rejects them. Narrow
+  instead: `requireValue()` for a value that must be there, a `__typename` switch for a GraphQL
+  union, `instanceof` for DOM elements and events. A value that arrives as `any` goes through
+  `@common/helpers/untyped-boundary.helpers`: `parseJsonAs<T>()` for `JSON.parse`,
+  `httpErrorBodyAs<T>()` for `HttpErrorResponse.error`. That file is the one place app code may
+  assert, and eslint exempts it. Files in `eslint.type-assertion-backlog.mjs` still hold older
+  assertions; remove a file from that list once it holds none, and add none to it.
 
 ## Rejected approaches
 

@@ -52,7 +52,6 @@ export const mockSearchOverviewResponse: SearchDatasetsOverviewQuery = {
                                     kind: DatasetKind.Derivative,
                                     name: "rhine-basin.netherlands",
                                     owner: {
-                                        __typename: "Account",
                                         ...mockOwnerFieldsWithAvatar,
                                     },
                                     alias: "deltares.nl/rhine-basin.netherlands",
@@ -69,7 +68,6 @@ export const mockSearchOverviewResponse: SearchDatasetsOverviewQuery = {
                     kind: DatasetKind.Root,
                     name: "alberta.case-details",
                     owner: {
-                        __typename: "Account",
                         ...mockOwnerFieldsWithAvatar,
                     },
                     alias: "kamu/alberta.case-details",
@@ -110,7 +108,6 @@ export const mockSearchOverviewResponse: SearchDatasetsOverviewQuery = {
                                     kind: DatasetKind.Derivative,
                                     name: "rhine-basin.netherlands",
                                     owner: {
-                                        __typename: "Account",
                                         ...mockOwnerFieldsWithAvatar,
                                     },
                                     alias: "deltares.nl/rhine-basin.netherlands",
@@ -127,7 +124,6 @@ export const mockSearchOverviewResponse: SearchDatasetsOverviewQuery = {
                     kind: DatasetKind.Derivative,
                     name: "alberta.case-details.hm",
                     owner: {
-                        __typename: "Account",
                         ...mockOwnerFieldsWithAvatar,
                     },
                     alias: "kamu/alberta.case-details.hm",
@@ -168,7 +164,6 @@ export const mockSearchOverviewResponse: SearchDatasetsOverviewQuery = {
                                     kind: DatasetKind.Derivative,
                                     name: "rhine-basin.netherlands",
                                     owner: {
-                                        __typename: "Account",
                                         ...mockOwnerFieldsWithAvatar,
                                     },
                                     alias: "deltares.nl/rhine-basin.netherlands",
@@ -185,7 +180,6 @@ export const mockSearchOverviewResponse: SearchDatasetsOverviewQuery = {
                     kind: DatasetKind.Root,
                     name: "british-columbia.case-details",
                     owner: {
-                        __typename: "Account",
                         ...mockOwnerFieldsWithAvatar,
                     },
                     alias: "kamu/british-columbia.case-details",
@@ -226,7 +220,6 @@ export const mockSearchOverviewResponse: SearchDatasetsOverviewQuery = {
                                     kind: DatasetKind.Derivative,
                                     name: "rhine-basin.netherlands",
                                     owner: {
-                                        __typename: "Account",
                                         ...mockOwnerFieldsWithAvatar,
                                     },
                                     alias: "deltares.nl/rhine-basin.netherlands",
@@ -243,7 +236,6 @@ export const mockSearchOverviewResponse: SearchDatasetsOverviewQuery = {
                     kind: DatasetKind.Derivative,
                     name: "british-columbia.case-details.hm",
                     owner: {
-                        __typename: "Account",
                         ...mockOwnerFieldsWithAvatar,
                     },
                     alias: "kamu/british-columbia.case-details.hm",
@@ -284,7 +276,6 @@ export const mockSearchOverviewResponse: SearchDatasetsOverviewQuery = {
                                     kind: DatasetKind.Derivative,
                                     name: "rhine-basin.netherlands",
                                     owner: {
-                                        __typename: "Account",
                                         ...mockOwnerFieldsWithAvatar,
                                     },
                                     alias: "deltares.nl/rhine-basin.netherlands",
@@ -301,7 +292,6 @@ export const mockSearchOverviewResponse: SearchDatasetsOverviewQuery = {
                     kind: DatasetKind.Derivative,
                     name: "canada.case-details",
                     owner: {
-                        __typename: "Account",
                         ...mockOwnerFieldsWithAvatar,
                     },
                     alias: "kamu/canada.case-details",
@@ -332,7 +322,6 @@ export const mockSearchOverviewResponse: SearchDatasetsOverviewQuery = {
                     kind: DatasetKind.Derivative,
                     name: "canada.daily-cases",
                     owner: {
-                        __typename: "Account",
                         ...mockOwnerFieldsWithAvatar,
                     },
                     alias: "kamu/canada.daily-cases",
@@ -356,7 +345,6 @@ export const mockSearchOverviewResponse: SearchDatasetsOverviewQuery = {
                     kind: DatasetKind.Root,
                     name: "co.alphavantage.tickers.daily.spy",
                     owner: {
-                        __typename: "Account",
                         ...mockOwnerFieldsWithAvatar,
                     },
                     alias: "kamu/co.alphavantage.tickers.daily.spy",
@@ -386,7 +374,6 @@ export const mockSearchOverviewResponse: SearchDatasetsOverviewQuery = {
                     kind: DatasetKind.Root,
                     name: "com.cryptocompare.ohlcv.eth-usd",
                     owner: {
-                        __typename: "Account",
                         ...mockOwnerFieldsWithAvatar,
                     },
                     alias: "kamu/com.cryptocompare.ohlcv.eth-usd",
@@ -410,7 +397,6 @@ export const mockSearchOverviewResponse: SearchDatasetsOverviewQuery = {
                     kind: DatasetKind.Root,
                     name: "net.rocketpool.reth.mint-burn",
                     owner: {
-                        __typename: "Account",
                         ...mockOwnerFieldsWithAvatar,
                     },
                     alias: "kamu/net.rocketpool.reth.mint-burn",
@@ -450,7 +436,6 @@ export const mockSearchOverviewResponse: SearchDatasetsOverviewQuery = {
                                     kind: DatasetKind.Derivative,
                                     name: "rhine-basin.netherlands",
                                     owner: {
-                                        __typename: "Account",
                                         ...mockOwnerFieldsWithAvatar,
                                     },
                                     alias: "deltares.nl/rhine-basin.netherlands",
@@ -467,7 +452,6 @@ export const mockSearchOverviewResponse: SearchDatasetsOverviewQuery = {
                     kind: DatasetKind.Root,
                     name: "ontario.case-details",
                     owner: {
-                        __typename: "Account",
                         ...mockOwnerFieldsWithAvatar,
                     },
                     alias: "kamu/ontario.case-details",
@@ -498,7 +482,6 @@ export const mockAutoCompleteResponse: SearchDatasetsAutocompleteQuery = {
                     kind: DatasetKind.Root,
                     name: "alberta.case-details",
                     owner: {
-                        __typename: "Account",
                         ...mockOwnerFieldsWithAvatar,
                     },
                     alias: "kamu/alberta.case-details",
@@ -510,7 +493,6 @@ export const mockAutoCompleteResponse: SearchDatasetsAutocompleteQuery = {
                     kind: DatasetKind.Derivative,
                     name: "alberta.case-details.hm",
                     owner: {
-                        __typename: "Account",
                         ...mockOwnerFieldsWithAvatar,
                     },
                     alias: "kamu/alberta.case-details.hm",
@@ -522,7 +504,6 @@ export const mockAutoCompleteResponse: SearchDatasetsAutocompleteQuery = {
                     kind: DatasetKind.Root,
                     name: "british-columbia.case-details",
                     owner: {
-                        __typename: "Account",
                         ...mockOwnerFieldsWithAvatar,
                     },
                     alias: "kamu/british-columbia.case-details",
@@ -534,7 +515,6 @@ export const mockAutoCompleteResponse: SearchDatasetsAutocompleteQuery = {
                     kind: DatasetKind.Derivative,
                     name: "british-columbia.case-details.hm",
                     owner: {
-                        __typename: "Account",
                         ...mockOwnerFieldsWithAvatar,
                     },
                     alias: "kamu/british-columbia.case-details.hm",
@@ -546,7 +526,6 @@ export const mockAutoCompleteResponse: SearchDatasetsAutocompleteQuery = {
                     kind: DatasetKind.Derivative,
                     name: "canada.case-details",
                     owner: {
-                        __typename: "Account",
                         ...mockOwnerFieldsWithAvatar,
                     },
                     alias: "kamu/canada.case-details",
@@ -558,7 +537,6 @@ export const mockAutoCompleteResponse: SearchDatasetsAutocompleteQuery = {
                     kind: DatasetKind.Derivative,
                     name: "canada.daily-cases",
                     owner: {
-                        __typename: "Account",
                         ...mockOwnerFieldsWithAvatar,
                     },
                     alias: "kamu/canada.daily-cases",
@@ -570,7 +548,6 @@ export const mockAutoCompleteResponse: SearchDatasetsAutocompleteQuery = {
                     kind: DatasetKind.Root,
                     name: "co.alphavantage.tickers.daily.spy",
                     owner: {
-                        __typename: "Account",
                         ...mockOwnerFieldsWithAvatar,
                     },
                     alias: "kamu/co.alphavantage.tickers.daily.spy",
@@ -582,7 +559,6 @@ export const mockAutoCompleteResponse: SearchDatasetsAutocompleteQuery = {
                     kind: DatasetKind.Root,
                     name: "com.cryptocompare.ohlcv.eth-usd",
                     owner: {
-                        __typename: "Account",
                         ...mockOwnerFieldsWithAvatar,
                     },
                     alias: "kamu/com.cryptocompare.ohlcv.eth-usd",
@@ -594,7 +570,6 @@ export const mockAutoCompleteResponse: SearchDatasetsAutocompleteQuery = {
                     kind: DatasetKind.Root,
                     name: "ontario.case-details",
                     owner: {
-                        __typename: "Account",
                         ...mockOwnerFieldsWithAvatar,
                     },
                     alias: "kamu/ontario.case-details",
@@ -606,7 +581,6 @@ export const mockAutoCompleteResponse: SearchDatasetsAutocompleteQuery = {
                     kind: DatasetKind.Derivative,
                     name: "ontario.case-details.hm",
                     owner: {
-                        __typename: "Account",
                         ...mockOwnerFieldsWithAvatar,
                     },
                     alias: "kamu/ontario.case-details.hm",
@@ -621,11 +595,11 @@ export const searchResult: DatasetAutocompleteItem[] = [
     {
         __typename: TypeNames.allDataType,
         dataset: {
+            __typename: "Dataset",
             id: "a",
             name: "a",
             kind: DatasetKind.Root,
             owner: {
-                __typename: "Account",
                 ...mockOwnerFieldsWithAvatar,
             },
             alias: "anonymous/a",
@@ -640,7 +614,6 @@ export const searchResult: DatasetAutocompleteItem[] = [
             kind: DatasetKind.Root,
             name: "alberta.case-details",
             owner: {
-                __typename: "Account",
                 ...mockOwnerFieldsWithAvatar,
             },
             alias: "kamu/alberta.case-details",
@@ -656,7 +629,6 @@ export const searchResult: DatasetAutocompleteItem[] = [
             kind: DatasetKind.Derivative,
             name: "alberta.case-details.hm",
             owner: {
-                __typename: "Account",
                 ...mockOwnerFieldsWithAvatar,
             },
             alias: "kamu/alberta.case-details.hm",
@@ -672,7 +644,6 @@ export const searchResult: DatasetAutocompleteItem[] = [
             kind: DatasetKind.Root,
             name: "british-columbia.case-details",
             owner: {
-                __typename: "Account",
                 ...mockOwnerFieldsWithAvatar,
             },
             alias: "kamu/british-columbia.case-details",
@@ -688,7 +659,6 @@ export const searchResult: DatasetAutocompleteItem[] = [
             kind: DatasetKind.Derivative,
             name: "british-columbia.case-details.hm",
             owner: {
-                __typename: "Account",
                 ...mockOwnerFieldsWithAvatar,
             },
             alias: "kamu/british-columbia.case-details.hm",
@@ -704,7 +674,6 @@ export const searchResult: DatasetAutocompleteItem[] = [
             kind: DatasetKind.Derivative,
             name: "canada.case-details",
             owner: {
-                __typename: "Account",
                 ...mockOwnerFieldsWithAvatar,
             },
             alias: "kamu/canada.case-details",
@@ -720,7 +689,6 @@ export const searchResult: DatasetAutocompleteItem[] = [
             kind: DatasetKind.Derivative,
             name: "canada.daily-cases",
             owner: {
-                __typename: "Account",
                 ...mockOwnerFieldsWithAvatar,
             },
             alias: "kamu/canada.daily-cases",
@@ -736,7 +704,6 @@ export const searchResult: DatasetAutocompleteItem[] = [
             kind: DatasetKind.Root,
             name: "co.alphavantage.tickers.daily.spy",
             owner: {
-                __typename: "Account",
                 ...mockOwnerFieldsWithAvatar,
             },
             alias: "kamu/co.alphavantage.tickers.daily.spy",
@@ -752,7 +719,6 @@ export const searchResult: DatasetAutocompleteItem[] = [
             kind: DatasetKind.Root,
             name: "com.cryptocompare.ohlcv.eth-usd",
             owner: {
-                __typename: "Account",
                 ...mockOwnerFieldsWithAvatar,
             },
             alias: "kamu/com.cryptocompare.ohlcv.eth-usd",
@@ -768,7 +734,6 @@ export const searchResult: DatasetAutocompleteItem[] = [
             kind: DatasetKind.Root,
             name: "ontario.case-details",
             owner: {
-                __typename: "Account",
                 ...mockOwnerFieldsWithAvatar,
             },
             alias: "kamu/ontario.case-details",
@@ -784,7 +749,6 @@ export const searchResult: DatasetAutocompleteItem[] = [
             kind: DatasetKind.Derivative,
             name: "ontario.case-details.hm",
             owner: {
-                __typename: "Account",
                 ...mockOwnerFieldsWithAvatar,
             },
             alias: "kamu/ontario.case-details.hm",

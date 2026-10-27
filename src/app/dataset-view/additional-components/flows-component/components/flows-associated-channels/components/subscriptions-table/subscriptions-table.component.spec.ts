@@ -36,7 +36,7 @@ describe("SubscriptionsTableComponent", () => {
         setComponentInput(
             fixture,
             "subprocesses",
-            requireValue(mockDatasetFlowsProcessesQuery.datasets.byId?.flows.processes.webhooks.subprocesses ?? null),
+            requireValue(mockDatasetFlowsProcessesQuery.datasets.byId?.flows.processes.webhooks.subprocesses),
         );
         setComponentInput(fixture, "webhookTableFilters", []);
         fixture.detectChanges();

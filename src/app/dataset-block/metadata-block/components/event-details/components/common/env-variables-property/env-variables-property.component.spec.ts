@@ -27,8 +27,8 @@ describe("EnvVariablesPropertyComponent", () => {
         fixture = TestBed.createComponent(EnvVariablesPropertyComponent);
         component = fixture.componentInstance;
         setComponentInput(fixture, "data", [
-            { name: "testName1", value: null },
-            { name: "testName2", value: "testValue" },
+            { __typename: "EnvVar", name: "testName1", value: null },
+            { __typename: "EnvVar", name: "testName2", value: "testValue" },
         ]);
         fixture.detectChanges();
     });

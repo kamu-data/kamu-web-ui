@@ -53,6 +53,7 @@ export const mockAccountDetails: AccountFragment = {
 };
 
 export const mockAccountDetailsWithEmail: AccountWithEmailFragment = {
+    __typename: "Account",
     id: TEST_ACCOUNT_ID,
     accountName: TEST_LOGIN,
     displayName: TEST_USER_NAME,

@@ -24,7 +24,7 @@ export const accountSettingsTabGuard: CanActivateFn = (route) => {
     const navigationService = inject(NavigationService);
 
     const accountName = requireValue(
-        route.pathFromRoot.map((r) => r.paramMap.get(ProjectLinks.URL_PARAM_ACCOUNT_NAME)).find(Boolean) ?? null,
+        route.pathFromRoot.map((r) => r.paramMap.get(ProjectLinks.URL_PARAM_ACCOUNT_NAME)).find(Boolean),
     );
     const loggedUser = loggedUserService.maybeCurrentlyLoggedInUser;
     const isAdminViewingAnotherAccount = Boolean(loggedUser?.isAdmin) && loggedUser?.accountName !== accountName;

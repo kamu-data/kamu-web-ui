@@ -58,19 +58,19 @@ describe("BlockService", () => {
 
     it("should check get block from api", async () => {
         vi.spyOn(datasetApi, "getBlockByHash").mockReturnValue(of(mockGetMetadataBlockQuery));
-        const metadata = requireValue(mockGetMetadataBlockQuery.datasets.byOwnerAndName ?? null).metadata;
+        const metadata = requireValue(mockGetMetadataBlockQuery.datasets.byOwnerAndName).metadata;
 
         const result = await firstValueFrom(service.requestMetadataBlock(mockDatasetInfo, TEST_BLOCK_HASH));
 
         expect(result).toEqual({
-            block: requireValue(metadata.chain.blockByHash ?? null),
-            blockAsYaml: requireValue(metadata.chain.blockByHashEncoded ?? null),
+            block: requireValue(metadata.chain.blockByHash),
+            blockAsYaml: requireValue(metadata.chain.blockByHashEncoded),
             downstreamsCount: metadata.currentDownstreamDependenciesCount,
         });
     });
 
     it("should emit nothing usable for a block hash the dataset does not have", async () => {
-        const dataset = requireValue(mockGetMetadataBlockQuery.datasets.byOwnerAndName ?? null);
+        const dataset = requireValue(mockGetMetadataBlockQuery.datasets.byOwnerAndName);
         vi.spyOn(datasetApi, "getBlockByHash").mockReturnValue(
             of({
                 ...mockGetMetadataBlockQuery,
@@ -100,8 +100,11 @@ describe("BlockService", () => {
         function mockProjection(schemaContent: MaybeNull<string>): DatasetBlocksSchemaByEventTypeQuery {
             return {
                 datasets: {
+                    __typename: "Datasets",
                     byOwnerAndName: {
+                        __typename: "Dataset",
                         metadata: {
+                            __typename: "DatasetMetadata",
                             metadataProjection: [
                                 {
                                     __typename: "MetadataBlockExtended",
@@ -158,7 +161,13 @@ describe("BlockService", () => {
 
         it("should return [] when metadataProjection is empty", () => {
             const emptyQuery: DatasetBlocksSchemaByEventTypeQuery = {
-                datasets: { byOwnerAndName: { metadata: { metadataProjection: [] } } },
+                datasets: {
+                    __typename: "Datasets",
+                    byOwnerAndName: {
+                        __typename: "Dataset",
+                        metadata: { __typename: "DatasetMetadata", metadataProjection: [] },
+                    },
+                },
             };
             vi.spyOn(datasetApi, "getSchemaFieldsByEventType").mockReturnValue(of(emptyQuery));
 
@@ -182,8 +191,11 @@ describe("BlockService", () => {
         function mockPushProjection(schemaContent: MaybeNull<string>): DatasetBlocksSchemaByEventTypeQuery {
             return {
                 datasets: {
+                    __typename: "Datasets",
                     byOwnerAndName: {
+                        __typename: "Dataset",
                         metadata: {
+                            __typename: "DatasetMetadata",
                             metadataProjection: [
                                 {
                                     __typename: "MetadataBlockExtended",
@@ -224,7 +236,13 @@ describe("BlockService", () => {
 
         it("should return [] when metadataProjection is empty", () => {
             const emptyQuery: DatasetBlocksSchemaByEventTypeQuery = {
-                datasets: { byOwnerAndName: { metadata: { metadataProjection: [] } } },
+                datasets: {
+                    __typename: "Datasets",
+                    byOwnerAndName: {
+                        __typename: "Dataset",
+                        metadata: { __typename: "DatasetMetadata", metadataProjection: [] },
+                    },
+                },
             };
             vi.spyOn(datasetApi, "getSchemaFieldsByEventType").mockReturnValue(of(emptyQuery));
 
@@ -246,8 +264,11 @@ describe("BlockService", () => {
         it("should return the schema for the requested source when multiple push sources exist", () => {
             const multiSourceQuery: DatasetBlocksSchemaByEventTypeQuery = {
                 datasets: {
+                    __typename: "Datasets",
                     byOwnerAndName: {
+                        __typename: "Dataset",
                         metadata: {
+                            __typename: "DatasetMetadata",
                             metadataProjection: [
                                 {
                                     __typename: "MetadataBlockExtended",
@@ -298,8 +319,11 @@ describe("BlockService", () => {
     describe("getAddPushSourceBlock", () => {
         const mockBlocksEncodedByEventTypeQuery: DatasetBlocksEncodedByEventTypeQuery = {
             datasets: {
+                __typename: "Datasets",
                 byOwnerAndName: {
+                    __typename: "Dataset",
                     metadata: {
+                        __typename: "DatasetMetadata",
                         metadataProjection: [
                             {
                                 __typename: "MetadataBlockExtended",

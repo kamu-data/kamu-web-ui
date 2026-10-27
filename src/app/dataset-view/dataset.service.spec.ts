@@ -87,17 +87,17 @@ describe("AppDatasetService", () => {
         const datasetChangesSubscription$ = service.datasetChanges
             .pipe(first())
             .subscribe((dataset: DatasetBasicsFragment) => {
-                const expectedDatasetBasics = requireValue(mockDatasetMainDataResponse.datasets.byOwnerAndName ?? null);
+                const expectedDatasetBasics = requireValue(mockDatasetMainDataResponse.datasets.byOwnerAndName);
                 expect(dataset).toBe(expectedDatasetBasics);
             });
 
         const datasetOverviewSubscription$ = datasetSubsService.overviewChanges
             .pipe(first())
             .subscribe((overviewDataUpdate: OverviewUpdate) => {
-                const expectedOverview = requireValue(mockDatasetMainDataResponse.datasets.byOwnerAndName ?? null);
+                const expectedOverview = requireValue(mockDatasetMainDataResponse.datasets.byOwnerAndName);
                 expect(overviewDataUpdate.overview).toEqual(expectedOverview);
 
-                const expectedSize = requireValue(mockDatasetMainDataResponse.datasets.byOwnerAndName?.data ?? null);
+                const expectedSize = requireValue(mockDatasetMainDataResponse.datasets.byOwnerAndName?.data);
                 expect(overviewDataUpdate.size).toEqual(expectedSize);
             });
 
@@ -208,7 +208,7 @@ describe("AppDatasetService", () => {
             .subscribe((historyUpdate: MaybeNull<DatasetHistoryUpdate>) => {
                 if (historyUpdate) {
                     const expectedNodes = requireValue(
-                        mockDatasetHistoryResponse.datasets.byOwnerAndName?.metadata.chain.blocks.nodes ?? null,
+                        mockDatasetHistoryResponse.datasets.byOwnerAndName?.metadata.chain.blocks.nodes,
                     );
                     expect(historyUpdate.history).toBe(expectedNodes);
                     expect(historyUpdate.pageInfo).toEqual({
@@ -300,7 +300,9 @@ describe("AppDatasetService", () => {
     });
 
     it("should check get dataset basics with permissions when dataset is not found", () => {
-        vi.spyOn(datasetApi, "getDatasetBasicsWithPermissions").mockReturnValue(of({ datasets: {} }));
+        vi.spyOn(datasetApi, "getDatasetBasicsWithPermissions").mockReturnValue(
+            of({ __typename: "Query", datasets: { __typename: "Datasets" } }),
+        );
 
         const subscription$ = service.requestDatasetBasicDataWithPermissions(mockDatasetInfo).subscribe({
             next: () => expect.fail("Unexpected success"),

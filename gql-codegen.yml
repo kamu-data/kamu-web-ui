@@ -11,6 +11,8 @@ generates:
       - typescript-apollo-angular
     config:
       inlineFragmentTypes: combine
+      nonOptionalTypename: true
+      skipTypeNameForRoot: true
       defaultScalarType: string
       gqlImport: "@apollo/client/core#gql"
       scalars:

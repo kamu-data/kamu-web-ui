@@ -123,7 +123,7 @@ export class DatasetSettingsSchedulingTabComponent extends BaseComponent impleme
 
             /* istanbul ignore next */
             default: {
-                throw new Error(`Unknown schedule type: ${schedule.__typename}`);
+                throw unexpectedValueError(schedule, "schedule");
             }
         }
     }

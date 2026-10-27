@@ -39,7 +39,7 @@ describe("FlowsBlockActionsComponent", () => {
         setComponentInput(
             fixture,
             "flowProcess",
-            requireValue(mockDatasetFlowsProcessesQuery.datasets.byId?.flows.processes.primary ?? null),
+            requireValue(mockDatasetFlowsProcessesQuery.datasets.byId?.flows.processes.primary),
         );
         setComponentInput(fixture, "hasPushSources", false);
     });

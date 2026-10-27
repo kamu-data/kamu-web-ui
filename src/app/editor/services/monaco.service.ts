@@ -13,9 +13,15 @@ import { MaybeUndefined } from "@interface/app.types";
 
 import { EditorError } from "src/app/editor/models/error.model";
 
+declare global {
+    interface Window {
+        // Set by the Monaco loader once the editor has loaded
+        monaco?: typeof monaco;
+    }
+}
+
 export function getMonacoNamespace(): MaybeUndefined<typeof monaco> {
-    // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-explicit-any
-    return (window as any).monaco as MaybeUndefined<typeof monaco>;
+    return window.monaco;
 }
 
 @Injectable({

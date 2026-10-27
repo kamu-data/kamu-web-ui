@@ -14,6 +14,7 @@ import { combineLatest, defaultIfEmpty, map, Observable, of, switchMap, tap } fr
 import { ToastrService } from "ngx-toastr";
 
 import { BaseComponent } from "@common/components/base.component";
+import { parseJsonAs } from "@common/helpers/untyped-boundary.helpers";
 import AppValues from "@common/values/app.values";
 import { DatasetByIdQuery } from "@api/kamu.graphql.interface";
 import { MaybeNull } from "@interface/app.types";
@@ -106,9 +107,9 @@ export class QueryExplainerComponent extends BaseComponent implements OnInit {
     }
 
     /* istanbul ignore next */
-    public async verifyCommitment(): Promise<void> {
+    public verifyCommitment(): void {
         try {
-            const parsedCommitment = (await JSON.parse(this.commitment)) as QueryExplainerResponse;
+            const parsedCommitment = parseJsonAs<QueryExplainerResponse>(this.commitment);
             this.componentData$ = this.withFormFallback(this.combineQueryExplainerResponse(parsedCommitment));
             // Set only once the parsed JSON proved to be a commitment, so a malformed one keeps the form
             this.commitmentUploadToken = "simulated-token";

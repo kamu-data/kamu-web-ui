@@ -209,7 +209,7 @@ export class FlowsTableComponent extends BaseComponent implements OnInit, OnChan
     }
 
     public datasetById(datasetId: string): DatasetBasicsFragment {
-        return requireValue(this.involvedDatasets.find((dataset) => dataset.id === datasetId) ?? null);
+        return requireValue(this.involvedDatasets.find((dataset) => dataset.id === datasetId));
     }
 
     public abortFlow(flowElement: FlowSummaryDataWithTriggerFragment): void {

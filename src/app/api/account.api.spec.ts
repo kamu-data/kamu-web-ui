@@ -146,8 +146,8 @@ describe("AccountApi", () => {
                 filters: ACCOUNT_FILTERS,
             })
             .subscribe((list: AccountListFlowsQuery) => {
-                expect(requireValue(list.accounts.byName?.flows.runs.table ?? null).totalCount).toEqual(
-                    requireValue(mockAccountListFlowsQuery.accounts.byName?.flows.runs.table ?? null).totalCount,
+                expect(requireValue(list.accounts.byName?.flows.runs.table).totalCount).toEqual(
+                    requireValue(mockAccountListFlowsQuery.accounts.byName?.flows.runs.table).totalCount,
                 );
             });
 

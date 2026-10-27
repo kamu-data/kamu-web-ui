@@ -48,7 +48,7 @@ describe("DatasetCommitService", () => {
 
     const TEST_ACCOUNT_NAME = "accountName";
     const TEST_DATASET_NAME = "datasetName";
-    const TEST_DATASET_ID = requireValue(mockDatasetByAccountAndDatasetNameQuery.datasets.byOwnerAndName ?? null).id;
+    const TEST_DATASET_ID = requireValue(mockDatasetByAccountAndDatasetNameQuery.datasets.byOwnerAndName).id;
     const TEST_EVENT_CONTENT = "event content";
 
     beforeEach(() => {
@@ -215,7 +215,9 @@ describe("DatasetCommitService", () => {
 
     it("should check commit to dataset when not found", () => {
         vi.spyOn(loggedUserService, "isAuthenticated", "get").mockReturnValue(true);
-        const notFoundResponse: CommitEventToDatasetMutation = { datasets: { byId: null } };
+        const notFoundResponse: CommitEventToDatasetMutation = {
+            datasets: { __typename: "DatasetsMut", byId: null },
+        };
         vi.spyOn(datasetApi, "commitEvent").mockReturnValue(of(notFoundResponse));
 
         const subscription$ = requestCommitEvent().subscribe({
@@ -267,7 +269,9 @@ describe("DatasetCommitService", () => {
 
     it("should check update readme for dataset when not found", () => {
         vi.spyOn(loggedUserService, "isAuthenticated", "get").mockReturnValue(true);
-        const notFoundResponse: UpdateReadmeMutation = { datasets: { byId: null } };
+        const notFoundResponse: UpdateReadmeMutation = {
+            datasets: { __typename: "DatasetsMut", byId: null },
+        };
         vi.spyOn(datasetApi, "updateReadme").mockReturnValue(of(notFoundResponse));
 
         const README_CONTENT = "readme content";

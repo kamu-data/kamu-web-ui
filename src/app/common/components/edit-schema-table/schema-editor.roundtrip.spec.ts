@@ -94,8 +94,11 @@ const NESTED_SCHEMA_ODF_JSON = JSON.stringify({ fields: NESTED_SCHEMA_FIELDS });
 function mockGqlProjectionWithSchema(schemaContent: string): DatasetBlocksSchemaByEventTypeQuery {
     return {
         datasets: {
+            __typename: "Datasets",
             byOwnerAndName: {
+                __typename: "Dataset",
                 metadata: {
+                    __typename: "DatasetMetadata",
                     metadataProjection: [
                         {
                             __typename: "MetadataBlockExtended",

@@ -26,6 +26,7 @@ export const mockHistoryFragmentWithFinishedStatus: FlowHistoryDataFragment = {
     taskId: "1",
     taskStatus: TaskStatus.Finished,
     task: {
+        __typename: "Task",
         outcome: {
             __typename: "TaskOutcomeSuccess",
         },
@@ -39,9 +40,7 @@ export const mockHistoryFragmentWithQueuedStatus: FlowHistoryDataFragment = {
     eventTime: "2024-03-13T13:54:30.656488373+00:00",
     taskId: "1",
     taskStatus: TaskStatus.Queued,
-    task: {
-        outcome: null,
-    },
+    task: { __typename: "Task", outcome: null },
     nextAttemptAt: null,
 };
 
@@ -54,6 +53,7 @@ export const mockFlowSummaryDataFragmentIngestResult: FlowSummaryDataFragment = 
             numRecords: 100,
         },
         pollingSource: {
+            __typename: "SetPollingSource",
             fetch: {
                 __typename: "FetchStepUrl",
                 url: "https://example.com/data.csv",
@@ -101,9 +101,7 @@ export const mockFlowHistoryDataFragmentForDescriptions: FlowHistoryDataFragment
         eventTime: "2024-03-13T13:54:30.656488373+00:00",
         taskId: "1",
         taskStatus: TaskStatus.Running,
-        task: {
-            outcome: null,
-        },
+        task: { __typename: "Task", outcome: null },
         nextAttemptAt: null,
     },
     {
@@ -113,6 +111,7 @@ export const mockFlowHistoryDataFragmentForDescriptions: FlowHistoryDataFragment
         taskId: "2",
         taskStatus: TaskStatus.Finished,
         task: {
+            __typename: "Task",
             outcome: {
                 __typename: "TaskOutcomeSuccess",
             },
@@ -191,10 +190,7 @@ export const mockFlowHistoryDataFragmentForDescriptions: FlowHistoryDataFragment
             activeBatchingRule: {
                 __typename: "FlowTriggerBatchingRuleBuffering",
                 minRecordsToAwait: 500,
-                maxBatchingInterval: {
-                    every: 5,
-                    unit: TimeUnit.Hours,
-                },
+                maxBatchingInterval: { __typename: "TimeDelta", every: 5, unit: TimeUnit.Hours },
             },
             batchingDeadline: "2022-08-05T21:17:30.613911358+00:00",
             accumulatedRecordsCount: 100,
@@ -303,9 +299,7 @@ export const mockFlowHistoryDataFragmentForIconOptions: FlowHistoryDataFragment[
         eventTime: "2024-03-13T13:54:30.656488373+00:00",
         taskId: "1",
         taskStatus: TaskStatus.Running,
-        task: {
-            outcome: null,
-        },
+        task: { __typename: "Task", outcome: null },
         nextAttemptAt: null,
     },
     {
@@ -407,6 +401,7 @@ export const mockFlowHistoryDataFragmentForSubMessages: FlowHistoryDataFragment[
                 __typename: "FlowTriggerBatchingRuleBuffering",
                 minRecordsToAwait: 500,
                 maxBatchingInterval: {
+                    __typename: "TimeDelta",
                     every: 5,
                     unit: TimeUnit.Hours,
                 },

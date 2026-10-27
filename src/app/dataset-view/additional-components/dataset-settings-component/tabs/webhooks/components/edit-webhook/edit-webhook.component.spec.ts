@@ -40,6 +40,7 @@ describe("EditWebhookComponent", () => {
         setComponentInput(fixture, "editWebhooksData", {
             datasetBasics: mockDatasetBasicsRootFragment,
             subscription: {
+                __typename: "WebhookSubscription",
                 targetUrl: "https://mock.com",
                 status: WebhookSubscriptionStatus.Enabled,
                 eventTypes: ["DATASET.REF.UPDATED"],

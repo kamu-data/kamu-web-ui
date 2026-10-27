@@ -53,6 +53,7 @@ export class OverviewHistorySummaryHeaderComponent {
         return this.metadataBlockFragment?.author
             ? this.metadataBlockFragment.author
             : {
+                  __typename: "Account",
                   id: "",
                   accountName: AppValues.DEFAULT_USER_DISPLAY_NAME,
                   avatarUrl: AppValues.DEFAULT_AVATAR_URL,

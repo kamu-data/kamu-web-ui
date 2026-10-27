@@ -41,9 +41,7 @@ describe("WebhookFlowProcessCardComponent", () => {
         setComponentInput(
             fixture,
             "summary",
-            requireValue(
-                mockAccountFlowsAsCardsQuery.accounts.byName?.flows.processes.allCards.nodes[0].summary ?? null,
-            ),
+            requireValue(mockAccountFlowsAsCardsQuery.accounts.byName?.flows.processes.allCards.nodes[0].summary),
         );
         fixture.detectChanges();
     });

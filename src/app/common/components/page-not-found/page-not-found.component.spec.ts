@@ -50,6 +50,6 @@ describe("PageNotFoundComponent", () => {
         const navigateToHomeSpy = vi.spyOn(navigationService, "navigateToLogin").mockReturnValue();
         emitClickOnElementByDataTestId(fixture, "navigate-to-login-btn");
         expect(navigateToHomeSpy).toHaveBeenCalledTimes(1);
-        expect(requireValue(navigateToHomeSpy.mock.lastCall ?? null).length).toEqual(1);
+        expect(requireValue(navigateToHomeSpy.mock.lastCall).length).toEqual(1);
     });
 });

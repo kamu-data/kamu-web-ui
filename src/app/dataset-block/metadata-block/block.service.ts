@@ -10,6 +10,7 @@ import { inject, Injectable } from "@angular/core";
 import { Observable } from "rxjs";
 import { map } from "rxjs/operators";
 
+import { requireValue } from "@common/helpers/app.helpers";
 import { extractSchemaFromReadStep } from "@common/helpers/data-schema.helpers";
 import { DatasetApi } from "@api/dataset.api";
 import { GetMetadataBlockQuery, MetadataEventType, MetadataManifestFormat } from "@api/kamu.graphql.interface";
@@ -34,7 +35,7 @@ export class BlockService {
                 if (metadata && block) {
                     return {
                         block,
-                        blockAsYaml: metadata.chain.blockByHashEncoded as string,
+                        blockAsYaml: requireValue(metadata.chain.blockByHashEncoded, "Block has no encoding"),
                         downstreamsCount: metadata.currentDownstreamDependenciesCount,
                     };
                 }
@@ -60,7 +61,7 @@ export class BlockService {
             .pipe(
                 map((data) => {
                     const blocks = data.datasets.byOwnerAndName?.metadata.metadataProjection ?? [];
-                    return blocks.length ? (blocks[0].encoded?.content as string) : null;
+                    return blocks.length ? (blocks[0].encoded?.content ?? null) : null;
                 }),
             );
     }
@@ -73,7 +74,7 @@ export class BlockService {
         return this.datasetApi.getBlocksByEventType({ ...params, eventTypes: [MetadataEventType.SetTransform] }).pipe(
             map((data) => {
                 const blocks = data.datasets.byOwnerAndName?.metadata.metadataProjection ?? [];
-                return blocks.length ? (blocks[0].encoded?.content as string) : null;
+                return blocks.length ? (blocks[0].encoded?.content ?? null) : null;
             }),
         );
     }

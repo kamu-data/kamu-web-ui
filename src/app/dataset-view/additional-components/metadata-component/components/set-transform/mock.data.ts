@@ -27,23 +27,28 @@ export const MOCK_DATASET_INFO: DatasetInfo = {
 
 export const mockEngines: EnginesQuery = {
     data: {
+        __typename: "DataQueries",
         knownEngines: [
             {
+                __typename: "EngineDesc",
                 dialect: QueryDialect.SqlSpark,
                 latestImage: "ghcr.io/kamu-data/engine-spark:0.1.2",
                 name: Engine.Spark,
             },
             {
+                __typename: "EngineDesc",
                 dialect: QueryDialect.SqlFlink,
                 latestImage: "ghcr.io/kamu-data/engine-flink:0.1.2",
                 name: Engine.Flink,
             },
             {
+                __typename: "EngineDesc",
                 dialect: QueryDialect.SqlDataFusion,
                 latestImage: "ghcr.io/kamu-data/engine-datafusion:0.1.2",
                 name: Engine.DataFusion,
             },
             {
+                __typename: "EngineDesc",
                 dialect: QueryDialect.SqlRisingWave,
                 latestImage: "ghcr.io/kamu-data/engine-risingwave:0.1.2",
                 name: Engine.RisingWave,
@@ -81,7 +86,6 @@ export const mockGetDatasetSchemaQuery: GetDatasetSchemaQuery = {
             kind: DatasetKind.Derivative,
             name: "account.tokens.portfolio.usd",
             owner: {
-                __typename: "Account",
                 ...mockOwnerFieldsWithAvatar,
             },
             alias: "kamu/account.tokens.portfolio.usd",

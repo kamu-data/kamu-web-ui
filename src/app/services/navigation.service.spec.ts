@@ -228,7 +228,7 @@ describe("NavigationService", () => {
         service.navigateToDatasetView({ accountName: "kamu", datasetName: "ds", tab: "history", page: 2, state });
 
         expect(navigatedUrl(routerSpy)).toEqual("/kamu/ds/history?page=2");
-        expect(requireValue(routerSpy.mock.lastCall ?? null)[1]).toEqual({ state });
+        expect(requireValue(routerSpy.mock.lastCall)[1]).toEqual({ state });
     });
 
     [
@@ -259,7 +259,7 @@ describe("NavigationService", () => {
         const routerSpy = vi.spyOn(router, "navigateByUrl").mockResolvedValue(true);
         service.navigateToPageNotFound();
         expect(navigatedUrl(routerSpy)).toEqual(`/${ProjectLinks.URL_PAGE_NOT_FOUND}`);
-        expect(requireValue(routerSpy.mock.lastCall ?? null)[1]).toEqual({ skipLocationChange: true });
+        expect(requireValue(routerSpy.mock.lastCall)[1]).toEqual({ skipLocationChange: true });
     });
 
     it("should test navigate to return to CLI view", () => {
@@ -338,7 +338,7 @@ describe("NavigationService", () => {
     });
 
     function navigatedUrl(routerSpy: Mock<Router["navigateByUrl"]>): string {
-        const [url] = requireValue(routerSpy.mock.lastCall ?? null);
+        const [url] = requireValue(routerSpy.mock.lastCall);
         expect(url).toBeInstanceOf(UrlTree);
         return url instanceof UrlTree ? router.serializeUrl(url) : url;
     }

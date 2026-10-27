@@ -71,7 +71,6 @@ export const mockDatasetListCollaboratorsQuery: DatasetListCollaboratorsQuery = 
             kind: DatasetKind.Root,
             name: "account.tokens.transfers",
             owner: {
-                __typename: "Account",
                 ...mockOwnerFieldsWithAvatar,
             },
             alias: "kamu/account.tokens.transfers",

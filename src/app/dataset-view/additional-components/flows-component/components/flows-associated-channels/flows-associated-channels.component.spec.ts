@@ -59,7 +59,7 @@ describe("FlowsAssociatedChannelsComponent", () => {
         setComponentInput(
             fixture,
             "webhooksData",
-            requireValue(mockDatasetFlowsProcessesQuery.datasets.byId?.flows.processes.webhooks ?? null),
+            requireValue(mockDatasetFlowsProcessesQuery.datasets.byId?.flows.processes.webhooks),
         );
         setComponentInput(fixture, "flowsSelectionState", {
             flowsCategory: undefined,

@@ -146,9 +146,7 @@ describe("ListWebhooksComponent", () => {
     });
 
     it("should check to edit subscription", () => {
-        const mockWebhookSubscription = requireValue(
-            mockDatasetWebhookByIdQuery.datasets.byId?.webhooks.subscription ?? null,
-        );
+        const mockWebhookSubscription = requireValue(mockDatasetWebhookByIdQuery.datasets.byId?.webhooks.subscription);
         const navigateToWebhooksSpy = vi.spyOn(navigationService, "navigateToWebhooks").mockImplementation(() => {});
         component.editWebhook(mockWebhookSubscription);
         expect(navigateToWebhooksSpy).toHaveBeenCalledTimes(1);

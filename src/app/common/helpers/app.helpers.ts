@@ -13,13 +13,14 @@ import { jwtDecode } from "jwt-decode";
 import { HIGHLIGHT_OPTIONS } from "ngx-highlightjs";
 
 import { JwtPayload } from "@common/guards/access-token-expired.types";
+import { parseJsonAs } from "@common/helpers/untyped-boundary.helpers";
 import AppValues from "@common/values/app.values";
 import { DataSchemaInfoFragment } from "@api/kamu.graphql.interface";
 import { MaybeNull, MaybeNullOrUndefined } from "@interface/app.types";
 import { DatasetSchema } from "@interface/dataset-schema.interface";
 
-export function requireValue<T>(input: MaybeNull<T>, errorMessage?: string): T {
-    if (input === null) throw Error(errorMessage || "value is required!");
+export function requireValue<T>(input: MaybeNullOrUndefined<T>, errorMessage?: string): T {
+    if (input === null || input === undefined) throw Error(errorMessage || "value is required!");
     return input;
 }
 
@@ -69,7 +70,7 @@ export function momentConvertDateToLocalWithFormat(dateParams: {
 }
 
 export function parseCurrentSchema(data: MaybeNullOrUndefined<DataSchemaInfoFragment>): MaybeNull<DatasetSchema> {
-    return data ? (JSON.parse(removeAllLineBreaks(data.content)) as DatasetSchema) : null;
+    return data ? parseJsonAs<DatasetSchema>(removeAllLineBreaks(data.content)) : null;
 }
 
 export function removeAllLineBreaks(value: string): string {

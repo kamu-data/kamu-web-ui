@@ -67,6 +67,7 @@ export const ALL_URLS_WITHOUT_HEADER: string[] = [
 })
 export class AppComponent extends BaseComponent implements OnInit {
     public static readonly ANONYMOUS_ACCOUNT_INFO: AccountFragment = {
+        __typename: "Account",
         id: "",
         accountName: "",
         displayName: AppValues.DEFAULT_USER_DISPLAY_NAME,

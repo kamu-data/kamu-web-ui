@@ -88,11 +88,17 @@ describe("datasetSettingsTransformOptionsTabResolverFn", () => {
             .spyOn(datasetFlowTriggerService, "fetchDatasetFlowTrigger")
             .mockReturnValue(
                 of({
+                    __typename: "Query",
                     datasets: {
+                        __typename: "Datasets",
                         byId: {
+                            __typename: "Dataset",
                             flows: {
+                                __typename: "DatasetFlows",
                                 triggers: {
+                                    __typename: "DatasetFlowTriggers",
                                     byType: {
+                                        __typename: "FlowTrigger",
                                         paused: true,
                                         reactive: null,
                                         stopPolicy: {
@@ -136,7 +142,7 @@ describe("datasetSettingsTransformOptionsTabResolverFn", () => {
             datasetBasics: mockDatasetBasicsDerivedFragment,
             datasetPermissions: mockFullPowerDatasetPermissionsFragment,
             reactive: requireValue(
-                mockGetDatasetFlowTriggersBatchingQuery.datasets.byId?.flows.triggers.byType?.reactive ?? null,
+                mockGetDatasetFlowTriggersBatchingQuery.datasets.byId?.flows.triggers.byType?.reactive,
             ),
             stopPolicy: {
                 __typename: "FlowTriggerStopPolicyAfterConsecutiveFailures",
@@ -149,11 +155,15 @@ describe("datasetSettingsTransformOptionsTabResolverFn", () => {
     it("should correctly map flowTriggers when no data is defined", async () => {
         vi.spyOn(datasetFlowTriggerService, "fetchDatasetFlowTrigger").mockReturnValue(
             of({
+                __typename: "Query",
                 datasets: {
                     __typename: "Datasets",
                     byId: {
+                        __typename: "Dataset",
                         flows: {
+                            __typename: "DatasetFlows",
                             triggers: {
+                                __typename: "DatasetFlowTriggers",
                                 byType: null,
                             },
                         },

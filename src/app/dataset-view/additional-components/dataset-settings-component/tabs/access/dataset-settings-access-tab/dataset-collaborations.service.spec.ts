@@ -148,7 +148,9 @@ describe("DatasetCollaborationsService", () => {
     });
 
     it("should give no role when the dataset is not found", () => {
-        vi.spyOn(datasetCollaborationApi, "getDatasetUserRole").mockReturnValue(of({ datasets: { byId: null } }));
+        vi.spyOn(datasetCollaborationApi, "getDatasetUserRole").mockReturnValue(
+            of({ __typename: "Query", datasets: { __typename: "Datasets", byId: null } }),
+        );
 
         const subscription$ = service.getRoleByDatasetId(TEST_DATASET_ID).subscribe((result) => {
             expect(result).toBeNull();

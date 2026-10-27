@@ -70,7 +70,7 @@ describe("DatasetWebhooksService", () => {
 
         service.datasetWebhookSubscriptions(DATASET_ID).subscribe((result: WebhookSubscriptionDataFragment[]) => {
             expect(result.length).toEqual(
-                requireValue(mockDatasetWebhookSubscriptionsQuery.datasets.byId?.webhooks.subscriptions.length ?? null),
+                requireValue(mockDatasetWebhookSubscriptionsQuery.datasets.byId?.webhooks.subscriptions.length),
             );
         });
         expect(datasetWebhookSubscriptionsSpy).toHaveBeenCalledTimes(1);
@@ -85,7 +85,7 @@ describe("DatasetWebhooksService", () => {
             service.datasetWebhookSubscriptionById({ datasetId: DATASET_ID, id: MOCK_SUBSCRIPTION_ID }),
         );
 
-        expect(result).toEqual(requireValue(mockDatasetWebhookByIdQuery.datasets.byId?.webhooks.subscription ?? null));
+        expect(result).toEqual(requireValue(mockDatasetWebhookByIdQuery.datasets.byId?.webhooks.subscription));
         expect(datasetWebhookSubscriptionByIdSpy).toHaveBeenCalledTimes(1);
         expect(datasetWebhookSubscriptionByIdSpy).toHaveBeenCalledWith({
             datasetId: DATASET_ID,

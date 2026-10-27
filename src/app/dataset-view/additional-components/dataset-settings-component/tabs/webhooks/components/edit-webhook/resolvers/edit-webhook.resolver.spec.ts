@@ -70,9 +70,7 @@ describe("editWebhookResolverFn", () => {
     }
 
     it("should request the webhook from the route and resolve it with the dataset", async () => {
-        const mockWebhookSubscription = requireValue(
-            mockDatasetWebhookByIdQuery.datasets.byId?.webhooks.subscription ?? null,
-        );
+        const mockWebhookSubscription = requireValue(mockDatasetWebhookByIdQuery.datasets.byId?.webhooks.subscription);
         const datasetWebhookSubscriptionByIdSpy = vi
             .spyOn(datasetWebhooksService, "datasetWebhookSubscriptionById")
             .mockReturnValue(of(mockWebhookSubscription));

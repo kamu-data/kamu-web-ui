@@ -30,7 +30,7 @@ export const datasetSettingsIngestConfigurationResolverFn: ResolveFn<DatasetSett
                 return of(data);
             }
             return datasetFlowConfigService.fetchDatasetFlowConfigs(data.datasetBasics.id, DatasetFlowType.Ingest).pipe(
-                map((ingestConfig: GetDatasetFlowConfigsQuery) => {
+                map((ingestConfig: GetDatasetFlowConfigsQuery): DatasetSettingsIngestConfigurationTabData => {
                     const fullConfig = ingestConfig.datasets.byId?.flows.configs.byType;
                     const retryPolicy = fullConfig?.retryPolicy ?? null;
                     const flowConfigRule = fullConfig?.rule;
@@ -44,6 +44,7 @@ export const datasetSettingsIngestConfigurationResolverFn: ResolveFn<DatasetSett
                         return {
                             ...data,
                             ingestionRule: {
+                                __typename: "FlowConfigRuleIngest",
                                 fetchUncacheable: false,
                                 fetchNextIteration: false,
                             },

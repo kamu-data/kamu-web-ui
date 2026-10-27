@@ -49,6 +49,7 @@ describe("OverviewHistorySummaryHeaderComponent", () => {
 
         expect(component.descriptionForMetadataBlock).toBe("");
         expect(component.authorInfo).toEqual({
+            __typename: "Account",
             id: "",
             accountName: AppValues.DEFAULT_USER_DISPLAY_NAME,
             avatarUrl: AppValues.DEFAULT_AVATAR_URL,

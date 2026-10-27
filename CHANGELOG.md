@@ -22,6 +22,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   - editing a source shows its saved values in every text, number and checkbox field instead of a default in some of them
   - a source can be saved after switching from a fetch kind with an event time "From path" to one without event time, instead of an unseen empty pattern blocking it
 - Flows tables: a run whose start or finish time is missing shows its state alone or "unknown" instead of "57 years ago" or a 1970 date
+- Query explainer: a verification the server rejects without saying why shows an error message instead of an empty result
 
 ## [0.72.0] - 2026-10-21
 ### Changed

@@ -13,10 +13,10 @@ import { catchError, EMPTY, map, Observable, of, ReplaySubject, Subject, tap } f
 import { ToastrService } from "ngx-toastr";
 
 import { requestErrorText } from "@common/helpers/http-error.helpers";
-import { httpErrorBodyAs } from "@common/helpers/untyped-boundary.helpers";
 
 import { AppConfigService } from "src/app/app-config.service";
 import { LoggedUserService } from "src/app/auth/logged-user.service";
+import { parseVerifyQueryFailure } from "src/app/query-explainer/query-explainer.helpers";
 import {
     QueryExplainerDataJsonAosResponse,
     QueryExplainerInputType,
@@ -96,9 +96,9 @@ export class QueryExplainerService {
         const url = new URL(`${this.baseUrl}/verify`);
         return this.http.post<VerifyQueryResponse>(url.href, data).pipe(
             catchError((e: unknown) => {
-                if (e instanceof HttpErrorResponse && e.status === 400)
-                    return of(httpErrorBodyAs<VerifyQueryResponse>(e));
-                return this.showRequestError(e);
+                const failure =
+                    e instanceof HttpErrorResponse && e.status === 400 ? parseVerifyQueryFailure(e.error) : null;
+                return failure ? of(failure) : this.showRequestError(e);
             }),
         );
     }

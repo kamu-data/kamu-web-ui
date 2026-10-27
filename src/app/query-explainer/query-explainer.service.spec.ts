@@ -18,6 +18,7 @@ import { ErrorTexts } from "@common/values/errors.text";
 import { AppConfigService } from "src/app/app-config.service";
 import {
     mockQueryExplainerResponse,
+    mockVerifyQueryOutputMismatchError,
     mockVerifyQueryResponseSuccess,
 } from "src/app/query-explainer/query-explainer.mocks";
 import { QueryExplainerService } from "src/app/query-explainer/query-explainer.service";
@@ -111,6 +112,30 @@ describe("QueryExplainerService", () => {
 
         expect(req.request.method).toEqual("POST");
         req.flush(mockVerifyQueryResponseSuccess);
+    });
+
+    it("should return the failure a rejected verification reports", () => {
+        const toastrServiceSpy = stubMethod(toastrService, "error");
+        const nextSpy = vi.fn();
+
+        service.verifyQuery(mockQueryExplainerResponse).subscribe(nextSpy);
+        const req = httpTestingController.expectOne(`${appConfigService.apiServerHttpUrl}/verify`);
+        req.flush(mockVerifyQueryOutputMismatchError, { status: 400, statusText: "Bad Request" });
+
+        expect(nextSpy).toHaveBeenCalledWith(mockVerifyQueryOutputMismatchError);
+        expect(toastrServiceSpy).not.toHaveBeenCalled();
+    });
+
+    it("should show an error when a rejected verification reports no failure", () => {
+        const toastrServiceSpy = stubMethod(toastrService, "error");
+        const nextSpy = vi.fn();
+
+        service.verifyQuery(mockQueryExplainerResponse).subscribe(nextSpy);
+        const req = httpTestingController.expectOne(`${appConfigService.apiServerHttpUrl}/verify`);
+        req.flush({ message: "Bad request" }, { status: 400, statusText: "Bad Request" });
+
+        expect(nextSpy).not.toHaveBeenCalled();
+        expect(toastrServiceSpy).toHaveBeenCalledWith("", "Bad request", { disableTimeOut: "timeOut" });
     });
 
     it("should return unsupported error when verify query", () => {

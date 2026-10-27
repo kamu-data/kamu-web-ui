@@ -5,7 +5,7 @@
  * included in the LICENSE file.
  */
 
-import { ChangeDetectionStrategy, Component, inject, Input, OnInit, ViewChild } from "@angular/core";
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, inject, Input, OnInit, ViewChild } from "@angular/core";
 import { takeUntilDestroyed } from "@angular/core/rxjs-interop";
 import { FormsModule } from "@angular/forms";
 import { MatDividerModule } from "@angular/material/divider";
@@ -80,6 +80,7 @@ export class DatasetSettingsSecretsManagerTabComponent extends BaseComponent imp
     private modalService = inject(ModalService);
     private navigationService = inject(NavigationService);
     private environmentVariablesService = inject(DatasetEnvironmentVariablesService);
+    private cdr = inject(ChangeDetectorRef);
 
     public ngOnInit(): void {
         this.currentPage = this.pageFromUrl() ?? this.currentPage;
@@ -166,6 +167,7 @@ export class DatasetSettingsSecretsManagerTabComponent extends BaseComponent imp
                 this.dataSource.data = result.nodes;
                 this.dataSource.sort = this.sort;
                 this.pageBasedInfo = result.pageInfo;
+                this.cdr.markForCheck();
             });
     }
 

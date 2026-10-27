@@ -105,7 +105,11 @@ describe("EditLicenseModalComponent", () => {
         });
         fixture.detectChanges();
 
-        ["name", "shortName", "websiteUrl"].forEach((controlName: string) => {
+        [
+            { controlName: "name", message: "Name is required" },
+            { controlName: "shortName", message: "Short name is required" },
+            { controlName: "websiteUrl", message: "Url is required" },
+        ].forEach(({ controlName, message }) => {
             const inputEl: HTMLInputElement = getInputElementByDataTestId(fixture, `license-${controlName}`);
 
             const focusEvent = new InputEvent("focus");
@@ -117,7 +121,7 @@ describe("EditLicenseModalComponent", () => {
             fixture.detectChanges();
 
             const errorElement = getElementByDataTestId(fixture, `error-message-${controlName}`);
-            expect(errorElement.innerText).toBeDefined();
+            expect(errorElement.innerText).toBe(message);
         });
     });
 });

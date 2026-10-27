@@ -26,6 +26,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Query explainer: a verification the server rejects without saying why shows an error message instead of an empty result
 - History tab, block page and dataset overview: data commits show how many records they added and license commits the license name again, and the block page shows each event's details instead of the header alone
 - Lineage tab: the graph loads again instead of failing with a query recursion error
+- License modal: an empty name shows "Name is required" instead of "Test is required"
 
 ## [0.72.0] - 2026-10-21
 ### Changed

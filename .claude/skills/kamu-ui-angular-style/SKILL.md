@@ -180,7 +180,6 @@ code added itself, or a third-party callback triggers none of them.
 | `BaseComponent` | the above + `activatedRoute`, `getDatasetInfoFromUrl()`, `datasetInfoFromUrlChanges`, `pageFromUrl()` | It reads route parameters |
 | `BaseProcessingComponent` | `BaseComponent` + `navigationService`, `modalService` | It navigates or opens modals |
 | `BaseDatasetDataComponent` | `BaseProcessingComponent` + `datasetService`, `datasetSubsService`, `datasetBasics$`, `datasetPermissions$` | It shows the current dataset |
-| `BaseFormControlComponent<T>` | `BaseComponent` + `ControlValueAccessor` / `Validator` plumbing | It is a custom form control |
 
 ### State and services
 
@@ -265,11 +264,11 @@ code added itself, or a third-party callback triggers none of them.
   such a form by control name reaches the control with `requireFormGroup` / `requireFormArray` /
   `requireFormControl` from `@common/helpers/form.helpers`, which check its class. A value that
   arrives as `any` goes through `@common/helpers/untyped-boundary.helpers`: `parseJsonAs<T>()` for
-  `JSON.parse`, `parseYamlAs<T>()` for YAML, `httpErrorBodyAs<T>()` for `HttpErrorResponse.error`,
-  `routeDataAs<T>()` for a value another route's resolver stored in route data, `formValueAs<T>()`
-  for the value of the untyped form behind a `BaseFormControlComponent`, `validationErrorAs<T>()`
-  for the detail a validator stored in its errors. That file is the one place app code may
-  assert, and eslint exempts it.
+  `JSON.parse`, `parseYamlAs<T>()` for YAML, `routeDataAs<T>()` for a value another route's
+  resolver stored in route data. That file is the one place app code may assert, and eslint
+  exempts it. Any other value that arrives as `any` or `unknown`, such as an HTTP error body or the
+  detail a validator stored in its errors, is checked field by field with `isRecord()` and
+  `typeof` (`parseVerifyQueryFailure` in `query-explainer.helpers.ts`).
 - Templates hold no non-null assertions (`x!`, `(x$ | async)!`) and no `$any()`; eslint's
   angular-eslint template rules reject both in `.html` files. Angular's template type-check does
   not narrow a deep path such as `a.b.c` under `@if (a.b.c?.length)`, nor an `@let` variable, so

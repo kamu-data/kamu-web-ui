@@ -187,7 +187,7 @@ One case per api method: assert the variables sent, flush a fixture typed with t
   `` expectRedirectTo(await runCanActivate(guard, route, url), `/${ProjectLinks.URL_LOGIN}`) ``
   (`account/guards/account.guard.spec.ts`).
 - An expected resolver error is checked with
-  `await expect(runResolver(...)).rejects.toThrowError(...)`. A page-not-found redirect is
+  `await expect(runResolver(...)).rejects.toThrow(...)`. A page-not-found redirect is
   checked with `expectPageNotFoundRedirect(data)`; a resolver built on another one also gets a
   test that the `RedirectCommand` passes through and its own fetch is not called
   (`dataset-settings-scheduling-tab.resolver.spec.ts`). Narrow a `T | RedirectCommand` result
@@ -255,9 +255,10 @@ or misspelled field before any test runs. A type assertion switches that check o
   method, give the spy a result: `.mockReturnValue(...)`, `.mockResolvedValue(...)`,
   `.mockImplementation(...)`.
 - A method the test only expects to be called, whose real work must not run (a navigation, a
-  toast, a mutation), is stubbed: `.mockImplementation(() => {})` when it returns nothing,
-  `stubMethod(object, "method")` from `@common/helpers/base-test.helpers.spec` when it returns a
-  value the code under test ignores.
+  toast, a mutation), is stubbed with `stubMethod(object, "method")` from
+  `@common/helpers/base-test.helpers.spec`, which replaces it with one returning `undefined`,
+  whatever the method returns. Not with an empty function such as
+  `.mockImplementation(() => {})`, which older specs still use until they are next edited.
 - A getter is spied with `vi.spyOn(object, "prop", "get")`.
 - Every spy is restored after each test (`restoreMocks` in `vitest-base.config.ts`), so a spy on
   a root service or a prototype does not reach the next test.

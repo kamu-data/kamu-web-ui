@@ -12,10 +12,12 @@ import { FormControl, ReactiveFormsModule } from "@angular/forms";
 import { RxReactiveFormsModule } from "@rxweb/reactive-form-validators";
 
 import { EditSchemaTableComponent } from "@common/components/edit-schema-table/edit-schema-table.component";
-import { SchemaValidationError } from "@common/components/edit-schema-table/validation/schema-validation";
+import {
+    SchemaValidationError,
+    validateSchemaFields,
+} from "@common/components/edit-schema-table/validation/schema-validation";
 import { TooltipIconComponent } from "@common/components/tooltip-icon/tooltip-icon.component";
 import { requireFormControl } from "@common/helpers/form.helpers";
-import { validationErrorAs } from "@common/helpers/untyped-boundary.helpers";
 import { DataSchemaField } from "@interface/dataset-schema.interface";
 
 import { BaseField } from "src/app/dataset-view/additional-components/metadata-component/components/form-components/base-field";
@@ -44,15 +46,14 @@ export class SchemaFieldComponent extends BaseField implements OnInit {
         return requireFormControl(this.form, this.controlName);
     }
 
-    public get schemaErrors(): SchemaValidationError[] {
-        const err = this.schemaControl.errors;
-        return validationErrorAs<SchemaValidationError[]>(err, "schemaErrors") ?? [];
-    }
+    public schemaErrors: SchemaValidationError[] = [];
 
     public ngOnInit(): void {
         this.schemaControl.addValidators(schemaValidator);
         this.schemaControl.updateValueAndValidity();
-        this.schemaControl.valueChanges.pipe(takeUntilDestroyed(this.destroyRef)).subscribe(() => {
+        this.schemaErrors = validateSchemaFields(this.schemaControl.value);
+        this.schemaControl.valueChanges.pipe(takeUntilDestroyed(this.destroyRef)).subscribe((fields) => {
+            this.schemaErrors = validateSchemaFields(fields);
             this.cdr.markForCheck();
         });
     }

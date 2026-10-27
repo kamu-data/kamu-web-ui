@@ -23,17 +23,20 @@ import { Subscription, tap } from "rxjs";
 import { NgSelectComponent } from "@ng-select/ng-select";
 
 import { ValidationError, ValidationErrorTuple } from "@common/directives/form-validation-errors.types";
-import { validationErrorAs } from "@common/helpers/untyped-boundary.helpers";
+import { isRecord } from "@common/helpers/app.helpers";
 import AppValues from "@common/values/app.values";
 import { MaybeNull, MaybeUndefined } from "@interface/app.types";
 
-/** What Angular's validators, and the app's "range" validator, store in their errors. */
-interface StandardErrorDetails {
-    requiredLength?: number;
-    requiredPattern?: string;
-    min?: number;
-    max?: number;
-    message?: string;
+/** A number Angular's validators, or the app's "range" validator, stored in their error details. */
+function numberDetail(details: unknown, key: string): MaybeUndefined<number> {
+    const value = isRecord(details) ? details[key] : undefined;
+    return typeof value === "number" ? value : undefined;
+}
+
+/** A string Angular's validators, or the app's "range" validator, stored in their error details. */
+function stringDetail(details: unknown, key: string): MaybeUndefined<string> {
+    const value = isRecord(details) ? details[key] : undefined;
+    return typeof value === "string" ? value : undefined;
 }
 
 @Directive({
@@ -68,34 +71,34 @@ export class FormValidationErrorsDirective implements OnDestroy, OnChanges, OnIn
     public getStandardErrorMessage(error: ValidationError): string {
         const label = this.fieldLabel || "Input";
         const errors = this.fieldControl?.errors ?? null;
-        const errorDetails = validationErrorAs<StandardErrorDetails>(errors, error);
+        const errorDetails: unknown = errors?.[error];
 
         switch (error) {
             case "required":
                 return `${label} is required`;
             case "minlength":
-                return `${label} must be at least ${errorDetails?.requiredLength ?? this.MIN_REQUIRED_LENGTH} characters`;
+                return `${label} must be at least ${numberDetail(errorDetails, "requiredLength") ?? this.MIN_REQUIRED_LENGTH} characters`;
             case "maxlength":
-                return `${label} can't exceed ${errorDetails?.requiredLength ?? this.MAX_REQUIRED_LENGTH} characters`;
+                return `${label} can't exceed ${numberDetail(errorDetails, "requiredLength") ?? this.MAX_REQUIRED_LENGTH} characters`;
             case "invalid":
                 return `A valid ${label} is required`;
             case "pattern": {
-                return `${label} ${this.patternMessages[errorDetails?.requiredPattern ?? ""]}`;
+                return `${label} ${this.patternMessages[stringDetail(errorDetails, "requiredPattern") ?? ""]}`;
             }
             case "passwordsMismatch":
                 return "Passwords mismatch";
             case "email":
                 return "Please provide a valid email address";
             case "min":
-                return `The minimum value must be ${errorDetails?.min}`;
+                return `The minimum value must be ${numberDetail(errorDetails, "min")}`;
             case "max":
-                return `The maximum value must be ${errorDetails?.max}`;
+                return `The maximum value must be ${numberDetail(errorDetails, "max")}`;
             case "whitespace":
                 return `${label} can't contain spaces`;
             case "range":
-                return errorDetails?.message ?? "";
+                return stringDetail(errorDetails, "message") ?? "";
             case "invalidCronExpression":
-                return validationErrorAs<string>(errors, error) ?? "";
+                return typeof errorDetails === "string" ? errorDetails : "";
             case "noneOf":
                 return `${label} already exists`;
 

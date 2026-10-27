@@ -41,8 +41,6 @@ export const typeAssertionBacklog = [
   "src/app/dataset-flow/dataset-flow-details/resolvers/flow-details.resolver.ts",
   "src/app/dataset-flow/dataset-flow-details/tabs/flow-details-summary-tab/resolver/flow-details-summary.resolver.ts",
   "src/app/dataset-flow/flows-table/components/flow-table-panel-filters/flow-table-panel-filters.component.ts",
-  "src/app/dataset-flow/flows-table/flows-table.component.ts",
-  "src/app/dataset-flow/flows-table/flows-table.helpers.ts",
   "src/app/dataset-view/additional-components/data-component/data.component.ts",
   "src/app/dataset-view/additional-components/dataset-settings-component/resolvers/dataset-settings-active-section.resolver.ts",
   "src/app/dataset-view/additional-components/dataset-settings-component/tabs/access/dataset-settings-access-tab/add-people-modal/add-people-modal.component.ts",

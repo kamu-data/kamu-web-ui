@@ -119,8 +119,7 @@ export class FlowsTableComponent extends BaseComponent implements OnInit, OnChan
         const nodesChange: SimpleChange = changes.nodes;
         if (!nodesChange || !nodesChange.currentValue) return;
 
-        const newNodes: FlowSummaryDataWithTriggerFragment[] =
-            nodesChange.currentValue as FlowSummaryDataWithTriggerFragment[];
+        const newNodes: FlowSummaryDataWithTriggerFragment[] = this.nodes;
         const existingData = this.dataSource.data;
 
         // Build lookup map from current data

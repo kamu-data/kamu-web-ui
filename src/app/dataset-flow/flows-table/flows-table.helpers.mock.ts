@@ -1009,6 +1009,31 @@ export const tooltipTextResults: string[] = [
     "Start running time: Mar 14th 2024 9:24:29 AM GMT+00:00",
 ];
 
+// The same flows with their timing records missing: start conditions still carry their own times
+export const durationBlockTextWithoutTimingResults: string[] = [
+    "waiting",
+    "wake up time: in 1 hour",
+    "wake up time: in 2 hours",
+    "deadline time: in 1 hour",
+    "retrying",
+    "running",
+    "finished",
+    "aborted",
+    "failed",
+];
+
+export const tooltipTextWithoutTimingResults: string[] = [
+    "waiting for: unknown",
+    "Wake up time: Mar 14th 2024 12:24:29 PM GMT+00:00",
+    "Wake up time: Mar 14th 2024 1:24:29 PM GMT+00:00",
+    "Deadline time: Mar 14th 2024 12:24:29 PM GMT+00:00",
+    "Planned retry time: unknown",
+    "Start running time: unknown",
+    "Completed time: unknown",
+    "Aborted time: unknown",
+    "Start running time: unknown",
+];
+
 export const mockDatasets: DatasetBasicsFragment[] = [
     {
         id: mockDatasetMainDataId,

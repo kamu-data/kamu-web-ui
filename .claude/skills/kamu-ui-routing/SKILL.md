@@ -107,7 +107,7 @@ its own routes file:
     route.children[0]?.data[ProjectLinks.URL_PARAM_TAB]), "…")`;
   - a query parameter, which the user can edit: `enumValueOf(...) ?? default`, and for a
     comma-separated list `.flatMap((s) => enumValueOf(Enum, s) ?? [])`, so an unknown value is
-    dropped rather than passed on; a page or another count:
+    dropped rather than passed on; a page, a version or another positive whole number:
     `positiveIntegerFromParam(...) ?? default` from `@common/helpers/app.helpers`, which a
     component reads through `pageFromUrl()` and a routed input through a setter of
     `MaybeUndefined<string>` (`SearchComponent.page`).

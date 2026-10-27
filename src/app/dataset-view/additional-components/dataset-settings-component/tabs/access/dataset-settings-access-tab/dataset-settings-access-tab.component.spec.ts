@@ -10,7 +10,7 @@ import { provideHttpClient } from "@angular/common/http";
 import { ComponentFixture, TestBed } from "@angular/core/testing";
 import { ActivatedRoute } from "@angular/router";
 
-import { of } from "rxjs";
+import { NEVER, of } from "rxjs";
 
 import { NgbModal } from "@ng-bootstrap/ng-bootstrap";
 import { Apollo } from "apollo-angular";
@@ -130,6 +130,18 @@ describe("DatasetSettingsAccessTabComponent", () => {
         expect(await pagePastEnd.getMessage()).toEqual("There are no collaborators on this page.");
         await pagePastEnd.goToLastPage();
         expect(navigateToDatasetViewSpy).toHaveBeenCalledWith(expect.objectContaining({ page: 1 }));
+    });
+
+    it("should not report a page past the last one while the collaborators load", async () => {
+        vi.spyOn(datasetCollaborationsService, "listCollaborators").mockReturnValue(NEVER);
+        const loadingFixture = TestBed.createComponent(DatasetSettingsAccessTabComponent);
+        setComponentInput(loadingFixture, "accessViewData", {
+            datasetBasics: mockDatasetBasicsRootFragment,
+            datasetPermissions: mockFullPowerDatasetPermissionsFragment,
+        });
+
+        const pagePastEnd = await TestbedHarnessEnvironment.loader(loadingFixture).getAllHarnesses(PagePastEndHarness);
+        expect(pagePastEnd).toEqual([]);
     });
 
     [

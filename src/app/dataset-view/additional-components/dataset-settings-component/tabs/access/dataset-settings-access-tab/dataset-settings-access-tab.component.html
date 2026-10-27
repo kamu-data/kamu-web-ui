@@ -69,7 +69,7 @@
         }
     </div>
 
-    @if (!dataSource.data.length && currentPage > 1) {
+    @if (!dataSource.data.length && currentPage > 1 && pageBasedInfo) {
         <app-page-past-end
             itemsName="collaborators"
             [totalPages]="pageBasedInfo.totalPages"

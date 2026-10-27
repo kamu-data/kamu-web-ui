@@ -8,7 +8,7 @@
             @if (datasetSchema) {
                 <app-dynamic-table
                     [hasTableHeader]="true"
-                    [idTable]="'set-data-schema-event'"
+                    idTable="set-data-schema-event"
                     [columnDescriptors]="[{ columnName: 'name' }, { columnName: 'type' }]"
                     [dataRows]="schemaData(datasetSchema.fields)"
                     tableClass="font-monospace"

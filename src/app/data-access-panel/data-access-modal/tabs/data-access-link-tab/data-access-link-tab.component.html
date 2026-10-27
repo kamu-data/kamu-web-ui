@@ -16,7 +16,7 @@
             <div class="input-group-button ms-1">
                 <app-copy-to-clipboard
                     [text]="clipboardReference.value"
-                    [dataTestId]="'copyToClipboard-clipboardReference'"
+                    dataTestId="copyToClipboard-clipboardReference"
                 />
             </div>
         </div>
@@ -30,7 +30,7 @@
             <mat-icon
                 class="text-muted fs-5 help-icon"
                 matTooltip="Include the unique identifier of the dataset. This guarantees that link will point to the same dataset even if its name and owner changes over time."
-                [matTooltipPosition]="'right'"
+                matTooltipPosition="right"
                 >help_outline</mat-icon
             >
         </div>
@@ -41,7 +41,7 @@
             <mat-icon
                 class="text-muted fs-5 help-icon"
                 matTooltip="Link to the state of a dataset at this specific point in time, for reproducibility. No matter how much time passes, everyone using this link will the the exact same data."
-                [matTooltipPosition]="'right'"
+                matTooltipPosition="right"
                 >help_outline</mat-icon
             >
         </div>
@@ -52,7 +52,7 @@
             <mat-icon
                 class="text-muted fs-5 help-icon"
                 matTooltip="Produce a DOI.org identifier used for scientific publications."
-                [matTooltipPosition]="'right'"
+                matTooltipPosition="right"
                 >help_outline</mat-icon
             >
         </div>

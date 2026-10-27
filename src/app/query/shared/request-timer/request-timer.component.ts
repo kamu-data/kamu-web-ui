@@ -30,7 +30,7 @@ import { CancelRequestService } from "src/app/services/cancel-request.service";
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class RequestTimerComponent extends BaseComponent implements OnChanges, OnDestroy, OnInit {
-    @Input({ required: true }) public class: string;
+    @Input({ required: true }) public timerClass: string;
     @Input({ required: true }) public sqlLoading: boolean = false;
     private mm: number = 0;
     private ss: number = 0;

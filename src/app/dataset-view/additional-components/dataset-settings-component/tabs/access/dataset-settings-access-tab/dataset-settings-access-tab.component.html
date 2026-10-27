@@ -49,7 +49,7 @@
         <div class="bg-subtitle p-3 rounded-2 color-shadow-small col-md-4 col-12">
             <div class="d-flex mb-2">
                 <span class="flex-auto f6 text-mono text-uppercase color-fg-muted">direct access</span>
-                <mat-icon class="mat-icon-svg-size" [svgIcon]="'people'" />
+                <mat-icon class="mat-icon-svg-size" svgIcon="people" />
             </div>
             <p>
                 <strong>{{ dataSource.data.length }} user(s)</strong>
@@ -130,10 +130,9 @@
                                     (click)="$event.stopPropagation()"
                                     (change)="selection.toggle(element)"
                                     [checked]="selection.isSelected(element)"
-                                    class="d-blcok app-checkbox-compact"
+                                    class="app-checkbox-compact"
                                     color="primary"
-                                >
-                                </mat-checkbox>
+                                />
                                 <div class="ms-1 me-2">
                                     <a [routerLink]="['/', element.account.accountName]">
                                         <img
@@ -174,12 +173,14 @@
                         <td mat-cell *matCellDef="let element">
                             <div class="d-flex justify-content-end py-3">
                                 <button
+                                    type="button"
                                     (click)="editCollaborator(element)"
                                     class="edit-button me-3 border border-1 rounded-2"
                                 >
                                     <mat-icon class="fs-4 pt-1px">edit</mat-icon>
                                 </button>
                                 <button
+                                    type="button"
                                     (click)="removeCollaborator(element)"
                                     class="delete-button border border-1 rounded-2"
                                 >

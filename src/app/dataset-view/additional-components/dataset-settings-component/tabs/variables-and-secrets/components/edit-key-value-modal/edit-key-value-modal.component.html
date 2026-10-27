@@ -24,7 +24,7 @@
             <mat-icon
                 class="text-muted fs-5 ms-1 mt-2"
                 [matTooltip]="IS_SECRET_CONTROL_TOOLTIP"
-                [matTooltipPosition]="'right'"
+                matTooltipPosition="right"
                 >help_outline</mat-icon
             >
         </div>
@@ -41,10 +41,10 @@
             <div
                 class="text-danger fs-12"
                 [input]="key"
-                [fieldLabel]="'Key'"
+                fieldLabel="Key"
                 [appFieldError]="['required', 'maxlength', 'whitespace']"
                 [group]="keyValueForm"
-                [dataTestId]="'error-key'"
+                dataTestId="error-key"
             ></div>
         </div>
         <div class="mt-4 form-group">
@@ -71,7 +71,7 @@
             <div
                 class="text-danger fs-12"
                 [input]="value"
-                [fieldLabel]="'Value'"
+                fieldLabel="Value"
                 [appFieldError]="['required']"
                 [group]="keyValueForm"
             ></div>

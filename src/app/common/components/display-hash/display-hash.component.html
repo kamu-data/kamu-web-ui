@@ -2,7 +2,7 @@
     @if (navigationTargetDataset) {
         <a
             [title]="value"
-            [class]="'font-monospace ' + class"
+            [class]="'font-monospace ' + hashClass"
             data-test-id="navigableValue"
             [routerLink]="
                 {
@@ -20,6 +20,7 @@
     }
     @if (showCopyButton) {
         <button
+            type="button"
             (click)="copyToClipboard(value)"
             class="btn btn-sm btn-gray clipboard-btn d-inline-flex align-items-center justify-content-center"
             role="button"

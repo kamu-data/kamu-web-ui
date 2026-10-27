@@ -7,13 +7,13 @@
         class="nav-tabs"
     >
         <li [ngbNavItem]="AccountFlowsNav.ACTIVITY">
-            <button ngbNavLink>Activity</button>
+            <button type="button" ngbNavLink>Activity</button>
             <ng-template ngbNavContent>
                 <app-account-flows-activity-subtab [accountFlowsData]="accountFlowsData" [accountName]="accountName" />
             </ng-template>
         </li>
         <li [ngbNavItem]="AccountFlowsNav.PROCESSES">
-            <button ngbNavLink>Processes</button>
+            <button type="button" ngbNavLink>Processes</button>
             <ng-template ngbNavContent>
                 <app-account-flows-processes-subtab [accountFlowsData]="accountFlowsData" [accountName]="accountName" />
             </ng-template>

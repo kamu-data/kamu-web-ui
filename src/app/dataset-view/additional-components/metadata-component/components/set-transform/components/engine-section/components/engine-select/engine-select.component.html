@@ -1,19 +1,13 @@
 <div class="dropdown" #dropdown (click)="clickInput()">
     <div class="preview">
-        <input
-            type="text"
-            placeholder="Dropdown menu"
-            readonly
-            [value]="value"
-            readonly
-            data-test-id="input-dropdown"
-        />
+        <input type="text" placeholder="Dropdown menu" readonly [value]="value" data-test-id="input-dropdown" />
         <img class="selectedImage" [src]="getLogo(engine).url_logo" #selectedImage />
     </div>
     @if (showDropdown) {
         <div class="option" #option>
             @for (item of data; track item.name) {
                 <button
+                    type="button"
                     (click)="clickShowDropdown(item)"
                     [disabled]="disabledOptionsMode && item.name !== 'DataFusion'"
                 >

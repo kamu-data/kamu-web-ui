@@ -244,12 +244,12 @@
             </ng-template>
             <ng-template #linkTemplate let-link>
                 <svg:g class="edge" [style.opacity]="link.data?.isHidden ? 0 : 1">
-                    <path class="line" stroke-width="2" [attr.d]="link.line" marker-end="url(#arrow)"></path>
+                    <path class="line" stroke-width="2" [attr.d]="link.line" marker-end="url(#arrow)" />
                 </svg:g>
             </ng-template>
         </ngx-graph>
         <div class="information-button">
-            <button (click)="onClickInfo()" data-test-id="info-button">
+            <button type="button" (click)="onClickInfo()" data-test-id="info-button">
                 <img src="assets/images/information.png" alt="" width="25" height="25" />
             </button>
         </div>
@@ -313,8 +313,8 @@
                         <app-display-time
                             [title]="currentDataset.createdAt"
                             [data]="currentDataset.createdAt"
-                            [dataTestId]="'side-panel-dataset-created'"
-                        ></app-display-time>
+                            dataTestId="side-panel-dataset-created"
+                        />
                     </span>
                 </div>
                 <div class="info d-flex align-items-start">
@@ -325,7 +325,7 @@
                             class="time"
                             [title]="currentDataset.lastUpdatedAt"
                             [data]="currentDataset.lastUpdatedAt"
-                            [dataTestId]="'side-panel-dataset-updated'"
+                            dataTestId="side-panel-dataset-updated"
                         />
                     </span>
                 </div>
@@ -338,7 +338,7 @@
                                 class="time"
                                 [title]="currentDataset.metadata.currentWatermark"
                                 [data]="currentDataset.metadata.currentWatermark"
-                                [dataTestId]="'side-panel-dataset-watermark'"
+                                dataTestId="side-panel-dataset-watermark"
                             />
                         } @else {
                             <span data-test-id="side-panel-no-watermark"> No watermark</span>

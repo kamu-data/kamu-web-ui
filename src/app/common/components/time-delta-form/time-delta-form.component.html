@@ -16,16 +16,16 @@
     <span
         class="text-danger fs-12"
         [input]="unit"
-        [fieldLabel]="'Unit'"
+        fieldLabel="Unit"
         [appFieldError]="['required']"
         [group]="form"
     ></span>
     <span
         class="text-danger fs-12"
         [input]="every"
-        [fieldLabel]="'Value'"
+        fieldLabel="Value"
         [appFieldError]="['required', 'range']"
         [group]="form"
-        [dataTestId]="'time-delta-error-message'"
+        dataTestId="time-delta-error-message"
     ></span>
 </div>

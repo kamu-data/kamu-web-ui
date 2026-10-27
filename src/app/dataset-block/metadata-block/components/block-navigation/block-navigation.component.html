@@ -28,10 +28,9 @@
                 bindValue="id"
                 [closeOnSelect]="false"
                 [clearable]="true"
-                [placeholder]="'Select event type'"
+                placeholder="Select event type"
                 [(ngModel)]="eventTypeFiltersSelected"
-            >
-            </ng-select>
+            />
         </div>
         @if (datasetHistory) {
             <div class="d-flex flex-column gap-3">

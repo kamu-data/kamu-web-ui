@@ -51,6 +51,9 @@ export class TimeDeltaFormComponent extends BaseComponent implements OnInit {
 - Inputs and outputs use the decorators — `@Input({ required: true })`, `@Input()`, `@Output()`
   with an `EventEmitter` — matching the rest of the codebase. Do not migrate to signal inputs,
   `input()`/`output()` or signals unless the user asks for that migration.
+- An input never takes the name of an HTML attribute (`class`, `style`, `title`, `id`): a static
+  attribute such as `class="mr-4"` sets the input and the host element alike, so the classes apply
+  twice. Name it for its target (`hashClass` on `app-display-hash`).
 - An input, a service result or a helper parameter is typed with what really reaches it, so
   neither the app nor its specs need a cast to pass data in:
   - GraphQL data: the type rules are in `kamu-ui-graphql-api`, "Documents".
@@ -234,6 +237,12 @@ code added itself, or a third-party callback triggers none of them.
 - No `console.log` (eslint `no-console`); no `eslint-disable` comments — fix the cause, or ask
   the user first (AGENTS.md, "Validation").
 - Unused parameters are prefixed `_`; `any` is avoided in favour of real or generated types.
+- `.html` templates are linted too (the angular-eslint block in `eslint.config.mjs`);
+  `npm run lint-and-fix` applies the rules that have fixers, such as self-closing tags and plain
+  attributes for static strings. A template has at most 10 control-flow branches
+  (`cyclomatic-complexity`): past that, move a branch's markup into a child component. The
+  templates listed in that rule's block are over the limit until they are split; remove one
+  once it is under, and add none.
 - No type assertions (`x as T`); eslint's `consistent-type-assertions` rejects them. Narrow
   instead: `requireValue()` for a value that must be there, a `__typename` switch for a GraphQL
   union, `instanceof` for DOM elements and events, `enumValueOf(Enum, value)` for a string that
@@ -252,9 +261,10 @@ code added itself, or a third-party callback triggers none of them.
   `formValueAs<T>()` for the value of such a runtime-built form or of the untyped form behind a
   `BaseFormControlComponent`, `validationErrorAs<T>()` for the detail a validator stored in its
   errors. That file is the one place app code may assert, and eslint exempts it.
-- Templates hold no non-null assertions (`x!`, `(x$ | async)!`) and no `$any()`; no lint sees
-  them, so this is on review. Angular's template type-check does not narrow a deep path such as
-  `a.b.c` under `@if (a.b.c?.length)`, nor an `@let` variable, so narrow through an alias
+- Templates hold no non-null assertions (`x!`, `(x$ | async)!`) and no `$any()`; eslint's
+  angular-eslint template rules reject both in `.html` files. Angular's template type-check does
+  not narrow a deep path such as `a.b.c` under `@if (a.b.c?.length)`, nor an `@let` variable, so
+  narrow through an alias
   (`@if (a.b.c; as c)`), give a value whose absence means a default its default
   (`@let rows = (rows$ | async) ?? [];`), or type the input with what really reaches it.
 

@@ -11,10 +11,6 @@ import { DynamicComponent } from "@common/components/modal/dynamic.component";
 
 @Component({
     selector: "modal-spinner",
-    template: `
-        <div class="modal__content">
-            <div data-test-id="spinner" class="loader">Loading...</div>
-        </div>
-    `,
+    templateUrl: "./modal-spinner.component.html",
 })
 export class ModalSpinnerComponent extends DynamicComponent {}

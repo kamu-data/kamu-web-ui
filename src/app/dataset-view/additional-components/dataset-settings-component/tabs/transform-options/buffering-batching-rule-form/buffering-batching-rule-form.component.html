@@ -19,7 +19,7 @@
             <div
                 class="text-danger fs-12"
                 [input]="minRecordsToAwait"
-                [fieldLabel]="'Minimum records'"
+                fieldLabel="Minimum records"
                 [appFieldError]="['required', 'min']"
                 dataTestId="min-records-error-message"
                 [group]="form"
@@ -29,6 +29,6 @@
             [form]="form.controls.maxBatchingInterval"
             label="Batching interval:"
             [excludeUnits]="[TimeUnit.Days, TimeUnit.Weeks]"
-        ></app-time-delta-form>
+        />
     </form>
 </div>

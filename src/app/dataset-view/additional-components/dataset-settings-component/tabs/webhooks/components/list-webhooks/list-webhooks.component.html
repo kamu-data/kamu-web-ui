@@ -59,17 +59,17 @@
                                     appFeatureFlag="dataset.panel.settings.webhooks.viewDeliveryReport"
                                     (click)="viewDeliveryReport(element)"
                                     class="mat-icon-action-size"
-                                    [title]="'monitoring'"
+                                    title="monitoring"
                                     >visibility</mat-icon
                                 >
-                                <mat-icon (click)="editWebhook(element)" class="mat-icon-action-size" [title]="'edit'"
+                                <mat-icon (click)="editWebhook(element)" class="mat-icon-action-size" title="edit"
                                     >edit</mat-icon
                                 >
                                 @if (element.status === WebhookSubscriptionStatus.Paused) {
                                     <mat-icon
                                         class="mat-icon-action-size"
                                         (click)="resumeWebhook(element.id)"
-                                        [title]="'resume'"
+                                        title="resume"
                                         >play_arrow</mat-icon
                                     >
                                 }
@@ -77,7 +77,7 @@
                                     <mat-icon
                                         class="mat-icon-action-size"
                                         (click)="pauseWebhook(element.id)"
-                                        [title]="'pause'"
+                                        title="pause"
                                         >pause</mat-icon
                                     >
                                 }
@@ -85,20 +85,20 @@
                                     <mat-icon
                                         class="mat-icon-action-size"
                                         (click)="reactivateWebhook(element.id)"
-                                        [title]="'reactivate'"
+                                        title="reactivate"
                                         >domain_disabled</mat-icon
                                     >
                                 }
                                 <mat-icon
                                     class="mat-icon-action-size"
                                     (click)="rotateSecret(element.id)"
-                                    [title]="'rotate secret'"
+                                    title="rotate secret"
                                     >key</mat-icon
                                 >
                                 <mat-icon
                                     (click)="removeWebhook(element.id)"
                                     class="mat-icon-action-size"
-                                    [title]="'delete'"
+                                    title="delete"
                                     >delete</mat-icon
                                 >
                             </div>
@@ -111,7 +111,7 @@
         </div>
     } @else {
         <div class="box text-center p-5 mb-100 mt-4">
-            <mat-icon class="webhook-icon" [svgIcon]="'webhook'" />
+            <mat-icon class="webhook-icon" svgIcon="webhook" />
             <h3 class="my-3">No webhook subscriptions configured yet</h3>
             <button class="btn btn-success" (click)="createWebhook()" type="button">Create webhook</button>
         </div>

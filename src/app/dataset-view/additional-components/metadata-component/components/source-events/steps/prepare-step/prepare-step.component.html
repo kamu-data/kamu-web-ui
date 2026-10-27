@@ -22,13 +22,14 @@
                         <div
                             class="text-danger fs-12"
                             [input]="command"
-                            [fieldLabel]="'Command'"
+                            fieldLabel="Command"
                             [fieldControl]="sectionForm.controls[i].get('command')"
                             [appFieldError]="['required']"
                             [group]="sectionForm"
                         ></div>
                         <div class="buttons-section d-flex flex-row">
                             <button
+                                type="button"
                                 class="no-button"
                                 title="Move down"
                                 attr.data-test-id="move-down-item-{{ i }}"
@@ -38,6 +39,7 @@
                                 <mat-icon class="fs-4 hover">expand_more</mat-icon>
                             </button>
                             <button
+                                type="button"
                                 class="no-button"
                                 title="Move up"
                                 attr.data-test-id="move-up-item-{{ i }}"
@@ -47,6 +49,7 @@
                                 <mat-icon class="fs-4 mx-2 hover">expand_less</mat-icon>
                             </button>
                             <button
+                                type="button"
                                 class="no-button"
                                 title="Delete item"
                                 attr.data-test-id="remove-item-{{ i }}"
@@ -75,6 +78,7 @@
                         </div>
                         <div class="buttons-section d-flex flex-row">
                             <button
+                                type="button"
                                 class="no-button"
                                 title="Move down"
                                 attr.data-test-id="move-down-item-{{ i }}"
@@ -84,6 +88,7 @@
                                 <mat-icon class="fs-4 hover">expand_more</mat-icon>
                             </button>
                             <button
+                                type="button"
                                 class="no-button"
                                 title="Move up"
                                 attr.data-test-id="move-up-item-{{ i }}"
@@ -93,6 +98,7 @@
                                 <mat-icon class="fs-4 mx-2 hover">expand_less</mat-icon>
                             </button>
                             <button
+                                type="button"
                                 class="no-button"
                                 title="Delete item"
                                 attr.data-test-id="remove-item-{{ i }}"

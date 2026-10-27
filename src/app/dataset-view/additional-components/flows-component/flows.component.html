@@ -39,9 +39,9 @@
                                     [(ngModel)]="flowsSelectionState.flowsCategory"
                                     (change)="onSelectionFlowsChange($event)"
                                 >
-                                    <mat-chip-option [value]="'all'">All flows</mat-chip-option>
+                                    <mat-chip-option value="all">All flows</mat-chip-option>
                                     @if (!hasPushSources) {
-                                        <mat-chip-option [value]="'updates'"
+                                        <mat-chip-option value="updates"
                                             >{{ isRoot ? "Ingest" : "Transform" }}
                                         </mat-chip-option>
                                     }

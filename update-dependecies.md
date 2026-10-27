@@ -13,6 +13,7 @@ Packages that constrain each other through `peerDependencies`. The Angular frame
 - **ngx-monaco-editor-v2**: each release peers on one **monaco-editor** minor (21.1 → `^0.55.1`); move the two together
 - **@danielmoncada/angular-datetime-picker-moment-adapter** peers on **moment** (`^2.30.1`), which npm installs as a peer, not from `package.json`
 - **date-fns-tz** peers on **date-fns**; **siwe** peers on **ethers**
+- **@angular-eslint/eslint-plugin-template** and **@angular-eslint/template-parser** share one version, released per Angular major; they peer on **eslint** and **@typescript-eslint/\***
 - **@typescript-eslint/\*** and **eslint-plugin-license-header** peer on **eslint**; **stylelint-scss** and **stylelint-config-standard-scss** peer on **stylelint**
 
 - "ng2-pdf-viewer": "^9.1.5" (touch only when absolutely necessary). It brings its own **pdfjs-dist** `~2.14.305` as a dependency, so `package.json` does not declare pdfjs-dist

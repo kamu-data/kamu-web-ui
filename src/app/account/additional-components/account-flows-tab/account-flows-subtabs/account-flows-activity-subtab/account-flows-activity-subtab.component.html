@@ -18,7 +18,7 @@
                     [nodes]="flowConnectionData.flowsData.connectionDataForWidget.nodes"
                     [involvedDatasets]="flowConnectionData.flowsData.involvedDatasets"
                     [displayAlias]="true"
-                ></app-tile-base-widget>
+                />
             </div>
             <div>
                 <app-flow-table-panel-filters
@@ -42,7 +42,7 @@
                     class="nav-tabs"
                 >
                     <li [ngbNavItem]="FlowStatus.Finished">
-                        <button ngbNavLink>Finished</button>
+                        <button type="button" ngbNavLink>Finished</button>
                         <ng-template ngbNavContent>
                             @if (loadingFlows$ | async) {
                                 <div class="mt-4 w-50 mx-auto">
@@ -63,7 +63,7 @@
                                 [accountFlowInitiators]="flowConnectionData.flowInitiators"
                                 [involvedDatasets]="flowConnectionData.flowsData.involvedDatasets"
                                 (abortFlowChange)="onAbortFlow($event)"
-                            ></app-flows-table>
+                            />
                             <div class="mt-50px">
                                 <app-pagination
                                     [currentPage]="
@@ -71,12 +71,12 @@
                                     "
                                     [pageInfo]="flowConnectionData.flowsData.connectionDataForTable.pageInfo"
                                     (pageChangeEvent)="onPageChange($event)"
-                                ></app-pagination>
+                                />
                             </div>
                         </ng-template>
                     </li>
                     <li [ngbNavItem]="FlowStatus.Running">
-                        <button ngbNavLink>Running</button>
+                        <button type="button" ngbNavLink>Running</button>
                         <ng-template ngbNavContent>
                             @if (loadingFlows$ | async) {
                                 <div class="mt-4 w-50 mx-auto">
@@ -98,7 +98,7 @@
                                 [involvedDatasets]="flowConnectionData.flowsData.involvedDatasets"
                                 (searchByFiltersChange)="onSearchByFiltersChange($event)"
                                 (abortFlowChange)="onAbortFlow($event)"
-                            ></app-flows-table>
+                            />
                             <div class="mt-50px">
                                 <app-pagination
                                     [currentPage]="
@@ -106,12 +106,12 @@
                                     "
                                     [pageInfo]="flowConnectionData.flowsData.connectionDataForTable.pageInfo"
                                     (pageChangeEvent)="onPageChange($event)"
-                                ></app-pagination>
+                                />
                             </div>
                         </ng-template>
                     </li>
                     <li [ngbNavItem]="FlowStatus.Waiting">
-                        <button ngbNavLink>Waiting</button>
+                        <button type="button" ngbNavLink>Waiting</button>
                         <ng-template ngbNavContent>
                             @if (loadingFlows$ | async) {
                                 <div class="mt-4 w-50 mx-auto">
@@ -133,7 +133,7 @@
                                 [involvedDatasets]="flowConnectionData.flowsData.involvedDatasets"
                                 (searchByFiltersChange)="onSearchByFiltersChange($event)"
                                 (abortFlowChange)="onAbortFlow($event)"
-                            ></app-flows-table>
+                            />
                             <div class="mt-50px">
                                 <app-pagination
                                     [currentPage]="
@@ -141,7 +141,7 @@
                                     "
                                     [pageInfo]="flowConnectionData.flowsData.connectionDataForTable.pageInfo"
                                     (pageChangeEvent)="onPageChange($event)"
-                                ></app-pagination>
+                                />
                             </div>
                         </ng-template>
                     </li>

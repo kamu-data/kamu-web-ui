@@ -11,18 +11,6 @@ import { DynamicComponent } from "@common/components/modal/dynamic.component";
 
 @Component({
     selector: "modal-image",
-    template: `
-        <div class="modal__content" data-test-id="modal_image_content">
-            <div class="modal__img text-center">
-                <img data-test-id="modal_image" [src]="context.message" />
-            </div>
-
-            <div class="text-center">
-                <button class="modal__btn" data-test-id="yesButton" (click)="context._close && context._close()">
-                    Close
-                </button>
-            </div>
-        </div>
-    `,
+    templateUrl: "./modal-image.component.html",
 })
 export class ModalImageComponent extends DynamicComponent {}

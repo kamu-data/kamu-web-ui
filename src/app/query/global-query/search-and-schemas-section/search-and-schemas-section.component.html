@@ -16,7 +16,13 @@
                     (selectItem)="onSelectItem($event)"
                 />
                 @if (searchDataset) {
-                    <button title="Clear search" class="inner-btn" (click)="clearSearch()" data-test-id="clear-input">
+                    <button
+                        type="button"
+                        title="Clear search"
+                        class="inner-btn"
+                        (click)="clearSearch()"
+                        data-test-id="clear-input"
+                    >
                         <mat-icon class="fs-5 hover">close</mat-icon>
                     </button>
                 }
@@ -44,7 +50,7 @@
 
     <div class="search-datasets mt-4">
         <h2>Schema:</h2>
-        <mat-divider class="px-2 mt-2 mb-4"></mat-divider>
+        <mat-divider class="px-2 mt-2 mb-4" />
 
         @if (sortedSearchResult.length) {
             <cdk-accordion [multi]="true" class="example-accordion mt-4">
@@ -72,6 +78,7 @@
                                 }
                                 @if (!disableSearch) {
                                     <button
+                                        type="button"
                                         class="no-button d-flex"
                                         (click)="removeDataset(item.datasetAlias)"
                                         title="Hide schema"
@@ -91,7 +98,7 @@
                                     <div>
                                         <app-dynamic-table
                                             [hasTableHeader]="true"
-                                            [idTable]="'schema-block-table'"
+                                            idTable="schema-block-table"
                                             [columnDescriptors]="[
                                                 {
                                                     columnName: 'name',
@@ -120,7 +127,7 @@
 
     <div class="mt-100" appFeatureFlag="query.savedQueries">
         <h2>Saved queries:</h2>
-        <mat-divider class="px-2 mt-2 mb-4"></mat-divider>
-        <app-saved-queries-section></app-saved-queries-section>
+        <mat-divider class="px-2 mt-2 mb-4" />
+        <app-saved-queries-section />
     </div>
 </div>

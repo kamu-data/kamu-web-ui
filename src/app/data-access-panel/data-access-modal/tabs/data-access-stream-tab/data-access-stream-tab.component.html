@@ -17,7 +17,7 @@
                 <div class="input-group-button ms-1">
                     <app-copy-to-clipboard
                         [text]="clipboardWebsocketURL.value"
-                        [dataTestId]="'copyToClipboard-clipboardWebsocketURL'"
+                        dataTestId="copyToClipboard-clipboardWebsocketURL"
                     />
                 </div>
             </div>
@@ -50,10 +50,7 @@
                     readonly
                 />
                 <div class="input-group-button ms-1">
-                    <app-copy-to-clipboard
-                        [text]="clipboardKafka.value"
-                        [dataTestId]="'copyToClipboard-clipboardKafka'"
-                    />
+                    <app-copy-to-clipboard [text]="clipboardKafka.value" dataTestId="copyToClipboard-clipboardKafka" />
                 </div>
             </div>
         </div>

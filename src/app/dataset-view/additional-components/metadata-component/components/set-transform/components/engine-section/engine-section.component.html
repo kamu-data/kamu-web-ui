@@ -1,14 +1,14 @@
 @if (knownEngines) {
     <div class="mt-4">
         <p class="fs-6">Engine</p>
-        <mat-divider class="w-350"></mat-divider>
+        <mat-divider class="w-350" />
         <div class="mt-4">
             <label for="engine-type" class="form-label">Type</label>
             <app-engine-select
                 [data]="knownEngines"
                 [engine]="selectedEngine"
                 (selectedEngineEmitter)="onSelectType($event)"
-            ></app-engine-select>
+            />
         </div>
         <div class="mt-4">
             <label for="engine-image" class="form-label">Image</label>

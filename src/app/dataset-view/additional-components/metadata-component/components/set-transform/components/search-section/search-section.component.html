@@ -15,7 +15,7 @@
                 [inputFormatter]="formatter"
                 (selectItem)="onSelectItem($event)"
             />
-            <button class="inner-btn" (click)="clearSearch()" data-test-id="clear-input">X</button>
+            <button type="button" class="inner-btn" (click)="clearSearch()" data-test-id="clear-input">X</button>
         </div>
     </div>
 </div>
@@ -98,7 +98,7 @@
                                     <div>
                                         <app-dynamic-table
                                             [hasTableHeader]="true"
-                                            [idTable]="'schema-block-table'"
+                                            idTable="schema-block-table"
                                             [columnDescriptors]="[
                                                 {
                                                     columnName: 'name',

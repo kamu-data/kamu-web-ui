@@ -1,6 +1,7 @@
 @if (shouldMinimizeSearchAdditionalButtons) {
     <div class="search-additional-buttons-block">
         <button
+            type="button"
             mat-icon-button
             [matMenuTriggerFor]="menu"
             aria-label="Example icon-button with a menu"
@@ -18,7 +19,7 @@
             (searchAdditionalButtonsMenuItemClick)="onClickMenuItem($event)"
             [searchAdditionalButtonsData]="searchAdditionalButtonsData"
             [loadingListDownsreams]="loadingListDownsreams"
-        ></app-search-additional-buttons-nav>
+        />
     </mat-menu>
 } @else {
     <app-search-additional-buttons-nav
@@ -29,5 +30,5 @@
         (searchAdditionalButtonsMenuItemClick)="onClickMenuItem($event)"
         [searchAdditionalButtonsData]="searchAdditionalButtonsData"
         [loadingListDownsreams]="loadingListDownsreams"
-    ></app-search-additional-buttons-nav>
+    />
 }

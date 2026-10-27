@@ -5,7 +5,7 @@
         [class.details--on]="isCollapsedAppHeaderMenu"
     >
         <div class="header-item mt-n1 mb-n1 d-none d-md-flex">
-            <div [classList]="'app-brand'" id="app-header-logo">
+            <div class="app-brand" id="app-header-logo">
                 <a [routerLink]="[HOME_LINK]" data-test-id="appLogo">
                     <img [src]="APP_LOGO" alt="Application logo" />
                 </a>
@@ -193,6 +193,7 @@
                         </a>
                         @if (featureFlags.enableLogout) {
                             <button
+                                type="button"
                                 class="header-link d-flex align-items-center header-signout-btn d-block d-md-none mr-0 mr-md-3 py-2 py-md-3 border-sm-top border-md-top-0 border-white-fade"
                                 data-test-id="openLogoutHeader"
                                 (click)="onLogout()"
@@ -229,6 +230,7 @@
                     }
                     <div class="position-relative">
                         <button
+                            type="button"
                             class="button-round m-2"
                             data-test-id="openUserInfoBlock"
                             mat-button
@@ -264,12 +266,20 @@
                                     : DEFAULT_USER_DISPLAY_NAME
                             }}</strong>
                         </p>
-                        <button appFeatureFlag="help" mat-menu-item data-test-id="openHelp" (click)="onHelp()">
+                        <button
+                            type="button"
+                            appFeatureFlag="help"
+                            mat-menu-item
+                            data-test-id="openHelp"
+                            (click)="onHelp()"
+                        >
                             Help
                         </button>
                         <div role="none" class="dropdown-divider"></div>
                         @if (!isUserLoggedIn()) {
-                            <button mat-menu-item data-test-id="openLogin" (click)="onLogin()">Login</button>
+                            <button type="button" mat-menu-item data-test-id="openLogin" (click)="onLogin()">
+                                Login
+                            </button>
                         } @else {
                             <a
                                 mat-menu-item
@@ -292,6 +302,7 @@
                             </a>
                             <div role="none" class="dropdown-divider"></div>
                             <button
+                                type="button"
                                 appFeatureFlag="billing"
                                 mat-menu-item
                                 data-test-id="openBillingPlan"
@@ -300,6 +311,7 @@
                                 Account & Billing
                             </button>
                             <button
+                                type="button"
                                 appFeatureFlag="analytics"
                                 mat-menu-item
                                 data-test-id="openAnalytics"
@@ -332,7 +344,7 @@
             </nav>
         </div>
         <div class="d-block d-md-none">
-            <div [classList]="'app-brand'">
+            <div class="app-brand">
                 <a [routerLink]="[HOME_LINK]" data-test-id="appLogo">
                     <img [src]="APP_LOGO" alt="Application logo" />
                 </a>

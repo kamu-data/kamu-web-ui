@@ -34,7 +34,7 @@ export class DisplayHashComponent {
     @Input({ required: true }) public value: string;
     @Input() public navigationTargetDataset?: DatasetInfo;
     @Input() public showCopyButton = false;
-    @Input() public class = "mr-1 hashBlock";
+    @Input() public hashClass = "mr-1 hashBlock";
 
     private clipboard = inject(Clipboard);
     private toastr = inject(ToastrService);

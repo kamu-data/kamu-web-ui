@@ -7,7 +7,7 @@
             (change)="onSelectionWebhooksChange($event)"
             data-test-id="webhooks-category-chips"
         >
-            <mat-chip-option [value]="'webhooks'"> Webhooks</mat-chip-option>
+            <mat-chip-option value="webhooks"> Webhooks</mat-chip-option>
         </mat-chip-listbox>
 
         <span class="fw-500">total: {{ webhooksData.rollup.total }}</span>
@@ -35,7 +35,7 @@
             @for (webhook of flowsSelectionState.subscriptions; track webhook) {
                 <mat-chip>
                     {{ webhook }}
-                    <button matChipRemove (click)="removeSelectedWebhook(webhook)">
+                    <button type="button" matChipRemove (click)="removeSelectedWebhook(webhook)">
                         <mat-icon>cancel</mat-icon>
                     </button>
                 </mat-chip>

@@ -3,7 +3,7 @@
         <span class="position-absolute text-muted group-box-label text-uppercase">Information</span>
         @if (event.description) {
             <div class="mx-4">
-                <app-block-row-data [tooltip]="'Brief single-sentence summary of a dataset.'" [label]="'Description:'">
+                <app-block-row-data tooltip="Brief single-sentence summary of a dataset." label="Description:">
                     <span>{{ event.description }}</span>
                 </app-block-row-data>
             </div>
@@ -11,8 +11,8 @@
         @if (event.keywords) {
             <div class="mx-4">
                 <app-block-row-data
-                    [tooltip]="'Keywords, search terms, or tags used to describe the dataset.'"
-                    [label]="'Keywords:'"
+                    tooltip="Keywords, search terms, or tags used to describe the dataset."
+                    label="Keywords:"
                 >
                     <app-cards-property [data]="event.keywords" />
                 </app-block-row-data>

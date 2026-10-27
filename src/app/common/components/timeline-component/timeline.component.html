@@ -46,7 +46,7 @@
                                         >{{ block.author.accountName }}</a
                                     >
                                     committed
-                                    <app-display-time class="no-wrap" [data]="block.systemTime" />
+                                    <app-display-time timeClass="no-wrap" [data]="block.systemTime" />
                                 </div>
                                 <div class="ml-1"></div>
                             </div>
@@ -57,7 +57,6 @@
                                     type="button"
                                     class="signed-commit-badge verified signed-commit-badge-small m-2"
                                     placement="left"
-                                    ngbPopover="Verified"
                                     [popoverTitle]="popTitle"
                                     [ngbPopover]="popContent"
                                     data-test-id="button-verified"
@@ -73,7 +72,7 @@
                                         datasetName: this.datasetName,
                                     }"
                                     [showCopyButton]="true"
-                                    [class]="'text-dark mr-4 hashBlock'"
+                                    hashClass="text-dark mr-4 hashBlock"
                                 />
                             </div>
                         </div>

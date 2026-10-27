@@ -29,7 +29,7 @@
                 <div
                     class="text-danger fs-12"
                     [input]="datasetName"
-                    [fieldLabel]="'Dataset name'"
+                    fieldLabel="Dataset name"
                     [appFieldError]="['required', 'pattern']"
                     [group]="createDatasetForm"
                 ></div>
@@ -95,7 +95,7 @@
                 <mat-icon
                     class="text-muted fs-5 ms-1 mt-1 help-icon"
                     [matTooltip]="ARCHETYPE_TOOLTIP"
-                    [matTooltipPosition]="'right'"
+                    matTooltipPosition="right"
                     >help_outline</mat-icon
                 >
             </div>
@@ -116,7 +116,7 @@
                         <mat-icon
                             class="text-muted fs-5 ms-1 help-icon"
                             [matTooltip]="item.tooltip"
-                            [matTooltipPosition]="'right'"
+                            matTooltipPosition="right"
                             >help_outline</mat-icon
                         >
                     </div>
@@ -164,7 +164,7 @@
     </div>
     @if (showMonacoEditor) {
         <div class="container-monaco border border-1 mt-4 ps-2 pe-2 pt-4 rounded-3">
-            <app-yaml-editor [(template)]="yamlTemplate" height="400px" data-test-id="monaco-editor"></app-yaml-editor>
+            <app-yaml-editor [(template)]="yamlTemplate" height="400px" data-test-id="monaco-editor" />
         </div>
         <input
             type="file"
@@ -175,7 +175,12 @@
             #fileUpload
         />
         <div class="my-4 d-flex justify-content-end align-items-center">
-            <button (click)="fileUpload.click()" class="upload-btn ms-2" data-test-id="upload-file-button">
+            <button
+                type="button"
+                (click)="fileUpload.click()"
+                class="upload-btn ms-2"
+                data-test-id="upload-file-button"
+            >
                 Upload from file
             </button>
         </div>
@@ -187,7 +192,13 @@
     </div>
     <mat-divider />
     <div class="mt-4 mb-4">
-        <button (click)="onCreateDataset()" class="btn-create" [disabled]="!isFormValid" data-test-id="create-dataset">
+        <button
+            type="button"
+            (click)="onCreateDataset()"
+            class="btn-create"
+            [disabled]="!isFormValid"
+            data-test-id="create-dataset"
+        >
             Create dataset
         </button>
     </div>

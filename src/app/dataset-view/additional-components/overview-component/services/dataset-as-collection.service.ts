@@ -9,7 +9,7 @@ import { inject, Injectable } from "@angular/core";
 
 import { BehaviorSubject, filter, map, Observable, switchMap } from "rxjs";
 
-import { trackBusy } from "@common/helpers/app.helpers";
+import { requireValue, trackBusy } from "@common/helpers/app.helpers";
 import { DatasetApi } from "@api/dataset.api";
 import { CollectionEntryConnectionDataFragment, DatasetAsCollectionQuery } from "@api/kamu.graphql.interface";
 import { MaybeNull } from "@interface/app.types";
@@ -59,7 +59,8 @@ export class DatasetAsCollectionService {
     }): Observable<CollectionEntryConnectionDataFragment> {
         return this.datasetApi.getDatasetAsCollection(params).pipe(
             map((result: DatasetAsCollectionQuery) => {
-                return result.datasets.byId?.asCollection?.latest.entries as CollectionEntryConnectionDataFragment;
+                const dataset = requireValue(result.datasets.byId, "Dataset not found");
+                return requireValue(dataset.asCollection, "Dataset is not a collection").latest.entries;
             }),
         );
     }

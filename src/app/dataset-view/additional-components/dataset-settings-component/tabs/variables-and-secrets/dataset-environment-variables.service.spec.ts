@@ -65,9 +65,7 @@ describe("EnvironmentVariablesService", () => {
             })
             .subscribe((result: ViewDatasetEnvVarConnectionDataFragment) => {
                 expect(result.nodes).toEqual(
-                    requireValue(
-                        mockListEnvVariablesQuery.datasets.byOwnerAndName?.envVars.listEnvVariables.nodes ?? null,
-                    ),
+                    requireValue(mockListEnvVariablesQuery.datasets.byOwnerAndName?.envVars.listEnvVariables.nodes),
                 );
             });
 

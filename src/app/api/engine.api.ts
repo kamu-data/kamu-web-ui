@@ -25,8 +25,8 @@ export class EngineApi {
         return this.enginesGQL.watch().valueChanges.pipe(
             onlyCompleteData(),
             first(),
-            map((result: ObservableQuery.Result<EnginesQuery>) => {
-                return result.data as EnginesQuery;
+            map((result: ObservableQuery.Result<EnginesQuery, "complete">) => {
+                return result.data;
             }),
         );
     }

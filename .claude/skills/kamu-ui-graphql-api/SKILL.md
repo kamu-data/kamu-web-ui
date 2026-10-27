@@ -44,9 +44,13 @@ src/app/api/gql/**/*.graphql ┴─ npm run gql-codegen ─→ src/app/api/kamu.
   union member; eslint's `no-restricted-syntax` rejects both. A fragment is named after its type
   with the `Data` suffix (`FlowEventTaskChangedData on FlowEventTaskChanged`), and a `__typename`
   switch over a union of named fragments narrows as before.
-- An api class or domain service may assert away the `null` or `undefined` of its operation's
-  own result (`result.data as XxxQuery`, `byId?.flows.processes as
-  DatasetFlowProcessesDataFragment`); it never asserts to a schema type.
+- An api class reads its result without an assertion (see "`*.api.ts` classes"). A domain
+  service reading into a result unwraps each nullable root once with `requireValue()` and a
+  message, then reads plain properties:
+  `requireValue(data.datasets.byId, "Dataset not found").flows.processes`. Unwrap only what the
+  page guarantees (the dataset or account it already resolved, the `asVersionedFile` view on a
+  versioned-file page); a field the schema leaves null as a real state, such as a versioned
+  file's `latest` before the first upload, passes on as `null`.
 - Select what the screen uses. Include `__typename` where the code discriminates a union or an
   interface result (`... on CreateWebhookSubscriptionResultSuccess`).
 - `.graphql` files use 2-space indentation. Prettier does not format them (`npm run prettier`
@@ -58,7 +62,12 @@ src/app/api/gql/**/*.graphql ┴─ npm run gql-codegen ─→ src/app/api/kamu.
   `kamu.graphql.interface.ts` in the same change. The file is generated — the edit hook refuses
   hand edits.
 - Codegen config is `gql-codegen.yml`: `inlineFragmentTypes: combine`, unknown scalars default
-  to `string`, `ExtraData` is `Record<string, any>`, `Uint64` is `string`. The generated header
+  to `string`, `ExtraData` is `Record<string, any>`, `Uint64` is `string`.
+- `nonOptionalTypename` makes `__typename` a required literal on every generated object type,
+  since Apollo adds it to every selection: a `switch` on it is exhaustive, and a typename lookup
+  needs no cast. `skipTypeNameForRoot` leaves it off `Query` and `Mutation`, where Apollo does
+  not add it. So a typed mock or a hand-built object carries `__typename` on every object except
+  the operation root. The generated header
   must import `gql` from `@apollo/client/core` (`gqlImport` in the config); if it ever shows
   `apollo-angular`, fix the config rather than the output.
 - `Uint64` stays `string` because the API sends it as a JSON string: a JSON number above 2^53
@@ -90,24 +99,28 @@ public datasetWebhookSubscriptions(datasetId: string): Observable<DatasetWebhook
         .valueChanges.pipe(
             onlyCompleteData(),
             first(),
-            map((result: ObservableQuery.Result<DatasetWebhookSubscriptionsQuery>) => {
-                return result.data as DatasetWebhookSubscriptionsQuery;
+            map((result: ObservableQuery.Result<DatasetWebhookSubscriptionsQuery, "complete">) => {
+                return result.data;
             }),
         );
 }
 
 public datasetWebhookCreateSubscription(datasetId: string, input: WebhookSubscriptionInput): Observable<DatasetWebhookCreateSubscriptionMutation> {
-    return this.datasetWebhookCreateSubscriptionGQL.mutate({ variables: { datasetId, input } }).pipe(
-        first(),
-        map((result: ApolloLink.Result<DatasetWebhookCreateSubscriptionMutation>) => {
-            return result.data as DatasetWebhookCreateSubscriptionMutation;
-        }),
-    );
+    return this.datasetWebhookCreateSubscriptionGQL
+        .mutate({ variables: { datasetId, input } })
+        .pipe(first(), mutationData());
 }
 ```
 
 - Queries: `.watch(...).valueChanges.pipe(onlyCompleteData(), first(), map(...))` — one complete
-  value, then completion. Mutations: `.mutate(...).pipe(first(), map(...))`.
+  value, then completion. `onlyCompleteData()` narrows to the `"complete"` state, where `data` is
+  the full `XxxQuery`; annotate the `map` parameter with that state, as above. The plain
+  `ObservableQuery.Result<XxxQuery>` covers the empty and partial states too, so `data` turns
+  back into `XxxQuery | undefined` and invites a cast.
+- Mutations: `.mutate(...).pipe(first(), mutationData())` (`@common/helpers/apollo-error.helpers`),
+  then a `map` over the `XxxMutation` when the method returns a part of it. apollo-angular types
+  mutation `data` as possibly `undefined` whatever the error policy; with the default policy a
+  failed mutation errors the observable instead, so `mutationData()` unwraps with a runtime check.
 - Apollo emits a failed query as a result carrying `error`, and `onlyCompleteData()` drops it: the
   observable then neither emits nor errors, and a caller's `catchError` never runs. A query whose
   callers react to failure uses `completeDataOrError()` (`@common/helpers/apollo-error.helpers`)
@@ -144,6 +157,7 @@ response fixture in `src/app/api/mock/<domain>.mock.ts` — the pattern is owned
 | Inline `gql` template literals in TypeScript | Codegen would not see them, so there would be no generated types or `Document` for tests |
 | Editing `kamu.graphql.interface.ts` to unblock a build | Overwritten by the next codegen; fix the document or the schema instead |
 | Returning `ObservableQuery.Result` / `ApolloLink.Result` from api methods | Callers would deal with Apollo envelopes; api methods return the operation data type |
+| `result.data as XxxQuery` / `as XxxMutation` in api methods | A wide `ObservableQuery.Result<XxxQuery>` annotation drops the `"complete"` narrowing `onlyCompleteData()` gives, so `data` looks optional and needs a cast; an unchecked cast also hides a stale field. The `"complete"` annotation and `mutationData()` give the full type with no assertion |
 
 ## What lives elsewhere
 

@@ -78,7 +78,6 @@ export const mockDatasetListDownstreamsQuery: DatasetListDownstreamsQuery = {
                         dataset: {
                             name: "rhine-basin.netherlands",
                             owner: {
-                                __typename: "Account",
                                 ...mockOwnerFieldsWithAvatar,
                             },
                             __typename: "Dataset",
@@ -128,7 +127,6 @@ export const mockDatasetListItem: DatasetSearchOverviewFragment = {
                     kind: DatasetKind.Derivative,
                     name: "rhine-basin.netherlands",
                     owner: {
-                        __typename: "Account",
                         ...mockOwnerFieldsWithAvatar,
                     },
                     alias: "deltares.nl/rhine-basin.netherlands",
@@ -145,7 +143,6 @@ export const mockDatasetListItem: DatasetSearchOverviewFragment = {
     kind: DatasetKind.Root,
     name: "alberta.case-details",
     owner: {
-        __typename: "Account",
         ...mockOwnerFieldsWithAvatar,
     },
     alias: "kamu/alberta.case-details",
@@ -173,7 +170,6 @@ export const mockDatasetByAccountAndDatasetNameQuery: DatasetByAccountAndDataset
             kind: DatasetKind.Root,
             name: TEST_DATASET_NAME,
             owner: {
-                __typename: "Account",
                 ...mockOwnerFieldsWithAvatar,
             },
             alias: TEST_LOGIN + "/" + TEST_DATASET_NAME,
@@ -191,7 +187,6 @@ export const mockDatasetByIdQuery: DatasetByIdQuery = {
             kind: DatasetKind.Root,
             name: TEST_DATASET_NAME,
             owner: {
-                __typename: "Account",
                 ...mockOwnerFieldsWithAvatar,
             },
             alias: TEST_LOGIN + "/" + TEST_DATASET_NAME,
@@ -310,7 +305,6 @@ export const mockDatasetBasicsWithPermissionQuery: GetDatasetBasicsWithPermissio
             kind: DatasetKind.Root,
             name: TEST_DATASET_NAME,
             owner: {
-                __typename: "Account",
                 ...mockOwnerFieldsWithAvatar,
             },
             alias: TEST_LOGIN + "/" + TEST_DATASET_NAME,
@@ -362,7 +356,6 @@ export const mockDatasetsByAccountNameQuery: DatasetsByAccountNameQuery = {
                                     kind: DatasetKind.Derivative,
                                     name: "rhine-basin.netherlands",
                                     owner: {
-                                        __typename: "Account",
                                         ...mockOwnerFieldsWithAvatar,
                                     },
                                     alias: "deltares.nl/rhine-basin.netherlands",
@@ -379,7 +372,6 @@ export const mockDatasetsByAccountNameQuery: DatasetsByAccountNameQuery = {
                     kind: DatasetKind.Root,
                     name: "alberta.case-details",
                     owner: {
-                        __typename: "Account",
                         ...mockOwnerFieldsWithAvatar,
                     },
                     alias: "kamu/alberta.case-details",
@@ -405,7 +397,6 @@ export const mockMetadataBlockByHash: MetadataBlockFragment = {
     systemTime: "2022-08-05T21:20:08.053635579+00:00",
     sequenceNumber: 6,
     author: {
-        __typename: "Account",
         ...mockOwnerFieldsWithAvatar,
     },
     event: {
@@ -462,7 +453,6 @@ export const mockGetMetadataBlockQuery: GetMetadataBlockQuery = {
             kind: DatasetKind.Root,
             alias: "kamu/com.naturalearthdata.admin0.countries.50m",
             owner: {
-                __typename: "Account",
                 ...mockOwnerFieldsWithAvatar,
             },
             visibility: mockPublicDatasetVisibility,

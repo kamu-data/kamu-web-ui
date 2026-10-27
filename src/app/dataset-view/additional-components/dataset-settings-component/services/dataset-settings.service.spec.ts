@@ -93,7 +93,9 @@ describe("DatasetSettingsService", () => {
 
     it("should check delete dataset when not found", () => {
         vi.spyOn(loggedUserService, "isAuthenticated", "get").mockReturnValue(true);
-        const notFoundResponse: DeleteDatasetMutation = { datasets: { byId: null } };
+        const notFoundResponse: DeleteDatasetMutation = {
+            datasets: { __typename: "DatasetsMut", byId: null },
+        };
         vi.spyOn(datasetApi, "deleteDataset").mockReturnValue(of(notFoundResponse));
 
         const subscription$ = service.deleteDataset(ACCOUNT_NAME, DATASET_ID).subscribe({
@@ -171,7 +173,9 @@ describe("DatasetSettingsService", () => {
 
     it("should check rename dataset when not found", () => {
         vi.spyOn(loggedUserService, "isAuthenticated", "get").mockReturnValue(true);
-        const notFoundResponse: RenameDatasetMutation = { datasets: { byId: null } };
+        const notFoundResponse: RenameDatasetMutation = {
+            datasets: { __typename: "DatasetsMut", byId: null },
+        };
         vi.spyOn(datasetApi, "renameDataset").mockReturnValue(of(notFoundResponse));
 
         const subscription$ = service

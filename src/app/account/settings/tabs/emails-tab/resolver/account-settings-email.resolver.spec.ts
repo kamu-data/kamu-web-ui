@@ -14,7 +14,7 @@ import { of } from "rxjs";
 import { Apollo } from "apollo-angular";
 import { provideToastr } from "ngx-toastr";
 
-import { runResolver } from "@common/helpers/base-test.helpers.spec";
+import { expectPageNotFoundRedirect, runResolver } from "@common/helpers/base-test.helpers.spec";
 import { mockAccountDetails, mockAccountDetailsWithEmail } from "@api/mock/auth.mock";
 
 import { AccountEmailService } from "src/app/account/settings/tabs/emails-tab/account-email.service";
@@ -33,6 +33,13 @@ describe("accountSettingsEmailResolverFn", () => {
 
         accountEmailService = TestBed.inject(AccountEmailService);
         loggedUserService = TestBed.inject(LoggedUserService);
+    });
+
+    it("should redirect to page not found when the account is not found", async () => {
+        vi.spyOn(accountEmailService, "fetchAccountWithEmail").mockReturnValue(of(null));
+        vi.spyOn(loggedUserService, "currentlyLoggedInUser", "get").mockReturnValue(mockAccountDetails);
+
+        expectPageNotFoundRedirect(await runResolver(accountSettingsEmailResolverFn));
     });
 
     it("should check resolver", async () => {

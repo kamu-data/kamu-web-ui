@@ -9,9 +9,10 @@ import { inject, Injectable } from "@angular/core";
 
 import { catchError, EMPTY, first, map, Observable } from "rxjs";
 
-import { ApolloLink, ObservableQuery } from "@apollo/client/core";
+import { ObservableQuery } from "@apollo/client/core";
 import { onlyCompleteData } from "apollo-angular";
 
+import { mutationData } from "@common/helpers/apollo-error.helpers";
 import { noCacheFetchPolicy } from "@common/helpers/data.helpers";
 import {
     AccountByNameGQL,
@@ -70,36 +71,21 @@ export class AccountApi {
     }): Observable<ChangeAccountUsernameMutation> {
         return this.changeAccountUsernameGQL
             .mutate({ variables: { accountName: params.accountName, newName: params.newName } })
-            .pipe(
-                first(),
-                map((result: ApolloLink.Result<ChangeAccountUsernameMutation>) => {
-                    return result.data as ChangeAccountUsernameMutation;
-                }),
-            );
+            .pipe(first(), mutationData());
     }
 
     public changeAccountEmail(params: {
         accountName: string;
         newEmail: string;
     }): Observable<AccountChangeEmailMutation> {
-        return this.accountChangeEmailGQL.mutate({ variables: params }).pipe(
-            first(),
-            map((result: ApolloLink.Result<AccountChangeEmailMutation>) => {
-                return result.data as AccountChangeEmailMutation;
-            }),
-        );
+        return this.accountChangeEmailGQL.mutate({ variables: params }).pipe(first(), mutationData());
     }
 
     public changeAdminPassword(params: {
         accountName: string;
         password: string;
     }): Observable<ChangeAdminPasswordMutation> {
-        return this.changeAdminPasswordGQL.mutate({ variables: params }).pipe(
-            first(),
-            map((result: ApolloLink.Result<ChangeAdminPasswordMutation>) => {
-                return result.data as ChangeAdminPasswordMutation;
-            }),
-        );
+        return this.changeAdminPasswordGQL.mutate({ variables: params }).pipe(first(), mutationData());
     }
 
     public changeUserPassword(params: {
@@ -109,9 +95,7 @@ export class AccountApi {
     }): Observable<ChangeUserPasswordMutation> {
         return this.changeUserPasswordGQL.mutate({ variables: params }).pipe(
             first(),
-            map((result: ApolloLink.Result<ChangeUserPasswordMutation>) => {
-                return result.data as ChangeUserPasswordMutation;
-            }),
+            mutationData(),
             catchError(() => EMPTY),
         );
     }
@@ -127,8 +111,8 @@ export class AccountApi {
             .valueChanges.pipe(
                 onlyCompleteData(),
                 first(),
-                map((result: ObservableQuery.Result<AccountWithEmailQuery>) => {
-                    return result.data as AccountWithEmailQuery;
+                map((result: ObservableQuery.Result<AccountWithEmailQuery, "complete">) => {
+                    return result.data;
                 }),
             );
     }
@@ -144,8 +128,8 @@ export class AccountApi {
             .valueChanges.pipe(
                 onlyCompleteData(),
                 first(),
-                map((result: ObservableQuery.Result<AccountStorageQuotaQuery>) => {
-                    return result.data as AccountStorageQuotaQuery;
+                map((result: ObservableQuery.Result<AccountStorageQuotaQuery, "complete">) => {
+                    return result.data;
                 }),
             );
     }
@@ -160,8 +144,8 @@ export class AccountApi {
             .valueChanges.pipe(
                 onlyCompleteData(),
                 first(),
-                map((result: ObservableQuery.Result<AccountByNameQuery>) => {
-                    return (result.data?.accounts?.byName ?? null) as MaybeNull<AccountFragment>;
+                map((result: ObservableQuery.Result<AccountByNameQuery, "complete">) => {
+                    return result.data.accounts.byName ?? null;
                 }),
             );
     }
@@ -192,8 +176,8 @@ export class AccountApi {
             .valueChanges.pipe(
                 onlyCompleteData(),
                 first(),
-                map((result: ObservableQuery.Result<AccountListFlowsQuery>) => {
-                    return result.data as AccountListFlowsQuery;
+                map((result: ObservableQuery.Result<AccountListFlowsQuery, "complete">) => {
+                    return result.data;
                 }),
             );
     }
@@ -222,8 +206,8 @@ export class AccountApi {
             .valueChanges.pipe(
                 onlyCompleteData(),
                 first(),
-                map((result: ObservableQuery.Result<AccountFlowsAsCardsQuery>) => {
-                    return result.data as AccountFlowsAsCardsQuery;
+                map((result: ObservableQuery.Result<AccountFlowsAsCardsQuery, "complete">) => {
+                    return result.data;
                 }),
             );
     }
@@ -252,8 +236,8 @@ export class AccountApi {
             .valueChanges.pipe(
                 onlyCompleteData(),
                 first(),
-                map((result: ObservableQuery.Result<AccountPrimaryCardsQuery>) => {
-                    return result.data as AccountPrimaryCardsQuery;
+                map((result: ObservableQuery.Result<AccountPrimaryCardsQuery, "complete">) => {
+                    return result.data;
                 }),
             );
     }
@@ -282,8 +266,8 @@ export class AccountApi {
             .valueChanges.pipe(
                 onlyCompleteData(),
                 first(),
-                map((result: ObservableQuery.Result<AccountWebhookCardsQuery>) => {
-                    return result.data as AccountWebhookCardsQuery;
+                map((result: ObservableQuery.Result<AccountWebhookCardsQuery, "complete">) => {
+                    return result.data;
                 }),
             );
     }
@@ -299,8 +283,8 @@ export class AccountApi {
             })
             .valueChanges.pipe(
                 onlyCompleteData(),
-                map((result: ObservableQuery.Result<AccountListDatasetsWithFlowsQuery>) => {
-                    return result.data as AccountListDatasetsWithFlowsQuery;
+                map((result: ObservableQuery.Result<AccountListDatasetsWithFlowsQuery, "complete">) => {
+                    return result.data;
                 }),
             );
     }
@@ -312,11 +296,6 @@ export class AccountApi {
                     accountName,
                 },
             })
-            .pipe(
-                first(),
-                map((result: ApolloLink.Result<DeleteAccountByNameMutation>) => {
-                    return result.data as DeleteAccountByNameMutation;
-                }),
-            );
+            .pipe(first(), mutationData());
     }
 }

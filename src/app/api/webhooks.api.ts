@@ -9,9 +9,10 @@ import { inject, Injectable } from "@angular/core";
 
 import { first, map, Observable } from "rxjs";
 
-import { ApolloLink, ObservableQuery } from "@apollo/client/core";
+import { ObservableQuery } from "@apollo/client/core";
 import { onlyCompleteData } from "apollo-angular";
 
+import { mutationData } from "@common/helpers/apollo-error.helpers";
 import { noCacheFetchPolicy } from "@common/helpers/data.helpers";
 import {
     DatasetWebhookByIdGQL,
@@ -54,8 +55,8 @@ export class WebhooksApi {
         return this.webhookEventTypesGQL.watch().valueChanges.pipe(
             onlyCompleteData(),
             first(),
-            map((result: ObservableQuery.Result<WebhookEventTypesQuery>) => {
-                return result.data as WebhookEventTypesQuery;
+            map((result: ObservableQuery.Result<WebhookEventTypesQuery, "complete">) => {
+                return result.data;
             }),
         );
     }
@@ -66,8 +67,8 @@ export class WebhooksApi {
             .valueChanges.pipe(
                 onlyCompleteData(),
                 first(),
-                map((result: ObservableQuery.Result<DatasetWebhookSubscriptionsQuery>) => {
-                    return result.data as DatasetWebhookSubscriptionsQuery;
+                map((result: ObservableQuery.Result<DatasetWebhookSubscriptionsQuery, "complete">) => {
+                    return result.data;
                 }),
             );
     }
@@ -76,69 +77,51 @@ export class WebhooksApi {
         datasetId: string,
         input: WebhookSubscriptionInput,
     ): Observable<DatasetWebhookCreateSubscriptionMutation> {
-        return this.datasetWebhookCreateSubscriptionGQL.mutate({ variables: { datasetId, input } }).pipe(
-            first(),
-            map((result: ApolloLink.Result<DatasetWebhookCreateSubscriptionMutation>) => {
-                return result.data as DatasetWebhookCreateSubscriptionMutation;
-            }),
-        );
+        return this.datasetWebhookCreateSubscriptionGQL
+            .mutate({ variables: { datasetId, input } })
+            .pipe(first(), mutationData());
     }
 
     public datasetWebhookRemoveSubscription(
         datasetId: string,
         id: string,
     ): Observable<DatasetWebhookRemoveSubscriptionMutation> {
-        return this.datasetWebhookRemoveSubscriptionGQL.mutate({ variables: { datasetId, id } }).pipe(
-            first(),
-            map((result: ApolloLink.Result<DatasetWebhookRemoveSubscriptionMutation>) => {
-                return result.data as DatasetWebhookRemoveSubscriptionMutation;
-            }),
-        );
+        return this.datasetWebhookRemoveSubscriptionGQL
+            .mutate({ variables: { datasetId, id } })
+            .pipe(first(), mutationData());
     }
 
     public datasetWebhookRotateSecret(datasetId: string, id: string): Observable<DatasetWebhookRotateSecretMutation> {
-        return this.datasetWebhookRotateSecretGQL.mutate({ variables: { datasetId, id } }).pipe(
-            first(),
-            map((result: ApolloLink.Result<DatasetWebhookRotateSecretMutation>) => {
-                return result.data as DatasetWebhookRotateSecretMutation;
-            }),
-        );
+        return this.datasetWebhookRotateSecretGQL
+            .mutate({ variables: { datasetId, id } })
+            .pipe(first(), mutationData());
     }
 
     public datasetWebhookPauseSubscription(
         datasetId: string,
         id: string,
     ): Observable<DatasetWebhookPauseSubscriptionMutation> {
-        return this.datasetWebhookPauseSubscriptionGQL.mutate({ variables: { datasetId, id } }).pipe(
-            first(),
-            map((result: ApolloLink.Result<DatasetWebhookPauseSubscriptionMutation>) => {
-                return result.data as DatasetWebhookPauseSubscriptionMutation;
-            }),
-        );
+        return this.datasetWebhookPauseSubscriptionGQL
+            .mutate({ variables: { datasetId, id } })
+            .pipe(first(), mutationData());
     }
 
     public datasetWebhookResumeSubscription(
         datasetId: string,
         id: string,
     ): Observable<DatasetWebhookResumeSubscriptionMutation> {
-        return this.datasetWebhookResumeSubscriptionGQL.mutate({ variables: { datasetId, id } }).pipe(
-            first(),
-            map((result: ApolloLink.Result<DatasetWebhookResumeSubscriptionMutation>) => {
-                return result.data as DatasetWebhookResumeSubscriptionMutation;
-            }),
-        );
+        return this.datasetWebhookResumeSubscriptionGQL
+            .mutate({ variables: { datasetId, id } })
+            .pipe(first(), mutationData());
     }
 
     public datasetWebhookReactivateSubscription(
         datasetId: string,
         id: string,
     ): Observable<DatasetWebhookReactivateSubscriptionMutation> {
-        return this.datasetWebhookReactivateSubscriptionGQL.mutate({ variables: { datasetId, id } }).pipe(
-            first(),
-            map((result: ApolloLink.Result<DatasetWebhookReactivateSubscriptionMutation>) => {
-                return result.data as DatasetWebhookReactivateSubscriptionMutation;
-            }),
-        );
+        return this.datasetWebhookReactivateSubscriptionGQL
+            .mutate({ variables: { datasetId, id } })
+            .pipe(first(), mutationData());
     }
 
     public datasetWebhookUpdateSubscription(params: {
@@ -146,12 +129,7 @@ export class WebhooksApi {
         id: string;
         input: WebhookSubscriptionInput;
     }): Observable<DatasetWebhookUpdateSubscriptionMutation> {
-        return this.datasetWebhookUpdateSubscriptionGQL.mutate({ variables: params }).pipe(
-            first(),
-            map((result: ApolloLink.Result<DatasetWebhookUpdateSubscriptionMutation>) => {
-                return result.data as DatasetWebhookUpdateSubscriptionMutation;
-            }),
-        );
+        return this.datasetWebhookUpdateSubscriptionGQL.mutate({ variables: params }).pipe(first(), mutationData());
     }
 
     public datasetWebhookSubscriptionById(params: {
@@ -163,8 +141,8 @@ export class WebhooksApi {
             .valueChanges.pipe(
                 onlyCompleteData(),
                 first(),
-                map((result: ObservableQuery.Result<DatasetWebhookByIdQuery>) => {
-                    return result.data as DatasetWebhookByIdQuery;
+                map((result: ObservableQuery.Result<DatasetWebhookByIdQuery, "complete">) => {
+                    return result.data;
                 }),
             );
     }

@@ -30,7 +30,7 @@ type TestCase = {
     });
 });
 
-[
+const resolveEntryIconCases: { case: CollectionEntryViewType; expected: string }[] = [
     {
         case: {
             displayName: "test-file",
@@ -40,6 +40,7 @@ type TestCase = {
             hash: "ewqeqwdsd1sl5l3lfdsfdsf",
             size: 255548,
             owner: {
+                __typename: "Account",
                 accountName: "twest",
             },
             contentType: "application/pdf",
@@ -89,7 +90,9 @@ type TestCase = {
         },
         expected: "question",
     },
-].forEach((item: { case: CollectionEntryViewType; expected: string }) => {
+];
+
+resolveEntryIconCases.forEach((item) => {
     it(`should check #resolveEntryIconHelper with ${item.case.nodeType}`, () => {
         expect(resolveEntryIconHelper(item.case)).toEqual(item.expected);
     });

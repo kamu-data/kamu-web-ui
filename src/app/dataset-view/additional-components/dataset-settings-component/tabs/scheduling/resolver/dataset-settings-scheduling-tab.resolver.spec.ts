@@ -81,11 +81,17 @@ describe("datasetSettingsSchedulingTabResolverFn", () => {
             .spyOn(datasetFlowTriggerService, "fetchDatasetFlowTrigger")
             .mockReturnValue(
                 of({
+                    __typename: "Query",
                     datasets: {
+                        __typename: "Datasets",
                         byId: {
+                            __typename: "Dataset",
                             flows: {
+                                __typename: "DatasetFlows",
                                 triggers: {
+                                    __typename: "DatasetFlowTriggers",
                                     byType: {
+                                        __typename: "FlowTrigger",
                                         paused: true,
                                         schedule: null,
                                         stopPolicy: {
@@ -140,11 +146,15 @@ describe("datasetSettingsSchedulingTabResolverFn", () => {
     it("should correctly map flowTriggers when no data is defined", async () => {
         vi.spyOn(datasetFlowTriggerService, "fetchDatasetFlowTrigger").mockReturnValue(
             of({
+                __typename: "Query",
                 datasets: {
                     __typename: "Datasets",
                     byId: {
+                        __typename: "Dataset",
                         flows: {
+                            __typename: "DatasetFlows",
                             triggers: {
+                                __typename: "DatasetFlowTriggers",
                                 byType: null,
                             },
                         },

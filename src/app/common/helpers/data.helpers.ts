@@ -16,6 +16,7 @@ import {
     DynamicTableDataRow,
 } from "@common/components/dynamic-table/dynamic-table.interface";
 import { convertSecondsToHumanReadableFormat } from "@common/helpers/app.helpers";
+import { parseJsonAs } from "@common/helpers/untyped-boundary.helpers";
 import {
     DataQueryResultSuccessViewFragment,
     MetadataBlockFragment,
@@ -322,7 +323,7 @@ export function sliceSizeMapperReverse(sizeInBytes: number): { size: number; uni
 
 export function parseDataRows(successResult: DataQueryResultSuccessViewFragment): DynamicTableDataRow[] {
     const content: string = successResult.data.content;
-    const parsedData = JSON.parse(content) as object[];
+    const parsedData = parseJsonAs<object[]>(content);
     if (parsedData.length) {
         const columnNames = Object.keys(parsedData[0]);
         const dataRowArray = parseDataFromJsonAoSFormat(parsedData, columnNames);

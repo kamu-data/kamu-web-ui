@@ -297,6 +297,7 @@ export class DatasetService {
             const metadataSummary: DatasetMetadataSummaryFragment = data.datasets.byOwnerAndName;
 
             const pageInfo: DatasetPageInfoFragment = {
+                __typename: "PageBasedInfo",
                 hasNextPage: false,
                 hasPreviousPage: false,
                 totalPages: 1,

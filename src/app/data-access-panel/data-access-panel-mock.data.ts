@@ -105,7 +105,6 @@ export const mockDatasetProtocolsQuery: DatasetProtocolsQuery = {
             kind: DatasetKind.Derivative,
             name: "account.tokens.portfolio",
             owner: {
-                __typename: "Account",
                 ...mockOwnerFieldsWithAvatar,
             },
             alias: "kamu/account.tokens.portfolio",

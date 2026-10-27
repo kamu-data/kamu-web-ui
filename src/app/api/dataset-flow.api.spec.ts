@@ -382,7 +382,7 @@ describe("DatasetFlowApi", () => {
                 filters: MOCK_FILTERS,
             })
             .subscribe((res: GetDatasetListFlowsQuery) => {
-                expect(requireValue(res.datasets.byId?.flows.runs.table ?? null).totalCount).toEqual(2);
+                expect(requireValue(res.datasets.byId?.flows.runs.table).totalCount).toEqual(2);
             });
 
         const op = controller.expectOne(GetDatasetListFlowsDocument);

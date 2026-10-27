@@ -55,6 +55,7 @@ describe("DatasetCreateService", () => {
     it("should be create empty dataset with success", () => {
         const mockResponseSuccess: CreateEmptyDatasetMutation = {
             datasets: {
+                __typename: "DatasetsMut",
                 createEmpty: {
                     message: "Success",
                     dataset: mockDatasetBasicsDerivedFragment,
@@ -100,6 +101,7 @@ describe("DatasetCreateService", () => {
     it("should be create empty dataset with a name collision error", () => {
         const mockResponseError: CreateEmptyDatasetMutation = {
             datasets: {
+                __typename: "DatasetsMut",
                 createEmpty: {
                     message: "Fail",
                     accountName: "",
@@ -132,6 +134,7 @@ describe("DatasetCreateService", () => {
     it("should be create dataset using snapshot with success", () => {
         const mockResponseSuccess: CreateDatasetFromSnapshotMutation = {
             datasets: {
+                __typename: "DatasetsMut",
                 createFromSnapshot: {
                     message: "Success",
                     dataset: {
@@ -172,6 +175,7 @@ describe("DatasetCreateService", () => {
     it("should be create dataset using snapshot with a name collision error", () => {
         const mockResponseError: CreateDatasetFromSnapshotMutation = {
             datasets: {
+                __typename: "DatasetsMut",
                 createFromSnapshot: {
                     message: "Fail",
                     accountName: "",
@@ -199,6 +203,7 @@ describe("DatasetCreateService", () => {
     it("should create collection and navigate to its overview", () => {
         const mockResponse: CreateDatasetAsCollectionMutation = {
             datasets: {
+                __typename: "DatasetsMut",
                 createCollection: {
                     message: "Success",
                     dataset: mockDatasetBasicsDerivedFragment,
@@ -228,6 +233,7 @@ describe("DatasetCreateService", () => {
     it("should emit an error when collection creation fails", () => {
         const mockResponse: CreateDatasetAsCollectionMutation = {
             datasets: {
+                __typename: "DatasetsMut",
                 createCollection: {
                     message: "Collection already exists",
                     __typename: "CreateDatasetResultNameCollision",
@@ -268,6 +274,7 @@ describe("DatasetCreateService", () => {
     it("should create versioned file and navigate to its overview", () => {
         const mockResponse: CreateDatasetAsVersionedFileMutation = {
             datasets: {
+                __typename: "DatasetsMut",
                 createVersionedFile: {
                     message: "Success",
                     dataset: mockDatasetBasicsDerivedFragment,
@@ -297,6 +304,7 @@ describe("DatasetCreateService", () => {
     it("should emit an error when versioned file creation fails", () => {
         const mockResponse: CreateDatasetAsVersionedFileMutation = {
             datasets: {
+                __typename: "DatasetsMut",
                 createVersionedFile: {
                     message: "Versioned file already exists",
                     __typename: "CreateDatasetResultNameCollision",

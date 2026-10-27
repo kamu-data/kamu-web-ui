@@ -92,9 +92,10 @@ describe("TileBaseWidgetComponent", () => {
 
     it("should check flow's duration and total time of running flow", () => {
         const now = new Date();
-        const widgetData = {
+        const widgetData: FlowItemWidgetDataFragment = {
             ...mockFlowItemWidgetDataFragments[1],
             timing: {
+                __typename: "FlowTimingRecords",
                 initiatedAt: new Date(now.getTime() - 100000).toISOString(), // 100 seconds ago
                 firstAttemptScheduledAt: new Date(now.getTime() - 80000).toISOString(), // 80 seconds ago
                 scheduledAt: new Date(now.getTime() - 80000).toISOString(), // 80 seconds ago

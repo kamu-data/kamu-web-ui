@@ -7,15 +7,15 @@
 
 import { inject, Injector } from "@angular/core";
 
-import { OperatorFunction, pipe, tap } from "rxjs";
+import { map, OperatorFunction, pipe, tap } from "rxjs";
 
 import { ApolloLink, ObservableQuery } from "@apollo/client/core";
 import { CombinedGraphQLErrors } from "@apollo/client/errors";
 import { ErrorLink } from "@apollo/client/link/error";
-import { onlyCompleteData } from "apollo-angular";
+import { Apollo, onlyCompleteData } from "apollo-angular";
 import { ToastrService } from "ngx-toastr";
 
-import { isAccessTokenExpired, logError } from "@common/helpers/app.helpers";
+import { isAccessTokenExpired, logError, requireValue } from "@common/helpers/app.helpers";
 import { ErrorTexts } from "@common/values/errors.text";
 
 import ProjectLinks from "src/app/project-links";
@@ -85,4 +85,12 @@ export function completeDataOrError<TData>(): OperatorFunction<
         }),
         onlyCompleteData<TData>(),
     );
+}
+
+/**
+ * The data of a mutation result. Under the default error policy a failed mutation errors the
+ * observable, so a result that arrives carries data; one without it throws.
+ */
+export function mutationData<TData>(): OperatorFunction<Apollo.MutateResult<TData>, TData> {
+    return map((result: Apollo.MutateResult<TData>) => requireValue(result.data, "mutation returned no data"));
 }

@@ -11,6 +11,7 @@ import { map, Observable } from "rxjs";
 
 import { ToastrService } from "ngx-toastr";
 
+import { requireValue } from "@common/helpers/app.helpers";
 import {
     DatasetWebhookByIdQuery,
     DatasetWebhookCreateSubscriptionMutation,
@@ -39,7 +40,7 @@ export class DatasetWebhooksService {
     public datasetWebhookSubscriptions(datasetId: string): Observable<WebhookSubscriptionDataFragment[]> {
         return this.webhooksApi.datasetWebhookSubscriptions(datasetId).pipe(
             map((data: DatasetWebhookSubscriptionsQuery) => {
-                return data.datasets.byId?.webhooks.subscriptions as WebhookSubscriptionDataFragment[];
+                return requireValue(data.datasets.byId, "Dataset not found").webhooks.subscriptions;
             }),
         );
     }

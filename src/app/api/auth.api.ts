@@ -10,9 +10,9 @@ import { inject, Injectable } from "@angular/core";
 import { Observable } from "rxjs";
 import { first, map } from "rxjs/operators";
 
-import { ApolloLink, ObservableQuery } from "@apollo/client/core";
+import { InMemoryCache, ObservableQuery } from "@apollo/client/core";
 
-import { completeDataOrError } from "@common/helpers/apollo-error.helpers";
+import { completeDataOrError, mutationData } from "@common/helpers/apollo-error.helpers";
 import {
     GithubLoginCredentials,
     LoginResponseType,
@@ -46,8 +46,8 @@ export class AuthApi {
         return this.getEnabledLoginMethodsGQL.watch().valueChanges.pipe(
             completeDataOrError(),
             first(),
-            map((result: ObservableQuery.Result<GetEnabledLoginMethodsQuery>) => {
-                return result.data?.auth?.enabledProviders ?? [];
+            map((result: ObservableQuery.Result<GetEnabledLoginMethodsQuery, "complete">) => {
+                return result.data.auth.enabledProviders;
             }),
         );
     }
@@ -94,8 +94,12 @@ export class AuthApi {
             .mutate({
                 variables: { login_method: loginMethod, login_credentials_json: loginCredentialsJson, deviceCode },
                 update: (cache) => {
-                    const cacheMap = cache.extract() as object[];
-                    const datasetCachedKeys = Object.keys(cacheMap).filter((item: string) => item.includes("Dataset:"));
+                    if (!(cache instanceof InMemoryCache)) {
+                        return;
+                    }
+                    const datasetCachedKeys = Object.keys(cache.extract()).filter((item: string) =>
+                        item.includes("Dataset:"),
+                    );
                     datasetCachedKeys.forEach((key) => {
                         cache.evict({
                             id: key,
@@ -105,24 +109,27 @@ export class AuthApi {
                 },
             })
             .pipe(
-                map((result: ApolloLink.Result<LoginMutation>) => {
-                    return result.data?.auth.login as LoginResponseType;
+                mutationData(),
+                map((data: LoginMutation) => {
+                    return data.auth.login;
                 }),
             );
     }
 
     public fetchAccountFromAccessToken(accessToken: string): Observable<AccountFragment> {
         return this.fetchAccountDetailsGQL.mutate({ variables: { accessToken } }).pipe(
-            map((result: ApolloLink.Result<FetchAccountDetailsMutation>) => {
-                return result.data?.auth.accountDetails as AccountFragment;
+            mutationData(),
+            map((data: FetchAccountDetailsMutation) => {
+                return data.auth.accountDetails;
             }),
         );
     }
 
     public fetchAuthNonceFromWeb3Wallet(walletAddress: string): Observable<string> {
         return this.loginWeb3WalletGQL.mutate({ variables: { account: walletAddress } }).pipe(
-            map((result: ApolloLink.Result<LoginWeb3WalletMutation>) => {
-                return result.data?.auth.web3.eip4361AuthNonce.value as string;
+            mutationData(),
+            map((data: LoginWeb3WalletMutation) => {
+                return data.auth.web3.eip4361AuthNonce.value;
             }),
         );
     }

@@ -379,6 +379,7 @@ export const mockTableFlowSummaryDataFragments: FlowSummaryDataFragment[] = [
         datasetId: "did:odf:fed0136c76cdaf8552581e8cf738df7a9d8ba169db326b5af905a8f546da4df424751",
         description: {
             ingestResult: {
+                __typename: "FlowDescriptionUpdateResultSuccess",
                 numBlocks: 4,
                 numRecords: 30,
             },
@@ -410,6 +411,7 @@ export const mockTableFlowSummaryDataFragments: FlowSummaryDataFragment[] = [
         datasetId: "did:odf:fed0136c76cdaf8552581e8cf738df7a9d8ba169db326b5af905a8f546da4df424751",
         description: {
             ingestResult: {
+                __typename: "FlowDescriptionUpdateResultSuccess",
                 numBlocks: 4,
                 numRecords: 30,
             },
@@ -632,7 +634,6 @@ export const mockTableFlowSummaryDataFragments: FlowSummaryDataFragment[] = [
                     name: "my-dataset-input",
                     alias: "owner/my-dataset-input",
                     owner: {
-                        __typename: "Account",
                         ...mockOwnerFieldsWithAvatar,
                     },
                     visibility: {
@@ -827,10 +828,7 @@ export const mockFlowSummaryDataFragmentTooltipAndDurationText: FlowSummaryDataF
             activeBatchingRule: {
                 __typename: "FlowTriggerBatchingRuleBuffering",
                 minRecordsToAwait: 500,
-                maxBatchingInterval: {
-                    every: 5,
-                    unit: TimeUnit.Hours,
-                },
+                maxBatchingInterval: { __typename: "TimeDelta", every: 5, unit: TimeUnit.Hours },
             },
             batchingDeadline: "2024-03-14T12:24:29+00:00",
             accumulatedRecordsCount: 100,
@@ -897,6 +895,7 @@ export const mockFlowSummaryDataFragmentTooltipAndDurationText: FlowSummaryDataF
         datasetId: "did:odf:fed0136c76cdaf8552581e8cf738df7a9d8ba169db326b5af905a8f546da4df424751",
         description: {
             ingestResult: {
+                __typename: "FlowDescriptionUpdateResultSuccess",
                 numBlocks: 4,
                 numRecords: 30,
             },
@@ -1016,7 +1015,6 @@ export const mockDatasets: DatasetBasicsFragment[] = [
         kind: DatasetKind.Root,
         name: "account.tokens.transfers",
         owner: {
-            __typename: "Account",
             ...mockOwnerFieldsWithAvatar,
         },
         alias: "account.tokens.transfers",
@@ -1028,7 +1026,6 @@ export const mockDatasets: DatasetBasicsFragment[] = [
         kind: DatasetKind.Root,
         name: "account.tokens.transfers",
         owner: {
-            __typename: "Account",
             ...mockOwnerFieldsWithAvatar,
         },
         alias: "account.tokens.transfers",
@@ -1040,7 +1037,6 @@ export const mockDatasets: DatasetBasicsFragment[] = [
         kind: DatasetKind.Root,
         name: "account.tokens.transfers",
         owner: {
-            __typename: "Account",
             ...mockOwnerFieldsWithAvatar,
         },
         alias: "account.tokens.transfers",
@@ -1053,7 +1049,6 @@ export const mockDatasets: DatasetBasicsFragment[] = [
         kind: DatasetKind.Root,
         name: "account.tokens.transfers",
         owner: {
-            __typename: "Account",
             ...mockOwnerFieldsWithAvatar,
         },
         alias: "account.tokens.transfers",

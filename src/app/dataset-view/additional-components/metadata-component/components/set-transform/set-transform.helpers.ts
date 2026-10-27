@@ -6,6 +6,7 @@
  */
 
 import { parseCurrentSchema } from "@common/helpers/app.helpers";
+import { parseJsonAs } from "@common/helpers/untyped-boundary.helpers";
 import AppValues from "@common/values/app.values";
 import { GetDatasetSchemaQuery } from "@api/kamu.graphql.interface";
 
@@ -43,5 +44,5 @@ export function inputDatasetKey(input: TransformSelectedInput): string {
 }
 
 export function parseInputDatasetKey(key: string): TransformSelectedInput {
-    return JSON.parse(key) as TransformSelectedInput;
+    return parseJsonAs<TransformSelectedInput>(key);
 }

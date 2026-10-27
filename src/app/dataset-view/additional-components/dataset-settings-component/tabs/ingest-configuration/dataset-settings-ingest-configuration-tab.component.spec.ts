@@ -15,7 +15,7 @@ import { provideToastr } from "ngx-toastr";
 
 import { getElementByDataTestId, setComponentInput, stubMethod } from "@common/helpers/base-test.helpers.spec";
 import { SharedTestModule } from "@common/modules/shared-test.module";
-import { FlowRetryBackoffType, TimeUnit } from "@api/kamu.graphql.interface";
+import { FlowRetryBackoffType, FlowRetryPolicyDataFragment, TimeUnit } from "@api/kamu.graphql.interface";
 import { MaybeNull } from "@interface/app.types";
 
 import { DatasetFlowConfigService } from "src/app/dataset-view/additional-components/dataset-settings-component/services/dataset-flow-config.service";
@@ -34,10 +34,10 @@ describe("DatasetSettingsIngestConfigurationTabComponent", () => {
     let ingestConfigurationRuleFormHarness: IngestConfigurationRuleFormHarness;
     let flowRetryPolicyFormHarness: FlowRetryPolicyFormHarness;
 
-    const MOCK_RETRY_POLICY = {
-        __typename: "FlowRetryPolicy" as const,
+    const MOCK_RETRY_POLICY: FlowRetryPolicyDataFragment = {
+        __typename: "FlowRetryPolicy",
         maxAttempts: 5,
-        minDelay: { every: 30, unit: TimeUnit.Minutes },
+        minDelay: { __typename: "TimeDelta", every: 30, unit: TimeUnit.Minutes },
         backoffType: FlowRetryBackoffType.Exponential,
     };
 
@@ -56,7 +56,7 @@ describe("DatasetSettingsIngestConfigurationTabComponent", () => {
             fetchUncacheable: boolean;
             fetchNextIteration: boolean;
         },
-        retryPolicy: MaybeNull<typeof MOCK_RETRY_POLICY>,
+        retryPolicy: MaybeNull<FlowRetryPolicyDataFragment>,
     ): Promise<void> {
         fixture = TestBed.createComponent(DatasetSettingsIngestConfigurationTabComponent);
         component = fixture.componentInstance;

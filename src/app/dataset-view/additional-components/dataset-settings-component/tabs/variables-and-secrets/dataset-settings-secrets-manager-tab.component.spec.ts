@@ -87,7 +87,7 @@ describe("DatasetSettingsSecretsManagerTabComponent", () => {
         });
         setComponentInput(fixture, "datasetInfo", MOCK_DATASET_INFO);
         vi.spyOn(environmentVariablesService, "listEnvVariables").mockReturnValue(
-            of(requireValue(mockListEnvVariablesQuery.datasets.byOwnerAndName?.envVars.listEnvVariables ?? null)),
+            of(requireValue(mockListEnvVariablesQuery.datasets.byOwnerAndName?.envVars.listEnvVariables)),
         );
         fixture.detectChanges();
     });

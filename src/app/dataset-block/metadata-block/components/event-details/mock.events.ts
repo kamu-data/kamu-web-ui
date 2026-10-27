@@ -164,7 +164,6 @@ export const mockSetTransform: DatasetTransformFragment = {
                     kind: DatasetKind.Root,
                     name: "covid19.quebec.case-details",
                     owner: {
-                        __typename: "Account",
                         ...mockOwnerFieldsWithAvatar,
                     },
                     alias: "kamu/covid19.quebec.case-details",

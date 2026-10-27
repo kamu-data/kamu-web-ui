@@ -73,7 +73,6 @@ export const mockHistoryUpdate: DatasetHistoryUpdate = {
             prevBlockHash: "zW1ioX6fdsM4so8MPw7wqF1uKsDC7n6FEkhahZKXNcgF5E1",
             systemTime: "2022-08-05T21:19:28.817281255+00:00",
             author: {
-                __typename: "Account",
                 ...mockOwnerFieldsWithAvatar,
             },
             event: {
@@ -105,7 +104,6 @@ export const mockHistoryUpdate: DatasetHistoryUpdate = {
             systemTime: "2022-08-05T21:17:30.613911358+00:00",
             sequenceNumber: 3,
             author: {
-                __typename: "Account",
                 ...mockOwnerFieldsWithAvatar,
             },
             event: {
@@ -134,6 +132,7 @@ export const mockHistoryUpdate: DatasetHistoryUpdate = {
 };
 
 export const mockCurrentSourceFetchUrlFragment: CurrentSourceFetchUrlFragment = {
+    __typename: "DatasetMetadata",
     currentPollingSource: {
         __typename: "SetPollingSource",
         fetch: {
@@ -169,7 +168,6 @@ export const mockLineageGraphUpdate: LineageUpdate = {
         kind: DatasetKind.Root,
         name: "alberta.case-details",
         owner: {
-            __typename: "Account",
             ...mockOwnerFieldsWithAvatar,
         },
         alias: "kamu/alberta.case-details",
@@ -209,7 +207,6 @@ export const mockLineageGraphUpdate: LineageUpdate = {
             kind: DatasetKind.Root,
             name: "alberta.case-details",
             owner: {
-                __typename: "Account",
                 ...mockOwnerFieldsWithAvatar,
             },
             alias: "kamu/alberta.case-details",
@@ -265,7 +262,6 @@ export const mockLineageGraphUpdate: LineageUpdate = {
                 estimatedSizeBytes: 6562253,
             },
             owner: {
-                __typename: "Account",
                 ...mockOwnerFieldsWithAvatar,
             },
             id: "did:odf:z4k88e8jmNqgCt5L84XPdaog32MttcHzGiXcktfuTuDY3QKwiyK",
@@ -297,7 +293,6 @@ export const mockLineageGraphUpdate: LineageUpdate = {
                 estimatedSizeBytes: 39905730,
             },
             owner: {
-                __typename: "Account",
                 ...mockOwnerFieldsWithAvatar,
             },
             id: "did:odf:z4k88e8nN5SdNPxsc5oeqwdCLvjzcvJzoyEQ938E87A15nTrkAk",
@@ -329,7 +324,6 @@ export const mockLineageGraphUpdate: LineageUpdate = {
                 estimatedSizeBytes: 21685,
             },
             owner: {
-                __typename: "Account",
                 ...mockOwnerFieldsWithAvatar,
             },
             id: "did:odf:z4k88e8qAReYmLPFUyaKfk1UHCSY2Mkh6X1AHxuUGNhec76QsGq",
@@ -347,7 +341,6 @@ export const mockLineageGraphUpdate: LineageUpdate = {
                 kind: DatasetKind.Root,
                 name: "alberta.case-details",
                 owner: {
-                    __typename: "Account",
                     ...mockOwnerFieldsWithAvatar,
                 },
                 alias: "kamu/alberta.case-details",
@@ -402,7 +395,6 @@ export const mockLineageGraphUpdate: LineageUpdate = {
                     estimatedSizeBytes: 6562253,
                 },
                 owner: {
-                    __typename: "Account",
                     ...mockOwnerFieldsWithAvatar,
                 },
                 id: "did:odf:z4k88e8jmNqgCt5L84XPdaog32MttcHzGiXcktfuTuDY3QKwiyK",
@@ -436,7 +428,6 @@ export const mockLineageGraphUpdate: LineageUpdate = {
                     estimatedSizeBytes: 6562253,
                 },
                 owner: {
-                    __typename: "Account",
                     ...mockOwnerFieldsWithAvatar,
                 },
                 id: "did:odf:z4k88e8jmNqgCt5L84XPdaog32MttcHzGiXcktfuTuDY3QKwiyK",
@@ -468,7 +459,6 @@ export const mockLineageGraphUpdate: LineageUpdate = {
                     estimatedSizeBytes: 39905730,
                 },
                 owner: {
-                    __typename: "Account",
                     ...mockOwnerFieldsWithAvatar,
                 },
                 id: "did:odf:z4k88e8nN5SdNPxsc5oeqwdCLvjzcvJzoyEQ938E87A15nTrkAk",
@@ -502,7 +492,6 @@ export const mockLineageGraphUpdate: LineageUpdate = {
                     estimatedSizeBytes: 39905730,
                 },
                 owner: {
-                    __typename: "Account",
                     ...mockOwnerFieldsWithAvatar,
                 },
                 id: "did:odf:z4k88e8nN5SdNPxsc5oeqwdCLvjzcvJzoyEQ938E87A15nTrkAk",
@@ -534,7 +523,6 @@ export const mockLineageGraphUpdate: LineageUpdate = {
                     estimatedSizeBytes: 21685,
                 },
                 owner: {
-                    __typename: "Account",
                     ...mockOwnerFieldsWithAvatar,
                 },
                 id: "did:odf:z4k88e8qAReYmLPFUyaKfk1UHCSY2Mkh6X1AHxuUGNhec76QsGq",
@@ -554,7 +542,6 @@ export const mockLineageGraphUpdateWithMqttSource: LineageUpdate = {
         kind: DatasetKind.Root,
         name: "temp",
         owner: {
-            __typename: "Account",
             ...mockOwnerFieldsWithAvatar,
         },
         alias: "temp",
@@ -588,7 +575,6 @@ export const mockLineageGraphUpdateWithMqttSource: LineageUpdate = {
             kind: DatasetKind.Root,
             name: "temp",
             owner: {
-                __typename: "Account",
                 ...mockOwnerFieldsWithAvatar,
             },
             alias: "temp",
@@ -779,7 +765,6 @@ export const mockOverviewDataUpdate: OverviewUpdate = {
                             systemTime: "2022-08-05T21:15:03.947245004+00:00",
                             sequenceNumber: 14,
                             author: {
-                                __typename: "Account",
                                 ...mockOwnerFieldsWithAvatar,
                             },
                             event: {
@@ -893,6 +878,7 @@ export const mockMetadataRootUpdate: MetadataSchemaUpdate = {
         ],
     },
     pageInfo: {
+        __typename: "PageBasedInfo",
         hasNextPage: false,
         hasPreviousPage: false,
         totalPages: 1,
@@ -978,6 +964,7 @@ export const mockMetadataRootUpdate: MetadataSchemaUpdate = {
                 __typename: "MetadataChain",
                 refs: [
                     {
+                        __typename: "BlockRef",
                         name: "head",
                         blockHash: "f16207c1039f6d9f5e107a2285ccfe04bc88cb65ddd2b217ceb62b717774b2f85f1f5",
                     },
@@ -992,7 +979,6 @@ export const mockMetadataRootUpdate: MetadataSchemaUpdate = {
                             systemTime: "2023-09-04T19:27:35.059076203+00:00",
                             sequenceNumber: 13,
                             author: {
-                                __typename: "Account",
                                 ...mockOwnerFieldsWithAvatar,
                             },
                             event: {
@@ -1085,6 +1071,7 @@ export const mockMetadataRootPushSourceUpdate: MetadataSchemaUpdate = {
         ],
     },
     pageInfo: {
+        __typename: "PageBasedInfo",
         hasNextPage: false,
         hasPreviousPage: false,
         totalPages: 1,
@@ -1165,6 +1152,7 @@ export const mockMetadataRootPushSourceUpdate: MetadataSchemaUpdate = {
                 __typename: "MetadataChain",
                 refs: [
                     {
+                        __typename: "BlockRef",
                         name: "head",
                         blockHash: "f16207c1039f6d9f5e107a2285ccfe04bc88cb65ddd2b217ceb62b717774b2f85f1f5",
                     },
@@ -1179,7 +1167,6 @@ export const mockMetadataRootPushSourceUpdate: MetadataSchemaUpdate = {
                             systemTime: "2023-09-04T19:27:35.059076203+00:00",
                             sequenceNumber: 13,
                             author: {
-                                __typename: "Account",
                                 ...mockOwnerFieldsWithAvatar,
                             },
                             event: {
@@ -1335,7 +1322,6 @@ export const mockMetadataDerivedUpdate: MetadataSchemaUpdate = {
                                 kind: DatasetKind.Root,
                                 name: "alberta.case-details",
                                 owner: {
-                                    __typename: "Account",
                                     ...mockOwnerFieldsWithAvatar,
                                 },
                                 alias: "kamu/alberta.case-details",
@@ -1370,6 +1356,7 @@ export const mockMetadataDerivedUpdate: MetadataSchemaUpdate = {
                 __typename: "MetadataChain",
                 refs: [
                     {
+                        __typename: "BlockRef",
                         name: "head",
                         blockHash: "f16207c1039f6d9f5e107a2285ccfe04bc88cb65ddd2b217ceb62b717774b2f85f1f5",
                     },
@@ -1384,7 +1371,6 @@ export const mockMetadataDerivedUpdate: MetadataSchemaUpdate = {
                             systemTime: "2022-08-05T21:20:08.053635579+00:00",
                             sequenceNumber: 6,
                             author: {
-                                __typename: "Account",
                                 ...mockOwnerFieldsWithAvatar,
                             },
                             event: {
@@ -1433,6 +1419,7 @@ export const mockMetadataDerivedUpdate: MetadataSchemaUpdate = {
         },
     },
     pageInfo: {
+        __typename: "PageBasedInfo",
         hasNextPage: false,
         hasPreviousPage: false,
         totalPages: 1,

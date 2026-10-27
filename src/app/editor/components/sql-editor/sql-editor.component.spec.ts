@@ -17,7 +17,6 @@ import {
     findElementByDataTestId,
     setComponentInput,
 } from "@common/helpers/base-test.helpers.spec";
-import { MaybeUndefined } from "@interface/app.types";
 
 import {
     BaseEditorComponentTestEnvironment,
@@ -28,14 +27,10 @@ import { createEditorMock } from "src/app/editor/mock/editor.mock";
 import { MonacoService } from "src/app/editor/services/monaco.service";
 
 /** The part of the Monaco namespace the SQL editor reads from `window` to build its keybindings */
-interface MonacoKeyCodes {
-    KeyCode: {
-        Enter: number;
-    };
-    KeyMod: {
-        CtrlCmd: number;
-    };
-}
+const MONACO_KEY_CODES = {
+    KeyCode: { Enter: 3 },
+    KeyMod: { CtrlCmd: 2048 },
+};
 
 describe("SqlEditorComponent", () => {
     let fixture: ComponentFixture<SqlEditorComponent>;
@@ -82,30 +77,19 @@ describe("SqlEditorComponent", () => {
             actions.push(action);
             return { dispose: () => undefined };
         });
-        const windowWithMonaco: typeof window & {
-            monaco?: MonacoKeyCodes;
-        } = window;
-        const originalMonaco = windowWithMonaco.monaco;
-        windowWithMonaco.monaco = {
-            KeyCode: { Enter: 3 },
-            KeyMod: { CtrlCmd: 2048 },
-        };
+        vi.stubGlobal("monaco", MONACO_KEY_CODES);
 
         component.onInitEditor(editor);
         const runSqlAction = actions.find((action) => action.id === "run-sql");
 
         void runSqlAction?.run(editor);
-        windowWithMonaco.monaco = originalMonaco;
+        vi.unstubAllGlobals();
 
         expect(runSqlAction).toBeDefined();
         expect(ngZoneRunSpy).toHaveBeenCalled();
     });
 
     describe("run actions", () => {
-        const windowWithMonaco: typeof window & {
-            monaco?: MonacoKeyCodes;
-        } = window;
-        let originalMonaco: MaybeUndefined<MonacoKeyCodes>;
         let actions: monaco.editor.IActionDescriptor[];
         let selectionListener: (e: monaco.editor.ICursorSelectionChangedEvent) => void;
         let hasSelectionValues: monaco.editor.ContextKeyValue[];
@@ -147,15 +131,11 @@ describe("SqlEditorComponent", () => {
         beforeEach(() => {
             actions = [];
             hasSelectionValues = [];
-            originalMonaco = windowWithMonaco.monaco;
-            windowWithMonaco.monaco = {
-                KeyCode: { Enter: 3 },
-                KeyMod: { CtrlCmd: 2048 },
-            };
+            vi.stubGlobal("monaco", MONACO_KEY_CODES);
         });
 
         afterEach(() => {
-            windowWithMonaco.monaco = originalMonaco;
+            vi.unstubAllGlobals();
         });
 
         it("should check Ctrl+Enter runs the selection when there is one and the whole query otherwise", () => {

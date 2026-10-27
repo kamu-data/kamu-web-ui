@@ -14,13 +14,13 @@ import { switchMap, take } from "rxjs/operators";
 import saveAs from "file-saver";
 import { ToastrService } from "ngx-toastr";
 
+import { requireValue } from "@common/helpers/app.helpers";
 import { DatasetApi } from "@api/dataset.api";
 import {
     DatasetAsVersionedFileByBlockHashQuery,
     DatasetAsVersionedFileByVersionQuery,
     DatasetAsVersionedFileQuery,
     VersionedFileContentUrlQuery,
-    VersionedFileEntryDataFragment,
 } from "@api/kamu.graphql.interface";
 import { MaybeNullOrUndefined, MaybeUndefined } from "@interface/app.types";
 
@@ -71,10 +71,12 @@ export class DatasetAsVersionedFileService {
         return this.datasetApi.getDatasetAsVersionedFile(datasetId).pipe(
             take(1),
             map((result: DatasetAsVersionedFileQuery) => {
+                const dataset = requireValue(result.datasets.byId, "Dataset not found");
+                const versionedFile = requireValue(dataset.asVersionedFile, "Dataset is not a versioned file");
                 const data = {
-                    name: result.datasets.byId?.name as string,
-                    fileInfo: result.datasets.byId?.asVersionedFile?.latest as VersionedFileEntryDataFragment,
-                    countVersions: result.datasets.byId?.asVersionedFile?.versions.totalCount as number,
+                    name: dataset.name,
+                    fileInfo: versionedFile.latest ?? null,
+                    countVersions: versionedFile.versions.totalCount,
                 };
                 this.emitVersionedFileDetailsChanged(data);
                 return data;
@@ -90,10 +92,12 @@ export class DatasetAsVersionedFileService {
         return this.datasetApi.getDatasetAsVersionedFileByVersion(datasetId, version).pipe(
             take(1),
             map((result: DatasetAsVersionedFileByVersionQuery) => {
+                const dataset = requireValue(result.datasets.byId, "Dataset not found");
+                const versionedFile = requireValue(dataset.asVersionedFile, "Dataset is not a versioned file");
                 const data = {
-                    name: result.datasets.byId?.name as string,
-                    fileInfo: result.datasets.byId?.asVersionedFile?.asOf as VersionedFileEntryDataFragment,
-                    countVersions: result.datasets.byId?.asVersionedFile?.versions.totalCount as number,
+                    name: dataset.name,
+                    fileInfo: versionedFile.asOf ?? null,
+                    countVersions: versionedFile.versions.totalCount,
                 };
                 this.emitVersionedFileDetailsChanged(data);
                 return data;
@@ -110,9 +114,10 @@ export class DatasetAsVersionedFileService {
     ): Observable<VersionedFileView> {
         return this.datasetApi.getDatasetAsVersionedFileByBlockHash(datasetId, blockHash).pipe(
             map((result: DatasetAsVersionedFileByBlockHashQuery) => {
+                const dataset = requireValue(result.datasets.byId, "Dataset not found");
                 return {
-                    name: result.datasets.byId?.name as string,
-                    fileInfo: result.datasets.byId?.asVersionedFile?.asOf as VersionedFileEntryDataFragment,
+                    name: dataset.name,
+                    fileInfo: requireValue(dataset.asVersionedFile, "Dataset is not a versioned file").asOf ?? null,
                 };
             }),
         );
@@ -164,7 +169,11 @@ export class DatasetAsVersionedFileService {
     public getVersionedFileContentUrl(datasetId: string, version: number): Observable<string> {
         return this.datasetApi.getVersionedFileContentUrl(datasetId, version).pipe(
             map((data: VersionedFileContentUrlQuery) => {
-                return data.datasets.byId?.asVersionedFile?.asOf?.contentUrl.url as string;
+                const versionedFile = requireValue(
+                    data.datasets.byId?.asVersionedFile,
+                    "Dataset is not a versioned file",
+                );
+                return requireValue(versionedFile.asOf, "File version not found").contentUrl.url;
             }),
         );
     }

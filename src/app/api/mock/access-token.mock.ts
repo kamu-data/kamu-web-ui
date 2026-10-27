@@ -40,8 +40,11 @@ export const mockCreatedAccessTokenData: CreatedAccessTokenDataFragment = {
 
 export const mockCreateAccessTokenMutation: CreateAccessTokenMutation = {
     accounts: {
+        __typename: "AccountsMut",
         byId: {
+            __typename: "AccountMut",
             accessTokens: {
+                __typename: "AccountAccessTokensMut",
                 createAccessToken: {
                     message: MOCK_CREATE_ACCESS_TOKEN_SUCCESS_MESSAGE,
                     token: mockCreatedAccessTokenData,
@@ -54,8 +57,11 @@ export const mockCreateAccessTokenMutation: CreateAccessTokenMutation = {
 
 export const mockCreateAccessTokenMutationError: CreateAccessTokenMutation = {
     accounts: {
+        __typename: "AccountsMut",
         byId: {
+            __typename: "AccountMut",
             accessTokens: {
+                __typename: "AccountAccessTokensMut",
                 createAccessToken: {
                     message: "Access token with q1 name already exists",
                     tokenName: "q1",
@@ -116,18 +122,21 @@ export const mockAccessTokenConnectionData: AccessTokenConnectionDataFragment = 
 
 export const mockListAccessTokensQuery: ListAccessTokensQuery = {
     accounts: {
+        __typename: "Accounts",
         byId: {
-            accessTokens: {
-                listAccessTokens: mockAccessTokenConnectionData,
-            },
+            __typename: "Account",
+            accessTokens: { __typename: "AccountAccessTokens", listAccessTokens: mockAccessTokenConnectionData },
         },
     },
 };
 
 export const mockRevokeAccessTokenMutation: RevokeAccessTokenMutation = {
     accounts: {
+        __typename: "AccountsMut",
         byId: {
+            __typename: "AccountMut",
             accessTokens: {
+                __typename: "AccountAccessTokensMut",
                 revokeAccessToken: {
                     tokenId: "514bcfec-1c58-44ce-aee8-867477b100d2",
                     message: "Access token revoked succesfully",
@@ -140,8 +149,11 @@ export const mockRevokeAccessTokenMutation: RevokeAccessTokenMutation = {
 
 export const mockRevokeAccessTokenMutationError: RevokeAccessTokenMutation = {
     accounts: {
+        __typename: "AccountsMut",
         byId: {
+            __typename: "AccountMut",
             accessTokens: {
+                __typename: "AccountAccessTokensMut",
                 revokeAccessToken: {
                     tokenId: "514bcfec-1c58-44ce-aee8-867477b100d2",
                     message: "Access token already revoked",

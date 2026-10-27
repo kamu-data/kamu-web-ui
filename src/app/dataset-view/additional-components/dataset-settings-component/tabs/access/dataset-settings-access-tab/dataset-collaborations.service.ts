@@ -42,7 +42,7 @@ export class DatasetCollaborationsService {
             .listCollaborators(params)
             .pipe(
                 map((result: DatasetListCollaboratorsQuery) =>
-                    requireValue(result.datasets.byId?.collaboration.accountRoles ?? null),
+                    requireValue(result.datasets.byId?.collaboration.accountRoles),
                 ),
             );
     }

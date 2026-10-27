@@ -56,7 +56,7 @@ describe("EditLicenseModalComponent", () => {
     });
 
     it("should check initialize form", () => {
-        const license = requireValue(mockOverviewWithSetLicense.metadata.currentLicense ?? null);
+        const license = requireValue(mockOverviewWithSetLicense.metadata.currentLicense);
         expect(component.licenseForm.controls.name.value).toBe(license.name);
         expect(component.licenseForm.controls.shortName.value).toBe(license.shortName);
         expect(component.licenseForm.controls.websiteUrl.value).toBe(license.websiteUrl);

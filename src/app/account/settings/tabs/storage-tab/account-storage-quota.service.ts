@@ -24,7 +24,7 @@ export class AccountStorageQuotaService {
     public fetchStorageQuota(accountName: string): Observable<AccountStorageQuota> {
         return this.accountApi.fetchAccountStorageQuota(accountName).pipe(
             map((data: AccountStorageQuotaQuery) => {
-                const account = requireValue(data.accounts.byName ?? null, "Account not found");
+                const account = requireValue(data.accounts.byName, "Account not found");
                 const storage = account.usage.storage;
                 return {
                     limitBytes: account.quotas.user.storage.limitTotalBytes ?? null,

@@ -25,8 +25,8 @@ export class ProtocolsApi {
         return this.protocolsGQL.watch({ variables: { ...datasetInfo } }).valueChanges.pipe(
             onlyCompleteData(),
             first(),
-            map((result: ObservableQuery.Result<DatasetProtocolsQuery>) => {
-                return result.data as DatasetProtocolsQuery;
+            map((result: ObservableQuery.Result<DatasetProtocolsQuery, "complete">) => {
+                return result.data;
             }),
         );
     }

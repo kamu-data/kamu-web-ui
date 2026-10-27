@@ -41,18 +41,15 @@ import {
 } from "src/app/search/mock.data";
 
 export const mockAccountByNameResponse: AccountByNameQuery = {
-    __typename: "Query",
     accounts: {
         __typename: "Accounts",
         byName: {
-            __typename: "Account",
             ...mockAccountDetails,
         },
     },
 };
 
 export const mockAccountByNameNotFoundResponse: AccountByNameQuery = {
-    __typename: "Query",
     accounts: {
         __typename: "Accounts",
         byName: null,
@@ -163,7 +160,6 @@ export const mockAccountListDatasetsWithFlowsQuery: AccountListDatasetsWithFlows
                                 kind: DatasetKind.Root,
                                 name: "baccount.tokens.transfers",
                                 owner: {
-                                    __typename: "Account",
                                     ...mockOwnerFieldsWithAvatar,
                                 },
                                 alias: "account.tokens.transfers",
@@ -189,7 +185,6 @@ export const mockAccountListDatasetsWithFlowsQuery: AccountListDatasetsWithFlows
                                 kind: DatasetKind.Root,
                                 name: "account.tokens.transfers",
                                 owner: {
-                                    __typename: "Account",
                                     ...mockOwnerFieldsWithAvatar,
                                 },
                                 alias: "account.tokens.transfers",
@@ -215,7 +210,6 @@ export const mockAccountListDatasetsWithFlowsQuery: AccountListDatasetsWithFlows
                                 kind: DatasetKind.Root,
                                 name: "account.tokens.transfers",
                                 owner: {
-                                    __typename: "Account",
                                     ...mockOwnerFieldsWithAvatar,
                                 },
                                 alias: "caccount.tokens.transfers",
@@ -241,7 +235,6 @@ export const mockAccountListDatasetsWithFlowsQuery: AccountListDatasetsWithFlows
                                 kind: DatasetKind.Root,
                                 name: "account.tokens.transfers",
                                 owner: {
-                                    __typename: "Account",
                                     ...mockOwnerFieldsWithAvatar,
                                 },
                                 alias: "account.tokens.transfers",

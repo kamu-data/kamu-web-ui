@@ -215,13 +215,13 @@ or misspelled field before any test runs. A type assertion switches that check o
 
   | The value | Use |
   |---|---|
-  | sits behind optional chaining in a typed fixture | `requireValue(mock.a?.b ?? null)` from `@common/helpers/app.helpers` |
+  | sits behind optional chaining in a typed fixture | `requireValue(mock.a?.b)` from `@common/helpers/app.helpers` |
   | is one member of a `__typename` union | a mock typed with that member, or an `if` on `__typename` |
   | is a variant of a typed mock | a spread: `{ ...structuredClone(mockX), field: value }` |
   | is a browser object such as `File` | the constructor: `new File(["a,b"], "data.csv", { type: "text/csv" })` |
   | is a DOM element or a component instance | the typed lookups ("DOM helpers") |
   | is a DOM property a harness reads, such as a `<select>` value | a lookup in the enum's values that throws on anything else (`time-delta-form.harness.ts`) |
-  | is a spy's call arguments | the spy `vi.spyOn` returned, typed as `Mock<Service["method"]>`; the last call is `requireValue(spy.mock.lastCall ?? null)` |
+  | is a spy's call arguments | the spy `vi.spyOn` returned, typed as `Mock<Service["method"]>`; the last call is `requireValue(spy.mock.lastCall)` |
   | is an object of a library type the code under test calls a few methods on (`NgbModalRef`, a Monaco editor) | `createSpyObj<T>({ method: returnValue }, { property: value })` from `base-test.helpers.spec.ts` |
   | still does not fit the component's input | a wrong input type: type the input with what reaches it (`kamu-ui-angular-style`, "Component anatomy"), not the value with a cast |
 

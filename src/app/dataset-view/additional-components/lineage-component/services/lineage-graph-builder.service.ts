@@ -224,9 +224,7 @@ export class LineageGraphBuilderService {
         if (qualifyingDatasetsUrl.length) {
             qualifyingDatasetsUrl.forEach((dataset: DatasetLineageBasicsFragment) => {
                 const datasetId = this.sanitizeID(dataset.id);
-                sourceNodeLabel = this.buildSourceNodeLabel(
-                    requireValue(dataset.metadata.currentPollingSource?.fetch ?? null),
-                );
+                sourceNodeLabel = this.buildSourceNodeLabel(requireValue(dataset.metadata.currentPollingSource?.fetch));
 
                 let sourceNode: MaybeUndefined<LineageGraphNode> = sourceNodesByLabel.get(sourceNodeLabel);
                 if (sourceNode === undefined) {

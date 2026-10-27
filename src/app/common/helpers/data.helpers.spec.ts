@@ -165,7 +165,6 @@ it("should check description for SetTransform block", () => {
                             kind: DatasetKind.Root,
                             name: "quebec.case-details",
                             owner: {
-                                __typename: "Account",
                                 ...mockOwnerFieldsWithAvatar,
                             },
                             alias: "kamu/quebec.case-details",

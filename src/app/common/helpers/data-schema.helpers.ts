@@ -10,6 +10,7 @@ import {
     DynamicTableDataRow,
 } from "@common/components/dynamic-table/dynamic-table.interface";
 import { removeAllLineBreaks } from "@common/helpers/app.helpers";
+import { parseJsonAs } from "@common/helpers/untyped-boundary.helpers";
 import { MaybeNull, MaybeNullOrUndefined } from "@interface/app.types";
 import {
     DataSchemaField,
@@ -20,7 +21,7 @@ import {
 } from "@interface/dataset-schema.interface";
 
 export function parseSchemaFromJson(schemaContent: string): DatasetSchema {
-    return JSON.parse(removeAllLineBreaks(schemaContent)) as DatasetSchema;
+    return parseJsonAs<DatasetSchema>(removeAllLineBreaks(schemaContent));
 }
 
 export const extractSchemaFieldsFromData = (data: DynamicTableDataRow): DataSchemaField[] => {

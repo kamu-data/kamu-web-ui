@@ -8,6 +8,7 @@
 import { inject, Injectable } from "@angular/core";
 
 import { environment } from "@env/environment";
+import { parseJsonAs } from "@common/helpers/untyped-boundary.helpers";
 import { MaybeNull, MaybeUndefined } from "@interface/app.types";
 import { Feature, FeatureShowMode } from "@interface/feature-flags.interface";
 
@@ -25,7 +26,7 @@ export class FeatureFlagsService {
         const request = new XMLHttpRequest();
         request.open("GET", environment.feature_flags_file, false);
         request.send(null);
-        this.features = JSON.parse(request.responseText) as Feature[];
+        this.features = parseJsonAs<Feature[]>(request.responseText);
     }
 
     public getEffectiveFeatureShowMode(): FeatureShowMode {

@@ -8,7 +8,7 @@
 import { inject, Injectable } from "@angular/core";
 
 import { combineLatest, forkJoin, Observable } from "rxjs";
-import { map } from "rxjs/operators";
+import { filter, map } from "rxjs/operators";
 
 import { ToastrService } from "ngx-toastr";
 
@@ -16,7 +16,6 @@ import { AccountApi } from "@api/account.api";
 import { DatasetApi } from "@api/dataset.api";
 import {
     AccountFlowFilters,
-    AccountFlowProcessCardConnectionDataFragment,
     AccountFlowsAsCardsQuery,
     AccountFragment,
     AccountListDatasetsWithFlowsQuery,
@@ -25,20 +24,15 @@ import {
     ChangeAccountUsernameMutation,
     ChangeAdminPasswordMutation,
     ChangeUserPasswordMutation,
-    DatasetFlowProcessConnectionDataFragment,
     DatasetsByAccountNameQuery,
     DatasetsTotalCountByAccountNameQuery,
     DatasetWithFlowsDataFragment,
     DeleteAccountByNameMutation,
-    FlowConnectionDataFragment,
-    FlowConnectionWidgetDataFragment,
     FlowProcessFilters,
-    FlowProcessGroupRollupDataFragment,
     FlowProcessOrdering,
     FlowRunOrder,
-    WebhookFlowSubProcessConnectionDataFragment,
 } from "@api/kamu.graphql.interface";
-import { MaybeNull } from "@interface/app.types";
+import { MaybeNull, MaybeNullOrUndefined } from "@interface/app.types";
 import { DatasetsAccountResponse } from "@interface/dataset.interface";
 
 import { CardsStrategyResult } from "src/app/account/additional-components/account-flows-tab/account-flows-tab.types";
@@ -106,14 +100,13 @@ export class AccountService {
             this.accountApi.fetchAccountListFlows(params),
             this.getDatasetsWithFlows(params.accountName),
         ]).pipe(
-            map(([listFlows, datasetsWithFlows]) => {
-                return {
-                    connectionDataForTable: listFlows.accounts.byName?.flows?.runs.table as FlowConnectionDataFragment,
-                    connectionDataForWidget: listFlows.accounts.byName?.flows?.runs
-                        .tiles as FlowConnectionWidgetDataFragment,
-                    involvedDatasets: datasetsWithFlows,
-                };
-            }),
+            map(([listFlows, involvedDatasets]) => ({ account: listFlows.accounts.byName, involvedDatasets })),
+            filter(AccountService.hasAccount),
+            map(({ account, involvedDatasets }) => ({
+                connectionDataForTable: account.flows.runs.table,
+                connectionDataForWidget: account.flows.runs.tiles,
+                involvedDatasets,
+            })),
         );
     }
 
@@ -125,13 +118,12 @@ export class AccountService {
         ordering: FlowProcessOrdering;
     }): Observable<CardsStrategyResult> {
         return this.accountApi.fetchAccountFlowsAsCards(params).pipe(
-            map((data: AccountFlowsAsCardsQuery) => {
-                return {
-                    cards: data.accounts.byName?.flows.processes
-                        .allCards as AccountFlowProcessCardConnectionDataFragment,
-                    rollup: data.accounts.byName?.flows.processes.fullRollup as FlowProcessGroupRollupDataFragment,
-                };
-            }),
+            map((data: AccountFlowsAsCardsQuery) => ({ account: data.accounts.byName })),
+            filter(AccountService.hasAccount),
+            map(({ account }) => ({
+                cards: account.flows.processes.allCards,
+                rollup: account.flows.processes.fullRollup,
+            })),
         );
     }
 
@@ -143,13 +135,12 @@ export class AccountService {
         ordering: FlowProcessOrdering;
     }): Observable<CardsStrategyResult> {
         return this.accountApi.fetchAccountPrimaryCards(params).pipe(
-            map((data: AccountPrimaryCardsQuery) => {
-                return {
-                    cards: data.accounts.byName?.flows.processes
-                        .primaryCards as DatasetFlowProcessConnectionDataFragment,
-                    rollup: data.accounts.byName?.flows.processes.primaryRollup as FlowProcessGroupRollupDataFragment,
-                };
-            }),
+            map((data: AccountPrimaryCardsQuery) => ({ account: data.accounts.byName })),
+            filter(AccountService.hasAccount),
+            map(({ account }) => ({
+                cards: account.flows.processes.primaryCards,
+                rollup: account.flows.processes.primaryRollup,
+            })),
         );
     }
 
@@ -161,13 +152,12 @@ export class AccountService {
         ordering: FlowProcessOrdering;
     }): Observable<CardsStrategyResult> {
         return this.accountApi.fetchAccountWebhookCards(params).pipe(
-            map((data: AccountWebhookCardsQuery) => {
-                return {
-                    cards: data.accounts.byName?.flows.processes
-                        .webhookCards as WebhookFlowSubProcessConnectionDataFragment,
-                    rollup: data.accounts.byName?.flows.processes.webhookRollup as FlowProcessGroupRollupDataFragment,
-                };
-            }),
+            map((data: AccountWebhookCardsQuery) => ({ account: data.accounts.byName })),
+            filter(AccountService.hasAccount),
+            map(({ account }) => ({
+                cards: account.flows.processes.webhookCards,
+                rollup: account.flows.processes.webhookRollup,
+            })),
         );
     }
 
@@ -240,5 +230,12 @@ export class AccountService {
                 return false;
             }),
         );
+    }
+
+    /** Whether a query found its account; one renamed or deleted since the page loaded leaves a poll without data. */
+    private static hasAccount<T extends { account: MaybeNullOrUndefined<object> }>(
+        value: T,
+    ): value is T & { account: NonNullable<T["account"]> } {
+        return Boolean(value.account);
     }
 }

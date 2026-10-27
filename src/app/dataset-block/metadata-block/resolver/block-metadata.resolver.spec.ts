@@ -39,10 +39,10 @@ describe("blockMetadataResolverFn", () => {
         },
     });
 
-    const mockDatasetMetadata = requireValue(mockGetMetadataBlockQuery.datasets.byOwnerAndName ?? null).metadata;
+    const mockDatasetMetadata = requireValue(mockGetMetadataBlockQuery.datasets.byOwnerAndName).metadata;
     const mockBlockInfo: MetadataBlockInfo = {
         block: mockMetadataBlockByHash,
-        blockAsYaml: requireValue(mockDatasetMetadata.chain.blockByHashEncoded ?? null),
+        blockAsYaml: requireValue(mockDatasetMetadata.chain.blockByHashEncoded),
         downstreamsCount: mockDatasetMetadata.currentDownstreamDependenciesCount,
     };
 

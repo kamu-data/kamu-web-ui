@@ -139,9 +139,9 @@ describe("AccountService", () => {
             .subscribe((data: DatasetWithFlowsDataFragment[]) => {
                 const listDatasets =
                     mockAccountListDatasetsWithFlowsQuery.accounts.byName?.flows?.runs.listDatasetsWithFlow;
-                expect(data.length).toEqual(requireValue(listDatasets ?? null).nodes.length);
+                expect(data.length).toEqual(requireValue(listDatasets).nodes.length);
                 expect(data[0].name).toEqual("account.tokens.transfers");
-                expect(requireValue(listDatasets ?? null).nodes[0].name).toEqual("baccount.tokens.transfers");
+                expect(requireValue(listDatasets).nodes[0].name).toEqual("baccount.tokens.transfers");
             });
 
         expect(accountDatasetsWithFlowsSpy).toHaveBeenCalledTimes(1);
@@ -262,11 +262,25 @@ describe("AccountService", () => {
 
         const subscription$ = service.getAccountAllCards(CARDS_PARAMS).subscribe((result: CardsStrategyResult) => {
             expect(result.cards).toEqual(
-                requireValue(mockAccountFlowsAsCardsQuery.accounts.byName ?? null).flows.processes.allCards,
+                requireValue(mockAccountFlowsAsCardsQuery.accounts.byName).flows.processes.allCards,
             );
         });
 
         expect(subscription$.closed).toBe(true);
+    });
+
+    it("should emit no cards when the account is no longer found", () => {
+        vi.spyOn(accountApi, "fetchAccountFlowsAsCards").mockReturnValue(
+            of({
+                ...mockAccountFlowsAsCardsQuery,
+                accounts: { ...mockAccountFlowsAsCardsQuery.accounts, byName: null },
+            }),
+        );
+        const next = vi.fn();
+
+        service.getAccountAllCards(CARDS_PARAMS).subscribe({ next, error: () => expect.fail("should not fail") });
+
+        expect(next).not.toHaveBeenCalled();
     });
 
     it("should check get flows primary cards", () => {
@@ -274,7 +288,7 @@ describe("AccountService", () => {
 
         const subscription$ = service.getAccountPrimaryCards(CARDS_PARAMS).subscribe((result: CardsStrategyResult) => {
             expect(result.cards).toEqual(
-                requireValue(mockAccountFlowsPrimaryCardsQuery.accounts.byName ?? null).flows.processes.primaryCards,
+                requireValue(mockAccountFlowsPrimaryCardsQuery.accounts.byName).flows.processes.primaryCards,
             );
         });
 
@@ -286,7 +300,7 @@ describe("AccountService", () => {
 
         const subscription$ = service.getAccountWebhookCards(CARDS_PARAMS).subscribe((result: CardsStrategyResult) => {
             expect(result.cards).toEqual(
-                requireValue(mockAccountFlowsWebhookCardsQuery.accounts.byName ?? null).flows.processes.webhookCards,
+                requireValue(mockAccountFlowsWebhookCardsQuery.accounts.byName).flows.processes.webhookCards,
             );
         });
 

@@ -8,6 +8,7 @@
 import { Injectable } from "@angular/core";
 
 import { environment } from "@env/environment";
+import { parseJsonAs } from "@common/helpers/untyped-boundary.helpers";
 import AppValues from "@common/values/app.values";
 import { MaybeNull, MaybeUndefined } from "@interface/app.types";
 
@@ -96,7 +97,7 @@ export class AppConfigService {
         const request = new XMLHttpRequest();
         request.open("GET", environment.runtime_config_file, false);
         request.send(null);
-        const data: AppRuntimeConfig = JSON.parse(request.responseText) as AppRuntimeConfig;
+        const data: AppRuntimeConfig = parseJsonAs<AppRuntimeConfig>(request.responseText);
         return {
             ...data,
             apiServerGqlUrl: AppConfigService.toRemoteURL(data.apiServerGqlUrl),
@@ -108,7 +109,7 @@ export class AppConfigService {
         request.open("GET", app_runtime_config.apiServerHttpUrl + "/ui-config", false);
         try {
             request.send(null);
-            const data: AppUIConfig = JSON.parse(request.responseText) as AppUIConfig;
+            const data: AppUIConfig = parseJsonAs<AppUIConfig>(request.responseText);
             return data;
         } catch {
             return AppValues.DEFAULT_UI_CONFIGURATION;

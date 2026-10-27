@@ -168,7 +168,7 @@ describe("FlowsSelectionStateService", () => {
 
     it("should check #initFlowsSelectionState with webhookFilterButtons", () => {
         service.setWebhookFilterButtons([FlowProcessEffectiveState.Active]);
-        const processes = requireValue(mockDatasetFlowsProcessesQuery.datasets.byId?.flows.processes ?? null);
+        const processes = requireValue(mockDatasetFlowsProcessesQuery.datasets.byId?.flows.processes);
         service.initFlowsSelectionState(processes);
         expect(service.snapshot).toEqual(
             expect.objectContaining({
@@ -180,7 +180,7 @@ describe("FlowsSelectionStateService", () => {
     it("should check #initFlowsSelectionState without webhookFilterButtons", () => {
         const mockId = "a9f33c51-aeda-4003-865f-8dc9712619d7";
         service.addWebhookId(mockId);
-        const processes = requireValue(mockDatasetFlowsProcessesQuery.datasets.byId?.flows.processes ?? null);
+        const processes = requireValue(mockDatasetFlowsProcessesQuery.datasets.byId?.flows.processes);
         service.initFlowsSelectionState(processes);
         expect(service.snapshot).toEqual(
             expect.objectContaining({
@@ -190,7 +190,7 @@ describe("FlowsSelectionStateService", () => {
     });
 
     it("should check #selectSubscription", () => {
-        const processes = requireValue(mockDatasetFlowsProcessesQuery.datasets.byId?.flows.processes ?? null);
+        const processes = requireValue(mockDatasetFlowsProcessesQuery.datasets.byId?.flows.processes);
         const mockId = processes.webhooks.subprocesses[0].id;
         const mockName = processes.webhooks.subprocesses[0].name;
         service.setFlowsCategory("updates");

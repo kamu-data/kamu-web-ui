@@ -15,7 +15,6 @@ import { onlyCompleteData } from "apollo-angular";
 
 import {
     AccountProvider,
-    DatasetBasicsFragment,
     DatasetKind,
     SearchDatasetsAutocompleteGQL,
     SearchDatasetsAutocompleteQuery,
@@ -53,8 +52,8 @@ export class SearchApi {
             .valueChanges.pipe(
                 onlyCompleteData(),
                 first(),
-                map((result: ObservableQuery.Result<SearchDatasetsOverviewQuery>) => {
-                    return result.data as SearchDatasetsOverviewQuery;
+                map((result: ObservableQuery.Result<SearchDatasetsOverviewQuery, "complete">) => {
+                    return result.data;
                 }),
                 catchError(() => EMPTY),
             );
@@ -76,8 +75,8 @@ export class SearchApi {
             .valueChanges.pipe(
                 onlyCompleteData(),
                 first(),
-                map((result: ObservableQuery.Result<SemanticSearchDatasetsOverviewQuery>) => {
-                    return result.data as SemanticSearchDatasetsOverviewQuery;
+                map((result: ObservableQuery.Result<SemanticSearchDatasetsOverviewQuery, "complete">) => {
+                    return result.data;
                 }),
                 catchError(() => EMPTY),
             );
@@ -95,22 +94,22 @@ export class SearchApi {
             .valueChanges.pipe(
                 onlyCompleteData(),
                 first(),
-                map((result: ObservableQuery.Result<SearchDatasetsAutocompleteQuery>) => {
-                    const nodesList: DatasetAutocompleteItem[] = (result.data?.search?.query?.nodes ?? []).map(
-                        (node) => ({
-                            dataset: node as DatasetBasicsFragment,
-                            dummy: false,
-                            __typename: node.__typename as TypeNames,
-                        }),
-                    );
+                map((result: ObservableQuery.Result<SearchDatasetsAutocompleteQuery, "complete">) => {
+                    const nodesList: DatasetAutocompleteItem[] = result.data.search.query.nodes.map((node) => ({
+                        dataset: node,
+                        dummy: false,
+                        __typename: TypeNames.datasetType,
+                    }));
                     // Add dummy result that opens search view
                     nodesList.unshift({
                         __typename: TypeNames.allDataType,
                         dataset: {
+                            __typename: "Dataset",
                             id,
                             name: id,
                             kind: DatasetKind.Root,
                             owner: {
+                                __typename: "Account",
                                 id: "",
                                 accountName: "",
                                 accountProvider: AccountProvider.Password,

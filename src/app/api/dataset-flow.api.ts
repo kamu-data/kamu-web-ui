@@ -9,9 +9,10 @@ import { inject, Injectable } from "@angular/core";
 
 import { first, map, Observable } from "rxjs";
 
-import { ApolloLink, ObservableQuery } from "@apollo/client/core";
+import { ObservableQuery } from "@apollo/client/core";
 import { onlyCompleteData } from "apollo-angular";
 
+import { mutationData } from "@common/helpers/apollo-error.helpers";
 import { noCacheFetchPolicy } from "@common/helpers/data.helpers";
 import {
     CancelFlowRunGQL,
@@ -97,8 +98,8 @@ export class DatasetFlowApi {
             })
             .valueChanges.pipe(
                 onlyCompleteData(),
-                map((result: ObservableQuery.Result<DatasetFlowsProcessesQuery>) => {
-                    return result.data as DatasetFlowsProcessesQuery;
+                map((result: ObservableQuery.Result<DatasetFlowsProcessesQuery, "complete">) => {
+                    return result.data;
                 }),
             );
     }
@@ -107,56 +108,33 @@ export class DatasetFlowApi {
         datasetId: string;
         ingestConfigInput?: FlowConfigIngestInput;
     }): Observable<DatasetTriggerIngestFlowMutation> {
-        return this.datasetTriggerIngestFlowGQL.mutate({ variables: { ...params } }).pipe(
-            first(),
-            map((result: ApolloLink.Result<DatasetTriggerIngestFlowMutation>) => {
-                return result.data as DatasetTriggerIngestFlowMutation;
-            }),
-        );
+        return this.datasetTriggerIngestFlowGQL.mutate({ variables: { ...params } }).pipe(first(), mutationData());
     }
 
     public datasetTriggerTransformFlow(params: { datasetId: string }): Observable<DatasetTriggerTransformFlowMutation> {
-        return this.datasetTriggetTransformFlowGQL.mutate({ variables: { ...params } }).pipe(
-            first(),
-            map((result: ApolloLink.Result<DatasetTriggerTransformFlowMutation>) => {
-                return result.data as DatasetTriggerTransformFlowMutation;
-            }),
-        );
+        return this.datasetTriggetTransformFlowGQL.mutate({ variables: { ...params } }).pipe(first(), mutationData());
     }
 
     public datasetTriggerCompactionFlow(params: {
         datasetId: string;
         compactionConfigInput?: FlowConfigCompactionInput;
     }): Observable<DatasetTriggerCompactionFlowMutation> {
-        return this.datasetTriggerCompactionFlowGQL.mutate({ variables: { ...params } }).pipe(
-            first(),
-            map((result: ApolloLink.Result<DatasetTriggerCompactionFlowMutation>) => {
-                return result.data as DatasetTriggerCompactionFlowMutation;
-            }),
-        );
+        return this.datasetTriggerCompactionFlowGQL.mutate({ variables: { ...params } }).pipe(first(), mutationData());
     }
 
     public datasetTriggerResetFlow(params: {
         datasetId: string;
         resetConfigInput: FlowConfigResetInput;
     }): Observable<DatasetTriggerResetFlowMutation> {
-        return this.datasetTriggerResetFlowGQL.mutate({ variables: { ...params } }).pipe(
-            first(),
-            map((result: ApolloLink.Result<DatasetTriggerResetFlowMutation>) => {
-                return result.data as DatasetTriggerResetFlowMutation;
-            }),
-        );
+        return this.datasetTriggerResetFlowGQL.mutate({ variables: { ...params } }).pipe(first(), mutationData());
     }
 
     public datasetTriggerResetToMetadataFlow(params: {
         datasetId: string;
     }): Observable<DatasetTriggerResetToMetadataFlowMutation> {
-        return this.datasetTriggerResetToMetadataFlowGQL.mutate({ variables: { ...params } }).pipe(
-            first(),
-            map((result: ApolloLink.Result<DatasetTriggerResetToMetadataFlowMutation>) => {
-                return result.data as DatasetTriggerResetToMetadataFlowMutation;
-            }),
-        );
+        return this.datasetTriggerResetToMetadataFlowGQL
+            .mutate({ variables: { ...params } })
+            .pipe(first(), mutationData());
     }
 
     public getDatasetFlowConfigs(params: {
@@ -170,8 +148,8 @@ export class DatasetFlowApi {
             })
             .valueChanges.pipe(
                 onlyCompleteData(),
-                map((result: ObservableQuery.Result<GetDatasetFlowConfigsQuery>) => {
-                    return result.data as GetDatasetFlowConfigsQuery;
+                map((result: ObservableQuery.Result<GetDatasetFlowConfigsQuery, "complete">) => {
+                    return result.data;
                 }),
             );
     }
@@ -189,12 +167,7 @@ export class DatasetFlowApi {
                     retryPolicyInput: params.retryPolicyInput,
                 },
             })
-            .pipe(
-                first(),
-                map((result: ApolloLink.Result<SetIngestFlowConfigMutation>) => {
-                    return result.data as SetIngestFlowConfigMutation;
-                }),
-            );
+            .pipe(first(), mutationData());
     }
 
     public setDatasetFlowCompactionConfig(params: {
@@ -208,12 +181,7 @@ export class DatasetFlowApi {
                     compactionConfigInput: params.compactionConfigInput,
                 },
             })
-            .pipe(
-                first(),
-                map((result: ApolloLink.Result<SetCompactionFlowConfigMutation>) => {
-                    return result.data as SetCompactionFlowConfigMutation;
-                }),
-            );
+            .pipe(first(), mutationData());
     }
 
     public setDatasetFlowTrigger(params: {
@@ -222,24 +190,14 @@ export class DatasetFlowApi {
         triggerRuleInput: FlowTriggerRuleInput;
         triggerStopPolicyInput: FlowTriggerStopPolicyInput;
     }): Observable<SetDatasetFlowTriggerMutation> {
-        return this.setDatasetFlowTriggerGQL.mutate({ variables: params }).pipe(
-            first(),
-            map((result: ApolloLink.Result<SetDatasetFlowTriggerMutation>) => {
-                return result.data as SetDatasetFlowTriggerMutation;
-            }),
-        );
+        return this.setDatasetFlowTriggerGQL.mutate({ variables: params }).pipe(first(), mutationData());
     }
 
     public pauseDatasetFlowTrigger(params: {
         datasetId: string;
         datasetFlowType: DatasetFlowType;
     }): Observable<PauseDatasetFlowTriggerMutation> {
-        return this.pauseDatasetFlowTriggerGQL.mutate({ variables: params }).pipe(
-            first(),
-            map((result: ApolloLink.Result<PauseDatasetFlowTriggerMutation>) => {
-                return result.data as PauseDatasetFlowTriggerMutation;
-            }),
-        );
+        return this.pauseDatasetFlowTriggerGQL.mutate({ variables: params }).pipe(first(), mutationData());
     }
 
     public getDatasetFlowTrigger(params: {
@@ -256,8 +214,8 @@ export class DatasetFlowApi {
             })
             .valueChanges.pipe(
                 onlyCompleteData(),
-                map((result: ObservableQuery.Result<GetDatasetFlowTriggerQuery>) => {
-                    return result.data as GetDatasetFlowTriggerQuery;
+                map((result: ObservableQuery.Result<GetDatasetFlowTriggerQuery, "complete">) => {
+                    return result.data;
                 }),
             );
     }
@@ -285,8 +243,8 @@ export class DatasetFlowApi {
             })
             .valueChanges.pipe(
                 onlyCompleteData(),
-                map((result: ObservableQuery.Result<GetDatasetListFlowsQuery>) => {
-                    return result.data as GetDatasetListFlowsQuery;
+                map((result: ObservableQuery.Result<GetDatasetListFlowsQuery, "complete">) => {
+                    return result.data;
                 }),
             );
     }
@@ -298,12 +256,7 @@ export class DatasetFlowApi {
                     datasetId: params.datasetId,
                 },
             })
-            .pipe(
-                first(),
-                map((result: ApolloLink.Result<DatasetPauseFlowsMutation>) => {
-                    return result.data as DatasetPauseFlowsMutation;
-                }),
-            );
+            .pipe(first(), mutationData());
     }
 
     public datasetResumeFlows(params: { datasetId: string }): Observable<DatasetResumeFlowsMutation> {
@@ -313,12 +266,7 @@ export class DatasetFlowApi {
                     datasetId: params.datasetId,
                 },
             })
-            .pipe(
-                first(),
-                map((result: ApolloLink.Result<DatasetResumeFlowsMutation>) => {
-                    return result.data as DatasetResumeFlowsMutation;
-                }),
-            );
+            .pipe(first(), mutationData());
     }
 
     public getFlowById(params: { datasetId: string; flowId: string }): Observable<GetFlowByIdQuery> {
@@ -326,8 +274,8 @@ export class DatasetFlowApi {
             .watch({ variables: { datasetId: params.datasetId, flowId: params.flowId }, ...noCacheFetchPolicy })
             .valueChanges.pipe(
                 onlyCompleteData(),
-                map((result: ObservableQuery.Result<GetFlowByIdQuery>) => {
-                    return result.data as GetFlowByIdQuery;
+                map((result: ObservableQuery.Result<GetFlowByIdQuery, "complete">) => {
+                    return result.data;
                 }),
             );
     }
@@ -340,12 +288,7 @@ export class DatasetFlowApi {
                     flowId: params.flowId,
                 },
             })
-            .pipe(
-                first(),
-                map((result: ApolloLink.Result<CancelFlowRunMutation>) => {
-                    return result.data as CancelFlowRunMutation;
-                }),
-            );
+            .pipe(first(), mutationData());
     }
 
     public getDatasetFlowsInitiators(datasetId: string): Observable<DatasetFlowsInitiatorsQuery> {
@@ -359,8 +302,8 @@ export class DatasetFlowApi {
             })
             .valueChanges.pipe(
                 onlyCompleteData(),
-                map((result: ObservableQuery.Result<DatasetFlowsInitiatorsQuery>) => {
-                    return result.data as DatasetFlowsInitiatorsQuery;
+                map((result: ObservableQuery.Result<DatasetFlowsInitiatorsQuery, "complete">) => {
+                    return result.data;
                 }),
             );
     }

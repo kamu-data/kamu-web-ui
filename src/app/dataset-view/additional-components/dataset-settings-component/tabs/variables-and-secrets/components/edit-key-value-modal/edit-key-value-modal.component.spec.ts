@@ -131,7 +131,7 @@ describe("EditKeyValueModalComponent", () => {
         setComponentInput(
             fixture,
             "row",
-            requireValue(mockListEnvVariablesQuery.datasets.byOwnerAndName?.envVars.listEnvVariables.nodes[0] ?? null),
+            requireValue(mockListEnvVariablesQuery.datasets.byOwnerAndName?.envVars.listEnvVariables.nodes[0]),
         );
         fixture.detectChanges();
         component.onEditRow();
@@ -143,7 +143,7 @@ describe("EditKeyValueModalComponent", () => {
         setComponentInput(
             fixture,
             "row",
-            requireValue(mockListEnvVariablesQuery.datasets.byOwnerAndName?.envVars.listEnvVariables.nodes[2] ?? null),
+            requireValue(mockListEnvVariablesQuery.datasets.byOwnerAndName?.envVars.listEnvVariables.nodes[2]),
         );
         const exposedEnvVariableValueSpy = vi
             .spyOn(evnironmentVariablesService, "exposedEnvVariableValue")
@@ -157,7 +157,7 @@ describe("EditKeyValueModalComponent", () => {
         setComponentInput(
             fixture,
             "row",
-            requireValue(mockListEnvVariablesQuery.datasets.byOwnerAndName?.envVars.listEnvVariables.nodes[1] ?? null),
+            requireValue(mockListEnvVariablesQuery.datasets.byOwnerAndName?.envVars.listEnvVariables.nodes[1]),
         );
 
         fixture.detectChanges();

@@ -153,6 +153,7 @@ describe("IngestConfigurationRuleFormComponent", () => {
 
     it("should build form value from FlowConfigRuleIngest", () => {
         const formValue1 = IngestConfigurationRuleFormComponent.buildFormValue({
+            __typename: "FlowConfigRuleIngest",
             fetchUncacheable: true,
             fetchNextIteration: false,
         });
@@ -162,6 +163,7 @@ describe("IngestConfigurationRuleFormComponent", () => {
         });
 
         const formValue2 = IngestConfigurationRuleFormComponent.buildFormValue({
+            __typename: "FlowConfigRuleIngest",
             fetchUncacheable: false,
             fetchNextIteration: true,
         });

@@ -4,6 +4,8 @@ import tsParser from "@typescript-eslint/parser";
 import vitestPlugin from "@vitest/eslint-plugin";
 import licenseHeaderPlugin from "eslint-plugin-license-header";
 
+import { typeAssertionBacklog } from "./eslint.type-assertion-backlog.mjs";
+
 // Code that needs part of a query result types it with a named sub-fragment, not a type cut out of a
 // bigger generated one
 const fragmentSliceRestrictions = [
@@ -146,17 +148,17 @@ export default [
       ],
     },
   },
-  // Specs, mocks, harnesses and test modules never assert a type: an assertion hides missing,
-  // misspelled and stale fields, and a wrong element or union member. base-test.helpers holds the
-  // few values that cannot be typed honestly, such as the router snapshot with no public constructor.
+  // No code asserts a type: an assertion hides missing, misspelled and stale fields, a missing null
+  // check, and a wrong element or union member. Two files hold the values that cannot be typed
+  // honestly: base-test.helpers for specs (the router snapshot with no public constructor) and
+  // untyped-boundary.helpers for the app (values that arrive as `any`, such as parsed JSON).
   {
-    files: [
-      "src/app/**/*.spec.ts",
-      "src/app/**/*mock*.ts",
-      "src/app/**/*.harness.ts",
-      "src/app/common/modules/*-test.module.ts",
+    files: ["src/app/**/*.ts"],
+    ignores: [
+      "src/app/common/helpers/base-test.helpers.spec.ts",
+      "src/app/common/helpers/untyped-boundary.helpers.ts",
+      ...typeAssertionBacklog,
     ],
-    ignores: ["src/app/common/helpers/base-test.helpers.spec.ts"],
     rules: {
       "@typescript-eslint/consistent-type-assertions": ["error", { assertionStyle: "never" }],
     },

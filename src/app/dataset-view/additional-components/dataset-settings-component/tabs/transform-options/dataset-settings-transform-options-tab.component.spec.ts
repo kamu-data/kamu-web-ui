@@ -101,13 +101,11 @@ describe("DatasetSettingsTransformOptionsTabComponent", () => {
         await createComponent({
             paused: false,
             reactive: {
+                __typename: "FlowTriggerReactiveRule",
                 forNewData: {
                     __typename: "FlowTriggerBatchingRuleBuffering",
                     minRecordsToAwait: 10,
-                    maxBatchingInterval: {
-                        every: 5,
-                        unit: TimeUnit.Minutes,
-                    },
+                    maxBatchingInterval: { __typename: "TimeDelta", every: 5, unit: TimeUnit.Minutes },
                 },
                 forBreakingChange: FlowTriggerBreakingChangeRule.Recover,
             },
@@ -158,10 +156,12 @@ describe("DatasetSettingsTransformOptionsTabComponent", () => {
         await createComponent({
             paused: false,
             reactive: {
+                __typename: "FlowTriggerReactiveRule",
                 forNewData: {
                     __typename: "FlowTriggerBatchingRuleBuffering",
                     minRecordsToAwait: 10,
                     maxBatchingInterval: {
+                        __typename: "TimeDelta",
                         every: 1,
                         unit: TimeUnit.Days, // This should be converted to 24 hours
                     },
@@ -216,6 +216,7 @@ describe("DatasetSettingsTransformOptionsTabComponent", () => {
         await createComponent({
             paused: false,
             reactive: {
+                __typename: "FlowTriggerReactiveRule",
                 forNewData: {
                     __typename: "FlowTriggerBatchingRuleImmediate",
                 },

@@ -11,6 +11,7 @@ import { map, Observable } from "rxjs";
 
 import { ToastrService } from "ngx-toastr";
 
+import { requireValue } from "@common/helpers/app.helpers";
 import { AccessTokenApi } from "@api/access-token.api";
 import {
     AccessTokenConnectionDataFragment,
@@ -38,7 +39,7 @@ export class AccessTokenService {
             .pipe(
                 map(
                     (result: ListAccessTokensQuery) =>
-                        result.accounts.byId?.accessTokens.listAccessTokens as AccessTokenConnectionDataFragment,
+                        requireValue(result.accounts.byId, "Account not found").accessTokens.listAccessTokens,
                 ),
             );
     }

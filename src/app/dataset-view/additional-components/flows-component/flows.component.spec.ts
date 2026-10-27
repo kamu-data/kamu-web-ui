@@ -146,7 +146,7 @@ describe("FlowsComponent", () => {
         vi.spyOn(datasetFlowsService, "datasetFlowsList").mockReturnValue(of(flowsTableDataWithoutRuns()));
         vi.spyOn(datasetFlowsService, "flowsInitiators").mockReturnValue(of([]));
         vi.spyOn(datasetFlowsService, "datasetFlowsProcesses").mockReturnValue(
-            of(requireValue(mockDatasetFlowsProcessesQuery.datasets.byId?.flows.processes ?? null)),
+            of(requireValue(mockDatasetFlowsProcessesQuery.datasets.byId?.flows.processes)),
         );
         // The first poll runs on an interval, which the harness's own flush skips
         fixture.detectChanges();
@@ -164,7 +164,7 @@ describe("FlowsComponent", () => {
             .mockReturnValue(of(flowsTableDataWithoutRuns()));
         vi.spyOn(datasetFlowsService, "flowsInitiators").mockReturnValue(of([]));
         vi.spyOn(datasetFlowsService, "datasetFlowsProcesses").mockReturnValue(
-            of(requireValue(mockDatasetFlowsProcessesQuery.datasets.byId?.flows.processes ?? null)),
+            of(requireValue(mockDatasetFlowsProcessesQuery.datasets.byId?.flows.processes)),
         );
         tick();
         fixture.detectChanges();
@@ -300,7 +300,7 @@ describe("FlowsComponent", () => {
     it("should show the init loading block until the flow runs arrive", fakeAsync(async () => {
         const flowsList$ = new Subject<FlowsTableData>();
         vi.spyOn(datasetFlowsService, "datasetFlowsProcesses").mockReturnValue(
-            of(requireValue(mockDatasetFlowsProcessesQuery.datasets.byId?.flows.processes ?? null)),
+            of(requireValue(mockDatasetFlowsProcessesQuery.datasets.byId?.flows.processes)),
         );
         vi.spyOn(datasetFlowsService, "datasetFlowsList").mockReturnValue(flowsList$);
         vi.spyOn(datasetFlowsService, "flowsInitiators").mockReturnValue(of([]));
@@ -316,7 +316,7 @@ describe("FlowsComponent", () => {
 
     it("should check 'update now' link for root dataset with PollingSource", fakeAsync(async () => {
         vi.spyOn(datasetFlowsService, "datasetFlowsProcesses").mockReturnValue(
-            of(requireValue(mockDatasetFlowsProcessesQuery.datasets.byId?.flows.processes ?? null)),
+            of(requireValue(mockDatasetFlowsProcessesQuery.datasets.byId?.flows.processes)),
         );
         vi.spyOn(datasetFlowsService, "datasetFlowsList").mockReturnValue(of(flowsTableDataWithoutRuns()));
         vi.spyOn(datasetFlowsService, "flowsInitiators").mockReturnValue(of([]));
@@ -343,7 +343,7 @@ describe("FlowsComponent", () => {
             overviewUpdate: copyMockOverviewUpdate,
         });
         vi.spyOn(datasetFlowsService, "datasetFlowsProcesses").mockReturnValue(
-            of(requireValue(mockDatasetFlowsProcessesQuery.datasets.byId?.flows.processes ?? null)),
+            of(requireValue(mockDatasetFlowsProcessesQuery.datasets.byId?.flows.processes)),
         );
         vi.spyOn(datasetFlowsService, "datasetFlowsList").mockReturnValue(of(flowsTableDataWithoutRuns()));
         vi.spyOn(datasetFlowsService, "flowsInitiators").mockReturnValue(of([]));
@@ -428,7 +428,7 @@ describe("FlowsComponent", () => {
     });
 
     it("should check to navigate to subscription", () => {
-        const processes = requireValue(mockDatasetFlowsProcessesQuery.datasets.byId?.flows.processes ?? null);
+        const processes = requireValue(mockDatasetFlowsProcessesQuery.datasets.byId?.flows.processes);
         const navigateToDatasetViewSpy = vi
             .spyOn(navigationService, "navigateToDatasetView")
             .mockImplementation(() => {});
@@ -467,7 +467,7 @@ describe("FlowsComponent", () => {
     });
 
     it("should check remove selected webhook", () => {
-        const processes = requireValue(mockDatasetFlowsProcessesQuery.datasets.byId?.flows.processes ?? null);
+        const processes = requireValue(mockDatasetFlowsProcessesQuery.datasets.byId?.flows.processes);
         const navigateToDatasetViewSpy = vi
             .spyOn(navigationService, "navigateToDatasetView")
             .mockImplementation(() => {});
@@ -480,7 +480,7 @@ describe("FlowsComponent", () => {
     });
 
     it("should check toggle webhook filter if states not exist", () => {
-        const processes = requireValue(mockDatasetFlowsProcessesQuery.datasets.byId?.flows.processes ?? null);
+        const processes = requireValue(mockDatasetFlowsProcessesQuery.datasets.byId?.flows.processes);
         const navigateToDatasetViewSpy = vi
             .spyOn(navigationService, "navigateToDatasetView")
             .mockImplementation(() => {});
@@ -493,7 +493,7 @@ describe("FlowsComponent", () => {
     });
 
     it("should check toggle webhook filter if states  exist", () => {
-        const processes = requireValue(mockDatasetFlowsProcessesQuery.datasets.byId?.flows.processes ?? null);
+        const processes = requireValue(mockDatasetFlowsProcessesQuery.datasets.byId?.flows.processes);
         const navigateToDatasetViewSpy = vi
             .spyOn(navigationService, "navigateToDatasetView")
             .mockImplementation(() => {});
@@ -537,7 +537,7 @@ describe("FlowsComponent", () => {
         const serviceInComponent = fixture.debugElement.injector.get(FlowsSelectionStateService);
         const clearFlowsCategorySpy = vi.spyOn(serviceInComponent, "clearFlowsCategory").mockImplementation(() => {});
         vi.spyOn(datasetFlowsService, "datasetFlowsProcesses").mockReturnValue(
-            of(requireValue(mockDatasetFlowsProcessesQuery.datasets.byId?.flows.processes ?? null)),
+            of(requireValue(mockDatasetFlowsProcessesQuery.datasets.byId?.flows.processes)),
         );
         vi.spyOn(datasetFlowsService, "datasetFlowsList").mockReturnValue(of(mockFlowsTableData).pipe(delay(10)));
         vi.spyOn(datasetFlowsService, "flowsInitiators").mockReturnValue(of([]));
@@ -555,7 +555,7 @@ describe("FlowsComponent", () => {
         setComponentInput(fixture, "setWebhookState", mockStates);
 
         vi.spyOn(datasetFlowsService, "datasetFlowsProcesses").mockReturnValue(
-            of(requireValue(mockDatasetFlowsProcessesQuery.datasets.byId?.flows.processes ?? null)),
+            of(requireValue(mockDatasetFlowsProcessesQuery.datasets.byId?.flows.processes)),
         );
         vi.spyOn(datasetFlowsService, "datasetFlowsList").mockReturnValue(of(mockFlowsTableData).pipe(delay(10)));
         vi.spyOn(datasetFlowsService, "flowsInitiators").mockReturnValue(of([mockAccountDetails]));
@@ -622,7 +622,7 @@ describe("FlowsComponent", () => {
 
         beforeEach(() => {
             vi.spyOn(datasetFlowsService, "datasetFlowsProcesses").mockReturnValue(
-                of(requireValue(mockDatasetFlowsProcessesQuery.datasets.byId?.flows.processes ?? null)),
+                of(requireValue(mockDatasetFlowsProcessesQuery.datasets.byId?.flows.processes)),
             );
             datasetFlowsListSpy = vi
                 .spyOn(datasetFlowsService, "datasetFlowsList")
@@ -696,7 +696,7 @@ describe("FlowsComponent", () => {
     describe("dataset process card", () => {
         beforeEach(() => {
             vi.spyOn(datasetFlowsService, "datasetFlowsProcesses").mockReturnValue(
-                of(requireValue(mockDatasetFlowsProcessesQuery.datasets.byId?.flows.processes ?? null)),
+                of(requireValue(mockDatasetFlowsProcessesQuery.datasets.byId?.flows.processes)),
             );
             vi.spyOn(datasetFlowsService, "datasetFlowsList").mockReturnValue(of(mockFlowsTableData));
             vi.spyOn(datasetFlowsService, "flowsInitiators").mockReturnValue(of([]));
@@ -901,9 +901,7 @@ describe("FlowsComponent", () => {
         beforeEach(() => {
             datasetFlowsProcessesSpy = vi
                 .spyOn(datasetFlowsService, "datasetFlowsProcesses")
-                .mockReturnValue(
-                    of(requireValue(mockDatasetFlowsProcessesQuery.datasets.byId?.flows.processes ?? null)),
-                );
+                .mockReturnValue(of(requireValue(mockDatasetFlowsProcessesQuery.datasets.byId?.flows.processes)));
             vi.spyOn(datasetFlowsService, "datasetFlowsList").mockReturnValue(of(mockFlowsTableData));
             vi.spyOn(datasetFlowsService, "flowsInitiators").mockReturnValue(of([]));
             setComponentInput(fixture, "flowsData", component.flowsData);
@@ -1019,12 +1017,12 @@ describe("FlowsComponent", () => {
 
         // The API pages from 0, the URL and the pagination from 1
         function lastRequestedPage(): number {
-            return requireValue(datasetFlowsListSpy.mock.lastCall ?? null)[0].page + 1;
+            return requireValue(datasetFlowsListSpy.mock.lastCall)[0].page + 1;
         }
 
         beforeEach(() => {
             vi.spyOn(datasetFlowsService, "datasetFlowsProcesses").mockReturnValue(
-                of(requireValue(mockDatasetFlowsProcessesQuery.datasets.byId?.flows.processes ?? null)),
+                of(requireValue(mockDatasetFlowsProcessesQuery.datasets.byId?.flows.processes)),
             );
             datasetFlowsListSpy = vi
                 .spyOn(datasetFlowsService, "datasetFlowsList")

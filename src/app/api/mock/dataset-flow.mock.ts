@@ -80,7 +80,6 @@ export const mockIngestGetDatasetFlowConfigsSuccess: GetDatasetFlowConfigsQuery 
             kind: DatasetKind.Root,
             name: "account.transactions",
             owner: {
-                __typename: "Account",
                 ...mockOwnerFieldsWithAvatar,
             },
             alias: "account.transactions",
@@ -112,7 +111,6 @@ export const mockCompactingGetDatasetFlowConfigsSuccess: GetDatasetFlowConfigsQu
             kind: DatasetKind.Root,
             name: "account.transactions",
             owner: {
-                __typename: "Account",
                 ...mockOwnerFieldsWithAvatar,
             },
             alias: "account.transactions",
@@ -139,9 +137,13 @@ export const mockCompactingGetDatasetFlowConfigsSuccess: GetDatasetFlowConfigsQu
 
 export const mockSetIngestFlowConfigMutation: SetIngestFlowConfigMutation = {
     datasets: {
+        __typename: "DatasetsMut",
         byId: {
+            __typename: "DatasetMut",
             flows: {
+                __typename: "DatasetFlowsMut",
                 configs: {
+                    __typename: "DatasetFlowConfigsMut",
                     setIngestConfig: {
                         __typename: "SetFlowConfigSuccess",
                         message: "Success",
@@ -154,9 +156,13 @@ export const mockSetIngestFlowConfigMutation: SetIngestFlowConfigMutation = {
 
 export const mockSetIngestFlowConfigMutationError: SetIngestFlowConfigMutation = {
     datasets: {
+        __typename: "DatasetsMut",
         byId: {
+            __typename: "DatasetMut",
             flows: {
+                __typename: "DatasetFlowsMut",
                 configs: {
+                    __typename: "DatasetFlowConfigsMut",
                     setIngestConfig: {
                         __typename: "FlowIncompatibleDatasetKind",
                         message: "Bad dataset kind",
@@ -171,9 +177,13 @@ export const mockSetIngestFlowConfigMutationError: SetIngestFlowConfigMutation =
 
 export const mockSetCompactionFlowConfigMutation: SetCompactionFlowConfigMutation = {
     datasets: {
+        __typename: "DatasetsMut",
         byId: {
+            __typename: "DatasetMut",
             flows: {
+                __typename: "DatasetFlowsMut",
                 configs: {
+                    __typename: "DatasetFlowConfigsMut",
                     setCompactionConfig: {
                         __typename: "SetFlowConfigSuccess",
                         message: "Success",
@@ -186,9 +196,13 @@ export const mockSetCompactionFlowConfigMutation: SetCompactionFlowConfigMutatio
 
 export const mockSetCompactionFlowConfigMutationError: SetCompactionFlowConfigMutation = {
     datasets: {
+        __typename: "DatasetsMut",
         byId: {
+            __typename: "DatasetMut",
             flows: {
+                __typename: "DatasetFlowsMut",
                 configs: {
+                    __typename: "DatasetFlowConfigsMut",
                     setCompactionConfig: {
                         __typename: "FlowPreconditionsNotMet",
                         message: "Bad preconditions",
@@ -265,9 +279,13 @@ export const mockGetDatasetFlowTriggerCronQuery: GetDatasetFlowTriggerQuery = {
     datasets: {
         __typename: "Datasets",
         byId: {
+            __typename: "Dataset",
             flows: {
+                __typename: "DatasetFlows",
                 triggers: {
+                    __typename: "DatasetFlowTriggers",
                     byType: {
+                        __typename: "FlowTrigger",
                         paused: false,
                         schedule: mockCronSchedule,
                         stopPolicy: {
@@ -285,9 +303,13 @@ export const mockGetDatasetFlowTriggersTimeDeltaQuery: GetDatasetFlowTriggerQuer
     datasets: {
         __typename: "Datasets",
         byId: {
+            __typename: "Dataset",
             flows: {
+                __typename: "DatasetFlows",
                 triggers: {
+                    __typename: "DatasetFlowTriggers",
                     byType: {
+                        __typename: "FlowTrigger",
                         paused: true,
                         schedule: {
                             __typename: "TimeDelta",
@@ -309,9 +331,13 @@ export const mockGetDatasetFlowTriggersBatchingQuery: GetDatasetFlowTriggerQuery
     datasets: {
         __typename: "Datasets",
         byId: {
+            __typename: "Dataset",
             flows: {
+                __typename: "DatasetFlows",
                 triggers: {
+                    __typename: "DatasetFlowTriggers",
                     byType: {
+                        __typename: "FlowTrigger",
                         paused: false,
                         reactive: {
                             __typename: "FlowTriggerReactiveRule",
@@ -341,18 +367,20 @@ export const mockGetDatasetFlowTriggersDefaultBatchingQuery: GetDatasetFlowTrigg
     datasets: {
         __typename: "Datasets",
         byId: {
+            __typename: "Dataset",
             flows: {
+                __typename: "DatasetFlows",
                 triggers: {
+                    __typename: "DatasetFlowTriggers",
                     byType: {
+                        __typename: "FlowTrigger",
                         paused: true,
                         reactive: {
+                            __typename: "FlowTriggerReactiveRule",
                             forNewData: {
                                 __typename: "FlowTriggerBatchingRuleBuffering",
                                 minRecordsToAwait: 0,
-                                maxBatchingInterval: {
-                                    every: 0,
-                                    unit: TimeUnit.Hours,
-                                },
+                                maxBatchingInterval: { __typename: "TimeDelta", every: 0, unit: TimeUnit.Hours },
                             },
                             forBreakingChange: FlowTriggerBreakingChangeRule.Recover,
                         },
@@ -740,11 +768,12 @@ export const mockFlowItemWidgetDataFragments: FlowItemWidgetDataFragment[] = [
 
 export const mockDatasetPauseFlowsMutationSuccess: DatasetPauseFlowsMutation = {
     datasets: {
+        __typename: "DatasetsMut",
         byId: {
+            __typename: "DatasetMut",
             flows: {
-                triggers: {
-                    pauseFlows: true,
-                },
+                __typename: "DatasetFlowsMut",
+                triggers: { __typename: "DatasetFlowTriggersMut", pauseFlows: true },
             },
         },
     },
@@ -752,11 +781,12 @@ export const mockDatasetPauseFlowsMutationSuccess: DatasetPauseFlowsMutation = {
 
 export const mockDatasetPauseFlowsMutationError: DatasetPauseFlowsMutation = {
     datasets: {
+        __typename: "DatasetsMut",
         byId: {
+            __typename: "DatasetMut",
             flows: {
-                triggers: {
-                    pauseFlows: false,
-                },
+                __typename: "DatasetFlowsMut",
+                triggers: { __typename: "DatasetFlowTriggersMut", pauseFlows: false },
             },
         },
     },
@@ -764,11 +794,12 @@ export const mockDatasetPauseFlowsMutationError: DatasetPauseFlowsMutation = {
 
 export const mockDatasetResumeFlowsMutationSuccess: DatasetResumeFlowsMutation = {
     datasets: {
+        __typename: "DatasetsMut",
         byId: {
+            __typename: "DatasetMut",
             flows: {
-                triggers: {
-                    resumeFlows: true,
-                },
+                __typename: "DatasetFlowsMut",
+                triggers: { __typename: "DatasetFlowTriggersMut", resumeFlows: true },
             },
         },
     },
@@ -776,11 +807,12 @@ export const mockDatasetResumeFlowsMutationSuccess: DatasetResumeFlowsMutation =
 
 export const mockDatasetResumeFlowsMutationError: DatasetResumeFlowsMutation = {
     datasets: {
+        __typename: "DatasetsMut",
         byId: {
+            __typename: "DatasetMut",
             flows: {
-                triggers: {
-                    resumeFlows: false,
-                },
+                __typename: "DatasetFlowsMut",
+                triggers: { __typename: "DatasetFlowTriggersMut", resumeFlows: false },
             },
         },
     },
@@ -791,7 +823,6 @@ const mockDatasetListFlowsDataset: DatasetBasicsFragment = {
     kind: DatasetKind.Root,
     name: "test-dataset",
     owner: {
-        __typename: "Account",
         ...mockOwnerFieldsWithAvatar,
     },
     alias: "test-dataset",
@@ -1065,10 +1096,9 @@ export const mockDatasetTriggerTransformFlowMutation: DatasetTriggerTransformFlo
                             datasetId: "did:odf:fed0136c76cdaf8552581e8cf738df7a9d8ba169db326b5af905a8f546da4df424751",
                             description: {
                                 transform: {
+                                    __typename: "SetTransform",
                                     inputs: [],
-                                    transform: {
-                                        engine: "flink",
-                                    },
+                                    transform: { __typename: "TransformSql", engine: "flink" },
                                 },
                                 transformResult: null,
                                 __typename: "FlowDescriptionDatasetExecuteTransform",
@@ -1224,6 +1254,7 @@ export const mockDatasetTriggerResetFlowMutation: DatasetTriggerResetFlowMutatio
                             description: {
                                 __typename: "FlowDescriptionDatasetReset",
                                 resetResult: {
+                                    __typename: "FlowDescriptionResetResult",
                                     newHead: "zW1gUpztxhibmmBcpeNgXN5wrJHjkPWzWfEK5DMuSZLzs2u",
                                 },
                             },
@@ -1455,9 +1486,7 @@ export const mockFlowHistoryDataFragment: FlowHistoryDataFragment[] = [
         eventTime: "2024-03-13T13:54:32.269040795+00:00",
         taskId: "0",
         taskStatus: TaskStatus.Running,
-        task: {
-            outcome: null,
-        },
+        task: { __typename: "Task", outcome: null },
         nextAttemptAt: null,
     },
 ];
@@ -1518,9 +1547,13 @@ export const mockDatasetFlowByIdResponse: DatasetFlowByIdResponse = {
 
 export const mockGetFlowByIdQueryError: GetFlowByIdQuery = {
     datasets: {
+        __typename: "Datasets",
         byId: {
+            __typename: "Dataset",
             flows: {
+                __typename: "DatasetFlows",
                 runs: {
+                    __typename: "DatasetFlowRuns",
                     getFlow: {
                         __typename: "FlowNotFound",
                         flowId: "3",
@@ -1534,9 +1567,13 @@ export const mockGetFlowByIdQueryError: GetFlowByIdQuery = {
 
 export const mockGetFlowByIdQuerySuccess: GetFlowByIdQuery = {
     datasets: {
+        __typename: "Datasets",
         byId: {
+            __typename: "Dataset",
             flows: {
+                __typename: "DatasetFlows",
                 runs: {
+                    __typename: "DatasetFlowRuns",
                     getFlow: {
                         flow: {
                             configSnapshot: {
@@ -1594,9 +1631,7 @@ export const mockGetFlowByIdQuerySuccess: GetFlowByIdQuery = {
                                     eventTime: "2024-03-15T19:43:38+00:00",
                                     taskId: "594",
                                     taskStatus: TaskStatus.Queued,
-                                    task: {
-                                        outcome: null,
-                                    },
+                                    task: { __typename: "Task", outcome: null },
                                     nextAttemptAt: null,
                                 },
                                 {
@@ -1605,9 +1640,7 @@ export const mockGetFlowByIdQuerySuccess: GetFlowByIdQuery = {
                                     eventTime: "2024-03-15T19:43:39.414651763+00:00",
                                     taskId: "594",
                                     taskStatus: TaskStatus.Running,
-                                    task: {
-                                        outcome: null,
-                                    },
+                                    task: { __typename: "Task", outcome: null },
                                     nextAttemptAt: null,
                                 },
                                 {
@@ -1617,6 +1650,7 @@ export const mockGetFlowByIdQuerySuccess: GetFlowByIdQuery = {
                                     taskId: "594",
                                     taskStatus: TaskStatus.Finished,
                                     task: {
+                                        __typename: "Task",
                                         outcome: {
                                             __typename: "TaskOutcomeSuccess",
                                         },

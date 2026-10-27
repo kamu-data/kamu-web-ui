@@ -8,14 +8,20 @@
 import { inject } from "@angular/core";
 import { ResolveFn } from "@angular/router";
 
+import { map } from "rxjs";
+
 import { AccountWithEmailFragment } from "@api/kamu.graphql.interface";
 
 import { AccountEmailService } from "src/app/account/settings/tabs/emails-tab/account-email.service";
 import { LoggedUserService } from "src/app/auth/logged-user.service";
+import { NavigationService } from "src/app/services/navigation.service";
 
 export const accountSettingsEmailResolverFn: ResolveFn<AccountWithEmailFragment> = () => {
     const accountEmailService = inject(AccountEmailService);
     const loggedUserService = inject(LoggedUserService);
+    const navigationService = inject(NavigationService);
 
-    return accountEmailService.fetchAccountWithEmail(loggedUserService.currentlyLoggedInUser.accountName);
+    return accountEmailService
+        .fetchAccountWithEmail(loggedUserService.currentlyLoggedInUser.accountName)
+        .pipe(map((account) => account ?? navigationService.pageNotFoundRedirect()));
 };

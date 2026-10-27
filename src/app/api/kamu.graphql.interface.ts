@@ -9258,26 +9258,11 @@ export type AccessTokenDataFragment = { __typename: 'ViewAccessToken', id: strin
 export type BlockRefDataFragment = { __typename: 'BlockRef', name: string, blockHash: string };
 
 export type CurrentSourceFetchUrlFragment = { __typename: 'DatasetMetadata', currentPollingSource?: { __typename: 'SetPollingSource', fetch:
-      | (
-        { __typename: 'FetchStepContainer' }
-        & FetchStepData_FetchStepContainer_Fragment
-      )
-      | (
-        { __typename: 'FetchStepEthereumLogs' }
-        & FetchStepData_FetchStepEthereumLogs_Fragment
-      )
-      | (
-        { __typename: 'FetchStepFilesGlob' }
-        & FetchStepData_FetchStepFilesGlob_Fragment
-      )
-      | (
-        { __typename: 'FetchStepMqtt' }
-        & FetchStepData_FetchStepMqtt_Fragment
-      )
-      | (
-        { __typename: 'FetchStepUrl' }
-        & FetchStepData_FetchStepUrl_Fragment
-      )
+      | { __typename: 'FetchStepContainer' }
+      | { __typename: 'FetchStepEthereumLogs', nodeUrl?: string | null, chainId?: string | null }
+      | { __typename: 'FetchStepFilesGlob' }
+      | { __typename: 'FetchStepMqtt', host: string, port: number }
+      | { __typename: 'FetchStepUrl', url: string }
      } | null };
 
 export type DataQueryResultSuccessViewFragment = { __typename: 'DataQueryResultSuccess', schema: { __typename: 'DataSchema', format: DataSchemaFormat, content: string }, data: { __typename: 'DataBatch', format: DataBatchFormat, content: string }, datasets: Array<{ __typename: 'DatasetState', id: string, alias: string, blockHash?: string | null }> };
@@ -11070,30 +11055,25 @@ ${PostgreSqlDeslDataFragmentDoc}
 ${KafkaProtocolDescDataFragmentDoc}
 ${WebSocketProtocolDescDataFragmentDoc}
 ${OdataProtocolDescDataFragmentDoc}`;
-export const FetchStepDataFragmentDoc = gql`
-    fragment FetchStepData on FetchStep {
-  ... on FetchStepUrl {
-    url
-  }
-  ... on FetchStepMqtt {
-    host
-    port
-  }
-  ... on FetchStepEthereumLogs {
-    nodeUrl
-    chainId
-  }
-}
-    `;
 export const CurrentSourceFetchUrlFragmentDoc = gql`
     fragment CurrentSourceFetchUrl on DatasetMetadata {
   currentPollingSource {
     fetch {
-      ...FetchStepData
+      ... on FetchStepUrl {
+        url
+      }
+      ... on FetchStepMqtt {
+        host
+        port
+      }
+      ... on FetchStepEthereumLogs {
+        nodeUrl
+        chainId
+      }
     }
   }
 }
-    ${FetchStepDataFragmentDoc}`;
+    `;
 export const LicenseFragmentDoc = gql`
     fragment License on SetLicense {
   shortName
@@ -12011,6 +11991,21 @@ export const EngineDescDataFragmentDoc = gql`
   name
   dialect
   latestImage
+}
+    `;
+export const FetchStepDataFragmentDoc = gql`
+    fragment FetchStepData on FetchStep {
+  ... on FetchStepUrl {
+    url
+  }
+  ... on FetchStepMqtt {
+    host
+    port
+  }
+  ... on FetchStepEthereumLogs {
+    nodeUrl
+    chainId
+  }
 }
     `;
 export const WebhookSubscriptionDataFragmentDoc = gql`
@@ -14827,3 +14822,405 @@ export const WebhookEventTypesDocument = gql`
       super(apollo);
     }
   }
+
+      export interface PossibleTypesResultData {
+        possibleTypes: {
+          [key: string]: string[]
+        }
+      }
+      const result: PossibleTypesResultData = {
+  "possibleTypes": {
+    "AccountFlowProcessCard": [
+      "DatasetFlowProcess",
+      "WebhookFlowSubProcess"
+    ],
+    "Attachments": [
+      "AttachmentsEmbedded"
+    ],
+    "BatchResourceHandlesOutcome": [
+      "BatchResourceHandlesResult",
+      "ResourceAccountResolutionProblem",
+      "ResourceUnsupportedSelectorProblem"
+    ],
+    "BatchResourceManifestsOutcome": [
+      "BatchResourceManifestsResult",
+      "ResourceAccountResolutionProblem",
+      "ResourceUnsupportedSelectorProblem"
+    ],
+    "BatchResourcesOutcome": [
+      "BatchResourcesResult",
+      "ResourceAccountResolutionProblem",
+      "ResourceUnsupportedSelectorProblem"
+    ],
+    "CancelFlowRunResult": [
+      "CancelFlowRunSuccess",
+      "FlowNotFound"
+    ],
+    "CollectionUpdateResult": [
+      "CollectionUpdateErrorCasFailed",
+      "CollectionUpdateErrorNotFound",
+      "CollectionUpdateErrorQuotaExceeded",
+      "CollectionUpdateSuccess",
+      "CollectionUpdateUpToDate"
+    ],
+    "CommitResult": [
+      "CommitResultAppendError",
+      "CommitResultSuccess",
+      "MetadataManifestMalformed",
+      "MetadataManifestUnsupportedVersion",
+      "NoChanges"
+    ],
+    "CompareChainsResult": [
+      "CompareChainsResultError",
+      "CompareChainsResultStatus"
+    ],
+    "CreateAccountResult": [
+      "AccountFieldNonUnique",
+      "CreateAccountSuccess"
+    ],
+    "CreateDatasetFromSnapshotResult": [
+      "CreateDatasetResultInvalidSnapshot",
+      "CreateDatasetResultMissingInputs",
+      "CreateDatasetResultNameCollision",
+      "CreateDatasetResultSuccess",
+      "MetadataManifestMalformed",
+      "MetadataManifestUnsupportedVersion"
+    ],
+    "CreateDatasetResult": [
+      "CreateDatasetResultNameCollision",
+      "CreateDatasetResultSuccess"
+    ],
+    "CreateTokenResult": [
+      "CreateAccessTokenResultDuplicate",
+      "CreateAccessTokenResultSuccess"
+    ],
+    "CreateWalletAccountsResult": [
+      "CreateWalletAccountsSuccess"
+    ],
+    "CreateWebhookSubscriptionResult": [
+      "CreateWebhookSubscriptionResultSuccess",
+      "WebhookSubscriptionDuplicateLabel",
+      "WebhookSubscriptionInvalidTargetUrl",
+      "WebhookSubscriptionNoEventTypesProvided"
+    ],
+    "DataQueryResult": [
+      "DataQueryResultError",
+      "DataQueryResultSuccess"
+    ],
+    "DatasetAccessResult": [
+      "DatasetAccessResultAccessible",
+      "DatasetAccessResultNotAccessible"
+    ],
+    "DatasetVisibilityOutput": [
+      "PrivateDatasetVisibility",
+      "PublicDatasetVisibility"
+    ],
+    "DeleteAccountResult": [
+      "DeleteAccountSuccess"
+    ],
+    "DeleteDatasetEnvVarResult": [
+      "DeleteDatasetEnvVarResultNotFound",
+      "DeleteDatasetEnvVarResultSuccess"
+    ],
+    "DeleteResult": [
+      "DeleteResultDanglingReference",
+      "DeleteResultSuccess"
+    ],
+    "EventTimeSource": [
+      "EventTimeSourceFromMetadata",
+      "EventTimeSourceFromPath",
+      "EventTimeSourceFromSystemTime"
+    ],
+    "FetchStep": [
+      "FetchStepContainer",
+      "FetchStepEthereumLogs",
+      "FetchStepFilesGlob",
+      "FetchStepMqtt",
+      "FetchStepUrl"
+    ],
+    "FlowActivationCause": [
+      "FlowActivationCauseAutoPolling",
+      "FlowActivationCauseDatasetUpdate",
+      "FlowActivationCauseIterationFinished",
+      "FlowActivationCauseManual"
+    ],
+    "FlowActivationCauseDatasetUpdateSource": [
+      "FlowActivationCauseDatasetUpdateSourceExternallyDetectedChange",
+      "FlowActivationCauseDatasetUpdateSourceHttpIngest",
+      "FlowActivationCauseDatasetUpdateSourceSmartProtocolPush",
+      "FlowActivationCauseDatasetUpdateSourceUpstreamFlow"
+    ],
+    "FlowConfigResetPropagationMode": [
+      "FlowConfigResetPropagationModeCustom",
+      "FlowConfigResetPropagationModeToSeed"
+    ],
+    "FlowConfigRule": [
+      "FlowConfigRuleCompaction",
+      "FlowConfigRuleIngest",
+      "FlowConfigRuleReset"
+    ],
+    "FlowDescription": [
+      "FlowDescriptionDatasetExecuteTransform",
+      "FlowDescriptionDatasetHardCompaction",
+      "FlowDescriptionDatasetPollingIngest",
+      "FlowDescriptionDatasetPushIngest",
+      "FlowDescriptionDatasetReset",
+      "FlowDescriptionDatasetResetToMetadata",
+      "FlowDescriptionSystemGC",
+      "FlowDescriptionUnknown",
+      "FlowDescriptionWebhookDeliver"
+    ],
+    "FlowDescriptionDatasetReorganizationResult": [
+      "FlowDescriptionReorganizationNothingToDo",
+      "FlowDescriptionReorganizationSuccess"
+    ],
+    "FlowDescriptionUpdateResult": [
+      "FlowDescriptionUpdateResultSuccess",
+      "FlowDescriptionUpdateResultUnknown",
+      "FlowDescriptionUpdateResultUpToDate"
+    ],
+    "FlowEvent": [
+      "FlowConfigSnapshotModified",
+      "FlowEventAborted",
+      "FlowEventActivationCauseAdded",
+      "FlowEventCompleted",
+      "FlowEventInitiated",
+      "FlowEventRetryPolicyModified",
+      "FlowEventScheduledForActivation",
+      "FlowEventStartConditionUpdated",
+      "FlowEventTaskChanged"
+    ],
+    "FlowOutcome": [
+      "FlowAbortedResult",
+      "FlowFailedError",
+      "FlowSuccessResult"
+    ],
+    "FlowStartCondition": [
+      "FlowStartConditionExecutor",
+      "FlowStartConditionReactive",
+      "FlowStartConditionSchedule",
+      "FlowStartConditionThrottling"
+    ],
+    "FlowTriggerBatchingRule": [
+      "FlowTriggerBatchingRuleBuffering",
+      "FlowTriggerBatchingRuleImmediate"
+    ],
+    "FlowTriggerScheduleRule": [
+      "Cron5ComponentExpression",
+      "TimeDelta"
+    ],
+    "FlowTriggerStopPolicy": [
+      "FlowTriggerStopPolicyAfterConsecutiveFailures",
+      "FlowTriggerStopPolicyNever"
+    ],
+    "GetFlowResult": [
+      "FlowNotFound",
+      "GetFlowSuccess"
+    ],
+    "MergeStrategy": [
+      "MergeStrategyAppend",
+      "MergeStrategyChangelogStream",
+      "MergeStrategyLedger",
+      "MergeStrategySnapshot",
+      "MergeStrategyUpsertStream"
+    ],
+    "MetadataEvent": [
+      "AddData",
+      "AddPushSource",
+      "DisablePollingSource",
+      "DisablePushSource",
+      "ExecuteTransform",
+      "Seed",
+      "SetAttachments",
+      "SetDataSchema",
+      "SetInfo",
+      "SetLicense",
+      "SetPollingSource",
+      "SetTransform",
+      "SetVocab"
+    ],
+    "ModifyPasswordResult": [
+      "ModifyPasswordSuccess",
+      "ModifyPasswordWrongOldPassword"
+    ],
+    "NameLookupResult": [
+      "Account"
+    ],
+    "PauseWebhookSubscriptionResult": [
+      "PauseWebhookSubscriptionResultSuccess",
+      "PauseWebhookSubscriptionResultUnexpected"
+    ],
+    "PrepStep": [
+      "PrepStepDecompress",
+      "PrepStepPipe"
+    ],
+    "ReactivateWebhookSubscriptionResult": [
+      "ReactivateWebhookSubscriptionResultSuccess",
+      "ReactivateWebhookSubscriptionResultUnexpected"
+    ],
+    "ReadStep": [
+      "ReadStepCsv",
+      "ReadStepEsriShapefile",
+      "ReadStepGeoJson",
+      "ReadStepJson",
+      "ReadStepNdGeoJson",
+      "ReadStepNdJson",
+      "ReadStepParquet"
+    ],
+    "RemoveWebhookSubscriptionResult": [
+      "RemoveWebhookSubscriptionResultSuccess"
+    ],
+    "RenameAccountResult": [
+      "RenameAccountNameNotUnique",
+      "RenameAccountSuccess"
+    ],
+    "RenameResult": [
+      "RenameResultNameCollision",
+      "RenameResultNoChanges",
+      "RenameResultSuccess"
+    ],
+    "ResourceApplyOutcome": [
+      "ResourceAccountResolutionProblem",
+      "ResourceApplyParseManifestProblem",
+      "ResourceApplyRejection",
+      "ResourceApplySuccess",
+      "ResourceInvalidHeaderProblem",
+      "ResourceInvalidSpecProblem",
+      "ResourceUnsupportedDescriptorProblem"
+    ],
+    "ResourceDeleteOutcome": [
+      "ResourceAccountResolutionProblem",
+      "ResourceDeleteResult",
+      "ResourceUnsupportedSelectorProblem"
+    ],
+    "ResourceHandleListOutcome": [
+      "ResourceAccountResolutionProblem",
+      "ResourceHandleConnection",
+      "ResourceInvalidLabelFilterProblem",
+      "ResourceUnsupportedSelectorProblem"
+    ],
+    "ResourceListOutcome": [
+      "ResourceAccountResolutionProblem",
+      "ResourceConnection",
+      "ResourceInvalidLabelFilterProblem",
+      "ResourceUnsupportedSelectorProblem"
+    ],
+    "ResourceLookupProblem": [
+      "ResourceEmptyRefProblem",
+      "ResourceIDNotFoundProblem",
+      "ResourceNameMismatchProblem",
+      "ResourceNameNotFoundProblem",
+      "ResourceSchemaMismatchProblem",
+      "ResourceUntypedNameProblem"
+    ],
+    "ResourcesSummaryOutcome": [
+      "ResourceAccountResolutionProblem",
+      "ResourcesSummary"
+    ],
+    "ResumeWebhookSubscriptionResult": [
+      "ResumeWebhookSubscriptionResultSuccess",
+      "ResumeWebhookSubscriptionResultUnexpected"
+    ],
+    "RevokeResult": [
+      "RevokeResultAlreadyRevoked",
+      "RevokeResultSuccess"
+    ],
+    "RotateWebhookSubscriptionSecretResult": [
+      "RotateWebhookSubscriptionSecretSuccess"
+    ],
+    "SearchResult": [
+      "Dataset"
+    ],
+    "SetAccountQuotasResult": [
+      "SetAccountQuotasResultInvalidInput",
+      "SetAccountQuotasResultSuccess"
+    ],
+    "SetDatasetVisibilityResult": [
+      "SetDatasetVisibilityResultSuccess"
+    ],
+    "SetFlowConfigResult": [
+      "FlowIncompatibleDatasetKind",
+      "FlowInvalidConfigInputError",
+      "FlowPreconditionsNotMet",
+      "SetFlowConfigSuccess"
+    ],
+    "SetFlowTriggerResult": [
+      "FlowIncompatibleDatasetKind",
+      "FlowInvalidTriggerInputError",
+      "FlowInvalidTriggerStopPolicyInputError",
+      "FlowPreconditionsNotMet",
+      "FlowTypeIsNotSupported",
+      "SetFlowTriggerSuccess"
+    ],
+    "SetRoleResult": [
+      "SetRoleResultSuccess"
+    ],
+    "SetWatermarkResult": [
+      "SetWatermarkIsDerivative",
+      "SetWatermarkUpToDate",
+      "SetWatermarkUpdated"
+    ],
+    "SourceCaching": [
+      "SourceCachingForever"
+    ],
+    "StartUploadVersionResult": [
+      "StartUploadVersionErrorTooLarge",
+      "StartUploadVersionSuccess"
+    ],
+    "TaskFailureReason": [
+      "TaskFailureReasonGeneral",
+      "TaskFailureReasonInputDatasetCompacted",
+      "TaskFailureReasonWebhookDeliveryProblem"
+    ],
+    "TaskOutcome": [
+      "TaskOutcomeCancelled",
+      "TaskOutcomeFailed",
+      "TaskOutcomeSuccess"
+    ],
+    "Transform": [
+      "TransformSql"
+    ],
+    "TransformInputDataset": [
+      "TransformInputDatasetAccessible",
+      "TransformInputDatasetNotAccessible"
+    ],
+    "TriggerFlowResult": [
+      "FlowIncompatibleDatasetKind",
+      "FlowInvalidRunConfigurations",
+      "FlowPreconditionsNotMet",
+      "TriggerFlowSuccess"
+    ],
+    "UnsetRoleResult": [
+      "UnsetRoleResultSuccess"
+    ],
+    "UpdateEmailResult": [
+      "UpdateEmailNonUnique",
+      "UpdateEmailSuccess"
+    ],
+    "UpdateReadmeResult": [
+      "CommitResultAppendError",
+      "CommitResultSuccess",
+      "NoChanges"
+    ],
+    "UpdateVersionResult": [
+      "UpdateVersionErrorCasFailed",
+      "UpdateVersionErrorInvalidExtraData",
+      "UpdateVersionErrorQuotaExceeded",
+      "UpdateVersionSuccess"
+    ],
+    "UpdateWebhookSubscriptionResult": [
+      "UpdateWebhookSubscriptionResultSuccess",
+      "UpdateWebhookSubscriptionResultUnexpected",
+      "WebhookSubscriptionDuplicateLabel",
+      "WebhookSubscriptionInvalidTargetUrl",
+      "WebhookSubscriptionNoEventTypesProvided"
+    ],
+    "UpsertDatasetEnvVarResult": [
+      "UpsertDatasetEnvVarResultCreated",
+      "UpsertDatasetEnvVarResultUpdated",
+      "UpsertDatasetEnvVarUpToDate"
+    ]
+  }
+};
+      export default result;
+    

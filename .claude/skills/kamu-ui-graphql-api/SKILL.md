@@ -71,6 +71,15 @@ src/app/api/gql/**/*.graphql ┴─ npm run gql-codegen ─→ src/app/api/kamu.
   the operation root. The generated header
   must import `gql` from `@apollo/client/core` (`gqlImport` in the config); if it ever shows
   `apollo-angular`, fix the config rather than the output.
+- The `fragment-matcher` plugin adds the members of every union and interface to the same file,
+  and `apolloCache()` passes them to `InMemoryCache` as `possibleTypes`. Without them the cache
+  cannot match a fragment declared on a union or interface (`MetadataEventData on MetadataEvent`)
+  to the object it reads, and returns that fragment's fields as missing while still reporting the
+  result complete: every AddData commit read as "Watermark updated".
+- The API refuses a query nested deeper than 32 levels, counting each fragment spread as one. The
+  lineage query repeats `CurrentSourceFetchUrl` seven datasets deep, so that fragment writes its
+  fetch selection inline instead of spreading `FetchStepData`; a new spread on that path needs
+  the same check against a real API.
 - `Uint64` stays `string` because the API sends it as a JSON string: a JSON number above 2^53
   loses precision in `JSON.parse`, and the backend rejects a number as input. Code that counts
   with one converts it, `Number()` for values known to be small (chain ids, byte sizes),

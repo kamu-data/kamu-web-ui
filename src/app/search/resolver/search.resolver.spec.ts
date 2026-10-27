@@ -40,6 +40,7 @@ describe("searchResolverFn", () => {
     function emptySearchResult(): DatasetSearchResult {
         const result = structuredClone(mockDatasetSearchResult);
         result.datasets = [];
+        result.totalCount = 0;
         return result;
     }
 
@@ -110,6 +111,26 @@ describe("searchResolverFn", () => {
 
         expect(semanticSearchDatasetsSpy).toHaveBeenCalledWith("dd");
         expect(data).toEqual(mockDatasetSearchResult);
+    });
+
+    it("should not fall back to semantic search for a page past the last one", async () => {
+        vi.spyOn(appConfigService, "semanticSearchThresholdScore", "get").mockReturnValue(0.5);
+        const pastEndResult = { ...structuredClone(mockDatasetSearchResult), datasets: [] };
+        searchDatasetsSpy.mockReturnValue(of(pastEndResult));
+
+        const data = await resolve({
+            [ProjectLinks.URL_QUERY_PARAM_PAGE]: "99",
+            [ProjectLinks.URL_QUERY_PARAM_QUERY]: "dd",
+        });
+
+        expect(semanticSearchDatasetsSpy).not.toHaveBeenCalled();
+        expect(data).toEqual(pastEndResult);
+    });
+
+    it("should search the first page when the page is not a page number", async () => {
+        await resolve({ [ProjectLinks.URL_QUERY_PARAM_PAGE]: "abc", [ProjectLinks.URL_QUERY_PARAM_QUERY]: "dd" });
+
+        expect(searchDatasetsSpy).toHaveBeenCalledWith("dd", 0);
     });
 
     it("should pass the page and query from the query parameters to the search", async () => {

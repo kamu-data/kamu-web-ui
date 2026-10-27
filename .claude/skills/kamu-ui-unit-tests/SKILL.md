@@ -26,7 +26,8 @@ Never commit `.only` or `.skip` (`describe.only`, `it.skip`, …) — eslint and
 Vitest prints the specs' console output only when its own output is a terminal, so a piped run
 (an agent, CI) shows no warnings at all. Angular's dev-mode reports therefore do not rely on being
 read: `src/test-setup.ts` fails any test during which a `console.warn` or `console.error` carries an
-Angular runtime code (`NG0956` and the like). Fix the cause; a test whose purpose is to provoke
+Angular runtime code: four digits for core (`NG0956`), five for the router and other packages
+(`NG04002`, a failed navigation). Fix the cause; a test whose purpose is to provoke
 such a message stubs the console method (`stubMethod(console, "warn")`), which keeps it from reaching the check.
 
 ## Component tests
@@ -77,6 +78,10 @@ beforeEach(async () => {
 - Mock collaborators with `vi.spyOn(service, "method").mockReturnValue(of(...))` on the real
   injected service rather than hand-written fakes. See [Spies](#spies) for what a spy without a
   return value does.
+- A test that needs a fixture other than the one `beforeEach` built, such as one whose first
+  response is deferred, calls `fixture.destroy()` before `TestBed.createComponent`. Harness calls
+  run change detection for the whole app, so a shared fixture left alive re-renders too: in the
+  dataset access spec, its pager corrected a page and started a real navigation.
 - A component with required inputs or content projection is tested through a small host
   `@Component` declared in the spec (see `time-delta-form.component.spec.ts`).
 

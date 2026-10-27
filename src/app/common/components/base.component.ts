@@ -11,7 +11,7 @@ import { ActivatedRoute, ParamMap } from "@angular/router";
 import { map, Observable } from "rxjs";
 
 import { UnsubscribeDestroyRefAdapter } from "@common/components/unsubscribe.ondestroy.adapter";
-import { requireValue } from "@common/helpers/app.helpers";
+import { positiveIntegerFromParam, requireValue } from "@common/helpers/app.helpers";
 import { MaybeNull } from "@interface/app.types";
 import { DatasetInfo } from "@interface/navigation.interface";
 
@@ -20,10 +20,11 @@ import ProjectLinks from "src/app/project-links";
 export abstract class BaseComponent extends UnsubscribeDestroyRefAdapter {
     protected activatedRoute = inject(ActivatedRoute);
 
-    /** `null` when the URL has no page */
+    /** `null` when the URL has no page, or one that is not a positive whole number */
     protected pageFromUrl(): MaybeNull<number> {
-        const pageParam = this.activatedRoute.snapshot.queryParamMap.get(ProjectLinks.URL_QUERY_PARAM_PAGE);
-        return pageParam ? +pageParam : null;
+        return positiveIntegerFromParam(
+            this.activatedRoute.snapshot.queryParamMap.get(ProjectLinks.URL_QUERY_PARAM_PAGE),
+        );
     }
 
     protected getDatasetInfoFromUrl(): DatasetInfo {

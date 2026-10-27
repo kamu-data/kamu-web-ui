@@ -5,20 +5,23 @@
  * included in the LICENSE file.
  */
 
+import { TestbedHarnessEnvironment } from "@angular/cdk/testing/testbed";
 import { provideHttpClient } from "@angular/common/http";
 import { provideHttpClientTesting } from "@angular/common/http/testing";
 import { ComponentFixture, TestBed } from "@angular/core/testing";
 import { ActivatedRoute } from "@angular/router";
 
-import { of } from "rxjs";
+import { of, Subject } from "rxjs";
 
 import { NgbModal } from "@ng-bootstrap/ng-bootstrap";
 import { ApolloTestingModule } from "apollo-angular/testing";
 import { provideToastr } from "ngx-toastr";
 
 import { ModalService } from "@common/components/modal/modal.service";
+import { PagePastEndHarness } from "@common/components/page-past-end/page-past-end.harness";
 import { requireValue } from "@common/helpers/app.helpers";
-import { registerMatSvgIcons, setComponentInput } from "@common/helpers/base-test.helpers.spec";
+import { registerMatSvgIcons, setComponentInput, stubMethod } from "@common/helpers/base-test.helpers.spec";
+import { ViewDatasetEnvVarConnectionDataFragment } from "@api/kamu.graphql.interface";
 import { MOCK_VAR_KEY, mockListEnvVariablesQuery } from "@api/mock/environment-variables-and-secrets.mock";
 import { ModalArgumentsInterface } from "@interface/modal.interface";
 
@@ -105,6 +108,35 @@ describe("DatasetSettingsSecretsManagerTabComponent", () => {
         component.onPageChange(3);
         expect(navigateToDatasetViewSpy).toHaveBeenCalledWith(expect.objectContaining({ page: 3 }));
         expect(component.currentPage).toEqual(3);
+    });
+
+    it("should say a page past the last one has no variables and lead to the last page", async () => {
+        const envVariables = requireValue(mockListEnvVariablesQuery.datasets.byOwnerAndName?.envVars.listEnvVariables);
+        const response$ = new Subject<ViewDatasetEnvVarConnectionDataFragment>();
+        vi.spyOn(environmentVariablesService, "listEnvVariables").mockReturnValue(response$);
+        const navigateToDatasetViewSpy = stubMethod(navigationService, "navigateToDatasetView");
+        // A table that starts empty and stays empty gives Angular no reason to re-render on its own
+        fixture.destroy();
+        const pastEndFixture = TestBed.createComponent(DatasetSettingsSecretsManagerTabComponent);
+        setComponentInput(pastEndFixture, "variablesAndSecretsTabData", {
+            datasetBasics: mockDatasetBasicsRootFragment,
+            datasetPermissions: mockFullPowerDatasetPermissionsFragment,
+        });
+        setComponentInput(pastEndFixture, "datasetInfo", MOCK_DATASET_INFO);
+        pastEndFixture.detectChanges();
+        pastEndFixture.componentInstance.onPageChange(5);
+
+        response$.next({
+            ...structuredClone(envVariables),
+            nodes: [],
+            pageInfo: { ...envVariables.pageInfo, totalPages: 3 },
+        });
+        response$.complete();
+
+        const pagePastEnd = await TestbedHarnessEnvironment.loader(pastEndFixture).getHarness(PagePastEndHarness);
+        expect(await pagePastEnd.getMessage()).toEqual("There are no variables on this page.");
+        await pagePastEnd.goToLastPage();
+        expect(navigateToDatasetViewSpy).toHaveBeenLastCalledWith(expect.objectContaining({ page: 3 }));
     });
 
     it("should check refresh search", () => {

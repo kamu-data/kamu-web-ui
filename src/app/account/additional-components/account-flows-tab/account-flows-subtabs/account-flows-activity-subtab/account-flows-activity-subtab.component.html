@@ -1,4 +1,24 @@
 @if (flowConnectionData$ | async; as flowConnectionData) {
+    <ng-template #pageControls>
+        <div class="mt-50px">
+            @if (
+                !flowConnectionData.flowsData.connectionDataForTable.nodes.length &&
+                flowConnectionData.flowsData.connectionDataForTable.pageInfo.currentPage > 0
+            ) {
+                <app-page-past-end
+                    itemsName="flow runs"
+                    [totalPages]="flowConnectionData.flowsData.connectionDataForTable.pageInfo.totalPages"
+                    (pageChangeEvent)="onPageChange($event)"
+                />
+            } @else {
+                <app-pagination
+                    [currentPage]="flowConnectionData.flowsData.connectionDataForTable.pageInfo.currentPage + 1"
+                    [pageInfo]="flowConnectionData.flowsData.connectionDataForTable.pageInfo"
+                    (pageChangeEvent)="onPageChange($event)"
+                />
+            }
+        </div>
+    </ng-template>
     <div>
         @if (flowConnectionData.flowsData.connectionDataForWidget.nodes.length) {
             <div class="d-flex justify-content-between">
@@ -64,15 +84,7 @@
                                 [involvedDatasets]="flowConnectionData.flowsData.involvedDatasets"
                                 (abortFlowChange)="onAbortFlow($event)"
                             />
-                            <div class="mt-50px">
-                                <app-pagination
-                                    [currentPage]="
-                                        flowConnectionData.flowsData.connectionDataForTable.pageInfo.currentPage + 1
-                                    "
-                                    [pageInfo]="flowConnectionData.flowsData.connectionDataForTable.pageInfo"
-                                    (pageChangeEvent)="onPageChange($event)"
-                                />
-                            </div>
+                            <ng-container *ngTemplateOutlet="pageControls" />
                         </ng-template>
                     </li>
                     <li [ngbNavItem]="FlowStatus.Running">
@@ -99,15 +111,7 @@
                                 (searchByFiltersChange)="onSearchByFiltersChange($event)"
                                 (abortFlowChange)="onAbortFlow($event)"
                             />
-                            <div class="mt-50px">
-                                <app-pagination
-                                    [currentPage]="
-                                        flowConnectionData.flowsData.connectionDataForTable.pageInfo.currentPage + 1
-                                    "
-                                    [pageInfo]="flowConnectionData.flowsData.connectionDataForTable.pageInfo"
-                                    (pageChangeEvent)="onPageChange($event)"
-                                />
-                            </div>
+                            <ng-container *ngTemplateOutlet="pageControls" />
                         </ng-template>
                     </li>
                     <li [ngbNavItem]="FlowStatus.Waiting">
@@ -134,15 +138,7 @@
                                 (searchByFiltersChange)="onSearchByFiltersChange($event)"
                                 (abortFlowChange)="onAbortFlow($event)"
                             />
-                            <div class="mt-50px">
-                                <app-pagination
-                                    [currentPage]="
-                                        flowConnectionData.flowsData.connectionDataForTable.pageInfo.currentPage + 1
-                                    "
-                                    [pageInfo]="flowConnectionData.flowsData.connectionDataForTable.pageInfo"
-                                    (pageChangeEvent)="onPageChange($event)"
-                                />
-                            </div>
+                            <ng-container *ngTemplateOutlet="pageControls" />
                         </ng-template>
                     </li>
                 </ul>

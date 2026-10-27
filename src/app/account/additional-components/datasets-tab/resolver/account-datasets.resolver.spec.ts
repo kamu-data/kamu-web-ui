@@ -64,4 +64,15 @@ describe("accountDatasetsResolverFn", () => {
         expect(getDatasetsByAccountNameSpy).toHaveBeenCalledTimes(1);
         expect(getDatasetsByAccountNameSpy).toHaveBeenCalledWith(TEST_ACCOUNT_NAME, pageNumber - 1);
     });
+
+    ["0", "abc", "-1", "1.5"].forEach((invalidPage: string) => {
+        it(`should request the first page when the page is "${invalidPage}"`, async () => {
+            const route = routeSnapshot({
+                parent: tabsRoute,
+                queryParams: { [ProjectLinks.URL_QUERY_PARAM_PAGE]: invalidPage },
+            });
+            await runResolver(accountDatasetsResolverFn, route);
+            expect(getDatasetsByAccountNameSpy).toHaveBeenCalledWith(TEST_ACCOUNT_NAME, 0);
+        });
+    });
 });

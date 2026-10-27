@@ -192,6 +192,15 @@ export function enumValueOf<E extends Record<string, string>>(
     return Object.values(enumObject).find((member): member is E[keyof E] => member === value);
 }
 
+/** The number a URL parameter such as a page holds, or `null` when it is missing or not a positive whole number */
+export function positiveIntegerFromParam(param: MaybeNullOrUndefined<string>): MaybeNull<number> {
+    if (!param || !/^\d+$/.test(param)) {
+        return null;
+    }
+    const value = Number(param);
+    return value >= 1 && Number.isSafeInteger(value) ? value : null;
+}
+
 export function isStringArray(x: unknown): x is string[] {
     return Array.isArray(x) && x.every((item) => typeof item === "string");
 }

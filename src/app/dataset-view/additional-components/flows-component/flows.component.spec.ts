@@ -19,6 +19,7 @@ import { provideToastr } from "ngx-toastr";
 import type { Mock } from "vitest";
 
 import { ModalService } from "@common/components/modal/modal.service";
+import { PagePastEndHarness } from "@common/components/page-past-end/page-past-end.harness";
 import { requireValue } from "@common/helpers/app.helpers";
 import {
     createSpyObj,
@@ -154,6 +155,28 @@ describe("FlowsComponent", () => {
         const flows = await TestbedHarnessEnvironment.harnessForFixture(fixture, FlowsHarness);
 
         expect(await flows.isEmptyFlowRunsBlockVisible()).toBe(true);
+        discardPeriodicTasks();
+    }));
+
+    it("should say a page past the last one has no flow runs and lead to the last page", fakeAsync(async () => {
+        const pastEndData = structuredClone(mockFlowsTableData);
+        pastEndData.connectionDataForTable.nodes = [];
+        pastEndData.connectionDataForTable.pageInfo.currentPage = 98;
+        pastEndData.connectionDataForTable.pageInfo.totalPages = 3;
+        vi.spyOn(datasetFlowsService, "datasetFlowsList").mockReturnValue(of(pastEndData));
+        vi.spyOn(datasetFlowsService, "flowsInitiators").mockReturnValue(of([]));
+        vi.spyOn(datasetFlowsService, "datasetFlowsProcesses").mockReturnValue(
+            of(requireValue(mockDatasetFlowsProcessesQuery.datasets.byId?.flows.processes)),
+        );
+        const navigateToDatasetViewSpy = stubMethod(navigationService, "navigateToDatasetView");
+        // The first poll runs on an interval, which the harness's own flush skips
+        fixture.detectChanges();
+        tick();
+
+        const pagePastEnd = await TestbedHarnessEnvironment.loader(fixture).getHarness(PagePastEndHarness);
+        expect(await pagePastEnd.getMessage()).toEqual("There are no flow runs on this page.");
+        await pagePastEnd.goToLastPage();
+        expect(navigateToDatasetViewSpy).toHaveBeenCalledWith(expect.objectContaining({ page: 3 }));
         discardPeriodicTasks();
     }));
 

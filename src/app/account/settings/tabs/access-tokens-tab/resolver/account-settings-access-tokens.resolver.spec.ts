@@ -69,4 +69,19 @@ describe("accountSettingsAccessTokensResolverFn", () => {
             perPage: 15,
         });
     });
+
+    it("should request the first page when the page is not a page number", async () => {
+        const route = routeSnapshot({ queryParams: { [ProjectLinks.URL_QUERY_PARAM_PAGE]: "abc" } });
+        const listAccessTokensSpy = vi
+            .spyOn(accessTokenService, "listAccessTokens")
+            .mockReturnValue(of(mockAccessTokenConnectionData));
+        vi.spyOn(loggedUserService, "currentlyLoggedInUser", "get").mockReturnValue(mockAccountDetails);
+
+        await runResolver(accountSettingsAccessTokensResolverFn, route);
+        expect(listAccessTokensSpy).toHaveBeenCalledWith({
+            accountId: mockAccountDetails.id,
+            page: 0,
+            perPage: 15,
+        });
+    });
 });

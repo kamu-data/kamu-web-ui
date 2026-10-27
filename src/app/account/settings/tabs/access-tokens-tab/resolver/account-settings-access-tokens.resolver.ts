@@ -8,6 +8,7 @@
 import { inject } from "@angular/core";
 import { ActivatedRouteSnapshot, ResolveFn } from "@angular/router";
 
+import { positiveIntegerFromParam } from "@common/helpers/app.helpers";
 import { AccessTokenConnectionDataFragment } from "@api/kamu.graphql.interface";
 
 import { AccessTokenService } from "src/app/account/settings/tabs/access-tokens-tab/access-token.service";
@@ -21,7 +22,7 @@ export const accountSettingsAccessTokensResolverFn: ResolveFn<AccessTokenConnect
     const loggedUserService = inject(LoggedUserService);
 
     const PER_PAGE = 15;
-    const page = Number(route.queryParamMap.get(ProjectLinks.URL_QUERY_PARAM_PAGE) ?? 1);
+    const page = positiveIntegerFromParam(route.queryParamMap.get(ProjectLinks.URL_QUERY_PARAM_PAGE)) ?? 1;
     return accessTokenService.listAccessTokens({
         accountId: loggedUserService.currentlyLoggedInUser.id,
         page: page - 1,

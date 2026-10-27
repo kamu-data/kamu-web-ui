@@ -5,7 +5,7 @@
  * included in the LICENSE file.
  */
 
-import { ChangeDetectionStrategy, Component, inject, Input, OnInit, ViewChild } from "@angular/core";
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, inject, Input, OnInit, ViewChild } from "@angular/core";
 import { takeUntilDestroyed } from "@angular/core/rxjs-interop";
 import { FormsModule } from "@angular/forms";
 import { MatDividerModule } from "@angular/material/divider";
@@ -19,6 +19,7 @@ import { NgbModal } from "@ng-bootstrap/ng-bootstrap";
 
 import { BaseComponent } from "@common/components/base.component";
 import { ModalService } from "@common/components/modal/modal.service";
+import { PagePastEndComponent } from "@common/components/page-past-end/page-past-end.component";
 import { PaginationComponent } from "@common/components/pagination-component/pagination.component";
 import { promiseWithCatch } from "@common/helpers/app.helpers";
 import { openModal } from "@common/helpers/modal.helpers";
@@ -59,6 +60,7 @@ export interface EnvVariableElement {
         MatSortModule,
         //-----//
         PaginationComponent,
+        PagePastEndComponent,
     ],
 })
 export class DatasetSettingsSecretsManagerTabComponent extends BaseComponent implements OnInit {
@@ -78,6 +80,7 @@ export class DatasetSettingsSecretsManagerTabComponent extends BaseComponent imp
     private modalService = inject(ModalService);
     private navigationService = inject(NavigationService);
     private environmentVariablesService = inject(DatasetEnvironmentVariablesService);
+    private cdr = inject(ChangeDetectorRef);
 
     public ngOnInit(): void {
         this.currentPage = this.pageFromUrl() ?? this.currentPage;
@@ -164,6 +167,7 @@ export class DatasetSettingsSecretsManagerTabComponent extends BaseComponent imp
                 this.dataSource.data = result.nodes;
                 this.dataSource.sort = this.sort;
                 this.pageBasedInfo = result.pageInfo;
+                this.cdr.markForCheck();
             });
     }
 

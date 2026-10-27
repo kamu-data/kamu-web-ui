@@ -21,6 +21,7 @@ import {
     isStringArray,
     momentConvertDateToLocalWithFormat,
     oneOf,
+    positiveIntegerFromParam,
     promiseWithCatch,
     requireValue,
     trackBusy,
@@ -74,6 +75,14 @@ describe("AppHelpers", () => {
         expect(oneOf(categories, "updates")).toEqual("updates");
         expect(oneOf(categories, "webhooks")).toBeUndefined();
         expect(oneOf(categories, undefined)).toBeUndefined();
+    });
+
+    it("should check positiveIntegerFromParam reads only positive whole numbers", () => {
+        expect(positiveIntegerFromParam("1")).toEqual(1);
+        expect(positiveIntegerFromParam("42")).toEqual(42);
+        ["abc", "0", "-1", "1.5", "1e3", " 2", "", null, undefined, "99999999999999999999"].forEach((param) => {
+            expect(positiveIntegerFromParam(param)).toBeNull();
+        });
     });
 
     it("should check promiseWithCatch with success", () => {

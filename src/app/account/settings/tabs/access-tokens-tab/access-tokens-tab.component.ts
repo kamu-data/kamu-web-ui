@@ -19,6 +19,7 @@ import { MatTableDataSource, MatTableModule } from "@angular/material/table";
 import { BaseComponent } from "@common/components/base.component";
 import { CopyToClipboardComponent } from "@common/components/copy-to-clipboard/copy-to-clipboard.component";
 import { ModalService } from "@common/components/modal/modal.service";
+import { PagePastEndComponent } from "@common/components/page-past-end/page-past-end.component";
 import { PaginationComponent } from "@common/components/pagination-component/pagination.component";
 import { FormValidationErrorsDirective } from "@common/directives/form-validation-errors.directive";
 import { promiseWithCatch } from "@common/helpers/app.helpers";
@@ -58,6 +59,7 @@ import { NavigationService } from "src/app/services/navigation.service";
         FormValidationErrorsDirective,
         CopyToClipboardComponent,
         PaginationComponent,
+        PagePastEndComponent,
     ],
 })
 export class AccessTokensTabComponent extends BaseComponent {

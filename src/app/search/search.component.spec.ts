@@ -5,13 +5,15 @@
  * included in the LICENSE file.
  */
 
+import { TestbedHarnessEnvironment } from "@angular/cdk/testing/testbed";
 import { ComponentFixture, fakeAsync, flush, TestBed, tick } from "@angular/core/testing";
 
 import { of } from "rxjs";
 
 import { Apollo } from "apollo-angular";
 
-import { findElementByDataTestId, setComponentInput } from "@common/helpers/base-test.helpers.spec";
+import { PagePastEndHarness } from "@common/components/page-past-end/page-past-end.harness";
+import { findElementByDataTestId, setComponentInput, stubMethod } from "@common/helpers/base-test.helpers.spec";
 import { SharedTestModule } from "@common/modules/shared-test.module";
 import { mockSearchOverviewResponse } from "@api/mock/search.mock";
 import { SearchApi } from "@api/search.api";
@@ -54,10 +56,33 @@ describe("SearchComponent", () => {
 
     it("should initially search query/page from active route", () => {
         setComponentInput(fixture, "search", DEFAULT_SEARCH_QUERY);
-        setComponentInput(fixture, "page", DEFAULT_SEARCH_PAGE);
+        setComponentInput(fixture, "page", String(DEFAULT_SEARCH_PAGE));
 
         expect(component.searchValue).toEqual(DEFAULT_SEARCH_QUERY);
         expect(component.currentPage).toEqual(DEFAULT_SEARCH_PAGE);
+    });
+
+    ["abc", "0", "-2", "1.5", undefined].forEach((invalidPage) => {
+        it(`should read the page "${invalidPage}" as the first page`, () => {
+            setComponentInput(fixture, "page", invalidPage);
+            expect(component.currentPage).toEqual(1);
+        });
+    });
+
+    it("should say a page past the last one has no datasets and lead to the last page", async () => {
+        setComponentInput(fixture, "search", DEFAULT_SEARCH_QUERY);
+        setComponentInput(fixture, "page", "99");
+        setComponentInput(fixture, "data", {
+            ...structuredClone(mockDatasetSearchResult),
+            datasets: [],
+            pageInfo: { ...mockDatasetSearchResult.pageInfo, totalPages: 4 },
+        });
+        const navigateToSearchSpy = stubMethod(navigationService, "navigateToSearch");
+
+        const pagePastEnd = await TestbedHarnessEnvironment.loader(fixture).getHarness(PagePastEndHarness);
+        expect(await pagePastEnd.getMessage()).toEqual("There are no datasets on this page.");
+        await pagePastEnd.goToLastPage();
+        expect(navigateToSearchSpy).toHaveBeenCalledWith(DEFAULT_SEARCH_QUERY, 4);
     });
 
     it("should call updateAllComplete method upon request", () => {
@@ -89,7 +114,7 @@ describe("SearchComponent", () => {
     it("should check search results update the dataset table", fakeAsync(() => {
         vi.spyOn(searchApi, "overviewDatasetSearch").mockReturnValue(of(mockSearchOverviewResponse));
         const testSearchQuery = "test";
-        setComponentInput(fixture, "page", 1);
+        setComponentInput(fixture, "page", "1");
 
         searchService.searchDatasets(testSearchQuery);
         tick();

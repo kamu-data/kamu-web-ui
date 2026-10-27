@@ -75,6 +75,9 @@ export class TimeDeltaFormComponent extends BaseComponent implements OnInit {
 
   Write the key inline; keep a method only when choosing the key needs logic, and give it just
   the item.
+- A paginated list that comes back empty on a page after the first shows `app-page-past-end`,
+  which leads to the last page, instead of its pager or its "no items yet" message: the URL can
+  ask for any page, and the list's own empty state would claim there are no items at all.
 - Every element a test needs gets a `data-test-id="..."` attribute; tests select on it, never on
   CSS classes.
 

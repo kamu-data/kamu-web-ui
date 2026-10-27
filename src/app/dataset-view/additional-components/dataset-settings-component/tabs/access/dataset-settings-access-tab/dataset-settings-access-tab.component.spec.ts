@@ -5,18 +5,20 @@
  * included in the LICENSE file.
  */
 
+import { TestbedHarnessEnvironment } from "@angular/cdk/testing/testbed";
 import { provideHttpClient } from "@angular/common/http";
 import { ComponentFixture, TestBed } from "@angular/core/testing";
 import { ActivatedRoute } from "@angular/router";
 
-import { of } from "rxjs";
+import { NEVER, of } from "rxjs";
 
 import { NgbModal } from "@ng-bootstrap/ng-bootstrap";
 import { Apollo } from "apollo-angular";
 import { provideToastr } from "ngx-toastr";
 
 import { ModalService } from "@common/components/modal/modal.service";
-import { registerMatSvgIcons, setComponentInput } from "@common/helpers/base-test.helpers.spec";
+import { PagePastEndHarness } from "@common/components/page-past-end/page-past-end.harness";
+import { registerMatSvgIcons, setComponentInput, stubMethod } from "@common/helpers/base-test.helpers.spec";
 import { DatasetAccessRole } from "@api/kamu.graphql.interface";
 import { mockAccountDetails } from "@api/mock/auth.mock";
 import { MOCK_ACCOUNT_WITH_ROLE, mockDatasetCollaboratorsConnection } from "@api/mock/dataset-collaborations.mock";
@@ -107,6 +109,42 @@ describe("DatasetSettingsAccessTabComponent", () => {
         expect(component.currentPage).toEqual(page);
         expect(navigateToDatasetViewSpy).toHaveBeenCalledTimes(1);
         expect(navigateToDatasetViewSpy).toHaveBeenCalledWith(expect.objectContaining({ page }));
+    });
+
+    it("should say a page past the last one has no collaborators and lead to the last page", async () => {
+        vi.spyOn(datasetCollaborationsService, "listCollaborators").mockReturnValue(
+            of({
+                ...structuredClone(mockDatasetCollaboratorsConnection),
+                nodes: [],
+                pageInfo: { ...mockDatasetCollaboratorsConnection.pageInfo, totalPages: 1 },
+            }),
+        );
+        // The shared fixture would re-render alongside, and its pager move from page 2 to its only page
+        fixture.destroy();
+        const pastEndFixture = TestBed.createComponent(DatasetSettingsAccessTabComponent);
+        setComponentInput(pastEndFixture, "accessViewData", {
+            datasetBasics: mockDatasetBasicsRootFragment,
+            datasetPermissions: mockFullPowerDatasetPermissionsFragment,
+        });
+        const navigateToDatasetViewSpy = stubMethod(navigationService, "navigateToDatasetView");
+
+        const pagePastEnd = await TestbedHarnessEnvironment.loader(pastEndFixture).getHarness(PagePastEndHarness);
+        expect(await pagePastEnd.getMessage()).toEqual("There are no collaborators on this page.");
+        await pagePastEnd.goToLastPage();
+        expect(navigateToDatasetViewSpy).toHaveBeenCalledWith(expect.objectContaining({ page: 1 }));
+    });
+
+    it("should not report a page past the last one while the collaborators load", async () => {
+        vi.spyOn(datasetCollaborationsService, "listCollaborators").mockReturnValue(NEVER);
+        fixture.destroy();
+        const loadingFixture = TestBed.createComponent(DatasetSettingsAccessTabComponent);
+        setComponentInput(loadingFixture, "accessViewData", {
+            datasetBasics: mockDatasetBasicsRootFragment,
+            datasetPermissions: mockFullPowerDatasetPermissionsFragment,
+        });
+
+        const pagePastEnd = await TestbedHarnessEnvironment.loader(loadingFixture).getAllHarnesses(PagePastEndHarness);
+        expect(pagePastEnd).toEqual([]);
     });
 
     [

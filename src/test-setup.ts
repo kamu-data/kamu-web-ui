@@ -21,10 +21,11 @@ declare global {
 
 window.ClipboardJS = ClipboardJS;
 
-// Angular reports some dev-mode problems (NG0956, a whole @for list rebuilt) only through the
-// console, and Vitest drops console output when its own output is not a terminal. Such a message
-// fails the test that caused it, so a piped or CI run sees it too.
-const ANGULAR_RUNTIME_CODE = /\bNG0\d{3}\b/;
+// Angular reports some dev-mode problems (NG0956, a whole @for list rebuilt) and failed navigations
+// (NG04002) only through the console, and Vitest drops console output when its own output is not a
+// terminal. Such a message fails the test that caused it, so a piped or CI run sees it too. Core
+// codes have four digits, the router's and other packages' five.
+const ANGULAR_RUNTIME_CODE = /\bNG0\d{3,4}\b/;
 const angularMessages: string[] = [];
 for (const level of ["warn", "error"] as const) {
     const original = console[level].bind(console);

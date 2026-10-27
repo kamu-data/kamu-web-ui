@@ -119,11 +119,22 @@
                     (abortFlowChange)="onAbortFlow($event)"
                 />
                 <div class="mt-50px">
-                    <app-pagination
-                        [currentPage]="flowConnectionData.flowsData.connectionDataForTable.pageInfo.currentPage + 1"
-                        [pageInfo]="flowConnectionData.flowsData.connectionDataForTable.pageInfo"
-                        (pageChangeEvent)="onPageChange($event)"
-                    />
+                    @if (
+                        !flowConnectionData.flowsData.connectionDataForTable.nodes.length &&
+                        flowConnectionData.flowsData.connectionDataForTable.pageInfo.currentPage > 0
+                    ) {
+                        <app-page-past-end
+                            itemsName="flow runs"
+                            [totalPages]="flowConnectionData.flowsData.connectionDataForTable.pageInfo.totalPages"
+                            (pageChangeEvent)="onPageChange($event)"
+                        />
+                    } @else {
+                        <app-pagination
+                            [currentPage]="flowConnectionData.flowsData.connectionDataForTable.pageInfo.currentPage + 1"
+                            [pageInfo]="flowConnectionData.flowsData.connectionDataForTable.pageInfo"
+                            (pageChangeEvent)="onPageChange($event)"
+                        />
+                    }
                 </div>
             }
         } @else {

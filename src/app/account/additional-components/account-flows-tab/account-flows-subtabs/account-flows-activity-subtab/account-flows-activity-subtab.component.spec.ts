@@ -5,6 +5,7 @@
  * included in the LICENSE file.
  */
 
+import { TestbedHarnessEnvironment } from "@angular/cdk/testing/testbed";
 import { ComponentFixture, discardPeriodicTasks, fakeAsync, TestBed, tick } from "@angular/core/testing";
 import { ActivatedRoute } from "@angular/router";
 
@@ -14,8 +15,9 @@ import { NgbNavChangeEvent } from "@ng-bootstrap/ng-bootstrap";
 import { Apollo } from "apollo-angular";
 import { provideToastr } from "ngx-toastr";
 
+import { PagePastEndHarness } from "@common/components/page-past-end/page-past-end.harness";
 import { requireValue } from "@common/helpers/app.helpers";
-import { setComponentInput } from "@common/helpers/base-test.helpers.spec";
+import { setComponentInput, stubMethod } from "@common/helpers/base-test.helpers.spec";
 import { FlowStatus } from "@api/kamu.graphql.interface";
 import { mockAccountDetails } from "@api/mock/auth.mock";
 import { mockDatasetFlowsInitiatorsQuery, mockFlowsTableData } from "@api/mock/dataset-flow.mock";
@@ -113,6 +115,29 @@ describe("AccountFlowsActivitySubtabComponent", () => {
             component.accountFlowsData.flowGroup,
         );
     });
+
+    it("should say a page past the last one has no flow runs and lead to the last page", fakeAsync(async () => {
+        const pastEndData = structuredClone(mockFlowsTableData);
+        pastEndData.connectionDataForTable.nodes = [];
+        pastEndData.connectionDataForTable.pageInfo.currentPage = 98;
+        pastEndData.connectionDataForTable.pageInfo.totalPages = 3;
+        vi.spyOn(accountService, "getAccountListFlows").mockReturnValue(of(pastEndData));
+        const navigateToOwnerViewSpy = stubMethod(navigationService, "navigateToOwnerView");
+        component.refreshFlow();
+        tick();
+
+        const pagePastEnd = await TestbedHarnessEnvironment.loader(fixture).getHarness(PagePastEndHarness);
+        expect(await pagePastEnd.getMessage()).toEqual("There are no flow runs on this page.");
+        await pagePastEnd.goToLastPage();
+        expect(navigateToOwnerViewSpy).toHaveBeenCalledWith(
+            MOCK_ACCOUNT_NAME,
+            AccountTabs.FLOWS,
+            3,
+            component.accountFlowsData.activeNav,
+            component.accountFlowsData.flowGroup,
+        );
+        discardPeriodicTasks();
+    }));
 
     it("should keep viewed account (not logged user) when paginating another account's flows", () => {
         expect(component.loggedUser.accountName).not.toEqual(MOCK_ACCOUNT_NAME);

@@ -10,7 +10,7 @@ import { ActivatedRouteSnapshot, ResolveFn } from "@angular/router";
 
 import { map } from "rxjs";
 
-import { requireValue } from "@common/helpers/app.helpers";
+import { positiveIntegerFromParam, requireValue } from "@common/helpers/app.helpers";
 import { DatasetsAccountResolverResponse, DatasetsAccountResponse } from "@interface/dataset.interface";
 
 import { AccountService } from "src/app/account/account.service";
@@ -25,8 +25,8 @@ export const accountDatasetsResolverFn: ResolveFn<DatasetsAccountResolverRespons
         route.parent?.parent?.paramMap.get(ProjectLinks.URL_PARAM_ACCOUNT_NAME),
         "Route has no account name",
     );
-    const page = route.queryParamMap.get(ProjectLinks.URL_QUERY_PARAM_PAGE) ?? 1;
-    return accountService.getDatasetsByAccountName(accountName, Number(page) - 1).pipe(
+    const page = positiveIntegerFromParam(route.queryParamMap.get(ProjectLinks.URL_QUERY_PARAM_PAGE)) ?? 1;
+    return accountService.getDatasetsByAccountName(accountName, page - 1).pipe(
         map((data: DatasetsAccountResponse) => {
             return {
                 datasetsResponse: data,

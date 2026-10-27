@@ -5,7 +5,7 @@
  * included in the LICENSE file.
  */
 
-import { AsyncPipe } from "@angular/common";
+import { AsyncPipe, NgTemplateOutlet } from "@angular/common";
 import { ChangeDetectionStrategy, Component, inject, Input, NgZone, OnInit } from "@angular/core";
 import { takeUntilDestroyed } from "@angular/core/rxjs-interop";
 import { MatProgressBarModule } from "@angular/material/progress-bar";
@@ -15,6 +15,7 @@ import { BehaviorSubject, combineLatest, map, Observable, of, startWith, Subject
 import { NgbNavChangeEvent, NgbNavModule } from "@ng-bootstrap/ng-bootstrap";
 
 import { environment } from "@env/environment";
+import { PagePastEndComponent } from "@common/components/page-past-end/page-past-end.component";
 import { PaginationComponent } from "@common/components/pagination-component/pagination.component";
 import { enumValueOf, requireValue } from "@common/helpers/app.helpers";
 import AppValues from "@common/values/app.values";
@@ -53,6 +54,7 @@ import { TileBaseWidgetComponent } from "src/app/dataset-flow/tile-base-widget/t
     imports: [
         //-----//
         AsyncPipe,
+        NgTemplateOutlet,
         //-----//
         MatProgressBarModule,
         NgbNavModule,
@@ -61,6 +63,7 @@ import { TileBaseWidgetComponent } from "src/app/dataset-flow/tile-base-widget/t
         FlowsTableComponent,
         FlowTablePanelFiltersComponent,
         PaginationComponent,
+        PagePastEndComponent,
     ],
     templateUrl: "./account-flows-activity-subtab.component.html",
     changeDetection: ChangeDetectionStrategy.OnPush,

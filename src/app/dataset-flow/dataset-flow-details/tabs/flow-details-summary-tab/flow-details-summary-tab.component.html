@@ -24,7 +24,7 @@
                 <div class="col-md-9">
                     @if (flowDetails.outcome) {
                         <span [class]="outcomeClass(flowDetails.outcome)" data-test-id="flow-outcome">{{
-                            flowOutcomeMessage[flowDetails.outcome.__typename!] | uppercase
+                            flowOutcomeMessage(flowDetails.outcome) | uppercase
                         }}</span>
                     } @else {
                         -

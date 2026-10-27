@@ -16,5 +16,10 @@ import { BasePropertyComponent } from "src/app/dataset-block/metadata-block/comp
 })
 export class SeparatorPropertyComponent extends BasePropertyComponent {
     @Input({ required: true }) public data: string;
+
     public defaultSeparator = ",";
+
+    public static acceptsData(data: unknown): data is SeparatorPropertyComponent["data"] {
+        return typeof data === "string";
+    }
 }

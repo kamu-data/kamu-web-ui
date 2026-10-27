@@ -31,7 +31,6 @@ import {
     CreateEmptyDatasetMutation,
     DatasetAsCollectionGQL,
     DatasetAsCollectionQuery,
-    DatasetAsVersionedFileByBlockHashQuery,
     DatasetAsVersionedFileByVersionGQL,
     DatasetAsVersionedFileByVersionQuery,
     DatasetAsVersionedFileQuery,
@@ -90,7 +89,7 @@ import {
 import { MaybeUndefined } from "@interface/app.types";
 import { DatasetRequestBySql } from "@interface/dataset.interface";
 
-import { DatasetAsVersionedFileByBlockHashGQL, DatasetAsVersionedFileGQL } from "./kamu.graphql.interface";
+import { DatasetAsVersionedFileGQL } from "./kamu.graphql.interface";
 
 @Injectable({ providedIn: "root" })
 export class DatasetApi {
@@ -121,7 +120,6 @@ export class DatasetApi {
     private datasetBlocksSchemaByEventTypeGQL = inject(DatasetBlocksSchemaByEventTypeGQL);
     private datasetAsVersionedFileGQL = inject(DatasetAsVersionedFileGQL);
     private datasetAsVersionedFileByVersionGQL = inject(DatasetAsVersionedFileByVersionGQL);
-    private datasetAsVersionedFileByBlockHashGQL = inject(DatasetAsVersionedFileByBlockHashGQL);
     private versionedFileContentUrlGQL = inject(VersionedFileContentUrlGQL);
     private datasetAsCollectionGQL = inject(DatasetAsCollectionGQL);
     private createDatasetAsCollectionGQL = inject(CreateDatasetAsCollectionGQL);
@@ -628,31 +626,6 @@ export class DatasetApi {
                 onlyCompleteData(),
                 first(),
                 map((result: ObservableQuery.Result<DatasetAsVersionedFileByVersionQuery, "complete">) => {
-                    return result.data;
-                }),
-            );
-    }
-
-    // TODO: implement later with URL and write unit test
-    public getDatasetAsVersionedFileByBlockHash(
-        datasetId: string,
-        blockHash: string,
-    ): Observable<DatasetAsVersionedFileByBlockHashQuery> {
-        return this.datasetAsVersionedFileByBlockHashGQL
-            .watch({
-                variables: {
-                    datasetId,
-                    blockHash,
-                },
-                ...noCacheFetchPolicy,
-                context: {
-                    skipLoading: true,
-                },
-            })
-            .valueChanges.pipe(
-                onlyCompleteData(),
-                first(),
-                map((result: ObservableQuery.Result<DatasetAsVersionedFileByBlockHashQuery, "complete">) => {
                     return result.data;
                 }),
             );

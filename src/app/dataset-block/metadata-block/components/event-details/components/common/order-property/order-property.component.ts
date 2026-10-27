@@ -19,6 +19,10 @@ import { BasePropertyComponent } from "src/app/dataset-block/metadata-block/comp
 export class OrderPropertyComponent extends BasePropertyComponent {
     @Input({ required: true }) public data: string;
 
+    public static acceptsData(data: unknown): data is OrderPropertyComponent["data"] {
+        return typeof data === "string";
+    }
+
     public get order(): string {
         return DataHelpers.descriptionOrder(this.data);
     }

@@ -7,6 +7,8 @@
 
 import { ChangeDetectionStrategy, Component, Input } from "@angular/core";
 
+import { isStringArray } from "@common/helpers/app.helpers";
+
 import { BasePropertyComponent } from "src/app/dataset-block/metadata-block/components/event-details/components/common/base-property/base-property.component";
 
 @Component({
@@ -17,4 +19,8 @@ import { BasePropertyComponent } from "src/app/dataset-block/metadata-block/comp
 })
 export class CardsPropertyComponent extends BasePropertyComponent {
     @Input({ required: true }) public data: string[];
+
+    public static acceptsData(data: unknown): data is CardsPropertyComponent["data"] {
+        return isStringArray(data);
+    }
 }

@@ -161,9 +161,7 @@ export class AccountFlowsProcessesSubtabComponent extends BaseComponent implemen
         return this.accountFlowsFiltersService.currentFiltersSnapshot;
     }
 
-    public get loadingCards$(): Observable<boolean> {
-        return this.loadingCardsSubject$.asObservable();
-    }
+    public readonly loadingCards$: Observable<boolean> = this.loadingCardsSubject$.asObservable();
 
     public fetchCardsData(): void {
         const polling$ = timer(0, environment.delay_polling_ms);

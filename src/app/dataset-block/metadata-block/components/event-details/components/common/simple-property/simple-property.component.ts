@@ -7,6 +7,8 @@
 
 import { ChangeDetectionStrategy, Component, Input } from "@angular/core";
 
+import { MaybeNull } from "@interface/app.types";
+
 import { BasePropertyComponent } from "src/app/dataset-block/metadata-block/components/event-details/components/common/base-property/base-property.component";
 
 @Component({
@@ -15,6 +17,11 @@ import { BasePropertyComponent } from "src/app/dataset-block/metadata-block/comp
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class SimplePropertyComponent extends BasePropertyComponent {
-    @Input({ required: true }) public data: string;
+    @Input({ required: true }) public data: MaybeNull<string | number | boolean>;
+
     @Input() public class?: string;
+
+    public static acceptsData(data: unknown): data is SimplePropertyComponent["data"] {
+        return data === null || typeof data === "string" || typeof data === "number" || typeof data === "boolean";
+    }
 }

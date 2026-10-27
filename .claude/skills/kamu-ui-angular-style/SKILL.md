@@ -98,6 +98,10 @@ export class TimeDeltaFormComponent extends BaseComponent implements OnInit {
 ### Subscriptions and lifetimes
 
 - Prefer the `async` pipe in templates over manual subscriptions.
+- An observable a template reads with `async` is a `readonly` field built once, never a getter:
+  `pipe()` and `asObservable()` return a new observable on each call, so the pipe unsubscribes
+  and resubscribes on every change detection pass. A spec stubs the field's source before
+  `TestBed.createComponent`, since the field reads it at construction.
 - A manual `subscribe` in a component or directive pipes through
   `takeUntilDestroyed(this.destroyRef)`. `destroyRef` comes from the base classes below; outside
   them, `private destroyRef = inject(DestroyRef)`.
@@ -248,6 +252,11 @@ code added itself, or a third-party callback triggers none of them.
   `formValueAs<T>()` for the value of such a runtime-built form or of the untyped form behind a
   `BaseFormControlComponent`, `validationErrorAs<T>()` for the detail a validator stored in its
   errors. That file is the one place app code may assert, and eslint exempts it.
+- Templates hold no non-null assertions (`x!`, `(x$ | async)!`) and no `$any()`; no lint sees
+  them, so this is on review. Angular's template type-check does not narrow a deep path such as
+  `a.b.c` under `@if (a.b.c?.length)`, nor an `@let` variable, so narrow through an alias
+  (`@if (a.b.c; as c)`), give a value whose absence means a default its default
+  (`@let rows = (rows$ | async) ?? [];`), or type the input with what really reaches it.
 
 ## Rejected approaches
 

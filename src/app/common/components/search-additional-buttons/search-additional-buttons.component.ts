@@ -5,17 +5,7 @@
  * included in the LICENSE file.
  */
 
-import {
-    ChangeDetectionStrategy,
-    Component,
-    ElementRef,
-    EventEmitter,
-    HostListener,
-    Input,
-    OnInit,
-    Output,
-    ViewChild,
-} from "@angular/core";
+import { ChangeDetectionStrategy, Component, EventEmitter, HostListener, Input, OnInit, Output } from "@angular/core";
 import { MatButtonModule } from "@angular/material/button";
 import { MatIconModule } from "@angular/material/icon";
 import { MatMenuModule } from "@angular/material/menu";
@@ -55,8 +45,6 @@ export class SearchAdditionalButtonsComponent implements OnInit {
 
     @Input({ required: true }) public datasetBasics: DatasetBasicsFragment;
     public shouldMinimizeSearchAdditionalButtons = false;
-
-    @ViewChild("menuTrigger") public trigger: ElementRef;
 
     @HostListener("window:resize")
     public checkWindowSize(): void {

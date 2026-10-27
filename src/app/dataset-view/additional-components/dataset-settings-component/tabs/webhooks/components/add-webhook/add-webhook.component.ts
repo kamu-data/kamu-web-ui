@@ -59,17 +59,13 @@ export class AddWebhookComponent extends BaseComponent implements OnInit {
         label: this.fb.control("", [Validators.maxLength(100)]),
     });
 
-    public get secretChanges(): Observable<MaybeUndefined<string>> {
-        return this.secret$.asObservable();
-    }
+    public readonly secretChanges: Observable<MaybeUndefined<string>> = this.secret$.asObservable();
 
     public secretChanged(value: string): void {
         this.secret$.next(value);
     }
 
-    public get hasSecret$(): Observable<boolean> {
-        return this.secret$.pipe(map((secret) => !!secret));
-    }
+    public readonly hasSecret$: Observable<boolean> = this.secret$.pipe(map((secret) => !!secret));
 
     public ngOnInit(): void {
         this.dropdownList$ = this.webhooksService.eventTypes();

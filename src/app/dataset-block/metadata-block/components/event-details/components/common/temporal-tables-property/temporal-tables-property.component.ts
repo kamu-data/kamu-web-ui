@@ -10,6 +10,7 @@ import { ChangeDetectionStrategy, Component, Input } from "@angular/core";
 import { TemporalTableDataFragment } from "@api/kamu.graphql.interface";
 
 import { BasePropertyComponent } from "src/app/dataset-block/metadata-block/components/event-details/components/common/base-property/base-property.component";
+import { isListOfTypename } from "src/app/dataset-block/metadata-block/components/event-details/components/common/base-property/base-property.helpers";
 import { CardsPropertyComponent } from "src/app/dataset-block/metadata-block/components/event-details/components/common/cards-property/cards-property.component";
 
 @Component({
@@ -23,4 +24,8 @@ import { CardsPropertyComponent } from "src/app/dataset-block/metadata-block/com
 })
 export class TemporalTablesPropertyComponent extends BasePropertyComponent {
     @Input({ required: true }) public data: TemporalTableDataFragment[];
+
+    public static acceptsData(data: unknown): data is TemporalTablesPropertyComponent["data"] {
+        return isListOfTypename(data, "TemporalTable");
+    }
 }

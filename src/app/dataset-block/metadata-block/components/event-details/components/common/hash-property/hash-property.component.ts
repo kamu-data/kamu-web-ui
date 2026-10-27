@@ -8,6 +8,7 @@
 import { ChangeDetectionStrategy, Component, Input } from "@angular/core";
 
 import { DisplayHashComponent } from "@common/components/display-hash/display-hash.component";
+import { MaybeNull } from "@interface/app.types";
 
 import { BasePropertyComponent } from "src/app/dataset-block/metadata-block/components/event-details/components/common/base-property/base-property.component";
 
@@ -21,5 +22,9 @@ import { BasePropertyComponent } from "src/app/dataset-block/metadata-block/comp
     ],
 })
 export class HashPropertyComponent extends BasePropertyComponent {
-    @Input({ required: true }) public data: string;
+    @Input({ required: true }) public data: MaybeNull<string>;
+
+    public static acceptsData(data: unknown): data is HashPropertyComponent["data"] {
+        return data === null || typeof data === "string";
+    }
 }

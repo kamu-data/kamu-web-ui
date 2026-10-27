@@ -114,7 +114,7 @@ describe("SetTransformComponent", () => {
 
             component.onSaveEvent();
 
-            expect(requireValue(commitEventToDatasetSpy.mock.lastCall ?? null)[0].event).toContain(
+            expect(requireValue(commitEventToDatasetSpy.mock.lastCall)[0].event).toContain(
                 `engine: ${mockParseSetTransformYamlType.transform.engine}`,
             );
         });
@@ -146,7 +146,7 @@ describe("SetTransformComponent", () => {
 
             component.onSaveEvent();
 
-            const event = requireValue(commitEventToDatasetSpy.mock.lastCall ?? null)[0].event;
+            const event = requireValue(commitEventToDatasetSpy.mock.lastCall)[0].event;
             mockParseSetTransformYamlType.inputs.forEach((input) => {
                 expect(event).toContain(input.datasetRef);
                 expect(event).toContain(input.alias);

@@ -15,6 +15,8 @@ import { DataSchemaInfoFragment } from "@api/kamu.graphql.interface";
 import { MaybeNull } from "@interface/app.types";
 import { DataSchemaField, DatasetSchema } from "@interface/dataset-schema.interface";
 
+import { hasTypename } from "src/app/dataset-block/metadata-block/components/event-details/components/common/base-property/base-property.helpers";
+
 import { BasePropertyComponent } from "../base-property/base-property.component";
 
 @Component({
@@ -28,6 +30,10 @@ import { BasePropertyComponent } from "../base-property/base-property.component"
 })
 export class OdfSchemaPropertyComponent extends BasePropertyComponent {
     @Input({ required: true }) public data: DataSchemaInfoFragment;
+
+    public static acceptsData(data: unknown): data is OdfSchemaPropertyComponent["data"] {
+        return hasTypename(data, "DataSchema");
+    }
 
     public get datasetSchema(): MaybeNull<DatasetSchema> {
         return parseCurrentSchema(this.data);

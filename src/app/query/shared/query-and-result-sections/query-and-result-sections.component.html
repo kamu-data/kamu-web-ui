@@ -124,7 +124,7 @@
         <app-dynamic-table
             [hasTableHeader]="true"
             [dataRows]="currentData"
-            [columnDescriptors]="inferTableSchema(sqlQueryResponse?.schema!)"
+            [columnDescriptors]="inferTableSchema(sqlQueryResponse?.schema ?? [])"
             [idTable]="'result-query-table'"
         />
         <app-load-more [isAllDataLoaded]="isAllDataLoaded" (loadMoreEmit)="loadMore($event)" class="mt-4" />
@@ -133,16 +133,12 @@
     }
 }
 
-@if (enabledProof && sqlQueryResponse?.proofResponse && !sqlError) {
+@if (enabledProof && !sqlError && sqlQueryResponse?.proofResponse; as proofResponse) {
     <div class="d-flex justify-content-between align-items-center mt-4">
         <h2 class="box-title align-items-center pb-3 m-0">Query Proof:</h2>
     </div>
     <div class="mt-2">
-        <markdown
-            clipboard
-            class="variable-binding"
-            [data]="sqlQueryResponse?.proofResponse! | markdownFormat: 'json'"
-        />
+        <markdown clipboard class="variable-binding" [data]="proofResponse | markdownFormat: 'json'" />
     </div>
     <div class="d-flex justify-content-end mt-4 pb-30">
         <button

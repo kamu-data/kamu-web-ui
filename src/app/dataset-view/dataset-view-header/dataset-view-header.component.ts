@@ -74,8 +74,8 @@ export class DatasetViewHeaderComponent extends BaseComponent {
         SEARCH_ADDITIONAL_BUTTONS_DESCRIPTORS,
     );
 
-    public get searchAdditionalButtonsData$(): Observable<SearchAdditionalHeaderButtonInterface[]> {
-        return this.datasetService.downstreamsCountChanges.pipe(
+    public readonly searchAdditionalButtonsData$: Observable<SearchAdditionalHeaderButtonInterface[]> =
+        this.datasetService.downstreamsCountChanges.pipe(
             map((counter) => {
                 const item = this.searchAdditionalButtonsData.find(
                     (option) => option.value === SearchAdditionalButtonsEnum.DeriveFrom,
@@ -86,7 +86,6 @@ export class DatasetViewHeaderComponent extends BaseComponent {
                 return this.searchAdditionalButtonsData;
             }),
         );
-    }
 
     public onClickSearchAdditionalButton(method: SearchAdditionalButtonsEnum) {
         const mapperMethod: {

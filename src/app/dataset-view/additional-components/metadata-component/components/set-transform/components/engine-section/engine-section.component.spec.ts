@@ -50,7 +50,7 @@ describe("EngineSectionComponent", () => {
         { testCase: "risingwave", expected: mockEngines.data.knownEngines[3] },
     ].forEach((item: { testCase: string; expected: EngineDescDataFragment }) => {
         it(`should check init ${item.testCase} engine and image`, fakeAsync(() => {
-            setComponentInput(fixture, "selectedEngine", item.testCase);
+            setComponentInput(fixture, "initialEngine", item.testCase);
             fixture.detectChanges();
             tick();
             const image = getElementByDataTestId(fixture, "engine-image", HTMLInputElement);
@@ -62,7 +62,7 @@ describe("EngineSectionComponent", () => {
     });
 
     it("should check the default engine applies when none is passed in", fakeAsync(() => {
-        setComponentInput(fixture, "selectedEngine", "");
+        setComponentInput(fixture, "initialEngine", "");
         fixture.detectChanges();
         tick();
 

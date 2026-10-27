@@ -22,4 +22,8 @@ import { BasePropertyComponent } from "src/app/dataset-block/metadata-block/comp
 })
 export class YamlEventViewerComponent extends BasePropertyComponent {
     @Input({ required: true }) public data: string;
+
+    public static acceptsData(data: unknown): data is YamlEventViewerComponent["data"] {
+        return typeof data === "string";
+    }
 }

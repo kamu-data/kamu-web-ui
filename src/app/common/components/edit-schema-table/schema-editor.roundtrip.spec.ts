@@ -44,9 +44,9 @@ import {
     FetchKind,
     MergeKind,
     ReadKind,
-    SetPollingSourceSection,
 } from "src/app/dataset-view/additional-components/metadata-component/components/source-events/add-polling-source/add-polling-source-form.types";
 import { EditPollingSourceService } from "src/app/dataset-view/additional-components/metadata-component/components/source-events/add-polling-source/edit-polling-source.service";
+import { ReadControls } from "src/app/dataset-view/additional-components/metadata-component/components/source-events/source-event-controls.types";
 import { mockDatasetInfo } from "src/app/search/mock.data";
 import { TemplatesYamlEventsService } from "src/app/services/templates-yaml-events.service";
 
@@ -169,7 +169,7 @@ describe("Schema editor round-trip (Load → Edit → Serialize)", () => {
     // Step 1: Load — GQL stub → EditPollingSourceService → FormControl
     // -------------------------------------------------------------------------
 
-    it("patchFormValues populates schemaControl with canonical DataSchemaField[] from a GQL event", async () => {
+    it("patchReadStep populates schemaControl with canonical DataSchemaField[] from a GQL event", async () => {
         await setup();
 
         const datasetApi = TestBed.inject(DatasetApi);
@@ -178,15 +178,13 @@ describe("Schema editor round-trip (Load → Edit → Serialize)", () => {
             .mockReturnValue(of(mockGqlProjectionWithSchema(NESTED_SCHEMA_ODF_JSON)));
 
         const editPollingSourceService = TestBed.inject(EditPollingSourceService);
-        const readForm = new FormGroup({ schema: schemaControl });
-        editPollingSourceService.patchFormValues(
+        const readForm = new FormGroup<ReadControls>({
+            kind: new FormControl(ReadKind.CSV, { nonNullable: true }),
+            schema: schemaControl,
+        });
+        editPollingSourceService.patchReadStep(
             readForm,
-            {
-                fetch: { kind: FetchKind.URL, url: "" },
-                read: { kind: ReadKind.CSV, schema: [] },
-                merge: { kind: MergeKind.APPEND },
-            },
-            SetPollingSourceSection.READ,
+            { kind: ReadKind.CSV, schema: [] },
             mockDatasetInfo,
             TestBed.inject(DestroyRef),
         );
@@ -375,7 +373,7 @@ describe("Schema editor round-trip (Load → Edit → Serialize)", () => {
     // Scenario 13 — Load ORDER_SCHEMA via GQL path (server always returns ODF_JSON)
     // -------------------------------------------------------------------------
 
-    it("scenario 13: patchFormValues populates control from ORDER_SCHEMA ODF_JSON returned by the backend", async () => {
+    it("scenario 13: patchReadStep populates control from ORDER_SCHEMA ODF_JSON returned by the backend", async () => {
         await setup();
 
         const datasetApi = TestBed.inject(DatasetApi);
@@ -384,15 +382,13 @@ describe("Schema editor round-trip (Load → Edit → Serialize)", () => {
         );
 
         const editPollingSourceService = TestBed.inject(EditPollingSourceService);
-        const readForm = new FormGroup({ schema: schemaControl });
-        editPollingSourceService.patchFormValues(
+        const readForm = new FormGroup<ReadControls>({
+            kind: new FormControl(ReadKind.CSV, { nonNullable: true }),
+            schema: schemaControl,
+        });
+        editPollingSourceService.patchReadStep(
             readForm,
-            {
-                fetch: { kind: FetchKind.URL, url: "" },
-                read: { kind: ReadKind.CSV, schema: [] },
-                merge: { kind: MergeKind.APPEND },
-            },
-            SetPollingSourceSection.READ,
+            { kind: ReadKind.CSV, schema: [] },
             mockDatasetInfo,
             TestBed.inject(DestroyRef),
         );

@@ -7,7 +7,7 @@
 
 import { AbstractControl, FormArray, FormControl, FormGroup } from "@angular/forms";
 
-// For forms that add and remove controls at runtime, whose types cannot say which controls exist.
+// For a field component bound into a form by control name, as the source event editor's fields are.
 // Each returns the control `name` of `parent` and throws when it is missing or of another kind.
 
 export function requireFormGroup(parent: AbstractControl, name: string): FormGroup {

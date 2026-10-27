@@ -66,7 +66,12 @@ export class TimeDeltaFormComponent extends BaseComponent implements OnInit {
     (`dataset.id`, `block.blockHash`, `flow.flowId`, `event.eventId`);
   - constant option lists, `FormArray` controls and lists edited in place: the item itself
     (`track item`), since the object is the identity;
-  - unique strings: the value; `$index` only for content with no identity at all.
+  - unique strings: the value; `$index` only for content with no identity at all;
+  - a list the template swaps for another one, such as the fields of the kind selected in a
+    source event step: a key that tells the two lists apart (`control.kind + "." + control.name`).
+    Tracking by the item there rebuilds the whole list, which Angular reports as NG0956, and a key
+    built from component state instead of the item (`currentKind + "." + control.name`) matches
+    the old rows to the new ones, since Angular computes it for both after the state has changed.
 
   Write the key inline; keep a method only when choosing the key needs logic, and give it just
   the item.
@@ -252,15 +257,19 @@ code added itself, or a third-party callback triggers none of them.
   inputs the caller sets, which returns its typed `instance` beside the `modalRef`.
   A typed form's value comes from `getRawValue()`, whose type is not `Partial`; a control that
   always holds a value is built `nonNullable`, and a getter returns the control's own type, not
-  `AbstractControl`. A form that adds and removes controls at runtime, such as the source event
-  editor, reaches them with `requireFormGroup` / `requireFormArray` / `requireFormControl` from
-  `@common/helpers/form.helpers`, which check the control's class. A value that arrives as `any`
-  goes through `@common/helpers/untyped-boundary.helpers`: `parseJsonAs<T>()` for `JSON.parse`,
-  `parseYamlAs<T>()` for YAML, `httpErrorBodyAs<T>()` for `HttpErrorResponse.error`,
-  `routeDataAs<T>()` for a value another route's resolver stored in route data,
-  `formValueAs<T>()` for the value of such a runtime-built form or of the untyped form behind a
-  `BaseFormControlComponent`, `validationErrorAs<T>()` for the detail a validator stored in its
-  errors. That file is the one place app code may assert, and eslint exempts it.
+  `AbstractControl`. A form whose controls depend on a selected kind, such as a step of the source
+  event editor, declares every control a kind can add as optional (`url?: FormControl<string>`)
+  and adds them from a config typed by those names (`SourceSection` and `JsonFormControl<T>` in
+  `metadata-component/components/source-events`), so a config entry cannot name a missing control,
+  build one of another type or render it with the wrong field. A shared field component bound into
+  such a form by control name reaches the control with `requireFormGroup` / `requireFormArray` /
+  `requireFormControl` from `@common/helpers/form.helpers`, which check its class. A value that
+  arrives as `any` goes through `@common/helpers/untyped-boundary.helpers`: `parseJsonAs<T>()` for
+  `JSON.parse`, `parseYamlAs<T>()` for YAML, `httpErrorBodyAs<T>()` for `HttpErrorResponse.error`,
+  `routeDataAs<T>()` for a value another route's resolver stored in route data, `formValueAs<T>()`
+  for the value of the untyped form behind a `BaseFormControlComponent`, `validationErrorAs<T>()`
+  for the detail a validator stored in its errors. That file is the one place app code may
+  assert, and eslint exempts it.
 - Templates hold no non-null assertions (`x!`, `(x$ | async)!`) and no `$any()`; eslint's
   angular-eslint template rules reject both in `.html` files. Angular's template type-check does
   not narrow a deep path such as `a.b.c` under `@if (a.b.c?.length)`, nor an `@let` variable, so

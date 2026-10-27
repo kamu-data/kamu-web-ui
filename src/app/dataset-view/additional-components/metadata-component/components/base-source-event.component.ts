@@ -7,20 +7,15 @@
 
 import { afterNextRender, Directive, ElementRef, inject, Injector, OnInit } from "@angular/core";
 import { takeUntilDestroyed } from "@angular/core/rxjs-interop";
-import { FormBuilder, FormGroup } from "@angular/forms";
+import { FormBuilder, FormControl, FormGroup } from "@angular/forms";
 
 import { catchError, combineLatest, from, of, take } from "rxjs";
 
 import { openModal } from "@common/helpers/modal.helpers";
-import { formValueAs } from "@common/helpers/untyped-boundary.helpers";
+import { MaybeNull } from "@interface/app.types";
 
-import {
-    SourcesEvents,
-    SupportedEvents,
-} from "src/app/dataset-block/metadata-block/components/event-details/supported.events";
 import { FinalYamlModalComponent } from "src/app/dataset-view/additional-components/metadata-component/components/final-yaml-modal/final-yaml-modal.component";
 import {
-    AddPollingSourceEditFormType,
     MergeKind,
     PreprocessStepValue,
     ReadKind,
@@ -29,8 +24,12 @@ import {
     MERGE_STEP_RADIO_CONTROLS,
     READ_STEP_RADIO_CONTROLS,
 } from "src/app/dataset-view/additional-components/metadata-component/components/source-events/add-polling-source/form-control.source";
-import { AddPushSourceEditFormType } from "src/app/dataset-view/additional-components/metadata-component/components/source-events/add-push-source/add-push-source-form.types";
 import { BaseMainEventComponent } from "src/app/dataset-view/additional-components/metadata-component/components/source-events/base-main-event.component";
+import {
+    MergeControls,
+    ReadControls,
+} from "src/app/dataset-view/additional-components/metadata-component/components/source-events/source-event-controls.types";
+import { SourceSection } from "src/app/dataset-view/additional-components/metadata-component/components/source-events/source-section";
 import { MERGE_FORM_DATA } from "src/app/dataset-view/additional-components/metadata-component/components/source-events/steps/data/merge-form-data";
 import { READ_FORM_DATA } from "src/app/dataset-view/additional-components/metadata-component/components/source-events/steps/data/read-form-data";
 import { ProcessFormService } from "src/app/dataset-view/additional-components/metadata-component/services/process-form.service";
@@ -49,11 +48,9 @@ export abstract class BaseSourceEventComponent extends BaseMainEventComponent im
     };
     // ---------------------------------
     public readonly READ_STEP_RADIO_DATA = READ_STEP_RADIO_CONTROLS;
-    public readonly READ_FORM_DATA = READ_FORM_DATA;
     public readonly READ_DEFAULT_KIND = ReadKind.CSV;
     // ---------------------------------
     public readonly MERGE_STEP_RADIO_DATA = MERGE_STEP_RADIO_CONTROLS;
-    public readonly MERGE_FORM_DATA = MERGE_FORM_DATA;
     public readonly MERGE_DEFAULT_KIND = MergeKind.APPEND;
 
     public ngOnInit(): void {
@@ -77,12 +74,10 @@ export abstract class BaseSourceEventComponent extends BaseMainEventComponent im
         );
     }
 
-    public editSourceYaml(form: FormGroup, sourceEvent: SourcesEvents): void {
+    public editSourceYaml(): void {
         const { modalRef, instance } = openModal(this.modalService, FinalYamlModalComponent, { size: "lg" });
         instance.yamlTemplate =
-            this.errorMessage && this.changedEventYamlByHash
-                ? this.changedEventYamlByHash
-                : this.selectSourceEvent(form, sourceEvent);
+            this.errorMessage && this.changedEventYamlByHash ? this.changedEventYamlByHash : this.buildEventYaml();
         instance.datasetInfo = this.getDatasetInfoFromUrl();
 
         combineLatest([
@@ -103,14 +98,14 @@ export abstract class BaseSourceEventComponent extends BaseMainEventComponent im
         });
     }
 
-    public saveSourceEvent(form: FormGroup, sourceEvent: SourcesEvents): void {
+    public saveSourceEvent(): void {
         this.datasetCommitService.emitCommitEventErrorOccurred("");
         this.datasetCommitService
             .commitEventToDataset({
                 accountId: this.loggedUserService.currentlyLoggedInUser.id,
                 accountName: this.getDatasetInfoFromUrl().accountName,
                 datasetName: this.getDatasetInfoFromUrl().datasetName,
-                event: this.selectSourceEvent(form, sourceEvent),
+                event: this.buildEventYaml(),
             })
             .pipe(takeUntilDestroyed(this.destroyRef))
             .subscribe((success: boolean) => {
@@ -124,17 +119,28 @@ export abstract class BaseSourceEventComponent extends BaseMainEventComponent im
             });
     }
 
-    private selectSourceEvent(form: FormGroup, event: SourcesEvents): string {
-        this.processFormService.transformForm(form);
-        if (event === SupportedEvents.SetPollingSource) {
-            return this.yamlEventService.buildYamlSetPollingSourceEvent(
-                formValueAs<AddPollingSourceEditFormType>(form),
-                this.showPreprocessStep ? this.preprocessStepValue : null,
-            );
-        }
-        return this.yamlEventService.buildYamlAddPushSourceEvent(
-            formValueAs<AddPushSourceEditFormType>(form),
-            this.showPreprocessStep ? this.preprocessStepValue : null,
-        );
+    /** The preprocess step's value, when the user turned that step on. */
+    protected get preprocessStep(): MaybeNull<PreprocessStepValue> {
+        return this.showPreprocessStep ? this.preprocessStepValue : null;
     }
+
+    protected createReadForm(): FormGroup<ReadControls> {
+        return new FormGroup<ReadControls>({ kind: new FormControl(this.READ_DEFAULT_KIND, { nonNullable: true }) });
+    }
+
+    /** The read step; the schema the user entered stays when they pick another format. */
+    protected createReadSection(form: FormGroup<ReadControls>): SourceSection<ReadControls> {
+        return new SourceSection(form, form.controls.kind, READ_FORM_DATA, this.destroyRef, ["schema"]);
+    }
+
+    protected createMergeForm(): FormGroup<MergeControls> {
+        return new FormGroup<MergeControls>({ kind: new FormControl(this.MERGE_DEFAULT_KIND, { nonNullable: true }) });
+    }
+
+    protected createMergeSection(form: FormGroup<MergeControls>): SourceSection<MergeControls> {
+        return new SourceSection(form, form.controls.kind, MERGE_FORM_DATA, this.destroyRef);
+    }
+
+    /** The event the editor's form describes, as YAML. */
+    protected abstract buildEventYaml(): string;
 }

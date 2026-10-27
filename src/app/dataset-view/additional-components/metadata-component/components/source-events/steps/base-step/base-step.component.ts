@@ -6,17 +6,8 @@
  */
 
 import { TitleCasePipe } from "@angular/common";
-import { ChangeDetectionStrategy, ChangeDetectorRef, Component, inject, Input, OnInit } from "@angular/core";
-import { takeUntilDestroyed } from "@angular/core/rxjs-interop";
-import { ControlContainer, FormBuilder, FormGroup, FormGroupDirective, ReactiveFormsModule } from "@angular/forms";
-
-import { BaseComponent } from "@common/components/base.component";
-import { getValidators } from "@common/helpers/data.helpers";
-import { requireFormGroup } from "@common/helpers/form.helpers";
-import { formValueAs } from "@common/helpers/untyped-boundary.helpers";
-import { MaybeNull } from "@interface/app.types";
-import { DataSchemaField } from "@interface/dataset-schema.interface";
-import { DatasetInfo } from "@interface/navigation.interface";
+import { ChangeDetectionStrategy, Component, Input } from "@angular/core";
+import { ReactiveFormsModule } from "@angular/forms";
 
 import { ArrayKeysFieldComponent } from "src/app/dataset-view/additional-components/metadata-component/components/form-components/array-keys-field/array-keys-field.component";
 import { CacheFieldComponent } from "src/app/dataset-view/additional-components/metadata-component/components/form-components/cache-field/cache-field.component";
@@ -31,22 +22,15 @@ import { SelectDateFormatFieldComponent } from "src/app/dataset-view/additional-
 import { SelectKindFieldComponent } from "src/app/dataset-view/additional-components/metadata-component/components/form-components/select-kind-field/select-kind-field.component";
 import { TopicsFieldComponent } from "src/app/dataset-view/additional-components/metadata-component/components/form-components/topics-field/topics-field.component";
 import { TypeaheadFieldComponent } from "src/app/dataset-view/additional-components/metadata-component/components/form-components/typeahead-field/typeahead-field.component";
-import {
-    AddPollingSourceEditFormType,
-    ControlType,
-    EventTimeSourceKind,
-    JsonFormControl,
-    JsonFormData,
-} from "src/app/dataset-view/additional-components/metadata-component/components/source-events/add-polling-source/add-polling-source-form.types";
-import { EditPollingSourceService } from "src/app/dataset-view/additional-components/metadata-component/components/source-events/add-polling-source/edit-polling-source.service";
+import { ControlType } from "src/app/dataset-view/additional-components/metadata-component/components/source-events/add-polling-source/add-polling-source-form.types";
 import { RadioControlType } from "src/app/dataset-view/additional-components/metadata-component/components/source-events/add-polling-source/form-control.source";
 import { SourcesSection } from "src/app/dataset-view/additional-components/metadata-component/components/source-events/add-polling-source/process-form.service.types";
+import { SourceStepSection } from "src/app/dataset-view/additional-components/metadata-component/components/source-events/source-section";
 
 @Component({
     selector: "app-base-step",
     templateUrl: "./base-step.component.html",
     changeDetection: ChangeDetectionStrategy.OnPush,
-    viewProviders: [{ provide: ControlContainer, useExisting: FormGroupDirective }],
     imports: [
         //-----//
         ReactiveFormsModule,
@@ -67,99 +51,14 @@ import { SourcesSection } from "src/app/dataset-view/additional-components/metad
         TopicsFieldComponent,
     ],
 })
-export class BaseStepComponent extends BaseComponent implements OnInit {
-    public parentForm: FormGroup;
+export class BaseStepComponent {
+    @Input({ required: true }) public section: SourceStepSection;
     @Input({ required: true }) public sectionStepRadioData: RadioControlType[];
-    @Input({ required: true }) public sectionFormData: JsonFormData;
-    @Input({ required: true }) public defaultKind: string;
     @Input({ required: true }) public description: string;
     @Input({ required: true }) public sectionName: SourcesSection;
-    @Input({ required: true }) public eventYamlByHash: MaybeNull<string> = null;
-    @Input() public datasetInfo: MaybeNull<DatasetInfo> = null;
-    private editFormValue: AddPollingSourceEditFormType;
     public controlType: typeof ControlType = ControlType;
-    public readonly KIND_NAME_CONTROL = "kind";
-    public readonly SCHEMA_NAME_CONTROL = "schema";
-    private readonly DEFAULT_EVENT_TIME_SOURCE = EventTimeSourceKind.FROM_METADATA;
-    private readonly EVENT_TIME_CONTROL = "eventTime";
-    private readonly JSON_KIND_CONTROL = "jsonKind";
-
-    private rootFormGroupDirective = inject(FormGroupDirective);
-    private fb = inject(FormBuilder);
-    private cdr = inject(ChangeDetectorRef);
-    private editService = inject(EditPollingSourceService);
-
-    public get sectionForm(): FormGroup {
-        return requireFormGroup(this.parentForm, this.sectionName);
-    }
 
     public get currentKind(): string {
-        const kind: unknown = this.sectionForm.get(this.KIND_NAME_CONTROL)?.value;
-        return typeof kind === "string" ? kind : "";
-    }
-
-    public ngOnInit(): void {
-        this.parentForm = this.rootFormGroupDirective.form;
-        this.initForm(this.currentKind);
-        this.chooseFetchKind();
-        this.initEditForm();
-        this.cdr.detectChanges();
-    }
-
-    private initEditForm(): void {
-        if (this.eventYamlByHash) {
-            this.editFormValue = this.editService.parseEventFromYaml(this.eventYamlByHash);
-            this.editService.patchFormValues(
-                this.sectionForm,
-                this.editFormValue,
-                this.sectionName,
-                this.datasetInfo,
-                this.destroyRef,
-            );
-        }
-    }
-
-    private chooseFetchKind(): void {
-        this.sectionForm
-            .get(this.KIND_NAME_CONTROL)
-            ?.valueChanges.pipe(takeUntilDestroyed(this.destroyRef))
-            .subscribe((kind: string) => {
-                Object.keys(formValueAs<object>(this.sectionForm))
-                    .filter((key: string) => ![this.KIND_NAME_CONTROL, this.SCHEMA_NAME_CONTROL].includes(key))
-                    .forEach((item: string) => {
-                        if (item !== this.EVENT_TIME_CONTROL) this.sectionForm.removeControl(item);
-                    });
-                if (this.sectionForm.contains(this.JSON_KIND_CONTROL)) {
-                    this.sectionForm.removeControl(this.JSON_KIND_CONTROL);
-                }
-                this.initForm(kind);
-            });
-    }
-
-    private initForm(kind: string): void {
-        this.sectionFormData[kind].controls.forEach((item: JsonFormControl) => {
-            switch (item.type) {
-                case ControlType.SCHEMA:
-                    this.sectionForm.addControl(item.name, this.fb.control<DataSchemaField[]>([]));
-                    break;
-                case ControlType.ARRAY_KEY_VALUE:
-                case ControlType.ARRAY_KEY:
-                    this.sectionForm.addControl(item.name, this.fb.array([]));
-                    break;
-                case ControlType.EVENT_TIME:
-                    this.sectionForm.addControl(
-                        item.name,
-                        this.fb.group({
-                            kind: [this.DEFAULT_EVENT_TIME_SOURCE],
-                        }),
-                    );
-                    break;
-                case ControlType.TOPICS:
-                    this.sectionForm.addControl(item.name, this.fb.array([], getValidators(item.validators)));
-                    break;
-                default:
-                    this.sectionForm.addControl(item.name, this.fb.control(item.value, getValidators(item.validators)));
-            }
-        });
+        return this.section.kindControl.value;
     }
 }

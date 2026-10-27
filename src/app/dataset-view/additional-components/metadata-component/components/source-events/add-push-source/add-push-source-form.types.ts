@@ -5,13 +5,12 @@
  * included in the LICENSE file.
  */
 
-import { Transform } from "@api/kamu.graphql.interface";
 import { DataSchemaField } from "@interface/dataset-schema.interface";
 
 import {
-    MergeKind,
-    PreprocessKind,
-    ReadKind,
+    MergeStepValue,
+    PreprocessValue,
+    ReadStepValue,
 } from "src/app/dataset-view/additional-components/metadata-component/components/source-events/add-polling-source/add-polling-source-form.types";
 
 export enum AddPushSourceSection {
@@ -23,32 +22,21 @@ export enum AddPushSourceSection {
 
 export interface EditAddPushSourceParseType {
     content: {
-        event: AddPushSourceEditFormType;
+        event: Omit<AddPushSourceEditFormType, "read"> & {
+            read: Omit<ReadStepValue, "schema"> & {
+                schema?: {
+                    fields: DataSchemaField[];
+                };
+            };
+        };
     };
 }
 
+/** An `AddPushSource` event: what the editor reads from YAML and writes back. */
 export interface AddPushSourceEditFormType {
     kind?: string;
     sourceName: string;
-    read: {
-        kind: ReadKind;
-        jsonKind?: ReadKind;
-        subPath?: string;
-        schema?: DataSchemaField[];
-        separator?: string;
-        encoding?: string;
-        quote?: string;
-        escape?: string;
-        dateFormat?: string;
-        timestampFormat?: string;
-    };
-    merge: {
-        kind: MergeKind;
-        primaryKey?: string[];
-        compareColumns?: string[];
-    };
-    preprocess?: Transform & {
-        kind: PreprocessKind.SQL;
-        query?: string;
-    };
+    read: ReadStepValue;
+    preprocess?: PreprocessValue;
+    merge: MergeStepValue;
 }

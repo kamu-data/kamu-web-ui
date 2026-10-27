@@ -41,11 +41,9 @@
                         >
                         <div class="container-step">
                             <app-base-step
+                                [section]="readSection"
                                 [sectionStepRadioData]="READ_STEP_RADIO_DATA"
-                                [sectionFormData]="READ_FORM_DATA"
-                                [defaultKind]="READ_DEFAULT_KIND"
                                 [sectionName]="steps.READ"
-                                [eventYamlByHash]="eventYamlByHash"
                                 description="Defines how data is read into structured format"
                             />
                             <app-stepper-navigation
@@ -77,11 +75,9 @@
                         <ng-template matStepLabel>Merge</ng-template>
                         <div class="container-step">
                             <app-base-step
+                                [section]="mergeSection"
                                 [sectionStepRadioData]="MERGE_STEP_RADIO_DATA"
-                                [sectionFormData]="MERGE_FORM_DATA"
-                                [defaultKind]="MERGE_DEFAULT_KIND"
                                 [sectionName]="steps.MERGE"
-                                [eventYamlByHash]="eventYamlByHash"
                                 description="Determines how newly-ingested data should be merged with existing history"
                             >
                                 @if (errorMessage) {

@@ -7,7 +7,7 @@
 
 import { ApplicationRef } from "@angular/core";
 import { ComponentFixture, TestBed } from "@angular/core/testing";
-import { FormArray, FormControl, FormGroup, Validators } from "@angular/forms";
+import { Validators } from "@angular/forms";
 import { ActivatedRoute } from "@angular/router";
 
 import { from, of } from "rxjs";
@@ -15,61 +15,21 @@ import { from, of } from "rxjs";
 import { NgbModal, NgbModalRef } from "@ng-bootstrap/ng-bootstrap";
 import { ApolloTestingModule } from "apollo-angular/testing";
 
+import { requireValue } from "@common/helpers/app.helpers";
 import {
     dispatchInputEvent,
     emitClickOnElementByDataTestId,
     getElementByDataTestId,
     setComponentInput,
 } from "@common/helpers/base-test.helpers.spec";
-import { OdfDefaultValues } from "@common/values/app-odf-default.values";
 import { mockAccountDetails } from "@api/mock/auth.mock";
-import { DataSchemaField } from "@interface/dataset-schema.interface";
 
 import { LoggedUserService } from "src/app/auth/logged-user.service";
 import { FinalYamlModalComponent } from "src/app/dataset-view/additional-components/metadata-component/components/final-yaml-modal/final-yaml-modal.component";
-import {
-    EventTimeSourceKind,
-    FetchKind,
-    MergeKind,
-    ReadKind,
-    SetPollingSourceSection,
-} from "src/app/dataset-view/additional-components/metadata-component/components/source-events/add-polling-source/add-polling-source-form.types";
+import { SetPollingSourceSection } from "src/app/dataset-view/additional-components/metadata-component/components/source-events/add-polling-source/add-polling-source-form.types";
 import { AddPollingSourceComponent } from "src/app/dataset-view/additional-components/metadata-component/components/source-events/add-polling-source/add-polling-source.component";
 import { DatasetCommitService } from "src/app/dataset-view/additional-components/overview-component/services/dataset-commit.service";
 import { mockDatasetInfo } from "src/app/search/mock.data";
-
-function buildPollingSourceForm(): FormGroup {
-    return new FormGroup({
-        fetch: new FormGroup({
-            kind: new FormControl(FetchKind.URL),
-            url: new FormControl(""),
-            order: new FormControl("NONE"),
-            eventTime: new FormGroup({
-                kind: new FormControl(EventTimeSourceKind.FROM_METADATA),
-                timestampFormat: new FormControl(""),
-            }),
-            cache: new FormControl(false),
-            headers: new FormArray([]),
-        }),
-        read: new FormGroup({
-            kind: new FormControl(ReadKind.CSV),
-            schema: new FormControl<DataSchemaField[]>([]),
-            header: new FormControl(OdfDefaultValues.CSV_HEADER),
-            encoding: new FormControl(OdfDefaultValues.CSV_ENCODING),
-            separator: new FormControl(OdfDefaultValues.CSV_SEPARATOR),
-            quote: new FormControl(OdfDefaultValues.CSV_QUOTE),
-            escape: new FormControl(OdfDefaultValues.CSV_ESCAPE),
-            nullValue: new FormControl(OdfDefaultValues.CSV_NULL_VALUE),
-            dateFormat: new FormControl(OdfDefaultValues.CSV_DATE_FORMAT),
-            timestampFormat: new FormControl(OdfDefaultValues.CSV_TIMESTAMP_FORMAT),
-            inferSchema: new FormControl(OdfDefaultValues.CSV_INFER_SCHEMA),
-        }),
-        merge: new FormGroup({
-            kind: new FormControl(MergeKind.APPEND),
-        }),
-        prepare: new FormArray([]),
-    });
-}
 
 describe("AddPollingSourceComponent", () => {
     let component: AddPollingSourceComponent;
@@ -120,7 +80,6 @@ describe("AddPollingSourceComponent", () => {
         component.currentStep = SetPollingSourceSection.FETCH;
         setComponentInput(fixture, "datasetInfo", mockDatasetInfo);
 
-        component.pollingSourceForm = buildPollingSourceForm();
         vi.spyOn(loggedUserService, "currentlyLoggedInUser", "get").mockReturnValue(mockAccountDetails);
         fixture.detectChanges();
     });
@@ -156,10 +115,19 @@ describe("AddPollingSourceComponent", () => {
         expect(component.eventYamlByHash).toEqual(MOCK_EVENT_YAML);
     });
 
-    it("should check submit yaml", () => {
+    it("should commit the event the form was filled from", () => {
         const submitYamlSpy = vi.spyOn(datasetCommitService, "commitEventToDataset").mockReturnValue(of());
         component.onSaveEvent();
         expect(submitYamlSpy).toHaveBeenCalledTimes(1);
+
+        const event = requireValue(submitYamlSpy.mock.lastCall)[0].event;
+        expect(event).toContain(
+            "content:\n  kind: SetPollingSource\n  fetch:\n    kind: Url\n    url: https://api.etherscan.io/",
+        );
+        expect(event).toContain("    eventTime:\n      kind: FromMetadata\n  read:\n    kind: Json\n");
+        expect(event).toContain("    subPath: result\n");
+        expect(event).toContain("  merge:\n    kind: Ledger\n    primaryKey:\n      - transaction_hash\n");
+        expect(event).toContain("  preprocess:\n    kind: Sql\n    engine: datafusion\n");
     });
 
     it("should check change step", () => {
@@ -192,14 +160,13 @@ describe("AddPollingSourceComponent", () => {
         setComponentInput(fixture, "eventYamlByHash", MOCK_EVENT_YAML_WITHOUT_PREPROCESS);
         component.currentStep = SetPollingSourceSection.FETCH;
         setComponentInput(fixture, "datasetInfo", mockDatasetInfo);
-        component.pollingSourceForm = buildPollingSourceForm();
         component.showPreprocessStep = true;
         fixture.detectChanges();
         expect(component.showPreprocessStep).toEqual(false);
     });
 
     it("should focus and blur invalid fields once the view renders after a step header click", () => {
-        component.fetchForm.controls.url.setValidators(Validators.required);
+        requireValue(component.fetchForm.controls.url).setValidators(Validators.required);
         dispatchInputEvent(fixture, "fetch-url", "");
         const urlInput = getElementByDataTestId(fixture, "fetch-url");
         const blurSpy = vi.spyOn(HTMLInputElement.prototype, "blur");

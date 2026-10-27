@@ -23,6 +23,12 @@ Run on the Node `.nvmrc` pins (AGENTS.md, "Node version"). Do not pipe the outpu
 `head`/`tail`; delegate a long run to the `ng-tester` sub-agent, which reports only failures.
 Never commit `.only` or `.skip` (`describe.only`, `it.skip`, …) — eslint and the edit hook reject them.
 
+Vitest prints the specs' console output only when its own output is a terminal, so a piped run
+(an agent, CI) shows no warnings at all. Angular's dev-mode reports therefore do not rely on being
+read: `src/test-setup.ts` fails any test during which a `console.warn` or `console.error` carries an
+Angular runtime code (`NG0956` and the like). Fix the cause; a test whose purpose is to provoke
+such a message stubs the console method (`stubMethod(console, "warn")`), which keeps it from reaching the check.
+
 ## Component tests
 
 ```ts

@@ -7,13 +7,10 @@
 
 import { DestroyRef, inject, Injectable } from "@angular/core";
 import { takeUntilDestroyed } from "@angular/core/rxjs-interop";
-import { FormArray, FormBuilder, FormControl, FormGroup } from "@angular/forms";
+import { FormArray, FormGroup, Validators } from "@angular/forms";
 
 import { Observable } from "rxjs";
 
-import { RxwebValidators } from "@rxweb/reactive-form-validators";
-
-import { requireFormArray, requireFormGroup } from "@common/helpers/form.helpers";
 import { parseYamlAs } from "@common/helpers/untyped-boundary.helpers";
 import { MetadataManifestFormat } from "@api/kamu.graphql.interface";
 import { MaybeNull } from "@interface/app.types";
@@ -24,24 +21,33 @@ import { BlockService } from "src/app/dataset-block/metadata-block/block.service
 import {
     AddPollingSourceEditFormType,
     EditFormParseType,
-    FetchKind,
-    MergeKind,
-    NameValue,
+    EventTimeSourceKind,
+    FetchStepValue,
+    MergeStepValue,
+    PrepareKind,
+    PrepareStepValue,
     ReadKind,
-    SetPollingSourceSection,
-    TopicsType,
+    ReadStepValue,
 } from "src/app/dataset-view/additional-components/metadata-component/components/source-events/add-polling-source/add-polling-source-form.types";
-import { SourcesSection } from "src/app/dataset-view/additional-components/metadata-component/components/source-events/add-polling-source/process-form.service.types";
+import {
+    FetchControls,
+    MergeControls,
+    PrepareStepForm,
+    ReadControls,
+} from "src/app/dataset-view/additional-components/metadata-component/components/source-events/source-event-controls.types";
+import {
+    decompressStepGroup,
+    listItemControl,
+    nameValueGroup,
+    pipeStepGroup,
+    textControl,
+    topicGroup,
+} from "src/app/dataset-view/additional-components/metadata-component/components/source-events/source-section";
 
 @Injectable({
     providedIn: "root",
 })
 export class EditPollingSourceService {
-    private readonly PATTERN_CONTROL = "pattern";
-    private readonly TIMESTAMP_FORMAT_CONTROL = "timestampFormat";
-    private readonly READ_JSON_SUB_PATH_CONTROL = "subPath";
-
-    private fb = inject(FormBuilder);
     private blockService = inject(BlockService);
 
     public parseEventFromYaml(event: string): AddPollingSourceEditFormType {
@@ -60,149 +66,82 @@ export class EditPollingSourceService {
         return this.blockService.getPollingSourceBlock({ ...info, encoding: MetadataManifestFormat.Yaml });
     }
 
-    public patchFormValues(
-        sectionForm: FormGroup,
-        editFormValue: AddPollingSourceEditFormType,
-        groupName: SourcesSection,
+    /** Selects the event's fetch kind, which adds that kind's controls, and fills them from the event. */
+    public patchFetchStep(form: FormGroup<FetchControls>, fetch: FetchStepValue): void {
+        const { kind, eventTime, headers, env, command, args, topics, cache, ...fields } = fetch;
+        form.controls.kind.setValue(kind);
+        form.patchValue({ ...fields, cache: Boolean(cache) });
+        const eventTimeForm = form.controls.eventTime;
+        if (eventTime && eventTimeForm) {
+            eventTimeForm.controls.kind.setValue(eventTime.kind);
+            if (eventTime.kind === EventTimeSourceKind.FROM_PATH) {
+                eventTimeForm.addControl("pattern", textControl(eventTime.pattern ?? "", [Validators.required]));
+                eventTimeForm.addControl("timestampFormat", textControl(eventTime.timestampFormat ?? ""));
+            }
+        }
+        headers?.forEach(({ name, value }) => form.controls.headers?.push(nameValueGroup(name, value)));
+        env?.forEach(({ name, value }) => form.controls.env?.push(nameValueGroup(name, value)));
+        command?.forEach((item) => form.controls.command?.push(listItemControl(item)));
+        args?.forEach((item) => form.controls.args?.push(listItemControl(item)));
+        topics?.forEach(({ path, qos }) => form.controls.topics?.push(topicGroup(path, qos)));
+    }
+
+    /** Fills the prepare step with the event's steps; steps of a kind the editor has no form for are skipped. */
+    public patchPrepareStep(form: FormArray<PrepareStepForm>, prepare: PrepareStepValue[] = []): void {
+        prepare.forEach((step) => {
+            switch (step.kind) {
+                case PrepareKind.PIPE:
+                    form.push(pipeStepGroup(step.command.join(" ")));
+                    break;
+                case PrepareKind.DECOMPRESS:
+                    form.push(decompressStepGroup(step.format, step.subPath));
+                    break;
+            }
+        });
+    }
+
+    /**
+     * Fills the read step from the event. The editor offers JSON and GeoJSON as one kind each with a
+     * format choice, so `Json` and `NdJson` select `AllJson` with the format in `jsonKind`. With a
+     * dataset, the schema comes from the dataset's current source.
+     */
+    public patchReadStep(
+        form: FormGroup<ReadControls>,
+        read: ReadStepValue,
         datasetInfo: MaybeNull<DatasetInfo>,
         destroyRef: DestroyRef,
     ): void {
-        switch (groupName) {
-            case SetPollingSourceSection.FETCH: {
-                this.patchFetchStep(sectionForm, editFormValue);
-                break;
-            }
-            case SetPollingSourceSection.READ: {
-                this.patchReadStep(sectionForm, editFormValue, datasetInfo, destroyRef);
-                break;
-            }
-            case SetPollingSourceSection.MERGE: {
-                this.patchMergeStep(sectionForm, editFormValue);
-                break;
-            }
-        }
-    }
-
-    private patchFetchStep(sectionForm: FormGroup, editFormValue: AddPollingSourceEditFormType): void {
-        this.initFetchCommonControls(sectionForm, editFormValue);
-        if (editFormValue.fetch.kind === FetchKind.URL) {
-            this.initFetchUrlControls(sectionForm, editFormValue);
-        } else if (editFormValue.fetch.kind === FetchKind.CONTAINER) {
-            this.initFetchContainerControls(sectionForm, editFormValue);
-        } else if (editFormValue.fetch.kind === FetchKind.MQTT) {
-            this.initFetchMqttControls(sectionForm, editFormValue);
-        }
-    }
-
-    private patchReadStep(
-        sectionForm: FormGroup,
-        editFormValue: AddPollingSourceEditFormType,
-        datasetInfo: MaybeNull<DatasetInfo>,
-        destroyRef: DestroyRef,
-    ): void {
-        sectionForm.patchValue(editFormValue.read);
-        if ([ReadKind.JSON, ReadKind.ND_JSON].includes(editFormValue.read.kind)) {
-            sectionForm.patchValue({
-                ...editFormValue.read,
-                kind: ReadKind.All_JSON,
-                jsonKind: editFormValue.read.kind,
-            });
-        }
-        if (editFormValue.read.kind === ReadKind.JSON) {
-            sectionForm.addControl(this.READ_JSON_SUB_PATH_CONTROL, new FormControl(editFormValue.read.subPath));
-        }
-        if ([ReadKind.GEO_JSON, ReadKind.ND_GEO_JSON].includes(editFormValue.read.kind)) {
-            sectionForm.patchValue({
-                ...editFormValue.read,
-                kind: ReadKind.ALL_GEO,
-                jsonKind: editFormValue.read.kind,
-            });
-        }
-        if (datasetInfo) {
-            const schemaControl = sectionForm.get("schema");
-
-            if (schemaControl) {
-                this.blockService
-                    .getPollingSourceSchemaFields(datasetInfo)
-                    .pipe(takeUntilDestroyed(destroyRef))
-                    .subscribe((fields: DataSchemaField[]) => schemaControl.setValue(fields));
-            }
-        }
-    }
-
-    private patchMergeStep(sectionForm: FormGroup, editFormValue: AddPollingSourceEditFormType): void {
-        sectionForm.patchValue(editFormValue.merge);
-        if (editFormValue.merge.kind !== MergeKind.APPEND) {
-            const primaryKey = requireFormArray(sectionForm, "primaryKey");
-            editFormValue.merge.primaryKey?.forEach((item) => {
-                primaryKey.push(this.fb.control(item));
-            });
-        }
-        if (editFormValue.merge.kind === MergeKind.SNAPSHOT) {
-            const compareColumns = requireFormArray(sectionForm, "compareColumns");
-            editFormValue.merge.compareColumns?.forEach((item) => {
-                compareColumns.push(this.fb.control(item));
-            });
-        }
-    }
-
-    private initFetchCommonControls(sectionForm: FormGroup, editFormValue: AddPollingSourceEditFormType): void {
-        sectionForm.patchValue(editFormValue.fetch);
-        const eventTimeGroup = requireFormGroup(sectionForm, "eventTime");
-        const pattern = editFormValue.fetch.eventTime?.pattern;
-        const timestampFormat = editFormValue.fetch.eventTime?.timestampFormat;
-        eventTimeGroup.addControl(this.PATTERN_CONTROL, this.fb.control(pattern));
-        eventTimeGroup.addControl(this.TIMESTAMP_FORMAT_CONTROL, this.fb.control(timestampFormat));
-    }
-
-    private initFetchUrlControls(sectionForm: FormGroup, editFormValue: AddPollingSourceEditFormType): void {
-        const headers = requireFormArray(sectionForm, "headers");
-        if (headers.length === 0 && editFormValue.fetch.headers) {
-            this.initNameValueControl(editFormValue.fetch.headers, headers);
-        }
-    }
-
-    private initFetchContainerControls(sectionForm: FormGroup, editFormValue: AddPollingSourceEditFormType): void {
-        const env = requireFormArray(sectionForm, "env");
-        if (editFormValue.fetch.env) {
-            this.initNameValueControl(editFormValue.fetch.env, env);
-        }
-        const command = requireFormArray(sectionForm, "command");
-        editFormValue.fetch.command?.forEach((item) => {
-            command.push(this.fb.control(item, RxwebValidators.required()));
+        const { kind, schema, subPath, ...fields } = read;
+        const formKind = JSON_KINDS.includes(kind)
+            ? ReadKind.All_JSON
+            : GEO_JSON_KINDS.includes(kind)
+              ? ReadKind.ALL_GEO
+              : kind;
+        form.controls.kind.setValue(formKind);
+        form.patchValue({
+            ...fields,
+            ...(formKind !== kind ? { jsonKind: kind } : {}),
+            ...(schema ? { schema } : {}),
+            ...(subPath !== undefined ? { subPath } : {}),
         });
-        const args = requireFormArray(sectionForm, "args");
-        editFormValue.fetch.args?.forEach((item) => {
-            args.push(this.fb.control(item, RxwebValidators.required()));
-        });
-    }
-
-    private initNameValueControl(array: NameValue[], formArray: FormArray): void {
-        array.forEach((item) => {
-            formArray.push(
-                this.fb.group({
-                    name: [item.name],
-                    value: [item.value],
-                }),
-            );
-        });
-    }
-
-    private initFetchMqttControls(sectionForm: FormGroup, editFormValue: AddPollingSourceEditFormType): void {
-        const topics = requireFormArray(sectionForm, "topics");
-        if (editFormValue.fetch.topics) {
-            this.initTopicsControl(editFormValue.fetch.topics, topics);
+        if (kind === ReadKind.JSON) {
+            form.addControl("subPath", textControl(subPath ?? ""));
+        }
+        const schemaControl = form.controls.schema;
+        if (datasetInfo && schemaControl) {
+            this.blockService
+                .getPollingSourceSchemaFields(datasetInfo)
+                .pipe(takeUntilDestroyed(destroyRef))
+                .subscribe((schemaFields: DataSchemaField[]) => schemaControl.setValue(schemaFields));
         }
     }
 
-    private initTopicsControl(array: TopicsType[], formArray: FormArray): void {
-        array.forEach((item) => {
-            formArray.push(
-                this.fb.group({
-                    path: [item.path],
-                    qos: [item.qos],
-                }),
-            );
-        });
+    public patchMergeStep(form: FormGroup<MergeControls>, merge: MergeStepValue): void {
+        form.controls.kind.setValue(merge.kind);
+        merge.primaryKey?.forEach((item) => form.controls.primaryKey?.push(listItemControl(item)));
+        merge.compareColumns?.forEach((item) => form.controls.compareColumns?.push(listItemControl(item)));
     }
 }
+
+const JSON_KINDS: readonly ReadKind[] = [ReadKind.JSON, ReadKind.ND_JSON];
+const GEO_JSON_KINDS: readonly ReadKind[] = [ReadKind.GEO_JSON, ReadKind.ND_GEO_JSON];

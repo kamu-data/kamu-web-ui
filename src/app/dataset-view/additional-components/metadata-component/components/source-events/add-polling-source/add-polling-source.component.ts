@@ -7,17 +7,15 @@
 
 import { STEPPER_GLOBAL_OPTIONS } from "@angular/cdk/stepper";
 import { ChangeDetectionStrategy, Component, inject, Input, OnInit } from "@angular/core";
-import { FormArray, FormGroup, FormsModule, ReactiveFormsModule } from "@angular/forms";
+import { FormArray, FormControl, FormGroup, FormsModule, ReactiveFormsModule } from "@angular/forms";
 import { MatStepperModule } from "@angular/material/stepper";
 import { RouterLink } from "@angular/router";
 
 import { enumValueOf, requireValue } from "@common/helpers/app.helpers";
-import { requireFormArray, requireFormGroup } from "@common/helpers/form.helpers";
 import { DatasetLinkPipe } from "@common/pipes/dataset-link.pipe";
 import RoutingResolvers from "@common/resolvers/routing-resolvers";
 import { DatasetInfo } from "@interface/navigation.interface";
 
-import { SupportedEvents } from "src/app/dataset-block/metadata-block/components/event-details/supported.events";
 import { BaseSourceEventComponent } from "src/app/dataset-view/additional-components/metadata-component/components/base-source-event.component";
 import {
     FetchKind,
@@ -26,6 +24,14 @@ import {
 import { EditPollingSourceService } from "src/app/dataset-view/additional-components/metadata-component/components/source-events/add-polling-source/edit-polling-source.service";
 import { FETCH_STEP_RADIO_CONTROLS } from "src/app/dataset-view/additional-components/metadata-component/components/source-events/add-polling-source/form-control.source";
 import { SourcesSection } from "src/app/dataset-view/additional-components/metadata-component/components/source-events/add-polling-source/process-form.service.types";
+import {
+    FetchControls,
+    MergeControls,
+    PollingSourceControls,
+    PrepareStepForm,
+    ReadControls,
+} from "src/app/dataset-view/additional-components/metadata-component/components/source-events/source-event-controls.types";
+import { SourceSection } from "src/app/dataset-view/additional-components/metadata-component/components/source-events/source-section";
 import { BaseStepComponent } from "src/app/dataset-view/additional-components/metadata-component/components/source-events/steps/base-step/base-step.component";
 import { FETCH_FORM_DATA } from "src/app/dataset-view/additional-components/metadata-component/components/source-events/steps/data/fetch-form-data";
 import { PrepareStepComponent } from "src/app/dataset-view/additional-components/metadata-component/components/source-events/steps/prepare-step/prepare-step.component";
@@ -67,45 +73,52 @@ export class AddPollingSourceComponent extends BaseSourceEventComponent implemen
     public steps: typeof SetPollingSourceSection = SetPollingSourceSection;
     // ---------------------------------
     public readonly FETCH_STEP_RADIO_DATA = FETCH_STEP_RADIO_CONTROLS;
-    public readonly FETCH_FORM_DATA = FETCH_FORM_DATA;
-    public readonly FETCH_DEFAULT_KIND = FetchKind.URL;
     public readonly DatasetViewTypeEnum: typeof DatasetViewTypeEnum = DatasetViewTypeEnum;
 
-    public pollingSourceForm: FormGroup = this.fb.group({
-        fetch: this.fb.group({
-            kind: [this.FETCH_DEFAULT_KIND],
-        }),
-        prepare: this.fb.array([]),
-        read: this.fb.group({
-            kind: [this.READ_DEFAULT_KIND],
-        }),
-        merge: this.fb.group({
-            kind: [this.MERGE_DEFAULT_KIND],
-        }),
+    public readonly pollingSourceForm = new FormGroup<PollingSourceControls>({
+        fetch: new FormGroup<FetchControls>({ kind: new FormControl(FetchKind.URL, { nonNullable: true }) }),
+        prepare: new FormArray<PrepareStepForm>([]),
+        read: this.createReadForm(),
+        merge: this.createMergeForm(),
     });
+    /** The fetch step; the event time the user set stays when they pick another source. */
+    public readonly fetchSection = new SourceSection(
+        this.fetchForm,
+        this.fetchForm.controls.kind,
+        FETCH_FORM_DATA,
+        this.destroyRef,
+        ["eventTime"],
+    );
+    public readonly readSection = this.createReadSection(this.readForm);
+    public readonly mergeSection = this.createMergeSection(this.mergeForm);
 
     private editService = inject(EditPollingSourceService);
 
-    public get fetchForm(): FormGroup {
-        return requireFormGroup(this.pollingSourceForm, SetPollingSourceSection.FETCH);
+    public get fetchForm(): FormGroup<FetchControls> {
+        return this.pollingSourceForm.controls.fetch;
     }
 
-    public get prepareForm(): FormArray {
-        return requireFormArray(this.pollingSourceForm, SetPollingSourceSection.PREPARE);
+    public get prepareForm(): FormArray<PrepareStepForm> {
+        return this.pollingSourceForm.controls.prepare;
     }
 
-    public get readForm(): FormGroup {
-        return requireFormGroup(this.pollingSourceForm, SetPollingSourceSection.READ);
+    public get readForm(): FormGroup<ReadControls> {
+        return this.pollingSourceForm.controls.read;
     }
 
-    public get mergeForm(): FormGroup {
-        return requireFormGroup(this.pollingSourceForm, SetPollingSourceSection.MERGE);
+    public get mergeForm(): FormGroup<MergeControls> {
+        return this.pollingSourceForm.controls.merge;
     }
 
     public ngOnInit(): void {
         super.ngOnInit();
         if (this.eventYamlByHash) {
-            this.showPreprocessStep = Boolean(this.editService.parseEventFromYaml(this.eventYamlByHash).preprocess);
+            const event = this.editService.parseEventFromYaml(this.eventYamlByHash);
+            this.showPreprocessStep = Boolean(event.preprocess);
+            this.editService.patchFetchStep(this.fetchForm, event.fetch);
+            this.editService.patchPrepareStep(this.prepareForm, event.prepare);
+            this.editService.patchReadStep(this.readForm, event.read, this.datasetInfo, this.destroyRef);
+            this.editService.patchMergeStep(this.mergeForm, event.merge);
         }
     }
 
@@ -114,10 +127,17 @@ export class AddPollingSourceComponent extends BaseSourceEventComponent implemen
     }
 
     public onSaveEvent(): void {
-        this.saveSourceEvent(this.pollingSourceForm, SupportedEvents.SetPollingSource);
+        this.saveSourceEvent();
     }
 
     public onEditYaml(): void {
-        this.editSourceYaml(this.pollingSourceForm, SupportedEvents.SetPollingSource);
+        this.editSourceYaml();
+    }
+
+    protected buildEventYaml(): string {
+        return this.yamlEventService.buildYamlSetPollingSourceEvent(
+            this.processFormService.pollingSourceEvent(this.pollingSourceForm.getRawValue()),
+            this.preprocessStep,
+        );
     }
 }

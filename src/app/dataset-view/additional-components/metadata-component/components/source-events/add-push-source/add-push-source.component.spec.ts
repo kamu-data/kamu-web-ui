@@ -8,7 +8,6 @@
 import { provideHttpClient } from "@angular/common/http";
 import { provideHttpClientTesting } from "@angular/common/http/testing";
 import { ComponentFixture, TestBed } from "@angular/core/testing";
-import { FormArray, FormControl, FormGroup } from "@angular/forms";
 import { ActivatedRoute } from "@angular/router";
 
 import { from, of } from "rxjs";
@@ -19,7 +18,6 @@ import { ApolloTestingModule } from "apollo-angular/testing";
 
 import { registerMatSvgIcons, setComponentInput } from "@common/helpers/base-test.helpers.spec";
 import { mockAccountDetails } from "@api/mock/auth.mock";
-import { DataSchemaField } from "@interface/dataset-schema.interface";
 
 import { LoggedUserService } from "src/app/auth/logged-user.service";
 import { FinalYamlModalComponent } from "src/app/dataset-view/additional-components/metadata-component/components/final-yaml-modal/final-yaml-modal.component";
@@ -27,10 +25,6 @@ import {
     mockAddPushSourceYaml,
     mockAddPushSourceYamlWithPreprocess,
 } from "src/app/dataset-view/additional-components/metadata-component/components/set-transform/mock.data";
-import {
-    MergeKind,
-    ReadKind,
-} from "src/app/dataset-view/additional-components/metadata-component/components/source-events/add-polling-source/add-polling-source-form.types";
 import { AddPushSourceSection } from "src/app/dataset-view/additional-components/metadata-component/components/source-events/add-push-source/add-push-source-form.types";
 import { AddPushSourceComponent } from "src/app/dataset-view/additional-components/metadata-component/components/source-events/add-push-source/add-push-source.component";
 import { DatasetCommitService } from "src/app/dataset-view/additional-components/overview-component/services/dataset-commit.service";
@@ -89,17 +83,6 @@ describe("AddPushSourceComponent with query parameter name", () => {
         setComponentInput(fixture, "eventYamlByHash", mockAddPushSourceYaml);
         setComponentInput(fixture, "queryParamName", "mockSourceName");
         setComponentInput(fixture, "datasetInfo", mockDatasetInfo);
-        component.addPushSourceForm = new FormGroup({
-            sourceName: new FormControl(""),
-            read: new FormGroup({
-                kind: new FormControl(ReadKind.CSV),
-                schema: new FormControl<DataSchemaField[]>([]),
-            }),
-            merge: new FormGroup({
-                kind: new FormControl(MergeKind.APPEND),
-            }),
-            prepare: new FormArray([]),
-        });
         vi.spyOn(loggedUserService, "currentlyLoggedInUser", "get").mockReturnValue(mockAccountDetails);
         fixture.detectChanges();
     });
@@ -183,17 +166,6 @@ describe("AddPushSourceComponent without query parameter name", () => {
         setComponentInput(fixture, "queryParamName", "");
         setComponentInput(fixture, "eventYamlByHash", mockAddPushSourceYaml);
         setComponentInput(fixture, "datasetInfo", mockDatasetInfo);
-        component.addPushSourceForm = new FormGroup({
-            sourceName: new FormControl("mockName"),
-            read: new FormGroup({
-                kind: new FormControl(ReadKind.CSV),
-                schema: new FormControl<DataSchemaField[]>([]),
-            }),
-            merge: new FormGroup({
-                kind: new FormControl(MergeKind.APPEND),
-            }),
-            prepare: new FormArray([]),
-        });
     });
 
     it("should check add validator when query parameter name equal null", () => {

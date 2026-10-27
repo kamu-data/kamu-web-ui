@@ -6,7 +6,7 @@
  */
 
 import { ChangeDetectionStrategy, Component, Input, OnInit } from "@angular/core";
-import { FormControl, ReactiveFormsModule } from "@angular/forms";
+import { ReactiveFormsModule } from "@angular/forms";
 
 import { RxReactiveFormsModule } from "@rxweb/reactive-form-validators";
 
@@ -21,6 +21,7 @@ import {
     ReadFormatControlType,
     ReadKind,
 } from "src/app/dataset-view/additional-components/metadata-component/components/source-events/add-polling-source/add-polling-source-form.types";
+import { textControl } from "src/app/dataset-view/additional-components/metadata-component/components/source-events/source-section";
 
 @Component({
     selector: "app-json-kind-field",
@@ -46,7 +47,7 @@ export class JsonKindFieldComponent extends BaseField implements OnInit {
     public readonly READ_JSON_KIND_CONTROL = "jsonKind";
 
     public ngOnInit(): void {
-        this.form.addControl(this.READ_SUB_PATH_CONTROL, new FormControl(""));
+        this.form.addControl(this.READ_SUB_PATH_CONTROL, textControl(""));
     }
 
     public get currentJsonKind(): MaybeUndefined<ReadKind> {

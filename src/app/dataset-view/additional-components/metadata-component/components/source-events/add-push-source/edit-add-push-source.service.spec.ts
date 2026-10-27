@@ -17,8 +17,10 @@ import { stubMethod } from "@common/helpers/base-test.helpers.spec";
 import { DataSchemaField, OdfTypes } from "@interface/dataset-schema.interface";
 
 import { BlockService } from "src/app/dataset-block/metadata-block/block.service";
+import { ReadKind } from "src/app/dataset-view/additional-components/metadata-component/components/source-events/add-polling-source/add-polling-source-form.types";
 import { AddPushSourceEditFormType } from "src/app/dataset-view/additional-components/metadata-component/components/source-events/add-push-source/add-push-source-form.types";
 import { EditAddPushSourceService } from "src/app/dataset-view/additional-components/metadata-component/components/source-events/add-push-source/edit-add-push-source.service";
+import { ReadControls } from "src/app/dataset-view/additional-components/metadata-component/components/source-events/source-event-controls.types";
 import { mockDatasetInfo, mockParseAddPushSourceEventFromYamlToObject } from "src/app/search/mock.data";
 
 describe("EditAddPushSourceService", () => {
@@ -53,7 +55,10 @@ describe("EditAddPushSourceService", () => {
         ];
         const spy = vi.spyOn(blockService, "getAddPushSourceSchemaFields").mockReturnValue(of(expectedFields));
 
-        const readForm = new FormGroup({ schema: new FormControl<DataSchemaField[]>([]) });
+        const readForm = new FormGroup<ReadControls>({
+            kind: new FormControl(ReadKind.CSV, { nonNullable: true }),
+            schema: new FormControl<DataSchemaField[]>([], { nonNullable: true }),
+        });
         service.patchSchemaField(readForm, mockDatasetInfo, "my-source", destroyRef);
 
         expect(spy).toHaveBeenCalledWith(
@@ -63,12 +68,12 @@ describe("EditAddPushSourceService", () => {
                 sourceName: "my-source",
             }),
         );
-        expect(readForm.get("schema")?.value).toEqual(expectedFields);
+        expect(readForm.controls.schema?.value).toEqual(expectedFields);
     });
 
     it("should not subscribe when schema control is absent in patchSchemaField", () => {
         const spy = stubMethod(blockService, "getAddPushSourceSchemaFields");
-        const readForm = new FormGroup({ otherControl: new FormControl("") });
+        const readForm = new FormGroup<ReadControls>({ kind: new FormControl(ReadKind.CSV, { nonNullable: true }) });
         service.patchSchemaField(readForm, mockDatasetInfo, "my-source", destroyRef);
         expect(spy).not.toHaveBeenCalled();
     });

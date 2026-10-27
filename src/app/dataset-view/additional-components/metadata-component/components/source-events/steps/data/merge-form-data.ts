@@ -9,11 +9,15 @@ import { SourcesTooltipsTexts } from "@common/tooltips/sources.text";
 
 import {
     ControlType,
-    JsonFormData,
     MergeKind,
 } from "src/app/dataset-view/additional-components/metadata-component/components/source-events/add-polling-source/add-polling-source-form.types";
+import {
+    JsonFormData,
+    MergeControls,
+} from "src/app/dataset-view/additional-components/metadata-component/components/source-events/source-event-controls.types";
+import { textListControl } from "src/app/dataset-view/additional-components/metadata-component/components/source-events/source-section";
 
-export const MERGE_FORM_DATA: JsonFormData = {
+export const MERGE_FORM_DATA: JsonFormData<MergeControls> = {
     [MergeKind.APPEND]: {
         controls: [],
     },
@@ -21,6 +25,7 @@ export const MERGE_FORM_DATA: JsonFormData = {
         controls: [
             {
                 name: "primaryKey",
+                create: textListControl(),
                 label: "Primary keys",
                 type: ControlType.ARRAY_KEY,
                 placeholder: "Enter primary key...",
@@ -36,6 +41,7 @@ export const MERGE_FORM_DATA: JsonFormData = {
         controls: [
             {
                 name: "primaryKey",
+                create: textListControl(),
                 label: "Primary keys",
                 placeholder: "Enter primary key...",
                 tooltip: SourcesTooltipsTexts.PRIMARY_KEYS,
@@ -47,6 +53,7 @@ export const MERGE_FORM_DATA: JsonFormData = {
             },
             {
                 name: "compareColumns",
+                create: textListControl(),
                 label: "Compare columns",
                 placeholder: "Enter column name...",
                 type: ControlType.ARRAY_KEY,
@@ -63,6 +70,7 @@ export const MERGE_FORM_DATA: JsonFormData = {
         controls: [
             {
                 name: "primaryKey",
+                create: textListControl(),
                 label: "Primary keys",
                 placeholder: "Enter primary key...",
                 tooltip: SourcesTooltipsTexts.PRIMARY_KEYS,
@@ -78,6 +86,7 @@ export const MERGE_FORM_DATA: JsonFormData = {
         controls: [
             {
                 name: "primaryKey",
+                create: textListControl(),
                 label: "Primary keys",
                 placeholder: "Enter primary key...",
                 tooltip: SourcesTooltipsTexts.PRIMARY_KEYS,

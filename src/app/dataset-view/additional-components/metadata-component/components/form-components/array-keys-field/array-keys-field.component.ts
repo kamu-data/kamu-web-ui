@@ -5,8 +5,8 @@
  * included in the LICENSE file.
  */
 
-import { ChangeDetectionStrategy, Component, inject, Input } from "@angular/core";
-import { FormArray, FormBuilder, ReactiveFormsModule, Validators } from "@angular/forms";
+import { ChangeDetectionStrategy, Component, Input } from "@angular/core";
+import { FormArray, ReactiveFormsModule } from "@angular/forms";
 
 import { RxReactiveFormsModule } from "@rxweb/reactive-form-validators";
 import { NgxTrimDirectiveModule } from "ngx-trim-directive";
@@ -15,6 +15,7 @@ import { TooltipIconComponent } from "@common/components/tooltip-icon/tooltip-ic
 import { requireFormArray } from "@common/helpers/form.helpers";
 
 import { BaseField } from "src/app/dataset-view/additional-components/metadata-component/components/form-components/base-field";
+import { listItemControl } from "src/app/dataset-view/additional-components/metadata-component/components/source-events/source-section";
 
 @Component({
     selector: "app-array-keys-field",
@@ -35,14 +36,12 @@ export class ArrayKeysFieldComponent extends BaseField {
     @Input({ required: true }) public buttonText: string;
     @Input({ required: true }) public placeholder: string;
 
-    private fb = inject(FormBuilder);
-
     public get items(): FormArray {
         return requireFormArray(this.form, this.controlName);
     }
 
     public addPrimaryKey(): void {
-        this.items.push(this.fb.control("", [Validators.required]));
+        this.items.push(listItemControl());
     }
 
     public removePrimaryKey(index: number): void {

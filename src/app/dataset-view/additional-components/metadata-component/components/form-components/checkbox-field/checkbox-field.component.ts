@@ -5,7 +5,7 @@
  * included in the LICENSE file.
  */
 
-import { ChangeDetectionStrategy, Component, Input } from "@angular/core";
+import { ChangeDetectionStrategy, Component } from "@angular/core";
 import { ReactiveFormsModule } from "@angular/forms";
 
 import { RxReactiveFormsModule } from "@rxweb/reactive-form-validators";
@@ -27,6 +27,4 @@ import { BaseField } from "src/app/dataset-view/additional-components/metadata-c
         TooltipIconComponent,
     ],
 })
-export class CheckboxFieldComponent extends BaseField {
-    @Input({ required: true }) public checked: boolean;
-}
+export class CheckboxFieldComponent extends BaseField {}

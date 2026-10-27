@@ -27,11 +27,7 @@ export function parseYamlAs<T>(text: string): T {
     return parse(text) as T;
 }
 
-/**
- * The value of a form whose type does not say its shape: one whose controls are added at runtime
- * from config, such as the source event editor, or the untyped form behind a custom form control.
- * It is the form's own value object, not a copy.
- */
+/** The value of the untyped form behind a custom form control, in the shape its subclass builds. */
 export function formValueAs<T>(control: AbstractControl): T {
     return control.value as T;
 }

@@ -6,100 +6,67 @@
  */
 
 import { ComponentFixture, TestBed } from "@angular/core/testing";
-import { FormGroupDirective } from "@angular/forms";
+import { FormArray, FormGroup, FormGroupDirective } from "@angular/forms";
 
 import { Apollo } from "apollo-angular";
 
 import { emitClickOnElementByDataTestId, setComponentInput } from "@common/helpers/base-test.helpers.spec";
 import { SharedTestModule } from "@common/modules/shared-test.module";
-import { MaybeNull } from "@interface/app.types";
 
-import { mockSetPollingSourceEventYaml } from "src/app/dataset-view/additional-components/metadata-component/components/set-transform/mock.data";
 import {
     DecompressFormat,
     PrepareKind,
     SetPollingSourceSection,
 } from "src/app/dataset-view/additional-components/metadata-component/components/source-events/add-polling-source/add-polling-source-form.types";
-import { createSourceEventFormGroupDirective } from "src/app/dataset-view/additional-components/metadata-component/components/source-events/steps/base-step/base-step.mock";
+import { PrepareStepForm } from "src/app/dataset-view/additional-components/metadata-component/components/source-events/source-event-controls.types";
 import { PrepareStepComponent } from "src/app/dataset-view/additional-components/metadata-component/components/source-events/steps/prepare-step/prepare-step.component";
 
 describe("PrepareStepComponent", () => {
     let component: PrepareStepComponent;
     let fixture: ComponentFixture<PrepareStepComponent>;
+    let prepareForm: FormArray<PrepareStepForm>;
 
     beforeEach(async () => {
+        prepareForm = new FormArray<PrepareStepForm>([]);
+        const formGroupDirective = new FormGroupDirective([], []);
+        formGroupDirective.form = new FormGroup({ prepare: prepareForm });
         await TestBed.configureTestingModule({
-            providers: [Apollo, { provide: FormGroupDirective, useFactory: createSourceEventFormGroupDirective }],
+            providers: [Apollo, { provide: FormGroupDirective, useValue: formGroupDirective }],
             imports: [SharedTestModule, PrepareStepComponent],
         }).compileComponents();
-    });
 
-    function createComponent(eventYamlByHash: MaybeNull<string>): void {
         fixture = TestBed.createComponent(PrepareStepComponent);
         component = fixture.componentInstance;
         setComponentInput(fixture, "sectionName", SetPollingSourceSection.PREPARE);
-        setComponentInput(fixture, "eventYamlByHash", eventYamlByHash);
+        setComponentInput(fixture, "sectionForm", prepareForm);
         fixture.detectChanges();
-    }
-
-    describe("editing an existing event", () => {
-        beforeEach(() => createComponent(mockSetPollingSourceEventYaml));
-
-        it("should load the prepare steps from the event", () => {
-            expect(component.sectionForm.value).toEqual([
-                { kind: PrepareKind.PIPE, command: "jq -c .result[]" },
-                { kind: PrepareKind.DECOMPRESS, format: "zip", subPath: null },
-            ]);
-        });
     });
 
-    describe("editing an event with a step of an unknown kind", () => {
-        beforeEach(() =>
-            createComponent(
-                mockSetPollingSourceEventYaml.replace(
-                    "    - kind: Pipe\n",
-                    "    - kind: Unknown\n      value: 1\n    - kind: Pipe\n",
-                ),
-            ),
-        );
-
-        it("should load only the steps of known kinds", () => {
-            expect(component.sectionForm.value).toEqual([
-                { kind: PrepareKind.PIPE, command: "jq -c .result[]" },
-                { kind: PrepareKind.DECOMPRESS, format: "zip", subPath: null },
-            ]);
-        });
+    it("should start with no steps", () => {
+        expect(component.sectionForm.length).toEqual(0);
     });
 
-    describe("starting without steps", () => {
-        beforeEach(() => createComponent(null));
+    it("should add and delete a pipe step", () => {
+        emitClickOnElementByDataTestId(fixture, "add-pipe");
+        fixture.detectChanges();
+        expect(prepareForm.getRawValue()).toEqual([{ kind: PrepareKind.PIPE, command: "" }]);
 
-        it("should start with no steps", () => {
-            expect(component.sectionForm.length).toEqual(0);
-        });
+        emitClickOnElementByDataTestId(fixture, "remove-item-0");
+        expect(prepareForm.length).toEqual(0);
+    });
 
-        it("should add and delete a pipe step", () => {
-            emitClickOnElementByDataTestId(fixture, "add-pipe");
-            fixture.detectChanges();
-            expect(component.sectionForm.length).toEqual(1);
+    it("should add a decompress step and move it down", () => {
+        const decompress = {
+            kind: PrepareKind.DECOMPRESS,
+            format: DecompressFormat.ZIP,
+            subPath: "",
+        };
+        emitClickOnElementByDataTestId(fixture, "add-decompress");
+        emitClickOnElementByDataTestId(fixture, "add-pipe");
+        fixture.detectChanges();
+        expect(prepareForm.at(0).getRawValue()).toEqual(decompress);
 
-            emitClickOnElementByDataTestId(fixture, "remove-item-0");
-            expect(component.sectionForm.length).toEqual(0);
-        });
-
-        it("should add a decompress step and move it down", () => {
-            const decompress = {
-                kind: PrepareKind.DECOMPRESS,
-                format: DecompressFormat.ZIP,
-                subPath: "",
-            };
-            emitClickOnElementByDataTestId(fixture, "add-decompress");
-            emitClickOnElementByDataTestId(fixture, "add-pipe");
-            fixture.detectChanges();
-            expect(component.sectionForm.at(0).value).toEqual(decompress);
-
-            emitClickOnElementByDataTestId(fixture, "move-down-item-0");
-            expect(component.sectionForm.at(1).value).toEqual(decompress);
-        });
+        emitClickOnElementByDataTestId(fixture, "move-down-item-0");
+        expect(prepareForm.at(1).getRawValue()).toEqual(decompress);
     });
 });

@@ -5,8 +5,8 @@
  * included in the LICENSE file.
  */
 
-import { ChangeDetectionStrategy, Component, inject, Input } from "@angular/core";
-import { FormArray, FormBuilder, FormGroup, ReactiveFormsModule } from "@angular/forms";
+import { ChangeDetectionStrategy, Component, Input } from "@angular/core";
+import { FormArray, ReactiveFormsModule } from "@angular/forms";
 
 import { RxReactiveFormsModule } from "@rxweb/reactive-form-validators";
 import { NgxTrimDirectiveModule } from "ngx-trim-directive";
@@ -15,7 +15,7 @@ import { TooltipIconComponent } from "@common/components/tooltip-icon/tooltip-ic
 import { requireFormArray } from "@common/helpers/form.helpers";
 
 import { BaseField } from "src/app/dataset-view/additional-components/metadata-component/components/form-components/base-field";
-import { KeyValueForm } from "src/app/dataset-view/additional-components/metadata-component/components/form-components/key-value-field/key-value-field.types";
+import { nameValueGroup } from "src/app/dataset-view/additional-components/metadata-component/components/source-events/source-section";
 
 @Component({
     selector: "app-key-value-field",
@@ -35,21 +35,12 @@ import { KeyValueForm } from "src/app/dataset-view/additional-components/metadat
 export class KeyValueFieldComponent extends BaseField {
     @Input({ required: true }) public buttonText: string;
 
-    private fb = inject(FormBuilder);
-
     public get items(): FormArray {
         return requireFormArray(this.form, this.controlName);
     }
 
-    public get keyValueForm(): FormGroup<KeyValueForm> {
-        return this.fb.group<KeyValueForm>({
-            name: this.fb.control(""),
-            value: this.fb.control(""),
-        });
-    }
-
     public addItem(): void {
-        this.items.push(this.keyValueForm);
+        this.items.push(nameValueGroup());
     }
 
     public removeItem(index: number): void {

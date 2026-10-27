@@ -22,6 +22,7 @@ import {
     AddPushSourceEditFormType,
     EditAddPushSourceParseType,
 } from "src/app/dataset-view/additional-components/metadata-component/components/source-events/add-push-source/add-push-source-form.types";
+import { ReadControls } from "src/app/dataset-view/additional-components/metadata-component/components/source-events/source-event-controls.types";
 
 @Injectable({
     providedIn: "root",
@@ -30,8 +31,14 @@ export class EditAddPushSourceService {
     private blockService = inject(BlockService);
 
     public parseEventFromYaml(event: string): AddPushSourceEditFormType {
-        const editFormParseValue = parseYamlAs<EditAddPushSourceParseType>(event);
-        return editFormParseValue.content.event;
+        const parsedEvent = parseYamlAs<EditAddPushSourceParseType>(event).content.event;
+        return {
+            ...parsedEvent,
+            read: {
+                ...parsedEvent.read,
+                schema: parsedEvent.read.schema?.fields ?? [],
+            },
+        };
     }
 
     public getEventAsYaml(info: DatasetInfo, sourceName: string): Observable<MaybeNullOrUndefined<string>> {
@@ -42,8 +49,13 @@ export class EditAddPushSourceService {
         });
     }
 
-    public patchSchemaField(readForm: FormGroup, info: DatasetInfo, sourceName: string, destroyRef: DestroyRef): void {
-        const schemaControl = readForm.get("schema");
+    public patchSchemaField(
+        readForm: FormGroup<ReadControls>,
+        info: DatasetInfo,
+        sourceName: string,
+        destroyRef: DestroyRef,
+    ): void {
+        const schemaControl = readForm.controls.schema;
         if (!schemaControl) return;
         this.blockService
             .getAddPushSourceSchemaFields({ ...info, sourceName })

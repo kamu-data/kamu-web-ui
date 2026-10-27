@@ -74,7 +74,7 @@ export type Scalars = {
   EvmWalletAddress: { input: string; output: string; }
   ExtraAttributes: { input: string; output: string; }
   /** JSON object of user-defined fields with string, number or boolean values */
-  ExtraData: { input: Record<string, any>; output: Record<string, any>; }
+  ExtraData: { input: Record<string, unknown>; output: Record<string, unknown>; }
   /** Unique identifier of a flow */
   FlowID: { input: string; output: string; }
   /** A scalar that can represent any JSON value. */
@@ -7724,7 +7724,7 @@ export type CollectionEntryConnectionDataFragment = { __typename: 'CollectionEnt
     & DatasetPageInfoFragment
   ) };
 
-export type CollectionEntryDataFragment = { __typename: 'CollectionEntry', systemTime: string, path: string, ref: string, extraData: Record<string, any>, asDataset?: { __typename: 'Dataset', alias: string, head: string, owner: (
+export type CollectionEntryDataFragment = { __typename: 'CollectionEntry', systemTime: string, path: string, ref: string, extraData: Record<string, unknown>, asDataset?: { __typename: 'Dataset', alias: string, head: string, owner: (
       { __typename: 'Account' }
       & AccountSummaryFragment
     ), data: { __typename: 'DatasetData', estimatedSizeBytes: number }, asVersionedFile?: { __typename: 'VersionedFile', latest?: { __typename: 'VersionedFileEntry', systemTime: string, contentType: string, contentLength: number, contentHash: string } | null } | null } | null };

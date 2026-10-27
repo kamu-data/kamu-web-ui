@@ -62,7 +62,8 @@ src/app/api/gql/**/*.graphql ┴─ npm run gql-codegen ─→ src/app/api/kamu.
   `kamu.graphql.interface.ts` in the same change. The file is generated — the edit hook refuses
   hand edits.
 - Codegen config is `gql-codegen.yml`: `inlineFragmentTypes: combine`, unknown scalars default
-  to `string`, `ExtraData` is `Record<string, any>`, `Uint64` is `string`.
+  to `string`, `ExtraData` is `Record<string, unknown>` (arbitrary JSON, narrowed where read),
+  `Uint64` is `string`.
 - `nonOptionalTypename` makes `__typename` a required literal on every generated object type,
   since Apollo adds it to every selection: a `switch` on it is exhaustive, and a typename lookup
   needs no cast. `skipTypeNameForRoot` leaves it off `Query` and `Mutation`, where Apollo does

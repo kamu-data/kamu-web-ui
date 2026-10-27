@@ -13,6 +13,7 @@ import { MatRadioButtonHarness } from "@angular/material/radio/testing";
 import { CronExpressionFormHarness } from "@common/components/cron-expression-form/cron-expression-form.harness";
 import { TimeDeltaFormHarness } from "@common/components/time-delta-form/time-delta-form.harness";
 import { TimeDeltaFormValue } from "@common/components/time-delta-form/time-delta-form.value";
+import { unexpectedValueError } from "@common/helpers/app.helpers";
 import { MaybeNull } from "@interface/app.types";
 
 import { ScheduleType } from "src/app/dataset-view/additional-components/dataset-settings-component/dataset-settings.model";
@@ -50,8 +51,7 @@ export class IngestTriggerFormHarness extends ComponentHarness {
                 await cronRadio.check();
             }
         } else {
-            // eslint-disable-next-line @typescript-eslint/restrict-template-expressions
-            throw new Error(`Unsupported schedule type: ${scheduleType}`);
+            throw unexpectedValueError(scheduleType, "schedule type");
         }
     }
 

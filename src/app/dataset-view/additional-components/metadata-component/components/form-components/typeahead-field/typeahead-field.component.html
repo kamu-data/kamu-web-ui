@@ -14,8 +14,8 @@
         [formControlName]="controlName"
         [attr.data-test-id]="dataTestId"
         [ngbTypeahead]="search"
-        (focus)="focus$.next($any($event).target.value)"
-        (click)="click$.next($any($event).target.value)"
+        (focus)="focus$.next(control.value)"
+        (click)="click$.next(control.value)"
         #instance="ngbTypeahead"
         #control
     />

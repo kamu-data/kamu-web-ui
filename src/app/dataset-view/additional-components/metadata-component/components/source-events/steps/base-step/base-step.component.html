@@ -17,17 +17,17 @@
                             [value]="control.value"
                             [requiredField]="control.validators.required"
                             [placeholder]="control.placeholder"
-                            [tooltip]="control.tooltip!"
+                            [tooltip]="control.tooltip"
                             [dataTestId]="sectionName + '-' + control.name"
                         />
                     }
                     @if (control.type === controlType.ARRAY_KEY_VALUE) {
                         <app-key-value-field
                             [form]="sectionForm"
-                            [controlName]="control.options?.formArrayName!"
-                            [label]="control.label!"
-                            [buttonText]="control.options?.buttonText!"
-                            [tooltip]="control.tooltip!"
+                            [controlName]="control.options.formArrayName"
+                            [label]="control.label"
+                            [buttonText]="control.options.buttonText"
+                            [tooltip]="control.tooltip"
                         />
                     }
                     @if (control.type === controlType.ARRAY_KEY) {
@@ -35,9 +35,9 @@
                             [form]="sectionForm"
                             [controlName]="control.name"
                             [label]="control.label"
-                            [buttonText]="control.options?.buttonText!"
-                            [placeholder]="control.placeholder!"
-                            [tooltip]="control.tooltip!"
+                            [buttonText]="control.options.buttonText"
+                            [placeholder]="control.placeholder"
+                            [tooltip]="control.tooltip"
                         />
                     }
                     @if (control.type === controlType.CHECKBOX) {
@@ -47,7 +47,7 @@
                             [label]="control.label"
                             [checked]="control.value"
                             [dataTestId]="control.dataTestId"
-                            [tooltip]="control.tooltip!"
+                            [tooltip]="control.tooltip"
                         />
                     }
                     @if (control.type === controlType.SCHEMA) {
@@ -55,7 +55,7 @@
                             [form]="sectionForm"
                             [controlName]="control.name"
                             [label]="control.label"
-                            [tooltip]="control.tooltip!"
+                            [tooltip]="control.tooltip"
                         />
                     }
                     @if (control.type === controlType.EVENT_TIME) {
@@ -63,8 +63,8 @@
                             [form]="sectionForm"
                             [controlName]="control.name"
                             [label]="control.label"
-                            [tooltip]="control.tooltip!"
-                            [innerTooltips]="control.options?.innerTooltips!"
+                            [tooltip]="control.tooltip"
+                            [innerTooltips]="control.options.innerTooltips"
                         />
                     }
                     @if (control.type === controlType.CACHE) {
@@ -72,7 +72,7 @@
                             [form]="sectionForm"
                             [controlName]="control.name"
                             [label]="control.label"
-                            [tooltip]="control.tooltip!"
+                            [tooltip]="control.tooltip"
                         />
                     }
                     @if (control.type === controlType.ORDER) {
@@ -80,7 +80,7 @@
                             [form]="sectionForm"
                             [controlName]="control.name"
                             [label]="control.label"
-                            [tooltip]="control.tooltip!"
+                            [tooltip]="control.tooltip"
                         />
                     }
                     @if (control.type === controlType.TYPEAHEAD) {
@@ -88,9 +88,9 @@
                             [form]="sectionForm"
                             [controlName]="control.name"
                             [label]="control.label"
-                            [placeholder]="control.placeholder!"
-                            [data]="control.list!"
-                            [tooltip]="control.tooltip!"
+                            [placeholder]="control.placeholder"
+                            [data]="control.list"
+                            [tooltip]="control.tooltip"
                             [maxLength]="control.validators.maxLength"
                         />
                     }
@@ -99,8 +99,8 @@
                             [form]="sectionForm"
                             [controlName]="control.name"
                             [label]="control.label"
-                            [tooltip]="control.tooltip!"
-                            [controlDescriptors]="control.readFormatDescriptors!"
+                            [tooltip]="control.tooltip"
+                            [controlDescriptors]="control.readFormatDescriptors"
                         />
                     }
                     @if (control.type === controlType.NUMBER) {
@@ -111,17 +111,17 @@
                             [value]="control.value"
                             [requiredField]="control.validators.required"
                             [placeholder]="control.placeholder"
-                            [tooltip]="control.tooltip!"
+                            [tooltip]="control.tooltip"
                         />
                     }
                     @if (control.type === controlType.TOPICS) {
                         <app-topics-field
                             [form]="sectionForm"
-                            [controlName]="control.options?.formArrayName!"
-                            [label]="control.label!"
-                            [buttonText]="control.options?.buttonText!"
+                            [controlName]="control.options.formArrayName"
+                            [label]="control.label"
+                            [buttonText]="control.options.buttonText"
                             [requiredField]="control.validators.required"
-                            [tooltip]="control.tooltip!"
+                            [tooltip]="control.tooltip"
                         />
                     }
                 </div>

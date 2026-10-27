@@ -14,13 +14,14 @@ import { filter, finalize, fromEvent, map, Observable, takeUntil } from "rxjs";
 import { NgbModal } from "@ng-bootstrap/ng-bootstrap";
 
 import { BaseComponent } from "@common/components/base.component";
-import { isRecord, promiseWithCatch } from "@common/helpers/app.helpers";
+import { promiseWithCatch } from "@common/helpers/app.helpers";
 import { openModal } from "@common/helpers/modal.helpers";
 import RoutingResolvers from "@common/resolvers/routing-resolvers";
 import AppValues from "@common/values/app.values";
 import { DatasetBasicsFragment, DatasetKind } from "@api/kamu.graphql.interface";
 import { MaybeNull } from "@interface/app.types";
 import { DatasetRequestBySql } from "@interface/dataset.interface";
+import { isDatasetOffsetRangeState } from "@interface/navigation.interface";
 
 import { DatasetFlowsService } from "src/app/dataset-view/additional-components/flows-component/services/dataset-flows.service";
 import { AddDataModalComponent } from "src/app/dataset-view/additional-components/overview-component/components/add-data-modal/add-data-modal.component";
@@ -96,8 +97,9 @@ export class DataComponent extends BaseComponent implements OnInit {
             this.sqlRequestCode = sqlQueryFromUrl;
         } else {
             this.sqlRequestCode += `'${this.dataTabData.datasetBasics.alias}'`;
+            // History state is whatever the entry was pushed with, so it is checked rather than trusted
             const offset: unknown = this.location.getState();
-            if (isRecord(offset) && typeof offset.start === "string" && typeof offset.end === "string") {
+            if (isDatasetOffsetRangeState(offset)) {
                 this.sqlRequestCode += `\nwhere ${this.offsetColumnName}>=${offset.start} and ${this.offsetColumnName}<=${offset.end}\norder by ${this.offsetColumnName} desc`;
                 return;
             }

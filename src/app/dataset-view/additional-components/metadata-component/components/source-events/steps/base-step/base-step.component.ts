@@ -136,27 +136,29 @@ export class BaseStepComponent extends BaseComponent implements OnInit {
             });
     }
 
-    private isArrayControl(type: ControlType): boolean {
-        return [this.controlType.ARRAY_KEY_VALUE, this.controlType.ARRAY_KEY, this.controlType.SCHEMA].includes(type);
-    }
-
     private initForm(kind: string): void {
         this.sectionFormData[kind].controls.forEach((item: JsonFormControl) => {
-            if (item.type === this.controlType.SCHEMA) {
-                this.sectionForm.addControl(item.name, this.fb.control<DataSchemaField[]>([]));
-            } else if (this.isArrayControl(item.type)) {
-                this.sectionForm.addControl(item.name, this.fb.array([]));
-            } else if (item.type === this.controlType.EVENT_TIME) {
-                this.sectionForm.addControl(
-                    item.name,
-                    this.fb.group({
-                        kind: [this.DEFAULT_EVENT_TIME_SOURCE],
-                    }),
-                );
-            } else if (item.type === this.controlType.TOPICS) {
-                this.sectionForm.addControl(item.name, this.fb.array([], getValidators(item.validators)));
-            } else {
-                this.sectionForm.addControl(item.name, this.fb.control(item.value, getValidators(item.validators)));
+            switch (item.type) {
+                case ControlType.SCHEMA:
+                    this.sectionForm.addControl(item.name, this.fb.control<DataSchemaField[]>([]));
+                    break;
+                case ControlType.ARRAY_KEY_VALUE:
+                case ControlType.ARRAY_KEY:
+                    this.sectionForm.addControl(item.name, this.fb.array([]));
+                    break;
+                case ControlType.EVENT_TIME:
+                    this.sectionForm.addControl(
+                        item.name,
+                        this.fb.group({
+                            kind: [this.DEFAULT_EVENT_TIME_SOURCE],
+                        }),
+                    );
+                    break;
+                case ControlType.TOPICS:
+                    this.sectionForm.addControl(item.name, this.fb.array([], getValidators(item.validators)));
+                    break;
+                default:
+                    this.sectionForm.addControl(item.name, this.fb.control(item.value, getValidators(item.validators)));
             }
         });
     }

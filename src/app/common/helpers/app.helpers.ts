@@ -201,46 +201,21 @@ export function oneOf<T extends string>(values: readonly T[], value: unknown): M
     return values.find((member) => member === value);
 }
 
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-export function isEqual(value: any, other: any) {
-    if (typeof value !== "object" && typeof other !== "object") {
-        return Object.is(value, other);
-    }
-    if (value === null && other === null) {
+export function isEqual(value: unknown, other: unknown): boolean {
+    if (Object.is(value, other)) {
         return true;
-    }
-    if (typeof value !== typeof other) {
-        return false;
     }
     if (Array.isArray(value) && Array.isArray(other)) {
-        if (value.length !== other.length) {
-            return false;
-        }
-        for (let i = 0; i < value.length; i++) {
-            if (!isEqual(value[i], other[i])) {
-                return false;
-            }
-        }
-        return true;
+        return value.length === other.length && value.every((item, index) => isEqual(item, other[index]));
     }
-    if (Array.isArray(value) || Array.isArray(other)) {
-        return false;
+    if (isRecord(value) && isRecord(other)) {
+        const keys = Object.keys(value);
+        return (
+            keys.length === Object.keys(other).length &&
+            keys.every((key) => key in other && isEqual(value[key], other[key]))
+        );
     }
-    // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
-    if (Object.keys(value).length !== Object.keys(other).length) {
-        return false;
-    }
-    // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
-    for (const [k, v] of Object.entries(value)) {
-        if (!(k in other)) {
-            return false;
-        }
-        // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
-        if (!isEqual(v, other[k])) {
-            return false;
-        }
-    }
-    return true;
+    return false;
 }
 
 export const HIGHLIGHT_OPTIONS_PROVIDER = {

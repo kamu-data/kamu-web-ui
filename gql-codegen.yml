@@ -16,5 +16,5 @@ generates:
       defaultScalarType: string
       gqlImport: "@apollo/client/core#gql"
       scalars:
-        ExtraData: Record<string, any>
+        ExtraData: Record<string, unknown>
         Uint64: string

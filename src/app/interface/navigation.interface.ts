@@ -5,10 +5,25 @@
  * included in the LICENSE file.
  */
 
+import { isRecord } from "@common/helpers/app.helpers";
 import { FlowProcessEffectiveState } from "@api/kamu.graphql.interface";
 
 import { FlowDetailsTabs } from "src/app/dataset-flow/dataset-flow-details/dataset-flow-details.types";
 import { FlowsCategoryUnion } from "src/app/dataset-view/additional-components/flows-component/flows.helpers";
+
+/** History state of the Data tab: the offset range its first query selects. */
+export interface DatasetOffsetRangeState {
+    start: string | number;
+    end: string | number;
+}
+
+export function isDatasetOffsetRangeState(state: unknown): state is DatasetOffsetRangeState {
+    return isRecord(state) && isOffset(state.start) && isOffset(state.end);
+}
+
+function isOffset(value: unknown): value is string | number {
+    return typeof value === "string" || typeof value === "number";
+}
 
 export interface DatasetNavigationParams {
     accountName: string;
@@ -16,7 +31,7 @@ export interface DatasetNavigationParams {
     tab?: string;
     page?: number;
     section?: string;
-    state?: object;
+    state?: DatasetOffsetRangeState;
     sqlQuery?: string;
     webhookId?: string[];
     category?: FlowsCategoryUnion;

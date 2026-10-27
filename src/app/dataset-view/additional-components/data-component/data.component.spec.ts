@@ -147,8 +147,11 @@ describe("DataComponent", () => {
         expect(component.sqlRequestCode).toEqual(mockQuery);
     });
 
-    it("should check set query with offset", async () => {
-        vi.spyOn(location, "getState").mockReturnValue({ start: "0", end: "100" });
+    it.each([
+        ["strings", { start: "0", end: "100" }],
+        ["numbers", { start: 0, end: 100 }],
+    ])("should check set query with offset given as %s", async (_, offset) => {
+        vi.spyOn(location, "getState").mockReturnValue(offset);
         const mockQuery = "select * from 'kamu/mockNameRoot'";
         const mockEntry = {
             query: mockQuery,

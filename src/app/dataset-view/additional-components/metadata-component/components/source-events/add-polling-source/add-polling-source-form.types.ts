@@ -8,6 +8,8 @@
 import { SqlQueryStep, Transform } from "@api/kamu.graphql.interface";
 import { DataSchemaField } from "@interface/dataset-schema.interface";
 
+import { SourceOrder } from "src/app/dataset-view/additional-components/metadata-component/components/source-events/add-polling-source/process-form.service.types";
+
 export enum SetPollingSourceSection {
     READ = "read",
     FETCH = "fetch",
@@ -28,40 +30,6 @@ export interface ReadFormatControlType {
     label: string;
     value: string;
 }
-
-interface JsonFormControlBase {
-    name: string;
-    label: string;
-    tooltip: string;
-    validators: JsonFormValidators;
-    dataTestId?: string;
-}
-
-interface JsonFormArrayOptions {
-    formArrayName: string;
-    buttonText: string;
-}
-
-/** A control of a source event step, configured per kind; `type` decides which fields it has. */
-export type JsonFormControl = JsonFormControlBase &
-    (
-        | { type: ControlType.TEXT | ControlType.NUMBER; value: string; placeholder?: string }
-        | { type: ControlType.CHECKBOX; value: boolean }
-        | { type: ControlType.CACHE | ControlType.ORDER; value: string }
-        | { type: ControlType.TYPEAHEAD; value: string; placeholder?: string; list: string[] }
-        | { type: ControlType.JSON_KIND; value: string; readFormatDescriptors: ReadFormatControlType[] }
-        | { type: ControlType.ARRAY_KEY_VALUE | ControlType.TOPICS; options: JsonFormArrayOptions }
-        | { type: ControlType.ARRAY_KEY; placeholder: string; options: Pick<JsonFormArrayOptions, "buttonText"> }
-        | { type: ControlType.EVENT_TIME; options: { innerTooltips: Record<string, string> } }
-        | { type: ControlType.SCHEMA }
-    );
-
-export type JsonFormData = Record<
-    string,
-    {
-        controls: JsonFormControl[];
-    }
->;
 
 export enum ControlType {
     TEXT = "text",
@@ -126,62 +94,85 @@ export enum EventTimeSourceKind {
     FROM_SYSTEM_TIME = "FromSystemTime",
 }
 
+export interface EventTimeValue {
+    kind: EventTimeSourceKind;
+    pattern?: string;
+    timestampFormat?: string;
+}
+
+/** ODF's `SourceCaching`, whose only variant caches the fetched data forever. */
+export interface SourceCachingValue {
+    kind: "Forever";
+}
+
+export interface FetchStepValue {
+    kind: FetchKind;
+    url?: string;
+    path?: string;
+    image?: string;
+    host?: string;
+    port?: number;
+    username?: string;
+    password?: string;
+    chainId?: number;
+    nodeUrl?: string;
+    filter?: string;
+    signature?: string;
+    eventTime?: EventTimeValue;
+    headers?: NameValue[];
+    env?: EnvVar[];
+    command?: string[];
+    args?: string[];
+    topics?: TopicsType[];
+    cache?: SourceCachingValue;
+    order?: SourceOrder;
+}
+
+export interface ReadStepValue {
+    kind: ReadKind;
+    jsonKind?: ReadKind;
+    schema?: DataSchemaField[];
+    subPath?: string;
+    header?: boolean;
+    inferSchema?: boolean;
+    encoding?: string;
+    separator?: string;
+    quote?: string;
+    escape?: string;
+    nullValue?: string;
+    dateFormat?: string;
+    timestampFormat?: string;
+}
+
+export interface MergeStepValue {
+    kind: MergeKind;
+    primaryKey?: string[];
+    compareColumns?: string[];
+}
+
+export type PrepareStepValue =
+    | { kind: PrepareKind.PIPE; command: string[] }
+    | { kind: PrepareKind.DECOMPRESS; format: DecompressFormat; subPath?: string };
+
+export interface PreprocessValue extends Transform {
+    kind: PreprocessKind.SQL;
+    query?: string;
+}
+
+/** A `SetPollingSource` event: what the editor reads from YAML and writes back. */
 export interface AddPollingSourceEditFormType {
     kind?: string;
-    fetch: {
-        kind: FetchKind;
-        eventTime?: {
-            kind: EventTimeSourceKind;
-            pattern?: string;
-            timestampFormat?: string;
-        };
-        headers?: NameValue[];
-        env?: NameValue[];
-        command?: string[];
-        args?: string[];
-        path?: string;
-        url?: string;
-        image?: string;
-        order?: string;
-        topics?: TopicsType[];
-        chainId?: number;
-        nodeUrl?: string;
-        filter?: string;
-        signature?: string;
-    };
-    read: {
-        kind: ReadKind;
-        jsonKind?: ReadKind;
-        subPath?: string;
-        schema: DataSchemaField[];
-        separator?: string;
-        encoding?: string;
-        quote?: string;
-        escape?: string;
-        dateFormat?: string;
-        timestampFormat?: string;
-    };
-    merge: {
-        kind: MergeKind;
-        primaryKey?: string[];
-        compareColumns?: string[];
-    };
-    preprocess?: Transform & {
-        kind: PreprocessKind.SQL;
-        query?: string;
-    };
-    prepare?: {
-        kind: PrepareKind;
-        command?: string[] | string;
-        format?: string;
-        subPath?: string;
-    }[];
+    fetch: FetchStepValue;
+    prepare?: PrepareStepValue[];
+    read: ReadStepValue;
+    preprocess?: PreprocessValue;
+    merge: MergeStepValue;
 }
 
 export interface EditFormParseType {
     content: {
         event: Omit<AddPollingSourceEditFormType, "read"> & {
-            read: Omit<AddPollingSourceEditFormType["read"], "schema"> & {
+            read: Omit<ReadStepValue, "schema"> & {
                 schema?: {
                     fields: DataSchemaField[];
                 };
@@ -193,6 +184,12 @@ export interface EditFormParseType {
 export interface NameValue {
     name: string;
     value: string;
+}
+
+/** An environment variable of a container; one without a value takes the value the host sets. */
+export interface EnvVar {
+    name: string;
+    value?: string;
 }
 
 export interface TopicsType {

@@ -6,7 +6,7 @@
  */
 
 import { ComponentFixture, TestBed } from "@angular/core/testing";
-import { FormGroup } from "@angular/forms";
+import { FormControl, FormGroup } from "@angular/forms";
 
 import { emitClickOnElementByDataTestId, setComponentInput } from "@common/helpers/base-test.helpers.spec";
 import { SharedTestModule } from "@common/modules/shared-test.module";
@@ -25,7 +25,11 @@ describe("OrderFieldComponent", () => {
 
         fixture = TestBed.createComponent(OrderFieldComponent);
         component = fixture.componentInstance;
-        setComponentInput(fixture, "form", new FormGroup({}));
+        setComponentInput(
+            fixture,
+            "form",
+            new FormGroup({ order: new FormControl(SourceOrder.NONE, { nonNullable: true }) }),
+        );
         setComponentInput(fixture, "controlName", "order");
         fixture.detectChanges();
     });

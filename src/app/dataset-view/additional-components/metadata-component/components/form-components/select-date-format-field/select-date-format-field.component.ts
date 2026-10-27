@@ -5,11 +5,11 @@
  * included in the LICENSE file.
  */
 
-import { ChangeDetectionStrategy, Component, inject, Input, OnInit } from "@angular/core";
+import { ChangeDetectionStrategy, Component, Input, OnInit } from "@angular/core";
 import { takeUntilDestroyed } from "@angular/core/rxjs-interop";
-import { FormBuilder, FormGroup, ReactiveFormsModule } from "@angular/forms";
+import { FormGroup, ReactiveFormsModule, Validators } from "@angular/forms";
 
-import { RxReactiveFormsModule, RxwebValidators } from "@rxweb/reactive-form-validators";
+import { RxReactiveFormsModule } from "@rxweb/reactive-form-validators";
 
 import { TooltipIconComponent } from "@common/components/tooltip-icon/tooltip-icon.component";
 import { enumValueOf } from "@common/helpers/app.helpers";
@@ -19,6 +19,7 @@ import { BaseField } from "src/app/dataset-view/additional-components/metadata-c
 import { InputFieldComponent } from "src/app/dataset-view/additional-components/metadata-component/components/form-components/input-field/input-field.component";
 import { TypeaheadFieldComponent } from "src/app/dataset-view/additional-components/metadata-component/components/form-components/typeahead-field/typeahead-field.component";
 import { EventTimeSourceKind } from "src/app/dataset-view/additional-components/metadata-component/components/source-events/add-polling-source/add-polling-source-form.types";
+import { textControl } from "src/app/dataset-view/additional-components/metadata-component/components/source-events/source-section";
 
 @Component({
     selector: "app-select-date-format-field",
@@ -53,8 +54,6 @@ export class SelectDateFormatFieldComponent extends BaseField implements OnInit 
         "YYYY-M-D",
     ];
 
-    private fb = inject(FormBuilder);
-
     public ngOnInit(): void {
         this.chooseEventTimeSource();
     }
@@ -81,11 +80,8 @@ export class SelectDateFormatFieldComponent extends BaseField implements OnInit 
                     this.currentSource = EventTimeSourceKind.FROM_SYSTEM_TIME;
                 } else {
                     this.currentSource = kind;
-                    this.eventTimeGroup.addControl(
-                        this.PATTERN_NAME_CONTROL,
-                        this.fb.control("", RxwebValidators.required()),
-                    );
-                    this.eventTimeGroup.addControl(this.TIMESTAMP_FORMAT_NAME_CONTROL, this.fb.control(""));
+                    this.eventTimeGroup.addControl(this.PATTERN_NAME_CONTROL, textControl("", [Validators.required]));
+                    this.eventTimeGroup.addControl(this.TIMESTAMP_FORMAT_NAME_CONTROL, textControl(""));
                 }
             });
     }

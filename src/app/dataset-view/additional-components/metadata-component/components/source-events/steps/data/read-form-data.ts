@@ -7,18 +7,24 @@
 
 import { SourcesTooltipsTexts } from "@common/tooltips/sources.text";
 import { OdfDefaultValues } from "@common/values/app-odf-default.values";
+import { DataSchemaField } from "@interface/dataset-schema.interface";
 
 import {
     ControlType,
-    JsonFormData,
     ReadKind,
 } from "src/app/dataset-view/additional-components/metadata-component/components/source-events/add-polling-source/add-polling-source-form.types";
+import {
+    JsonFormData,
+    ReadControls,
+} from "src/app/dataset-view/additional-components/metadata-component/components/source-events/source-event-controls.types";
+import { valueControl } from "src/app/dataset-view/additional-components/metadata-component/components/source-events/source-section";
 
-export const READ_FORM_DATA: JsonFormData = {
+export const READ_FORM_DATA: JsonFormData<ReadControls> = {
     Csv: {
         controls: [
             {
                 name: "schema",
+                create: valueControl<DataSchemaField[]>([]),
                 label: "Schema",
                 type: ControlType.SCHEMA,
                 tooltip: SourcesTooltipsTexts.SCHEMA,
@@ -26,8 +32,8 @@ export const READ_FORM_DATA: JsonFormData = {
             },
             {
                 name: "header",
+                create: valueControl(OdfDefaultValues.CSV_HEADER),
                 label: "Header",
-                value: OdfDefaultValues.CSV_HEADER,
                 type: ControlType.CHECKBOX,
                 tooltip: SourcesTooltipsTexts.HEADER,
                 validators: {},
@@ -35,8 +41,8 @@ export const READ_FORM_DATA: JsonFormData = {
             },
             {
                 name: "encoding",
+                create: valueControl(OdfDefaultValues.CSV_ENCODING),
                 label: "Encoding",
-                value: OdfDefaultValues.CSV_ENCODING,
                 type: ControlType.TEXT,
                 tooltip: SourcesTooltipsTexts.ENCODING,
                 placeholder: "Enter encoding type...",
@@ -44,8 +50,8 @@ export const READ_FORM_DATA: JsonFormData = {
             },
             {
                 name: "separator",
+                create: valueControl(OdfDefaultValues.CSV_SEPARATOR),
                 label: "Separator",
-                value: OdfDefaultValues.CSV_SEPARATOR,
                 type: ControlType.TYPEAHEAD,
                 placeholder: "--Select character--",
                 tooltip: SourcesTooltipsTexts.SEPARATOR,
@@ -57,8 +63,8 @@ export const READ_FORM_DATA: JsonFormData = {
 
             {
                 name: "quote",
+                create: valueControl(OdfDefaultValues.CSV_QUOTE),
                 label: "Quote character",
-                value: OdfDefaultValues.CSV_QUOTE,
                 type: ControlType.TYPEAHEAD,
                 placeholder: "--Select character--",
                 tooltip: SourcesTooltipsTexts.QUOTE,
@@ -69,8 +75,8 @@ export const READ_FORM_DATA: JsonFormData = {
             },
             {
                 name: "escape",
+                create: valueControl(OdfDefaultValues.CSV_ESCAPE),
                 label: "Escape character",
-                value: OdfDefaultValues.CSV_ESCAPE,
                 type: ControlType.TYPEAHEAD,
                 placeholder: "Enter escape character...",
                 tooltip: SourcesTooltipsTexts.ESCAPE,
@@ -81,8 +87,8 @@ export const READ_FORM_DATA: JsonFormData = {
             },
             {
                 name: "nullValue",
+                create: valueControl(OdfDefaultValues.CSV_NULL_VALUE),
                 label: "Null value",
-                value: OdfDefaultValues.CSV_NULL_VALUE,
                 type: ControlType.TEXT,
                 tooltip: SourcesTooltipsTexts.NULL_VALUE,
                 placeholder: "Enter null value...",
@@ -90,8 +96,8 @@ export const READ_FORM_DATA: JsonFormData = {
             },
             {
                 name: "dateFormat",
+                create: valueControl(OdfDefaultValues.CSV_DATE_FORMAT),
                 label: "Date format",
-                value: OdfDefaultValues.CSV_DATE_FORMAT,
                 type: ControlType.TYPEAHEAD,
                 tooltip: SourcesTooltipsTexts.DATE_FORMAT,
                 placeholder: "--Select format--",
@@ -100,8 +106,8 @@ export const READ_FORM_DATA: JsonFormData = {
             },
             {
                 name: "timestampFormat",
+                create: valueControl(OdfDefaultValues.CSV_TIMESTAMP_FORMAT),
                 label: "Timestamp format",
-                value: OdfDefaultValues.CSV_TIMESTAMP_FORMAT,
                 type: ControlType.TYPEAHEAD,
                 placeholder: "--Select format--",
                 tooltip: SourcesTooltipsTexts.TIMESTAMP_FORMAT,
@@ -110,8 +116,8 @@ export const READ_FORM_DATA: JsonFormData = {
             },
             {
                 name: "inferSchema",
+                create: valueControl(OdfDefaultValues.CSV_INFER_SCHEMA),
                 label: "Infer schema",
-                value: OdfDefaultValues.CSV_INFER_SCHEMA,
                 type: ControlType.CHECKBOX,
                 tooltip: SourcesTooltipsTexts.INFER_SCHEMA,
                 validators: {},
@@ -123,6 +129,7 @@ export const READ_FORM_DATA: JsonFormData = {
         controls: [
             {
                 name: "schema",
+                create: valueControl<DataSchemaField[]>([]),
                 label: "Schema",
                 type: ControlType.SCHEMA,
                 tooltip: SourcesTooltipsTexts.SCHEMA,
@@ -130,8 +137,8 @@ export const READ_FORM_DATA: JsonFormData = {
             },
             {
                 name: "jsonKind",
+                create: valueControl(ReadKind.GEO_JSON),
                 label: "Select reader format",
-                value: ReadKind.GEO_JSON,
                 type: ControlType.JSON_KIND,
                 tooltip: SourcesTooltipsTexts.READ_JSON,
                 validators: {},
@@ -146,6 +153,7 @@ export const READ_FORM_DATA: JsonFormData = {
         controls: [
             {
                 name: "schema",
+                create: valueControl<DataSchemaField[]>([]),
                 label: "Schema",
                 type: ControlType.SCHEMA,
                 tooltip: SourcesTooltipsTexts.SCHEMA,
@@ -153,8 +161,8 @@ export const READ_FORM_DATA: JsonFormData = {
             },
             {
                 name: "subPath",
+                create: valueControl(""),
                 label: "Path",
-                value: "",
                 type: ControlType.TEXT,
                 tooltip: SourcesTooltipsTexts.SUB_PATH,
                 placeholder: "Enter path to data file...",
@@ -166,6 +174,7 @@ export const READ_FORM_DATA: JsonFormData = {
         controls: [
             {
                 name: "schema",
+                create: valueControl<DataSchemaField[]>([]),
                 label: "Schema",
                 tooltip: SourcesTooltipsTexts.SCHEMA,
                 type: ControlType.SCHEMA,
@@ -177,6 +186,7 @@ export const READ_FORM_DATA: JsonFormData = {
         controls: [
             {
                 name: "schema",
+                create: valueControl<DataSchemaField[]>([]),
                 label: "Schema",
                 type: ControlType.SCHEMA,
                 tooltip: SourcesTooltipsTexts.SCHEMA,
@@ -184,8 +194,8 @@ export const READ_FORM_DATA: JsonFormData = {
             },
             {
                 name: "jsonKind",
+                create: valueControl(ReadKind.JSON),
                 label: "Select reader format",
-                value: ReadKind.JSON,
                 type: ControlType.JSON_KIND,
                 tooltip: SourcesTooltipsTexts.READ_JSON,
                 validators: {},
@@ -196,8 +206,8 @@ export const READ_FORM_DATA: JsonFormData = {
             },
             {
                 name: "encoding",
+                create: valueControl(OdfDefaultValues.CSV_ENCODING),
                 label: "Encoding",
-                value: OdfDefaultValues.CSV_ENCODING,
                 type: ControlType.TEXT,
                 tooltip: SourcesTooltipsTexts.ENCODING,
                 placeholder: "Enter encoding...",
@@ -205,8 +215,8 @@ export const READ_FORM_DATA: JsonFormData = {
             },
             {
                 name: "dateFormat",
+                create: valueControl("rfc3339"),
                 label: "Date format",
-                value: "rfc3339",
                 type: ControlType.TYPEAHEAD,
                 tooltip: SourcesTooltipsTexts.DATE_FORMAT,
                 placeholder: "--Select format--",
@@ -215,8 +225,8 @@ export const READ_FORM_DATA: JsonFormData = {
             },
             {
                 name: "timestampFormat",
+                create: valueControl("rfc3339"),
                 label: "Timestamp format",
-                value: "rfc3339",
                 type: ControlType.TYPEAHEAD,
                 placeholder: "--Select format--",
                 tooltip: SourcesTooltipsTexts.TIMESTAMP_FORMAT,
@@ -224,17 +234,5 @@ export const READ_FORM_DATA: JsonFormData = {
                 validators: {},
             },
         ],
-    },
-    NdGeoJson: {
-        controls: [],
-    },
-    GeoJson: {
-        controls: [],
-    },
-    NdJson: {
-        controls: [],
-    },
-    Json: {
-        controls: [],
     },
 };

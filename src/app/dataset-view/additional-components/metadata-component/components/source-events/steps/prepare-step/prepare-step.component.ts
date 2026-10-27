@@ -5,30 +5,25 @@
  * included in the LICENSE file.
  */
 
-import { ChangeDetectionStrategy, Component, inject, Input, OnInit } from "@angular/core";
-import {
-    ControlContainer,
-    FormArray,
-    FormBuilder,
-    FormGroup,
-    FormGroupDirective,
-    ReactiveFormsModule,
-    Validators,
-} from "@angular/forms";
+import { ChangeDetectionStrategy, Component, Input } from "@angular/core";
+import { ControlContainer, FormArray, FormGroup, FormGroupDirective, ReactiveFormsModule } from "@angular/forms";
 import { MatIconModule } from "@angular/material/icon";
 
-import { BaseComponent } from "@common/components/base.component";
 import { FormValidationErrorsDirective } from "@common/directives/form-validation-errors.directive";
-import { requireFormArray } from "@common/helpers/form.helpers";
 import { MaybeNull } from "@interface/app.types";
 
 import {
-    AddPollingSourceEditFormType,
-    DecompressFormat,
     PrepareKind,
     SetPollingSourceSection,
 } from "src/app/dataset-view/additional-components/metadata-component/components/source-events/add-polling-source/add-polling-source-form.types";
-import { EditPollingSourceService } from "src/app/dataset-view/additional-components/metadata-component/components/source-events/add-polling-source/edit-polling-source.service";
+import {
+    PipeStepControls,
+    PrepareStepForm,
+} from "src/app/dataset-view/additional-components/metadata-component/components/source-events/source-event-controls.types";
+import {
+    decompressStepGroup,
+    pipeStepGroup,
+} from "src/app/dataset-view/additional-components/metadata-component/components/source-events/source-section";
 
 @Component({
     selector: "app-prepare-step",
@@ -45,70 +40,21 @@ import { EditPollingSourceService } from "src/app/dataset-view/additional-compon
         FormValidationErrorsDirective,
     ],
 })
-export class PrepareStepComponent extends BaseComponent implements OnInit {
-    @Input({ required: true }) public eventYamlByHash: MaybeNull<string> = null;
+export class PrepareStepComponent {
     @Input({ required: true }) public sectionName: SetPollingSourceSection;
-    public parentForm: FormGroup;
-    public setPollingSourceEvent: MaybeNull<AddPollingSourceEditFormType> = null;
-    public readonly prepareKind: typeof PrepareKind = PrepareKind;
+    @Input({ required: true }) public sectionForm: FormArray<PrepareStepForm>;
 
-    private rootFormGroupDirective = inject(FormGroupDirective);
-    private fb = inject(FormBuilder);
-    private editService = inject(EditPollingSourceService);
-
-    public ngOnInit(): void {
-        this.parentForm = this.rootFormGroupDirective.form;
-        if (this.eventYamlByHash) {
-            this.setPollingSourceEvent = this.editService.parseEventFromYaml(this.eventYamlByHash);
-            this.initExistingPrepareStep(this.setPollingSourceEvent);
-        }
-    }
-
-    private initExistingPrepareStep(event: AddPollingSourceEditFormType): void {
-        if (event.prepare && this.sectionForm.length === 0) {
-            event.prepare.forEach((item) => {
-                // Steps of a kind the form has no editor for are skipped
-                if (item.kind === PrepareKind.PIPE && Array.isArray(item.command)) {
-                    this.sectionForm.push(
-                        this.fb.group({
-                            kind: this.fb.control(PrepareKind.PIPE),
-                            command: this.fb.control(item.command.join(" "), Validators.required),
-                        }),
-                    );
-                } else if (item.kind === PrepareKind.DECOMPRESS) {
-                    this.sectionForm.push(
-                        this.fb.group({
-                            kind: this.fb.control(PrepareKind.DECOMPRESS),
-                            format: this.fb.control(item.format),
-                            subPath: this.fb.control(item.subPath),
-                        }),
-                    );
-                }
-            });
-        }
-    }
-
-    public get sectionForm(): FormArray {
-        return requireFormArray(this.parentForm, this.sectionName);
+    /** The step as a pipe step's form, or `null` for a step of another kind. */
+    public pipeStep(step: PrepareStepForm): MaybeNull<FormGroup<PipeStepControls>> {
+        return isPipeStep(step) ? step : null;
     }
 
     public addPipe(): void {
-        this.sectionForm.push(
-            this.fb.group({
-                kind: this.fb.control(PrepareKind.PIPE),
-                command: this.fb.control("", Validators.required),
-            }),
-        );
+        this.sectionForm.push(pipeStepGroup());
     }
 
     public addDecompress(): void {
-        this.sectionForm.push(
-            this.fb.group({
-                kind: this.fb.control(PrepareKind.DECOMPRESS),
-                format: this.fb.control(DecompressFormat.ZIP),
-                subPath: this.fb.control(""),
-            }),
-        );
+        this.sectionForm.push(decompressStepGroup());
     }
 
     public delete(index: number): void {
@@ -128,4 +74,8 @@ export class PrepareStepComponent extends BaseComponent implements OnInit {
     public isFirstItem(index: number): boolean {
         return index === 0;
     }
+}
+
+function isPipeStep(step: PrepareStepForm): step is FormGroup<PipeStepControls> {
+    return step.controls.kind.value === PrepareKind.PIPE;
 }

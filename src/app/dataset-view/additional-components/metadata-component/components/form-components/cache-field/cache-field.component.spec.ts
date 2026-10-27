@@ -17,6 +17,7 @@ describe("CacheFieldComponent", () => {
     let component: CacheFieldComponent;
     let fixture: ComponentFixture<CacheFieldComponent>;
     const dataTestId = "cache-control";
+    let cacheControl: FormControl<boolean>;
 
     beforeEach(async () => {
         await TestBed.configureTestingModule({
@@ -26,7 +27,8 @@ describe("CacheFieldComponent", () => {
         fixture = TestBed.createComponent(CacheFieldComponent);
         component = fixture.componentInstance;
         setComponentInput(fixture, "controlName", "cache");
-        setComponentInput(fixture, "form", new FormGroup({ cache: new FormControl(false) }));
+        cacheControl = new FormControl(false, { nonNullable: true });
+        setComponentInput(fixture, "form", new FormGroup({ cache: cacheControl }));
         setComponentInput(fixture, "dataTestId", dataTestId);
         fixture.detectChanges();
     });
@@ -35,16 +37,13 @@ describe("CacheFieldComponent", () => {
         expect(component).toBeTruthy();
     });
 
-    it("should check checked and unchecked value", () => {
+    it("should check and uncheck caching", () => {
         const cacheCheckbox = getElementByDataTestId(fixture, "cache-control", HTMLInputElement);
-        const onCheckedCacheSpy = vi.spyOn(component, "onCheckedCache");
 
         cacheCheckbox.click();
-        expect(onCheckedCacheSpy).toHaveBeenCalledTimes(1);
-        expect(component.form.controls.cache).toBeDefined();
+        expect(cacheControl.value).toBe(true);
 
         cacheCheckbox.click();
-        expect(onCheckedCacheSpy).toHaveBeenCalledTimes(2);
-        expect(component.form.controls.cache).toBeUndefined();
+        expect(cacheControl.value).toBe(false);
     });
 });

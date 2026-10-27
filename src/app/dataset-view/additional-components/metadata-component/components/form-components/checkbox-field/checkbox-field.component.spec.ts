@@ -28,7 +28,6 @@ describe("CheckboxFieldComponent", () => {
         setComponentInput(fixture, "controlName", "test");
         setComponentInput(fixture, "tooltip", "Test tooltip");
         setComponentInput(fixture, "dataTestId", "checkbox");
-        setComponentInput(fixture, "checked", false);
         fixture.detectChanges();
     });
 

@@ -9,18 +9,28 @@ import { SetPollingSourceTooltipsTexts } from "@common/tooltips/set-polling-sour
 import { SourcesTooltipsTexts } from "@common/tooltips/sources.text";
 import AppValues from "@common/values/app.values";
 
+import { ControlType } from "src/app/dataset-view/additional-components/metadata-component/components/source-events/add-polling-source/add-polling-source-form.types";
+import { SourceOrder } from "src/app/dataset-view/additional-components/metadata-component/components/source-events/add-polling-source/process-form.service.types";
 import {
-    ControlType,
+    FetchControls,
     JsonFormData,
-} from "src/app/dataset-view/additional-components/metadata-component/components/source-events/add-polling-source/add-polling-source-form.types";
+} from "src/app/dataset-view/additional-components/metadata-component/components/source-events/source-event-controls.types";
+import {
+    eventTimeControl,
+    nameValueListControl,
+    numberInputControl,
+    textListControl,
+    topicListControl,
+    valueControl,
+} from "src/app/dataset-view/additional-components/metadata-component/components/source-events/source-section";
 
-export const FETCH_FORM_DATA: JsonFormData = {
+export const FETCH_FORM_DATA: JsonFormData<FetchControls> = {
     Url: {
         controls: [
             {
                 name: "url",
+                create: valueControl(""),
                 label: "Url",
-                value: "",
                 type: ControlType.TEXT,
                 placeholder: "Enter url",
                 tooltip: SetPollingSourceTooltipsTexts.URL,
@@ -31,6 +41,7 @@ export const FETCH_FORM_DATA: JsonFormData = {
             },
             {
                 name: "eventTime",
+                create: eventTimeControl(),
                 label: "Event time",
                 type: ControlType.EVENT_TIME,
                 tooltip: SetPollingSourceTooltipsTexts.EVENT_TIME,
@@ -45,19 +56,19 @@ export const FETCH_FORM_DATA: JsonFormData = {
             },
             {
                 name: "headers",
+                create: nameValueListControl(),
                 label: "Headers",
                 type: ControlType.ARRAY_KEY_VALUE,
                 tooltip: SourcesTooltipsTexts.HEADERS,
                 options: {
-                    formArrayName: "headers",
                     buttonText: "+ Add headers",
                 },
                 validators: {},
             },
             {
                 name: "cache",
+                create: valueControl(false),
                 label: "Use cache",
-                value: "",
                 tooltip: SetPollingSourceTooltipsTexts.CACHE,
                 type: ControlType.CACHE,
                 validators: {},
@@ -68,8 +79,8 @@ export const FETCH_FORM_DATA: JsonFormData = {
         controls: [
             {
                 name: "path",
+                create: valueControl(""),
                 label: "Path",
-                value: "",
                 type: ControlType.TEXT,
                 placeholder: "Enter path",
                 tooltip: SetPollingSourceTooltipsTexts.PATH,
@@ -80,14 +91,15 @@ export const FETCH_FORM_DATA: JsonFormData = {
 
             {
                 name: "order",
+                create: valueControl(SourceOrder.NONE),
                 label: "Order",
-                value: "NONE",
                 type: ControlType.ORDER,
                 tooltip: SetPollingSourceTooltipsTexts.PATH,
                 validators: {},
             },
             {
                 name: "eventTime",
+                create: eventTimeControl(),
                 label: "Event time",
                 type: ControlType.EVENT_TIME,
                 tooltip: SetPollingSourceTooltipsTexts.EVENT_TIME,
@@ -101,8 +113,8 @@ export const FETCH_FORM_DATA: JsonFormData = {
             },
             {
                 name: "cache",
+                create: valueControl(false),
                 label: "Use cache",
-                value: "",
                 type: ControlType.CACHE,
                 tooltip: SetPollingSourceTooltipsTexts.CACHE,
                 validators: {},
@@ -113,8 +125,8 @@ export const FETCH_FORM_DATA: JsonFormData = {
         controls: [
             {
                 name: "image",
+                create: valueControl(""),
                 label: "Image",
-                value: "",
                 type: ControlType.TEXT,
                 placeholder: "Enter image..",
                 tooltip: SetPollingSourceTooltipsTexts.IMAGE,
@@ -124,6 +136,7 @@ export const FETCH_FORM_DATA: JsonFormData = {
             },
             {
                 name: "command",
+                create: textListControl(),
                 label: "Commands",
                 placeholder: "Enter command...",
                 type: ControlType.ARRAY_KEY,
@@ -135,6 +148,7 @@ export const FETCH_FORM_DATA: JsonFormData = {
             },
             {
                 name: "args",
+                create: textListControl(),
                 label: "Arguments",
                 placeholder: "Enter argument...",
                 type: ControlType.ARRAY_KEY,
@@ -147,11 +161,11 @@ export const FETCH_FORM_DATA: JsonFormData = {
 
             {
                 name: "env",
+                create: nameValueListControl(),
                 label: "Environment variables",
                 type: ControlType.ARRAY_KEY_VALUE,
                 tooltip: SetPollingSourceTooltipsTexts.ENVIRONMENT_VARIABLES,
                 options: {
-                    formArrayName: "env",
                     buttonText: "+ Add variable",
                 },
                 validators: {},
@@ -162,8 +176,8 @@ export const FETCH_FORM_DATA: JsonFormData = {
         controls: [
             {
                 name: "host",
+                create: valueControl(""),
                 label: "Host",
-                value: "",
                 type: ControlType.TEXT,
                 placeholder: "Enter host",
                 tooltip: SetPollingSourceTooltipsTexts.MQTT_HOST,
@@ -173,8 +187,8 @@ export const FETCH_FORM_DATA: JsonFormData = {
             },
             {
                 name: "port",
+                create: numberInputControl(),
                 label: "Port",
-                value: "",
                 type: ControlType.NUMBER,
                 placeholder: "Enter port",
                 tooltip: SetPollingSourceTooltipsTexts.MQTT_PORT,
@@ -184,8 +198,8 @@ export const FETCH_FORM_DATA: JsonFormData = {
             },
             {
                 name: "username",
+                create: valueControl(""),
                 label: "Username",
-                value: "",
                 type: ControlType.TEXT,
                 placeholder: "Enter username",
                 tooltip: SetPollingSourceTooltipsTexts.MQTT_USERNAME,
@@ -193,8 +207,8 @@ export const FETCH_FORM_DATA: JsonFormData = {
             },
             {
                 name: "password",
+                create: valueControl(""),
                 label: "Password",
-                value: "",
                 type: ControlType.TEXT,
                 placeholder: "Enter password",
                 tooltip: SetPollingSourceTooltipsTexts.MQTT_PASSWORD,
@@ -202,11 +216,11 @@ export const FETCH_FORM_DATA: JsonFormData = {
             },
             {
                 name: "topics",
+                create: topicListControl(),
                 label: "Topics",
                 type: ControlType.TOPICS,
                 tooltip: SetPollingSourceTooltipsTexts.MQTT_TOPICS,
                 options: {
-                    formArrayName: "topics",
                     buttonText: "+ Add new topic",
                 },
                 validators: {
@@ -219,8 +233,8 @@ export const FETCH_FORM_DATA: JsonFormData = {
         controls: [
             {
                 name: "chainId",
+                create: numberInputControl(),
                 label: "Chain ID",
-                value: "",
                 type: ControlType.NUMBER,
                 placeholder: "Enter id",
                 tooltip: SetPollingSourceTooltipsTexts.ETHEREUM_LOGS_CHAIN_ID,
@@ -228,8 +242,8 @@ export const FETCH_FORM_DATA: JsonFormData = {
             },
             {
                 name: "nodeUrl",
+                create: valueControl(""),
                 label: "Node url",
-                value: "",
                 type: ControlType.TEXT,
                 placeholder: "Enter url",
                 tooltip: SetPollingSourceTooltipsTexts.ETHEREUM_LOGS_NODE_URL,
@@ -239,8 +253,8 @@ export const FETCH_FORM_DATA: JsonFormData = {
             },
             {
                 name: "filter",
+                create: valueControl(""),
                 label: "Filter",
-                value: "",
                 type: ControlType.TEXT,
                 placeholder: "Enter filter",
                 tooltip: SetPollingSourceTooltipsTexts.ETHEREUM_LOGS_FILTER,
@@ -248,8 +262,8 @@ export const FETCH_FORM_DATA: JsonFormData = {
             },
             {
                 name: "signature",
+                create: valueControl(""),
                 label: "Signature",
-                value: "",
                 type: ControlType.TEXT,
                 placeholder: "Enter signature",
                 tooltip: SetPollingSourceTooltipsTexts.ETHEREUM_LOGS_SIGNATURE,

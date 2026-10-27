@@ -8,13 +8,13 @@
 import { AbstractControl, ValidationErrors } from "@angular/forms";
 
 import { validateSchemaFields } from "@common/components/edit-schema-table/validation/schema-validation";
-import { formValueAs } from "@common/helpers/untyped-boundary.helpers";
 import { MaybeNull } from "@interface/app.types";
 import { DataSchemaField } from "@interface/dataset-schema.interface";
 
-export function schemaValidator(control: AbstractControl): MaybeNull<ValidationErrors> {
-    const fields = formValueAs<DataSchemaField[]>(control);
-    if (!Array.isArray(fields) || fields.length === 0) return null;
+/** Validates the schema control of a read step. */
+export function schemaValidator(control: AbstractControl<DataSchemaField[]>): MaybeNull<ValidationErrors> {
+    const fields = control.value;
+    if (fields.length === 0) return null;
     const errors = validateSchemaFields(fields);
     return errors.length > 0 ? { schemaErrors: errors } : null;
 }

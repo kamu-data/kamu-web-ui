@@ -33,7 +33,6 @@ import { BaseField } from "src/app/dataset-view/additional-components/metadata-c
     ],
 })
 export class InputFieldComponent extends BaseField {
-    @Input() public value: string;
     @Input() public placeholder?: string;
     @Input() public requiredField?: boolean;
 }

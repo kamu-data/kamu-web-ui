@@ -6,155 +6,158 @@
  */
 
 import { TestBed } from "@angular/core/testing";
-import { FormArray, FormControl, FormGroup } from "@angular/forms";
 
 import {
+    DecompressFormat,
     EventTimeSourceKind,
     FetchKind,
     MergeKind,
     PrepareKind,
     ReadKind,
 } from "src/app/dataset-view/additional-components/metadata-component/components/source-events/add-polling-source/add-polling-source-form.types";
-import { ProcessFormService } from "src/app/dataset-view/additional-components/metadata-component/services/process-form.service";
+import { SourceOrder } from "src/app/dataset-view/additional-components/metadata-component/components/source-events/add-polling-source/process-form.service.types";
+import {
+    PollingSourceFormValue,
+    ProcessFormService,
+} from "src/app/dataset-view/additional-components/metadata-component/services/process-form.service";
 
 describe("ProcessFormService", () => {
     let service: ProcessFormService;
-    const formGroup = new FormGroup({
-        fetch: new FormGroup({
-            order: new FormControl("NONE"),
-            eventTime: new FormGroup({
-                kind: new FormControl(EventTimeSourceKind.FROM_METADATA),
-                timestampFormat: new FormControl(""),
-            }),
-            cache: new FormControl(false),
-        }),
-        read: new FormGroup({
-            kind: new FormControl(ReadKind.CSV),
-            schema: new FormArray([
-                new FormGroup({
-                    name: new FormControl("id"),
-                    type: new FormControl("BIGINT"),
-                }),
-            ]),
-        }),
-        merge: new FormGroup({
-            kind: new FormControl(MergeKind.APPEND),
-        }),
-    });
+
+    const read: PollingSourceFormValue["read"] = {
+        kind: ReadKind.CSV,
+        header: false,
+        separator: ",",
+        nullValue: "",
+    };
+    const merge: PollingSourceFormValue["merge"] = { kind: MergeKind.LEDGER, primaryKey: ["id"], compareColumns: [] };
+
+    function pollingSourceValue(fetch: PollingSourceFormValue["fetch"]): PollingSourceFormValue {
+        return { fetch, prepare: [], read, merge };
+    }
 
     beforeEach(() => {
         TestBed.configureTestingModule({});
         service = TestBed.inject(ProcessFormService);
     });
 
-    it("should be created", () => {
-        expect(service).toBeTruthy();
-    });
-
-    it("should check transform form is call", () => {
-        const transformFormSpy = vi.spyOn(service, "transformForm");
-        const initialResult = {
-            fetch: {
-                order: "NONE",
-                eventTime: { kind: EventTimeSourceKind.FROM_METADATA, timestampFormat: "" },
+    it("should leave out empty fields, an unset order and an unchecked cache", () => {
+        const event = service.pollingSourceEvent(
+            pollingSourceValue({
+                kind: FetchKind.URL,
+                url: "https://example.com/data.csv",
+                headers: [],
+                eventTime: { kind: EventTimeSourceKind.FROM_METADATA, pattern: "", timestampFormat: "" },
                 cache: false,
-            },
-            read: { kind: ReadKind.CSV, schema: [{ name: "id", type: "BIGINT" }] },
-            merge: { kind: MergeKind.APPEND },
-        };
-        const expectedResult = {
-            fetch: { eventTime: { kind: EventTimeSourceKind.FROM_METADATA } },
-            read: { kind: ReadKind.CSV, schema: [{ name: "id", type: "BIGINT" }] },
-            merge: { kind: MergeKind.APPEND },
-        };
-        expect(formGroup.value).toEqual(initialResult);
-        service.transformForm(formGroup);
-        expect(transformFormSpy).toHaveBeenCalledTimes(1);
-        expect(formGroup.value).toEqual(expectedResult);
-    });
+                order: SourceOrder.NONE,
+            }),
+        );
 
-    it("should check remove eventTime when fetch type is container ", () => {
-        const formGroupFetchContainer = new FormGroup({
-            fetch: new FormGroup({
-                kind: new FormControl(FetchKind.CONTAINER),
-                eventTime: new FormGroup({
-                    kind: new FormControl(EventTimeSourceKind.FROM_METADATA),
-                    timestampFormat: new FormControl(""),
-                }),
-            }),
-            read: new FormGroup({
-                kind: new FormControl(ReadKind.CSV),
-                schema: new FormArray([
-                    new FormGroup({
-                        name: new FormControl("id (A.M.)"),
-                        type: new FormControl("BIGINT"),
-                    }),
-                ]),
-            }),
-            merge: new FormGroup({
-                kind: new FormControl(MergeKind.APPEND),
-            }),
-        });
-
-        const initialResult = {
+        expect(event).toEqual({
             fetch: {
-                kind: FetchKind.CONTAINER,
-                eventTime: { kind: EventTimeSourceKind.FROM_METADATA, timestampFormat: "" },
+                kind: FetchKind.URL,
+                url: "https://example.com/data.csv",
+                eventTime: { kind: EventTimeSourceKind.FROM_METADATA },
             },
-            read: {
-                kind: ReadKind.CSV,
-                schema: [{ name: "id (A.M.)", type: "BIGINT" }],
-            },
-            merge: { kind: MergeKind.APPEND },
-        };
-        const expectedResult = {
-            fetch: { kind: FetchKind.CONTAINER },
-            read: { kind: ReadKind.CSV, schema: [{ name: "id (A.M.)", type: "BIGINT" }] },
-            merge: { kind: MergeKind.APPEND },
-        };
-        expect(formGroupFetchContainer.value).toEqual(initialResult);
-        service.transformForm(formGroupFetchContainer);
-
-        expect(formGroupFetchContainer.value).toEqual(expectedResult);
+            read: { kind: ReadKind.CSV, separator: "," },
+            merge: { kind: MergeKind.LEDGER, primaryKey: ["id"] },
+        });
     });
 
-    it("should check parse command correct on the PREPARE step. ", () => {
-        const formGroupFetchContainer = new FormGroup({
-            fetch: new FormGroup({
-                kind: new FormControl(FetchKind.CONTAINER),
-                eventTime: new FormGroup({
-                    kind: new FormControl(EventTimeSourceKind.FROM_METADATA),
-                    timestampFormat: new FormControl(""),
-                }),
+    it("should cache forever when caching is checked, and keep the path pattern of an event time from the path", () => {
+        const event = service.pollingSourceEvent(
+            pollingSourceValue({
+                kind: FetchKind.FILES_GLOB,
+                path: "/data/*.csv",
+                eventTime: { kind: EventTimeSourceKind.FROM_PATH, pattern: "(\\d+).csv", timestampFormat: "" },
+                cache: true,
+                order: SourceOrder.BY_NAME,
             }),
-            prepare: new FormArray([
-                new FormGroup({
-                    kind: new FormControl(PrepareKind.PIPE),
-                    command: new FormControl("i -c '1,/OBSERVATION/d'"),
-                }),
-            ]),
-            read: new FormGroup({
-                kind: new FormControl(ReadKind.CSV),
-                schema: new FormArray([
-                    new FormGroup({
-                        name: new FormControl("id (A.M.)"),
-                        type: new FormControl("BIGINT"),
-                    }),
-                ]),
+        );
+
+        expect(event.fetch).toEqual({
+            kind: FetchKind.FILES_GLOB,
+            path: "/data/*.csv",
+            eventTime: { kind: EventTimeSourceKind.FROM_PATH, pattern: "(\\d+).csv" },
+            cache: { kind: "Forever" },
+            order: SourceOrder.BY_NAME,
+        });
+    });
+
+    it("should leave out the event time of a fetch kind that takes none", () => {
+        const event = service.pollingSourceEvent(
+            pollingSourceValue({
+                kind: FetchKind.CONTAINER,
+                image: "ghcr.io/kamu-data/fetch:latest",
+                eventTime: { kind: EventTimeSourceKind.FROM_METADATA },
+                args: ["--all"],
             }),
-            merge: new FormGroup({
-                kind: new FormControl(MergeKind.APPEND),
+        );
+
+        expect(event.fetch).toEqual({
+            kind: FetchKind.CONTAINER,
+            image: "ghcr.io/kamu-data/fetch:latest",
+            args: ["--all"],
+        });
+    });
+
+    it("should keep numbers typed into number fields and leave out an empty topic quality of service", () => {
+        const event = service.pollingSourceEvent(
+            pollingSourceValue({
+                kind: FetchKind.MQTT,
+                host: "broker.example.com",
+                port: 1883,
+                topics: [
+                    { path: "sensors/a", qos: "" },
+                    { path: "sensors/b", qos: "AtLeastOnce" },
+                ],
             }),
+        );
+
+        expect(event.fetch).toEqual({
+            kind: FetchKind.MQTT,
+            host: "broker.example.com",
+            port: 1883,
+            topics: [{ path: "sensors/a" }, { path: "sensors/b", qos: "AtLeastOnce" }],
+        });
+    });
+
+    it("should leave out a number field the user never filled", () => {
+        const event = service.pollingSourceEvent(
+            pollingSourceValue({ kind: FetchKind.ETHEREUM_LOGS, chainId: "", nodeUrl: "https://node.example.com" }),
+        );
+
+        expect(event.fetch).toEqual({ kind: FetchKind.ETHEREUM_LOGS, nodeUrl: "https://node.example.com" });
+    });
+
+    it("should split a pipe command into arguments and leave out an empty decompress path", () => {
+        const event = service.pollingSourceEvent({
+            ...pollingSourceValue({ kind: FetchKind.URL, url: "https://example.com/data.zip" }),
+            prepare: [
+                { kind: PrepareKind.PIPE, command: "sed -e '1,/OBSERVATION/d'" },
+                { kind: PrepareKind.DECOMPRESS, format: DecompressFormat.ZIP, subPath: "" },
+            ],
         });
 
-        const expectedResult = {
-            fetch: { kind: FetchKind.CONTAINER },
-            read: { kind: ReadKind.CSV, schema: [{ name: "id (A.M.)", type: "BIGINT" }] },
-            prepare: [{ kind: PrepareKind.PIPE, command: ["i", "-c", "'1,/OBSERVATION/d'"] }],
-            merge: { kind: MergeKind.APPEND },
-        };
-        service.transformForm(formGroupFetchContainer);
+        expect(event.prepare).toEqual([
+            { kind: PrepareKind.PIPE, command: ["sed", "-e", "'1,/OBSERVATION/d'"] },
+            { kind: PrepareKind.DECOMPRESS, format: DecompressFormat.ZIP },
+        ]);
+    });
 
-        expect(formGroupFetchContainer.value).toEqual(expect.objectContaining(expectedResult));
+    it("should leave out the prepare step when it has no steps", () => {
+        const event = service.pollingSourceEvent(pollingSourceValue({ kind: FetchKind.URL, url: "https://a.b" }));
+
+        expect("prepare" in event).toBe(false);
+    });
+
+    it("should build a push source event from its name, read and merge steps", () => {
+        const event = service.pushSourceEvent({ sourceName: "device", read, merge });
+
+        expect(event).toEqual({
+            sourceName: "device",
+            read: { kind: ReadKind.CSV, separator: "," },
+            merge: { kind: MergeKind.LEDGER, primaryKey: ["id"] },
+        });
     });
 });

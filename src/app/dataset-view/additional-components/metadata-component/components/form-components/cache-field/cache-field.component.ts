@@ -5,8 +5,8 @@
  * included in the LICENSE file.
  */
 
-import { ChangeDetectionStrategy, Component, inject } from "@angular/core";
-import { FormBuilder, ReactiveFormsModule } from "@angular/forms";
+import { ChangeDetectionStrategy, Component } from "@angular/core";
+import { ReactiveFormsModule } from "@angular/forms";
 
 import { RxReactiveFormsModule } from "@rxweb/reactive-form-validators";
 
@@ -27,14 +27,4 @@ import { BaseField } from "src/app/dataset-view/additional-components/metadata-c
         TooltipIconComponent,
     ],
 })
-export class CacheFieldComponent extends BaseField {
-    private fb = inject(FormBuilder);
-
-    public onCheckedCache(event: Event) {
-        if (event.target instanceof HTMLInputElement && event.target.checked) {
-            this.form.addControl(this.controlName, this.fb.control(true));
-        } else {
-            this.form.removeControl(this.controlName);
-        }
-    }
-}
+export class CacheFieldComponent extends BaseField {}

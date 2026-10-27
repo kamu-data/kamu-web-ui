@@ -13,17 +13,22 @@ import { RouterLink } from "@angular/router";
 import { RxwebValidators } from "@rxweb/reactive-form-validators";
 
 import { enumValueOf, requireValue } from "@common/helpers/app.helpers";
-import { requireFormGroup } from "@common/helpers/form.helpers";
 import { DatasetLinkPipe } from "@common/pipes/dataset-link.pipe";
 import RoutingResolvers from "@common/resolvers/routing-resolvers";
 import { DatasetInfo } from "@interface/navigation.interface";
 
 import { BlockService } from "src/app/dataset-block/metadata-block/block.service";
-import { SupportedEvents } from "src/app/dataset-block/metadata-block/components/event-details/supported.events";
 import { BaseSourceEventComponent } from "src/app/dataset-view/additional-components/metadata-component/components/base-source-event.component";
+import { EditPollingSourceService } from "src/app/dataset-view/additional-components/metadata-component/components/source-events/add-polling-source/edit-polling-source.service";
 import { SourcesSection } from "src/app/dataset-view/additional-components/metadata-component/components/source-events/add-polling-source/process-form.service.types";
 import { AddPushSourceSection } from "src/app/dataset-view/additional-components/metadata-component/components/source-events/add-push-source/add-push-source-form.types";
 import { EditAddPushSourceService } from "src/app/dataset-view/additional-components/metadata-component/components/source-events/add-push-source/edit-add-push-source.service";
+import {
+    MergeControls,
+    PushSourceControls,
+    ReadControls,
+} from "src/app/dataset-view/additional-components/metadata-component/components/source-events/source-event-controls.types";
+import { textControl } from "src/app/dataset-view/additional-components/metadata-component/components/source-events/source-section";
 import { BaseStepComponent } from "src/app/dataset-view/additional-components/metadata-component/components/source-events/steps/base-step/base-step.component";
 import { PreprocessStepComponent } from "src/app/dataset-view/additional-components/metadata-component/components/source-events/steps/preprocess-step/preprocess-step.component";
 import { SourceNameStepComponent } from "src/app/dataset-view/additional-components/metadata-component/components/source-events/steps/source-name-step/source-name-step.component";
@@ -61,6 +66,7 @@ export class AddPushSourceComponent extends BaseSourceEventComponent implements 
     public readonly DatasetViewTypeEnum: typeof DatasetViewTypeEnum = DatasetViewTypeEnum;
 
     private editService = inject(EditAddPushSourceService);
+    private pollingEditService = inject(EditPollingSourceService);
     private blockService = inject(BlockService);
 
     public ngOnInit(): void {
@@ -79,23 +85,23 @@ export class AddPushSourceComponent extends BaseSourceEventComponent implements 
         }
     }
 
-    public addPushSourceForm: FormGroup = this.fb.group({
-        sourceName: this.fb.control("", [RxwebValidators.required()]),
-        read: this.fb.group({
-            kind: [this.READ_DEFAULT_KIND],
-        }),
-        merge: this.fb.group({
-            kind: [this.MERGE_DEFAULT_KIND],
-        }),
+    public readonly addPushSourceForm = new FormGroup<PushSourceControls>({
+        sourceName: textControl("", [RxwebValidators.required()]),
+        read: this.createReadForm(),
+        merge: this.createMergeForm(),
     });
+    public readonly readSection = this.createReadSection(this.readPushForm);
+    public readonly mergeSection = this.createMergeSection(this.mergePushForm);
 
     public initEditForm(): void {
         if (this.eventYamlByHash) {
-            const currentPushSourceEvent = this.editService.parseEventFromYaml(this.eventYamlByHash);
-            this.showPreprocessStep = Boolean(currentPushSourceEvent.preprocess);
-            this.addPushSourceForm.patchValue({
-                sourceName: this.queryParamName ? currentPushSourceEvent.sourceName : "",
-            });
+            const event = this.editService.parseEventFromYaml(this.eventYamlByHash);
+            this.showPreprocessStep = Boolean(event.preprocess);
+            if (this.queryParamName) {
+                this.addPushSourceForm.controls.sourceName.setValue(event.sourceName);
+            }
+            this.pollingEditService.patchReadStep(this.readPushForm, event.read, null, this.destroyRef);
+            this.pollingEditService.patchMergeStep(this.mergePushForm, event.merge);
         }
         if (!this.queryParamName) {
             this.addPushSourceForm.controls.sourceName.addValidators(
@@ -110,12 +116,12 @@ export class AddPushSourceComponent extends BaseSourceEventComponent implements 
         return this.blockService.sourceNames;
     }
 
-    public get readPushForm(): FormGroup {
-        return requireFormGroup(this.addPushSourceForm, AddPushSourceSection.READ);
+    public get readPushForm(): FormGroup<ReadControls> {
+        return this.addPushSourceForm.controls.read;
     }
 
-    public get mergePushForm(): FormGroup {
-        return requireFormGroup(this.addPushSourceForm, AddPushSourceSection.MERGE);
+    public get mergePushForm(): FormGroup<MergeControls> {
+        return this.addPushSourceForm.controls.merge;
     }
 
     public changeStep(step: SourcesSection): void {
@@ -123,10 +129,17 @@ export class AddPushSourceComponent extends BaseSourceEventComponent implements 
     }
 
     public onEditYaml(): void {
-        this.editSourceYaml(this.addPushSourceForm, SupportedEvents.AddPushSource);
+        this.editSourceYaml();
     }
 
     public onSaveEvent(): void {
-        this.saveSourceEvent(this.addPushSourceForm, SupportedEvents.AddPushSource);
+        this.saveSourceEvent();
+    }
+
+    protected buildEventYaml(): string {
+        return this.yamlEventService.buildYamlAddPushSourceEvent(
+            this.processFormService.pushSourceEvent(this.addPushSourceForm.getRawValue()),
+            this.preprocessStep,
+        );
     }
 }

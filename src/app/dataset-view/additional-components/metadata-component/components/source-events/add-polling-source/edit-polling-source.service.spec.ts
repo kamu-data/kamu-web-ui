@@ -11,16 +11,29 @@ import { FormArray, FormControl, FormGroup } from "@angular/forms";
 
 import { Apollo } from "apollo-angular";
 
-import { OdfTypes } from "@interface/dataset-schema.interface";
+import { DataSchemaField, OdfTypes } from "@interface/dataset-schema.interface";
 
+import { mockSetPollingSourceEventYaml } from "src/app/dataset-view/additional-components/metadata-component/components/set-transform/mock.data";
 import {
     AddPollingSourceEditFormType,
+    DecompressFormat,
+    EventTimeSourceKind,
     FetchKind,
     MergeKind,
+    PrepareKind,
     ReadKind,
-    SetPollingSourceSection,
 } from "src/app/dataset-view/additional-components/metadata-component/components/source-events/add-polling-source/add-polling-source-form.types";
 import { EditPollingSourceService } from "src/app/dataset-view/additional-components/metadata-component/components/source-events/add-polling-source/edit-polling-source.service";
+import {
+    FetchControls,
+    MergeControls,
+    PrepareStepForm,
+    ReadControls,
+} from "src/app/dataset-view/additional-components/metadata-component/components/source-events/source-event-controls.types";
+import { SourceSection } from "src/app/dataset-view/additional-components/metadata-component/components/source-events/source-section";
+import { FETCH_FORM_DATA } from "src/app/dataset-view/additional-components/metadata-component/components/source-events/steps/data/fetch-form-data";
+import { MERGE_FORM_DATA } from "src/app/dataset-view/additional-components/metadata-component/components/source-events/steps/data/merge-form-data";
+import { READ_FORM_DATA } from "src/app/dataset-view/additional-components/metadata-component/components/source-events/steps/data/read-form-data";
 import { mockParseSetPollingSourceEventFromYamlToObject } from "src/app/search/mock.data";
 
 describe("EditPollingSourceService", () => {
@@ -69,166 +82,134 @@ content:
         ]);
     });
 
-    it("should be check patch form with fetch url step and without headers", () => {
-        const sectionFetchForm = new FormGroup({
-            kind: new FormControl(FetchKind.URL),
-            url: new FormControl("http://test.com"),
-            eventTime: new FormGroup({}),
-            headers: new FormArray([]),
-        });
-        const editFormValue = {
-            fetch: {
-                kind: FetchKind.URL,
-                url: "http://test.com",
-            },
-            read: {
-                kind: ReadKind.CSV,
-                separator: ",",
-                encoding: "UTF-8",
-                quote: '"',
-                escape: "\\",
-                dateFormat: "yyyy-MM-dd",
-                timestampFormat: "yyyy-MM-dd'T'HH:mm:ss[.SSS][XXX]",
-                schema: [],
-            },
-            merge: {
-                kind: MergeKind.APPEND,
-            },
-        };
-        const result = {
+    function fetchForm(): FormGroup<FetchControls> {
+        const form = new FormGroup<FetchControls>({ kind: new FormControl(FetchKind.URL, { nonNullable: true }) });
+        new SourceSection(form, form.controls.kind, FETCH_FORM_DATA, destroyRef, ["eventTime"]);
+        return form;
+    }
+
+    function readForm(): FormGroup<ReadControls> {
+        const form = new FormGroup<ReadControls>({ kind: new FormControl(ReadKind.CSV, { nonNullable: true }) });
+        new SourceSection(form, form.controls.kind, READ_FORM_DATA, destroyRef, ["schema"]);
+        return form;
+    }
+
+    function mergeForm(): FormGroup<MergeControls> {
+        const form = new FormGroup<MergeControls>({ kind: new FormControl(MergeKind.APPEND, { nonNullable: true }) });
+        new SourceSection(form, form.controls.kind, MERGE_FORM_DATA, destroyRef);
+        return form;
+    }
+
+    it("should patch a url fetch step without headers", () => {
+        const form = fetchForm();
+        service.patchFetchStep(form, { kind: FetchKind.URL, url: "http://test.com" });
+
+        expect(form.getRawValue()).toEqual({
             kind: FetchKind.URL,
             url: "http://test.com",
-            eventTime: { pattern: null, timestampFormat: null },
+            eventTime: { kind: EventTimeSourceKind.FROM_METADATA },
             headers: [],
-        };
-        const groupName = SetPollingSourceSection.FETCH;
-        service.patchFormValues(sectionFetchForm, editFormValue, groupName, null, destroyRef);
-        expect(sectionFetchForm.value.headers?.length).toEqual(0);
-        expect(sectionFetchForm.value.url).toEqual(result.url);
-        expect(sectionFetchForm.value.eventTime).toEqual(result.eventTime);
+            cache: false,
+        });
     });
 
-    it("should be check patch form with fetch url and with headers", () => {
-        const sectionFetchForm = new FormGroup({
-            kind: new FormControl(FetchKind.URL),
-            url: new FormControl(""),
-            eventTime: new FormGroup({}),
-            headers: new FormArray([]),
-        });
-        const editFormValue = {
-            fetch: {
-                kind: FetchKind.URL,
-                url: "http://test.com",
-                headers: [{ name: "test_name", value: "test_value" }],
-            },
-            read: {
-                kind: ReadKind.CSV,
-                separator: ",",
-                encoding: "UTF-8",
-                quote: '"',
-                escape: "\\",
-                dateFormat: "yyyy-MM-dd",
-                timestampFormat: "yyyy-MM-dd'T'HH:mm:ss[.SSS][XXX]",
-                schema: [],
-            },
-            merge: {
-                kind: MergeKind.APPEND,
-            },
-        };
-        const groupName = SetPollingSourceSection.FETCH;
-        const result = {
+    it("should patch a url fetch step with its headers, cache and an event time from the path", () => {
+        const form = fetchForm();
+        service.patchFetchStep(form, {
             kind: FetchKind.URL,
             url: "http://test.com",
-            eventTime: { pattern: null, timestampFormat: null },
             headers: [{ name: "test_name", value: "test_value" }],
-        };
-        service.patchFormValues(sectionFetchForm, editFormValue, groupName, null, destroyRef);
-        expect(sectionFetchForm.value.headers?.length).toEqual(1);
-        expect(sectionFetchForm.value.url).toEqual(result.url);
-        expect(sectionFetchForm.value.eventTime).toEqual(result.eventTime);
+            cache: { kind: "Forever" },
+            eventTime: { kind: EventTimeSourceKind.FROM_PATH, pattern: "(\\d+)" },
+        });
+
+        expect(form.getRawValue()).toEqual({
+            kind: FetchKind.URL,
+            url: "http://test.com",
+            eventTime: { kind: EventTimeSourceKind.FROM_PATH, pattern: "(\\d+)", timestampFormat: "" },
+            headers: [{ name: "test_name", value: "test_value" }],
+            cache: true,
+        });
     });
 
-    it("should be check patch form with fetch CONTAINER step", () => {
-        const sectionFetchForm = new FormGroup({
-            kind: new FormControl(FetchKind.CONTAINER),
-            image: new FormControl(""),
-            eventTime: new FormGroup({}),
-            env: new FormArray([]),
-            command: new FormArray<FormControl<string>>([]),
-            args: new FormArray<FormControl<string>>([]),
-        });
-        const editFormValue = {
-            fetch: {
-                kind: FetchKind.CONTAINER,
-                image: "test_image",
-                env: [],
-                command: ["-a"],
-                args: ["arg1"],
-            },
-            read: {
-                kind: ReadKind.CSV,
-                separator: ",",
-                encoding: "UTF-8",
-                quote: '"',
-                escape: "\\",
-                dateFormat: "yyyy-MM-dd",
-                timestampFormat: "yyyy-MM-dd'T'HH:mm:ss[.SSS][XXX]",
-                schema: [],
-            },
-            merge: {
-                kind: MergeKind.APPEND,
-            },
-        };
-        const result = {
+    it("should switch the fetch step to a container and fill its lists", () => {
+        const form = fetchForm();
+        service.patchFetchStep(form, {
             kind: FetchKind.CONTAINER,
             image: "test_image",
-            eventTime: { pattern: null, timestampFormat: null },
-            env: [],
+            env: [{ name: "KEY", value: "value" }],
             command: ["-a"],
             args: ["arg1"],
-        };
-        const groupName = SetPollingSourceSection.FETCH;
-        service.patchFormValues(sectionFetchForm, editFormValue, groupName, null, destroyRef);
-        expect(sectionFetchForm.value.image).toEqual(result.image);
-        expect(sectionFetchForm.value.command).toEqual(result.command);
-        expect(sectionFetchForm.value.args).toEqual(result.args);
+        });
+
+        expect(form.getRawValue()).toEqual({
+            kind: FetchKind.CONTAINER,
+            image: "test_image",
+            eventTime: { kind: EventTimeSourceKind.FROM_METADATA },
+            command: ["-a"],
+            args: ["arg1"],
+            env: [{ name: "KEY", value: "value" }],
+        });
     });
 
-    it("should patch read form CSV kind without schema when datasetInfo is null", () => {
-        const sectionReadForm = new FormGroup({
-            kind: new FormControl(ReadKind.CSV),
-            schema: new FormControl([]),
-        });
-        const editFormValue: AddPollingSourceEditFormType = {
-            fetch: { kind: FetchKind.CONTAINER, image: "test_image", env: [], command: ["-a"], args: ["arg1"] },
-            read: { kind: ReadKind.CSV, schema: [] },
-            merge: { kind: MergeKind.APPEND },
-        };
-        service.patchFormValues(sectionReadForm, editFormValue, SetPollingSourceSection.READ, null, destroyRef);
-        expect(sectionReadForm.value.kind).toEqual(ReadKind.CSV);
-        expect(sectionReadForm.value.schema).toEqual([]);
+    it("should patch a csv read step and keep the schema from the event without a dataset", () => {
+        const form = readForm();
+        const schema: DataSchemaField[] = [{ name: "id", type: { kind: OdfTypes.Int64 } }];
+        service.patchReadStep(form, { kind: ReadKind.CSV, separator: ";", schema }, null, destroyRef);
+
+        expect(form.controls.kind.value).toEqual(ReadKind.CSV);
+        expect(form.controls.separator?.value).toEqual(";");
+        expect(form.controls.schema?.value).toEqual(schema);
     });
 
-    it("should be check patch form with merge CSV step with schema", () => {
-        const sectionMergeForm = new FormGroup({
-            kind: new FormControl(MergeKind.SNAPSHOT),
-            primaryKey: new FormArray([]),
-            compareColumns: new FormArray([]),
-        });
-        const editFormValue: AddPollingSourceEditFormType = {
-            fetch: { kind: FetchKind.CONTAINER, image: "test_image", env: [], command: ["-a"], args: ["arg1"] },
-            read: { kind: ReadKind.CSV, schema: [{ name: "id", type: { kind: OdfTypes.Int64 } }] },
-            merge: { kind: MergeKind.SNAPSHOT, primaryKey: ["id", "test"], compareColumns: ["id"] },
-        };
-        const groupName = SetPollingSourceSection.MERGE;
-        const result = {
+    it("should patch a json read step as the json kind with its format and path", () => {
+        const form = readForm();
+        service.patchReadStep(form, { kind: ReadKind.JSON, subPath: "items" }, null, destroyRef);
+
+        expect(form.controls.kind.value).toEqual(ReadKind.All_JSON);
+        expect(form.controls.jsonKind?.value).toEqual(ReadKind.JSON);
+        expect(form.controls.subPath?.value).toEqual("items");
+    });
+
+    it("should patch a snapshot merge step with its keys", () => {
+        const form = mergeForm();
+        service.patchMergeStep(form, {
             kind: MergeKind.SNAPSHOT,
             primaryKey: ["id", "test"],
             compareColumns: ["id"],
-        };
-        service.patchFormValues(sectionMergeForm, editFormValue, groupName, null, destroyRef);
-        expect(sectionMergeForm.value.kind).toEqual(result.kind);
-        expect(sectionMergeForm.value.primaryKey?.length).toEqual(result.primaryKey.length);
-        expect(sectionMergeForm.value.compareColumns?.length).toEqual(result.compareColumns.length);
+        });
+
+        expect(form.getRawValue()).toEqual({
+            kind: MergeKind.SNAPSHOT,
+            primaryKey: ["id", "test"],
+            compareColumns: ["id"],
+        });
+    });
+
+    it("should fill the prepare step from the event", () => {
+        const form = new FormArray<PrepareStepForm>([]);
+        service.patchPrepareStep(form, [
+            { kind: PrepareKind.PIPE, command: ["sed", "-e", "s/a/b/"] },
+            { kind: PrepareKind.DECOMPRESS, format: DecompressFormat.GZIP },
+        ]);
+
+        expect(form.getRawValue()).toEqual([
+            { kind: PrepareKind.PIPE, command: "sed -e s/a/b/" },
+            { kind: PrepareKind.DECOMPRESS, format: DecompressFormat.GZIP, subPath: "" },
+        ]);
+    });
+
+    it("should skip the steps of a kind the editor has no form for", () => {
+        const yaml = mockSetPollingSourceEventYaml.replace(
+            "    - kind: Pipe\n",
+            "    - kind: Unknown\n      value: 1\n    - kind: Pipe\n",
+        );
+        const form = new FormArray<PrepareStepForm>([]);
+        service.patchPrepareStep(form, service.parseEventFromYaml(yaml).prepare);
+
+        expect(form.getRawValue()).toEqual([
+            { kind: PrepareKind.PIPE, command: "jq -c .result[]" },
+            { kind: PrepareKind.DECOMPRESS, format: "zip", subPath: "" },
+        ]);
     });
 });

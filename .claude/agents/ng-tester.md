@@ -17,6 +17,7 @@ Repository rules (from `AGENTS.md`, which wins on any conflict):
 - The browser runs in UTC (`vitest-base.config.ts`); a date assertion written for another zone fails on every machine.
 - If Chromium is missing, `npx playwright install chromium` installs it.
 - Never pipe output into `head`/`tail` — save long output to a file in the scratch directory if needed, read it in full, and summarize it yourself.
+- Your output is not a terminal, so Vitest drops the specs' console output: a warning you do not see may still exist. Angular's dev-mode reports (`NG0956` and the like) fail the test that caused them (`src/test-setup.ts`), with "Angular reported runtime problems during this test" and the message. Report such a failure with its NG code and the message text, as any other failure.
 
 When running tests:
 

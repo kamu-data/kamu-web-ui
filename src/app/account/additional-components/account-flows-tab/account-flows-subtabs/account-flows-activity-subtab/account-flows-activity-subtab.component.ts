@@ -6,7 +6,16 @@
  */
 
 import { AsyncPipe, NgTemplateOutlet } from "@angular/common";
-import { ChangeDetectionStrategy, Component, inject, Input, NgZone, OnInit } from "@angular/core";
+import {
+    ChangeDetectionStrategy,
+    Component,
+    inject,
+    Input,
+    NgZone,
+    OnChanges,
+    OnInit,
+    SimpleChanges,
+} from "@angular/core";
 import { takeUntilDestroyed } from "@angular/core/rxjs-interop";
 import { MatProgressBarModule } from "@angular/material/progress-bar";
 
@@ -69,7 +78,10 @@ import { TileBaseWidgetComponent } from "src/app/dataset-flow/tile-base-widget/t
     templateUrl: "./account-flows-activity-subtab.component.html",
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class AccountFlowsActivitySubtabComponent extends FlowsTableProcessingBaseComponent implements OnInit {
+export class AccountFlowsActivitySubtabComponent
+    extends FlowsTableProcessingBaseComponent
+    implements OnInit, OnChanges
+{
     @Input({ required: true }) public accountFlowsData: AccountFlowsType;
     @Input({ required: true }) public accountName: string;
 
@@ -102,6 +114,27 @@ export class AccountFlowsActivitySubtabComponent extends FlowsTableProcessingBas
     public ngOnInit(): void {
         this.filterByStatus = this.accountFlowsData.flowGroup;
         this.refreshNow();
+    }
+
+    public ngOnChanges(changes: SimpleChanges<AccountFlowsActivitySubtabComponent>): void {
+        const dataChange = changes.accountFlowsData;
+        if (!dataChange || dataChange.firstChange) {
+            return;
+        }
+        // The subtab's own status tab and page changes apply themselves before the URL follows; back and
+        // forward do not. The status filter panel narrows the status within a group, so only a change of
+        // the URL's group replaces it.
+        const urlGroup = this.accountFlowsData.flowGroup;
+        const groupChanged =
+            !sameStatuses(dataChange.previousValue.flowGroup, urlGroup) && !sameStatuses(this.filterByStatus, urlGroup);
+        const urlPage = this.pageFromUrl() ?? 1;
+        if (groupChanged || urlPage !== this.currentPage) {
+            if (groupChanged) {
+                this.filterByStatus = urlGroup;
+            }
+            this.currentPage = urlPage;
+            this.updateFilters();
+        }
     }
 
     public fetchTableData(
@@ -289,4 +322,8 @@ export class AccountFlowsActivitySubtabComponent extends FlowsTableProcessingBas
             order: this.getFlowRunOrder(),
         });
     }
+}
+
+function sameStatuses(a: MaybeNull<FlowStatus[]>, b: FlowStatus[]): boolean {
+    return a !== null && a.length === b.length && a.every((status, index) => status === b[index]);
 }

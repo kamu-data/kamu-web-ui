@@ -11,7 +11,7 @@ import { provideHttpClientTesting } from "@angular/common/http/testing";
 import { provideLocationMocks } from "@angular/common/testing";
 import { Type } from "@angular/core";
 import { ComponentFixture, fakeAsync, flush, TestBed, tick } from "@angular/core/testing";
-import { Router, ROUTES } from "@angular/router";
+import { ActivatedRoute, Router, RouteReuseStrategy, ROUTES } from "@angular/router";
 
 import { NEVER, Observable, of } from "rxjs";
 
@@ -22,6 +22,7 @@ import { Mock } from "vitest";
 
 import { PageNotFoundComponent } from "@common/components/page-not-found/page-not-found.component";
 import { promiseWithCatch } from "@common/helpers/app.helpers";
+import { KamuRouteReuseStrategy } from "@common/helpers/kamu-route-reuse-strategy";
 import { AccountProvider } from "@api/kamu.graphql.interface";
 import { mockAccessTokenConnectionData } from "@api/mock/access-token.mock";
 import { mockAccountDetails } from "@api/mock/auth.mock";
@@ -42,9 +43,10 @@ import { DatasetFlowByIdResponse } from "src/app/dataset-flow/dataset-flow-detai
 import { flowDetailsResolverFn } from "src/app/dataset-flow/dataset-flow-details/resolvers/flow-details.resolver";
 import { mockDerivedOverviewUpdate } from "src/app/dataset-view/additional-components/data-tabs.mock";
 import { editWebhookResolverFn } from "src/app/dataset-view/additional-components/dataset-settings-component/tabs/webhooks/components/edit-webhook/resolvers/edit-webhook.resolver";
+import { addPushSourceResolverFn } from "src/app/dataset-view/additional-components/metadata-component/components/source-events/add-push-source/resolver/add-push-source.resolver";
 import { datasetOverviewTabResolverFn } from "src/app/dataset-view/additional-components/overview-component/resolver/dataset-overview-tab.resolver";
 import { datasetViewResolverFn } from "src/app/dataset-view/resolvers/dataset-view.resolver";
-import ProjectLinks from "src/app/project-links";
+import ProjectLinks, { SourceEventEditor } from "src/app/project-links";
 import {
     mockDatasetBasicsDerivedFragment,
     mockDatasetSearchResult,
@@ -62,6 +64,7 @@ describe("Router", () => {
     let flowDetailsResolveSpy: Mock<() => Observable<DatasetFlowByIdResponse>>;
     let editWebhookResolveSpy: Mock<() => Observable<never>>;
     let blockMetadataResolveSpy: Mock<() => Observable<never>>;
+    let addPushSourceResolveSpy: Mock<() => Observable<string>>;
 
     /** The component of the deepest route the last navigation activated */
     function activatedComponent(): MaybeNull<Type<unknown> | string> {
@@ -72,10 +75,20 @@ describe("Router", () => {
         return route.component;
     }
 
+    /** The deepest route the last navigation activated; the router creates a new one for a page it builds afresh */
+    function activatedLeafRoute(): ActivatedRoute {
+        let route = router.routerState.root;
+        while (route.firstChild) {
+            route = route.firstChild;
+        }
+        return route;
+    }
+
     async function configureRouter(allowAnonymous: boolean): Promise<void> {
         flowDetailsResolveSpy = vi.fn(() => of(mockDatasetFlowByIdResponse));
         editWebhookResolveSpy = vi.fn(() => NEVER);
         blockMetadataResolveSpy = vi.fn(() => NEVER);
+        addPushSourceResolveSpy = vi.fn(() => of(""));
 
         await TestBed.configureTestingModule({
             imports: [ApolloTestingModule, PageNotFoundComponent, LoginComponent],
@@ -131,6 +144,8 @@ describe("Router", () => {
                 { provide: flowDetailsResolverFn, useValue: { resolve: flowDetailsResolveSpy } },
                 { provide: editWebhookResolverFn, useValue: { resolve: editWebhookResolveSpy } },
                 { provide: blockMetadataResolverFn, useValue: { resolve: blockMetadataResolveSpy } },
+                { provide: addPushSourceResolverFn, useValue: { resolve: addPushSourceResolveSpy } },
+                { provide: RouteReuseStrategy, useClass: KamuRouteReuseStrategy },
                 {
                     provide: accountDatasetsResolverFn,
                     useValue: {
@@ -342,6 +357,58 @@ describe("Router", () => {
             await router.navigateByUrl("/datasets?page=2");
 
             expect(location.path()).toBe("/datasets/~select/datasets?page=2");
+        });
+    });
+
+    describe("page reuse", () => {
+        beforeEach(async () => {
+            await configureRouter(true);
+            vi.spyOn(loggedUserService, "isAuthenticated", "get").mockReturnValue(true);
+            vi.spyOn(loggedUserService, "currentlyLoggedInUser", "get").mockReturnValue(mockAccountDetails);
+        });
+
+        [
+            { page: "another dataset's overview", from: "/kamu/population", to: "/kamu/extra-14" },
+            { page: "another account's dataset", from: "/kamu/population", to: "/alice/population" },
+            {
+                page: "another flow's details",
+                from: "/kamu/population/flow-details/42/history",
+                to: "/kamu/population/flow-details/43/history",
+            },
+            {
+                page: "the explainer for another commitment",
+                from: `/${ProjectLinks.URL_QUERY_EXPLAINER}?${ProjectLinks.URL_QUERY_PARAM_COMMITMENT_UPLOAD_TOKEN}=a`,
+                to: `/${ProjectLinks.URL_QUERY_EXPLAINER}?${ProjectLinks.URL_QUERY_PARAM_COMMITMENT_UPLOAD_TOKEN}=b`,
+            },
+            {
+                page: "another push source's editor",
+                from: `/kamu/population/${SourceEventEditor.AddPushSource}?name=a`,
+                to: `/kamu/population/${SourceEventEditor.AddPushSource}?name=b`,
+            },
+        ].forEach(({ page, from, to }) => {
+            it(`should build ${page} afresh`, async () => {
+                await router.navigateByUrl(from);
+                const fromRoute = activatedLeafRoute();
+                await router.navigateByUrl(to);
+
+                expect(location.path()).toBe(to);
+                expect(activatedLeafRoute()).not.toBe(fromRoute);
+            });
+        });
+
+        it("should resolve the push source again for another source name", async () => {
+            await router.navigateByUrl(`/kamu/population/${SourceEventEditor.AddPushSource}?name=a`);
+            await router.navigateByUrl(`/kamu/population/${SourceEventEditor.AddPushSource}?name=b`);
+
+            expect(addPushSourceResolveSpy).toHaveBeenCalledTimes(2);
+        });
+
+        it("should keep a page when only its page query parameter changes", async () => {
+            await router.navigateByUrl("/datasets?page=1");
+            const fromRoute = activatedLeafRoute();
+            await router.navigateByUrl("/datasets?page=2");
+
+            expect(activatedLeafRoute()).toBe(fromRoute);
         });
     });
 

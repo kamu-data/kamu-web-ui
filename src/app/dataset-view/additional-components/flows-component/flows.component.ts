@@ -6,7 +6,7 @@
  */
 
 import { AsyncPipe, NgClass } from "@angular/common";
-import { ChangeDetectionStrategy, Component, inject, Input, OnInit } from "@angular/core";
+import { ChangeDetectionStrategy, Component, inject, Input, OnChanges, OnInit, SimpleChanges } from "@angular/core";
 import { takeUntilDestroyed } from "@angular/core/rxjs-interop";
 import { FormsModule } from "@angular/forms";
 import { MatChipListboxChange, MatChipsModule } from "@angular/material/chips";
@@ -19,7 +19,7 @@ import { environment } from "@env/environment";
 import { PagePastEndComponent } from "@common/components/page-past-end/page-past-end.component";
 import { PaginationComponent } from "@common/components/pagination-component/pagination.component";
 import { enumValueOf, oneOf, trackBusyKey } from "@common/helpers/app.helpers";
-import { isUuid, queryParamValue } from "@common/helpers/url-params.helpers";
+import { isUuid, positiveIntegerFromParam, queryParamValue } from "@common/helpers/url-params.helpers";
 import { DatasetLinkPipe } from "@common/pipes/dataset-link.pipe";
 import { SourceEventEditorLinkPipe } from "@common/pipes/source-event-editor-link.pipe";
 import RoutingResolvers from "@common/resolvers/routing-resolvers";
@@ -90,7 +90,7 @@ import { ProcessDatasetCardInteractionService } from "src/app/services/process-d
         SourceEventEditorLinkPipe,
     ],
 })
-export class FlowsComponent extends FlowsTableProcessingBaseComponent implements OnInit {
+export class FlowsComponent extends FlowsTableProcessingBaseComponent implements OnInit, OnChanges {
     @Input(RoutingResolvers.DATASET_VIEW_FLOWS_KEY) public flowsData: DatasetOverviewTabData;
     @Input({ alias: ProjectLinks.URL_QUERY_PARAM_WEBHOOK_ID, transform: queryParamValue })
     public set setWebhookId(value: MaybeUndefined<string>) {
@@ -104,6 +104,12 @@ export class FlowsComponent extends FlowsTableProcessingBaseComponent implements
     public set setFlowsCategory(value: MaybeUndefined<string>) {
         this.applyFlowsCategoryParam(oneOf(FLOWS_CATEGORIES, value));
     }
+    @Input({ alias: ProjectLinks.URL_QUERY_PARAM_PAGE, transform: queryParamValue })
+    public set page(value: MaybeUndefined<string>) {
+        this.pageParam = positiveIntegerFromParam(value) ?? 1;
+    }
+
+    private pageParam = 1;
 
     public selectedDatasetItems: DatasetBasicsFragment[] = [];
     public selectedAccountItems: AccountFragment[] = [];
@@ -129,8 +135,16 @@ export class FlowsComponent extends FlowsTableProcessingBaseComponent implements
 
     public ngOnInit(): void {
         this.filterByStatus = null;
-        this.currentPage = this.pageFromUrl() ?? 1;
+        this.currentPage = this.pageParam;
         this.refreshFlow();
+    }
+
+    public ngOnChanges(changes: SimpleChanges<FlowsComponent>): void {
+        // A page change of the list's own sets the page before the URL follows; back and forward do not
+        if (changes.page && !changes.page.firstChange && this.pageParam !== this.currentPage) {
+            this.currentPage = this.pageParam;
+            this.fetchTableData(this.currentPage, this.filterByStatus, this.filterInitiator);
+        }
     }
 
     // For changes that lead to the URL without a page

@@ -27,7 +27,6 @@ import {
 } from "src/app/dataset-view/additional-components/data-tabs.mock";
 import { EngineService } from "src/app/dataset-view/additional-components/metadata-component/components/set-transform/components/engine-section/engine.service";
 import { mockEngines } from "src/app/dataset-view/additional-components/metadata-component/components/set-transform/mock.data";
-import ProjectLinks from "src/app/project-links";
 import {
     mockDatasetBasicsDerivedFragment,
     mockDatasetBasicsRootFragment,
@@ -58,14 +57,6 @@ describe("DataComponent", () => {
                     provide: ActivatedRoute,
                     useValue: {
                         snapshot: {
-                            queryParamMap: {
-                                get: (key: string) => {
-                                    switch (key) {
-                                        case ProjectLinks.URL_QUERY_PARAM_SQL_QUERY:
-                                            return null;
-                                    }
-                                },
-                            },
                             paramMap: {
                                 get: (key: string) => {
                                     switch (key) {
@@ -122,6 +113,28 @@ describe("DataComponent", () => {
 
         expect(getQuerySpy).toHaveBeenCalledTimes(1);
         expect(component.sqlRequestCode).toEqual("select * from 'test.table'");
+    }));
+
+    it("should open and run the query the URL names", fakeAsync(() => {
+        const getQuerySpy = vi.spyOn(queryMicriDbTrackerService, "getQuery");
+        setComponentInput(fixture, "sqlQuery", "select 1");
+        fixture.detectChanges();
+        flush();
+
+        expect(component.sqlRequestCode).toEqual("select 1");
+        expect(requestDataSqlRunSpy).toHaveBeenCalledWith(expect.objectContaining({ query: "select 1" }));
+        expect(getQuerySpy).not.toHaveBeenCalled();
+    }));
+
+    it("should show the query of the run that back or forward leads to", fakeAsync(() => {
+        setComponentInput(fixture, "sqlQuery", "select 1");
+        fixture.detectChanges();
+        flush();
+
+        setComponentInput(fixture, "sqlQuery", "select 2");
+        fixture.detectChanges();
+
+        expect(component.sqlRequestCode).toEqual("select 2");
     }));
 
     it("should check add data", () => {

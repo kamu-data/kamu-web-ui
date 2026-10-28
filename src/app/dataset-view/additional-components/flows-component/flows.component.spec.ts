@@ -87,16 +87,6 @@ describe("FlowsComponent", () => {
                     provide: ActivatedRoute,
                     useValue: {
                         snapshot: {
-                            queryParamMap: {
-                                get: (key: string) => {
-                                    switch (key) {
-                                        case "tab":
-                                            return "flows";
-                                        case "page":
-                                            return 2;
-                                    }
-                                },
-                            },
                             paramMap: {
                                 get: (key: string) => {
                                     switch (key) {
@@ -131,6 +121,7 @@ describe("FlowsComponent", () => {
             datasetPermissions: mockFullPowerDatasetPermissionsFragment,
             overviewUpdate: mockOverviewUpdate,
         });
+        setComponentInput(fixture, "page", "2");
     });
 
     it("should create", () => {
@@ -1001,6 +992,35 @@ describe("FlowsComponent", () => {
             tick();
 
             expect(lastRequestedPage()).toEqual(2);
+            discardPeriodicTasks();
+        }));
+
+        it("should load the page the URL names after back or forward", fakeAsync(() => {
+            fixture.detectChanges();
+            tick();
+
+            setComponentInput(fixture, "page", "4");
+            fixture.detectChanges();
+            tick();
+
+            expect(component.currentPage).toEqual(4);
+            expect(lastRequestedPage()).toEqual(4);
+            discardPeriodicTasks();
+        }));
+
+        it("should not load its own page change again when the URL follows it", fakeAsync(() => {
+            fixture.detectChanges();
+            tick();
+            component.onPageChange(3);
+            fixture.detectChanges();
+            tick();
+            datasetFlowsListSpy.mockClear();
+
+            setComponentInput(fixture, "page", "3");
+            fixture.detectChanges();
+            tick();
+
+            expect(datasetFlowsListSpy).not.toHaveBeenCalled();
             discardPeriodicTasks();
         }));
 

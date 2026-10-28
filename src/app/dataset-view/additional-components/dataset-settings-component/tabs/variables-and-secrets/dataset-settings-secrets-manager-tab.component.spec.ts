@@ -16,6 +16,7 @@ import { of, Subject } from "rxjs";
 import { NgbModal } from "@ng-bootstrap/ng-bootstrap";
 import { ApolloTestingModule } from "apollo-angular/testing";
 import { provideToastr } from "ngx-toastr";
+import { Mock } from "vitest";
 
 import { ModalService } from "@common/components/modal/modal.service";
 import { PagePastEndHarness } from "@common/components/page-past-end/page-past-end.harness";
@@ -28,7 +29,6 @@ import { ModalArgumentsInterface } from "@interface/modal.interface";
 import { DatasetEnvironmentVariablesService } from "src/app/dataset-view/additional-components/dataset-settings-component/tabs/variables-and-secrets/dataset-environment-variables.service";
 import { DatasetSettingsSecretsManagerTabComponent } from "src/app/dataset-view/additional-components/dataset-settings-component/tabs/variables-and-secrets/dataset-settings-secrets-manager-tab.component";
 import { MOCK_DATASET_INFO } from "src/app/dataset-view/additional-components/metadata-component/components/set-transform/mock.data";
-import ProjectLinks from "src/app/project-links";
 import { mockDatasetBasicsRootFragment, mockFullPowerDatasetPermissionsFragment } from "src/app/search/mock.data";
 import { NavigationService } from "src/app/services/navigation.service";
 
@@ -39,6 +39,7 @@ describe("DatasetSettingsSecretsManagerTabComponent", () => {
     let environmentVariablesService: DatasetEnvironmentVariablesService;
     let ngbModalService: NgbModal;
     let modalService: ModalService;
+    let listEnvVariablesSpy: Mock<DatasetEnvironmentVariablesService["listEnvVariables"]>;
 
     beforeEach(async () => {
         await TestBed.configureTestingModule({
@@ -56,14 +57,6 @@ describe("DatasetSettingsSecretsManagerTabComponent", () => {
                                             return "accountName";
                                         case "datasetName":
                                             return "datasetName";
-                                    }
-                                },
-                            },
-                            queryParamMap: {
-                                get: (key: string) => {
-                                    switch (key) {
-                                        case ProjectLinks.URL_QUERY_PARAM_PAGE:
-                                            return undefined;
                                     }
                                 },
                             },
@@ -89,9 +82,11 @@ describe("DatasetSettingsSecretsManagerTabComponent", () => {
             datasetPermissions: mockFullPowerDatasetPermissionsFragment,
         });
         setComponentInput(fixture, "datasetInfo", MOCK_DATASET_INFO);
-        vi.spyOn(environmentVariablesService, "listEnvVariables").mockReturnValue(
-            of(requireValue(mockListEnvVariablesQuery.datasets.byOwnerAndName?.envVars.listEnvVariables)),
-        );
+        listEnvVariablesSpy = vi
+            .spyOn(environmentVariablesService, "listEnvVariables")
+            .mockReturnValue(
+                of(requireValue(mockListEnvVariablesQuery.datasets.byOwnerAndName?.envVars.listEnvVariables)),
+            );
         fixture.detectChanges();
     });
 
@@ -101,13 +96,26 @@ describe("DatasetSettingsSecretsManagerTabComponent", () => {
 
     it("should check change page", () => {
         expect(component.currentPage).toEqual(1);
-        const navigateToDatasetViewSpy = vi
-            .spyOn(navigationService, "navigateToDatasetView")
-            .mockImplementation(() => {});
+        const navigateToDatasetViewSpy = stubMethod(navigationService, "navigateToDatasetView");
 
         component.onPageChange(3);
         expect(navigateToDatasetViewSpy).toHaveBeenCalledWith(expect.objectContaining({ page: 3 }));
         expect(component.currentPage).toEqual(3);
+    });
+
+    it("should load the first page when the URL has no page", () => {
+        expect(listEnvVariablesSpy).toHaveBeenCalledWith(expect.objectContaining({ page: 0 }));
+    });
+
+    it("should load the page the URL names when it changes", () => {
+        listEnvVariablesSpy.mockClear();
+
+        setComponentInput(fixture, "page", "4");
+        fixture.detectChanges();
+
+        expect(component.currentPage).toEqual(4);
+        expect(listEnvVariablesSpy).toHaveBeenCalledTimes(1);
+        expect(listEnvVariablesSpy).toHaveBeenCalledWith(expect.objectContaining({ page: 3 }));
     });
 
     it("should say a page past the last one has no variables and lead to the last page", async () => {
@@ -123,8 +131,8 @@ describe("DatasetSettingsSecretsManagerTabComponent", () => {
             datasetPermissions: mockFullPowerDatasetPermissionsFragment,
         });
         setComponentInput(pastEndFixture, "datasetInfo", MOCK_DATASET_INFO);
+        setComponentInput(pastEndFixture, "page", "5");
         pastEndFixture.detectChanges();
-        pastEndFixture.componentInstance.onPageChange(5);
 
         response$.next({
             ...structuredClone(envVariables),

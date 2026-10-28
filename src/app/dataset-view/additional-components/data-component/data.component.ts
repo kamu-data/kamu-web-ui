@@ -16,10 +16,11 @@ import { NgbModal } from "@ng-bootstrap/ng-bootstrap";
 import { BaseComponent } from "@common/components/base.component";
 import { promiseWithCatch } from "@common/helpers/app.helpers";
 import { openModal } from "@common/helpers/modal.helpers";
+import { queryParamValue } from "@common/helpers/url-params.helpers";
 import RoutingResolvers from "@common/resolvers/routing-resolvers";
 import AppValues from "@common/values/app.values";
 import { DatasetBasicsFragment, DatasetKind } from "@api/kamu.graphql.interface";
-import { MaybeNull } from "@interface/app.types";
+import { MaybeNull, MaybeUndefined } from "@interface/app.types";
 import { DatasetRequestBySql } from "@interface/dataset.interface";
 import { isDatasetOffsetRangeState } from "@interface/navigation.interface";
 
@@ -51,6 +52,15 @@ import { SqlQueryService } from "src/app/services/sql-query.service";
 })
 export class DataComponent extends BaseComponent implements OnInit {
     @Input(RoutingResolvers.DATASET_VIEW_DATA_KEY) public dataTabData: DatasetOverviewTabData;
+    // Each run puts its query into the URL, so back and forward bring the editor the query of that run
+    @Input({ alias: ProjectLinks.URL_QUERY_PARAM_SQL_QUERY, transform: queryParamValue })
+    public set sqlQuery(value: MaybeUndefined<string>) {
+        this.sqlQueryFromUrl = value;
+        if (value) {
+            this.sqlRequestCode = value;
+        }
+    }
+    private sqlQueryFromUrl: MaybeUndefined<string>;
 
     public sqlLoading: boolean;
     public sqlRequestCode = `select\n  *\nfrom `;
@@ -92,27 +102,23 @@ export class DataComponent extends BaseComponent implements OnInit {
     }
 
     private async buildSqlRequestCode(): Promise<void> {
-        const sqlQueryFromUrl = this.activatedRoute.snapshot.queryParamMap.get(ProjectLinks.URL_QUERY_PARAM_SQL_QUERY);
-        if (sqlQueryFromUrl) {
-            this.sqlRequestCode = sqlQueryFromUrl;
+        if (this.sqlQueryFromUrl) {
+            return;
+        }
+        this.sqlRequestCode += `'${this.dataTabData.datasetBasics.alias}'`;
+        // History state is whatever the entry was pushed with, so it is checked rather than trusted
+        const offset: unknown = this.location.getState();
+        if (isDatasetOffsetRangeState(offset)) {
+            this.sqlRequestCode += `\nwhere ${this.offsetColumnName}>=${offset.start} and ${this.offsetColumnName}<=${offset.end}\norder by ${this.offsetColumnName} desc`;
+            return;
+        }
+        const entry = await this.queryMicroDbTrackerService.getQuery(this.datasetBasics.alias).catch(() => undefined);
+        if (entry) {
+            this.sqlRequestCode = entry.query;
         } else {
-            this.sqlRequestCode += `'${this.dataTabData.datasetBasics.alias}'`;
-            // History state is whatever the entry was pushed with, so it is checked rather than trusted
-            const offset: unknown = this.location.getState();
-            if (isDatasetOffsetRangeState(offset)) {
-                this.sqlRequestCode += `\nwhere ${this.offsetColumnName}>=${offset.start} and ${this.offsetColumnName}<=${offset.end}\norder by ${this.offsetColumnName} desc`;
-                return;
-            }
-            const entry = await this.queryMicroDbTrackerService
-                .getQuery(this.datasetBasics.alias)
-                .catch(() => undefined);
-            if (entry) {
-                this.sqlRequestCode = entry.query;
-            } else {
-                promiseWithCatch(
-                    this.queryMicroDbTrackerService.saveQuery(this.datasetBasics.alias, this.sqlRequestCode).then(),
-                );
-            }
+            promiseWithCatch(
+                this.queryMicroDbTrackerService.saveQuery(this.datasetBasics.alias, this.sqlRequestCode).then(),
+            );
         }
     }
 

@@ -5,7 +5,15 @@
  * included in the LICENSE file.
  */
 
-import { ChangeDetectionStrategy, ChangeDetectorRef, Component, inject, Input, OnInit, ViewChild } from "@angular/core";
+import {
+    ChangeDetectionStrategy,
+    ChangeDetectorRef,
+    Component,
+    inject,
+    Input,
+    OnChanges,
+    ViewChild,
+} from "@angular/core";
 import { takeUntilDestroyed } from "@angular/core/rxjs-interop";
 import { FormsModule } from "@angular/forms";
 import { MatDividerModule } from "@angular/material/divider";
@@ -23,6 +31,7 @@ import { PagePastEndComponent } from "@common/components/page-past-end/page-past
 import { PaginationComponent } from "@common/components/pagination-component/pagination.component";
 import { promiseWithCatch } from "@common/helpers/app.helpers";
 import { openModal } from "@common/helpers/modal.helpers";
+import { positiveIntegerFromParam, queryParamValue } from "@common/helpers/url-params.helpers";
 import RoutingResolvers from "@common/resolvers/routing-resolvers";
 import {
     DatasetBasicsFragment,
@@ -31,12 +40,14 @@ import {
     ViewDatasetEnvVarConnectionDataFragment,
     ViewDatasetEnvVarDataFragment,
 } from "@api/kamu.graphql.interface";
+import { MaybeUndefined } from "@interface/app.types";
 import { DatasetInfo } from "@interface/navigation.interface";
 
 import { SettingsTabsEnum } from "src/app/dataset-view/additional-components/dataset-settings-component/dataset-settings.model";
 import { EditKeyValueModalComponent } from "src/app/dataset-view/additional-components/dataset-settings-component/tabs/variables-and-secrets/components/edit-key-value-modal/edit-key-value-modal.component";
 import { DatasetEnvironmentVariablesService } from "src/app/dataset-view/additional-components/dataset-settings-component/tabs/variables-and-secrets/dataset-environment-variables.service";
 import { DatasetViewData, DatasetViewTypeEnum } from "src/app/dataset-view/dataset-view.interface";
+import ProjectLinks from "src/app/project-links";
 import { NavigationService } from "src/app/services/navigation.service";
 
 export interface EnvVariableElement {
@@ -63,10 +74,14 @@ export interface EnvVariableElement {
         PagePastEndComponent,
     ],
 })
-export class DatasetSettingsSecretsManagerTabComponent extends BaseComponent implements OnInit {
+export class DatasetSettingsSecretsManagerTabComponent extends BaseComponent implements OnChanges {
     @Input(RoutingResolvers.DATASET_SETTINGS_VARIABLES_AND_SECRETS_KEY)
     public variablesAndSecretsTabData: DatasetViewData;
     @Input(RoutingResolvers.DATASET_INFO_KEY) public datasetInfo: DatasetInfo;
+    @Input({ alias: ProjectLinks.URL_QUERY_PARAM_PAGE, transform: queryParamValue })
+    public set page(value: MaybeUndefined<string>) {
+        this.currentPage = positiveIntegerFromParam(value) ?? 1;
+    }
 
     public readonly DISPLAY_COLUMNS: string[] = ["key", "value", "actions"];
     public dataSource = new MatTableDataSource<ViewDatasetEnvVarDataFragment>();
@@ -82,8 +97,7 @@ export class DatasetSettingsSecretsManagerTabComponent extends BaseComponent imp
     private environmentVariablesService = inject(DatasetEnvironmentVariablesService);
     private cdr = inject(ChangeDetectorRef);
 
-    public ngOnInit(): void {
-        this.currentPage = this.pageFromUrl() ?? this.currentPage;
+    public ngOnChanges(): void {
         this.updateTable(this.currentPage);
     }
 
@@ -180,6 +194,5 @@ export class DatasetSettingsSecretsManagerTabComponent extends BaseComponent imp
             section: SettingsTabsEnum.VARIABLES_AND_SECRETS,
             page: this.currentPage,
         });
-        this.updateTable(this.currentPage);
     }
 }

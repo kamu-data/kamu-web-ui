@@ -8,6 +8,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Changed
 - Account flows, Processes: resuming an auto-stopped process asks for confirmation, as the dataset's Flows tab does, and "Update now" refreshes the card shortly after instead of on the next poll
 ### Fixed
+- Metadata tab, polling and push sources:
+  - a CSV source without a header setting shows "Header: false" instead of an empty row, and "Infer schema: false" is shown instead of left out
+  - a newline-delimited JSON source shows its encoding, date format and timestamp format
+  - an MQTT source without a username or password leaves those rows out instead of showing them empty
 - Collection: a folder whose first entry is a dataset or a missing dataset shows as a folder and opens in place, instead of showing as that entry
 - Global query: a link with a query opens that query in the editor instead of an empty one, and opening the page without a query restores the last one you ran
 - Flow process cards on the dataset's Flows tab and the account's Processes:

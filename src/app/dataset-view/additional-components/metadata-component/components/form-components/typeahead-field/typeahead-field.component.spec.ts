@@ -5,72 +5,95 @@
  * included in the LICENSE file.
  */
 
-import { ComponentFixture, fakeAsync, flush, TestBed, tick } from "@angular/core/testing";
-import { FormControl, FormGroup } from "@angular/forms";
-import { ActivatedRoute } from "@angular/router";
+import { TestbedHarnessEnvironment } from "@angular/cdk/testing/testbed";
+import { Component } from "@angular/core";
+import { ComponentFixture, TestBed } from "@angular/core/testing";
+import { Validators } from "@angular/forms";
 
-import { interval } from "rxjs";
-import { map, take } from "rxjs/operators";
-
-import { getInputElementByDataTestId, setComponentInput } from "@common/helpers/base-test.helpers.spec";
-import AppValues from "@common/values/app.values";
+import { singleCharValidator } from "@common/validation/text.validators";
 
 import { TypeaheadFieldComponent } from "src/app/dataset-view/additional-components/metadata-component/components/form-components/typeahead-field/typeahead-field.component";
+import { TypeaheadFieldHarness } from "src/app/dataset-view/additional-components/metadata-component/components/form-components/typeahead-field/typeahead-field.harness";
+import { textControl } from "src/app/dataset-view/additional-components/metadata-component/components/source-events/source-section";
+
+@Component({
+    imports: [TypeaheadFieldComponent],
+    template: `
+        <app-typeahead-field
+            [control]="control"
+            label="Date format"
+            tooltip="Format of dates"
+            placeholder="Select format"
+            [data]="formats"
+            [requiredField]="true"
+            dataTestId="read-dateFormat"
+        />
+    `,
+})
+class TestTypeaheadFieldHostComponent {
+    public control = textControl("", [Validators.required]);
+    public formats = ["rfc3339", "iso8601"];
+}
 
 describe("TypeaheadFieldComponent", () => {
-    let component: TypeaheadFieldComponent;
-    let fixture: ComponentFixture<TypeaheadFieldComponent>;
+    let fixture: ComponentFixture<TestTypeaheadFieldHostComponent>;
+    let host: TestTypeaheadFieldHostComponent;
+    let harness: TypeaheadFieldHarness;
 
     beforeEach(async () => {
         await TestBed.configureTestingModule({
-            imports: [TypeaheadFieldComponent],
-            providers: [
-                {
-                    provide: ActivatedRoute,
-                    useValue: {
-                        snapshot: {
-                            paramMap: {
-                                get: (key: string) => {
-                                    switch (key) {
-                                        case "accountName":
-                                            return "accountName";
-                                        case "datasetName":
-                                            return "datasetName";
-                                    }
-                                },
-                            },
-                        },
-                    },
-                },
-            ],
+            imports: [TestTypeaheadFieldHostComponent],
         }).compileComponents();
 
-        fixture = TestBed.createComponent(TypeaheadFieldComponent);
-        component = fixture.componentInstance;
-        setComponentInput(fixture, "data", ["test1", "test2"]);
-        setComponentInput(fixture, "controlName", "name");
-        setComponentInput(fixture, "dataTestId", "typeahead");
-        setComponentInput(fixture, "form", new FormGroup({ name: new FormControl("") }));
+        fixture = TestBed.createComponent(TestTypeaheadFieldHostComponent);
+        host = fixture.componentInstance;
         fixture.detectChanges();
+        harness = await TestbedHarnessEnvironment.loader(fixture).getHarness(TypeaheadFieldHarness);
     });
 
-    it("should create", () => {
-        expect(component).toBeTruthy();
+    it("should render the label with the required marker", async () => {
+        expect(await harness.getLabel()).toBe("Date format");
+        expect(await harness.isRequiredMarked()).toBe(true);
     });
 
-    it("should check call search method", fakeAsync(() => {
-        const inputEl = getInputElementByDataTestId(fixture, "typeahead");
-        inputEl.click();
-        const textMock$ = interval(100).pipe(
-            take(2),
-            map((index) => component.data[index]),
-        );
-        component.search(textMock$).subscribe((result) => {
-            expect(result).toEqual(["test2"]);
-        });
-        tick(AppValues.SHORT_DELAY_MS);
-        expect(component.focus$).toBeDefined();
-        expect(component.click$).toBeDefined();
-        flush();
-    }));
+    it("should suggest the formats that contain the typed text", async () => {
+        await harness.typeText("iso");
+
+        expect(await harness.getSuggestions()).toEqual(["iso8601"]);
+    });
+
+    it("should suggest every format when the empty input is clicked", async () => {
+        await harness.openSuggestions();
+
+        expect(await harness.getSuggestions()).toEqual(["rfc3339", "iso8601"]);
+    });
+
+    it("should write the picked suggestion into the control", async () => {
+        await harness.typeText("rfc");
+        await harness.selectSuggestion("rfc3339");
+
+        expect(host.control.value).toBe("rfc3339");
+        expect(await harness.getValue()).toBe("rfc3339");
+    });
+
+    it("should accept a value that is not suggested", async () => {
+        await harness.setValue("yyyy-MM-dd");
+
+        expect(host.control.value).toBe("yyyy-MM-dd");
+        expect(host.control.valid).toBe(true);
+    });
+
+    it("should show the required error once the field is touched", async () => {
+        await harness.touch();
+
+        expect(await harness.getErrorMessage()).toBe("Date format is required");
+    });
+
+    it("should show the error of the control's own validator", async () => {
+        host.control.setValidators([Validators.required, singleCharValidator()]);
+
+        await harness.setValue(",;");
+
+        expect(await harness.getErrorMessage()).toBe("Date format must be a single ASCII character");
+    });
 });

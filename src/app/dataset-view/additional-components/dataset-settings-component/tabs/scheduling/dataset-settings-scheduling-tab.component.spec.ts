@@ -250,6 +250,22 @@ describe("DatasetSettingsSchedulingTabComponent", () => {
         expect(setDatasetFlowTriggerSpy).not.toHaveBeenCalled();
     });
 
+    it("should ignore 'Save' while the max failures is out of kamu-cli's range", async () => {
+        const setDatasetFlowTriggerSpy = stubMethod(datasetFlowTriggerService, "setDatasetFlowTrigger");
+        component.form.controls.updatesEnabled.setValue(true);
+
+        await ingestTriggerFormHarness.setSelectedScheduleType(ScheduleType.TIME_DELTA);
+        await ingestTriggerFormHarness.setTimeDeltaSchedule({ every: 10, unit: TimeUnit.Minutes });
+        await stopPolicyFormHarness.setSelectedStopPolicyType(FlowTriggerStopPolicyType.AFTER_CONSECUTIVE_FAILURES);
+        await stopPolicyFormHarness.setMaxFailures(11);
+
+        const saveButton = getSaveButton();
+        expect(saveButton.disabled).toBe(true);
+        saveButton.click();
+
+        expect(setDatasetFlowTriggerSpy).not.toHaveBeenCalled();
+    });
+
     it("should check 'Save' button works for disabling updates", () => {
         const pauseDatasetFlowTriggerSpy = vi.spyOn(datasetFlowTriggerService, "pauseDatasetFlowTrigger");
 

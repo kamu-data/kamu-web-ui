@@ -1,37 +1,56 @@
-<ng-container [formGroup]="form">
-    <div class="d-flex">
-        <app-tooltip-icon [tooltip]="tooltip" />
-        <label class="form-label">{{ label }} </label>
-    </div>
-    <div [formArrayName]="controlName">
-        @for (key of items.controls; track key; let i = $index) {
-            <div>
-                <div class="row mt-3">
-                    <div class="col-md-10">
-                        <input class="form-control" [placeholder]="placeholder" formControlName="{{ i }}" trim />
-                    </div>
-                    <div class="col-md-2 d-flex justify-content-end align-items-center">
-                        <button
-                            class="btn btn-light"
-                            type="button"
-                            data-test-id="remove-key-button"
-                            (click)="removePrimaryKey(i)"
-                        >
-                            x
-                        </button>
-                    </div>
-                </div>
-            </div>
+<div class="d-flex">
+    <app-tooltip-icon [tooltip]="tooltip" />
+    <label class="form-label" [attr.data-test-id]="dataTestId + '-label'"
+        >{{ label }}
+        @if (requiredField) {
+            <span class="text-danger" [attr.data-test-id]="dataTestId + '-required'">*</span>
         }
-        <div class="ms-4">
+    </label>
+</div>
+@for (key of control.controls; track key; let i = $index) {
+    <div class="row mt-3">
+        <div class="col-md-10">
+            <input
+                class="form-control"
+                [placeholder]="placeholder"
+                [formControl]="key"
+                [attr.data-test-id]="dataTestId + '-item-' + i"
+                trim="blur"
+            />
+            <div
+                class="text-danger fs-12"
+                [fieldControl]="key"
+                fieldLabel="Entry"
+                [dataTestId]="dataTestId + '-item-' + i + '-error'"
+                appFieldError
+            ></div>
+        </div>
+        <div class="col-md-2 d-flex justify-content-end align-items-center">
             <button
+                class="btn btn-light"
                 type="button"
-                class="add-primary-key-button mt-2"
-                (click)="addPrimaryKey()"
-                data-test-id="add-key-button"
+                [attr.data-test-id]="dataTestId + '-remove-' + i"
+                (click)="removeItem(i)"
             >
-                <span>{{ buttonText }}</span>
+                x
             </button>
         </div>
     </div>
-</ng-container>
+}
+<div
+    class="text-danger fs-12"
+    [fieldControl]="control"
+    [fieldLabel]="label"
+    [dataTestId]="dataTestId + '-error'"
+    appFieldError
+></div>
+<div class="ms-4">
+    <button
+        type="button"
+        class="add-primary-key-button mt-2"
+        (click)="addItem()"
+        [attr.data-test-id]="dataTestId + '-add'"
+    >
+        <span>{{ buttonText }}</span>
+    </button>
+</div>

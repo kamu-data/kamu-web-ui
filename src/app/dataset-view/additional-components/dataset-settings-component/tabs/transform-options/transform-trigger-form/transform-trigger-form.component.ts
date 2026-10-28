@@ -59,14 +59,15 @@ export class TransformTriggerFormComponent extends BaseComponent implements OnIn
 
         const formGroup = new FormGroup<TransformTriggerFormType>({
             forNewData: new FormGroup<BatchingRuleFormType>({
+                // A dataset without a saved trigger starts on what an unset choice is saved as.
                 batchingRuleType: new FormControl<MaybeNull<BatchingRuleType>>(
-                    { value: null, disabled: true },
+                    { value: BatchingRuleType.IMMEDIATE, disabled: true },
                     { nonNullable: true, validators: [Validators.required] },
                 ),
                 buffering: bufferingForm,
             }),
             forBreakingChange: new FormControl<MaybeNull<FlowTriggerBreakingChangeRule>>(
-                { value: null, disabled: true },
+                { value: FlowTriggerBreakingChangeRule.NoAction, disabled: true },
                 { nonNullable: true, validators: [Validators.required] },
             ),
         });

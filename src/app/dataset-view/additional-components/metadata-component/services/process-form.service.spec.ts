@@ -89,7 +89,7 @@ describe("ProcessFormService", () => {
             pollingSourceValue({
                 kind: FetchKind.CONTAINER,
                 image: "ghcr.io/kamu-data/fetch:latest",
-                eventTime: { kind: EventTimeSourceKind.FROM_METADATA },
+                eventTime: { kind: EventTimeSourceKind.FROM_METADATA, pattern: "", timestampFormat: "" },
                 args: ["--all"],
             }),
         );

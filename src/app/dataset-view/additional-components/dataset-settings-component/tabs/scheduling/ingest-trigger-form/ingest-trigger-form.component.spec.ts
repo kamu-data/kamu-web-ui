@@ -198,12 +198,7 @@ describe("IngestTriggerFormComponent", () => {
         expect(component.cronExpressionControl.errors).toBeNull();
 
         expect(component.timeDeltaControl.invalid).toBe(true);
-        expect(component.timeDeltaControl.get("every")?.errors).toEqual({
-            range: {
-                message: "Value should be between 1 to 60",
-                refValues: [100, 1, 60],
-            },
-        });
+        expect(component.timeDeltaControl.get("every")?.errors).toEqual({ max: { max: 60, actual: 100 } });
     });
 
     it("should keep controls disabled when schedule type changes while updates are disabled", () => {

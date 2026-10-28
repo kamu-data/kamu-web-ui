@@ -3,39 +3,61 @@
     mat-button
     class="mr-4"
     data-test-id="btn-load-more"
-    [disabled]="isAllDataLoaded"
+    [disabled]="isAllDataLoaded || rowsControl.invalid"
     (click)="loadMore()"
 >
     Load more data
 </button>
 
 @if (!isAllDataLoaded) {
-    <button type="button" mat-button class="mr-4 btn-toggle" [class.opened]="isHolderVisible" (click)="toggleOptions()">
+    <button
+        type="button"
+        mat-button
+        class="mr-4 btn-toggle"
+        data-test-id="btn-row-options"
+        [class.opened]="isHolderVisible"
+        (click)="toggleOptions()"
+    >
         Options
         <mat-icon fontIcon="chevron_right" />
     </button>
-    <div class="d-flex flex-wrap align-items-center row-gap-3 holder" [class.hidden]="!isHolderVisible">
+    <div
+        class="d-flex flex-wrap align-items-center row-gap-3 holder"
+        data-test-id="row-options"
+        [class.hidden]="!isHolderVisible"
+    >
         <p class="mb-0 mr-4">Select number of rows to load:</p>
-        <mat-button-toggle-group name="query-limits" [(ngModel)]="rowsNumber" class="mr-4">
+        <mat-button-toggle-group
+            name="query-limits"
+            [value]="rowsControl.value"
+            (change)="rowsControl.setValue($event.value)"
+            class="mr-4"
+        >
             @for (option of ROWS_OPTIONS; track option) {
-                <mat-button-toggle
-                    [checked]="option === rowsNumber"
-                    [value]="option"
-                    [attr.data-test-id]="'row-limit-' + option"
-                >
+                <mat-button-toggle [value]="option" [attr.data-test-id]="'row-limit-' + option">
                     {{ option }}
                 </mat-button-toggle>
             }
         </mat-button-toggle-group>
         <div class="d-flex flex-nowrap align-items-center">
-            <p class="mb-0 mr-4">Or enter your number:</p>
+            <label class="mb-0 mr-4" for="row-limit-input">Or enter the number of rows:</label>
             <input
                 type="number"
                 class="form-control small-width"
+                id="row-limit-input"
                 data-test-id="row-limit-input"
                 placeholder="Enter number of rows"
-                [(ngModel)]="rowsNumber"
+                min="1"
+                step="1"
+                [formControl]="rowsControl"
             />
+            <span
+                class="text-danger fs-12 ms-2"
+                appFieldError
+                [fieldControl]="rowsControl"
+                fieldLabel="Number of rows"
+                dataTestId="row-limit-error"
+            ></span>
         </div>
     </div>
 } @else {

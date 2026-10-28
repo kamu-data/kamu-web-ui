@@ -15,7 +15,6 @@ import {
     DecompressFormat,
     EventTimeSourceKind,
     FetchKind,
-    JsonFormValidators,
     MergeKind,
     PrepareKind,
     ReadFormatControlType,
@@ -41,10 +40,11 @@ export interface TopicControls {
     qos: TextControl;
 }
 
+/** `pattern` and `timestampFormat` apply only while `kind` is "From path"; `pattern` is required then. */
 export interface EventTimeControls {
     kind: FormControl<EventTimeSourceKind>;
-    pattern?: TextControl;
-    timestampFormat?: TextControl;
+    pattern: TextControl;
+    timestampFormat: TextControl;
 }
 
 export interface FetchControls {
@@ -131,7 +131,10 @@ interface ControlLayoutBase {
     name: string;
     label: string;
     tooltip: string;
-    validators: JsonFormValidators;
+    /** Adds `Validators.required` and marks the label. */
+    required?: boolean;
+    /** Validators from `@common/validation`, besides `required`. */
+    validators?: ValidatorFn[];
     dataTestId?: string;
 }
 
@@ -139,9 +142,16 @@ interface ArrayFieldOptions {
     buttonText: string;
 }
 
-type TextLayout = ControlLayoutBase & { type: ControlType.TEXT; placeholder?: string };
+/** `trimmed: false` keeps the spaces around a value kamu-cli uses exactly as typed, such as a password. */
+type TextLayout = ControlLayoutBase & {
+    type: ControlType.TEXT;
+    placeholder?: string;
+    inputType?: "text" | "password";
+    trimmed?: boolean;
+};
 type TypeaheadLayout = ControlLayoutBase & { type: ControlType.TYPEAHEAD; placeholder?: string; list: string[] };
-type NumberLayout = ControlLayoutBase & { type: ControlType.NUMBER; placeholder?: string };
+/** A number field states its range: the step builds its whole-number and range validators, and its input, from it. */
+type NumberLayout = ControlLayoutBase & { type: ControlType.NUMBER; placeholder?: string; min: number; max?: number };
 type CheckboxLayout = ControlLayoutBase & { type: ControlType.CHECKBOX };
 type CacheLayout = ControlLayoutBase & { type: ControlType.CACHE };
 type OrderLayout = ControlLayoutBase & { type: ControlType.ORDER };
@@ -177,8 +187,28 @@ export type ControlLayout =
     | TopicsLayout
     | ArrayKeyLayout;
 
-/** A control's layout in the step of one kind; the kind keeps the rows of two kinds apart when the kind changes. */
-export type KindControlLayout = ControlLayout & { readonly kind: string };
+interface FieldState<C> {
+    control: C;
+    shown: () => boolean;
+}
+
+/** A field of a step that edits one value: its layout, with the control the step built for it. */
+export type ScalarSourceField =
+    | ((TextLayout | TypeaheadLayout) & FieldState<TextControl>)
+    | (NumberLayout & FieldState<NumberInputControl>)
+    | ((CheckboxLayout | CacheLayout) & FieldState<FormControl<boolean>>)
+    | (OrderLayout & FieldState<FormControl<SourceOrder>>)
+    | (JsonKindLayout & FieldState<FormControl<ReadKind>>);
+
+/** A field of a step that edits a group or a list of values. */
+export type CompositeSourceField =
+    | (SchemaLayout & FieldState<FormControl<DataSchemaField[]>>)
+    | (EventTimeLayout & FieldState<FormGroup<EventTimeControls>>)
+    | (KeyValueLayout & FieldState<FormArray<FormGroup<NameValueControls>>>)
+    | (TopicsLayout & FieldState<FormArray<FormGroup<TopicControls>>>)
+    | (ArrayKeyLayout & FieldState<FormArray<TextControl>>);
+
+export type SourceField = ScalarSourceField | CompositeSourceField;
 
 /** The layouts that can render a control of type `C`; the order matters, as enum controls are string controls too. */
 type LayoutFor<C> =
@@ -209,9 +239,16 @@ type LayoutFor<C> =
  * layout that can render it. An entry cannot name a control the step does not have, build a
  * control of another type, or render it with a field made for another type.
  */
-export type JsonFormControl<T> = {
-    [K in OptionalControlName<T>]: LayoutFor<Required<T>[K]> & { name: K; create: ControlFactory<Required<T>[K]> };
+export type JsonFormControl<T extends ControlsOf<T>> = {
+    [K in OptionalControlName<T>]: LayoutFor<Required<T>[K]> & {
+        name: K;
+        create: ControlFactory<Required<T>[K]>;
+        /** Shows the field only while this holds; the control stays in the form either way. */
+        shownWhen?: (form: FormGroup<T>) => boolean;
+        /** Controls of the same step whose changes revalidate this one, for validators that read them. */
+        dependsOn?: readonly OptionalControlName<T>[];
+    };
 }[OptionalControlName<T>];
 
 /** The config entries of a step, per kind. */
-export type JsonFormData<T> = Record<string, { controls: JsonFormControl<T>[] }>;
+export type JsonFormData<T extends ControlsOf<T>> = Record<string, { controls: JsonFormControl<T>[] }>;

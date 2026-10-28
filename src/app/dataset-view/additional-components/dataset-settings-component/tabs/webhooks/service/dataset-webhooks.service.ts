@@ -12,6 +12,7 @@ import { map, Observable } from "rxjs";
 import { ToastrService } from "ngx-toastr";
 
 import { requireValue } from "@common/helpers/app.helpers";
+import { ErrorTexts } from "@common/values/errors.text";
 import {
     DatasetWebhookByIdQuery,
     DatasetWebhookCreateSubscriptionMutation,
@@ -22,13 +23,46 @@ import {
     DatasetWebhookRotateSecretMutation,
     DatasetWebhookSubscriptionsQuery,
     DatasetWebhookUpdateSubscriptionMutation,
+    UpdateWebhookSubscriptionResultUnexpected,
     WebhookSubscriptionDataFragment,
+    WebhookSubscriptionDuplicateLabel,
     WebhookSubscriptionInput,
+    WebhookSubscriptionInvalidTargetUrl,
+    WebhookSubscriptionNoEventTypesProvided,
 } from "@api/kamu.graphql.interface";
 import { WebhooksApi } from "@api/webhooks.api";
 import { MaybeNull } from "@interface/app.types";
 
 import { CreateWebhookSubscriptionSuccess } from "src/app/dataset-view/additional-components/dataset-settings-component/tabs/webhooks/dataset-settings-webhooks-tab.component.types";
+
+/** A rejection kamu-cli ties to one field of the webhook form. */
+export interface WebhookFieldError {
+    field: "targetUrl" | "label";
+    message: string;
+}
+
+export type WebhookMutationResult<T> = { ok: true; value: T } | { ok: false; fieldError: MaybeNull<WebhookFieldError> };
+
+/** Every result of a create or update that kamu-cli returns instead of the subscription. */
+type WebhookRejection = Pick<
+    | WebhookSubscriptionDuplicateLabel
+    | WebhookSubscriptionInvalidTargetUrl
+    | WebhookSubscriptionNoEventTypesProvided
+    | UpdateWebhookSubscriptionResultUnexpected,
+    "__typename" | "message"
+>;
+
+function webhookFieldError(result: WebhookRejection): MaybeNull<WebhookFieldError> {
+    switch (result.__typename) {
+        case "WebhookSubscriptionDuplicateLabel":
+            return { field: "label", message: ErrorTexts.ERROR_WEBHOOK_DUPLICATE_LABEL };
+        case "WebhookSubscriptionInvalidTargetUrl":
+            return { field: "targetUrl", message: result.message };
+        case "WebhookSubscriptionNoEventTypesProvided":
+        case "UpdateWebhookSubscriptionResultUnexpected":
+            return null;
+    }
+}
 
 @Injectable({
     providedIn: "root",
@@ -48,25 +82,23 @@ export class DatasetWebhooksService {
     public datasetWebhookCreateSubscription(
         datasetId: string,
         input: WebhookSubscriptionInput,
-    ): Observable<MaybeNull<CreateWebhookSubscriptionSuccess>> {
+    ): Observable<WebhookMutationResult<CreateWebhookSubscriptionSuccess>> {
         return this.webhooksApi.datasetWebhookCreateSubscription(datasetId, input).pipe(
-            map((data: DatasetWebhookCreateSubscriptionMutation) => {
-                if (
-                    data.datasets.byId?.webhooks.createSubscription.__typename ===
-                    "CreateWebhookSubscriptionResultSuccess"
-                ) {
-                    this.toastrService.success(data.datasets.byId?.webhooks.createSubscription.message);
-                    return {
-                        datasetId,
-                        secret: data.datasets.byId.webhooks.createSubscription.secret,
-                        input,
-                        subscriptionId: data.datasets.byId.webhooks.createSubscription.subscriptionId,
-                    };
-                } else {
-                    this.toastrService.error(data.datasets.byId?.webhooks.createSubscription.message);
-                    return null;
-                }
-            }),
+            map(
+                (
+                    data: DatasetWebhookCreateSubscriptionMutation,
+                ): WebhookMutationResult<CreateWebhookSubscriptionSuccess> => {
+                    const result = requireValue(data.datasets.byId, "Dataset not found").webhooks.createSubscription;
+                    if (result.__typename === "CreateWebhookSubscriptionResultSuccess") {
+                        this.toastrService.success(result.message);
+                        return {
+                            ok: true,
+                            value: { secret: result.secret, input, subscriptionId: result.subscriptionId },
+                        };
+                    }
+                    return this.rejected(result);
+                },
+            ),
         );
     }
 
@@ -152,21 +184,29 @@ export class DatasetWebhooksService {
         datasetId: string;
         id: string;
         input: WebhookSubscriptionInput;
-    }): Observable<boolean> {
+    }): Observable<WebhookMutationResult<true>> {
         return this.webhooksApi.datasetWebhookUpdateSubscription(params).pipe(
-            map((data: DatasetWebhookUpdateSubscriptionMutation) => {
-                if (
-                    data.datasets.byId?.webhooks.subscription?.update.__typename ===
-                    "UpdateWebhookSubscriptionResultSuccess"
-                ) {
-                    this.toastrService.success(data.datasets.byId?.webhooks.subscription?.update.message);
-                    return true;
-                } else {
-                    this.toastrService.error(data.datasets.byId?.webhooks.subscription?.update.message);
-                    return false;
+            map((data: DatasetWebhookUpdateSubscriptionMutation): WebhookMutationResult<true> => {
+                const result = requireValue(
+                    data.datasets.byId?.webhooks.subscription,
+                    "Webhook subscription not found",
+                ).update;
+                if (result.__typename === "UpdateWebhookSubscriptionResultSuccess") {
+                    this.toastrService.success(result.message);
+                    return { ok: true, value: true };
                 }
+                return this.rejected(result);
             }),
         );
+    }
+
+    /** A rejection the form shows on a field, or a toast for one that belongs to no field. */
+    private rejected(result: WebhookRejection): WebhookMutationResult<never> {
+        const fieldError = webhookFieldError(result);
+        if (!fieldError) {
+            this.toastrService.error(result.message);
+        }
+        return { ok: false, fieldError };
     }
 
     /** Emits `null` when the dataset has no subscription with this ID. */

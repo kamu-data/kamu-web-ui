@@ -7,10 +7,20 @@
 
 import { DestroyRef } from "@angular/core";
 import { takeUntilDestroyed } from "@angular/core/rxjs-interop";
-import { FormArray, FormControl, FormGroup, ValidatorFn, Validators } from "@angular/forms";
+import {
+    AbstractControl,
+    FormArray,
+    FormControl,
+    FormGroup,
+    ValidationErrors,
+    ValidatorFn,
+    Validators,
+} from "@angular/forms";
 
-import { getValidators } from "@common/helpers/data.helpers";
-import { MaybeUndefined } from "@interface/app.types";
+import { distinctUntilChanged, Subject, takeUntil } from "rxjs";
+
+import { notBlankValidator } from "@common/validation/text.validators";
+import { MaybeNull, MaybeUndefined } from "@interface/app.types";
 
 import {
     DecompressFormat,
@@ -24,14 +34,18 @@ import {
     EventTimeControls,
     JsonFormControl,
     JsonFormData,
-    KindControlLayout,
     NameValueControls,
     NumberInputControl,
     OptionalControlName,
     PipeStepControls,
+    SourceField,
     TextControl,
     TopicControls,
 } from "src/app/dataset-view/additional-components/metadata-component/components/source-events/source-event-controls.types";
+import {
+    layoutValidators,
+    sourceField,
+} from "src/app/dataset-view/additional-components/metadata-component/components/source-events/source-field";
 
 /** A control holding `value` until the user changes it. */
 export function valueControl<V>(value: V): ControlFactory<FormControl<V>> {
@@ -54,11 +68,33 @@ export function topicListControl(): ControlFactory<FormArray<FormGroup<TopicCont
     return (validators) => new FormArray<FormGroup<TopicControls>>([], validators);
 }
 
+/**
+ * Requires the pattern only while the event time comes from the path, the one kind that shows it. kamu-cli compiles
+ * it with Rust's regex syntax (`(?i)` and the like), which the browser's `RegExp` can't check.
+ */
+function patternFromPath(control: AbstractControl): MaybeNull<ValidationErrors> {
+    if (control.parent?.get("kind")?.value !== EventTimeSourceKind.FROM_PATH) {
+        return null;
+    }
+    return Validators.required(control);
+}
+
+/** The event time group; its pattern is checked only while the kind is "From path". */
 export function eventTimeControl(): ControlFactory<FormGroup<EventTimeControls>> {
-    return () =>
-        new FormGroup<EventTimeControls>({
+    return () => {
+        const group = new FormGroup<EventTimeControls>({
             kind: new FormControl(EventTimeSourceKind.FROM_METADATA, { nonNullable: true }),
+            pattern: textControl("", [patternFromPath]),
+            timestampFormat: textControl(""),
         });
+        // The group owns both controls, so the subscription ends with it. `onlySelf` leaves the group's status to
+        // `kind`, which updates its parent after this handler; revalidating the group here would re-enable it in
+        // the middle of `group.disable()`.
+        group.controls.kind.valueChanges.subscribe(() =>
+            group.controls.pattern.updateValueAndValidity({ onlySelf: true }),
+        );
+        return group;
+    };
 }
 
 export function textControl(value: string, validators: ValidatorFn[] = []): TextControl {
@@ -71,7 +107,10 @@ export function listItemControl(value = ""): TextControl {
 }
 
 export function nameValueGroup(name = "", value = ""): FormGroup<NameValueControls> {
-    return new FormGroup<NameValueControls>({ name: textControl(name), value: textControl(value) });
+    return new FormGroup<NameValueControls>({
+        name: textControl(name, [Validators.required]),
+        value: textControl(value),
+    });
 }
 
 export function topicGroup(path = "", qos = ""): FormGroup<TopicControls> {
@@ -81,7 +120,7 @@ export function topicGroup(path = "", qos = ""): FormGroup<TopicControls> {
 export function pipeStepGroup(command = ""): FormGroup<PipeStepControls> {
     return new FormGroup<PipeStepControls>({
         kind: new FormControl(PrepareKind.PIPE, { nonNullable: true }),
-        command: textControl(command, [Validators.required]),
+        command: textControl(command, [Validators.required, notBlankValidator()]),
     });
 }
 
@@ -93,45 +132,41 @@ export function decompressStepGroup(format = DecompressFormat.ZIP, subPath = "")
     });
 }
 
-/** What the step component needs of a section: the form its fields bind into, and the layout per kind. */
+/** What the step component needs of a section: the form, and the fields of the selected kind. */
 export interface SourceStepSection {
     readonly form: FormGroup;
-    readonly kindControl: FormControl<string>;
-    layout(kind: string): readonly KindControlLayout[];
+    readonly fields: readonly SourceField[];
 }
 
 /**
  * One step of the source event editor: its form holds `kindControl` and the controls the config
  * lists for the kind selected there. Choosing another kind removes the previous kind's controls and
  * adds the new ones, except those named in `kept`, which carry their value from kind to kind. A kept
- * control the selected kind does not list is disabled, so its validators do not block the form.
+ * control the selected kind does not list is disabled, so its validators do not block the form, and it keeps
+ * the validators of the kind that built it first, so every kind that lists it must give it the same ones.
  */
 export class SourceSection<T extends ControlsOf<T>> implements SourceStepSection {
     private builtKind: string;
-    private readonly layouts = new Map<string, readonly KindControlLayout[]>();
+    private builtFields: readonly SourceField[] = [];
+    private readonly kindSwitched$ = new Subject<void>();
 
     public constructor(
         public readonly form: FormGroup<T>,
-        public readonly kindControl: FormControl<string>,
+        private readonly kindControl: FormControl<string>,
         private readonly config: JsonFormData<T>,
-        destroyRef: DestroyRef,
+        private readonly destroyRef: DestroyRef,
         private readonly kept: readonly OptionalControlName<T>[] = [],
     ) {
         this.builtKind = this.kindControl.value;
         this.addControls(this.builtKind);
-        this.kindControl.valueChanges.pipe(takeUntilDestroyed(destroyRef)).subscribe((kind: string) => {
+        this.kindControl.valueChanges.pipe(takeUntilDestroyed(this.destroyRef)).subscribe((kind: string) => {
             this.switchKind(kind);
         });
     }
 
-    /** The same array for the same kind on every call, so change detection sees no new rows. */
-    public layout(kind: string): readonly KindControlLayout[] {
-        let rows = this.layouts.get(kind);
-        if (!rows) {
-            rows = this.entries(kind).map((entry): KindControlLayout => ({ ...entry, kind }));
-            this.layouts.set(kind, rows);
-        }
-        return rows;
+    /** The fields of the selected kind, each with the control built for it; a new array only when the kind changes. */
+    public get fields(): readonly SourceField[] {
+        return this.builtFields;
     }
 
     private entries(kind: string): readonly JsonFormControl<T>[] {
@@ -145,6 +180,7 @@ export class SourceSection<T extends ControlsOf<T>> implements SourceStepSection
             return;
         }
         this.builtKind = kind;
+        this.kindSwitched$.next();
         Object.values(this.config).forEach(({ controls }) => {
             controls.forEach((item) => {
                 if (!this.kept.includes(item.name)) {
@@ -165,8 +201,37 @@ export class SourceSection<T extends ControlsOf<T>> implements SourceStepSection
     }
 
     private addControls(kind: string): void {
+        this.builtFields = this.entries(kind).map((item) => {
+            const validators = [
+                ...(item.required ? [Validators.required] : []),
+                ...layoutValidators(item),
+                ...(item.validators ?? []),
+            ];
+            const created = item.create(validators);
+            // A kept control of the same name stays in the form, and the field binds to it.
+            this.form.addControl(item.name, created);
+            const control = this.form.get(item.name) ?? created;
+            const shown = (): boolean => item.shownWhen?.(this.form) ?? true;
+            return sourceField(item, control, shown);
+        });
+        // A control can depend on one listed after it, so these are wired once all of the kind's controls exist.
         this.entries(kind).forEach((item) => {
-            this.form.addControl(item.name, item.create(getValidators(item.validators)));
+            const control = this.form.get(item.name);
+            item.dependsOn?.forEach((name) => {
+                // Revalidating re-emits an unchanged value; skipping it ends the round trip between two controls
+                // that depend on each other.
+                this.form
+                    .get(name)
+                    ?.valueChanges.pipe(
+                        distinctUntilChanged(),
+                        takeUntil(this.kindSwitched$),
+                        takeUntilDestroyed(this.destroyRef),
+                    )
+                    .subscribe(() => control?.updateValueAndValidity());
+            });
+            if (item.dependsOn) {
+                control?.updateValueAndValidity();
+            }
         });
     }
 }

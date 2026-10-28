@@ -3,17 +3,17 @@
 <form [formGroup]="changeEmailForm">
     <dl class="form-group d-inline-block mt-3 mb-0">
         <dt class="input-label mb-2 fw-600">
-            <label for="email-address">Your email address</label>
+            <label for="email-address">Email address</label>
         </dt>
         <dd>
             <input
                 formControlName="emailAddress"
-                type="text"
+                type="email"
+                trim="blur"
                 name="email"
                 class="form-control email-control"
                 id="email-address"
                 data-test-id="email-address"
-                (keyup)="changeEmail()"
                 #emailAddress
             />
         </dd>
@@ -31,12 +31,8 @@
         class="text-danger fs-12"
         [input]="emailAddress"
         fieldLabel="Email address"
-        [appFieldError]="['required', 'email']"
+        appFieldError
         [group]="changeEmailForm"
+        dataTestId="email-address-error"
     ></div>
-    @if (changeEmailError$ | async; as changeEmailError) {
-        <div>
-            <div class="error-block" data-test-id="change-email-error">{{ changeEmailError }}</div>
-        </div>
-    }
 </form>

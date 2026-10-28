@@ -12,12 +12,12 @@ import { merge, Observable, OperatorFunction, Subject } from "rxjs";
 import { debounceTime, distinctUntilChanged, filter, map } from "rxjs/operators";
 
 import { NgbTypeahead } from "@ng-bootstrap/ng-bootstrap";
-import { RxReactiveFormsModule } from "@rxweb/reactive-form-validators";
 
 import { TooltipIconComponent } from "@common/components/tooltip-icon/tooltip-icon.component";
-import { FormValidationErrorsDirective } from "@common/directives/form-validation-errors.directive";
+import { FormValidationErrorsDirective } from "@common/validation/form-validation-errors.directive";
 
 import { BaseField } from "src/app/dataset-view/additional-components/metadata-component/components/form-components/base-field";
+import { TextControl } from "src/app/dataset-view/additional-components/metadata-component/components/source-events/source-event-controls.types";
 
 @Component({
     selector: "app-typeahead-field",
@@ -28,17 +28,14 @@ import { BaseField } from "src/app/dataset-view/additional-components/metadata-c
         ReactiveFormsModule,
         //-----//
         NgbTypeahead,
-        RxReactiveFormsModule,
         //-----//
         TooltipIconComponent,
         FormValidationErrorsDirective,
     ],
 })
-export class TypeaheadFieldComponent extends BaseField {
+export class TypeaheadFieldComponent extends BaseField<TextControl> {
     @Input({ required: true }) public data: string[];
-    @Input() public requiredField = false;
     @Input() public placeholder?: string;
-    @Input() public maxLength?: number;
     @ViewChild("instance", { static: true }) public instance: NgbTypeahead;
     public focus$ = new Subject<string>();
     public click$ = new Subject<string>();

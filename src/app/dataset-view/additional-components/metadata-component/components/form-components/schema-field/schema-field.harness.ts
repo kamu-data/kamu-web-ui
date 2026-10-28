@@ -7,11 +7,11 @@
 
 /* istanbul ignore file */
 
-import { ComponentHarness } from "@angular/cdk/testing";
-
 import { EditSchemaTableHarness } from "@common/components/edit-schema-table/edit-schema-table.harness";
 
-export class SchemaFieldHarness extends ComponentHarness {
+import { BaseFieldHarness } from "src/app/dataset-view/additional-components/metadata-component/components/form-components/base-field.harness";
+
+export class SchemaFieldHarness extends BaseFieldHarness {
     public static readonly hostSelector = "app-schema-field";
 
     private readonly locatorRootTable = this.locatorFor(EditSchemaTableHarness);

@@ -75,6 +75,8 @@ RULES: list[tuple[re.Pattern[str], str, bool, list[str]]] = [
 
 ROUTING_FILE = ["src/app/**/*routing*.ts"]
 ROUTE_LOADING = re.compile(r"\b(loadChildren|loadComponent|component)\s*:")
+APP_SOURCE = ["src/app/**/*.ts", "src/app/**/*.html"]
+FORM_FIELD = re.compile(r"\bValidators\.|\bformControlName\b|\[formControl\]|\bappFieldError\b|validators:")
 
 
 def nudges(rel: str, added: list[str]) -> list[str]:
@@ -89,6 +91,16 @@ def nudges(rel: str, added: list[str]) -> list[str]:
         out.append(
             "Route loading changed: run `npm run build-prod` and check the lazy chunk list it prints "
             "(kamu-ui-routing)."
+        )
+    if (
+        matches(rel, APP_SOURCE)
+        and not matches(rel, SPEC)
+        and not rel.startswith("src/app/common/validation/")
+        and any(FORM_FIELD.search(line) for line in added)
+    ):
+        out.append(
+            "Form field or validator changed: check it against the field checklist in "
+            "kamu-ui-forms-and-validation (kamu-cli's rule, a message for every validator, a test per rule)."
         )
     if rel == "package.json":
         out.append(

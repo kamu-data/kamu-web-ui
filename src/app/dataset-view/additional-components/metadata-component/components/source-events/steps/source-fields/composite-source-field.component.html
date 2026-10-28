@@ -1,0 +1,46 @@
+@let f = field;
+@switch (f.type) {
+    @case (ControlType.SCHEMA) {
+        <app-schema-field [control]="f.control" [label]="f.label" [tooltip]="f.tooltip" [dataTestId]="dataTestId" />
+    }
+    @case (ControlType.EVENT_TIME) {
+        <app-select-date-format-field
+            [control]="f.control"
+            [label]="f.label"
+            [tooltip]="f.tooltip"
+            [innerTooltips]="f.options.innerTooltips"
+            [dataTestId]="dataTestId"
+        />
+    }
+    @case (ControlType.ARRAY_KEY_VALUE) {
+        <app-key-value-field
+            [control]="f.control"
+            [label]="f.label"
+            [requiredField]="f.required ?? false"
+            [buttonText]="f.options.buttonText"
+            [tooltip]="f.tooltip"
+            [dataTestId]="dataTestId"
+        />
+    }
+    @case (ControlType.TOPICS) {
+        <app-topics-field
+            [control]="f.control"
+            [label]="f.label"
+            [buttonText]="f.options.buttonText"
+            [requiredField]="f.required ?? false"
+            [tooltip]="f.tooltip"
+            [dataTestId]="dataTestId"
+        />
+    }
+    @case (ControlType.ARRAY_KEY) {
+        <app-array-keys-field
+            [control]="f.control"
+            [label]="f.label"
+            [requiredField]="f.required ?? false"
+            [buttonText]="f.options.buttonText"
+            [placeholder]="f.placeholder"
+            [tooltip]="f.tooltip"
+            [dataTestId]="dataTestId"
+        />
+    }
+}

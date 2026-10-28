@@ -10,7 +10,8 @@ import { FormControl, FormGroup, FormsModule, ReactiveFormsModule, Validators } 
 
 import { BaseComponent } from "@common/components/base.component";
 import { TimeDeltaFormComponent } from "@common/components/time-delta-form/time-delta-form.component";
-import { FormValidationErrorsDirective } from "@common/directives/form-validation-errors.directive";
+import { FormValidationErrorsDirective } from "@common/validation/form-validation-errors.directive";
+import { integerInRangeValidators } from "@common/validation/number.validators";
 import { TimeUnit } from "@api/kamu.graphql.interface";
 import { MaybeNull } from "@interface/app.types";
 
@@ -39,7 +40,10 @@ export class BufferingBatchingRuleFormComponent extends BaseComponent {
         const timeDeltaForm = TimeDeltaFormComponent.buildForm();
 
         const formGroup = new FormGroup<BufferingBatchingRuleFormType>({
-            minRecordsToAwait: new FormControl<MaybeNull<number>>(null, [Validators.required, Validators.min(1)]),
+            minRecordsToAwait: new FormControl<MaybeNull<number>>(null, [
+                Validators.required,
+                ...integerInRangeValidators(1),
+            ]),
             maxBatchingInterval: timeDeltaForm,
         });
 

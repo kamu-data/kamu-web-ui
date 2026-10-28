@@ -6,16 +6,15 @@
  */
 
 import { ChangeDetectionStrategy, Component, Input } from "@angular/core";
-import { FormArray, ReactiveFormsModule } from "@angular/forms";
+import { FormArray, FormGroup, ReactiveFormsModule } from "@angular/forms";
 
-import { RxReactiveFormsModule } from "@rxweb/reactive-form-validators";
 import { NgxTrimDirectiveModule } from "ngx-trim-directive";
 
 import { TooltipIconComponent } from "@common/components/tooltip-icon/tooltip-icon.component";
-import { requireFormArray } from "@common/helpers/form.helpers";
-import { MqttQos } from "@api/kamu.graphql.interface";
+import { FormValidationErrorsDirective } from "@common/validation/form-validation-errors.directive";
 
 import { BaseField } from "src/app/dataset-view/additional-components/metadata-component/components/form-components/base-field";
+import { TopicControls } from "src/app/dataset-view/additional-components/metadata-component/components/source-events/source-event-controls.types";
 import { topicGroup } from "src/app/dataset-view/additional-components/metadata-component/components/source-events/source-section";
 
 @Component({
@@ -28,25 +27,20 @@ import { topicGroup } from "src/app/dataset-view/additional-components/metadata-
         ReactiveFormsModule,
         //-----//
         NgxTrimDirectiveModule,
-        RxReactiveFormsModule,
         //-----//
         TooltipIconComponent,
+        FormValidationErrorsDirective,
     ],
 })
-export class TopicsFieldComponent extends BaseField {
+export class TopicsFieldComponent extends BaseField<FormArray<FormGroup<TopicControls>>> {
     @Input({ required: true }) public buttonText: string;
-    @Input() public requiredField?: boolean;
-    public readonly MqttQos: typeof MqttQos = MqttQos;
-
-    public get items(): FormArray {
-        return requireFormArray(this.form, this.controlName);
-    }
 
     public addItem(): void {
-        this.items.push(topicGroup());
+        this.control.push(topicGroup());
     }
 
     public removeItem(index: number): void {
-        this.items.removeAt(index);
+        this.control.removeAt(index);
+        this.control.markAsDirty();
     }
 }

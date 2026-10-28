@@ -5,12 +5,14 @@
  * included in the LICENSE file.
  */
 
+import { TestbedHarnessEnvironment } from "@angular/cdk/testing/testbed";
 import { ComponentFixture, TestBed } from "@angular/core/testing";
 import { FormControl, FormGroup } from "@angular/forms";
 
-import { emitClickOnElementByDataTestId, setComponentInput } from "@common/helpers/base-test.helpers.spec";
+import { setComponentInput } from "@common/helpers/base-test.helpers.spec";
 
 import { SelectKindFieldComponent } from "src/app/dataset-view/additional-components/metadata-component/components/form-components/select-kind-field/select-kind-field.component";
+import { SelectKindFieldHarness } from "src/app/dataset-view/additional-components/metadata-component/components/form-components/select-kind-field/select-kind-field.harness";
 import { FetchKind } from "src/app/dataset-view/additional-components/metadata-component/components/source-events/add-polling-source/add-polling-source-form.types";
 import { FETCH_STEP_RADIO_CONTROLS } from "src/app/dataset-view/additional-components/metadata-component/components/source-events/add-polling-source/form-control.source";
 
@@ -40,13 +42,16 @@ describe("SelectKindFieldComponent", () => {
         expect(component).toBeTruthy();
     });
 
-    it("should check switch control", () => {
+    it("should write the picked kind into the form", async () => {
+        const harness = await TestbedHarnessEnvironment.harnessForFixture(fixture, SelectKindFieldHarness);
         expect(component.form.value).toEqual({ kind: FetchKind.URL });
+        expect(await harness.isKindSelected(FetchKind.URL)).toBe(true);
 
-        emitClickOnElementByDataTestId(fixture, `radio-${FetchKind.FILES_GLOB}-control`);
+        await harness.selectKind(FetchKind.FILES_GLOB);
         expect(component.form.value).toEqual({ kind: FetchKind.FILES_GLOB });
 
-        emitClickOnElementByDataTestId(fixture, `radio-${FetchKind.CONTAINER}-control`);
+        await harness.selectKind(FetchKind.CONTAINER);
         expect(component.form.value).toEqual({ kind: FetchKind.CONTAINER });
+        expect(await harness.isKindSelected(FetchKind.FILES_GLOB)).toBe(false);
     });
 });

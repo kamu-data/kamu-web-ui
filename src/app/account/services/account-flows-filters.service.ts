@@ -22,6 +22,7 @@ import {
     DashboardFiltersOptions,
     ProcessCardFilterMode,
 } from "src/app/account/additional-components/account-flows-tab/account-flows-tab.types";
+import { clampConsecutiveFailures } from "src/app/account/services/account-flows-filters.helpers";
 
 @Injectable({
     providedIn: "root",
@@ -112,9 +113,7 @@ export class AccountFlowsFiltersService {
                     lastAttemptBetween:
                         this.currentFiltersSnapshot.toFilterDate && this.currentFiltersSnapshot.fromFilterDate
                             ? {
-                                  start: this.currentFiltersSnapshot.fromFilterDate
-                                      ? stripSecondsFromDateToISOString(this.currentFiltersSnapshot.fromFilterDate)
-                                      : stripSecondsFromDateToISOString(sixHoursAgoDate),
+                                  start: stripSecondsFromDateToISOString(this.currentFiltersSnapshot.fromFilterDate),
                                   end: stripSecondsFromDateToISOString(this.currentFiltersSnapshot.toFilterDate),
                               }
                             : undefined,
@@ -124,10 +123,10 @@ export class AccountFlowsFiltersService {
                 this.updateFilters({
                     selectedOrderField:
                         this.currentFiltersSnapshot.selectedOrderField ?? FlowProcessOrderField.LastFailureAt,
-                    minConsecutiveFailures:
-                        this.currentFiltersSnapshot.minConsecutiveFailures > 1
-                            ? this.currentFiltersSnapshot.minConsecutiveFailures
-                            : 1,
+                    minConsecutiveFailures: clampConsecutiveFailures(
+                        this.currentFiltersSnapshot.minConsecutiveFailures,
+                        1,
+                    ),
                 });
 
                 return {
@@ -137,7 +136,10 @@ export class AccountFlowsFiltersService {
                     lastFailureSince: this.currentFiltersSnapshot.lastFailureDate
                         ? stripSecondsFromDateToISOString(this.currentFiltersSnapshot.lastFailureDate)
                         : undefined,
-                    minConsecutiveFailures: this.currentFiltersSnapshot.minConsecutiveFailures,
+                    minConsecutiveFailures: clampConsecutiveFailures(
+                        this.currentFiltersSnapshot.minConsecutiveFailures,
+                        1,
+                    ),
                 };
             }
             case ProcessCardFilterMode.UPCOMING_SCHEDULED: {
@@ -168,6 +170,12 @@ export class AccountFlowsFiltersService {
                 };
             }
             case ProcessCardFilterMode.CUSTOM: {
+                const minConsecutiveFailures = clampConsecutiveFailures(
+                    this.currentFiltersSnapshot.minConsecutiveFailures,
+                    0,
+                );
+                this.updateFilters({ minConsecutiveFailures });
+
                 return {
                     effectiveStateIn: this.currentFiltersSnapshot.selectedFlowProcessStates.length
                         ? this.currentFiltersSnapshot.selectedFlowProcessStates
@@ -179,7 +187,7 @@ export class AccountFlowsFiltersService {
                                   end: stripSecondsFromDateToISOString(this.currentFiltersSnapshot.toFilterDate),
                               }
                             : undefined,
-                    minConsecutiveFailures: this.currentFiltersSnapshot.minConsecutiveFailures,
+                    minConsecutiveFailures,
                     lastFailureSince: this.currentFiltersSnapshot.lastFailureDate
                         ? stripSecondsFromDateToISOString(this.currentFiltersSnapshot.lastFailureDate)
                         : undefined,

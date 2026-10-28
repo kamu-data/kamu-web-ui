@@ -12,6 +12,7 @@ import { map, Observable } from "rxjs";
 import { ToastrService } from "ngx-toastr";
 
 import { requireValue } from "@common/helpers/app.helpers";
+import { FieldMutationResult } from "@common/validation/server-errors.helpers";
 import { AccessTokenApi } from "@api/access-token.api";
 import {
     AccessTokenConnectionDataFragment,
@@ -20,7 +21,6 @@ import {
     ListAccessTokensQuery,
     RevokeAccessTokenMutation,
 } from "@api/kamu.graphql.interface";
-import { MaybeNull } from "@interface/app.types";
 
 @Injectable({
     providedIn: "root",
@@ -47,17 +47,16 @@ export class AccessTokenService {
     public createAccessTokens(
         accountId: string,
         tokenName: string,
-    ): Observable<MaybeNull<CreatedAccessTokenDataFragment>> {
+    ): Observable<FieldMutationResult<CreatedAccessTokenDataFragment>> {
         return this.accessTokenApi.createAccessToken(accountId, tokenName).pipe(
-            map((result: CreateAccessTokenMutation) => {
-                const createResult = result.accounts.byId?.accessTokens.createAccessToken;
-                if (createResult?.__typename === "CreateAccessTokenResultSuccess") {
+            map((result: CreateAccessTokenMutation): FieldMutationResult<CreatedAccessTokenDataFragment> => {
+                const createResult = requireValue(result.accounts.byId, "Account not found").accessTokens
+                    .createAccessToken;
+                if (createResult.__typename === "CreateAccessTokenResultSuccess") {
                     this.toastrService.success(createResult.message);
-                    return createResult.token;
-                } else {
-                    this.toastrService.error(createResult?.message);
-                    return null;
+                    return { ok: true, value: createResult.token };
                 }
+                return { ok: false, fieldError: createResult.message };
             }),
         );
     }

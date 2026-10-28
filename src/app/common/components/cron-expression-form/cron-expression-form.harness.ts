@@ -29,7 +29,9 @@ export class CronExpressionFormHarness extends ComponentHarness {
     public async setCronExpression(value: string): Promise<void> {
         const input = await this.input();
         await input.clear();
-        await input.sendKeys(value);
+        if (value !== "") {
+            await input.sendKeys(value);
+        }
         await input.blur();
     }
 

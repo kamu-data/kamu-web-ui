@@ -18,14 +18,6 @@ export enum SetPollingSourceSection {
     PREPARE = "prepare",
 }
 
-export interface JsonFormValidators {
-    required?: boolean;
-    minLength?: number;
-    maxLength?: number;
-    pattern?: string | RegExp;
-    min?: number;
-}
-
 export interface ReadFormatControlType {
     label: string;
     value: string;

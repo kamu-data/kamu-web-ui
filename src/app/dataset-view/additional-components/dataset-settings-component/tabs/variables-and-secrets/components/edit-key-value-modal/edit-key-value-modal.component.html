@@ -19,7 +19,12 @@
 <div class="body p-4">
     <form [formGroup]="keyValueForm" (ngSubmit)="onEditRow()">
         <div class="mt-4 d-flex align-items-center">
-            <input class="checkbox-uncacheable me-2" type="checkbox" formControlName="isSecret" />
+            <input
+                class="checkbox-uncacheable me-2"
+                type="checkbox"
+                formControlName="isSecret"
+                data-test-id="is-secret"
+            />
             <span class="d-inline-block">Secret value</span>
             <mat-icon
                 class="text-muted fs-5 ms-1 mt-2"
@@ -42,7 +47,7 @@
                 class="text-danger fs-12"
                 [input]="key"
                 fieldLabel="Key"
-                [appFieldError]="['required', 'maxlength', 'whitespace']"
+                appFieldError
                 [group]="keyValueForm"
                 dataTestId="error-key"
             ></div>
@@ -72,8 +77,9 @@
                 class="text-danger fs-12"
                 [input]="value"
                 fieldLabel="Value"
-                [appFieldError]="['required']"
+                appFieldError
                 [group]="keyValueForm"
+                dataTestId="error-value"
             ></div>
         </div>
     </form>
@@ -85,7 +91,7 @@
         class="btn btn-success"
         data-test-id="save-row"
         (click)="onEditRow()"
-        [disabled]="!keyValueForm.valid"
+        [disabled]="!keyValueForm.valid || !existingKeysLoaded || ((busy$ | async) ?? false)"
     >
         Save
     </button>

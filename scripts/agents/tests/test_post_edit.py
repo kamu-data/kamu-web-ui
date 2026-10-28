@@ -81,6 +81,23 @@ class AddedTextTest(unittest.TestCase):
         self.assertIn("npm install", nudges("package.json", ['"x": "1"'])[0])
         self.assertEqual(nudges("src/app/app.component.ts", ["x"]), [])
 
+    def test_nudges_point_form_changes_to_the_forms_skill(self):
+        for rel, line in [
+            ("src/app/auth/login/login.component.ts", '        login: ["", [Validators.required]],'),
+            ("src/app/auth/login/login.component.html", '            formControlName="login"'),
+            ("src/app/x/x.component.html", "        appFieldError"),
+            ("src/app/x/steps/data/fetch-form-data.ts", '                validators: [urlValidator(["https"])],'),
+        ]:
+            with self.subTest(rel=rel):
+                self.assertIn("kamu-ui-forms-and-validation", " ".join(nudges(rel, [line])))
+        for rel, line in [
+            ("src/app/auth/login/login.component.spec.ts", "    Validators.required,"),
+            ("src/app/common/validation/text.validators.ts", "    return Validators.required(control);"),
+            ("src/app/auth/login/login.component.ts", "    public x = 1;"),
+        ]:
+            with self.subTest(rel=rel):
+                self.assertEqual(nudges(rel, [line]), [])
+
 
 class LicenseTest(unittest.TestCase):
     def setUp(self):

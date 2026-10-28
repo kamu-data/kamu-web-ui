@@ -11,6 +11,9 @@ import { ComponentHarness } from "@angular/cdk/testing";
 
 import { TimeDeltaFormHarness } from "@common/components/time-delta-form/time-delta-form.harness";
 import { TimeDeltaFormValue } from "@common/components/time-delta-form/time-delta-form.value";
+import { NativeInputHarness } from "@common/helpers/native-input.harness";
+import { FieldErrorHarness } from "@common/validation/field-error.harness";
+import { TimeUnit } from "@api/kamu.graphql.interface";
 import { MaybeNull } from "@interface/app.types";
 
 import { BufferingBatchingRuleFormValue } from "src/app/dataset-view/additional-components/dataset-settings-component/tabs/transform-options/buffering-batching-rule-form/buffering-batching-rule-form.types";
@@ -22,24 +25,18 @@ export class BufferingBatchingRuleFormHarness extends ComponentHarness {
     private static readonly MIN_RECORDS_ERROR_TEST_ID = "min-records-error-message";
 
     private readonly locatorMinRecordsInput = this.locatorFor(
-        `[data-test-id="${BufferingBatchingRuleFormHarness.MIN_RECORDS_INPUT_TEST_ID}"]`,
+        NativeInputHarness.with({ dataTestId: BufferingBatchingRuleFormHarness.MIN_RECORDS_INPUT_TEST_ID }),
     );
-    private readonly locatorMinRecordsErrorMessage = this.locatorForOptional(
-        `[data-test-id="${BufferingBatchingRuleFormHarness.MIN_RECORDS_ERROR_TEST_ID}"]`,
+    private readonly locatorMinRecordsError = this.locatorFor(
+        FieldErrorHarness.with({ dataTestId: BufferingBatchingRuleFormHarness.MIN_RECORDS_ERROR_TEST_ID }),
     );
 
     private readonly locatorTimeDeltaForm = this.locatorForOptional(TimeDeltaFormHarness);
 
-    public async setMinRecordsToAwait(value: MaybeNull<number | "">): Promise<void> {
+    /** Types the value as a user would; an empty string leaves the field blank. */
+    public async setMinRecordsToAwait(value: number | string): Promise<void> {
         const input = await this.locatorMinRecordsInput();
-        await input.clear();
-        if (value === "") {
-            // Blank input, do not set any value, but ensure the input is touched
-            await input.blur();
-        } else if (value !== null) {
-            await input.sendKeys(value.toString());
-            await input.blur();
-        }
+        await input.setValue(value.toString());
     }
 
     public async setMaxBatchingInterval(timeDelta: TimeDeltaFormValue): Promise<void> {
@@ -53,30 +50,30 @@ export class BufferingBatchingRuleFormHarness extends ComponentHarness {
 
     public async getMinRecordsToAwait(): Promise<MaybeNull<number>> {
         const input = await this.locatorMinRecordsInput();
-        const value = await input.getProperty<string>("value");
-        if (value == null || value === "") {
-            return null;
+        const value = await input.getValue();
+        return value === "" ? null : Number(value);
+    }
+
+    public async getMinRecordsError(): Promise<MaybeNull<string>> {
+        const error = await this.locatorMinRecordsError();
+        return error.getMessage();
+    }
+
+    public async getMaxBatchingIntervalError(): Promise<MaybeNull<string>> {
+        const timeDeltaForm = await this.locatorTimeDeltaForm();
+        if (!timeDeltaForm) {
+            throw new Error("Time delta form did not appear");
         }
-        return Number(value);
+        return timeDeltaForm.getErrorMessage();
     }
 
-    public async isMinRecordsInvalid(): Promise<boolean> {
-        const input = await this.locatorMinRecordsInput();
-        return input.hasClass("ng-invalid");
-    }
-
-    public async isMinRecordsUntouched(): Promise<boolean> {
-        const input = await this.locatorMinRecordsInput();
-        return input.hasClass("ng-untouched");
-    }
-
-    public async getMinRecordsErrorMessage(): Promise<MaybeNull<string>> {
-        const errorElement = await this.locatorMinRecordsErrorMessage();
-        if (errorElement) {
-            const message = await errorElement.text();
-            return message === "" ? null : message;
+    /** The units the batching interval offers; kamu-cli caps the interval at 24 hours. */
+    public async getBatchingIntervalUnits(): Promise<TimeUnit[]> {
+        const timeDeltaForm = await this.locatorTimeDeltaForm();
+        if (!timeDeltaForm) {
+            throw new Error("Time delta form did not appear");
         }
-        return null;
+        return timeDeltaForm.getAvailableUnits();
     }
 
     public async getMaxBatchingInterval(): Promise<TimeDeltaFormValue> {

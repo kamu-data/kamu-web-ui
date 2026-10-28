@@ -9,7 +9,7 @@ import { TestbedHarnessEnvironment } from "@angular/cdk/testing/testbed";
 import { provideHttpClient } from "@angular/common/http";
 import { provideHttpClientTesting } from "@angular/common/http/testing";
 import { ComponentFixture, TestBed } from "@angular/core/testing";
-import { FormControl, FormGroup } from "@angular/forms";
+import { FormControl } from "@angular/forms";
 
 import { EditSchemaTableHarness } from "@common/components/edit-schema-table/edit-schema-table.harness";
 import { ORDER_SCHEMA } from "@common/components/edit-schema-table/schema-editor.mock";
@@ -21,8 +21,10 @@ import { registerMatSvgIcons, setComponentInput } from "@common/helpers/base-tes
 import { SharedTestModule } from "@common/modules/shared-test.module";
 import { DataSchemaField, OdfTypes } from "@interface/dataset-schema.interface";
 
-import { SchemaFieldComponent } from "./schema-field.component";
-import { SchemaFieldHarness } from "./schema-field.harness";
+import { SchemaFieldComponent } from "src/app/dataset-view/additional-components/metadata-component/components/form-components/schema-field/schema-field.component";
+import { schemaValidator } from "src/app/dataset-view/additional-components/metadata-component/components/form-components/schema-field/schema-field.component.helpers";
+import { SchemaFieldHarness } from "src/app/dataset-view/additional-components/metadata-component/components/form-components/schema-field/schema-field.harness";
+import { valueControl } from "src/app/dataset-view/additional-components/metadata-component/components/source-events/source-section";
 
 // ---------------------------------------------------------------------------
 // Suite
@@ -33,19 +35,20 @@ describe("SchemaFieldComponent", () => {
     let component: SchemaFieldComponent;
     let harness: SchemaFieldHarness;
 
+    let control: FormControl<DataSchemaField[]>;
+
     function schemaControl(): FormControl<DataSchemaField[]> {
-        return component.schemaControl;
+        return control;
     }
 
     async function setup(initialFields: DataSchemaField[] = []): Promise<void> {
         fixture = TestBed.createComponent(SchemaFieldComponent);
         component = fixture.componentInstance;
-        setComponentInput(
-            fixture,
-            "form",
-            new FormGroup({ schema: new FormControl<DataSchemaField[]>(initialFields) }),
-        );
-        setComponentInput(fixture, "controlName", "schema");
+        control = valueControl(initialFields)([schemaValidator]);
+        setComponentInput(fixture, "control", control);
+        setComponentInput(fixture, "label", "Schema");
+        setComponentInput(fixture, "tooltip", "Columns of the data");
+        setComponentInput(fixture, "dataTestId", "read-schema");
         fixture.detectChanges();
         await fixture.whenStable();
         harness = await TestbedHarnessEnvironment.harnessForFixture(fixture, SchemaFieldHarness);
@@ -64,6 +67,10 @@ describe("SchemaFieldComponent", () => {
     // ---------------------------------------------------------------------------
     // Basic editing
     // ---------------------------------------------------------------------------
+
+    it("renders the label", async () => {
+        expect(await harness.getLabel()).toBe("Schema");
+    });
 
     it("adding a field updates schemaControl.value", async () => {
         await harness.addField("city");

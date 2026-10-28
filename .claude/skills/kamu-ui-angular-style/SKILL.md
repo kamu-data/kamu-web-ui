@@ -68,11 +68,13 @@ export class TimeDeltaFormComponent extends BaseComponent implements OnInit {
   - constant option lists, `FormArray` controls and lists edited in place: the item itself
     (`track item`), since the object is the identity;
   - unique strings: the value; `$index` only for content with no identity at all;
-  - a list the template swaps for another one, such as the fields of the kind selected in a
-    source event step: a key that tells the two lists apart (`control.kind + "." + control.name`).
-    Tracking by the item there rebuilds the whole list, which Angular reports as NG0956, and a key
-    built from component state instead of the item (`currentKind + "." + control.name`) matches
-    the old rows to the new ones, since Angular computes it for both after the state has changed.
+  - a list rebuilt from state, whose items are new objects each time, such as the fields of the
+    kind selected in a source event step: the thing each row stands for, here the form control
+    (`track field.control`). A kind switch builds new controls, so their rows render afresh, while
+    a control two kinds share keeps its row and what the user typed. Tracking by the rebuilt item
+    re-creates every row, which Angular reports as NG0956, and a key built from component state
+    (`currentKind + "." + name`) matches old rows to new ones, since Angular computes it for both
+    after the state has changed.
 
   Write the key inline; keep a method only when choosing the key needs logic, and give it just
   the item.
@@ -269,12 +271,12 @@ code added itself, or a third-party callback triggers none of them.
   event editor, declares every control a kind can add as optional (`url?: FormControl<string>`)
   and adds them from a config typed by those names (`SourceSection` and `JsonFormControl<T>` in
   `metadata-component/components/source-events`), so a config entry cannot name a missing control,
-  build one of another type or render it with the wrong field. A shared field component bound into
-  such a form by control name reaches the control with `requireFormGroup` / `requireFormArray` /
-  `requireFormControl` from `@common/helpers/form.helpers`, which check its class. A value that
-  arrives as `any` goes through `@common/helpers/untyped-boundary.helpers`: `parseJsonAs<T>()` for
-  `JSON.parse`, `parseYamlAs<T>()` for YAML, `routeDataAs<T>()` for a value another route's
-  resolver stored in route data. That file is the one place app code may assert, and eslint
+  build one of another type or render it with the wrong field. A shared field component takes the
+  control itself as a typed `control` input, never a form and a control name; `SourceSection.fields`
+  hands each field the control built for it. A value that arrives as `any` goes through
+  `@common/helpers/untyped-boundary.helpers`: `parseJsonAs<T>()` for `JSON.parse`,
+  `parseYamlAs<T>()` for YAML, `routeDataAs<T>()` for a value another route's resolver stored in
+  route data. That file is the one place app code may assert, and eslint
   exempts it. Any other value that arrives as `any` or `unknown`, such as an HTTP error body or the
   detail a validator stored in its errors, is checked field by field with `isRecord()` and
   `typeof` (`parseVerifyQueryFailure` in `query-explainer.helpers.ts`).
@@ -307,4 +309,5 @@ code added itself, or a third-party callback triggers none of them.
 - Routes, lazy loading, guards and resolvers wiring: `kamu-ui-routing`.
 - Specs, harnesses, mocks: `kamu-ui-unit-tests`.
 - Comments: `kamu-ui-prose-and-comments`.
+- Form fields and their validation rules: `kamu-ui-forms-and-validation`.
 - A whole new page end to end: `kamu-ui-adding-a-page`.

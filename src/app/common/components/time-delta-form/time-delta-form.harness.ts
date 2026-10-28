@@ -9,6 +9,8 @@
 
 import { ComponentHarness } from "@angular/cdk/testing";
 
+import { NativeInputHarness } from "@common/helpers/native-input.harness";
+import { FieldErrorHarness } from "@common/validation/field-error.harness";
 import { TimeUnit } from "@api/kamu.graphql.interface";
 import { MaybeNull } from "@interface/app.types";
 
@@ -18,22 +20,24 @@ export class TimeDeltaFormHarness extends ComponentHarness {
     private static readonly EVERY_INPUT_TEST_ID = "time-delta-every";
     private static readonly UNIT_SELECT_TEST_ID = "time-delta-unit";
     private static readonly ERROR_TEST_ID = "time-delta-error-message";
+    private static readonly UNIT_ERROR_TEST_ID = "time-delta-unit-error-message";
 
     private readonly locatorEveryInput = this.locatorFor(
         `[data-test-id="${TimeDeltaFormHarness.EVERY_INPUT_TEST_ID}"]`,
+    );
+    private readonly locatorEveryField = this.locatorFor(
+        NativeInputHarness.with({ dataTestId: TimeDeltaFormHarness.EVERY_INPUT_TEST_ID }),
     );
     private readonly locatorUnitSelect = this.locatorFor(
         `[data-test-id="${TimeDeltaFormHarness.UNIT_SELECT_TEST_ID}"]`,
     );
 
-    private readonly locatorError = this.locatorForOptional(`[data-test-id="${TimeDeltaFormHarness.ERROR_TEST_ID}"]`);
-
-    private static readonly DEFAULT_UNIT_ORDER: TimeUnit[] = [
-        TimeUnit.Minutes,
-        TimeUnit.Hours,
-        TimeUnit.Days,
-        TimeUnit.Weeks,
-    ];
+    private readonly locatorError = this.locatorFor(
+        FieldErrorHarness.with({ dataTestId: TimeDeltaFormHarness.ERROR_TEST_ID }),
+    );
+    private readonly locatorUnitError = this.locatorFor(
+        FieldErrorHarness.with({ dataTestId: TimeDeltaFormHarness.UNIT_ERROR_TEST_ID }),
+    );
 
     private readonly locatorOptionElements = this.locatorForAll(
         `[data-test-id="${TimeDeltaFormHarness.UNIT_SELECT_TEST_ID}"] option`,
@@ -50,31 +54,45 @@ export class TimeDeltaFormHarness extends ComponentHarness {
         return units;
     }
 
+    /** Sets both parts; `""` or `null` leaves the value blank but touched, `null` clears the unit. */
     public async setTimeDelta(every: MaybeNull<number | "">, unit: MaybeNull<TimeUnit>): Promise<void> {
-        const input = await this.locatorEveryInput();
-        const select = await this.locatorUnitSelect();
-
-        await input.clear();
-        if (every === "") {
-            // Blank input, do not set any value, but ensure the input is touched
-            await input.blur();
-        } else if (every) {
-            await input.sendKeys(every.toString());
-            await input.blur();
-        }
-
+        await this.setEvery(every === null ? "" : String(every));
         if (unit === null) {
+            const select = await this.locatorUnitSelect();
             await select.clear();
         } else {
-            // Get available units and find the index
-            const availableUnits = await this.getAvailableUnits();
-            const index = availableUnits.indexOf(unit);
-            if (index === -1) {
-                throw new Error(`Unit ${unit} is not available in the current configuration`);
-            }
-            await select.selectOptions(index);
-            await select.blur();
+            await this.setUnit(unit);
         }
+    }
+
+    /** Types the value as a user would, leaving the unit as it is; an empty string leaves the field blank. */
+    public async setEvery(value: string): Promise<void> {
+        const input = await this.locatorEveryField();
+        await input.setValue(value);
+    }
+
+    /** Picks a unit, leaving the value as it is. */
+    public async setUnit(unit: TimeUnit): Promise<void> {
+        const select = await this.locatorUnitSelect();
+        const availableUnits = await this.getAvailableUnits();
+        const index = availableUnits.indexOf(unit);
+        if (index === -1) {
+            throw new Error(`Unit ${unit} is not available in the current configuration`);
+        }
+        await select.selectOptions(index);
+        await select.blur();
+    }
+
+    /** Focuses the unit select and leaves it without choosing. */
+    public async touchUnit(): Promise<void> {
+        const select = await this.locatorUnitSelect();
+        await select.focus();
+        await select.blur();
+    }
+
+    public async getUnitErrorMessage(): Promise<MaybeNull<string>> {
+        const error = await this.locatorUnitError();
+        return error.getMessage();
     }
 
     public async getTimeDelta(): Promise<{ every: number; unit: MaybeNull<TimeUnit> }> {
@@ -101,13 +119,8 @@ export class TimeDeltaFormHarness extends ComponentHarness {
     }
 
     public async getErrorMessage(): Promise<MaybeNull<string>> {
-        const errorElement = await this.locatorError();
-        if (errorElement) {
-            const message = await errorElement.text();
-            return message === "" ? null : message;
-        }
-
-        return null;
+        const error = await this.locatorError();
+        return error.getMessage();
     }
 
     private static toTimeUnit(value: unknown): TimeUnit {

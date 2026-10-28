@@ -23,7 +23,11 @@
                             data-test-id="slice-size"
                             #sliceTest
                         />
-                        <select class="form-select form-control-width" formControlName="sliceUnit">
+                        <select
+                            class="form-select form-control-width"
+                            formControlName="sliceUnit"
+                            data-test-id="slice-unit"
+                        >
                             <option [value]="SliceUnit.KB">KB</option>
                             <option [value]="SliceUnit.MB">MB</option>
                             <option [value]="SliceUnit.GB">GB</option>
@@ -32,9 +36,10 @@
                         <span
                             class="text-danger ms-4 fs-12 d-flex align-items-end text-break"
                             [input]="sliceTest"
-                            fieldLabel="Slice size"
-                            [appFieldError]="['min', 'required']"
+                            fieldLabel="Max slice size"
+                            appFieldError
                             [group]="hardCompactionForm"
+                            dataTestId="slice-size-error"
                         ></span>
                     </div>
                 </div>
@@ -59,8 +64,9 @@
                             class="text-danger ms-4 fs-12 d-flex align-items-end text-break"
                             [input]="recordsCount"
                             fieldLabel="Max slice records"
-                            [appFieldError]="['min', 'required']"
+                            appFieldError
                             [group]="hardCompactionForm"
+                            dataTestId="records-count-error"
                         ></span>
                     </div>
                 </div>

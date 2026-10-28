@@ -20,6 +20,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   - an MQTT source without a username or password leaves those rows out instead of showing them empty
 - Collection: a folder whose first entry is a dataset or a missing dataset shows as a folder and opens in place, instead of showing as that entry
 - Global query: a link with a query opens that query in the editor instead of an empty one, and opening the page without a query restores the last one you ran
+- Forms: fields accept what kamu-cli accepts, and say why under the field when they don't:
+  - polling source editor: an MQTT port outside 1–65535, a malformed fetch or node URL, a CSV separator, quote or escape longer than one character, a blank pipe command, an empty primary key, and an Ethereum source with neither chain id nor node URL are rejected before saving; a saved Zip decompress step shows in the editor again; the MQTT username and password, the CSV null value, the event time pattern and environment variable values keep their leading and trailing spaces
+  - dataset variables: adding a key the dataset already has is rejected instead of overwriting its value
+  - dataset and account names, emails, passwords, token names, webhooks, cron schedules and flow settings follow kamu-cli's rules; a name, email, label or old password kamu-cli rejects shows under its field instead of in a toast
+  - transform settings: turning on automatic updates no longer leaves Save disabled without a message
 - Flow process cards on the dataset's Flows tab and the account's Processes:
   - triggering, pausing or resuming no longer refreshes the page after you have left it
   - the buttons wait for the result of the previous action, so a second click no longer repeats it; webhook pause and resume as well

@@ -30,8 +30,9 @@
                     class="text-danger fs-12"
                     [input]="datasetName"
                     fieldLabel="Dataset name"
-                    [appFieldError]="['required', 'pattern']"
+                    appFieldError
                     [group]="createDatasetForm"
+                    dataTestId="dataset-name-error"
                 ></div>
             </div>
         </div>
@@ -202,11 +203,11 @@
             Create dataset
         </button>
     </div>
-    @if (errorMessage$ | async; as errorMessage) {
+    @if (snapshotError) {
         <div class="alert alert-danger" role="alert">
             <p class="text-danger fs-6">
                 Error:<br />
-                <span class="fs-6" data-test-id="create-error-message">{{ errorMessage }}</span>
+                <span class="fs-6" data-test-id="create-error-message">{{ snapshotError }}</span>
             </p>
         </div>
     }

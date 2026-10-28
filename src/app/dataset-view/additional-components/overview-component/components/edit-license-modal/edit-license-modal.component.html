@@ -26,7 +26,7 @@
                 class="text-danger fs-12"
                 [input]="name"
                 fieldLabel="Name"
-                [appFieldError]="['required']"
+                appFieldError
                 [group]="licenseForm"
                 dataTestId="error-message-name"
             ></div>
@@ -45,7 +45,7 @@
                 class="text-danger fs-12"
                 [input]="shortName"
                 fieldLabel="Short name"
-                [appFieldError]="['required']"
+                appFieldError
                 [group]="licenseForm"
                 dataTestId="error-message-shortName"
             ></div>
@@ -64,7 +64,7 @@
                 class="text-danger fs-12"
                 [input]="websiteUrl"
                 fieldLabel="Url"
-                [appFieldError]="['required', 'pattern']"
+                appFieldError
                 [group]="licenseForm"
                 dataTestId="error-message-websiteUrl"
             ></div>

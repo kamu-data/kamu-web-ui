@@ -14,7 +14,7 @@ import { ActivatedRoute } from "@angular/router";
 
 import { CronExpressionFormComponent } from "@common/components/cron-expression-form/cron-expression-form.component";
 import { CronExpressionFormHarness } from "@common/components/cron-expression-form/cron-expression-form.harness";
-import { FormValidationErrorsDirective } from "@common/directives/form-validation-errors.directive";
+import { FormValidationErrorsDirective } from "@common/validation/form-validation-errors.directive";
 
 @Component({
     imports: [CronExpressionFormComponent, ReactiveFormsModule],
@@ -128,6 +128,13 @@ describe("CronExpressionFormComponent", () => {
 
         const nextTime = await cronHarness.getNextTime();
         expect(nextTime).toContain(component.NEXT_TIME_LABEL);
+    });
+
+    it("should require an expression", async () => {
+        await cronHarness.setCronExpression("");
+
+        expect(await cronHarness.getErrorMessage()).toBe("Expression is required");
+        expect(await cronHarness.getNextTime()).toBeNull();
     });
 
     it("should not show error neither next time for untouched cron expression", async () => {

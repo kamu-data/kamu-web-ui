@@ -5,44 +5,64 @@
  * included in the LICENSE file.
  */
 
+import { TestbedHarnessEnvironment } from "@angular/cdk/testing/testbed";
+import { Component } from "@angular/core";
 import { ComponentFixture, TestBed } from "@angular/core/testing";
-import { FormControl, FormGroup } from "@angular/forms";
-
-import { getInputElementByDataTestId, setComponentInput } from "@common/helpers/base-test.helpers.spec";
-import { SharedTestModule } from "@common/modules/shared-test.module";
 
 import { CheckboxFieldComponent } from "src/app/dataset-view/additional-components/metadata-component/components/form-components/checkbox-field/checkbox-field.component";
+import { CheckboxFieldHarness } from "src/app/dataset-view/additional-components/metadata-component/components/form-components/checkbox-field/checkbox-field.harness";
+import { valueControl } from "src/app/dataset-view/additional-components/metadata-component/components/source-events/source-section";
+
+@Component({
+    imports: [CheckboxFieldComponent],
+    template: `
+        <app-checkbox-field
+            [control]="control"
+            label="Header"
+            tooltip="The first line holds column names"
+            dataTestId="read-header"
+        />
+    `,
+})
+class TestCheckboxFieldHostComponent {
+    public control = valueControl(false)([]);
+}
 
 describe("CheckboxFieldComponent", () => {
-    let component: CheckboxFieldComponent;
-    let fixture: ComponentFixture<CheckboxFieldComponent>;
+    let fixture: ComponentFixture<TestCheckboxFieldHostComponent>;
+    let host: TestCheckboxFieldHostComponent;
+    let harness: CheckboxFieldHarness;
 
     beforeEach(async () => {
         await TestBed.configureTestingModule({
-            imports: [SharedTestModule, CheckboxFieldComponent],
+            imports: [TestCheckboxFieldHostComponent],
         }).compileComponents();
 
-        fixture = TestBed.createComponent(CheckboxFieldComponent);
-        component = fixture.componentInstance;
-        setComponentInput(fixture, "form", new FormGroup({ test: new FormControl(false) }));
-        setComponentInput(fixture, "controlName", "test");
-        setComponentInput(fixture, "tooltip", "Test tooltip");
-        setComponentInput(fixture, "dataTestId", "checkbox");
+        fixture = TestBed.createComponent(TestCheckboxFieldHostComponent);
+        host = fixture.componentInstance;
         fixture.detectChanges();
+        harness = await TestbedHarnessEnvironment.loader(fixture).getHarness(CheckboxFieldHarness);
     });
 
-    it("should create", () => {
-        expect(component).toBeTruthy();
+    it("should render the label", async () => {
+        expect(await harness.getLabel()).toBe("Header");
     });
 
-    it("should check state control", () => {
-        const element = getInputElementByDataTestId(fixture, "checkbox");
-        expect(element.checked).toBe(false);
-        expect(component.form.controls.test.value).toBe(false);
+    it("should toggle the control", async () => {
+        expect(await harness.isChecked()).toBe(false);
 
-        element.click();
+        await harness.toggle();
+        expect(await harness.isChecked()).toBe(true);
+        expect(host.control.value).toBe(true);
 
-        expect(element.checked).toBe(true);
-        expect(component.form.controls.test.value).toBe(true);
+        await harness.toggle();
+        expect(await harness.isChecked()).toBe(false);
+        expect(host.control.value).toBe(false);
+    });
+
+    it("should show the value the control holds", async () => {
+        host.control.setValue(true);
+
+        expect(await harness.isChecked()).toBe(true);
     });
 });

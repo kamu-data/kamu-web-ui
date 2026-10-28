@@ -13,7 +13,7 @@ import { Apollo } from "apollo-angular";
 import { ApolloTestingModule } from "apollo-angular/testing";
 import { provideToastr } from "ngx-toastr";
 
-import { getElementByDataTestId, setComponentInput } from "@common/helpers/base-test.helpers.spec";
+import { getElementByDataTestId, setComponentInput, stubMethod } from "@common/helpers/base-test.helpers.spec";
 import { SharedTestModule } from "@common/modules/shared-test.module";
 import { FlowTriggerBreakingChangeRule, TimeUnit } from "@api/kamu.graphql.interface";
 
@@ -90,11 +90,19 @@ describe("DatasetSettingsTransformOptionsTabComponent", () => {
         const domTransformTriggerFormValue = await transformTriggerFormHarness.currentFormValue();
         expect(domTransformTriggerFormValue).toEqual({
             forNewData: {
-                batchingRuleType: null,
+                batchingRuleType: BatchingRuleType.IMMEDIATE,
                 buffering: undefined,
             },
-            forBreakingChange: null,
+            forBreakingChange: FlowTriggerBreakingChangeRule.NoAction,
         });
+    });
+
+    it("should keep 'Save' enabled once updates are turned on for a dataset with no reactive rule", () => {
+        component.form.controls.updatesEnabled.setValue(true);
+        fixture.detectChanges();
+
+        expect(component.form.status).toBe("VALID");
+        expect(getSaveButton().disabled).toBe(false);
     });
 
     it("should check form is valid when loaded with buffering batching rule", async () => {
@@ -294,6 +302,30 @@ describe("DatasetSettingsTransformOptionsTabComponent", () => {
                 },
             }),
         );
+    });
+
+    [
+        { minRecords: 0, maxFailures: 3, field: "minimum records" },
+        { minRecords: 10, maxFailures: 11, field: "max failures" },
+    ].forEach(({ minRecords, maxFailures, field }) => {
+        it(`should ignore 'Save' while the ${field} is invalid`, async () => {
+            const setDatasetFlowTriggerSpy = stubMethod(datasetFlowTriggerService, "setDatasetFlowTrigger");
+            component.form.controls.updatesEnabled.setValue(true);
+
+            await transformTriggerFormHarness.setSelectedBatchingRuleType(BatchingRuleType.BUFFERING);
+            await transformTriggerFormHarness.enterBufferingBatchingRule(minRecords, {
+                every: 5,
+                unit: TimeUnit.Minutes,
+            });
+            await stopPolicyFormHarness.setSelectedStopPolicyType(FlowTriggerStopPolicyType.AFTER_CONSECUTIVE_FAILURES);
+            await stopPolicyFormHarness.setMaxFailures(maxFailures);
+
+            const saveButton = getSaveButton();
+            expect(saveButton.disabled).toBe(true);
+            saveButton.click();
+
+            expect(setDatasetFlowTriggerSpy).not.toHaveBeenCalled();
+        });
     });
 
     it("should check 'Save' button works for with immediate batching rule", async () => {

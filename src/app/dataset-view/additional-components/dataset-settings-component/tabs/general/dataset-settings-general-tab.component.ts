@@ -9,6 +9,7 @@ import { AsyncPipe } from "@angular/common";
 import {
     afterNextRender,
     ChangeDetectionStrategy,
+    ChangeDetectorRef,
     Component,
     ElementRef,
     inject,
@@ -21,21 +22,22 @@ import { FormBuilder, FormControl, FormGroup, FormsModule, ReactiveFormsModule, 
 import { MatDividerModule } from "@angular/material/divider";
 import { MatRadioModule } from "@angular/material/radio";
 
-import { Observable, shareReplay, timer } from "rxjs";
+import { BehaviorSubject, timer } from "rxjs";
 
 import { BaseComponent } from "@common/components/base.component";
 import { DatasetVisibilityComponent } from "@common/components/dataset-visibility/dataset-visibility.component";
 import { ModalService } from "@common/components/modal/modal.service";
 import { TooltipIconComponent } from "@common/components/tooltip-icon/tooltip-icon.component";
 import { FeatureFlagDirective } from "@common/directives/feature-flag.directive";
-import { FormValidationErrorsDirective } from "@common/directives/form-validation-errors.directive";
-import { promiseWithCatch } from "@common/helpers/app.helpers";
+import { promiseWithCatch, trackBusy } from "@common/helpers/app.helpers";
 import RoutingResolvers from "@common/resolvers/routing-resolvers";
 import { CompactionTooltipsTexts } from "@common/tooltips/compacting.text";
+import { FormValidationErrorsDirective } from "@common/validation/form-validation-errors.directive";
+import { odfNameValidators } from "@common/validation/identifier.validators";
+import { FieldMutationResult, setServerError } from "@common/validation/server-errors.helpers";
 import AppValues from "@common/values/app.values";
 import {
     DatasetBasicsFragment,
-    DatasetKind,
     DatasetPermissionsFragment,
     DatasetVisibilityInput,
     DatasetVisibilityOutputDataFragment,
@@ -76,8 +78,8 @@ import { NavigationService } from "src/app/services/navigation.service";
 export class DatasetSettingsGeneralTabComponent extends BaseComponent implements OnInit {
     @Input(RoutingResolvers.DATASET_SETTINGS_GENERAL_KEY) public generalTabData: DatasetViewData;
 
-    public renameError$: Observable<string>;
     public renameDatasetForm: FormGroup<RenameDatasetFormType>;
+    public readonly renameBusy$ = new BehaviorSubject<boolean>(false);
     public resetDatasetForm: FormGroup<ResetDatasetFormType>;
 
     public readonly FLATTEN_METADATA_TOOLTIP = CompactionTooltipsTexts.RESET_BLOCK_FLATTEN_METADATA;
@@ -93,6 +95,7 @@ export class DatasetSettingsGeneralTabComponent extends BaseComponent implements
     private datasetService = inject(DatasetService);
     private injector = inject(Injector);
     private elementRef = inject<ElementRef<HTMLElement>>(ElementRef);
+    private readonly cdr = inject(ChangeDetectorRef);
 
     public get datasetBasics(): DatasetBasicsFragment {
         return this.generalTabData.datasetBasics;
@@ -103,12 +106,8 @@ export class DatasetSettingsGeneralTabComponent extends BaseComponent implements
     }
 
     public ngOnInit(): void {
-        this.renameError$ = this.datasetSettingsService.renameDatasetErrorOccurrences.pipe(shareReplay());
         this.renameDatasetForm = this.fb.nonNullable.group({
-            datasetName: [
-                this.datasetBasics.name,
-                [Validators.required, Validators.pattern(AppValues.DATASET_NAME_PATTERN)],
-            ],
+            datasetName: [this.datasetBasics.name, [Validators.required, ...odfNameValidators()]],
         });
 
         this.resetDatasetForm = this.fb.nonNullable.group({
@@ -150,10 +149,6 @@ export class DatasetSettingsGeneralTabComponent extends BaseComponent implements
         return this.datasetPermissions.permissions.general.canDelete;
     }
 
-    public get isRoot(): boolean {
-        return this.datasetBasics.kind === DatasetKind.Root;
-    }
-
     public get isPrivate(): boolean {
         return this.datasetBasics.visibility.__typename === "PrivateDatasetVisibility";
     }
@@ -173,8 +168,13 @@ export class DatasetSettingsGeneralTabComponent extends BaseComponent implements
                 datasetId,
                 newName: this.datasetNameControl.value,
             })
-            .pipe(takeUntilDestroyed(this.destroyRef))
-            .subscribe();
+            .pipe(trackBusy(this.renameBusy$), takeUntilDestroyed(this.destroyRef))
+            .subscribe((result: FieldMutationResult<true>) => {
+                if (!result.ok) {
+                    setServerError(this.datasetNameControl, result.fieldError);
+                    this.cdr.markForCheck();
+                }
+            });
     }
 
     public deleteDataset(): void {
@@ -276,10 +276,6 @@ export class DatasetSettingsGeneralTabComponent extends BaseComponent implements
                 },
             }),
         );
-    }
-
-    public changeName(): void {
-        this.datasetSettingsService.resetRenameError();
     }
 
     public changeVisibilityDataset(): void {

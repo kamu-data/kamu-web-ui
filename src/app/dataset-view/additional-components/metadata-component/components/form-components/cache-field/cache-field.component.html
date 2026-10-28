@@ -1,10 +1,10 @@
-<div class="form-check ms-2 d-flex gap-2" [formGroup]="form">
+<div class="form-check ms-2 d-flex gap-2">
     <input
         class="form-check-input"
         type="checkbox"
-        [formControlName]="controlName"
-        [attr.data-test-id]="'cache-control'"
+        [formControl]="control"
+        [attr.data-test-id]="dataTestId + '-checkbox'"
     />
-    <label class="form-check-label"> {{ label }} </label>
+    <label class="form-check-label" [attr.data-test-id]="dataTestId + '-label'"> {{ label }} </label>
     <app-tooltip-icon [tooltip]="tooltip" />
 </div>

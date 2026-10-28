@@ -8,13 +8,13 @@
 import { ChangeDetectionStrategy, Component, Input } from "@angular/core";
 import { FormArray, ReactiveFormsModule } from "@angular/forms";
 
-import { RxReactiveFormsModule } from "@rxweb/reactive-form-validators";
 import { NgxTrimDirectiveModule } from "ngx-trim-directive";
 
 import { TooltipIconComponent } from "@common/components/tooltip-icon/tooltip-icon.component";
-import { requireFormArray } from "@common/helpers/form.helpers";
+import { FormValidationErrorsDirective } from "@common/validation/form-validation-errors.directive";
 
 import { BaseField } from "src/app/dataset-view/additional-components/metadata-component/components/form-components/base-field";
+import { TextControl } from "src/app/dataset-view/additional-components/metadata-component/components/source-events/source-event-controls.types";
 import { listItemControl } from "src/app/dataset-view/additional-components/metadata-component/components/source-events/source-section";
 
 @Component({
@@ -27,24 +27,21 @@ import { listItemControl } from "src/app/dataset-view/additional-components/meta
         ReactiveFormsModule,
         //-----//
         NgxTrimDirectiveModule,
-        RxReactiveFormsModule,
         //-----//
         TooltipIconComponent,
+        FormValidationErrorsDirective,
     ],
 })
-export class ArrayKeysFieldComponent extends BaseField {
+export class ArrayKeysFieldComponent extends BaseField<FormArray<TextControl>> {
     @Input({ required: true }) public buttonText: string;
     @Input({ required: true }) public placeholder: string;
 
-    public get items(): FormArray {
-        return requireFormArray(this.form, this.controlName);
+    public addItem(): void {
+        this.control.push(listItemControl());
     }
 
-    public addPrimaryKey(): void {
-        this.items.push(listItemControl());
-    }
-
-    public removePrimaryKey(index: number): void {
-        this.items.removeAt(index);
+    public removeItem(index: number): void {
+        this.control.removeAt(index);
+        this.control.markAsDirty();
     }
 }

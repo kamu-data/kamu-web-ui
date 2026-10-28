@@ -131,6 +131,7 @@ in addition to that match (an api class needs both `kamu-ui-graphql-api` and
 | Specs, CDK component harnesses, mocks and fixtures, Apollo testing, running a narrowed test set | `kamu-ui-unit-tests` | `src/**/*.spec.ts`, `src/**/*.harness.ts`, `src/**/*mock*.ts`, `src/app/common/modules/*-test.module.ts` |
 | GraphQL documents and fragments, codegen, `*.api.ts` classes, fetch policies, Apollo cache, schema refresh | `kamu-ui-graphql-api` | `src/app/api/**/*.graphql`, `src/app/api/*.api.ts` |
 | Routes and the lazy bundle split, guards and resolvers wiring, `ProjectLinks`, `RoutingResolvers` | `kamu-ui-routing` | `src/app/**/*routing*.ts`, `src/app/project-links.ts`, `src/app/common/resolvers/routing-resolvers.ts` |
+| Form fields and validators: which rules a field needs, `appFieldError`, matching kamu-cli, server errors on a field, source editor config entries | `kamu-ui-forms-and-validation` | `src/app/common/validation/**` |
 | Changelog, release, npm dependency updates | `kamu-ui-release-dependency-workflows` | `CHANGELOG.md`, `package.json`, `update-dependecies.md` |
 | Comments and any prose in docs, skills or sub-agent prompts | `kamu-ui-prose-and-comments` | `AGENTS.md`, `CLAUDE.md`, `DEVELOPER.md`, `docs/**/*.md`, `.claude/skills/**`, `.claude/agents/**` |
 | Adding a new routed page, tab or settings section end to end | `kamu-ui-adding-a-page` | |

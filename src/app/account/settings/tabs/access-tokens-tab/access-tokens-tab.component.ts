@@ -9,7 +9,7 @@ import { Clipboard } from "@angular/cdk/clipboard";
 import { DatePipe, NgTemplateOutlet } from "@angular/common";
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, inject, Input, ViewChild } from "@angular/core";
 import { takeUntilDestroyed } from "@angular/core/rxjs-interop";
-import { AbstractControl, FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators } from "@angular/forms";
+import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators } from "@angular/forms";
 import { MatDividerModule } from "@angular/material/divider";
 import { MatIconModule } from "@angular/material/icon";
 import { MatSlideToggleModule } from "@angular/material/slide-toggle";
@@ -21,9 +21,11 @@ import { CopyToClipboardComponent } from "@common/components/copy-to-clipboard/c
 import { ModalService } from "@common/components/modal/modal.service";
 import { PagePastEndComponent } from "@common/components/page-past-end/page-past-end.component";
 import { PaginationComponent } from "@common/components/pagination-component/pagination.component";
-import { FormValidationErrorsDirective } from "@common/directives/form-validation-errors.directive";
 import { promiseWithCatch } from "@common/helpers/app.helpers";
 import RoutingResolvers from "@common/resolvers/routing-resolvers";
+import { FormValidationErrorsDirective } from "@common/validation/form-validation-errors.directive";
+import { FieldMutationResult, setServerError } from "@common/validation/server-errors.helpers";
+import { notBlankValidator } from "@common/validation/text.validators";
 import AppValues from "@common/values/app.values";
 import {
     AccessTokenConnectionDataFragment,
@@ -31,7 +33,6 @@ import {
     CreatedAccessTokenDataFragment,
     DatasetPageInfoFragment,
 } from "@api/kamu.graphql.interface";
-import { MaybeNull } from "@interface/app.types";
 
 import { AccountSettingsTabs, TokenCreateStep } from "src/app/account/settings/account-settings.constants";
 import { AccessTokenService } from "src/app/account/settings/tabs/access-tokens-tab/access-token.service";
@@ -89,7 +90,7 @@ export class AccessTokensTabComponent extends BaseComponent {
     public currentCreateStep = TokenCreateStep.INITIAL;
     public pageBasedInfo: DatasetPageInfoFragment;
     public createTokenForm: FormGroup<CreateTokenFormType> = this.fb.nonNullable.group({
-        name: ["", [Validators.required, Validators.maxLength(100)]],
+        name: ["", [Validators.required, Validators.maxLength(100), notBlankValidator()]],
     });
     public showRevokedToken = false;
 
@@ -100,10 +101,6 @@ export class AccessTokensTabComponent extends BaseComponent {
 
     public get currentPage(): number {
         return this.tokenConnection.pageInfo.currentPage + 1;
-    }
-
-    public get tokenNameControl(): AbstractControl {
-        return this.createTokenForm.controls.name;
     }
 
     public get accountId(): string {
@@ -160,16 +157,23 @@ export class AccessTokensTabComponent extends BaseComponent {
     }
 
     public onGenerateToken(): void {
+        // Enter in the name field submits the form, which the disabled button does not prevent.
+        if (this.createTokenForm.invalid) {
+            this.createTokenForm.markAllAsTouched();
+            return;
+        }
         this.accessTokenService
             .createAccessTokens(this.accountId, this.createTokenForm.controls.name.value)
             .pipe(takeUntilDestroyed(this.destroyRef))
-            .subscribe((newToken: MaybeNull<CreatedAccessTokenDataFragment>) => {
-                if (newToken) {
+            .subscribe((result: FieldMutationResult<CreatedAccessTokenDataFragment>) => {
+                if (result.ok) {
                     this.deleteComposedToken();
                     this.createTokenForm.controls.name.reset();
-                    this.composedToken = newToken.composed;
-                    this.cdr.detectChanges();
+                    this.composedToken = result.value.composed;
+                } else {
+                    setServerError(this.createTokenForm.controls.name, result.fieldError);
                 }
+                this.cdr.detectChanges();
             });
     }
 

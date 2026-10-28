@@ -6,16 +6,16 @@
  */
 
 import { AfterViewInit, ChangeDetectionStrategy, Component, inject, Input } from "@angular/core";
-import { FormGroup, FormsModule, ReactiveFormsModule } from "@angular/forms";
+import { FormGroup, FormsModule, ReactiveFormsModule, Validators } from "@angular/forms";
 import { MatStepperModule } from "@angular/material/stepper";
 import { RouterLink } from "@angular/router";
-
-import { RxwebValidators } from "@rxweb/reactive-form-validators";
 
 import { enumValueOf, requireValue } from "@common/helpers/app.helpers";
 import { queryParamValue } from "@common/helpers/url-params.helpers";
 import { DatasetLinkPipe } from "@common/pipes/dataset-link.pipe";
 import RoutingResolvers from "@common/resolvers/routing-resolvers";
+import { uniqueValueValidator } from "@common/validation/collection.validators";
+import { notBlankValidator } from "@common/validation/text.validators";
 import { MaybeUndefined } from "@interface/app.types";
 import { DatasetInfo } from "@interface/navigation.interface";
 
@@ -89,7 +89,7 @@ export class AddPushSourceComponent extends BaseSourceEventComponent implements 
     }
 
     public readonly addPushSourceForm = new FormGroup<PushSourceControls>({
-        sourceName: textControl("", [RxwebValidators.required()]),
+        sourceName: textControl("", [Validators.required, notBlankValidator()]),
         read: this.createReadForm(),
         merge: this.createMergeForm(),
     });
@@ -107,11 +107,11 @@ export class AddPushSourceComponent extends BaseSourceEventComponent implements 
             this.pollingEditService.patchMergeStep(this.mergePushForm, event.merge);
         }
         if (!this.queryParamName) {
+            // kamu-cli compares source names case-sensitively.
             this.addPushSourceForm.controls.sourceName.addValidators(
-                RxwebValidators.noneOf({
-                    matchValues: [...this.getAllSourceNames()],
-                }),
+                uniqueValueValidator(() => this.getAllSourceNames()),
             );
+            this.addPushSourceForm.controls.sourceName.updateValueAndValidity();
         }
     }
 

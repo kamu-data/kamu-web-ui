@@ -25,6 +25,7 @@
                         id="maxAttempts"
                         type="number"
                         min="1"
+                        [max]="MAX_ATTEMPTS"
                         formControlName="maxAttempts"
                         class="form-control form-control-width"
                         data-test-id="retry-policy-max-attempts-input"
@@ -34,8 +35,9 @@
                         class="text-danger ms-4 fs-12 d-flex align-items-end text-break"
                         [input]="maxAttempts"
                         fieldLabel="Max attempts"
-                        [appFieldError]="['min', 'max', 'required']"
+                        appFieldError
                         [group]="form"
+                        dataTestId="retry-policy-max-attempts-error"
                     ></span>
                 </div>
                 <div class="ms-1 px-2 pb-2">

@@ -6,6 +6,8 @@
  */
 
 import { TestbedHarnessEnvironment } from "@angular/cdk/testing/testbed";
+import { provideHttpClient } from "@angular/common/http";
+import { provideHttpClientTesting } from "@angular/common/http/testing";
 import { ComponentFixture, discardPeriodicTasks, fakeAsync, TestBed, tick } from "@angular/core/testing";
 import { ActivatedRoute } from "@angular/router";
 
@@ -18,7 +20,7 @@ import { Mock } from "vitest";
 
 import { PagePastEndHarness } from "@common/components/page-past-end/page-past-end.harness";
 import { requireValue } from "@common/helpers/app.helpers";
-import { setComponentInput, stubMethod } from "@common/helpers/base-test.helpers.spec";
+import { registerMatSvgIcons, setComponentInput, stubMethod } from "@common/helpers/base-test.helpers.spec";
 import { FlowStatus } from "@api/kamu.graphql.interface";
 import { mockAccountDetails } from "@api/mock/auth.mock";
 import { mockDatasetFlowsInitiatorsQuery, mockFlowsTableData } from "@api/mock/dataset-flow.mock";
@@ -57,6 +59,8 @@ describe("AccountFlowsActivitySubtabComponent", () => {
             providers: [
                 Apollo,
                 provideToastr(),
+                provideHttpClient(),
+                provideHttpClientTesting(),
                 {
                     provide: ActivatedRoute,
                     useValue: {
@@ -74,6 +78,7 @@ describe("AccountFlowsActivitySubtabComponent", () => {
                 },
             ],
         });
+        registerMatSvgIcons();
         fixture = TestBed.createComponent(AccountFlowsActivitySubtabComponent);
         navigationService = TestBed.inject(NavigationService);
         loggedUserService = TestBed.inject(LoggedUserService);

@@ -24,7 +24,7 @@ import { MatProgressSpinnerModule } from "@angular/material/progress-spinner";
 import { MatTableDataSource, MatTableModule } from "@angular/material/table";
 import { Router } from "@angular/router";
 
-import { buffer, debounceTime, map, Observable, Subject } from "rxjs";
+import { buffer, debounceTime, filter, map, Observable, Subject } from "rxjs";
 
 import { InfiniteScrollDirective } from "ngx-infinite-scroll";
 import { ToastrService } from "ngx-toastr";
@@ -34,7 +34,7 @@ import { ValueNotFoundComponent } from "@common/components/value-not-found/value
 import { DisplayDatasetIdPipe } from "@common/pipes/display-dataset-id.pipe";
 import { DisplaySizePipe } from "@common/pipes/display-size.pipe";
 import AppValues from "@common/values/app.values";
-import { CollectionEntryDataFragment, DatasetBasicsFragment } from "@api/kamu.graphql.interface";
+import { DatasetBasicsFragment } from "@api/kamu.graphql.interface";
 import { MaybeNull } from "@interface/app.types";
 
 import { DatasetViewTypeEnum } from "src/app/dataset-view/dataset-view.interface";
@@ -127,13 +127,19 @@ export class CollectionViewComponent extends UnsubscribeDestroyRefAdapter implem
     }
 
     public ngOnChanges(changes: SimpleChanges): void {
+        const pathPrefixChanged =
+            changes.pathPrefix && changes.pathPrefix.previousValue !== changes.pathPrefix.currentValue;
+        if (pathPrefixChanged) {
+            this.maxDepth = this.pathPrefix === "/" ? 0 : this.pathPrefix.split("/").length - 1;
+        }
         if (changes.datasetBasics && changes.datasetBasics.previousValue !== changes.datasetBasics.currentValue) {
             this.resetTableView();
             this.triggerLoadCollection(false);
             this.loadDatasetAsCollection();
-        }
-        if (changes.pathPrefix && changes.pathPrefix.previousValue !== changes.pathPrefix.currentValue) {
-            this.maxDepth = this.pathPrefix === "/" ? 0 : this.pathPrefix.split("/").length - 1;
+        } else if (pathPrefixChanged) {
+            // The folder comes from the URL, whether a click in the table or back and forward changed it
+            this.currentPage = 1;
+            this.checkHeadAndLoadCollection();
         }
     }
 
@@ -153,21 +159,24 @@ export class CollectionViewComponent extends UnsubscribeDestroyRefAdapter implem
         this.collectionInfo$ = this.datasetAsCollectionService
             .loadCollectionInfo(this.datasetBasics.id, this.perPage)
             .pipe(
-                map(({ connection, headChanged }) => {
-                    if (headChanged || this.pathPrefix === "/") {
-                        this.entriesTotalCount = connection.totalCount;
-                    }
+                // A folder left before its entries arrived must not fill the table of the next one
+                filter(({ path }) => path === this.pathPrefix),
+                map(({ path, connection, headChanged }) => {
+                    this.entriesTotalCount = connection.totalCount;
                     this.isAllDataLoaded = !connection.pageInfo.hasNextPage;
                     const nodes = sortCollectionEntryData(connection.nodes, this.maxDepth);
-                    this.prepareDisplayColumns(connection.nodes);
+                    this.prepareDisplayColumns(nodes);
                     if (connection.totalCount !== this.dataSource.data.length) {
-                        this.datasetAsCollectionService.cacheEntries.set(this.pathPrefix, [
-                            ...this.dataSource.data,
-                            ...nodes,
-                        ]);
+                        this.datasetAsCollectionService.cacheEntries.set(this.pathPrefix, {
+                            entries: [...this.dataSource.data, ...nodes],
+                            totalCount: connection.totalCount,
+                            loadedPages: this.currentPage,
+                            isAllDataLoaded: this.isAllDataLoaded,
+                        });
                     }
                     this.dataSource.data = [...this.dataSource.data, ...nodes];
                     return {
+                        path,
                         connection,
                         headChanged,
                     };
@@ -175,9 +184,8 @@ export class CollectionViewComponent extends UnsubscribeDestroyRefAdapter implem
             );
     }
 
-    private prepareDisplayColumns(nodes: CollectionEntryDataFragment[]): void {
-        this.extraDataKeys =
-            nodes.length > 0 ? Object.keys(sortCollectionEntryData(nodes, this.maxDepth)[0].extraData) : [];
+    private prepareDisplayColumns(entries: CollectionEntryViewType[]): void {
+        this.extraDataKeys = entries.length > 0 ? Object.keys(entries[0].extraData) : [];
 
         if (this.displayedColumns.length) {
             this.displayedColumns = [...this.INITIAL_DISPLAYED_COLUMNS, ...this.extraDataKeys];
@@ -204,15 +212,7 @@ export class CollectionViewComponent extends UnsubscribeDestroyRefAdapter implem
 
     public dbClickTableRow(row: CollectionEntryViewType): void {
         if (row.nodeType === CollectionViewNode.Folder) {
-            this.pathPrefix += `${this.maxDepth === 0 ? row.displayName : "/" + row.displayName}`;
-            this.currentPage = 1;
-            this.checkHeadAndLoadCollection();
-            this.navigationService.navigateToDatasetView({
-                accountName: this.datasetBasics.owner.accountName,
-                datasetName: this.datasetBasics.name,
-                tab: DatasetViewTypeEnum.Overview,
-                [ProjectLinks.URL_QUERY_PARAM_PATH_PREFIX]: this.pathPrefix,
-            });
+            this.openFolder(`${this.pathPrefix}${this.maxDepth === 0 ? row.displayName : "/" + row.displayName}`);
         } else {
             if ([CollectionViewNode.Dataset, CollectionViewNode.File].includes(row.nodeType)) {
                 const urlTree = this.router.createUrlTree([row?.alias]);
@@ -231,22 +231,14 @@ export class CollectionViewComponent extends UnsubscribeDestroyRefAdapter implem
         this.openFolder(lastSlashIndex === 0 ? "/" : this.pathPrefix.substring(0, lastSlashIndex));
     }
 
+    /** Only navigates: the new pathPrefix input loads the folder */
     public openFolder(path: string): void {
-        this.pathPrefix = path;
-        this.currentPage = 1;
-        this.checkHeadAndLoadCollection();
         this.navigationService.navigateToDatasetView({
             accountName: this.datasetBasics.owner.accountName,
             datasetName: this.datasetBasics.name,
             tab: DatasetViewTypeEnum.Overview,
-            [ProjectLinks.URL_QUERY_PARAM_PATH_PREFIX]: this.pathPrefix,
+            [ProjectLinks.URL_QUERY_PARAM_PATH_PREFIX]: path,
         });
-    }
-
-    /** Loads the root again rather than from the cache, since the page shows the last response's totalCount */
-    public openCollectionRoot(): void {
-        this.datasetAsCollectionService.cacheEntries.delete("/");
-        this.openFolder("/");
     }
 
     public onCellEventClick(value: string, nodeType: MaybeNull<CollectionViewNode>) {
@@ -278,9 +270,13 @@ export class CollectionViewComponent extends UnsubscribeDestroyRefAdapter implem
                     this.datasetAsCollectionService.cacheEntries.clear();
                     this.isAllDataLoaded = false;
                 }
-                const cachedEntries = this.datasetAsCollectionService.cacheEntries.get(this.pathPrefix);
-                if (cachedEntries) {
-                    this.dataSource.data = cachedEntries;
+                const cachedFolder = this.datasetAsCollectionService.cacheEntries.get(this.pathPrefix);
+                if (cachedFolder) {
+                    this.dataSource.data = cachedFolder.entries;
+                    this.prepareDisplayColumns(cachedFolder.entries);
+                    this.entriesTotalCount = cachedFolder.totalCount;
+                    this.currentPage = cachedFolder.loadedPages;
+                    this.isAllDataLoaded = cachedFolder.isAllDataLoaded;
                     this.cdr.detectChanges();
                 } else {
                     this.dataSource.data = [];

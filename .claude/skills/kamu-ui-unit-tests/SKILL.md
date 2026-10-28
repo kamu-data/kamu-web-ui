@@ -27,7 +27,8 @@ Vitest prints the specs' console output only when its own output is a terminal, 
 (an agent, CI) shows no warnings at all. Angular's dev-mode reports therefore do not rely on being
 read: `src/test-setup.ts` fails any test during which a `console.warn` or `console.error` carries an
 Angular runtime code: four digits for core (`NG0956`), five for the router and other packages
-(`NG04002`, a failed navigation). Fix the cause; a test whose purpose is to provoke
+(`NG04002`, a failed navigation), or MatIcon's "Error retrieving icon" for an SVG icon the spec did
+not register (`registerMatSvgIcons()`). Fix the cause; a test whose purpose is to provoke
 such a message stubs the console method (`stubMethod(console, "warn")`), which keeps it from reaching the check.
 
 ## Component tests

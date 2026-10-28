@@ -15,8 +15,8 @@ import { CollectionEntryConnectionDataFragment, DatasetAsCollectionQuery } from 
 import { MaybeNull } from "@interface/app.types";
 
 import {
+    CollectionCachedFolder,
     CollectionEntriesResult,
-    CollectionEntryViewType,
     LoadCollectionDataParams,
 } from "../components/collection-view/collection-view.model";
 
@@ -26,7 +26,7 @@ import {
 export class DatasetAsCollectionService {
     private datasetApi = inject(DatasetApi);
 
-    public cacheEntries: Map<string, CollectionEntryViewType[]> = new Map();
+    public cacheEntries: Map<string, CollectionCachedFolder> = new Map();
 
     private loadingCollection$: BehaviorSubject<boolean> = new BehaviorSubject(true);
 
@@ -78,6 +78,7 @@ export class DatasetAsCollectionService {
                 }).pipe(
                     trackBusy(activeBusySubject),
                     map((data) => ({
+                        path: params.path,
                         connection: data,
                         headChanged: params.headChanged,
                     })),

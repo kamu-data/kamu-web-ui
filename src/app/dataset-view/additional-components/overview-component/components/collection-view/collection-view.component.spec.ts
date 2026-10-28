@@ -8,20 +8,25 @@
 import { TestbedHarnessEnvironment } from "@angular/cdk/testing/testbed";
 import { provideHttpClient } from "@angular/common/http";
 import { ComponentFixture, fakeAsync, flush, TestBed, tick } from "@angular/core/testing";
+import { MatTableHarness } from "@angular/material/table/testing";
 
 import { delay, of } from "rxjs";
 
 import { Apollo } from "apollo-angular";
 import { provideToastr } from "ngx-toastr";
+import { Mock } from "vitest";
 
 import { ValueNotFoundHarness } from "@common/components/value-not-found/value-not-found.harness";
+import { requireValue } from "@common/helpers/app.helpers";
 import {
     findElementByDataTestId,
+    getElementByDataTestId,
     registerMatSvgIcons,
     setComponentInput,
     stubMethod,
 } from "@common/helpers/base-test.helpers.spec";
 import { DatasetApi } from "@api/dataset.api";
+import { DatasetAsCollectionQuery } from "@api/kamu.graphql.interface";
 
 import { DatasetViewTypeEnum } from "src/app/dataset-view/dataset-view.interface";
 import ProjectLinks from "src/app/project-links";
@@ -43,6 +48,7 @@ describe("CollectionViewComponent", () => {
     let datasetAsCollectionService: DatasetAsCollectionService;
     let datasetApi: DatasetApi;
     let datasetService: DatasetService;
+    let loadCollectionInfoSpy: Mock<DatasetAsCollectionService["loadCollectionInfo"]>;
 
     beforeEach(async () => {
         await TestBed.configureTestingModule({
@@ -53,9 +59,11 @@ describe("CollectionViewComponent", () => {
         registerMatSvgIcons();
 
         datasetAsCollectionService = TestBed.inject(DatasetAsCollectionService);
-        vi.spyOn(datasetAsCollectionService, "loadCollectionInfo").mockReturnValue(
-            of({ headChanged: false, connection: mockCollectionEntryConnection }),
-        );
+        loadCollectionInfoSpy = vi
+            .spyOn(datasetAsCollectionService, "loadCollectionInfo")
+            .mockReturnValue(
+                of({ path: "/test-folder", headChanged: false, connection: mockCollectionEntryConnection }),
+            );
         datasetApi = TestBed.inject(DatasetApi);
         datasetService = TestBed.inject(DatasetService);
         fixture = TestBed.createComponent(CollectionViewComponent);
@@ -95,9 +103,9 @@ describe("CollectionViewComponent", () => {
         expect(component.currentPage).toEqual(2);
     });
 
-    it("should check double click on folder row ", () => {
+    it("should navigate to a folder on double click and leave loading it to the URL", () => {
         const row: CollectionEntryViewType = {
-            displayName: "test-folder",
+            displayName: "another-test-folder",
             nodeType: CollectionViewNode.Folder,
             alias: "",
             systemTime: "2025-11-12T12:22:04.577+00:00",
@@ -107,23 +115,17 @@ describe("CollectionViewComponent", () => {
             contentType: null,
             extraData: {},
         };
-        datasetAsCollectionService.cacheEntries.set(component.pathPrefix, [row]);
-        const isHeadHashBlockChangedSpy = vi
-            .spyOn(datasetService, "isHeadHashBlockChanged")
-            .mockReturnValue(of(true).pipe());
-
-        const navigateToDatasetViewSpy = vi
-            .spyOn(TestBed.inject(NavigationService), "navigateToDatasetView")
-            .mockImplementation(() => {});
+        const isHeadHashBlockChangedSpy = vi.spyOn(datasetService, "isHeadHashBlockChanged").mockReturnValue(of(true));
+        const navigateToDatasetViewSpy = stubMethod(TestBed.inject(NavigationService), "navigateToDatasetView");
 
         component.dbClickTableRow(row);
-        expect(isHeadHashBlockChangedSpy).toHaveBeenCalledTimes(1);
+        expect(isHeadHashBlockChangedSpy).not.toHaveBeenCalled();
         expect(navigateToDatasetViewSpy).toHaveBeenCalledTimes(1);
         expect(navigateToDatasetViewSpy).toHaveBeenCalledWith({
             accountName: mockDatasetBasicsRootFragment.owner.accountName,
             datasetName: mockDatasetBasicsRootFragment.name,
             tab: DatasetViewTypeEnum.Overview,
-            [ProjectLinks.URL_QUERY_PARAM_PATH_PREFIX]: component.pathPrefix,
+            [ProjectLinks.URL_QUERY_PARAM_PATH_PREFIX]: "/test-folder/another-test-folder",
         });
     });
 
@@ -170,16 +172,8 @@ describe("CollectionViewComponent", () => {
     });
 
     it("should check go up from folder", () => {
-        const isHeadHashBlockChangedSpy = vi
-            .spyOn(datasetService, "isHeadHashBlockChanged")
-            .mockReturnValue(of(true).pipe());
-        const navigateToDatasetViewSpy = vi
-            .spyOn(TestBed.inject(NavigationService), "navigateToDatasetView")
-            .mockImplementation(() => {});
-        component.currentPage = 2;
+        const navigateToDatasetViewSpy = stubMethod(TestBed.inject(NavigationService), "navigateToDatasetView");
         component.goUp();
-        expect(component.currentPage).toEqual(1);
-        expect(isHeadHashBlockChangedSpy).toHaveBeenCalledTimes(1);
         expect(navigateToDatasetViewSpy).toHaveBeenCalledTimes(1);
         expect(navigateToDatasetViewSpy).toHaveBeenCalledWith({
             accountName: mockDatasetBasicsRootFragment.owner.accountName,
@@ -193,7 +187,11 @@ describe("CollectionViewComponent", () => {
         function createWithNoEntries(pathPrefix: string): void {
             fixture.destroy();
             vi.spyOn(datasetAsCollectionService, "loadCollectionInfo").mockReturnValue(
-                of({ headChanged: false, connection: { ...mockCollectionEntryConnection, totalCount: 0, nodes: [] } }),
+                of({
+                    path: pathPrefix,
+                    headChanged: false,
+                    connection: { ...mockCollectionEntryConnection, totalCount: 0, nodes: [] },
+                }),
             );
 
             fixture = TestBed.createComponent(CollectionViewComponent);
@@ -227,25 +225,130 @@ describe("CollectionViewComponent", () => {
             });
         });
 
-        it("should load the collection root again even when it is cached", async () => {
-            createWithNoEntries("/missing");
-            datasetAsCollectionService.cacheEntries.set("/", []);
-            vi.spyOn(datasetService, "isHeadHashBlockChanged").mockReturnValue(of(false));
-            stubMethod(TestBed.inject(NavigationService), "navigateToDatasetView");
-            const loadCollectionDataChangeSpy = vi.spyOn(datasetAsCollectionService, "loadCollectionDataChange");
-            const notFound = await TestbedHarnessEnvironment.loader(fixture).getHarness(ValueNotFoundHarness);
-
-            await notFound.runAction();
-
-            expect(loadCollectionDataChangeSpy).toHaveBeenCalledWith({ path: "/", page: 1, headChanged: false });
-        });
-
         it("should keep the empty-collection message at the root", async () => {
             createWithNoEntries("/");
 
             const notFound = await TestbedHarnessEnvironment.loader(fixture).getHarnessOrNull(ValueNotFoundHarness);
 
             expect(notFound).toBeNull();
+        });
+    });
+
+    describe("the folder in the URL", () => {
+        /** Answers with the entries of the mock connection under the requested folder; only the root has a next page */
+        function collectionQueryFor(pathPrefix: string): DatasetAsCollectionQuery {
+            const query = structuredClone(mockDatasetAsCollectionQuery);
+            const entries = requireValue(requireValue(query.datasets.byId).asCollection).latest.entries;
+            entries.nodes = mockCollectionEntryConnection.nodes.filter((node) => node.path.startsWith(pathPrefix));
+            entries.totalCount = entries.nodes.length;
+            entries.pageInfo.hasNextPage = pathPrefix === "/";
+            return query;
+        }
+
+        function createAt(pathPrefix: string): void {
+            fixture.destroy();
+            // The fixture beforeEach built has cached its entries under its own folder
+            datasetAsCollectionService.cacheEntries.clear();
+            loadCollectionInfoSpy.mockRestore();
+            vi.spyOn(datasetApi, "getDatasetAsCollection").mockImplementation((params) =>
+                of(collectionQueryFor(params.pathPrefix)).pipe(delay(0)),
+            );
+            vi.spyOn(datasetService, "isHeadHashBlockChanged").mockReturnValue(of(false).pipe(delay(0)));
+
+            fixture = TestBed.createComponent(CollectionViewComponent);
+            component = fixture.componentInstance;
+            setComponentInput(fixture, "datasetBasics", mockDatasetBasicsRootFragment);
+            setComponentInput(fixture, "pathPrefix", pathPrefix);
+            fixture.detectChanges();
+        }
+
+        /** Waits for the answers still on their way, which render after the harness has settled */
+        async function listedNames(): Promise<string[]> {
+            await fixture.whenStable();
+            fixture.detectChanges();
+            const table = await TestbedHarnessEnvironment.loader(fixture).getHarness(MatTableHarness);
+            const rows = await table.getRows();
+            return Promise.all(rows.map(async (row) => (await row.getCellTextByColumnName()).name));
+        }
+
+        async function columnHeaders(): Promise<string[]> {
+            const table = await TestbedHarnessEnvironment.loader(fixture).getHarness(MatTableHarness);
+            const [headerRow] = await table.getHeaderRows();
+            return headerRow.getCellTextByIndex();
+        }
+
+        it("should list the entries of a folder the URL changes to", async () => {
+            createAt("/");
+            await fixture.whenStable();
+            fixture.detectChanges();
+
+            setComponentInput(fixture, "pathPrefix", "/test-folder");
+            fixture.detectChanges();
+
+            expect(await listedNames()).toEqual(["another-test-folder", "molecule-dataset"]);
+        });
+
+        it("should not list the previous folder's entries when they arrive after the URL changed", async () => {
+            createAt("/");
+
+            setComponentInput(fixture, "pathPrefix", "/test-folder");
+            fixture.detectChanges();
+
+            expect(await listedNames()).toEqual(["another-test-folder", "molecule-dataset"]);
+        });
+
+        it("should list the root entries again from the cache", async () => {
+            createAt("/");
+            const rootNames = await listedNames();
+            setComponentInput(fixture, "pathPrefix", "/missing");
+            fixture.detectChanges();
+
+            setComponentInput(fixture, "pathPrefix", "/");
+            fixture.detectChanges();
+
+            expect(await listedNames()).toEqual(rootNames);
+            expect(getElementByDataTestId(fixture, "collection-total-count").textContent).toContain("5");
+        });
+
+        it("should show the extra data columns of a cached folder after a folder without entries", async () => {
+            createAt("/");
+            await listedNames();
+            const rootHeaders = await columnHeaders();
+            setComponentInput(fixture, "pathPrefix", "/missing");
+            fixture.detectChanges();
+            await fixture.whenStable();
+            fixture.detectChanges();
+
+            setComponentInput(fixture, "pathPrefix", "/");
+            fixture.detectChanges();
+            await listedNames();
+
+            expect(rootHeaders).toContain("content_length");
+            expect(await columnHeaders()).toEqual(rootHeaders);
+        });
+
+        it("should load the next page of a cached folder after a folder that had no more pages", async () => {
+            createAt("/");
+            await listedNames();
+            setComponentInput(fixture, "pathPrefix", "/test-folder");
+            fixture.detectChanges();
+            await listedNames();
+            setComponentInput(fixture, "pathPrefix", "/");
+            fixture.detectChanges();
+            await listedNames();
+            const loadCollectionDataChangeSpy = vi.spyOn(datasetAsCollectionService, "loadCollectionDataChange");
+
+            component.onScroll();
+
+            expect(loadCollectionDataChangeSpy).toHaveBeenCalledWith({ path: "/", page: 2, scrollActivated: true });
+        });
+
+        it("should show the total count of a folder opened by a page load", async () => {
+            createAt("/test-folder");
+            await fixture.whenStable();
+            fixture.detectChanges();
+
+            expect(getElementByDataTestId(fixture, "collection-total-count").textContent).toContain("2");
         });
     });
 });

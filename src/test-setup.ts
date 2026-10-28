@@ -22,16 +22,17 @@ declare global {
 window.ClipboardJS = ClipboardJS;
 
 // Angular reports some dev-mode problems (NG0956, a whole @for list rebuilt) and failed navigations
-// (NG04002) only through the console, and Vitest drops console output when its own output is not a
-// terminal. Such a message fails the test that caused it, so a piped or CI run sees it too. Core
-// codes have four digits, the router's and other packages' five.
-const ANGULAR_RUNTIME_CODE = /\bNG0\d{3,4}\b/;
+// (NG04002) only through the console, and so does MatIcon for an SVG icon nobody registered; Vitest
+// drops console output when its own output is not a terminal. Such a message fails the test that
+// caused it, so a piped or CI run sees it too. Core codes have four digits, the router's and other
+// packages' five.
+const ANGULAR_RUNTIME_PROBLEM = /\bNG0\d{3,4}\b|Error retrieving icon/;
 const angularMessages: string[] = [];
 for (const level of ["warn", "error"] as const) {
     const original = console[level].bind(console);
     console[level] = (...args: unknown[]) => {
         const text = args.map(String).join(" ");
-        if (ANGULAR_RUNTIME_CODE.test(text)) {
+        if (ANGULAR_RUNTIME_PROBLEM.test(text)) {
             angularMessages.push(`console.${level}: ${text}`);
         }
         original(...args);

@@ -8,7 +8,13 @@
 import { DatasetArchetype } from "@api/kamu.graphql.interface";
 import { MaybeNull } from "@interface/app.types";
 
-import { OverviewTabMode } from "src/app/dataset-view/dataset-view.interface";
+import { OverviewTabMode, VersionedFileView } from "src/app/dataset-view/dataset-view.interface";
+
+/** A file version with the URL its content downloads from, `null` when the node cannot serve it */
+export interface VersionedFileContentView {
+    details: VersionedFileView;
+    contentUrl: MaybeNull<string>;
+}
 
 export interface ViewModeButtonsOptions {
     value: OverviewTabMode;

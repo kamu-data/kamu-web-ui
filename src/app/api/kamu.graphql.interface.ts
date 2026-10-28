@@ -7768,7 +7768,7 @@ export type DatasetAsVersionedFileQuery = { datasets: { __typename: 'Datasets', 
           & VersionedFileEntryDataFragment
         ) | null } | null } | null } };
 
-export type VersionedFileEntryDataFragment = { __typename: 'VersionedFileEntry', systemTime: string, eventTime: string, version: number, contentType: string, contentLength: number, contentHash: string, contentUrl: { __typename: 'VersionedFileContentDownload', url: string, expiresAt?: string | null } };
+export type VersionedFileEntryDataFragment = { __typename: 'VersionedFileEntry', systemTime: string, eventTime: string, version: number, contentType: string, contentLength: number, contentHash: string };
 
 export type VersionedFileContentUrlQueryVariables = Exact<{
   datasetId: Scalars['DatasetID']['input'];
@@ -10343,10 +10343,6 @@ export const VersionedFileEntryDataFragmentDoc = gql`
   contentType
   contentLength
   contentHash
-  contentUrl {
-    url
-    expiresAt
-  }
 }
     `;
 export const AccountWithRoleDataFragmentDoc = gql`

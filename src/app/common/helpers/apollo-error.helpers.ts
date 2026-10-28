@@ -23,17 +23,24 @@ import ProjectLinks from "src/app/project-links";
 import { LocalStorageService } from "src/app/services/local-storage.service";
 import { NavigationService } from "src/app/services/navigation.service";
 
+/** How the error handler treats the errors of one operation */
+export interface ApolloErrorHandlingOptions {
+    /** The caller shows the GraphQL errors of this operation itself, so they get no toast */
+    skipErrorToast?: boolean;
+}
+
 /**
  * Reacts to an error of any GraphQL operation: an account that is not whitelisted or an invalid
- * access token navigates away, other GraphQL errors show a toast each, and a network error shows
- * a toast that stays. Create it in an injection context; call it from anywhere.
+ * access token navigates away, other GraphQL errors show a toast each, unless the operation asked
+ * to skip them, and a network error shows a toast that stays. Create it in an injection context;
+ * call it from anywhere.
  */
-export function createApolloErrorHandler(): (error: unknown) => void {
+export function createApolloErrorHandler(): (error: unknown, options?: ApolloErrorHandlingOptions) => void {
     const injector = inject(Injector);
     const navigationService = inject(NavigationService);
     const localStorageService = inject(LocalStorageService);
 
-    return (error: unknown) => {
+    return (error: unknown, options: ApolloErrorHandlingOptions = {}) => {
         // Resolved lazily: ToastrService depends on services that are still being created at this point
         const toastrService = injector.get(ToastrService);
 
@@ -51,7 +58,7 @@ export function createApolloErrorHandler(): (error: unknown) => void {
                     toastrService.error(isAccessTokenExpired(token) ? ErrorTexts.ERROR_ACCESS_TOKEN_EXPIRED : firstMsg);
                     navigationService.navigateToLogin(currentLocationPath());
                 }
-            } else {
+            } else if (!options.skipErrorToast) {
                 graphQLErrors.forEach((err) => toastrService.error(err.message));
             }
         } else if (error) {
@@ -63,10 +70,16 @@ export function createApolloErrorHandler(): (error: unknown) => void {
     };
 }
 
-/** The Apollo link that passes every operation error to `createApolloErrorHandler`. Create it in an injection context. */
+/**
+ * The Apollo link that passes every operation error to `createApolloErrorHandler`. An operation
+ * whose caller shows its GraphQL errors itself passes `context: { skipErrorToast: true }`.
+ * Create it in an injection context.
+ */
 export function createApolloErrorLink(): ApolloLink {
     const handleError = createApolloErrorHandler();
-    return new ErrorLink(({ error }) => handleError(error));
+    return new ErrorLink(({ error, operation }) =>
+        handleError(error, { skipErrorToast: !!operation.getContext().skipErrorToast }),
+    );
 }
 
 /**

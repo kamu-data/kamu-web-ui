@@ -9,18 +9,24 @@ import { TestbedHarnessEnvironment } from "@angular/cdk/testing/testbed";
 import { provideHttpClient } from "@angular/common/http";
 import { ComponentFixture, TestBed } from "@angular/core/testing";
 
-import { of } from "rxjs";
+import { of, Subject } from "rxjs";
 
 import { Apollo } from "apollo-angular";
 import { provideToastr, ToastrService } from "ngx-toastr";
+import { Mock } from "vitest";
 
 import { ValueNotFoundHarness } from "@common/components/value-not-found/value-not-found.harness";
-import { setComponentInput, stubMethod } from "@common/helpers/base-test.helpers.spec";
+import { requireValue } from "@common/helpers/app.helpers";
+import { findElementByDataTestId, setComponentInput, stubMethod } from "@common/helpers/base-test.helpers.spec";
 import { SharedTestModule } from "@common/modules/shared-test.module";
+import { DatasetApi } from "@api/dataset.api";
+import { DatasetAsVersionedFileByVersionQuery } from "@api/kamu.graphql.interface";
+import { MaybeNull } from "@interface/app.types";
 
 import { DatasetViewTypeEnum, VersionedFileView } from "src/app/dataset-view/dataset-view.interface";
 import {
     MOCK_VERSIONED_FILE_NAME,
+    mockDatasetAsVersionedFileByVersionQuery,
     mockDatasetAsVersionedFileQuery,
     mockDatasetBasicsRootFragment,
     mockVersionedFileEntryLatest,
@@ -29,6 +35,8 @@ import { NavigationService } from "src/app/services/navigation.service";
 
 import { DatasetAsVersionedFileService } from "../../services/dataset-as-versioned-file.service";
 import { VersionedFileViewComponent } from "./versioned-file-view.component";
+import { VersionedFileContentView } from "./versioned-file-view.model";
+import { VersionedFileViewTexts } from "./versioned-file-view.text";
 
 describe("VersionedFileViewComponent", () => {
     let component: VersionedFileViewComponent;
@@ -43,6 +51,8 @@ describe("VersionedFileViewComponent", () => {
         countVersions: mockDatasetAsVersionedFileQuery.datasets.byId?.asVersionedFile?.versions.totalCount,
     };
 
+    const MOCK_CONTENT_URL = "https://example.com/file-content";
+
     function setMockObjectByContentType(contentType: string): VersionedFileView {
         return Object.assign({}, MOCK_VERSIONED_VIEW_FILE, {
             fileInfo: {
@@ -50,6 +60,13 @@ describe("VersionedFileViewComponent", () => {
                 contentType,
             },
         });
+    }
+
+    function contentViewOf(
+        contentType: string,
+        contentUrl: MaybeNull<string> = MOCK_CONTENT_URL,
+    ): VersionedFileContentView {
+        return { details: setMockObjectByContentType(contentType), contentUrl };
     }
 
     beforeEach(async () => {
@@ -75,12 +92,19 @@ describe("VersionedFileViewComponent", () => {
         const requestDatasetAsVersionedFileSpy = vi
             .spyOn(datasetAsVersionedFileService, "requestDatasetAsVersionedFile")
             .mockReturnValue(of(mockVersionedFileView));
+        const getVersionedFileContentUrlSpy = vi
+            .spyOn(datasetAsVersionedFileService, "getVersionedFileContentUrl")
+            .mockReturnValue(of(MOCK_CONTENT_URL));
         vi.spyOn(component, "setPreviewFileStrategy").mockReturnValue(Promise.resolve());
 
         component.version$.next(0);
         fixture.detectChanges();
 
         expect(requestDatasetAsVersionedFileSpy).toHaveBeenCalledTimes(1);
+        expect(getVersionedFileContentUrlSpy).toHaveBeenCalledWith(
+            mockDatasetBasicsRootFragment.id,
+            mockVersionedFileEntryLatest.version,
+        );
     });
 
     it("should check ngOnInit with version", () => {
@@ -91,6 +115,7 @@ describe("VersionedFileViewComponent", () => {
         const requestDatasetAsVersionedFileByVersionSpy = vi
             .spyOn(datasetAsVersionedFileService, "requestDatasetAsVersionedFileByVersion")
             .mockReturnValue(of(mockVersionedFileView));
+        vi.spyOn(datasetAsVersionedFileService, "getVersionedFileContentUrl").mockReturnValue(of(MOCK_CONTENT_URL));
         vi.spyOn(component, "setPreviewFileStrategy").mockReturnValue(Promise.resolve());
 
         component.version$.next(2);
@@ -100,51 +125,140 @@ describe("VersionedFileViewComponent", () => {
         expect(requestDatasetAsVersionedFileSpy).not.toHaveBeenCalled();
     });
 
-    it("should check setPreviewFileStrategy method for pdf file", async () => {
-        const mockVersionedFileView: VersionedFileView = setMockObjectByContentType("application/pdf");
-        await component.setPreviewFileStrategy(mockVersionedFileView);
+    it.each([MOCK_CONTENT_URL, null])(
+        "should clear the previous version until its replacement content URL resolves to %s",
+        (contentUrl) => {
+            const dataset = requireValue(mockDatasetAsVersionedFileByVersionQuery.datasets.byId);
+            const versionedFile = requireValue(dataset.asVersionedFile);
+            const responseForVersion = (version: number): DatasetAsVersionedFileByVersionQuery => ({
+                datasets: {
+                    ...mockDatasetAsVersionedFileByVersionQuery.datasets,
+                    byId: {
+                        ...dataset,
+                        asVersionedFile: {
+                            ...versionedFile,
+                            asOf: { ...mockVersionedFileEntryLatest, version, contentType: "text/plain" },
+                        },
+                    },
+                },
+            });
+            const metadata$ = new Subject<DatasetAsVersionedFileByVersionQuery>();
+            const contentUrl$ = new Subject<MaybeNull<string>>();
+            vi.spyOn(TestBed.inject(DatasetApi), "getDatasetAsVersionedFileByVersion")
+                .mockReturnValueOnce(of(responseForVersion(1)))
+                .mockReturnValue(metadata$);
+            vi.spyOn(datasetAsVersionedFileService, "getVersionedFileContentUrl")
+                .mockReturnValueOnce(of("https://example.com/version-1"))
+                .mockReturnValue(contentUrl$);
+            vi.spyOn(datasetAsVersionedFileService, "requestFileAsText")
+                .mockReturnValueOnce(of("Version 1 content"))
+                .mockReturnValue(of("Version 2 content"));
 
-        expect(component.urlContentPath).toEqual(mockVersionedFileEntryLatest.contentUrl.url);
+            setComponentInput(fixture, "version", 1);
+            fixture.detectChanges();
+            expect(findElementByDataTestId(fixture, "file-content-text")?.textContent).toBe("Version 1 content");
+            expect(findElementByDataTestId(fixture, "download-file-button")).toBeDefined();
+            expect(findElementByDataTestId(fixture, "editor-progress-bar")).toBeUndefined();
+
+            setComponentInput(fixture, "version", 2);
+            fixture.detectChanges();
+            expect(findElementByDataTestId(fixture, "file-content-text")).toBeUndefined();
+            expect(findElementByDataTestId(fixture, "download-file-button")).toBeUndefined();
+            expect(findElementByDataTestId(fixture, "editor-progress-bar")).toBeDefined();
+
+            metadata$.next(responseForVersion(2));
+            fixture.detectChanges();
+            expect(findElementByDataTestId(fixture, "file-content-text")).toBeUndefined();
+            expect(findElementByDataTestId(fixture, "download-file-button")).toBeUndefined();
+            expect(findElementByDataTestId(fixture, "file-content-unavailable")).toBeUndefined();
+            expect(findElementByDataTestId(fixture, "editor-progress-bar")).toBeDefined();
+
+            contentUrl$.next(contentUrl);
+            contentUrl$.complete();
+            fixture.detectChanges();
+            expect(findElementByDataTestId(fixture, "editor-progress-bar")).toBeUndefined();
+            if (contentUrl) {
+                expect(findElementByDataTestId(fixture, "file-content-text")?.textContent).toBe("Version 2 content");
+                const downloadSpy = stubMethod(datasetAsVersionedFileService, "downloadFile");
+                findElementByDataTestId(fixture, "download-file-button")?.click();
+                const [datasetId, details] = requireValue(downloadSpy.mock.lastCall);
+                expect(datasetId).toBe(mockDatasetBasicsRootFragment.id);
+                expect(details.fileInfo?.version).toBe(2);
+            } else {
+                expect(findElementByDataTestId(fixture, "file-content-text")).toBeUndefined();
+                expect(findElementByDataTestId(fixture, "download-file-button")).toBeUndefined();
+                expect(findElementByDataTestId(fixture, "file-content-unavailable")).toBeDefined();
+            }
+        },
+    );
+
+    it("should check setPreviewFileStrategy method for pdf file", async () => {
+        await component.setPreviewFileStrategy(contentViewOf("application/pdf"));
+
+        expect(component.urlContentPath).toEqual(MOCK_CONTENT_URL);
     });
 
     it("should check setPreviewFileStrategy method for text file", async () => {
         const requestFileAsTextSpy = stubMethod(datasetAsVersionedFileService, "requestFileAsText");
-        const mockVersionedFileView: VersionedFileView = setMockObjectByContentType("text/plain");
-        if (mockVersionedFileView.fileInfo) {
-            await component.setPreviewFileStrategy(mockVersionedFileView);
+        await component.setPreviewFileStrategy(contentViewOf("text/plain"));
 
-            expect(requestFileAsTextSpy).toHaveBeenCalledTimes(1);
-        }
+        expect(requestFileAsTextSpy).toHaveBeenCalledTimes(1);
     });
 
     it("should check setPreviewFileStrategy method for video file", async () => {
-        const mockVersionedFileView: VersionedFileView = setMockObjectByContentType("video/mp4");
-        if (mockVersionedFileView.fileInfo) {
-            await component.setPreviewFileStrategy(mockVersionedFileView);
+        await component.setPreviewFileStrategy(contentViewOf("video/mp4"));
 
-            expect(component.urlContentPath).toBeDefined();
-        }
+        expect(component.urlContentPath).toBeDefined();
     });
 
     it("should check setPreviewFileStrategy method for json file", async () => {
         const requestFileAsJsonSpy = stubMethod(datasetAsVersionedFileService, "requestFileAsJson");
-        const mockVersionedFileView: VersionedFileView = setMockObjectByContentType("application/json");
-        if (mockVersionedFileView.fileInfo) {
-            await component.setPreviewFileStrategy(mockVersionedFileView);
+        await component.setPreviewFileStrategy(contentViewOf("application/json"));
 
-            expect(requestFileAsJsonSpy).toHaveBeenCalledTimes(1);
-        }
+        expect(requestFileAsJsonSpy).toHaveBeenCalledTimes(1);
     });
 
     it("should check setPreviewFileStrategy method for unspported file", async () => {
         const toastrServiceInfoSpy = stubMethod(toastrService, "info");
-        const mockVersionedFileView: VersionedFileView = setMockObjectByContentType("unsupported/type");
+        await component.setPreviewFileStrategy(contentViewOf("unsupported/type"));
 
-        if (mockVersionedFileView.fileInfo) {
-            await component.setPreviewFileStrategy(mockVersionedFileView);
+        expect(toastrServiceInfoSpy).toHaveBeenCalledWith("Content type not supported: unsupported/type");
+    });
 
-            expect(toastrServiceInfoSpy).toHaveBeenCalledWith("Content type not supported: unsupported/type");
-        }
+    it("should clear the previous preview for a version whose content the node cannot serve", async () => {
+        await component.setPreviewFileStrategy(contentViewOf("application/pdf"));
+        await component.setPreviewFileStrategy(contentViewOf("application/pdf", null));
+
+        expect(component.urlContentPath).toBe("");
+        expect(component.pdfComponent).toBeNull();
+    });
+
+    describe("a node that cannot serve the file content", () => {
+        let requestFileAsTextSpy: Mock<DatasetAsVersionedFileService["requestFileAsText"]>;
+
+        beforeEach(() => {
+            vi.spyOn(datasetAsVersionedFileService, "requestDatasetAsVersionedFile").mockReturnValue(
+                of(setMockObjectByContentType("text/plain")),
+            );
+            vi.spyOn(datasetAsVersionedFileService, "getVersionedFileContentUrl").mockReturnValue(of(null));
+            requestFileAsTextSpy = stubMethod(datasetAsVersionedFileService, "requestFileAsText");
+
+            fixture.detectChanges();
+        });
+
+        it("should say the file can't be previewed or downloaded", () => {
+            const message = findElementByDataTestId(fixture, "file-content-unavailable");
+
+            expect(message?.textContent?.trim()).toBe(VersionedFileViewTexts.CONTENT_UNAVAILABLE);
+        });
+
+        it("should not offer a download", () => {
+            expect(findElementByDataTestId(fixture, "download-file-button")).toBeUndefined();
+        });
+
+        it("should not request the file content", () => {
+            expect(requestFileAsTextSpy).not.toHaveBeenCalled();
+        });
     });
 
     it("should check redirecr to latest version", () => {

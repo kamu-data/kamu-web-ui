@@ -883,6 +883,16 @@ describe("DatasetApi", () => {
         flush();
     }));
 
+    it("should fail getting versioned file contentUrl the node cannot serve, without an error toast", async () => {
+        const result = firstValueFrom(service.getVersionedFileContentUrl(TEST_DATASET_ID, 2));
+
+        const op = controller.expectOne(VersionedFileContentUrlDocument);
+        expect(op.operation.getContext().skipErrorToast).toBe(true);
+        op.graphqlErrors([{ message: "Repository does not support external transfers" }]);
+
+        await expect(result).rejects.toThrow();
+    });
+
     it("should get dataset as collection", fakeAsync(() => {
         const PATH_PREFIX = "";
         const PAGE = 0;

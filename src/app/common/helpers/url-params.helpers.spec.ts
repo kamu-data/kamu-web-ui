@@ -12,6 +12,7 @@ import {
     isMultihash,
     isOdfName,
     isUuid,
+    positiveIntegerFromParam,
     queryParamValue,
 } from "@common/helpers/url-params.helpers";
 
@@ -54,12 +55,12 @@ describe("URL parameter helpers", () => {
     ].forEach(({ name, check, valid, invalid }) => {
         describe(name, () => {
             valid.forEach((value) => {
-                it(`accepts "${value}"`, () => {
+                it(`should accept "${value}"`, () => {
                     expect(check(value)).toBe(true);
                 });
             });
             invalid.forEach((value) => {
-                it(`refuses "${value}"`, () => {
+                it(`should refuse "${value}"`, () => {
                     expect(check(value)).toBe(false);
                 });
             });
@@ -76,22 +77,32 @@ describe("URL parameter helpers", () => {
             { value: null, expected: undefined },
             { value: 42, expected: undefined },
         ].forEach(({ value, expected }) => {
-            it(`reads ${JSON.stringify(value)} as ${JSON.stringify(expected)}`, () => {
+            it(`should read ${JSON.stringify(value)} as ${JSON.stringify(expected)}`, () => {
                 expect(queryParamValue(value)).toBe(expected);
+            });
+        });
+    });
+
+    describe("positiveIntegerFromParam", () => {
+        it("should read only positive whole numbers", () => {
+            expect(positiveIntegerFromParam("1")).toEqual(1);
+            expect(positiveIntegerFromParam("42")).toEqual(42);
+            ["abc", "0", "-1", "1.5", "1e3", " 2", "", null, undefined, "99999999999999999999"].forEach((param) => {
+                expect(positiveIntegerFromParam(param)).toBeNull();
             });
         });
     });
 
     describe("inAppPathFromParam", () => {
         ["/", "/kamu/dataset", "/v/query?sqlQuery=select%201#top"].forEach((path) => {
-            it(`keeps the app path "${path}"`, () => {
+            it(`should keep the app path "${path}"`, () => {
                 expect(inAppPathFromParam(path)).toBe(path);
             });
         });
 
         ["", null, undefined, "kamu/dataset", "//evil.example", "/\\evil.example", "https://evil.example"].forEach(
             (param) => {
-                it(`refuses ${JSON.stringify(param)}`, () => {
+                it(`should refuse ${JSON.stringify(param)}`, () => {
                     expect(inAppPathFromParam(param)).toBeUndefined();
                 });
             },
@@ -109,7 +120,7 @@ describe("URL parameter helpers", () => {
             { param: null, expected: "/" },
             { param: undefined, expected: "/" },
         ].forEach(({ param, expected }) => {
-            it(`reads ${JSON.stringify(param)} as "${expected}"`, () => {
+            it(`should read ${JSON.stringify(param)} as "${expected}"`, () => {
                 expect(collectionPathFromParam(param)).toBe(expected);
             });
         });

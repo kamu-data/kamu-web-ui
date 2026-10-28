@@ -399,7 +399,9 @@ describe("FlowsComponent", () => {
     it("should keep only the webhook ids that are UUIDs", () => {
         const serviceInComponent = fixture.debugElement.injector.get(FlowsSelectionStateService);
         const addWebhookIdSpy = stubMethod(serviceInComponent, "addWebhookId");
+
         setComponentInput(fixture, "setWebhookId", "not-an-id,d20a935e-0ccb-4844-b1bb-f4b5b9b0279a,");
+
         expect(addWebhookIdSpy).toHaveBeenCalledTimes(1);
         expect(addWebhookIdSpy).toHaveBeenCalledWith("d20a935e-0ccb-4844-b1bb-f4b5b9b0279a");
     });
@@ -441,7 +443,9 @@ describe("FlowsComponent", () => {
             const setFlowsCategorySpy = stubMethod(serviceInComponent, "setFlowsCategory");
             const setWebhooksCategorySpy = stubMethod(serviceInComponent, "setWebhooksCategory");
             const clearFlowsCategorySpy = stubMethod(serviceInComponent, "clearFlowsCategory");
+
             setComponentInput(fixture, "setFlowsCategory", category);
+
             expect(clearFlowsCategorySpy).toHaveBeenCalledTimes(1);
             expect(setFlowsCategorySpy).not.toHaveBeenCalled();
             expect(setWebhooksCategorySpy).not.toHaveBeenCalled();

@@ -49,11 +49,11 @@ import { FlowsAssociatedChannelsComponent } from "src/app/dataset-view/additiona
 import { FlowsBlockActionsComponent } from "src/app/dataset-view/additional-components/flows-component/components/flows-block-actions/flows-block-actions.component";
 import {
     DatasetFlowsTabState,
+    FLOWS_CATEGORIES,
     FLOWS_SELECTED_CATEGORIES,
     FlowsCategoryUnion,
     FlowsSelectedCategory,
     FlowsSelectionState,
-    WEBHOOKS_SELECTED_CATEGORIES,
     WebhooksSelectedCategory,
 } from "src/app/dataset-view/additional-components/flows-component/flows.helpers";
 import { FlowsSelectionStateService } from "src/app/dataset-view/additional-components/flows-component/services/flows-selection-state.service";
@@ -104,7 +104,7 @@ export class FlowsComponent extends FlowsTableProcessingBaseComponent implements
     }
     @Input({ alias: ProjectLinks.URL_QUERY_PARAM_FLOWS_CATEGORY, transform: queryParamValue })
     public set setFlowsCategory(value: MaybeUndefined<string>) {
-        this.flowsCategoryParam = oneOf([...FLOWS_SELECTED_CATEGORIES, ...WEBHOOKS_SELECTED_CATEGORIES], value);
+        this.flowsCategoryParam = oneOf(FLOWS_CATEGORIES, value);
         this.applyFlowsCategoryParam();
     }
 

@@ -32,10 +32,10 @@ import { MaybeNull } from "@interface/app.types";
 
 import { AccountTabs } from "src/app/account/account.constants";
 import { AccountService } from "src/app/account/account.service";
+import { flowStatusGroup } from "src/app/account/additional-components/account-flows-tab/account-flows-tab.helpers";
 import {
     AccountFiltersParams,
     AccountFlowsNav,
-    flowStatusGroup,
 } from "src/app/account/additional-components/account-flows-tab/account-flows-tab.types";
 import { AccountFlowsType } from "src/app/account/additional-components/account-flows-tab/resolvers/account-flows.resolver";
 import { LoggedUserService } from "src/app/auth/logged-user.service";

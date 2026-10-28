@@ -173,17 +173,18 @@ describe("VersionedFileViewComponent", () => {
             vi.spyOn(datasetAsVersionedFileService, "requestDatasetAsVersionedFileByVersion").mockReturnValue(
                 of({ ...MOCK_VERSIONED_VIEW_FILE, fileInfo: null }),
             );
+
             setComponentInput(fixture, "version", 99);
             fixture.detectChanges();
         });
 
-        it("says there is no such version", async () => {
+        it("should say there is no such version", async () => {
             const notFound = await TestbedHarnessEnvironment.loader(fixture).getHarness(ValueNotFoundHarness);
 
             expect(await notFound.getMessage()).toBe("There is no version 99 of this file.");
         });
 
-        it("leads to the latest version", async () => {
+        it("should lead to the latest version", async () => {
             const goToLatestSpy = stubMethod(component, "goToLatestVersionedFile");
             const notFound = await TestbedHarnessEnvironment.loader(fixture).getHarness(ValueNotFoundHarness);
 

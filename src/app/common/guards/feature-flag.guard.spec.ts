@@ -21,7 +21,7 @@ describe("featureFlagGuard", () => {
         featureFlagsService = TestBed.inject(FeatureFlagsService);
     });
 
-    it("opens the route when its feature is visible", async () => {
+    it("should open the route when its feature is visible", async () => {
         const visibilitySpy = vi
             .spyOn(featureFlagsService, "featureVisibility")
             .mockReturnValue(FeatureVisibility.VISIBLE);
@@ -31,7 +31,7 @@ describe("featureFlagGuard", () => {
     });
 
     [FeatureVisibility.DISABLED, FeatureVisibility.INVISIBLE].forEach((visibility) => {
-        it(`shows page-not-found when its feature is ${visibility}`, async () => {
+        it(`should show page-not-found when its feature is ${visibility}`, async () => {
             vi.spyOn(featureFlagsService, "featureVisibility").mockReturnValue(visibility);
 
             expectPageNotFoundRedirect(await runCanActivate(featureFlagGuard("flowDetails.usage")));

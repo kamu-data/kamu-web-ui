@@ -44,6 +44,11 @@ async function collectRoutes(routes: Routes, parentPath: string): Promise<RouteE
     return entries;
 }
 
+/** An empty-path route without a component only groups its children; the URL ending there belongs to the route above */
+function isPassThroughGroup(route: Route): boolean {
+    return route.path === "" && !route.component && !route.loadComponent;
+}
+
 /**
  * Checks every route in the app, lazy ones included, against the URL rules: a path parameter is
  * checked by a guard before anything reads it, and a route that can match a URL with no segment
@@ -57,7 +62,7 @@ describe("Route configuration", () => {
         entries = await collectRoutes([...PUBLIC_ROUTES, ...ANONYMOUS_GUARDED_ROUTES], "");
     });
 
-    it("validates every path parameter with a validRouteParams guard on the route that declares it", () => {
+    it("should validate every path parameter with a validRouteParams guard on the route that declares it", () => {
         const unchecked = entries.flatMap(({ fullPath, route }) => {
             const declared = (route.path ?? "")
                 .split("/")
@@ -70,7 +75,7 @@ describe("Route configuration", () => {
         expect(unchecked).toEqual([]);
     });
 
-    it("gives every parent route a child for the URL that ends at the parent", () => {
+    it("should give every parent route a child for the URL that ends at the parent", () => {
         const withoutDefault = entries
             .filter(({ route, children }) => children.length > 0 && !isPassThroughGroup(route))
             .filter(({ children }) => !children.some((child) => child.path === ""))
@@ -79,15 +84,10 @@ describe("Route configuration", () => {
         expect(withoutDefault).toEqual([]);
     });
 
-    it("finds the lazy routes too", () => {
+    it("should find the lazy routes too", () => {
         const paths = entries.map(({ fullPath }) => fullPath);
 
         expect(paths).toContain(":accountName/:datasetName/flow-details/:flow-id");
         expect(paths.some((path) => path.endsWith("webhooks/rotate-secret/:webhookId"))).toBe(true);
     });
 });
-
-/** An empty-path route without a component only groups its children; the URL ending there belongs to the route above */
-function isPassThroughGroup(route: Route): boolean {
-    return route.path === "" && !route.component && !route.loadComponent;
-}

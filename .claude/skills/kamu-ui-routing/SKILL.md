@@ -119,9 +119,9 @@ its own routes file:
   - a query parameter, which the user can edit: `enumValueOf(...) ?? default`, and for a
     comma-separated list `.flatMap((s) => enumValueOf(Enum, s) ?? [])`, so an unknown value is
     dropped rather than passed on; a page, a version or another positive whole number:
-    `positiveIntegerFromParam(...) ?? default` from `@common/helpers/app.helpers`, which a
-    component reads through `pageFromUrl()`; other parsers such as `collectionPathFromParam` and
-    `inAppPathFromParam` are in `@common/helpers/url-params.helpers`. A query parameter bound to
+    `positiveIntegerFromParam(...) ?? default`, which a component reads through `pageFromUrl()`.
+    Every URL parser lives in `@common/helpers/url-params.helpers`, with `collectionPathFromParam`
+    and `inAppPathFromParam` beside it. A query parameter bound to
     a component input is declared
     `@Input({ alias: ProjectLinks.URL_QUERY_PARAM_X, transform: queryParamValue })` with a setter
     of `MaybeUndefined<string>` that parses it (`SearchComponent.page`): the router binds a

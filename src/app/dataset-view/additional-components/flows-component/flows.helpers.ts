@@ -23,9 +23,19 @@ import {
 import { FlowsTableData } from "src/app/dataset-flow/flows-table/flows-table.types";
 
 export const FLOWS_SELECTED_CATEGORIES = ["all", "updates"] as const;
+
 export type FlowsSelectedCategory = (typeof FLOWS_SELECTED_CATEGORIES)[number];
+
 export const WEBHOOKS_SELECTED_CATEGORIES = ["webhooks"] as const;
+
 export type WebhooksSelectedCategory = (typeof WEBHOOKS_SELECTED_CATEGORIES)[number];
+
+export type FlowsCategoryUnion = FlowsSelectedCategory | WebhooksSelectedCategory;
+
+export const FLOWS_CATEGORIES: readonly FlowsCategoryUnion[] = [
+    ...FLOWS_SELECTED_CATEGORIES,
+    ...WEBHOOKS_SELECTED_CATEGORIES,
+];
 
 export interface RollupFiltersDescriptor {
     label: string;
@@ -36,7 +46,6 @@ export interface RollupFiltersDescriptor {
     allowedStates?: FlowProcessEffectiveState[];
 }
 
-export type FlowsCategoryUnion = FlowsSelectedCategory | WebhooksSelectedCategory;
 export interface DatasetFlowsBadgeStyle {
     containerClass: string;
     iconClass: string;

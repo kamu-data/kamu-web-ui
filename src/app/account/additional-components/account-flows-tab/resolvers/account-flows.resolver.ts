@@ -10,9 +10,9 @@ import { ActivatedRouteSnapshot, ResolveFn } from "@angular/router";
 import { enumValueOf } from "@common/helpers/app.helpers";
 import { FlowStatus } from "@api/kamu.graphql.interface";
 
+import { flowStatusGroup } from "src/app/account/additional-components/account-flows-tab/account-flows-tab.helpers";
 import {
     AccountFlowsNav,
-    flowStatusGroup,
     ProcessCardFilterMode,
 } from "src/app/account/additional-components/account-flows-tab/account-flows-tab.types";
 import ProjectLinks from "src/app/project-links";

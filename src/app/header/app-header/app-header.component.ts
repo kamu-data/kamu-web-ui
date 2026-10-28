@@ -126,7 +126,7 @@ export class AppHeaderComponent extends BaseComponent implements OnInit {
                 this.searchQuery = urlObj.searchParams.get(ProjectLinks.URL_QUERY_PARAM_QUERY) ?? "";
                 this.cdr.detectChanges();
             });
-        // The header can be created after the navigation it shows has ended, which the handler above never sees
+        // The header can be created after the navigation it shows has ended, which NavigationEnd never reports
         this.route.queryParamMap.pipe(takeUntilDestroyed(this.destroyRef)).subscribe((params: ParamMap) => {
             const query = params.get(ProjectLinks.URL_QUERY_PARAM_QUERY);
             if (query) {

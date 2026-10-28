@@ -7,8 +7,7 @@
 
 import { ActivatedRouteSnapshot, ResolveFn } from "@angular/router";
 
-import { positiveIntegerFromParam } from "@common/helpers/app.helpers";
-import { collectionPathFromParam } from "@common/helpers/url-params.helpers";
+import { collectionPathFromParam, positiveIntegerFromParam } from "@common/helpers/url-params.helpers";
 
 import { OverviewTabQueryParamsType } from "src/app/dataset-view/dataset-view.interface";
 import ProjectLinks from "src/app/project-links";

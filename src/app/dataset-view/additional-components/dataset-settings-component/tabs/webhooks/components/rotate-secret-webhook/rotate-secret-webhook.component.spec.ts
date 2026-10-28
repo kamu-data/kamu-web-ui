@@ -16,7 +16,7 @@ import { provideToastr } from "ngx-toastr";
 import { Mock } from "vitest";
 
 import { requireValue } from "@common/helpers/app.helpers";
-import { registerMatSvgIcons, setComponentInput } from "@common/helpers/base-test.helpers.spec";
+import { registerMatSvgIcons, setComponentInput, stubMethod } from "@common/helpers/base-test.helpers.spec";
 import { SharedTestModule } from "@common/modules/shared-test.module";
 import { mockDatasetWebhookByIdQuery } from "@api/mock/webhooks.mock";
 
@@ -31,6 +31,7 @@ describe("RotateSecretWebhookComponent", () => {
     let datasetWebhooksService: DatasetWebhooksService;
     let navigationService: NavigationService;
     let rotateSecretSpy: Mock<DatasetWebhooksService["datasetWebhookRotateSecret"]>;
+
     const mockWebhookSubscription = requireValue(mockDatasetWebhookByIdQuery.datasets.byId?.webhooks.subscription);
 
     beforeEach(() => {
@@ -48,6 +49,7 @@ describe("RotateSecretWebhookComponent", () => {
             datasetBasics: mockDatasetBasicsRootFragment,
             subscription: mockWebhookSubscription,
         });
+
         rotateSecretSpy = vi
             .spyOn(datasetWebhooksService, "datasetWebhookRotateSecret")
             .mockReturnValue(of("mock-secret"));
@@ -65,8 +67,10 @@ describe("RotateSecretWebhookComponent", () => {
     });
 
     it("should check navigate to webhooks list", () => {
-        const navigateToWebhooksSpy = vi.spyOn(navigationService, "navigateToWebhooks").mockImplementation(() => {});
+        const navigateToWebhooksSpy = stubMethod(navigationService, "navigateToWebhooks");
+
         component.navigateToListWebhooks();
+
         expect(navigateToWebhooksSpy).toHaveBeenCalledTimes(1);
     });
 });

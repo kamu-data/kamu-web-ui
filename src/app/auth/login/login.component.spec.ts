@@ -82,11 +82,13 @@ describe("LoginComponent", () => {
     }
 
     const mockQueryParams: BehaviorSubject<Params> = new BehaviorSubject<Params>({});
+
     let redirectUrlParam: MaybeNull<string>;
 
     beforeEach(async () => {
         mockQueryParams.next({});
         redirectUrlParam = null;
+
         await TestBed.configureTestingModule({
             imports: [ApolloTestingModule, ReactiveFormsModule, MatIconModule, LoginComponent, SpinnerComponent],
             providers: [
@@ -308,7 +310,7 @@ describe("LoginComponent", () => {
             expect(navigationSpy).toHaveBeenCalledTimes(1);
         });
 
-        it("a device code that is not a UUID is not kept, and the page says the link is invalid", () => {
+        it("should not keep a device code that is not a UUID, and say the link is invalid", () => {
             localStorageService.setDeviceCode("3f8e1c52-6c1d-4f7a-9b8e-2d4c6a1b0e9f");
             checkVisible(fixture, Elements.INVALID_DEVICE_CODE, false);
 
@@ -371,7 +373,7 @@ describe("LoginComponent", () => {
             localStorageService.setAccessToken("some-token");
         });
 
-        it("returns a signed-in user to a page inside the app", () => {
+        it("should return a signed-in user to a page inside the app", () => {
             const navigateSpy = stubMethod(navigationService, "navigateToReplacedPath");
             redirectUrlParam = "/kamu/dataset?page=2";
 
@@ -381,7 +383,7 @@ describe("LoginComponent", () => {
         });
 
         ["//evil.example/path", "/\\evil.example", "https://evil.example", "kamu/dataset"].forEach((url) => {
-            it(`ignores "${url}", which is not a path inside the app`, () => {
+            it(`should ignore "${url}", which is not a path inside the app`, () => {
                 const navigateSpy = stubMethod(navigationService, "navigateToReplacedPath");
                 redirectUrlParam = url;
 

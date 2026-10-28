@@ -195,6 +195,7 @@ describe("CollectionViewComponent", () => {
             vi.spyOn(datasetAsCollectionService, "loadCollectionInfo").mockReturnValue(
                 of({ headChanged: false, connection: { ...mockCollectionEntryConnection, totalCount: 0, nodes: [] } }),
             );
+
             fixture = TestBed.createComponent(CollectionViewComponent);
             component = fixture.componentInstance;
             setComponentInput(fixture, "datasetBasics", mockDatasetBasicsRootFragment);
@@ -202,17 +203,25 @@ describe("CollectionViewComponent", () => {
             fixture.detectChanges();
         }
 
-        it("says there is no such folder and leads to the root", async () => {
+        it("should say there is no such folder", async () => {
+            createWithNoEntries("/missing");
+
+            const notFound = await TestbedHarnessEnvironment.loader(fixture).getHarness(ValueNotFoundHarness);
+
+            expect(await notFound.getMessage()).toBe("There is no folder /missing in this collection.");
+        });
+
+        it("should lead to the collection root", async () => {
             createWithNoEntries("/missing");
             const openFolderSpy = stubMethod(component, "openFolder");
             const notFound = await TestbedHarnessEnvironment.loader(fixture).getHarness(ValueNotFoundHarness);
 
-            expect(await notFound.getMessage()).toBe("There is no folder /missing in this collection.");
             await notFound.runAction();
+
             expect(openFolderSpy).toHaveBeenCalledWith("/");
         });
 
-        it("keeps the empty-collection message at the root", async () => {
+        it("should keep the empty-collection message at the root", async () => {
             createWithNoEntries("/");
 
             const notFound = await TestbedHarnessEnvironment.loader(fixture).getHarnessOrNull(ValueNotFoundHarness);

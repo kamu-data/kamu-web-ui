@@ -76,6 +76,7 @@ describe("Router", () => {
         flowDetailsResolveSpy = vi.fn(() => of(mockDatasetFlowByIdResponse));
         editWebhookResolveSpy = vi.fn(() => NEVER);
         blockMetadataResolveSpy = vi.fn(() => NEVER);
+
         await TestBed.configureTestingModule({
             imports: [ApolloTestingModule, PageNotFoundComponent, LoginComponent],
             providers: [
@@ -293,6 +294,7 @@ describe("Router", () => {
     describe("URL validation", () => {
         beforeEach(async () => {
             await configureRouter(true);
+
             vi.spyOn(loggedUserService, "isAuthenticated", "get").mockReturnValue(true);
             vi.spyOn(loggedUserService, "currentlyLoggedInUser", "get").mockReturnValue(mockAccountDetails);
             vi.spyOn(TestBed.inject(FeatureFlagsService), "featureVisibility").mockImplementation((name) =>
@@ -300,7 +302,7 @@ describe("Router", () => {
             );
         });
 
-        it("a flow-details URL without a tab opens the history tab", async () => {
+        it("should open the history tab for a flow-details URL without a tab", async () => {
             await router.navigateByUrl("/kamu/dataset/flow-details/42");
 
             expect(location.path()).toBe("/kamu/dataset/flow-details/42/history");
@@ -326,19 +328,17 @@ describe("Router", () => {
                 url: "/kamu/dataset/settings/webhooks/rotate-secret",
             },
         ].forEach(({ description, url }) => {
-            it(`${description} shows page-not-found and resolves nothing`, async () => {
+            it(`should show page-not-found for ${description} and resolve nothing`, async () => {
                 await router.navigateByUrl(url);
 
                 expect(activatedComponent()).toBe(PageNotFoundComponent);
+                expect(flowDetailsResolveSpy).not.toHaveBeenCalled();
                 expect(editWebhookResolveSpy).not.toHaveBeenCalled();
                 expect(blockMetadataResolveSpy).not.toHaveBeenCalled();
-                if (url.includes("flow-details/abc")) {
-                    expect(flowDetailsResolveSpy).not.toHaveBeenCalled();
-                }
             });
         });
 
-        it("an account named after an account tab opens its datasets tab", async () => {
+        it("should open the datasets tab of an account named after an account tab", async () => {
             await router.navigateByUrl("/datasets?page=2");
 
             expect(location.path()).toBe("/datasets/~select/datasets?page=2");

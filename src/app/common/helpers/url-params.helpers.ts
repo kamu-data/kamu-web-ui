@@ -5,14 +5,17 @@
  * included in the LICENSE file.
  */
 
-import { MaybeNullOrUndefined, MaybeUndefined } from "@interface/app.types";
+import { MaybeNull, MaybeNullOrUndefined, MaybeUndefined } from "@interface/app.types";
 
 // Each format matches what the API accepts for the scalar, and is never stricter than it:
 // a value it lets through may still be unknown to the API, but never refused as malformed.
 
 const MAX_U64 = 2n ** 64n - 1n;
+
 const ODF_NAME_PATTERN = /^[A-Za-z0-9]+(-[A-Za-z0-9]+)*(\.[A-Za-z0-9]+(-[A-Za-z0-9]+)*)*$/;
+
 const UUID_PATTERN = /^(urn:uuid:)?\{?[0-9a-f]{8}-?[0-9a-f]{4}-?[0-9a-f]{4}-?[0-9a-f]{4}-?[0-9a-f]{12}\}?$/i;
+
 const MULTIBASE_PATTERN = /^(f([0-9a-f]{2})+|u[A-Za-z0-9_-]+|z[1-9A-HJ-NP-Za-km-z]+)$/i;
 
 /** Whether `value` is a `FlowID`: an unsigned 64-bit integer in decimal */
@@ -42,6 +45,15 @@ export function isMultihash(value: string): boolean {
 export function queryParamValue(value: unknown): MaybeUndefined<string> {
     const first: unknown = Array.isArray(value) ? value[0] : value;
     return typeof first === "string" ? first : undefined;
+}
+
+/** The number a URL parameter such as a page holds, or `null` when it is missing or not a positive whole number */
+export function positiveIntegerFromParam(param: MaybeNullOrUndefined<string>): MaybeNull<number> {
+    if (!param || !/^\d+$/.test(param)) {
+        return null;
+    }
+    const value = Number(param);
+    return value >= 1 && Number.isSafeInteger(value) ? value : null;
 }
 
 /** A path inside the app, such as the page to return to after login, or `undefined` for anything else */

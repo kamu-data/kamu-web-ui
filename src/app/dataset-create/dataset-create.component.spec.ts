@@ -15,6 +15,7 @@ import { of } from "rxjs";
 
 import { ApolloTestingModule } from "apollo-angular/testing";
 
+import { requireValue } from "@common/helpers/app.helpers";
 import { getElementByDataTestId, registerMatSvgIcons, stubMethod } from "@common/helpers/base-test.helpers.spec";
 import { SharedTestModule } from "@common/modules/shared-test.module";
 import { FieldMutationResult } from "@common/validation/server-errors.helpers";
@@ -248,7 +249,11 @@ describe("DatasetCreateComponent", () => {
         fileInput.dispatchEvent(new Event("change"));
 
         expect(onFileSelectedSpy).toHaveBeenCalledTimes(1);
-        await vi.waitFor(() => expect(onFileSelectedSpy).toHaveResolvedWith("# You can edit this file\ntest content"));
+        const call = requireValue(onFileSelectedSpy.mock.results[0]);
+        if (call.type !== "return") {
+            expect.fail("onFileSelected threw");
+        }
+        expect(await call.value).toBe("# You can edit this file\ntest content");
     });
 
     it("should check call uploadFile when file not picked)", async () => {

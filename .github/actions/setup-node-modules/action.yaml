@@ -1,0 +1,26 @@
+name: Set up Node and node_modules
+description: >
+  Installs the Node version .nvmrc pins and restores node_modules from a cache keyed on the
+  lockfile, running npm ci only on a cache miss.
+runs:
+  using: composite
+  steps:
+    - uses: actions/setup-node@v4
+      with:
+        node-version-file: .nvmrc
+
+    - id: node-modules-cache
+      uses: actions/cache@v4
+      with:
+        path: node_modules
+        key: node-modules-${{ runner.os }}-${{ hashFiles('.nvmrc', 'package-lock.json') }}
+
+    - if: steps.node-modules-cache.outputs.cache-hit != 'true'
+      shell: bash
+      run: npm ci
+
+    # A restored node_modules skips postinstall, which generates the gitignored
+    # src/app/editor/generated/monaco-version.ts the build needs.
+    - if: steps.node-modules-cache.outputs.cache-hit == 'true'
+      shell: bash
+      run: node scripts/set-monaco-version.js

@@ -1,23 +1,49 @@
 name: build
 on: [push]
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  # A newer push to a branch supersedes its running checks; every master commit keeps its own.
+  cancel-in-progress: ${{ github.ref != 'refs/heads/master' }}
+
 jobs:
-  build:
-    name: Build / Linux
+  lint:
+    name: Lint
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-
-      - uses: actions/setup-node@v4
-        with:
-          node-version-file: .nvmrc
-          cache: npm
-
-      - run: npm ci
-
+      - uses: ./.github/actions/setup-node-modules
       - run: npm run prettier-check
       - run: npm run lint
       - run: npm run stylelint
-      - run: npx playwright install --with-deps chromium
+
+  test:
+    name: Test
+    runs-on: ubuntu-latest
+    # Ships Chromium and its system libraries. Keep the tag on the playwright version in
+    # package-lock.json; on a mismatch the install step below downloads the matching browser.
+    container: mcr.microsoft.com/playwright:v1.64.1-noble
+    steps:
+      - uses: actions/checkout@v4
+      - uses: ./.github/actions/setup-node-modules
+      - run: npx playwright install chromium
       - run: npm run test
+
+  build:
+    name: Build
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: ./.github/actions/setup-node-modules
       - run: npm run build
       - run: npm run build-prod
+
+  # One stable check name for branch protection, whatever jobs sit behind it.
+  result:
+    name: Build / Linux
+    if: always()
+    needs: [lint, test, build]
+    runs-on: ubuntu-latest
+    steps:
+      - if: contains(needs.*.result, 'failure') || contains(needs.*.result, 'cancelled')
+        run: exit 1

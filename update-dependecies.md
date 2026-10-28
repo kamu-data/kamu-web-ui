@@ -21,3 +21,4 @@ Packages that constrain each other through `peerDependencies`. The Angular frame
 
 - **vitest**, **@vitest/browser-playwright** and **@vitest/coverage-v8** share one version; **@angular/build** 21 peers on **vitest** `^4.0.8`, so Vitest 5 waits for Angular 22
 - "@vitest/eslint-plugin": "1.6.27" (pinned: 1.6.28 peers on **typescript** `>=6.0.0`, while Angular 21 requires `<6.0`)
+- **playwright**: the test job in `.github/workflows/build.yaml` runs in the `mcr.microsoft.com/playwright:v<version>-noble` container; move its tag with the locked **playwright** version, or every CI run downloads Chromium again

@@ -8,6 +8,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Changed
 - Account flows, Processes: resuming an auto-stopped process asks for confirmation, as the dataset's Flows tab does, and "Update now" refreshes the card shortly after instead of on the next poll
 ### Fixed
+- Global query: a link with a query opens that query in the editor instead of an empty one, and opening the page without a query restores the last one you ran
 - Flow process cards on the dataset's Flows tab and the account's Processes:
   - triggering, pausing or resuming no longer refreshes the page after you have left it
   - the buttons wait for the result of the previous action, so a second click no longer repeats it; webhook pause and resume as well

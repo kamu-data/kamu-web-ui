@@ -8,7 +8,7 @@
 import { TestbedHarnessEnvironment } from "@angular/cdk/testing/testbed";
 import { provideHttpClient } from "@angular/common/http";
 import { provideHttpClientTesting } from "@angular/common/http/testing";
-import { ChangeDetectorRef } from "@angular/core";
+import { ChangeDetectorRef, Component, EventEmitter, Input, Output } from "@angular/core";
 import { ComponentFixture, TestBed } from "@angular/core/testing";
 
 import { of } from "rxjs";
@@ -27,8 +27,18 @@ import { DatasetCreateComponent } from "src/app/dataset-create/dataset-create.co
 import { DatasetCreateHarness } from "src/app/dataset-create/dataset-create.harness";
 import { DatasetCreateService } from "src/app/dataset-create/dataset-create.service";
 import { ArchetypeViewType } from "src/app/dataset-create/dataset-create.types";
+import { YamlEditorComponent } from "src/app/editor/components/yaml-editor/yaml-editor.component";
 
 const CREATED: FieldMutationResult<true> = { ok: true, value: true };
+
+// Stands in for the YAML editor, which the tests drive through `yamlTemplate`: a real Monaco editor disposed with work
+// still pending at the end of a test reports an uncaught "Canceled" error
+@Component({ selector: "app-yaml-editor", template: "" })
+class YamlEditorStubComponent {
+    @Input() public template = "";
+    @Input() public height = "";
+    @Output() public templateChange = new EventEmitter<string>();
+}
 
 describe("DatasetCreateComponent", () => {
     let component: DatasetCreateComponent;
@@ -40,7 +50,12 @@ describe("DatasetCreateComponent", () => {
         await TestBed.configureTestingModule({
             imports: [ApolloTestingModule, SharedTestModule, DatasetCreateComponent],
             providers: [provideHttpClient(), provideHttpClientTesting()],
-        }).compileComponents();
+        })
+            .overrideComponent(DatasetCreateComponent, {
+                remove: { imports: [YamlEditorComponent] },
+                add: { imports: [YamlEditorStubComponent] },
+            })
+            .compileComponents();
 
         registerMatSvgIcons();
 

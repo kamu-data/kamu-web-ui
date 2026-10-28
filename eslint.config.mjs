@@ -45,6 +45,29 @@ const fragmentSliceRestrictions = [
   },
 ];
 
+// Form rules live in @common/validation, where each validator has its message and its spec: a bare
+// Validators.pattern shows a generic message, and rxweb validators bring messages the directive doesn't own
+const formValidationRestrictions = [
+  {
+    selector: "CallExpression[callee.object.name='Validators'][callee.property.name='pattern']",
+    message:
+      "Add the pattern with its message to @common/validation/patterns.ts and validate it with formatValidator(), or add a validator to @common/validation.",
+  },
+  {
+    selector: "ImportDeclaration[source.value='@rxweb/reactive-form-validators']",
+    message: "Use the validators in @common/validation, whose errors FormValidationErrorsDirective has messages for.",
+  },
+];
+
+// A number input states the smallest value it accepts, so the browser's spinner and the validators agree
+const templateFormRestrictions = [
+  {
+    selector:
+      'Element[name="input"]:has(TextAttribute[name="type"][value="number"]):not(:has(TextAttribute[name="min"])):not(:has(BoundAttribute[name="min"]))',
+    message: 'Give a number input its minimum (min="…" or [min]), matching its control\'s validators.',
+  },
+];
+
 export default [
   {
     // Global ignore patterns
@@ -118,7 +141,12 @@ export default [
       "vitest/no-focused-tests": "error",
       "vitest/no-disabled-tests": "error",
 
-      "no-restricted-syntax": ["error", ...fragmentSliceRestrictions, ...urlParamRestrictions],
+      "no-restricted-syntax": [
+        "error",
+        ...fragmentSliceRestrictions,
+        ...urlParamRestrictions,
+        ...formValidationRestrictions,
+      ],
 
       // Spec files share one module cache: a spec imported by another runs its tests inside that
       // file, and Vitest then finds no tests in it. Only the two helper files without tests of
@@ -145,6 +173,7 @@ export default [
       "no-restricted-syntax": [
         "error",
         ...fragmentSliceRestrictions,
+        ...formValidationRestrictions,
         {
           selector: "CallExpression:matches([callee.property.name='setInput'], [callee.property.value='setInput'])",
           message:
@@ -199,6 +228,7 @@ export default [
       "@angular-eslint/template": angularTemplatePlugin,
     },
     rules: {
+      "no-restricted-syntax": ["error", ...templateFormRestrictions],
       "@angular-eslint/template/no-non-null-assertion": "error",
       "@angular-eslint/template/no-any": "error",
       "@angular-eslint/template/banana-in-box": "error",

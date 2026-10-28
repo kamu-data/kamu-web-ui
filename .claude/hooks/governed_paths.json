@@ -9,6 +9,7 @@
       "skill": "kamu-ui-routing",
       "paths": ["src/app/**/*routing*.ts", "src/app/project-links.ts", "src/app/common/resolvers/routing-resolvers.ts"]
     },
+    { "skill": "kamu-ui-forms-and-validation", "paths": ["src/app/common/validation/**"] },
     { "skill": "kamu-ui-release-dependency-workflows", "paths": ["CHANGELOG.md", "package.json", "update-dependecies.md"] },
     {
       "skill": "kamu-ui-prose-and-comments",

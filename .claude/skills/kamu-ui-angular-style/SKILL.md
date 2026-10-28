@@ -264,9 +264,9 @@ code added itself, or a third-party callback triggers none of them.
   event editor, declares every control a kind can add as optional (`url?: FormControl<string>`)
   and adds them from a config typed by those names (`SourceSection` and `JsonFormControl<T>` in
   `metadata-component/components/source-events`), so a config entry cannot name a missing control,
-  build one of another type or render it with the wrong field. A shared field component bound into
-  such a form by control name reaches the control with `requireFormGroup` / `requireFormArray` /
-  `requireFormControl` from `@common/helpers/form.helpers`, which check its class. A value that
+  build one of another type or render it with the wrong field. A shared field component takes the
+  control itself as a typed `control` input, never a form and a control name; `SourceSection.fields`
+  hands each field the control built for it. Validation rules belong to `kamu-ui-forms-and-validation`. A value that
   arrives as `any` goes through `@common/helpers/untyped-boundary.helpers`: `parseJsonAs<T>()` for
   `JSON.parse`, `parseYamlAs<T>()` for YAML, `routeDataAs<T>()` for a value another route's
   resolver stored in route data. That file is the one place app code may assert, and eslint

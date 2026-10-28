@@ -5,10 +5,10 @@
  * included in the LICENSE file.
  */
 
-import { AsyncPipe } from "@angular/common";
 import {
     afterNextRender,
     ChangeDetectionStrategy,
+    ChangeDetectorRef,
     Component,
     ElementRef,
     inject,
@@ -21,7 +21,7 @@ import { FormBuilder, FormControl, FormGroup, FormsModule, ReactiveFormsModule, 
 import { MatDividerModule } from "@angular/material/divider";
 import { MatRadioModule } from "@angular/material/radio";
 
-import { Observable, shareReplay, timer } from "rxjs";
+import { timer } from "rxjs";
 
 import { BaseComponent } from "@common/components/base.component";
 import { DatasetVisibilityComponent } from "@common/components/dataset-visibility/dataset-visibility.component";
@@ -33,6 +33,7 @@ import RoutingResolvers from "@common/resolvers/routing-resolvers";
 import { CompactionTooltipsTexts } from "@common/tooltips/compacting.text";
 import { FormValidationErrorsDirective } from "@common/validation/form-validation-errors.directive";
 import { odfNameValidators } from "@common/validation/identifier.validators";
+import { FieldMutationResult, setServerError } from "@common/validation/server-errors.helpers";
 import AppValues from "@common/values/app.values";
 import {
     DatasetBasicsFragment,
@@ -60,7 +61,6 @@ import { NavigationService } from "src/app/services/navigation.service";
     changeDetection: ChangeDetectionStrategy.OnPush,
     imports: [
         //-----//
-        AsyncPipe,
         FormsModule,
         ReactiveFormsModule,
         //-----//
@@ -76,7 +76,6 @@ import { NavigationService } from "src/app/services/navigation.service";
 export class DatasetSettingsGeneralTabComponent extends BaseComponent implements OnInit {
     @Input(RoutingResolvers.DATASET_SETTINGS_GENERAL_KEY) public generalTabData: DatasetViewData;
 
-    public renameError$: Observable<string>;
     public renameDatasetForm: FormGroup<RenameDatasetFormType>;
     public resetDatasetForm: FormGroup<ResetDatasetFormType>;
 
@@ -93,6 +92,7 @@ export class DatasetSettingsGeneralTabComponent extends BaseComponent implements
     private datasetService = inject(DatasetService);
     private injector = inject(Injector);
     private elementRef = inject<ElementRef<HTMLElement>>(ElementRef);
+    private readonly cdr = inject(ChangeDetectorRef);
 
     public get datasetBasics(): DatasetBasicsFragment {
         return this.generalTabData.datasetBasics;
@@ -103,7 +103,6 @@ export class DatasetSettingsGeneralTabComponent extends BaseComponent implements
     }
 
     public ngOnInit(): void {
-        this.renameError$ = this.datasetSettingsService.renameDatasetErrorOccurrences.pipe(shareReplay());
         this.renameDatasetForm = this.fb.nonNullable.group({
             datasetName: [this.datasetBasics.name, [Validators.required, ...odfNameValidators()]],
         });
@@ -167,7 +166,12 @@ export class DatasetSettingsGeneralTabComponent extends BaseComponent implements
                 newName: this.datasetNameControl.value,
             })
             .pipe(takeUntilDestroyed(this.destroyRef))
-            .subscribe();
+            .subscribe((result: FieldMutationResult<true>) => {
+                if (!result.ok) {
+                    setServerError(this.datasetNameControl, result.fieldError);
+                    this.cdr.markForCheck();
+                }
+            });
     }
 
     public deleteDataset(): void {
@@ -269,10 +273,6 @@ export class DatasetSettingsGeneralTabComponent extends BaseComponent implements
                 },
             }),
         );
-    }
-
-    public changeName(): void {
-        this.datasetSettingsService.resetRenameError();
     }
 
     public changeVisibilityDataset(): void {

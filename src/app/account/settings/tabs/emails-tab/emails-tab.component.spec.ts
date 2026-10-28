@@ -77,7 +77,9 @@ describe("EmailsTabComponent", () => {
     });
 
     it("should change the email, trimmed, and return to the emails tab", async () => {
-        const changeEmailAddressSpy = vi.spyOn(accountEmailService, "changeEmailAddress").mockReturnValue(of(true));
+        const changeEmailAddressSpy = vi
+            .spyOn(accountEmailService, "changeEmailAddress")
+            .mockReturnValue(of({ ok: true, value: true } as const));
         const tab = await emailsTabHarness();
 
         await tab.setEmail("  new@example.com ");
@@ -91,24 +93,23 @@ describe("EmailsTabComponent", () => {
         expect(navigateToSettingsSpy).toHaveBeenCalledWith(AccountSettingsTabs.EMAILS);
     });
 
-    it("should stay on the form when the server does not change the email", async () => {
-        vi.spyOn(accountEmailService, "changeEmailAddress").mockReturnValue(of(false));
+    it("should show an email kamu-cli rejects under the field, stay on the form, and clear it once edited", async () => {
+        vi.spyOn(accountEmailService, "changeEmailAddress").mockReturnValue(
+            of({ ok: false, fieldError: "Email address is already used by another account" } as const),
+        );
         const tab = await emailsTabHarness();
 
         await tab.setEmail("new@example.com");
         await tab.changeEmail();
 
-        expect(navigateToSettingsSpy).not.toHaveBeenCalled();
+        expect(await tab.getEmailError()).toBe("Email address is already used by another account");
+        expect(await tab.isChangeEmailDisabled()).toBe(true);
         expect(await tab.getEmail()).toBe("new@example.com");
-    });
+        expect(navigateToSettingsSpy).not.toHaveBeenCalled();
 
-    it("should clear the server error once the email is edited", async () => {
-        const tab = await emailsTabHarness();
-        accountEmailService.emitRenameAccountEmailErrorOccurred("Email is taken");
-        expect(await tab.getServerError()).toBe("Email is taken");
+        await tab.setEmail("other@example.com");
 
-        await tab.setEmail("new@example.com");
-
-        expect(await tab.getServerError()).toBeNull();
+        expect(await tab.getEmailError()).toBeNull();
+        expect(await tab.isChangeEmailDisabled()).toBe(false);
     });
 });

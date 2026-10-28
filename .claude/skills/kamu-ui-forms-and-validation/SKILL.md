@@ -40,7 +40,7 @@ each file with its spec:
 | `password.validators.ts`, `cross-field.validators.ts` | new passwords as kamu-cli checks them, matching confirmation; one of two fields required (`requiredUnless`) |
 | `cron.validators.ts` | cron expressions as kamu-cli parses them |
 | `form-validation-errors.directive.ts`, `.types.ts` | `appFieldError` and the message for each error key |
-| `server-errors.helpers.ts` | `setServerError(control, message)` |
+| `server-errors.helpers.ts` | `setServerError(control, message)`, and `FieldMutationResult<T>` for the services that return such a rejection |
 
 A new rule is a validator here with a spec, whose error key is in `VALIDATION_ERRORS` with a message in
 `validationErrorMessage`. eslint rejects `Validators.pattern` everywhere: a pattern is a `FormatRule` with its
@@ -57,7 +57,9 @@ message, checked by `formatValidator()`.
 - [`src/app/form-fields.spec.ts`](../../../src/app/form-fields.spec.ts) fails for a form input that no
   `appFieldError` reports on, unless the input is listed there with the reason it needs no message.
 - A rejection kamu-cli returns as a typed result for one field (a duplicate label, a name taken) goes on that
-  field through `setServerError`; it clears on the next change. A toast is for errors that belong to no field.
+  field through `setServerError`; it clears on the next change. The service returns it as a
+  `FieldMutationResult<T>` (`{ ok: false, fieldError }`) instead of showing a toast or emitting it through a
+  subject of its own, and the component sets it on the control. A toast is for errors that belong to no field.
 
 ## Matching kamu-cli
 

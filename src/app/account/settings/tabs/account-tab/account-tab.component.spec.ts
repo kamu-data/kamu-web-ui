@@ -135,7 +135,8 @@ describe("AccountTabComponent", () => {
             openPage(undefined, true);
             const changeAccountUsernameSpy = vi
                 .spyOn(accountService, "changeAccountUsername")
-                .mockReturnValue(of({ changed: false, name: username }));
+                .mockReturnValue(of({ ok: true, value: username } as const));
+            stubMethod(loggedUserService, "changeUser");
             confirmEveryModal();
             const tab = await accountTabHarness();
 
@@ -179,7 +180,7 @@ describe("AccountTabComponent", () => {
     it("should check rename account username when the URL does not contain the account name", async () => {
         openPage(undefined, true);
         vi.spyOn(accountService, "changeAccountUsername").mockReturnValue(
-            of({ changed: true, name: "new-account-username" }),
+            of({ ok: true, value: "new-account-username" } as const),
         );
         const changeUserSpy = stubMethod(loggedUserService, "changeUser");
         const navigateToOwnerViewSpy = stubMethod(navigationService, "navigateToOwnerView");
@@ -197,7 +198,7 @@ describe("AccountTabComponent", () => {
     it("should check rename account username when the URL contain the account name", async () => {
         openPage(TEST_LOGIN, false);
         vi.spyOn(accountService, "changeAccountUsername").mockReturnValue(
-            of({ changed: true, name: "new-account-username" }),
+            of({ ok: true, value: "new-account-username" } as const),
         );
         const navigateToOwnerViewSpy = stubMethod(navigationService, "navigateToOwnerView");
         const modalWindowSpy = confirmEveryModal();
@@ -252,10 +253,10 @@ describe("AccountTabComponent", () => {
         expect(changeAccountUsernameSpy).not.toHaveBeenCalled();
     });
 
-    it("should stay on the page when the server does not change the username", async () => {
+    it("should show a username kamu-cli rejects under the field and stay on the page until it is changed", async () => {
         openPage(TEST_LOGIN, false);
         vi.spyOn(accountService, "changeAccountUsername").mockReturnValue(
-            of({ changed: false, name: "new-account-username" }),
+            of({ ok: false, fieldError: "Account name 'new-account-username' already exists" } as const),
         );
         const changeUserSpy = stubMethod(loggedUserService, "changeUser");
         const navigateToOwnerViewSpy = stubMethod(navigationService, "navigateToOwnerView");
@@ -265,7 +266,14 @@ describe("AccountTabComponent", () => {
         await tab.setUsername("new-account-username");
         await tab.changeUsername();
 
+        expect(await tab.getUsernameError()).toBe("Account name 'new-account-username' already exists");
+        expect(await tab.isChangeUsernameDisabled()).toBe(true);
         expect(changeUserSpy).not.toHaveBeenCalled();
         expect(navigateToOwnerViewSpy).not.toHaveBeenCalled();
+
+        await tab.setUsername("another-username");
+
+        expect(await tab.getUsernameError()).toBeNull();
+        expect(await tab.isChangeUsernameDisabled()).toBe(false);
     });
 });

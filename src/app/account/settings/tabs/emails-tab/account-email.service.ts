@@ -7,10 +7,12 @@
 
 import { inject, Injectable } from "@angular/core";
 
-import { map, Observable, Subject } from "rxjs";
+import { map, Observable } from "rxjs";
 
 import { ToastrService } from "ngx-toastr";
 
+import { requireValue } from "@common/helpers/app.helpers";
+import { FieldMutationResult } from "@common/validation/server-errors.helpers";
 import { AccountApi } from "@api/account.api";
 import {
     AccountChangeEmailMutation,
@@ -26,20 +28,6 @@ export class AccountEmailService {
     private accountApi = inject(AccountApi);
     private toastrService = inject(ToastrService);
 
-    private renameAccountEmailError$: Subject<string> = new Subject<string>();
-
-    public emitRenameAccountEmailErrorOccurred(message: string): void {
-        this.renameAccountEmailError$.next(message);
-    }
-
-    public get renameAccountEmailErrorOccurrences(): Observable<string> {
-        return this.renameAccountEmailError$.asObservable();
-    }
-
-    public resetChangeEmailError(): void {
-        this.emitRenameAccountEmailErrorOccurred("");
-    }
-
     public fetchAccountWithEmail(accountName: string): Observable<MaybeNull<AccountWithEmailFragment>> {
         return this.accountApi.fetchAccountWithEmail(accountName).pipe(
             map((data: AccountWithEmailQuery) => {
@@ -48,17 +36,18 @@ export class AccountEmailService {
         );
     }
 
-    public changeEmailAddress(params: { accountName: string; newEmail: string }): Observable<boolean> {
+    public changeEmailAddress(params: {
+        accountName: string;
+        newEmail: string;
+    }): Observable<FieldMutationResult<true>> {
         return this.accountApi.changeAccountEmail(params).pipe(
-            map((data: AccountChangeEmailMutation) => {
-                const updateEmail = data.accounts.byName?.updateEmail;
-                if (updateEmail?.__typename === "UpdateEmailSuccess") {
+            map((data: AccountChangeEmailMutation): FieldMutationResult<true> => {
+                const updateEmail = requireValue(data.accounts.byName, "Account not found").updateEmail;
+                if (updateEmail.__typename === "UpdateEmailSuccess") {
                     this.toastrService.success(updateEmail.message);
-                    return true;
-                } else {
-                    this.emitRenameAccountEmailErrorOccurred(updateEmail?.message ?? "");
-                    return false;
+                    return { ok: true, value: true };
                 }
+                return { ok: false, fieldError: updateEmail.message };
             }),
         );
     }

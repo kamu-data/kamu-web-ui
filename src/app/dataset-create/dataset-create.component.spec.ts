@@ -17,6 +17,7 @@ import { ApolloTestingModule } from "apollo-angular/testing";
 
 import { getElementByDataTestId, registerMatSvgIcons, stubMethod } from "@common/helpers/base-test.helpers.spec";
 import { SharedTestModule } from "@common/modules/shared-test.module";
+import { FieldMutationResult } from "@common/validation/server-errors.helpers";
 import { DatasetKind, DatasetVisibility } from "@api/kamu.graphql.interface";
 import { mockAccountDetails } from "@api/mock/auth.mock";
 
@@ -25,6 +26,8 @@ import { DatasetCreateComponent } from "src/app/dataset-create/dataset-create.co
 import { DatasetCreateHarness } from "src/app/dataset-create/dataset-create.harness";
 import { DatasetCreateService } from "src/app/dataset-create/dataset-create.service";
 import { ArchetypeViewType } from "src/app/dataset-create/dataset-create.types";
+
+const CREATED: FieldMutationResult<true> = { ok: true, value: true };
 
 describe("DatasetCreateComponent", () => {
     let component: DatasetCreateComponent;
@@ -61,12 +64,58 @@ describe("DatasetCreateComponent", () => {
         return TestbedHarnessEnvironment.harnessForFixture(fixture, DatasetCreateHarness);
     }
 
-    it("should check error message is exist", async () => {
+    it("should show a name kamu-cli rejects under the name field until it is changed", async () => {
+        vi.spyOn(datasetCreateService, "createEmptyDataset").mockReturnValue(
+            of({ ok: false, fieldError: "Dataset with name my-dataset already exists" } as const),
+        );
         const page = await datasetCreateHarness();
 
-        datasetCreateService.emitErrorMessageChanged("testMessage");
+        await page.setDatasetName("my-dataset");
+        await page.create();
 
-        expect(await page.getCreateError()).toEqual("testMessage");
+        expect(await page.getDatasetNameError()).toBe("Dataset with name my-dataset already exists");
+        expect(await page.isCreateDisabled()).toBe(true);
+        expect(await page.getCreateError()).toBeNull();
+
+        await page.setDatasetName("my-dataset-2");
+
+        expect(await page.getDatasetNameError()).toBeNull();
+        expect(await page.isCreateDisabled()).toBe(false);
+    });
+
+    it("should show a snapshot kamu-cli rejects above the form, and drop it when the editor is turned off", async () => {
+        vi.spyOn(datasetCreateService, "createDatasetFromSnapshot").mockReturnValue(
+            of({ ok: false, fieldError: "Snapshot is invalid" } as const),
+        );
+        const page = await datasetCreateHarness();
+        await page.toggleYamlSnapshot();
+        component.yamlTemplate = "kind: DatasetSnapshot";
+        fixture.debugElement.injector.get(ChangeDetectorRef).markForCheck();
+
+        await page.create();
+
+        expect(await page.getCreateError()).toBe("Snapshot is invalid");
+        expect(await page.getDatasetNameError()).toBeNull();
+
+        await page.toggleYamlSnapshot();
+
+        expect(await page.getCreateError()).toBeNull();
+    });
+
+    it("should clear the snapshot error once a snapshot is accepted", async () => {
+        const createDatasetFromSnapshotSpy = vi
+            .spyOn(datasetCreateService, "createDatasetFromSnapshot")
+            .mockReturnValue(of({ ok: false, fieldError: "Snapshot is invalid" } as const));
+        const page = await datasetCreateHarness();
+        await page.toggleYamlSnapshot();
+        component.yamlTemplate = "kind: DatasetSnapshot";
+        fixture.debugElement.injector.get(ChangeDetectorRef).markForCheck();
+        await page.create();
+
+        createDatasetFromSnapshotSpy.mockReturnValue(of(CREATED));
+        await page.create();
+
+        expect(await page.getCreateError()).toBeNull();
     });
 
     it("should check getter isFormValid()", () => {
@@ -76,7 +125,9 @@ describe("DatasetCreateComponent", () => {
     });
 
     it("should check call createDatasetFromForm()", () => {
-        const createDatasetFromFormSpy = vi.spyOn(datasetCreateService, "createEmptyDataset").mockReturnValue(of());
+        const createDatasetFromFormSpy = vi
+            .spyOn(datasetCreateService, "createEmptyDataset")
+            .mockReturnValue(of(CREATED));
 
         component.onCreateDataset();
 
@@ -89,7 +140,7 @@ describe("DatasetCreateComponent", () => {
             datasetName: "my-collection",
             visibility: DatasetVisibility.Public,
         });
-        const createCollectionSpy = vi.spyOn(datasetCreateService, "createCollection").mockReturnValue(of());
+        const createCollectionSpy = vi.spyOn(datasetCreateService, "createCollection").mockReturnValue(of(CREATED));
 
         component.onCreateDataset();
 
@@ -107,7 +158,9 @@ describe("DatasetCreateComponent", () => {
             datasetName: "my-versioned-file",
             visibility: DatasetVisibility.Private,
         });
-        const createVersionedFileSpy = vi.spyOn(datasetCreateService, "createVersionedFile").mockReturnValue(of());
+        const createVersionedFileSpy = vi
+            .spyOn(datasetCreateService, "createVersionedFile")
+            .mockReturnValue(of(CREATED));
 
         component.onCreateDataset();
 
@@ -157,7 +210,7 @@ describe("DatasetCreateComponent", () => {
         component.yamlTemplate = "test template";
         const createDatasetFromSnapshotSpy = vi
             .spyOn(datasetCreateService, "createDatasetFromSnapshot")
-            .mockReturnValue(of());
+            .mockReturnValue(of(CREATED));
 
         component.onCreateDataset();
 
@@ -237,7 +290,7 @@ describe("DatasetCreateComponent", () => {
             it(`should create a dataset named "${datasetName}"`, async () => {
                 const createEmptyDatasetSpy = vi
                     .spyOn(datasetCreateService, "createEmptyDataset")
-                    .mockReturnValue(of());
+                    .mockReturnValue(of(CREATED));
                 const page = await datasetCreateHarness();
 
                 await page.setDatasetName(datasetName);

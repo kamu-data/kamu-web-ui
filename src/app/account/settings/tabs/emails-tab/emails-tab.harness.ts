@@ -19,7 +19,6 @@ export class EmailsTabHarness extends ComponentHarness {
     private static readonly EMAIL_INPUT_TEST_ID = "email-address";
     private static readonly EMAIL_ERROR_TEST_ID = "email-address-error";
     private static readonly CHANGE_EMAIL_BUTTON_TEST_ID = "change-email-button";
-    private static readonly SERVER_ERROR_TEST_ID = "change-email-error";
 
     private readonly locatorEmailInput = this.locatorFor(
         NativeInputHarness.with({ dataTestId: EmailsTabHarness.EMAIL_INPUT_TEST_ID }),
@@ -29,9 +28,6 @@ export class EmailsTabHarness extends ComponentHarness {
     );
     private readonly locatorChangeEmailButton = this.locatorFor(
         `[data-test-id="${EmailsTabHarness.CHANGE_EMAIL_BUTTON_TEST_ID}"]`,
-    );
-    private readonly locatorServerError = this.locatorForOptional(
-        `[data-test-id="${EmailsTabHarness.SERVER_ERROR_TEST_ID}"]`,
     );
 
     public async getEmail(): Promise<string> {
@@ -52,12 +48,6 @@ export class EmailsTabHarness extends ComponentHarness {
     public async getEmailError(): Promise<MaybeNull<string>> {
         const error = await this.locatorEmailError();
         return error.getMessage();
-    }
-
-    /** The error the server returned for the last change, or `null` when none is shown. */
-    public async getServerError(): Promise<MaybeNull<string>> {
-        const error = await this.locatorServerError();
-        return error ? error.text() : null;
     }
 
     public async isChangeEmailDisabled(): Promise<boolean> {

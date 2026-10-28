@@ -7,12 +7,13 @@
 
 import { TestBed } from "@angular/core/testing";
 
-import { first, of } from "rxjs";
+import { first, firstValueFrom, of } from "rxjs";
 
 import { Apollo } from "apollo-angular";
-import { provideToastr } from "ngx-toastr";
+import { provideToastr, ToastrService } from "ngx-toastr";
 
 import { requireValue } from "@common/helpers/app.helpers";
+import { stubMethod } from "@common/helpers/base-test.helpers.spec";
 import { AccountApi } from "@api/account.api";
 import { DatasetApi } from "@api/dataset.api";
 import {
@@ -43,7 +44,6 @@ import { DatasetsAccountResponse } from "@interface/dataset.interface";
 
 import { AccountService } from "src/app/account/account.service";
 import { CardsStrategyResult } from "src/app/account/additional-components/account-flows-tab/account-flows-tab.types";
-import { ChangeAccountUsernameResult } from "src/app/account/settings/account-settings.constants";
 import { FlowsTableData } from "src/app/dataset-flow/flows-table/flows-table.types";
 
 describe("AccountService", () => {
@@ -185,28 +185,28 @@ describe("AccountService", () => {
         expect(subscription$.closed).toBe(true);
     });
 
-    it("should check change account username with success", () => {
+    it("should return the new account name and report the rename", async () => {
         vi.spyOn(accountApi, "changeAccountUsername").mockReturnValue(of(mockChangeAccountUsernameMutation));
+        const successSpy = stubMethod(TestBed.inject(ToastrService), "success");
 
-        const subscription$ = service
-            .changeAccountUsername({ accountName: TEST_LOGIN, newName: "new-account-name" })
-            .subscribe((result: ChangeAccountUsernameResult) => {
-                expect(result).toEqual({ changed: true, name: result.name });
-            });
+        const result = await firstValueFrom(
+            service.changeAccountUsername({ accountName: TEST_LOGIN, newName: "new-account-name" }),
+        );
 
-        expect(subscription$.closed).toBe(true);
+        expect(result).toEqual({ ok: true, value: "kamu" });
+        expect(successSpy).toHaveBeenCalledWith("Account renamed");
     });
 
-    it("should check change account username with error", () => {
+    it("should return a name taken as the username field's error, without a toast", async () => {
         vi.spyOn(accountApi, "changeAccountUsername").mockReturnValue(of(mockChangeAccountUsernameMutationError));
+        const errorSpy = stubMethod(TestBed.inject(ToastrService), "error");
 
-        const subscription$ = service
-            .changeAccountUsername({ accountName: TEST_LOGIN, newName: "new-account-name" })
-            .subscribe((result: ChangeAccountUsernameResult) => {
-                expect(result).toEqual({ changed: false, name: TEST_LOGIN });
-            });
+        const result = await firstValueFrom(
+            service.changeAccountUsername({ accountName: TEST_LOGIN, newName: "new-account-name" }),
+        );
 
-        expect(subscription$.closed).toBe(true);
+        expect(result).toEqual({ ok: false, fieldError: "Failed" });
+        expect(errorSpy).not.toHaveBeenCalled();
     });
 
     it("should check change password for admin", () => {
@@ -233,28 +233,36 @@ describe("AccountService", () => {
         expect(subscription$.closed).toBe(true);
     });
 
-    it("should check change password for user", () => {
+    it("should change the user's password and report it", async () => {
         vi.spyOn(accountApi, "changeUserPassword").mockReturnValue(of(mockChangeUserPasswordMutation));
+        const successSpy = stubMethod(TestBed.inject(ToastrService), "success");
 
-        const subscription$ = service
-            .changeUserPassword({ accountName: TEST_LOGIN, newPassword: NEW_PASSWORD, oldPassword: OLD_PASSWORD })
-            .subscribe((result: boolean) => {
-                expect(result).toEqual(true);
-            });
+        const result = await firstValueFrom(
+            service.changeUserPassword({
+                accountName: TEST_LOGIN,
+                newPassword: NEW_PASSWORD,
+                oldPassword: OLD_PASSWORD,
+            }),
+        );
 
-        expect(subscription$.closed).toBe(true);
+        expect(result).toEqual({ ok: true, value: true });
+        expect(successSpy).toHaveBeenCalledWith("Password changed");
     });
 
-    it("should check change password for user with error", () => {
+    it("should return a wrong old password as that field's error, without a toast", async () => {
         vi.spyOn(accountApi, "changeUserPassword").mockReturnValue(of(mockChangeUserPasswordMutationError));
+        const errorSpy = stubMethod(TestBed.inject(ToastrService), "error");
 
-        const subscription$ = service
-            .changeUserPassword({ accountName: TEST_LOGIN, newPassword: NEW_PASSWORD, oldPassword: OLD_PASSWORD })
-            .subscribe((result: boolean) => {
-                expect(result).toEqual(false);
-            });
+        const result = await firstValueFrom(
+            service.changeUserPassword({
+                accountName: TEST_LOGIN,
+                newPassword: NEW_PASSWORD,
+                oldPassword: OLD_PASSWORD,
+            }),
+        );
 
-        expect(subscription$.closed).toBe(true);
+        expect(result).toEqual({ ok: false, fieldError: "Password not changed" });
+        expect(errorSpy).not.toHaveBeenCalled();
     });
 
     it("should check get flows all cards", () => {

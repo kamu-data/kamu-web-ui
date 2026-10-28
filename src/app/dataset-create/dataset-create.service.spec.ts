@@ -9,10 +9,11 @@ import { provideHttpClient } from "@angular/common/http";
 import { provideHttpClientTesting } from "@angular/common/http/testing";
 import { TestBed } from "@angular/core/testing";
 
-import { of } from "rxjs";
+import { firstValueFrom, of } from "rxjs";
 
 import { Apollo } from "apollo-angular";
 
+import { stubMethod } from "@common/helpers/base-test.helpers.spec";
 import { DatasetOperationError } from "@common/values/errors";
 import { DatasetApi } from "@api/dataset.api";
 import {
@@ -98,7 +99,7 @@ describe("DatasetCreateService", () => {
         ).toThrow(new DatasetOperationError([new Error(DatasetCreateService.NOT_LOGGED_USER_ERROR)]));
     });
 
-    it("should be create empty dataset with a name collision error", () => {
+    it("should return a name collision of an empty dataset as the name field's error", async () => {
         const mockResponseError: CreateEmptyDatasetMutation = {
             datasets: {
                 __typename: "DatasetsMut",
@@ -116,19 +117,16 @@ describe("DatasetCreateService", () => {
             .spyOn(navigationService, "navigateToDatasetView")
             .mockImplementation(() => {});
 
-        const datasetName = "my-test";
-        service
-            .createEmptyDataset({
+        const result = await firstValueFrom(
+            service.createEmptyDataset({
                 datasetKind: DatasetKind.Root,
-                datasetAlias: datasetName,
+                datasetAlias: "my-test",
                 datasetVisibility: DatasetVisibility.Public,
-            })
-            .subscribe();
+            }),
+        );
 
+        expect(result).toEqual({ ok: false, fieldError: "Fail" });
         expect(spyNavigateToDatasetView).not.toHaveBeenCalled();
-        service.errorMessageChanges.subscribe((error) => {
-            expect(error).toBe("Fail");
-        });
     });
 
     it("should be create dataset using snapshot with success", () => {
@@ -172,7 +170,7 @@ describe("DatasetCreateService", () => {
         ).toThrow(new DatasetOperationError([new Error(DatasetCreateService.NOT_LOGGED_USER_ERROR)]));
     });
 
-    it("should be create dataset using snapshot with a name collision error", () => {
+    it("should return a name collision of a snapshot as its error", async () => {
         const mockResponseError: CreateDatasetFromSnapshotMutation = {
             datasets: {
                 __typename: "DatasetsMut",
@@ -190,14 +188,15 @@ describe("DatasetCreateService", () => {
             .spyOn(navigationService, "navigateToDatasetView")
             .mockImplementation(() => {});
 
-        service
-            .createDatasetFromSnapshot({ snapshot: "mockSnapshot", datasetVisibility: DatasetVisibility.Public })
-            .subscribe();
+        const result = await firstValueFrom(
+            service.createDatasetFromSnapshot({
+                snapshot: "mockSnapshot",
+                datasetVisibility: DatasetVisibility.Public,
+            }),
+        );
 
+        expect(result).toEqual({ ok: false, fieldError: "Fail" });
         expect(spyNavigateToDatasetView).not.toHaveBeenCalled();
-        service.errorMessageChanges.subscribe((error) => {
-            expect(error).toBe("Fail");
-        });
     });
 
     it("should create collection and navigate to its overview", () => {
@@ -230,7 +229,7 @@ describe("DatasetCreateService", () => {
         });
     });
 
-    it("should emit an error when collection creation fails", () => {
+    it("should return a name collision of a collection as the name field's error", async () => {
         const mockResponse: CreateDatasetAsCollectionMutation = {
             datasets: {
                 __typename: "DatasetsMut",
@@ -242,21 +241,16 @@ describe("DatasetCreateService", () => {
         };
         vi.spyOn(datasetApi, "createDatasetAsCollection").mockReturnValue(of(mockResponse));
         vi.spyOn(loggedUserService, "maybeCurrentlyLoggedInUser", "get").mockReturnValue(mockAccountDetails);
-        const emitErrorMessageChangedSpy = vi.spyOn(service, "emitErrorMessageChanged").mockImplementation(() => {});
-        const navigateToDatasetViewSpy = vi
-            .spyOn(navigationService, "navigateToDatasetView")
-            .mockImplementation(() => {});
+        const navigateToDatasetViewSpy = stubMethod(navigationService, "navigateToDatasetView");
 
-        service
-            .createCollection({
+        const result = await firstValueFrom(
+            service.createCollection({
                 datasetAlias: "my-collection",
                 datasetVisibility: DatasetVisibility.Public,
-            })
-            .subscribe();
+            }),
+        );
 
-        expect(emitErrorMessageChangedSpy).toHaveBeenCalledTimes(1);
-
-        expect(emitErrorMessageChangedSpy).toHaveBeenCalledWith("Collection already exists");
+        expect(result).toEqual({ ok: false, fieldError: "Collection already exists" });
         expect(navigateToDatasetViewSpy).not.toHaveBeenCalled();
     });
 
@@ -301,7 +295,7 @@ describe("DatasetCreateService", () => {
         });
     });
 
-    it("should emit an error when versioned file creation fails", () => {
+    it("should return a name collision of a versioned file as the name field's error", async () => {
         const mockResponse: CreateDatasetAsVersionedFileMutation = {
             datasets: {
                 __typename: "DatasetsMut",
@@ -313,21 +307,16 @@ describe("DatasetCreateService", () => {
         };
         vi.spyOn(datasetApi, "createDatasetAsVersionedFile").mockReturnValue(of(mockResponse));
         vi.spyOn(loggedUserService, "maybeCurrentlyLoggedInUser", "get").mockReturnValue(mockAccountDetails);
-        const emitErrorMessageChangedSpy = vi.spyOn(service, "emitErrorMessageChanged").mockImplementation(() => {});
-        const navigateToDatasetViewSpy = vi
-            .spyOn(navigationService, "navigateToDatasetView")
-            .mockImplementation(() => {});
+        const navigateToDatasetViewSpy = stubMethod(navigationService, "navigateToDatasetView");
 
-        service
-            .createVersionedFile({
+        const result = await firstValueFrom(
+            service.createVersionedFile({
                 datasetAlias: "my-versioned-file",
                 datasetVisibility: DatasetVisibility.Public,
-            })
-            .subscribe();
+            }),
+        );
 
-        expect(emitErrorMessageChangedSpy).toHaveBeenCalledTimes(1);
-
-        expect(emitErrorMessageChangedSpy).toHaveBeenCalledWith("Versioned file already exists");
+        expect(result).toEqual({ ok: false, fieldError: "Versioned file already exists" });
         expect(navigateToDatasetViewSpy).not.toHaveBeenCalled();
     });
 

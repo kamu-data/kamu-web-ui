@@ -5,7 +5,6 @@
  * included in the LICENSE file.
  */
 
-import { AsyncPipe } from "@angular/common";
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, inject } from "@angular/core";
 import { takeUntilDestroyed } from "@angular/core/rxjs-interop";
 import { FormBuilder, FormControl, FormGroup, FormsModule, ReactiveFormsModule, Validators } from "@angular/forms";
@@ -20,6 +19,7 @@ import { NgSelectModule } from "@ng-select/ng-select";
 import { BaseComponent } from "@common/components/base.component";
 import { FormValidationErrorsDirective } from "@common/validation/form-validation-errors.directive";
 import { odfNameValidators } from "@common/validation/identifier.validators";
+import { FieldMutationResult, setServerError } from "@common/validation/server-errors.helpers";
 import { AccountProvider, DatasetKind, DatasetVisibility } from "@api/kamu.graphql.interface";
 import { MaybeNull } from "@interface/app.types";
 
@@ -43,7 +43,6 @@ import { YamlEditorComponent } from "src/app/editor/components/yaml-editor/yaml-
     changeDetection: ChangeDetectionStrategy.OnPush,
     imports: [
         //-----//
-        AsyncPipe,
         FormsModule,
         ReactiveFormsModule,
         //-----//
@@ -69,7 +68,8 @@ export class DatasetCreateComponent extends BaseComponent {
 
     public yamlTemplate = "";
     public showMonacoEditor = false;
-    public errorMessage$: Observable<string>;
+    /** Why kamu-cli rejected the snapshot; a rejected name of the other archetypes shows on the name field. */
+    public snapshotError = "";
     public owners: string[] = [];
     public archetype: ArchetypeViewType = ArchetypeViewType.DATASET_WITH_DATA;
     public createDatasetForm: FormGroup<CreateDatasetFormType> = this.fb.nonNullable.group({
@@ -93,7 +93,6 @@ export class DatasetCreateComponent extends BaseComponent {
             this.owners = [currentUser.accountName];
             this.createDatasetForm.controls.owner.setValue(currentUser.accountName);
         }
-        this.errorMessage$ = this.datasetCreateService.errorMessageChanges;
     }
 
     public get owner() {
@@ -160,7 +159,7 @@ export class DatasetCreateComponent extends BaseComponent {
         const datasetVisibility = this.visibilityControl.value;
         const datasetKind = this.createDatasetForm.controls.kind.value;
 
-        const creationStrategies: Record<ArchetypeViewType, () => Observable<void>> = {
+        const creationStrategies: Record<ArchetypeViewType, () => Observable<FieldMutationResult<true>>> = {
             [ArchetypeViewType.DATASET_WITH_DATA]: () =>
                 this.datasetCreateService.createEmptyDataset({
                     datasetKind,
@@ -179,7 +178,14 @@ export class DatasetCreateComponent extends BaseComponent {
                 }),
         };
 
-        creationStrategies[this.archetype]().pipe(takeUntilDestroyed(this.destroyRef)).subscribe();
+        creationStrategies[this.archetype]()
+            .pipe(takeUntilDestroyed(this.destroyRef))
+            .subscribe((result: FieldMutationResult<true>) => {
+                if (!result.ok) {
+                    setServerError(this.createDatasetForm.controls.datasetName, result.fieldError);
+                    this.cdr.markForCheck();
+                }
+            });
     }
 
     private createDatasetFromSnapshot(): void {
@@ -190,7 +196,10 @@ export class DatasetCreateComponent extends BaseComponent {
                     datasetVisibility: this.visibilityControl.value,
                 })
                 .pipe(takeUntilDestroyed(this.destroyRef))
-                .subscribe();
+                .subscribe((result: FieldMutationResult<true>) => {
+                    this.snapshotError = result.ok ? "" : result.fieldError;
+                    this.cdr.markForCheck();
+                });
         }
     }
 
@@ -205,7 +214,7 @@ export class DatasetCreateComponent extends BaseComponent {
             this.createDatasetForm.controls.owner.enable();
             this.createDatasetForm.controls.kind.enable();
             this.yamlTemplate = "";
-            this.datasetCreateService.emitErrorMessageChanged("");
+            this.snapshotError = "";
         }
     }
 

@@ -12,6 +12,8 @@ import { filter, map } from "rxjs/operators";
 
 import { ToastrService } from "ngx-toastr";
 
+import { requireValue } from "@common/helpers/app.helpers";
+import { FieldMutationResult } from "@common/validation/server-errors.helpers";
 import { AccountApi } from "@api/account.api";
 import { DatasetApi } from "@api/dataset.api";
 import {
@@ -36,7 +38,6 @@ import { MaybeNull, MaybeNullOrUndefined } from "@interface/app.types";
 import { DatasetsAccountResponse } from "@interface/dataset.interface";
 
 import { CardsStrategyResult } from "src/app/account/additional-components/account-flows-tab/account-flows-tab.types";
-import { ChangeAccountUsernameResult } from "src/app/account/settings/account-settings.constants";
 import { FlowsTableData } from "src/app/dataset-flow/flows-table/flows-table.types";
 
 @Injectable({
@@ -188,16 +189,15 @@ export class AccountService {
     public changeAccountUsername(params: {
         accountName: string;
         newName: string;
-    }): Observable<ChangeAccountUsernameResult> {
+    }): Observable<FieldMutationResult<string>> {
         return this.accountApi.changeAccountUsername(params).pipe(
-            map((data: ChangeAccountUsernameMutation) => {
-                if (data.accounts.byName?.rename.__typename === "RenameAccountSuccess") {
-                    this.toastrService.success(data.accounts.byName?.rename.message);
-                    return { changed: true, name: data.accounts.byName?.rename.newName };
-                } else if (data.accounts.byName?.rename.__typename === "RenameAccountNameNotUnique") {
-                    this.toastrService.error(data.accounts.byName?.rename.message);
+            map((data: ChangeAccountUsernameMutation): FieldMutationResult<string> => {
+                const rename = requireValue(data.accounts.byName, "Account not found").rename;
+                if (rename.__typename === "RenameAccountSuccess") {
+                    this.toastrService.success(rename.message);
+                    return { ok: true, value: rename.newName };
                 }
-                return { changed: false, name: params.accountName };
+                return { ok: false, fieldError: rename.message };
             }),
         );
     }
@@ -219,15 +219,15 @@ export class AccountService {
         accountName: string;
         oldPassword: string;
         newPassword: string;
-    }): Observable<boolean> {
+    }): Observable<FieldMutationResult<true>> {
         return this.accountApi.changeUserPassword(params).pipe(
-            map((data: ChangeUserPasswordMutation) => {
-                if (data.accounts.byName?.modifyPasswordWithConfirmation.__typename === "ModifyPasswordSuccess") {
-                    this.toastrService.success(data.accounts.byName?.modifyPasswordWithConfirmation.message);
-                    return true;
+            map((data: ChangeUserPasswordMutation): FieldMutationResult<true> => {
+                const modify = requireValue(data.accounts.byName, "Account not found").modifyPasswordWithConfirmation;
+                if (modify.__typename === "ModifyPasswordSuccess") {
+                    this.toastrService.success(modify.message);
+                    return { ok: true, value: true };
                 }
-                this.toastrService.error(data.accounts.byName?.modifyPasswordWithConfirmation.message);
-                return false;
+                return { ok: false, fieldError: modify.message };
             }),
         );
     }

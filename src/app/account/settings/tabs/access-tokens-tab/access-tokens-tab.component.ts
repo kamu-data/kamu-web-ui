@@ -24,6 +24,7 @@ import { PaginationComponent } from "@common/components/pagination-component/pag
 import { promiseWithCatch } from "@common/helpers/app.helpers";
 import RoutingResolvers from "@common/resolvers/routing-resolvers";
 import { FormValidationErrorsDirective } from "@common/validation/form-validation-errors.directive";
+import { FieldMutationResult, setServerError } from "@common/validation/server-errors.helpers";
 import { notBlankValidator } from "@common/validation/text.validators";
 import AppValues from "@common/values/app.values";
 import {
@@ -32,7 +33,6 @@ import {
     CreatedAccessTokenDataFragment,
     DatasetPageInfoFragment,
 } from "@api/kamu.graphql.interface";
-import { MaybeNull } from "@interface/app.types";
 
 import { AccountSettingsTabs, TokenCreateStep } from "src/app/account/settings/account-settings.constants";
 import { AccessTokenService } from "src/app/account/settings/tabs/access-tokens-tab/access-token.service";
@@ -165,13 +165,15 @@ export class AccessTokensTabComponent extends BaseComponent {
         this.accessTokenService
             .createAccessTokens(this.accountId, this.createTokenForm.controls.name.value)
             .pipe(takeUntilDestroyed(this.destroyRef))
-            .subscribe((newToken: MaybeNull<CreatedAccessTokenDataFragment>) => {
-                if (newToken) {
+            .subscribe((result: FieldMutationResult<CreatedAccessTokenDataFragment>) => {
+                if (result.ok) {
                     this.deleteComposedToken();
                     this.createTokenForm.controls.name.reset();
-                    this.composedToken = newToken.composed;
-                    this.cdr.detectChanges();
+                    this.composedToken = result.value.composed;
+                } else {
+                    setServerError(this.createTokenForm.controls.name, result.fieldError);
                 }
+                this.cdr.detectChanges();
             });
     }
 

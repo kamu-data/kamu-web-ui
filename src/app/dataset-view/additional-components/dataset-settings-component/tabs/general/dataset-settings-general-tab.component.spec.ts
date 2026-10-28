@@ -161,7 +161,9 @@ describe("DatasetSettingsGeneralTabComponent", () => {
 
     ["someName", "my.dataset-1", "a".repeat(100)].forEach((newName) => {
         it(`should rename the dataset to "${newName}"`, async () => {
-            const renameDatasetSpy = vi.spyOn(datasetSettingsService, "renameDataset").mockReturnValue(of());
+            const renameDatasetSpy = vi
+                .spyOn(datasetSettingsService, "renameDataset")
+                .mockReturnValue(of({ ok: true, value: true } as const));
             const tab = await generalTabHarness();
 
             await tab.setDatasetName(newName);
@@ -198,23 +200,22 @@ describe("DatasetSettingsGeneralTabComponent", () => {
         });
     });
 
-    it("should show the error the server returned for the rename", async () => {
+    it("should show a name kamu-cli rejects under the name field until it is changed", async () => {
+        vi.spyOn(datasetSettingsService, "renameDataset").mockReturnValue(
+            of({ ok: false, fieldError: "Dataset 'account.portfolio' already exists" } as const),
+        );
         const tab = await generalTabHarness();
 
-        datasetSettingsService.emitRenameDatasetErrorOccurred("Dataset is already exist.");
+        await tab.setDatasetName("portfolio");
+        await tab.rename();
 
-        expect(await tab.getRenameServerError()).toBe("Dataset is already exist.");
-        expect(await tab.isDatasetNameMarkedInvalid()).toBe(true);
-    });
-
-    it("should clear the server error once the name is edited", async () => {
-        const tab = await generalTabHarness();
-        datasetSettingsService.emitRenameDatasetErrorOccurred("Dataset is already exist.");
+        expect(await tab.getDatasetNameError()).toBe("Dataset 'account.portfolio' already exists");
+        expect(await tab.isRenameDisabled()).toBe(true);
 
         await tab.setDatasetName("another-name");
 
-        expect(await tab.getRenameServerError()).toBeNull();
-        expect(await tab.isDatasetNameMarkedInvalid()).toBe(false);
+        expect(await tab.getDatasetNameError()).toBeNull();
+        expect(await tab.isRenameDisabled()).toBe(false);
     });
 
     it("should check delete modal window is shown and sends API call after confirm", async () => {

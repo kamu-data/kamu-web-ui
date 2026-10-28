@@ -5,7 +5,7 @@
  * included in the LICENSE file.
  */
 
-import { ChangeDetectionStrategy, Component, inject, Input, OnInit } from "@angular/core";
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, inject, Input, OnInit } from "@angular/core";
 import { takeUntilDestroyed } from "@angular/core/rxjs-interop";
 import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators } from "@angular/forms";
 import { MatDividerModule } from "@angular/material/divider";
@@ -20,12 +20,12 @@ import { isUrlWithin } from "@common/helpers/url-params.helpers";
 import RoutingResolvers from "@common/resolvers/routing-resolvers";
 import { FormValidationErrorsDirective } from "@common/validation/form-validation-errors.directive";
 import { odfNameValidators } from "@common/validation/identifier.validators";
+import { FieldMutationResult, setServerError } from "@common/validation/server-errors.helpers";
 import { AccountWithEmailFragment } from "@api/kamu.graphql.interface";
 import { MaybeNullOrUndefined, MaybeUndefined } from "@interface/app.types";
 
 import { AccountTabs } from "src/app/account/account.constants";
 import { AccountService } from "src/app/account/account.service";
-import { ChangeAccountUsernameResult } from "src/app/account/settings/account-settings.constants";
 import { ChangeUsernameFormType } from "src/app/account/settings/tabs/account-tab/account-tab.types";
 import { AdminChangePasswordComponent } from "src/app/account/settings/tabs/password-and-authentication-tab/components/admin-change-password/admin-change-password.component";
 import { LoggedUserService } from "src/app/auth/logged-user.service";
@@ -60,6 +60,7 @@ export class AccountTabComponent extends BaseComponent implements OnInit {
     private toastrService = inject(ToastrService);
     private navigationService = inject(NavigationService);
     private fb = inject(FormBuilder);
+    private readonly cdr = inject(ChangeDetectorRef);
 
     public ngOnInit(): void {
         this.changeUsernameForm = this.fb.nonNullable.group({
@@ -112,16 +113,17 @@ export class AccountTabComponent extends BaseComponent implements OnInit {
                                 newName: this.changeUsernameForm.controls.username.value,
                             })
                             .pipe(takeUntilDestroyed(this.destroyRef))
-                            .subscribe((result: ChangeAccountUsernameResult) => {
-                                if (result.changed) {
-                                    if (this.isOwnerPage && this.loggedUserService.currentlyLoggedInUser) {
-                                        this.loggedUserService.changeUser({
-                                            ...this.loggedUserService.currentlyLoggedInUser,
-                                            accountName: result.name,
-                                        });
-                                    } else {
-                                        this.navigationService.navigateToOwnerView(result.name, AccountTabs.SETTINGS);
-                                    }
+                            .subscribe((result: FieldMutationResult<string>) => {
+                                if (!result.ok) {
+                                    setServerError(this.changeUsernameForm.controls.username, result.fieldError);
+                                    this.cdr.markForCheck();
+                                } else if (this.isOwnerPage && this.loggedUserService.currentlyLoggedInUser) {
+                                    this.loggedUserService.changeUser({
+                                        ...this.loggedUserService.currentlyLoggedInUser,
+                                        accountName: result.value,
+                                    });
+                                } else {
+                                    this.navigationService.navigateToOwnerView(result.value, AccountTabs.SETTINGS);
                                 }
                             });
                     }

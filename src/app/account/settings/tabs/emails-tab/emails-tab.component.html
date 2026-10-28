@@ -14,7 +14,6 @@
                 class="form-control email-control"
                 id="email-address"
                 data-test-id="email-address"
-                (keyup)="changeEmail()"
                 #emailAddress
             />
         </dd>
@@ -36,9 +35,4 @@
         [group]="changeEmailForm"
         dataTestId="email-address-error"
     ></div>
-    @if (changeEmailError$ | async; as changeEmailError) {
-        <div>
-            <div class="error-block" data-test-id="change-email-error">{{ changeEmailError }}</div>
-        </div>
-    }
 </form>

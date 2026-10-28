@@ -164,7 +164,9 @@ describe("PasswordAndAuthenticationTabComponent", () => {
     });
 
     it("should update the password and clear the form", async () => {
-        const changeUserPasswordSpy = vi.spyOn(accountService, "changeUserPassword").mockReturnValue(of(true));
+        const changeUserPasswordSpy = vi
+            .spyOn(accountService, "changeUserPassword")
+            .mockReturnValue(of({ ok: true, value: true } as const));
         const tab = await openChangePassword();
 
         await tab.setOldPassword("old-password");
@@ -185,8 +187,10 @@ describe("PasswordAndAuthenticationTabComponent", () => {
         });
     });
 
-    it("should keep what the user typed when the server does not change the password", async () => {
-        vi.spyOn(accountService, "changeUserPassword").mockReturnValue(of(false));
+    it("should show a wrong old password under that field and keep what the user typed until it is changed", async () => {
+        vi.spyOn(accountService, "changeUserPassword").mockReturnValue(
+            of({ ok: false, fieldError: "Wrong old password" } as const),
+        );
         const tab = await openChangePassword();
 
         await tab.setOldPassword("old-password");
@@ -194,10 +198,17 @@ describe("PasswordAndAuthenticationTabComponent", () => {
         await tab.setConfirmPassword("password1");
         await tab.update();
 
+        expect(await tab.getOldPasswordError()).toBe("Wrong old password");
+        expect(await tab.isUpdateDisabled()).toBe(true);
         expect(component.changeUserAccountPasswordForm.getRawValue()).toEqual({
             oldPassword: "old-password",
             newPassword: "password1",
             confirmPassword: "password1",
         });
+
+        await tab.setOldPassword("old-password-2");
+
+        expect(await tab.getOldPasswordError()).toBeNull();
+        expect(await tab.isUpdateDisabled()).toBe(false);
     });
 });

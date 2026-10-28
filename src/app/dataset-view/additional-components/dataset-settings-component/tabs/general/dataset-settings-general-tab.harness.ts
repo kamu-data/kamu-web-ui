@@ -19,12 +19,9 @@ export class DatasetSettingsGeneralTabHarness extends ComponentHarness {
     private static readonly RENAME_INPUT_TEST_ID = "rename-dataset-input";
     private static readonly RENAME_BUTTON_TEST_ID = "rename-dataset-button";
     private static readonly RENAME_ERROR_TEST_ID = "rename-dataset-error";
-    private static readonly RENAME_SERVER_ERROR_TEST_ID = "rename-dataset-error-custom";
     private static readonly DELETE_BUTTON_TEST_ID = "delete-dataset-button";
     private static readonly CHANGE_VISIBILITY_BUTTON_TEST_ID = "change-visibility-dataset-button";
     private static readonly RESET_BUTTON_TEST_ID = "reset-dataset-button";
-
-    private static readonly ERROR_BORDER_CLASS = "error-border-color";
 
     private readonly locatorRenameInput = this.locatorFor(
         NativeInputHarness.with({ dataTestId: DatasetSettingsGeneralTabHarness.RENAME_INPUT_TEST_ID }),
@@ -34,9 +31,6 @@ export class DatasetSettingsGeneralTabHarness extends ComponentHarness {
     );
     private readonly locatorRenameError = this.locatorFor(
         FieldErrorHarness.with({ dataTestId: DatasetSettingsGeneralTabHarness.RENAME_ERROR_TEST_ID }),
-    );
-    private readonly locatorRenameServerError = this.locatorForOptional(
-        `[data-test-id="${DatasetSettingsGeneralTabHarness.RENAME_SERVER_ERROR_TEST_ID}"]`,
     );
     private readonly locatorDeleteButton = this.locatorForOptional(
         `[data-test-id="${DatasetSettingsGeneralTabHarness.DELETE_BUTTON_TEST_ID}"]`,
@@ -68,18 +62,6 @@ export class DatasetSettingsGeneralTabHarness extends ComponentHarness {
     public async rename(): Promise<void> {
         const button = await this.locatorRenameButton();
         await button.click();
-    }
-
-    /** The error the server returned for the last rename, or `null` when none is shown. */
-    public async getRenameServerError(): Promise<MaybeNull<string>> {
-        const error = await this.locatorRenameServerError();
-        return error ? error.text() : null;
-    }
-
-    public async isDatasetNameMarkedInvalid(): Promise<boolean> {
-        const input = await this.locatorRenameInput();
-        const host = await input.host();
-        return host.hasClass(DatasetSettingsGeneralTabHarness.ERROR_BORDER_CLASS);
     }
 
     public async isDeleteShown(): Promise<boolean> {

@@ -19,6 +19,8 @@ import type { Mock } from "vitest";
 import { ModalService } from "@common/components/modal/modal.service";
 import { PagePastEndHarness } from "@common/components/page-past-end/page-past-end.harness";
 import { registerMatSvgIcons, setComponentInput } from "@common/helpers/base-test.helpers.spec";
+import { FieldMutationResult } from "@common/validation/server-errors.helpers";
+import { CreatedAccessTokenDataFragment } from "@api/kamu.graphql.interface";
 import { mockAccessTokenConnectionData, mockCreatedAccessTokenData, TOKEN_ID } from "@api/mock/access-token.mock";
 import { mockAccountDetails } from "@api/mock/auth.mock";
 import { ModalArgumentsInterface } from "@interface/modal.interface";
@@ -29,6 +31,11 @@ import { AccessTokensTabComponent } from "src/app/account/settings/tabs/access-t
 import { AccessTokensTabHarness } from "src/app/account/settings/tabs/access-tokens-tab/access-tokens-tab.harness";
 import { LoggedUserService } from "src/app/auth/logged-user.service";
 import { NavigationService } from "src/app/services/navigation.service";
+
+const TOKEN_CREATED: FieldMutationResult<CreatedAccessTokenDataFragment> = {
+    ok: true,
+    value: mockCreatedAccessTokenData,
+};
 
 describe("AccessTokensTabComponent", () => {
     let component: AccessTokensTabComponent;
@@ -155,7 +162,7 @@ describe("AccessTokensTabComponent", () => {
         it(`should generate a token named "${name}"`, async () => {
             const createAccessTokensSpy = vi
                 .spyOn(accessTokenService, "createAccessTokens")
-                .mockReturnValue(of(mockCreatedAccessTokenData));
+                .mockReturnValue(of(TOKEN_CREATED));
             const tab = await openNewTokenForm();
 
             await tab.setTokenName(name);
@@ -178,7 +185,7 @@ describe("AccessTokensTabComponent", () => {
     });
 
     it("should check done button", async () => {
-        vi.spyOn(accessTokenService, "createAccessTokens").mockReturnValue(of(mockCreatedAccessTokenData));
+        vi.spyOn(accessTokenService, "createAccessTokens").mockReturnValue(of(TOKEN_CREATED));
         const tab = await openNewTokenForm();
         await tab.setTokenName("token-name");
         await tab.generate();
@@ -254,15 +261,24 @@ describe("AccessTokensTabComponent", () => {
         expect(navigateToSettingsSpy).toHaveBeenCalledWith(AccountSettingsTabs.ACCESS_TOKENS);
     });
 
-    it("should keep the typed name and show no token when the server creates none", async () => {
-        vi.spyOn(accessTokenService, "createAccessTokens").mockReturnValue(of(null));
+    it("should show a name kamu-cli rejects under the name field until it is changed", async () => {
+        vi.spyOn(accessTokenService, "createAccessTokens").mockReturnValue(
+            of({ ok: false, fieldError: "Access token with token-name name already exists" } as const),
+        );
         const tab = await openNewTokenForm();
 
         await tab.setTokenName("token-name");
         await tab.generate();
 
+        expect(await tab.getTokenNameError()).toBe("Access token with token-name name already exists");
+        expect(await tab.isGenerateDisabled()).toBe(true);
         expect(component.composedToken).toEqual("");
         expect(component.createTokenForm.controls.name.value).toEqual("token-name");
+
+        await tab.setTokenName("token-name-2");
+
+        expect(await tab.getTokenNameError()).toBeNull();
+        expect(await tab.isGenerateDisabled()).toBe(false);
     });
 
     it("should check toggle status tokens", () => {

@@ -10,12 +10,14 @@ import { provideHttpClientTesting } from "@angular/common/http/testing";
 import { importProvidersFrom } from "@angular/core";
 import { TestBed } from "@angular/core/testing";
 
-import { of } from "rxjs";
+import { firstValueFrom, of } from "rxjs";
 
 import { Apollo } from "apollo-angular";
 import { ApolloTestingModule } from "apollo-angular/testing";
 import { provideToastr } from "ngx-toastr";
 
+import { requireValue } from "@common/helpers/app.helpers";
+import { stubMethod } from "@common/helpers/base-test.helpers.spec";
 import { DatasetNotFoundError, DatasetOperationError } from "@common/values/errors";
 import { DatasetApi } from "@api/dataset.api";
 import { DeleteDatasetMutation, RenameDatasetMutation } from "@api/kamu.graphql.interface";
@@ -23,6 +25,7 @@ import { TEST_ACCOUNT_ID } from "@api/mock/auth.mock";
 
 import { LoggedUserService } from "src/app/auth/logged-user.service";
 import { DatasetSettingsService } from "src/app/dataset-view/additional-components/dataset-settings-component/services/dataset-settings.service";
+import { DatasetViewTypeEnum } from "src/app/dataset-view/dataset-view.interface";
 import {
     mockDeleteDanglingReferenceError,
     mockDeleteSuccessResponse,
@@ -116,59 +119,54 @@ describe("DatasetSettingsService", () => {
         );
     });
 
-    it("should check rename dataset with success", () => {
+    it("should rename the dataset and open it under its new name", async () => {
         vi.spyOn(loggedUserService, "isAuthenticated", "get").mockReturnValue(true);
-        const navigateToDatasetViewSpy = vi
-            .spyOn(navigationService, "navigateToDatasetView")
-            .mockImplementation(() => {});
-        const deleteDatasetSpy = vi.spyOn(datasetApi, "renameDataset").mockReturnValue(of(mockRenameSuccessResponse));
-        service
-            .renameDataset({
+        const navigateToDatasetViewSpy = stubMethod(navigationService, "navigateToDatasetView");
+        const renameDatasetSpy = vi.spyOn(datasetApi, "renameDataset").mockReturnValue(of(mockRenameSuccessResponse));
+
+        const result = await firstValueFrom(
+            service.renameDataset({
                 accountId: TEST_ACCOUNT_ID,
                 accountName: ACCOUNT_NAME,
                 datasetId: DATASET_ID,
                 newName: NEW_NAME,
-            })
-            .subscribe(() => {
-                expect(deleteDatasetSpy).toHaveBeenCalledTimes(1);
-                expect(navigateToDatasetViewSpy).toHaveBeenCalledTimes(1);
-            });
+            }),
+        );
+
+        expect(result).toEqual({ ok: true, value: true });
+        expect(renameDatasetSpy).toHaveBeenCalledWith({
+            datasetId: DATASET_ID,
+            newName: NEW_NAME,
+            accountId: TEST_ACCOUNT_ID,
+        });
+        expect(navigateToDatasetViewSpy).toHaveBeenCalledWith({
+            accountName: ACCOUNT_NAME,
+            datasetName: NEW_NAME,
+            tab: DatasetViewTypeEnum.Overview,
+        });
     });
 
-    it("should check rename dataset with name collision", () => {
-        vi.spyOn(loggedUserService, "isAuthenticated", "get").mockReturnValue(true);
-        const emitRenameDatasetErrorOccurredSpy = vi.spyOn(service, "emitRenameDatasetErrorOccurred");
-        const deleteDatasetSpy = vi
-            .spyOn(datasetApi, "renameDataset")
-            .mockReturnValue(of(mockRenameResultNameCollision));
-        service
-            .renameDataset({
-                accountId: TEST_ACCOUNT_ID,
-                accountName: ACCOUNT_NAME,
-                datasetId: DATASET_ID,
-                newName: NEW_NAME,
-            })
-            .subscribe(() => {
-                expect(deleteDatasetSpy).toHaveBeenCalledTimes(1);
-                expect(emitRenameDatasetErrorOccurredSpy).toHaveBeenCalledTimes(1);
-            });
-    });
+    [
+        { name: "a name another dataset has", response: mockRenameResultNameCollision },
+        { name: "the current name", response: mockRenameResultNoChanges },
+    ].forEach(({ name, response }) => {
+        it(`should return a rename to ${name} as the name field's error, without navigating`, async () => {
+            vi.spyOn(loggedUserService, "isAuthenticated", "get").mockReturnValue(true);
+            const navigateToDatasetViewSpy = stubMethod(navigationService, "navigateToDatasetView");
+            vi.spyOn(datasetApi, "renameDataset").mockReturnValue(of(response));
 
-    it("should check rename dataset with no changes", () => {
-        vi.spyOn(loggedUserService, "isAuthenticated", "get").mockReturnValue(true);
-        const emitRenameDatasetErrorOccurredSpy = vi.spyOn(service, "emitRenameDatasetErrorOccurred");
-        const deleteDatasetSpy = vi.spyOn(datasetApi, "renameDataset").mockReturnValue(of(mockRenameResultNoChanges));
-        service
-            .renameDataset({
-                accountId: TEST_ACCOUNT_ID,
-                accountName: ACCOUNT_NAME,
-                datasetId: DATASET_ID,
-                newName: NEW_NAME,
-            })
-            .subscribe(() => {
-                expect(deleteDatasetSpy).toHaveBeenCalledTimes(1);
-                expect(emitRenameDatasetErrorOccurredSpy).toHaveBeenCalledTimes(1);
-            });
+            const result = await firstValueFrom(
+                service.renameDataset({
+                    accountId: TEST_ACCOUNT_ID,
+                    accountName: ACCOUNT_NAME,
+                    datasetId: DATASET_ID,
+                    newName: NEW_NAME,
+                }),
+            );
+
+            expect(result).toEqual({ ok: false, fieldError: requireValue(response.datasets.byId).rename.message });
+            expect(navigateToDatasetViewSpy).not.toHaveBeenCalled();
+        });
     });
 
     it("should check rename dataset when not found", () => {

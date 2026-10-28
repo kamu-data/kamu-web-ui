@@ -123,7 +123,9 @@ export class LoginComponent extends BaseComponent implements OnInit {
             this.passwordLoginForm.markAllAsTouched();
             return;
         }
-        this.loginService.passwordLogin(this.passwordLoginForm.getRawValue(), this.redirectUrl);
+        // The field trims on blur, and Enter in the field submits without one.
+        const { login, password } = this.passwordLoginForm.getRawValue();
+        this.loginService.passwordLogin({ login: login.trim(), password }, this.redirectUrl);
     }
 
     public resetPasswordLoginError(): void {

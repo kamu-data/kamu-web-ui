@@ -10,7 +10,7 @@ import { ApplicationRef } from "@angular/core";
 import { ComponentFixture, fakeAsync, flush, TestBed, tick } from "@angular/core/testing";
 import { ActivatedRoute } from "@angular/router";
 
-import { of } from "rxjs";
+import { NEVER, of } from "rxjs";
 
 import { Apollo } from "apollo-angular";
 import { provideToastr } from "ngx-toastr";
@@ -198,6 +198,18 @@ describe("DatasetSettingsGeneralTabComponent", () => {
 
             expect(renameDatasetSpy).not.toHaveBeenCalled();
         });
+    });
+
+    it("should keep Rename disabled while the rename runs", async () => {
+        const renameDatasetSpy = vi.spyOn(datasetSettingsService, "renameDataset").mockReturnValue(NEVER);
+        const tab = await generalTabHarness();
+
+        await tab.setDatasetName("someName");
+        await tab.rename();
+        await tab.rename();
+
+        expect(await tab.isRenameDisabled()).toBe(true);
+        expect(renameDatasetSpy).toHaveBeenCalledTimes(1);
     });
 
     it("should show a name kamu-cli rejects under the name field until it is changed", async () => {

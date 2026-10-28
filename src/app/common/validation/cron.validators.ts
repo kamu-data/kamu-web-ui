@@ -9,6 +9,36 @@ import { AbstractControl, ValidationErrors } from "@angular/forms";
 
 import { MaybeNull } from "@interface/app.types";
 
+const MONTH_NAMES: Readonly<Record<string, number>> = {
+    JAN: 1,
+    FEB: 2,
+    MAR: 3,
+    APR: 4,
+    MAY: 5,
+    JUN: 6,
+    JUL: 7,
+    AUG: 8,
+    SEP: 9,
+    OCT: 10,
+    NOV: 11,
+    DEC: 12,
+};
+
+/** Sunday is 1, as in kamu-cli's `cron` crate. */
+const WEEKDAY_NAMES: Readonly<Record<string, number>> = {
+    SUN: 1,
+    MON: 2,
+    TUE: 3,
+    WED: 4,
+    THU: 5,
+    FRI: 6,
+    SAT: 7,
+};
+
+/**
+ * Fails with `invalidCronExpression`, whose value is the message, when a non-empty value is not a 5-field
+ * expression kamu-cli's `cron` crate accepts. Month and day-of-week names are accepted in their own field only.
+ */
 export function cronValidator(control: AbstractControl): MaybeNull<ValidationErrors> {
     const cron = typeof control.value === "string" ? control.value.trim() : "";
 
@@ -29,39 +59,20 @@ export function cronValidator(control: AbstractControl): MaybeNull<ValidationErr
     validatePart(minute, 0, 59, "Minute", errors);
     validatePart(hour, 0, 23, "Hour", errors);
     validatePart(day, 1, 31, "Day of month", errors);
-    validatePart(month, 1, 12, "Month", errors, true); // allow JAN, FEB, ...
-    validatePart(weekday, 1, 7, "Day of week", errors, true); // allow MON, TUE, ...
+    validatePart(month, 1, 12, "Month", errors, MONTH_NAMES);
+    validatePart(weekday, 1, 7, "Day of week", errors, WEEKDAY_NAMES);
 
     return errors.length ? { invalidCronExpression: errors.join(" ") } : null;
 }
 
-function validatePart(part: string, min: number, max: number, label: string, errors: string[], allowNamed = false) {
-    const namedValuesMap: Record<string, number> = allowNamed
-        ? {
-              // Days of week
-              SUN: 1,
-              MON: 2,
-              TUE: 3,
-              WED: 4,
-              THU: 5,
-              FRI: 6,
-              SAT: 7,
-              // Months
-              JAN: 1,
-              FEB: 2,
-              MAR: 3,
-              APR: 4,
-              MAY: 5,
-              JUN: 6,
-              JUL: 7,
-              AUG: 8,
-              SEP: 9,
-              OCT: 10,
-              NOV: 11,
-              DEC: 12,
-          }
-        : {}; // no named values allowed if false
-
+function validatePart(
+    part: string,
+    min: number,
+    max: number,
+    label: string,
+    errors: string[],
+    names: Readonly<Record<string, number>> = {},
+) {
     const validPattern =
         /^((\*|\?|[A-Z]+|\d+|\d+-\d+|\d+\/\d+|\*\/\d+|\d+-\d+\/\d+|[A-Z]+-[A-Z]+(\/\d+)?)(,(\*|\?|[A-Z]+|\d+|\d+-\d+|\d+\/\d+|\*\/\d+|\d+-\d+\/\d+|[A-Z]+-[A-Z]+(\/\d+)?))*)$/;
 
@@ -89,7 +100,7 @@ function validatePart(part: string, min: number, max: number, label: string, err
             return [];
         }
         const [fromText, toText] = base.split("-");
-        const from = parseCronValue(fromText, namedValuesMap);
+        const from = parseCronValue(fromText, names);
         if (toText === undefined) {
             if (from === null) {
                 errors.push(`${label} has invalid value: "${entry}".`);
@@ -97,7 +108,7 @@ function validatePart(part: string, min: number, max: number, label: string, err
             }
             return [from];
         }
-        const to = parseCronValue(toText, namedValuesMap);
+        const to = parseCronValue(toText, names);
         if (from === null || to === null || from > to) {
             errors.push(`${label} has invalid range: "${entry}".`);
             return [];
@@ -112,10 +123,11 @@ function validatePart(part: string, min: number, max: number, label: string, err
     });
 }
 
-function parseCronValue(input: string, namedMap: Record<string, number>): MaybeNull<number> {
-    const upper = input.toUpperCase();
-
-    if (namedMap[upper]) return namedMap[upper];
+function parseCronValue(input: string, names: Readonly<Record<string, number>>): MaybeNull<number> {
+    const named = names[input.toUpperCase()];
+    if (named !== undefined) {
+        return named;
+    }
 
     const num = Number(input);
     return isNaN(num) ? null : num;

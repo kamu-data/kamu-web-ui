@@ -8,6 +8,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Changed
 - Account flows, Processes: resuming an auto-stopped process asks for confirmation, as the dataset's Flows tab does, and "Update now" refreshes the card shortly after instead of on the next poll
 ### Fixed
+- Forms: fields accept what kamu-cli accepts, and say why under the field when they don't:
+  - polling source editor: an MQTT port outside 1–65535, a malformed fetch or node URL, a CSV separator, quote or escape longer than one character, a blank pipe command, an empty primary key, and an Ethereum source with neither chain id nor node URL are rejected before saving; a saved Zip decompress step shows in the editor again
+  - dataset variables: adding a key the dataset already has is rejected instead of overwriting its value
+  - dataset and account names, emails, passwords, token names, webhooks, cron schedules and flow settings follow kamu-cli's rules; a name, email, label or old password kamu-cli rejects shows under its field instead of in a toast
+  - transform settings: turning on automatic updates no longer leaves Save disabled without a message
 - Flow process cards on the dataset's Flows tab and the account's Processes:
   - triggering, pausing or resuming no longer refreshes the page after you have left it
   - the buttons wait for the result of the previous action, so a second click no longer repeats it; webhook pause and resume as well

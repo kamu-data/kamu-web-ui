@@ -200,7 +200,7 @@ describe("AddPushSourceComponent without query parameter name", () => {
 
         await sourceName.setValue("my-source");
         expect(await sourceName.getErrorMessage()).toBeNull();
-        expect(component.addPushSourceForm.controls.sourceName.valid).toBe(true);
+        expect(await isNextDisabled()).toBe(false);
     });
 
     it("should trim a source name of spaces only to nothing, and reject it", async () => {

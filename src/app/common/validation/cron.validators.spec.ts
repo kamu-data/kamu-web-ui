@@ -160,6 +160,18 @@ describe("Cron expression validator", () => {
             expectedResult: { invalidCronExpression: `Month has invalid format: "JAN/2".` },
         },
         {
+            expression: "* * * MON *",
+            expectedResult: { invalidCronExpression: `Month has invalid value: "MON".` },
+        },
+        {
+            expression: "0 12 * * JAN",
+            expectedResult: { invalidCronExpression: `Day of week has invalid value: "JAN".` },
+        },
+        {
+            expression: "0 MON * * *",
+            expectedResult: { invalidCronExpression: `Hour has invalid value: "MON".` },
+        },
+        {
             expression: "0 12 * * 0",
             expectedResult: { invalidCronExpression: "Day of week must be between 1 and 7, but got 0." },
         },

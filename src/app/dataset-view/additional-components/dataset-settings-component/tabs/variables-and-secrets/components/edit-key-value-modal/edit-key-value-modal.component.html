@@ -91,7 +91,7 @@
         class="btn btn-success"
         data-test-id="save-row"
         (click)="onEditRow()"
-        [disabled]="!keyValueForm.valid"
+        [disabled]="!keyValueForm.valid || !existingKeysLoaded || ((busy$ | async) ?? false)"
     >
         Save
     </button>

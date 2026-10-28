@@ -77,11 +77,17 @@ describe("Source event step rules", () => {
             expect(port.errors).toEqual({ required: true });
         });
 
-        [-5, 0, 1.5, 70000].forEach((port) => {
+        [
+            { port: -5, errors: { min: { min: 1, actual: -5 } } },
+            { port: 0, errors: { min: { min: 1, actual: 0 } } },
+            { port: 1.5, errors: { integer: true } },
+            { port: 65536, errors: { max: { max: 65535, actual: 65536 } } },
+            { port: 70000, errors: { max: { max: 65535, actual: 70000 } } },
+        ].forEach(({ port, errors }) => {
             it(`should reject port ${port}`, () => {
                 const port$ = requireValue(fetchForm(FetchKind.MQTT).controls.port);
                 port$.setValue(port);
-                expect(port$.valid).toBe(false);
+                expect(port$.errors).toEqual(errors);
             });
         });
 
@@ -134,7 +140,7 @@ describe("Source event step rules", () => {
         it("should reject a repeated header name and a header without a name", () => {
             const headers = requireValue(fetchForm(FetchKind.URL).controls.headers);
             headers.push(nameValueGroup("", "x"));
-            expect(headers.valid).toBe(false);
+            expect(headers.at(0).controls.name.errors).toEqual({ required: true });
 
             headers.at(0).controls.name.setValue("Accept");
             headers.push(nameValueGroup("Accept", "y"));

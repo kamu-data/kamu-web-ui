@@ -5,6 +5,7 @@
  * included in the LICENSE file.
  */
 
+import { AsyncPipe } from "@angular/common";
 import {
     afterNextRender,
     ChangeDetectionStrategy,
@@ -21,14 +22,14 @@ import { FormBuilder, FormControl, FormGroup, FormsModule, ReactiveFormsModule, 
 import { MatDividerModule } from "@angular/material/divider";
 import { MatRadioModule } from "@angular/material/radio";
 
-import { timer } from "rxjs";
+import { BehaviorSubject, timer } from "rxjs";
 
 import { BaseComponent } from "@common/components/base.component";
 import { DatasetVisibilityComponent } from "@common/components/dataset-visibility/dataset-visibility.component";
 import { ModalService } from "@common/components/modal/modal.service";
 import { TooltipIconComponent } from "@common/components/tooltip-icon/tooltip-icon.component";
 import { FeatureFlagDirective } from "@common/directives/feature-flag.directive";
-import { promiseWithCatch } from "@common/helpers/app.helpers";
+import { promiseWithCatch, trackBusy } from "@common/helpers/app.helpers";
 import RoutingResolvers from "@common/resolvers/routing-resolvers";
 import { CompactionTooltipsTexts } from "@common/tooltips/compacting.text";
 import { FormValidationErrorsDirective } from "@common/validation/form-validation-errors.directive";
@@ -61,6 +62,7 @@ import { NavigationService } from "src/app/services/navigation.service";
     changeDetection: ChangeDetectionStrategy.OnPush,
     imports: [
         //-----//
+        AsyncPipe,
         FormsModule,
         ReactiveFormsModule,
         //-----//
@@ -77,6 +79,7 @@ export class DatasetSettingsGeneralTabComponent extends BaseComponent implements
     @Input(RoutingResolvers.DATASET_SETTINGS_GENERAL_KEY) public generalTabData: DatasetViewData;
 
     public renameDatasetForm: FormGroup<RenameDatasetFormType>;
+    public readonly renameBusy$ = new BehaviorSubject<boolean>(false);
     public resetDatasetForm: FormGroup<ResetDatasetFormType>;
 
     public readonly FLATTEN_METADATA_TOOLTIP = CompactionTooltipsTexts.RESET_BLOCK_FLATTEN_METADATA;
@@ -165,7 +168,7 @@ export class DatasetSettingsGeneralTabComponent extends BaseComponent implements
                 datasetId,
                 newName: this.datasetNameControl.value,
             })
-            .pipe(takeUntilDestroyed(this.destroyRef))
+            .pipe(trackBusy(this.renameBusy$), takeUntilDestroyed(this.destroyRef))
             .subscribe((result: FieldMutationResult<true>) => {
                 if (!result.ok) {
                     setServerError(this.datasetNameControl, result.fieldError);

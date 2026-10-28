@@ -22,7 +22,7 @@
         class="ms-4 rename-btn"
         type="button"
         (click)="renameDataset()"
-        [disabled]="!renameDatasetForm.valid"
+        [disabled]="!renameDatasetForm.valid || ((renameBusy$ | async) ?? false)"
         data-test-id="rename-dataset-button"
     >
         Rename

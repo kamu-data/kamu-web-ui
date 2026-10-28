@@ -18,7 +18,13 @@
                         <div>
                             <label class="form-label"> Command <span class="text-danger">*</span> </label>
                         </div>
-                        <input class="form-control" formControlName="command" required #command />
+                        <input
+                            class="form-control"
+                            formControlName="command"
+                            required
+                            #command
+                            attr.data-test-id="pipe-command-{{ i }}"
+                        />
                         <div
                             class="text-danger fs-12"
                             [input]="command"
@@ -26,6 +32,7 @@
                             [fieldControl]="pipe.controls.command"
                             appFieldError
                             [group]="sectionForm"
+                            dataTestId="pipe-command-error-{{ i }}"
                         ></div>
                         <div class="buttons-section d-flex flex-row">
                             <button

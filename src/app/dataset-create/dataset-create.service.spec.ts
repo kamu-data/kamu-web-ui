@@ -53,7 +53,7 @@ describe("DatasetCreateService", () => {
         expect(service).toBeTruthy();
     });
 
-    it("should be create empty dataset with success", () => {
+    it("should be create empty dataset with success", async () => {
         const mockResponseSuccess: CreateEmptyDatasetMutation = {
             datasets: {
                 __typename: "DatasetsMut",
@@ -71,14 +71,15 @@ describe("DatasetCreateService", () => {
             .mockImplementation(() => {});
 
         const datasetName = "my-test";
-        service
-            .createEmptyDataset({
+        const result = await firstValueFrom(
+            service.createEmptyDataset({
                 datasetKind: DatasetKind.Root,
                 datasetAlias: datasetName,
                 datasetVisibility: DatasetVisibility.Public,
-            })
-            .subscribe();
+            }),
+        );
 
+        expect(result).toEqual({ ok: true, value: true });
         expect(spyNavigateToDatasetView).toHaveBeenCalledWith({
             accountName: mockAccountDetails.accountName,
             datasetName: datasetName,
@@ -129,7 +130,7 @@ describe("DatasetCreateService", () => {
         expect(spyNavigateToDatasetView).not.toHaveBeenCalled();
     });
 
-    it("should be create dataset using snapshot with success", () => {
+    it("should be create dataset using snapshot with success", async () => {
         const mockResponseSuccess: CreateDatasetFromSnapshotMutation = {
             datasets: {
                 __typename: "DatasetsMut",
@@ -148,10 +149,14 @@ describe("DatasetCreateService", () => {
             .spyOn(navigationService, "navigateToDatasetView")
             .mockImplementation(() => {});
 
-        service
-            .createDatasetFromSnapshot({ snapshot: "mockSnapshot", datasetVisibility: DatasetVisibility.Public })
-            .subscribe();
+        const result = await firstValueFrom(
+            service.createDatasetFromSnapshot({
+                snapshot: "mockSnapshot",
+                datasetVisibility: DatasetVisibility.Public,
+            }),
+        );
 
+        expect(result).toEqual({ ok: true, value: true });
         expect(spyNavigateToDatasetView).toHaveBeenCalledWith({
             accountName: mockAccountDetails.accountName,
             datasetName: mockDatasetBasicsDerivedFragment.name,
@@ -329,5 +334,30 @@ describe("DatasetCreateService", () => {
                 datasetVisibility: DatasetVisibility.Public,
             }),
         ).toThrow(new DatasetOperationError([new Error(DatasetCreateService.NOT_LOGGED_USER_ERROR)]));
+    });
+
+    it("should return an invalid snapshot as its error", async () => {
+        const mockResponseError: CreateDatasetFromSnapshotMutation = {
+            datasets: {
+                __typename: "DatasetsMut",
+                createFromSnapshot: {
+                    message: "Invalid snapshot: unknown field `kindd`",
+                    __typename: "CreateDatasetResultInvalidSnapshot",
+                },
+            },
+        };
+        vi.spyOn(datasetApi, "createDatasetFromSnapshot").mockReturnValue(of(mockResponseError));
+        vi.spyOn(loggedUserService, "maybeCurrentlyLoggedInUser", "get").mockReturnValue(mockAccountDetails);
+        const spyNavigateToDatasetView = stubMethod(navigationService, "navigateToDatasetView");
+
+        const result = await firstValueFrom(
+            service.createDatasetFromSnapshot({
+                snapshot: "mockSnapshot",
+                datasetVisibility: DatasetVisibility.Public,
+            }),
+        );
+
+        expect(result).toEqual({ ok: false, fieldError: "Invalid snapshot: unknown field `kindd`" });
+        expect(spyNavigateToDatasetView).not.toHaveBeenCalled();
     });
 });

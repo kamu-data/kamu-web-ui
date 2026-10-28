@@ -59,7 +59,9 @@ message, checked by `formatValidator()`.
 - A rejection kamu-cli returns as a typed result for one field (a duplicate label, a name taken) goes on that
   field through `setServerError`; it clears on the next change. The service returns it as a
   `FieldMutationResult<T>` (`{ ok: false, fieldError }`) instead of showing a toast or emitting it through a
-  subject of its own, and the component sets it on the control. A toast is for errors that belong to no field.
+  subject of its own, and the component sets it on the control. When a rejection can belong to one of several
+  fields, the service names the field beside the message (`WebhookFieldError` in `dataset-webhooks.service.ts`).
+  A toast is for errors that belong to no field.
 
 ## Matching kamu-cli
 

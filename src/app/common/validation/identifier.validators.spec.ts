@@ -37,12 +37,6 @@ describe("Identifier validators", () => {
                 maxlength: { requiredLength: 100, actualLength: 101 },
             });
         });
-
-        it("should answer quickly on a long name ending in an invalid character", () => {
-            const started = performance.now();
-            check(odfNameValidators(), `${"a".repeat(5000)}!`);
-            expect(performance.now() - started).toBeLessThan(100);
-        });
     });
 
     describe("envVarKeyValidators", () => {

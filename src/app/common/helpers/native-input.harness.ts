@@ -40,12 +40,18 @@ export class NativeInputHarness extends ComponentHarness {
 
     /** Types the value as a user would, replacing the current one, then leaves the field. */
     public async setValue(value: string): Promise<void> {
+        await this.typeValue(value);
+        const host = await this.host();
+        await host.blur();
+    }
+
+    /** Types the value as a user would, replacing the current one, and stays in the field. */
+    public async typeValue(value: string): Promise<void> {
         const host = await this.host();
         await host.clear();
         if (value !== "") {
             await host.sendKeys(value);
         }
-        await host.blur();
     }
 
     /** Picks the option of a `select` that has this value, then leaves the field. */

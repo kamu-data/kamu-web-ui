@@ -5,6 +5,7 @@
  * included in the LICENSE file.
  */
 
+import { AsyncPipe } from "@angular/common";
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, inject, Input, OnInit } from "@angular/core";
 import { takeUntilDestroyed } from "@angular/core/rxjs-interop";
 import { AbstractControl, FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators } from "@angular/forms";
@@ -12,9 +13,12 @@ import { MatDividerModule } from "@angular/material/divider";
 import { MatIconModule } from "@angular/material/icon";
 import { MatTooltipModule } from "@angular/material/tooltip";
 
+import { BehaviorSubject } from "rxjs";
+
 import { NgbActiveModal } from "@ng-bootstrap/ng-bootstrap";
 
 import { BaseComponent } from "@common/components/base.component";
+import { trackBusy } from "@common/helpers/app.helpers";
 import { uniqueValueValidator } from "@common/validation/collection.validators";
 import { FormValidationErrorsDirective } from "@common/validation/form-validation-errors.directive";
 import { envVarKeyValidators } from "@common/validation/identifier.validators";
@@ -32,6 +36,7 @@ import { DatasetEnvironmentVariablesService } from "src/app/dataset-view/additio
     changeDetection: ChangeDetectionStrategy.OnPush,
     imports: [
         //-----//
+        AsyncPipe,
         FormsModule,
         ReactiveFormsModule,
         //-----//
@@ -59,14 +64,15 @@ export class EditKeyValueModalComponent extends BaseComponent implements OnInit 
     public keyValueForm: FormGroup<EnvAndSecretsFormType> = this.fb.nonNullable.group({
         keyEnvVariable: [
             "",
-            [Validators.required, ...envVarKeyValidators(), uniqueValueValidator(() => this.existingKeys)],
+            [Validators.required, ...envVarKeyValidators(), uniqueValueValidator(() => this.existingKeys ?? [])],
         ],
         value: ["", [Validators.required, maxBytesValidator(EditKeyValueModalComponent.VALUE_MAX_BYTES)]],
         isSecret: [false],
     });
 
-    /** The keys the dataset has; empty when editing, since a key can't change then. */
-    private existingKeys: readonly string[] = [];
+    public readonly busy$ = new BehaviorSubject<boolean>(false);
+    /** The keys the dataset has: empty when editing, since a key can't change then; `null` until they load. */
+    private existingKeys: MaybeNull<readonly string[]> = null;
     public exposedValue: string;
     public isShowExposedValue: boolean = false;
     public readonly STUB_VALUE = "stub-value";
@@ -74,9 +80,16 @@ export class EditKeyValueModalComponent extends BaseComponent implements OnInit 
     public ngOnInit(): void {
         this.fetchExposedValue();
         this.setInitialFormValue();
-        if (!this.row) {
+        if (this.row) {
+            this.existingKeys = [];
+        } else {
             this.fetchExistingKeys();
         }
+    }
+
+    /** Save waits for the existing keys, so that adding a key the dataset has can't overwrite its value. */
+    public get existingKeysLoaded(): boolean {
+        return this.existingKeys !== null;
     }
 
     public get keyControl(): AbstractControl<string> {
@@ -100,7 +113,7 @@ export class EditKeyValueModalComponent extends BaseComponent implements OnInit 
                 value: this.valueControl.value,
                 isSecret: this.isSecretControl.value,
             })
-            .pipe(takeUntilDestroyed(this.destroyRef))
+            .pipe(trackBusy(this.busy$), takeUntilDestroyed(this.destroyRef))
             .subscribe(() => {
                 this.activeModal.close("Success");
             });

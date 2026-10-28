@@ -9,7 +9,7 @@ import { TestbedHarnessEnvironment } from "@angular/cdk/testing/testbed";
 import { ComponentFixture, TestBed } from "@angular/core/testing";
 import { ActivatedRoute } from "@angular/router";
 
-import { of } from "rxjs";
+import { NEVER, of, Subject } from "rxjs";
 
 import { NgbActiveModal } from "@ng-bootstrap/ng-bootstrap";
 import { Apollo } from "apollo-angular";
@@ -141,6 +141,9 @@ describe("EditKeyValueModalComponent", () => {
     it("should reject a key over 200 characters", async () => {
         const modal = await openForAdding();
 
+        await modal.setKey("K".repeat(200));
+        expect(await modal.getKeyError()).toBeNull();
+
         await modal.setKey("K".repeat(201));
 
         expect(await modal.getKeyError()).toBe("Key can't exceed 200 characters");
@@ -206,6 +209,34 @@ describe("EditKeyValueModalComponent", () => {
 
         expect(await modal.isSaveDisabled()).toBe(true);
         expect(upsertSpy).not.toHaveBeenCalled();
+    });
+
+    it("should keep Save disabled until the existing keys have loaded", async () => {
+        const keys$ = new Subject<typeof existingVariables>();
+        vi.spyOn(evnironmentVariablesService, "listEnvVariables").mockReturnValue(keys$);
+        setComponentInput(fixture, "row", null);
+        fixture.detectChanges();
+        const modal = await TestbedHarnessEnvironment.harnessForFixture(fixture, EditKeyValueModalHarness);
+
+        await modal.setKey("API_KEY");
+        await modal.setValue("value-1");
+        expect(await modal.isSaveDisabled()).toBe(true);
+
+        keys$.next(existingVariables);
+        expect(await modal.isSaveDisabled()).toBe(false);
+    });
+
+    it("should keep Save disabled while the variable is being saved", async () => {
+        const upsertSpy = vi.spyOn(evnironmentVariablesService, "upsertEnvVariable").mockReturnValue(NEVER);
+        const modal = await openForAdding();
+
+        await modal.setKey("API_KEY");
+        await modal.setValue("value-1");
+        await modal.save();
+        await modal.save();
+
+        expect(await modal.isSaveDisabled()).toBe(true);
+        expect(upsertSpy).toHaveBeenCalledTimes(1);
     });
 
     it("should fill the form from the variable being edited, with an empty value for a missing one", async () => {

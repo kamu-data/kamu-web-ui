@@ -228,6 +228,19 @@ describe("LoginComponent", () => {
                 );
             });
 
+            it("should trim the login when the form is submitted from the login field", async () => {
+                const loginServicePasswordSubmit = stubMethod(loginService, "passwordLogin");
+
+                await login.setPassword(TEST_PASSWORD);
+                await login.typeLogin(`  ${TEST_LOGIN} `);
+                await login.submitForm();
+
+                expect(loginServicePasswordSubmit).toHaveBeenCalledWith(
+                    { login: TEST_LOGIN, password: TEST_PASSWORD },
+                    null,
+                );
+            });
+
             it("Missing login or password leads to disable submit", async () => {
                 const loginServicePasswordSubmit = stubMethod(loginService, "passwordLogin");
                 expect(await login.isSubmitDisabled()).toBe(true);

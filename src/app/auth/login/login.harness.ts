@@ -121,6 +121,12 @@ export class LoginHarness extends ComponentHarness {
         await input.setValue(login);
     }
 
+    /** Types the login and stays in the field, as before pressing Enter. */
+    public async typeLogin(login: string): Promise<void> {
+        const input = await this.locatorLoginInput();
+        await input.typeValue(login);
+    }
+
     public async getLoginError(): Promise<MaybeNull<string>> {
         const error = await this.locatorLoginError();
         return error.getMessage();

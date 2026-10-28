@@ -268,9 +268,10 @@ code added itself, or a third-party callback triggers none of them.
   `metadata-component/components/source-events`), so a config entry cannot name a missing control,
   build one of another type or render it with the wrong field. A shared field component takes the
   control itself as a typed `control` input, never a form and a control name; `SourceSection.fields`
-  hands each field the control built for it. A value that arrives as `any` goes through `@common/helpers/untyped-boundary.helpers`: `parseJsonAs<T>()` for
-  `JSON.parse`, `parseYamlAs<T>()` for YAML, `routeDataAs<T>()` for a value another route's
-  resolver stored in route data. That file is the one place app code may assert, and eslint
+  hands each field the control built for it. A value that arrives as `any` goes through
+  `@common/helpers/untyped-boundary.helpers`: `parseJsonAs<T>()` for `JSON.parse`,
+  `parseYamlAs<T>()` for YAML, `routeDataAs<T>()` for a value another route's resolver stored in
+  route data. That file is the one place app code may assert, and eslint
   exempts it. Any other value that arrives as `any` or `unknown`, such as an HTTP error body or the
   detail a validator stored in its errors, is checked field by field with `isRecord()` and
   `typeof` (`parseVerifyQueryFailure` in `query-explainer.helpers.ts`).

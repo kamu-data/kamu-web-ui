@@ -20,6 +20,7 @@ import {
 } from "@common/validation/form-validation-errors.directive";
 import { ValidationError } from "@common/validation/form-validation-errors.types";
 import { setServerError } from "@common/validation/server-errors.helpers";
+import { MaybeNull } from "@interface/app.types";
 
 @Component({
     template: `
@@ -65,6 +66,13 @@ describe("FormValidationErrorsDirective", () => {
         expect(await error.getMessage()).toBe("Name is required");
     });
 
+    it("should show an error while the user is still typing in the field", async () => {
+        const input = await nameInput();
+        await input.typeValue("abcd");
+
+        expect(await error.getMessage()).toBe("Name can't exceed 3 characters");
+    });
+
     it("should follow the value as the user types", async () => {
         const input = await nameInput();
         await input.setValue("abcd");
@@ -93,6 +101,49 @@ describe("FormValidationErrorsDirective", () => {
         fixture.detectChanges();
 
         expect(await error.getMessage()).toBe("Title is required");
+    });
+});
+
+@Component({
+    template: `<div [fieldControl]="control" fieldLabel="Port" dataTestId="port-error" appFieldError></div>`,
+    imports: [FormValidationErrorsDirective],
+})
+class TestFieldControlHostComponent {
+    public control = new FormControl<MaybeNull<number>>(null, [Validators.required]);
+}
+
+describe("FormValidationErrorsDirective given its control", () => {
+    let fixture: ComponentFixture<TestFieldControlHostComponent>;
+    let error: FieldErrorHarness;
+
+    beforeEach(async () => {
+        TestBed.configureTestingModule({ imports: [TestFieldControlHostComponent] });
+        fixture = TestBed.createComponent(TestFieldControlHostComponent);
+        fixture.detectChanges();
+        const loader = TestbedHarnessEnvironment.loader(fixture);
+        error = await loader.getHarness(FieldErrorHarness.with({ dataTestId: "port-error" }));
+    });
+
+    it("should show the error of that control once it is touched", async () => {
+        fixture.componentInstance.control.markAsTouched();
+
+        expect(await error.getMessage()).toBe("Port is required");
+    });
+
+    it("should follow a control that replaces it", async () => {
+        const first = fixture.componentInstance.control;
+        first.markAsTouched();
+        const second = new FormControl<MaybeNull<number>>(0, [Validators.min(1)]);
+        fixture.componentInstance.control = second;
+        fixture.detectChanges();
+
+        expect(await error.getMessage()).toBeNull();
+
+        second.markAsTouched();
+        expect(await error.getMessage()).toBe("Port must be at least 1");
+
+        second.setValue(2);
+        expect(await error.getMessage()).toBeNull();
     });
 });
 

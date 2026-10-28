@@ -19,7 +19,7 @@ import {
 
 import { distinctUntilChanged, Subject, takeUntil } from "rxjs";
 
-import { regexValidator } from "@common/validation/text.validators";
+import { notBlankValidator, regexValidator } from "@common/validation/text.validators";
 import { MaybeNull, MaybeUndefined } from "@interface/app.types";
 
 import {
@@ -119,7 +119,7 @@ export function topicGroup(path = "", qos = ""): FormGroup<TopicControls> {
 export function pipeStepGroup(command = ""): FormGroup<PipeStepControls> {
     return new FormGroup<PipeStepControls>({
         kind: new FormControl(PrepareKind.PIPE, { nonNullable: true }),
-        command: textControl(command, [Validators.required]),
+        command: textControl(command, [Validators.required, notBlankValidator()]),
     });
 }
 

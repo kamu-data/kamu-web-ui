@@ -23,11 +23,7 @@ export default class AppValues {
     public static readonly MICRO_DB_GLOBAL_QUERY_SQL = "global_sql_code";
     public static readonly DEFAULT_USER_DISPLAY_NAME = "anonymous";
     public static readonly DEFAULT_AVATAR_URL = "https://avatars.githubusercontent.com/u/11951648?v=4";
-    public static readonly URL_PATTERN = /^(http:\/\/)|(https:\/\/)/i;
-    public static readonly URL_PATTERN_ONLY_HTTPS = /^(https:\/\/)/i;
-    public static readonly ZERO_OR_POSITIVE_PATTERN = /^[0-9]*$/i;
     public static readonly SPLIT_ARGUMENTS_PATTERN = /[^\s"']+|"([^"]*)"+|'([^']*)'/g;
-    public static readonly DATASET_NAME_PATTERN = /^([a-zA-Z0-9][a-zA-Z0-9-]*)+(\.[a-zA-Z0-9][a-zA-Z0-9-]*)*$/i;
 
     public static readonly DISPLAY_DATE_FORMAT = "dd MMM yyyy";
     public static readonly DISPLAY_TIME_FORMAT = "y-MM-dd, h:mm:ss a";

@@ -14,6 +14,8 @@ import { ActivatedRoute, ParamMap } from "@angular/router";
 
 import { Observable, shareReplay } from "rxjs";
 
+import { NgxTrimDirectiveModule } from "ngx-trim-directive";
+
 import { BaseComponent } from "@common/components/base.component";
 import { SpinnerComponent } from "@common/components/spinner/spinner/spinner.component";
 import { inAppPathFromParam, isUuid } from "@common/helpers/url-params.helpers";
@@ -42,6 +44,7 @@ import { NavigationService } from "src/app/services/navigation.service";
         FormsModule,
         NgTemplateOutlet,
         ReactiveFormsModule,
+        NgxTrimDirectiveModule,
         //-----//
         MatIconModule,
         //-----//

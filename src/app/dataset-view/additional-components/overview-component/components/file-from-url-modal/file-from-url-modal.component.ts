@@ -12,6 +12,8 @@ import { MatDividerModule } from "@angular/material/divider";
 import { NgbActiveModal } from "@ng-bootstrap/ng-bootstrap";
 
 import { BaseComponent } from "@common/components/base.component";
+import { FormValidationErrorsDirective } from "@common/validation/form-validation-errors.directive";
+import { urlValidator } from "@common/validation/url.validators";
 
 import { FileUrlFormType } from "src/app/dataset-view/additional-components/overview-component/components/file-from-url-modal/file-from-url-modal.types";
 
@@ -25,6 +27,8 @@ import { FileUrlFormType } from "src/app/dataset-view/additional-components/over
         ReactiveFormsModule,
         //-----//
         MatDividerModule,
+        //-----//
+        FormValidationErrorsDirective,
     ],
 })
 export class FileFromUrlModalComponent extends BaseComponent {
@@ -32,6 +36,6 @@ export class FileFromUrlModalComponent extends BaseComponent {
     private fb = inject(FormBuilder);
 
     public fileUrlForm: FormGroup<FileUrlFormType> = this.fb.group({
-        fileUrl: ["", [Validators.required]],
+        fileUrl: ["", [Validators.required, urlValidator(["http", "https"])]],
     });
 }

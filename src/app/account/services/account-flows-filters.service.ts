@@ -124,10 +124,10 @@ export class AccountFlowsFiltersService {
                 this.updateFilters({
                     selectedOrderField:
                         this.currentFiltersSnapshot.selectedOrderField ?? FlowProcessOrderField.LastFailureAt,
-                    minConsecutiveFailures:
-                        this.currentFiltersSnapshot.minConsecutiveFailures > 1
-                            ? this.currentFiltersSnapshot.minConsecutiveFailures
-                            : 1,
+                    minConsecutiveFailures: clampConsecutiveFailures(
+                        this.currentFiltersSnapshot.minConsecutiveFailures,
+                        1,
+                    ),
                 });
 
                 return {
@@ -137,7 +137,10 @@ export class AccountFlowsFiltersService {
                     lastFailureSince: this.currentFiltersSnapshot.lastFailureDate
                         ? stripSecondsFromDateToISOString(this.currentFiltersSnapshot.lastFailureDate)
                         : undefined,
-                    minConsecutiveFailures: this.currentFiltersSnapshot.minConsecutiveFailures,
+                    minConsecutiveFailures: clampConsecutiveFailures(
+                        this.currentFiltersSnapshot.minConsecutiveFailures,
+                        1,
+                    ),
                 };
             }
             case ProcessCardFilterMode.UPCOMING_SCHEDULED: {
@@ -179,7 +182,10 @@ export class AccountFlowsFiltersService {
                                   end: stripSecondsFromDateToISOString(this.currentFiltersSnapshot.toFilterDate),
                               }
                             : undefined,
-                    minConsecutiveFailures: this.currentFiltersSnapshot.minConsecutiveFailures,
+                    minConsecutiveFailures: clampConsecutiveFailures(
+                        this.currentFiltersSnapshot.minConsecutiveFailures,
+                        0,
+                    ),
                     lastFailureSince: this.currentFiltersSnapshot.lastFailureDate
                         ? stripSecondsFromDateToISOString(this.currentFiltersSnapshot.lastFailureDate)
                         : undefined,
@@ -219,4 +225,13 @@ export class AccountFlowsFiltersService {
         const updatedFilters = { ...this.currentFiltersSnapshot, ...changes };
         this.filtersSubject$.next(updatedFilters);
     }
+}
+
+/** kamu-cli stops a flow after at most 10 consecutive failures, so no filter needs more. */
+const MAX_CONSECUTIVE_FAILURES = 10;
+
+/** A whole number of consecutive failures from `min` to 10; anything else the input allows becomes the nearest one. */
+export function clampConsecutiveFailures(value: unknown, min: number): number {
+    const number = typeof value === "number" && Number.isFinite(value) ? Math.round(value) : min;
+    return Math.min(Math.max(number, min), MAX_CONSECUTIVE_FAILURES);
 }

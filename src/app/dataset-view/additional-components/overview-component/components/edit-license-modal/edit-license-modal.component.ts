@@ -17,6 +17,7 @@ import { NgbActiveModal } from "@ng-bootstrap/ng-bootstrap";
 import { BaseComponent } from "@common/components/base.component";
 import { DynamicTableDataRow } from "@common/components/dynamic-table/dynamic-table.interface";
 import { FormValidationErrorsDirective } from "@common/validation/form-validation-errors.directive";
+import { notBlankValidator } from "@common/validation/text.validators";
 import { urlValidator } from "@common/validation/url.validators";
 import { DatasetBasicsFragment, DatasetDataSizeFragment, DatasetOverviewFragment } from "@api/kamu.graphql.interface";
 import { MaybeNull } from "@interface/app.types";
@@ -55,8 +56,8 @@ export class EditLicenseModalComponent extends BaseComponent implements OnInit {
         size: DatasetDataSizeFragment;
     };
     public licenseForm: FormGroup<LicenseFormType> = this.fb.group({
-        name: this.fb.nonNullable.control("", [Validators.required]),
-        shortName: this.fb.nonNullable.control("", [Validators.required]),
+        name: this.fb.nonNullable.control("", [Validators.required, notBlankValidator()]),
+        shortName: this.fb.nonNullable.control("", [Validators.required, notBlankValidator()]),
         websiteUrl: this.fb.nonNullable.control("", [Validators.required, urlValidator(["http", "https"])]),
         spdxId: [""],
     });

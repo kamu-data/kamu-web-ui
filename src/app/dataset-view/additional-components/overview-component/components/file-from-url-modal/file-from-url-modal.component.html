@@ -13,7 +13,15 @@
     <form [formGroup]="fileUrlForm">
         <div class="mt-4">
             <label for="file-url" class="form-label">Source URL <span class="text-danger">*</span></label>
-            <input class="form-control" id="file-url" formControlName="fileUrl" data-test-id="file-url" />
+            <input class="form-control" id="file-url" formControlName="fileUrl" data-test-id="file-url" #fileUrl />
+            <div
+                class="text-danger fs-12"
+                [input]="fileUrl"
+                fieldLabel="Source URL"
+                appFieldError
+                [group]="fileUrlForm"
+                dataTestId="file-url-error"
+            ></div>
         </div>
     </form>
 </div>

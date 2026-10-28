@@ -12,6 +12,7 @@ import { MatButtonToggleModule } from "@angular/material/button-toggle";
 import { MatIconModule } from "@angular/material/icon";
 
 import AppValues from "@common/values/app.values";
+import { MaybeNull } from "@interface/app.types";
 
 @Component({
     selector: "app-load-more",
@@ -27,7 +28,8 @@ import AppValues from "@common/values/app.values";
     ],
 })
 export class LoadMoreComponent {
-    public rowsNumber: number = AppValues.SQL_QUERY_LIMIT;
+    /** `null` while the number input is empty. */
+    public rowsNumber: MaybeNull<number> = AppValues.SQL_QUERY_LIMIT;
     public isHolderVisible = false;
 
     @Input({ required: true }) public isAllDataLoaded = false;
@@ -44,8 +46,12 @@ export class LoadMoreComponent {
         this.isHolderVisible = !this.isHolderVisible;
     }
 
+    public get isRowsNumberValid(): boolean {
+        return Number.isInteger(this.rowsNumber) && (this.rowsNumber ?? 0) >= 1;
+    }
+
     public loadMore(): void {
-        if (!this.isAllDataLoaded) {
+        if (!this.isAllDataLoaded && this.isRowsNumberValid && this.rowsNumber !== null) {
             this.loadMoreEmit.emit(this.rowsNumber);
         }
     }

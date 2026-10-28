@@ -8,7 +8,8 @@
         <dd>
             <input
                 formControlName="emailAddress"
-                type="text"
+                type="email"
+                trim="blur"
                 name="email"
                 class="form-control email-control"
                 id="email-address"
@@ -33,6 +34,7 @@
         fieldLabel="Email address"
         appFieldError
         [group]="changeEmailForm"
+        dataTestId="email-address-error"
     ></div>
     @if (changeEmailError$ | async; as changeEmailError) {
         <div>

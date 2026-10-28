@@ -3,7 +3,7 @@
     mat-button
     class="mr-4"
     data-test-id="btn-load-more"
-    [disabled]="isAllDataLoaded"
+    [disabled]="isAllDataLoaded || !isRowsNumberValid"
     (click)="loadMore()"
 >
     Load more data
@@ -34,8 +34,15 @@
                 class="form-control small-width"
                 data-test-id="row-limit-input"
                 placeholder="Enter number of rows"
+                min="1"
+                step="1"
                 [(ngModel)]="rowsNumber"
             />
+            @if (!isRowsNumberValid) {
+                <span class="text-danger fs-12 ms-2" data-test-id="row-limit-error"
+                    >Enter a whole number of rows, at least 1</span
+                >
+            }
         </div>
     </div>
 } @else {

@@ -100,11 +100,14 @@ export class EditDetailsModalComponent extends BaseComponent implements OnInit {
             .subscribe();
     }
 
+    /** Adds the typed keyword, trimmed, unless it is blank or the dataset has it already in any letter case. */
     public addKeywordFromInput(event: MatChipInputEvent) {
-        if (event.value) {
-            this.keywordsSet.add(event.value);
-            event.chipInput.clear();
+        const keyword = event.value.trim();
+        const known = [...this.keywordsSet].some((existing) => existing.toLowerCase() === keyword.toLowerCase());
+        if (keyword && !known) {
+            this.keywordsSet.add(keyword);
         }
+        event.chipInput.clear();
     }
 
     public removeKeyword(keyword: string) {

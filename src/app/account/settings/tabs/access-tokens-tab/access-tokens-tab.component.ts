@@ -24,6 +24,7 @@ import { PaginationComponent } from "@common/components/pagination-component/pag
 import { promiseWithCatch } from "@common/helpers/app.helpers";
 import RoutingResolvers from "@common/resolvers/routing-resolvers";
 import { FormValidationErrorsDirective } from "@common/validation/form-validation-errors.directive";
+import { notBlankValidator } from "@common/validation/text.validators";
 import AppValues from "@common/values/app.values";
 import {
     AccessTokenConnectionDataFragment,
@@ -89,7 +90,7 @@ export class AccessTokensTabComponent extends BaseComponent {
     public currentCreateStep = TokenCreateStep.INITIAL;
     public pageBasedInfo: DatasetPageInfoFragment;
     public createTokenForm: FormGroup<CreateTokenFormType> = this.fb.nonNullable.group({
-        name: ["", [Validators.required, Validators.maxLength(100)]],
+        name: ["", [Validators.required, Validators.maxLength(100), notBlankValidator()]],
     });
     public showRevokedToken = false;
 

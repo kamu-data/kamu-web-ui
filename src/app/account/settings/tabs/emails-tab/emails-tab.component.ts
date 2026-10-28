@@ -12,6 +12,8 @@ import { MatDividerModule } from "@angular/material/divider";
 
 import { Observable } from "rxjs";
 
+import { NgxTrimDirectiveModule } from "ngx-trim-directive";
+
 import RoutingResolvers from "@common/resolvers/routing-resolvers";
 import { FormValidationErrorsDirective } from "@common/validation/form-validation-errors.directive";
 import { AccountWithEmailFragment } from "@api/kamu.graphql.interface";
@@ -33,6 +35,7 @@ import { NavigationService } from "src/app/services/navigation.service";
         ReactiveFormsModule,
         //-----//
         MatDividerModule,
+        NgxTrimDirectiveModule,
         //-----//
         FormValidationErrorsDirective,
     ],

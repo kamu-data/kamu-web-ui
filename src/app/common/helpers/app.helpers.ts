@@ -157,7 +157,7 @@ export function addMarkdownRunButton(
             linkElement.style.borderRadius = "4px";
             linkElement.style.transition = "all 250ms ease-out";
             linkElement.setAttribute("target", "_blank");
-            linkElement.setAttribute("href", `${path}=${encodeURI(sqlQueries[index])}`);
+            linkElement.setAttribute("href", `${path}=${encodeURIComponent(sqlQueries[index])}`);
             linkElement.addEventListener("mouseover", () => {
                 linkElement.style.backgroundColor = "rgba(255,255, 255, 0.14)";
             });

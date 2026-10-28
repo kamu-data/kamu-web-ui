@@ -56,6 +56,18 @@ export function positiveIntegerFromParam(param: MaybeNullOrUndefined<string>): M
     return value >= 1 && Number.isSafeInteger(value) ? value : null;
 }
 
+/** Whether the path of `url` is `/<path>` or a page below it; the query string and fragment do not count */
+export function isUrlWithin(url: string, path: string): boolean {
+    const urlPath = url.split(/[?#]/)[0];
+    return urlPath === `/${path}` || urlPath.startsWith(`/${path}/`);
+}
+
+/** The page the address bar shows, with its query string and fragment, as an in-app path to return to */
+export function currentLocationPath(): string {
+    const { pathname, search, hash } = window.location;
+    return pathname + search + hash;
+}
+
 /** A path inside the app, such as the page to return to after login, or `undefined` for anything else */
 export function inAppPathFromParam(param: MaybeNullOrUndefined<string>): MaybeUndefined<string> {
     return param && /^\/(?![/\\])/.test(param) ? param : undefined;

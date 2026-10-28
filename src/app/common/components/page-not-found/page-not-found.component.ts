@@ -7,6 +7,7 @@
 
 import { ChangeDetectionStrategy, Component, inject } from "@angular/core";
 
+import { currentLocationPath } from "@common/helpers/url-params.helpers";
 import AppValues from "@common/values/app.values";
 
 import { LoggedUserService } from "src/app/auth/logged-user.service";
@@ -29,8 +30,7 @@ export class PageNotFoundComponent {
     }
 
     public navigateToLogin(): void {
-        const redirectUrl = window.location.pathname;
-        this.navigationService.navigateToLogin(redirectUrl);
+        this.navigationService.navigateToLogin(currentLocationPath());
     }
 
     public get isAuthenticated(): boolean {

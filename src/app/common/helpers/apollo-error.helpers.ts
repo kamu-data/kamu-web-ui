@@ -16,6 +16,7 @@ import { Apollo, onlyCompleteData } from "apollo-angular";
 import { ToastrService } from "ngx-toastr";
 
 import { isAccessTokenExpired, logError, requireValue } from "@common/helpers/app.helpers";
+import { currentLocationPath } from "@common/helpers/url-params.helpers";
 import { ErrorTexts } from "@common/values/errors.text";
 
 import ProjectLinks from "src/app/project-links";
@@ -48,7 +49,7 @@ export function createApolloErrorHandler(): (error: unknown) => void {
                 const token = localStorageService.accessToken;
                 if (token) {
                     toastrService.error(isAccessTokenExpired(token) ? ErrorTexts.ERROR_ACCESS_TOKEN_EXPIRED : firstMsg);
-                    navigationService.navigateToLogin(window.location.pathname);
+                    navigationService.navigateToLogin(currentLocationPath());
                 }
             } else {
                 graphQLErrors.forEach((err) => toastrService.error(err.message));

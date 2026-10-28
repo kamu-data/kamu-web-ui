@@ -195,6 +195,17 @@ describe("AppHelpers", () => {
             expect(other.querySelectorAll(RUN_BUTTON_SELECTOR).length).toEqual(0);
         });
 
+        it("should keep characters that end a query value inside the linked query", () => {
+            const target = createMarkdownContainer();
+
+            addMarkdownRunButton(target, ["select 'a&b' as x, 1+2 # c"], "/query?sqlQuery");
+
+            const runButton = requireValue(target.querySelector<HTMLAnchorElement>(RUN_BUTTON_SELECTOR));
+            expect(runButton.getAttribute("href")).toEqual(
+                "/query?sqlQuery=select%20'a%26b'%20as%20x%2C%201%2B2%20%23%20c",
+            );
+        });
+
         it("should not add a second Run button when called again for the same render", () => {
             const target = createMarkdownContainer();
 

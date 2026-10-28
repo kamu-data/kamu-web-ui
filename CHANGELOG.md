@@ -27,6 +27,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - History tab, block page and dataset overview: data commits show how many records they added and license commits the license name again, and the block page shows each event's details instead of the header alone
 - Lineage tab: the graph loads again instead of failing with a query recursion error
 - License modal: an empty name shows "Name is required" instead of "Test is required"
+- Header: a page whose URL only contains "v/login" or "github_callback", such as a dataset named "login-records", shows the header again
+- Signing in again after a session expired, or from the "page not found" page, returns to the page with its query string and fragment, such as an SQL query
+- "Run" buttons in README and query explainer SQL blocks keep `&`, `#` and `+` in the query instead of cutting it off or turning `+` into a space
 - Links with an incomplete, malformed or unknown value:
   - a malformed account or dataset name, flow id, webhook id or block hash shows "page not found" instead of an error toast, an endless load or the home page
   - flow details without a tab opens the History tab instead of an empty page, and its unreleased tabs can no longer be opened by URL

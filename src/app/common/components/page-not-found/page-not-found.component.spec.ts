@@ -10,8 +10,8 @@ import { ComponentFixture, TestBed } from "@angular/core/testing";
 import { Apollo } from "apollo-angular";
 
 import { PageNotFoundComponent } from "@common/components/page-not-found/page-not-found.component";
-import { requireValue } from "@common/helpers/app.helpers";
 import { emitClickOnElementByDataTestId } from "@common/helpers/base-test.helpers.spec";
+import { currentLocationPath } from "@common/helpers/url-params.helpers";
 
 import { LoggedUserService } from "src/app/auth/logged-user.service";
 import { NavigationService } from "src/app/services/navigation.service";
@@ -50,6 +50,6 @@ describe("PageNotFoundComponent", () => {
         const navigateToHomeSpy = vi.spyOn(navigationService, "navigateToLogin").mockReturnValue();
         emitClickOnElementByDataTestId(fixture, "navigate-to-login-btn");
         expect(navigateToHomeSpy).toHaveBeenCalledTimes(1);
-        expect(requireValue(navigateToHomeSpy.mock.lastCall).length).toEqual(1);
+        expect(navigateToHomeSpy).toHaveBeenCalledWith(currentLocationPath());
     });
 });

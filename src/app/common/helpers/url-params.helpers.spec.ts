@@ -7,10 +7,12 @@
 
 import {
     collectionPathFromParam,
+    currentLocationPath,
     inAppPathFromParam,
     isFlowId,
     isMultihash,
     isOdfName,
+    isUrlWithin,
     isUuid,
     positiveIntegerFromParam,
     queryParamValue,
@@ -107,6 +109,30 @@ describe("URL parameter helpers", () => {
                 });
             },
         );
+    });
+
+    describe("isUrlWithin", () => {
+        [
+            { url: "/v/settings", expected: true },
+            { url: "/v/settings/account", expected: true },
+            { url: "/v/settings?tab=1", expected: true },
+            { url: "/v/settings#top", expected: true },
+            { url: "/v/settingsx", expected: false },
+            { url: "/dev/v/settings", expected: false },
+            { url: "/kamu/notes?redirectUrl=/v/settings", expected: false },
+        ].forEach(({ url, expected }) => {
+            it(`should ${expected ? "" : "not "}put "${url}" within v/settings`, () => {
+                expect(isUrlWithin(url, "v/settings")).toBe(expected);
+            });
+        });
+    });
+
+    describe("currentLocationPath", () => {
+        it("should keep the query string and fragment of the address bar", () => {
+            const { pathname, search, hash } = window.location;
+
+            expect(currentLocationPath()).toBe(pathname + search + hash);
+        });
     });
 
     describe("collectionPathFromParam", () => {

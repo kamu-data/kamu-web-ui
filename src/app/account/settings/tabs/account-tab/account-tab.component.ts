@@ -17,6 +17,7 @@ import { BaseComponent } from "@common/components/base.component";
 import { ModalService } from "@common/components/modal/modal.service";
 import { FormValidationErrorsDirective } from "@common/directives/form-validation-errors.directive";
 import { promiseWithCatch } from "@common/helpers/app.helpers";
+import { isUrlWithin } from "@common/helpers/url-params.helpers";
 import RoutingResolvers from "@common/resolvers/routing-resolvers";
 import AppValues from "@common/values/app.values";
 import { AccountWithEmailFragment } from "@api/kamu.graphql.interface";
@@ -137,7 +138,7 @@ export class AccountTabComponent extends BaseComponent implements OnInit {
     }
 
     public get isOwnerPage(): boolean {
-        return this.router.url.includes(ProjectLinks.URL_SETTINGS);
+        return isUrlWithin(this.router.url, ProjectLinks.URL_SETTINGS);
     }
 
     public get accountName(): MaybeNullOrUndefined<string> {

@@ -6,6 +6,7 @@
  */
 
 import { ComponentFixture, TestBed } from "@angular/core/testing";
+import { Router } from "@angular/router";
 
 import { of } from "rxjs";
 
@@ -48,6 +49,18 @@ describe("AccountTabComponent", () => {
 
     it("should create", () => {
         expect(component).toBeTruthy();
+    });
+
+    [
+        { url: "/v/settings/account", expected: true },
+        { url: "/kamu/~select/settings", expected: false },
+        { url: "/kamu/notes?redirectUrl=/v/settings", expected: false },
+    ].forEach(({ url, expected }) => {
+        it(`should ${expected ? "" : "not "}treat ${url} as the user's own settings`, () => {
+            vi.spyOn(TestBed.inject(Router), "url", "get").mockReturnValue(url);
+
+            expect(component.isOwnerPage).toBe(expected);
+        });
     });
 
     it("should check delete account name when the URL does not contain the account name", () => {

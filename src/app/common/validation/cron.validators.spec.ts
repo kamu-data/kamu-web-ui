@@ -54,7 +54,10 @@ describe("Cron expression validator", () => {
                 invalidCronExpression: `Month has invalid format: "+".`,
             },
         },
-        { expression: "0 12-2 * 2 ?", expectedResult: null },
+        {
+            expression: "0 12-2 * 2 ?",
+            expectedResult: { invalidCronExpression: `Hour has invalid range: "12-2".` },
+        },
         { expression: "0 12,2 * 2 ?", expectedResult: null },
         { expression: "0 12/2 * 2 ?", expectedResult: null },
         {
@@ -93,7 +96,7 @@ describe("Cron expression validator", () => {
         {
             expression: "* * 1/32 * ?",
             expectedResult: {
-                invalidCronExpression: `Day of month must be between 1 and 31, but got 32.`,
+                invalidCronExpression: `Day of month step must be between 1 and 31, but got 32.`,
             },
         },
         { expression: "* * 1-10,5 * ?", expectedResult: null },
@@ -114,6 +117,56 @@ describe("Cron expression validator", () => {
             },
         },
         { expression: "30 9 3 * MON", expectedResult: null },
+        // Checked against kamu-cli's `cron` crate, which parses these with a leading seconds field.
+        { expression: "0-30/5 * * * *", expectedResult: null },
+        { expression: "1-5,10-15/2 * * * *", expectedResult: null },
+        { expression: "5/59 * * * *", expectedResult: null },
+        { expression: "0-30/59 * * * *", expectedResult: null },
+        { expression: "5-5 * * * *", expectedResult: null },
+        { expression: "* * * JAN-MAR/2 *", expectedResult: null },
+        { expression: "* * * * MON-FRI/2", expectedResult: null },
+        { expression: "* * * * mon", expectedResult: null },
+        { expression: "* * * * 1/7", expectedResult: null },
+        {
+            expression: "*/0 * * * *",
+            expectedResult: { invalidCronExpression: "Minute step must be between 1 and 59, but got 0." },
+        },
+        {
+            expression: "*/60 * * * *",
+            expectedResult: { invalidCronExpression: "Minute step must be between 1 and 59, but got 60." },
+        },
+        {
+            expression: "0-30/0 * * * *",
+            expectedResult: { invalidCronExpression: "Minute step must be between 1 and 59, but got 0." },
+        },
+        {
+            expression: "* */24 * * *",
+            expectedResult: { invalidCronExpression: "Hour step must be between 1 and 23, but got 24." },
+        },
+        {
+            expression: "0 10-5 * * *",
+            expectedResult: { invalidCronExpression: `Hour has invalid range: "10-5".` },
+        },
+        {
+            expression: "* * * MAR-JAN *",
+            expectedResult: { invalidCronExpression: `Month has invalid range: "MAR-JAN".` },
+        },
+        {
+            expression: "* * * JAN-FOO *",
+            expectedResult: { invalidCronExpression: `Month has invalid range: "JAN-FOO".` },
+        },
+        {
+            expression: "* * * JAN/2 *",
+            expectedResult: { invalidCronExpression: `Month has invalid format: "JAN/2".` },
+        },
+        {
+            expression: "0 12 * * 0",
+            expectedResult: { invalidCronExpression: "Day of week must be between 1 and 7, but got 0." },
+        },
+        {
+            expression: "0 12 * * 8",
+            expectedResult: { invalidCronExpression: "Day of week must be between 1 and 7, but got 8." },
+        },
     ].forEach((item: { expression: string; expectedResult: MaybeNull<ValidationErrors> }) => {
         it(`should check value with ${item.expression}`, () => {
             const control = new FormControl(item.expression);

@@ -96,10 +96,6 @@ export class DatasetCreateComponent extends BaseComponent {
         this.errorMessage$ = this.datasetCreateService.errorMessageChanges;
     }
 
-    public get datasetName() {
-        return this.createDatasetForm.get("datasetName");
-    }
-
     public get owner() {
         return this.createDatasetForm.get("owner");
     }

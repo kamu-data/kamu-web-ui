@@ -13,6 +13,7 @@ import { TimeDeltaFormHarness } from "@common/components/time-delta-form/time-de
 import { TimeDeltaFormValue } from "@common/components/time-delta-form/time-delta-form.value";
 import { NativeInputHarness } from "@common/helpers/native-input.harness";
 import { FieldErrorHarness } from "@common/validation/field-error.harness";
+import { TimeUnit } from "@api/kamu.graphql.interface";
 import { MaybeNull } from "@interface/app.types";
 
 import { BufferingBatchingRuleFormValue } from "src/app/dataset-view/additional-components/dataset-settings-component/tabs/transform-options/buffering-batching-rule-form/buffering-batching-rule-form.types";
@@ -64,6 +65,15 @@ export class BufferingBatchingRuleFormHarness extends ComponentHarness {
             throw new Error("Time delta form did not appear");
         }
         return timeDeltaForm.getErrorMessage();
+    }
+
+    /** The units the batching interval offers; kamu-cli caps the interval at 24 hours. */
+    public async getBatchingIntervalUnits(): Promise<TimeUnit[]> {
+        const timeDeltaForm = await this.locatorTimeDeltaForm();
+        if (!timeDeltaForm) {
+            throw new Error("Time delta form did not appear");
+        }
+        return timeDeltaForm.getAvailableUnits();
     }
 
     public async getMaxBatchingInterval(): Promise<TimeDeltaFormValue> {

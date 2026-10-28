@@ -7,7 +7,7 @@
 
 /* istanbul ignore file */
 
-import { ComponentHarness } from "@angular/cdk/testing";
+import { ComponentHarness, TestKey } from "@angular/cdk/testing";
 
 import { NativeInputHarness } from "@common/helpers/native-input.harness";
 import { FieldErrorHarness } from "@common/validation/field-error.harness";
@@ -21,6 +21,7 @@ export class LoginHarness extends ComponentHarness {
     private static readonly PASSWORD_METHOD_BLOCK_TEST_ID = "password-method-block";
     private static readonly SELECT_METHOD_GITHUB_TEST_ID = "select-method-github";
     private static readonly SELECT_METHOD_PASSWORD_TEST_ID = "select-method-password";
+    private static readonly SELECT_METHOD_WEB3_WALLET_TEST_ID = "select-method-web3-wallet";
     private static readonly PASSWORD_LOGIN_FORM_TEST_ID = "password-login-form";
     private static readonly LOGIN_INPUT_TEST_ID = "input-login";
     private static readonly LOGIN_ERROR_TEST_ID = "input-login-error";
@@ -44,6 +45,12 @@ export class LoginHarness extends ComponentHarness {
     );
     private readonly locatorSelectPasswordButton = this.locatorFor(
         `[data-test-id="${LoginHarness.SELECT_METHOD_PASSWORD_TEST_ID}"]`,
+    );
+    private readonly locatorSelectWeb3WalletButton = this.locatorFor(
+        `[data-test-id="${LoginHarness.SELECT_METHOD_WEB3_WALLET_TEST_ID}"]`,
+    );
+    private readonly locatorPasswordInputElement = this.locatorFor(
+        `[data-test-id="${LoginHarness.PASSWORD_INPUT_TEST_ID}"]`,
     );
     private readonly locatorPasswordLoginForm = this.locatorFor(
         `[data-test-id="${LoginHarness.PASSWORD_LOGIN_FORM_TEST_ID}"]`,
@@ -96,6 +103,17 @@ export class LoginHarness extends ComponentHarness {
     public async selectPassword(): Promise<void> {
         const button = await this.locatorSelectPasswordButton();
         await button.click();
+    }
+
+    public async selectWeb3Wallet(): Promise<void> {
+        const button = await this.locatorSelectWeb3WalletButton();
+        await button.click();
+    }
+
+    /** Presses Enter in the password field, the key that submits the form rather than editing the field. */
+    public async pressEnterInPassword(): Promise<void> {
+        const input = await this.locatorPasswordInputElement();
+        await input.sendKeys(TestKey.ENTER);
     }
 
     public async setLogin(login: string): Promise<void> {

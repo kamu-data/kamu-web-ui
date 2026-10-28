@@ -184,6 +184,21 @@ describe("AddWebhookComponent", () => {
         expect(await page.isSubmitDisabled()).toBe(false);
     });
 
+    it("should keep the form editable without a field error when kamu-cli rejects it for no field", async () => {
+        vi.spyOn(datasetWebhooksService, "datasetWebhookCreateSubscription").mockReturnValue(
+            of({ ok: false, fieldError: null }),
+        );
+        const page = await addWebhookHarness();
+        const form = await fillValidForm(page);
+
+        await page.submit();
+
+        expect(await form.isReadonly()).toBe(false);
+        expect(await form.getTargetUrlError()).toBeNull();
+        expect(await form.getLabelError()).toBeNull();
+        expect(await page.isSubmitDisabled()).toBe(false);
+    });
+
     it("should check to navigate to webhooks list", () => {
         const navigateToWebhooksSpy = stubMethod(navigationService, "navigateToWebhooks");
         component.navigateToListWebhooks();

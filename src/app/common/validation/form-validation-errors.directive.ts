@@ -61,17 +61,25 @@ export function validationErrorMessage(label: string, error: ValidationError, de
         case "singleChar":
             return `${label} must be a single ASCII character`;
         case "format":
-            return `${label} ${stringDetail(details, "message")}`;
-        case "url":
-            return `${label} must be a URL starting with ${urlSchemesDetail(details)}`;
+            return `${label} ${stringDetail(details, "message") ?? "has the wrong format"}`;
+        case "url": {
+            const schemes = urlSchemesDetail(details);
+            return schemes === "" ? `${label} must be a URL` : `${label} must be a URL starting with ${schemes}`;
+        }
         case "invalidCronExpression":
             return typeof details === "string" ? details : `${label} is not a valid cron expression`;
         case "duplicate":
             return `${label} already exists`;
-        case "requiredUnless":
-            return `${label} is required unless ${stringDetail(details, "sibling")} is set`;
-        case "duplicateItems":
-            return `${label} contains "${stringDetail(details, "value")}" more than once`;
+        case "requiredUnless": {
+            const sibling = stringDetail(details, "sibling");
+            return sibling === undefined ? `${label} is required` : `${label} is required unless ${sibling} is set`;
+        }
+        case "duplicateItems": {
+            const value = stringDetail(details, "value");
+            return value === undefined
+                ? `${label} contains a value more than once`
+                : `${label} contains "${value}" more than once`;
+        }
         case "server":
             return stringDetail(details, "message") ?? `${label} was rejected by the server`;
     }

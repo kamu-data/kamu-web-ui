@@ -69,59 +69,44 @@ function validatePart(part: string, min: number, max: number, label: string, err
         return;
     }
 
-    if (label === "Month" && part.includes("-") && /[A-Za-z]/.test(part)) {
-        const [fromStr, toStr] = part.split("-");
-        const from = parseCronValue(fromStr, namedValuesMap);
-        const to = parseCronValue(toStr, namedValuesMap);
-
-        if (from === null || to === null || from > to) {
-            errors.push(`${label} has invalid named range: "${part}".`);
-        }
-        return;
-    }
-
-    if (!validPattern.test(part)) {
+    if (!validPattern.test(part.toUpperCase())) {
         errors.push(`${label} has invalid format: "${part}".`);
         return;
     }
 
-    const values = part.split(",").map((p) => {
-        if (p.includes("-")) {
-            const [fromStr, toStr] = p.split("-");
-            const from = parseCronValue(fromStr, namedValuesMap);
-            const to = parseCronValue(toStr, namedValuesMap);
-            if (from === null || to === null) {
-                errors.push(`${label} has invalid range: "${p}".`);
+    // Each entry is `start`, `start-end` or `*`, optionally followed by `/step`. kamu-cli's `cron` crate requires
+    // values within the field's bounds, a range that does not run backwards, and a step from 1 to the field's maximum.
+    const values = part.split(",").flatMap((entry) => {
+        const [base, stepText] = entry.split("/");
+        if (stepText !== undefined) {
+            const step = Number(stepText);
+            if (step < 1 || step > max) {
+                errors.push(`${label} step must be between 1 and ${max}, but got ${stepText}.`);
                 return [];
             }
-            return Array.from({ length: to - from + 1 }, (_, i) => from + i);
-        } else if (p.startsWith("*/")) {
-            const step = Number(p.slice(2));
-            return isNaN(step) ? [] : [min];
-        } else if (p === "*") {
-            return [min];
-        } else if (p.includes("/")) {
-            const [fromStr, toStr] = p.split("/");
-            const from = parseCronValue(fromStr, namedValuesMap);
-            const to = parseCronValue(toStr, namedValuesMap);
-            if (from === null || to === null) {
-                errors.push(`${label} has invalid range: "${p}".`);
-                return [];
-            }
-            return Array.from({ length: to - from + 1 }, (_, i) => from + i);
-        } else {
-            const v = parseCronValue(p, namedValuesMap);
-            if (v === null) {
-                errors.push(`${label} has invalid value: "${p}".`);
-                return [];
-            }
-            return [v];
         }
+        if (base === "*") {
+            return [];
+        }
+        const [fromText, toText] = base.split("-");
+        const from = parseCronValue(fromText, namedValuesMap);
+        if (toText === undefined) {
+            if (from === null) {
+                errors.push(`${label} has invalid value: "${entry}".`);
+                return [];
+            }
+            return [from];
+        }
+        const to = parseCronValue(toText, namedValuesMap);
+        if (from === null || to === null || from > to) {
+            errors.push(`${label} has invalid range: "${entry}".`);
+            return [];
+        }
+        return [from, to];
     });
 
-    const result = values.reduce((accumulator, value) => accumulator.concat(value), []);
-    result.forEach((v) => {
-        if (isNaN(v) || v < min || v > max) {
+    values.forEach((v) => {
+        if (v < min || v > max) {
             errors.push(`${label} must be between ${min} and ${max}, but got ${v}.`);
         }
     });

@@ -72,6 +72,11 @@ describe("Source event step rules", () => {
     });
 
     describe("MQTT", () => {
+        it("should require a port", () => {
+            const port = requireValue(fetchForm(FetchKind.MQTT).controls.port);
+            expect(port.errors).toEqual({ required: true });
+        });
+
         [-5, 0, 1.5, 70000].forEach((port) => {
             it(`should reject port ${port}`, () => {
                 const port$ = requireValue(fetchForm(FetchKind.MQTT).controls.port);
@@ -115,6 +120,17 @@ describe("Source event step rules", () => {
             });
         });
 
+        it("should require a URL", () => {
+            const url = requireValue(fetchForm(FetchKind.URL).controls.url);
+            expect(url.errors).toEqual({ required: true });
+        });
+
+        it("should accept a dataset variable template, which kamu-cli substitutes when it fetches", () => {
+            const url$ = requireValue(fetchForm(FetchKind.URL).controls.url);
+            url$.setValue("https://example.com/data.csv?key=${{ env.API_KEY }}");
+            expect(url$.valid).toBe(true);
+        });
+
         it("should reject a repeated header name and a header without a name", () => {
             const headers = requireValue(fetchForm(FetchKind.URL).controls.headers);
             headers.push(nameValueGroup("", "x"));
@@ -126,12 +142,23 @@ describe("Source event step rules", () => {
         });
     });
 
+    describe("Container", () => {
+        it("should reject a repeated environment variable name", () => {
+            const env = requireValue(fetchForm(FetchKind.CONTAINER).controls.env);
+            env.push(nameValueGroup("TOKEN", "a"));
+            env.push(nameValueGroup("TOKEN", "b"));
+            expect(env.errors).toEqual({ duplicateItems: { value: "TOKEN" } });
+        });
+    });
+
     describe("Ethereum logs", () => {
         it("should require a chain id or a node URL", () => {
             const form = fetchForm(FetchKind.ETHEREUM_LOGS);
             const chainId = requireValue(form.controls.chainId);
             const nodeUrl = requireValue(form.controls.nodeUrl);
             expect(form.valid).toBe(false);
+            expect(chainId.errors).toEqual({ requiredUnless: { sibling: "Node URL" } });
+            expect(nodeUrl.errors).toEqual({ requiredUnless: { sibling: "Chain ID" } });
 
             nodeUrl.setValue("wss://node.example.com");
             expect(chainId.valid).toBe(true);
@@ -140,6 +167,15 @@ describe("Source event step rules", () => {
             nodeUrl.setValue("");
             chainId.setValue(1);
             expect(form.valid).toBe(true);
+        });
+
+        it("should take a node URL over HTTP or WebSocket only", () => {
+            const nodeUrl = requireValue(fetchForm(FetchKind.ETHEREUM_LOGS).controls.nodeUrl);
+            nodeUrl.setValue("https://node.example.com");
+            expect(nodeUrl.valid).toBe(true);
+
+            nodeUrl.setValue("ftp://node.example.com");
+            expect(nodeUrl.errors).toEqual({ url: { schemes: ["http", "https", "ws", "wss"] } });
         });
 
         it("should reject a chain id that is not a positive whole number", () => {
@@ -176,12 +212,17 @@ describe("Source event step rules", () => {
             expect(separator.errors).toEqual({ singleChar: true });
             quote.setValue("");
             expect(quote.errors).toEqual({ required: true });
+            quote.setValue("''");
+            expect(quote.errors).toEqual({ singleChar: true });
         });
 
-        it("should allow an empty escape character", () => {
+        it("should allow an empty escape character, but not a longer one", () => {
             const escape = requireValue(readForm(ReadKind.CSV).controls.escape);
             escape.setValue("");
             expect(escape.valid).toBe(true);
+
+            escape.setValue("\\\\");
+            expect(escape.errors).toEqual({ singleChar: true });
         });
     });
 
@@ -195,6 +236,15 @@ describe("Source event step rules", () => {
                 primaryKey.push(listItemControl("id"));
                 expect(primaryKey.errors).toEqual({ duplicateItems: { value: "id" } });
             });
+        });
+
+        it("should reject a repeated compare column for snapshots", () => {
+            const compareColumns = requireValue(mergeForm(MergeKind.SNAPSHOT).controls.compareColumns);
+            compareColumns.push(listItemControl("value"));
+            expect(compareColumns.valid).toBe(true);
+
+            compareColumns.push(listItemControl("value"));
+            expect(compareColumns.errors).toEqual({ duplicateItems: { value: "value" } });
         });
     });
 });

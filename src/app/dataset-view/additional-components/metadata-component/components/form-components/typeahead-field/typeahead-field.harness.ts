@@ -24,6 +24,12 @@ export class TypeaheadFieldHarness extends BaseTextFieldHarness {
         await input.sendKeys(text);
     }
 
+    /** Clicks the input, which opens the list of every suggestion while it is empty. */
+    public async openSuggestions(): Promise<void> {
+        const input = await this.element("");
+        await input.click();
+    }
+
     /** The suggestions the open list shows; empty when it is closed. */
     public async getSuggestions(): Promise<string[]> {
         const suggestions = await this.locatorSuggestions();

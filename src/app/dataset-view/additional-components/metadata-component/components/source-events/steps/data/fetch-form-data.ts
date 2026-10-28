@@ -45,7 +45,7 @@ export const FETCH_FORM_DATA: JsonFormData<FetchControls> = {
                 placeholder: "Enter url",
                 tooltip: SetPollingSourceTooltipsTexts.URL,
                 required: true,
-                validators: [urlValidator(["http", "https", "ftp", "ftps"])],
+                validators: [urlValidator(["http", "https", "ftp", "ftps"], { templates: true })],
             },
             {
                 name: "eventTime",
@@ -239,7 +239,7 @@ export const FETCH_FORM_DATA: JsonFormData<FetchControls> = {
                 placeholder: "Enter url",
                 tooltip: SetPollingSourceTooltipsTexts.ETHEREUM_LOGS_NODE_URL,
                 validators: [
-                    urlValidator(["http", "https", "ws", "wss"]),
+                    urlValidator(["http", "https", "ws", "wss"], { templates: true }),
                     requiredUnlessValidator("chainId", "Chain ID"),
                 ],
                 dependsOn: ["chainId"],

@@ -147,4 +147,18 @@ describe("AdminChangePasswordComponent", () => {
             confirmPassword: "",
         });
     });
+
+    it("should keep what the user typed when the server does not change the password", async () => {
+        vi.spyOn(accountService, "changeAdminPassword").mockReturnValue(of(false));
+        const form = await createHarness(8);
+
+        await form.setNewPassword("password1");
+        await form.setConfirmPassword("password1");
+        await form.update();
+
+        expect(fixture.componentInstance.changeAdminAccountPasswordForm.getRawValue()).toEqual({
+            newPassword: "password1",
+            confirmPassword: "password1",
+        });
+    });
 });

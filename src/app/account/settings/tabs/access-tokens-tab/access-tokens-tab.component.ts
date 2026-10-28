@@ -9,7 +9,7 @@ import { Clipboard } from "@angular/cdk/clipboard";
 import { DatePipe, NgTemplateOutlet } from "@angular/common";
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, inject, Input, ViewChild } from "@angular/core";
 import { takeUntilDestroyed } from "@angular/core/rxjs-interop";
-import { AbstractControl, FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators } from "@angular/forms";
+import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators } from "@angular/forms";
 import { MatDividerModule } from "@angular/material/divider";
 import { MatIconModule } from "@angular/material/icon";
 import { MatSlideToggleModule } from "@angular/material/slide-toggle";
@@ -101,10 +101,6 @@ export class AccessTokensTabComponent extends BaseComponent {
 
     public get currentPage(): number {
         return this.tokenConnection.pageInfo.currentPage + 1;
-    }
-
-    public get tokenNameControl(): AbstractControl {
-        return this.createTokenForm.controls.name;
     }
 
     public get accountId(): string {

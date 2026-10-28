@@ -96,6 +96,28 @@ describe("FormValidationErrorsDirective", () => {
     });
 });
 
+@Component({
+    template: `
+        <form [formGroup]="form">
+            <input #nameInput data-test-id="name-input" />
+            <div [input]="nameInput" [group]="form" fieldLabel="Name" appFieldError></div>
+        </form>
+    `,
+    imports: [ReactiveFormsModule, FormValidationErrorsDirective],
+})
+class TestUnboundHostComponent {
+    public form = new FormGroup({});
+}
+
+describe("FormValidationErrorsDirective on an input bound to no control", () => {
+    it("should say which field is bound to no control", () => {
+        TestBed.configureTestingModule({ imports: [TestUnboundHostComponent] });
+        const fixture = TestBed.createComponent(TestUnboundHostComponent);
+
+        expect(() => fixture.detectChanges()).toThrow('[appFieldError] "Name" is bound to no control');
+    });
+});
+
 describe("fieldErrorMessage", () => {
     it("should describe the first error", () => {
         expect(fieldErrorMessage("Port", { required: true, min: { min: 1 } })).toBe("Port is required");
@@ -137,9 +159,24 @@ describe("validationErrorMessage", () => {
         { error: "duplicateItems", details: { value: "a" }, message: 'Port contains "a" more than once' },
         { error: "server", details: { message: "Rejected" }, message: "Rejected" },
     ];
+    // Details a validator left out, or stored in another shape, still give a readable message.
+    const casesWithoutDetails: { error: ValidationError; details: unknown; message: string }[] = [
+        { error: "format", details: true, message: "Port has the wrong format" },
+        { error: "url", details: true, message: "Port must be a URL" },
+        { error: "invalidCronExpression", details: true, message: "Port is not a valid cron expression" },
+        { error: "requiredUnless", details: true, message: "Port is required" },
+        { error: "duplicateItems", details: { value: 1 }, message: "Port contains a value more than once" },
+        { error: "server", details: true, message: "Port was rejected by the server" },
+    ];
 
     cases.forEach(({ error, details, message }) => {
         it(`should describe "${error}"`, () => {
+            expect(validationErrorMessage("Port", error, details)).toBe(message);
+        });
+    });
+
+    casesWithoutDetails.forEach(({ error, details, message }) => {
+        it(`should describe "${error}" without its details`, () => {
             expect(validationErrorMessage("Port", error, details)).toBe(message);
         });
     });

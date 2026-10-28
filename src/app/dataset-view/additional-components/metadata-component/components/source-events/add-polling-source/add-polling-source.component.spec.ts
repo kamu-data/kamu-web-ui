@@ -5,6 +5,8 @@
  * included in the LICENSE file.
  */
 
+import { HarnessLoader } from "@angular/cdk/testing";
+import { TestbedHarnessEnvironment } from "@angular/cdk/testing/testbed";
 import { ApplicationRef } from "@angular/core";
 import { ComponentFixture, TestBed } from "@angular/core/testing";
 import { Validators } from "@angular/forms";
@@ -26,8 +28,11 @@ import { mockAccountDetails } from "@api/mock/auth.mock";
 
 import { LoggedUserService } from "src/app/auth/logged-user.service";
 import { FinalYamlModalComponent } from "src/app/dataset-view/additional-components/metadata-component/components/final-yaml-modal/final-yaml-modal.component";
+import { ArrayKeysFieldHarness } from "src/app/dataset-view/additional-components/metadata-component/components/form-components/array-keys-field/array-keys-field.harness";
+import { InputFieldHarness } from "src/app/dataset-view/additional-components/metadata-component/components/form-components/input-field/input-field.harness";
 import { SetPollingSourceSection } from "src/app/dataset-view/additional-components/metadata-component/components/source-events/add-polling-source/add-polling-source-form.types";
 import { AddPollingSourceComponent } from "src/app/dataset-view/additional-components/metadata-component/components/source-events/add-polling-source/add-polling-source.component";
+import { StepperNavigationHarness } from "src/app/dataset-view/additional-components/metadata-component/components/stepper-navigation/stepper-navigation.harness";
 import { DatasetCommitService } from "src/app/dataset-view/additional-components/overview-component/services/dataset-commit.service";
 import { mockDatasetInfo } from "src/app/search/mock.data";
 
@@ -128,6 +133,60 @@ describe("AddPollingSourceComponent", () => {
         expect(event).toContain("    subPath: result\n");
         expect(event).toContain("  merge:\n    kind: Ledger\n    primaryKey:\n      - transaction_hash\n");
         expect(event).toContain("  preprocess:\n    kind: Sql\n    engine: datafusion\n");
+    });
+
+    describe("validation", () => {
+        let loader: HarnessLoader;
+
+        beforeEach(() => {
+            loader = TestbedHarnessEnvironment.loader(fixture);
+        });
+
+        async function navigation(step: "first" | "last"): Promise<StepperNavigationHarness> {
+            const navigations = await loader.getAllHarnesses(StepperNavigationHarness);
+            return requireValue(step === "first" ? navigations.at(0) : navigations.at(-1));
+        }
+
+        it("should keep Next disabled while the URL is not one kamu-cli fetches, and say why", async () => {
+            const url = await loader.getHarness(InputFieldHarness.with({ dataTestId: "fetch-url" }));
+            const fetchNavigation = await navigation("first");
+
+            await url.setValue("example.com/data.json");
+            expect(await url.getErrorMessage()).toBe(
+                "Url must be a URL starting with http://, https://, ftp://, ftps://",
+            );
+            expect(await fetchNavigation.isNextDisabled()).toBe(true);
+
+            await url.setValue("https://example.com/data.json");
+            expect(await url.getErrorMessage()).toBeNull();
+            expect(await fetchNavigation.isNextDisabled()).toBe(false);
+        });
+
+        it("should keep Save disabled while the merge strategy has no primary key", async () => {
+            const url = await loader.getHarness(InputFieldHarness.with({ dataTestId: "fetch-url" }));
+            await url.setValue("https://example.com/data.json");
+            const primaryKey = await loader.getHarness(ArrayKeysFieldHarness.with({ dataTestId: "merge-primaryKey" }));
+            const mergeNavigation = await navigation("last");
+            expect(await mergeNavigation.isSaveDisabled()).toBe(false);
+
+            await primaryKey.removeItem(0);
+
+            expect(await mergeNavigation.isSaveDisabled()).toBe(true);
+        });
+
+        it("should save the URL the user typed", async () => {
+            const commitSpy = vi.spyOn(datasetCommitService, "commitEventToDataset").mockReturnValue(of());
+            const url = await loader.getHarness(InputFieldHarness.with({ dataTestId: "fetch-url" }));
+            await url.setValue("https://example.com/data.json");
+
+            const mergeNavigation = await navigation("last");
+            await mergeNavigation.save();
+
+            expect(commitSpy).toHaveBeenCalledTimes(1);
+            expect(requireValue(commitSpy.mock.lastCall)[0].event).toContain(
+                "    kind: Url\n    url: https://example.com/data.json\n",
+            );
+        });
     });
 
     it("should check change step", () => {

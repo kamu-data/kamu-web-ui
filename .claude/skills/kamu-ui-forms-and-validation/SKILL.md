@@ -18,7 +18,7 @@ Go through it for each field a change adds or touches.
 | Is it required? Can it be blank (only spaces)? | `Validators.required`; `notBlankValidator()`, or `trim="blur"` from `NgxTrimDirectiveModule` when kamu-cli trims |
 | Is it a number? Whole? Its smallest and largest value? | `integerInRangeValidators(min, max)` and the same `min` / `max` on the input |
 | Is it a name, key or identifier with a grammar? A length limit? | `odfNameValidators()`, `envVarKeyValidators()`, a `FormatRule` in `patterns.ts` with `formatValidator()`, `Validators.maxLength`; `maxBytesValidator(max)` where kamu-cli counts UTF-8 bytes |
-| Is it a URL? Which schemes? | `urlValidator([...schemes])` |
+| Is it a URL? Which schemes? Does kamu-cli substitute `${{ env.NAME }}` templates in it? | `urlValidator([...schemes])`, with `{ templates: true }` for the fetch URLs kamu-cli templates |
 | Must it differ from existing values or other entries of the list? Ignoring case? | `uniqueValueValidator(() => existing, options)`, `uniqueItemsValidator(key, options)` |
 | Does it depend on another field? | `requiredUnlessValidator`, `matchFieldsValidator`; revalidate on the sibling's changes |
 | What does kamu-cli accept? | Look it up in kamu-cli (below), then match it: never looser, and stricter only with a reason |

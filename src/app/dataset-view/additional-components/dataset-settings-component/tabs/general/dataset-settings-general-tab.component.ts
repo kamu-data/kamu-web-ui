@@ -36,7 +36,6 @@ import { odfNameValidators } from "@common/validation/identifier.validators";
 import AppValues from "@common/values/app.values";
 import {
     DatasetBasicsFragment,
-    DatasetKind,
     DatasetPermissionsFragment,
     DatasetVisibilityInput,
     DatasetVisibilityOutputDataFragment,
@@ -146,10 +145,6 @@ export class DatasetSettingsGeneralTabComponent extends BaseComponent implements
 
     public get isAllowedToDeleteDataset(): boolean {
         return this.datasetPermissions.permissions.general.canDelete;
-    }
-
-    public get isRoot(): boolean {
-        return this.datasetBasics.kind === DatasetKind.Root;
     }
 
     public get isPrivate(): boolean {

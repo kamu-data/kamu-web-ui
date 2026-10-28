@@ -15,9 +15,9 @@ import { of } from "rxjs";
 
 import { ApolloTestingModule } from "apollo-angular/testing";
 
-import { getElementByDataTestId, registerMatSvgIcons } from "@common/helpers/base-test.helpers.spec";
+import { getElementByDataTestId, registerMatSvgIcons, stubMethod } from "@common/helpers/base-test.helpers.spec";
 import { SharedTestModule } from "@common/modules/shared-test.module";
-import { DatasetVisibility } from "@api/kamu.graphql.interface";
+import { DatasetKind, DatasetVisibility } from "@api/kamu.graphql.interface";
 import { mockAccountDetails } from "@api/mock/auth.mock";
 
 import { LoggedUserService } from "src/app/auth/logged-user.service";
@@ -210,6 +210,28 @@ describe("DatasetCreateComponent", () => {
         await vi.waitFor(() => expect(onFileSelectedSpy).toHaveResolvedWith(""));
     });
 
+    it("should keep creating disabled without an owner when no user is logged in", async () => {
+        fixture.destroy();
+        vi.spyOn(loggedUserService, "maybeCurrentlyLoggedInUser", "get").mockReturnValue(null);
+        fixture = TestBed.createComponent(DatasetCreateComponent);
+        fixture.detectChanges();
+        const page = await datasetCreateHarness();
+
+        await page.setDatasetName("my-dataset");
+
+        expect(await page.isCreateDisabled()).toBe(true);
+    });
+
+    it("should not create a dataset from an empty snapshot", () => {
+        const createDatasetFromSnapshotSpy = stubMethod(datasetCreateService, "createDatasetFromSnapshot");
+        component.showMonacoEditor = true;
+        component.yamlTemplate = "";
+
+        component.onCreateDataset();
+
+        expect(createDatasetFromSnapshotSpy).not.toHaveBeenCalled();
+    });
+
     ["test.test", "t-test.test", "test.t-test", "t-test.t-test", "my.dataset-1", "a".repeat(100)].forEach(
         (datasetName) => {
             it(`should create a dataset named "${datasetName}"`, async () => {
@@ -223,9 +245,11 @@ describe("DatasetCreateComponent", () => {
                 expect(await page.isCreateDisabled()).toBe(false);
                 await page.create();
 
-                expect(createEmptyDatasetSpy).toHaveBeenCalledWith(
-                    expect.objectContaining({ datasetAlias: datasetName }),
-                );
+                expect(createEmptyDatasetSpy).toHaveBeenCalledWith({
+                    datasetKind: DatasetKind.Root,
+                    datasetAlias: datasetName,
+                    datasetVisibility: DatasetVisibility.Private,
+                });
             });
         },
     );

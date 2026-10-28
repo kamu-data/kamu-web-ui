@@ -91,6 +91,17 @@ describe("EmailsTabComponent", () => {
         expect(navigateToSettingsSpy).toHaveBeenCalledWith(AccountSettingsTabs.EMAILS);
     });
 
+    it("should stay on the form when the server does not change the email", async () => {
+        vi.spyOn(accountEmailService, "changeEmailAddress").mockReturnValue(of(false));
+        const tab = await emailsTabHarness();
+
+        await tab.setEmail("new@example.com");
+        await tab.changeEmail();
+
+        expect(navigateToSettingsSpy).not.toHaveBeenCalled();
+        expect(await tab.getEmail()).toBe("new@example.com");
+    });
+
     it("should clear the server error once the email is edited", async () => {
         const tab = await emailsTabHarness();
         accountEmailService.emitRenameAccountEmailErrorOccurred("Email is taken");

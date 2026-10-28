@@ -130,6 +130,13 @@ describe("CronExpressionFormComponent", () => {
         expect(nextTime).toContain(component.NEXT_TIME_LABEL);
     });
 
+    it("should require an expression", async () => {
+        await cronHarness.setCronExpression("");
+
+        expect(await cronHarness.getErrorMessage()).toBe("Expression is required");
+        expect(await cronHarness.getNextTime()).toBeNull();
+    });
+
     it("should not show error neither next time for untouched cron expression", async () => {
         const isInvalid = await cronHarness.isInvalid();
         expect(isInvalid).toBe(true);

@@ -41,5 +41,6 @@ export class KeyValueFieldComponent extends BaseField<FormArray<FormGroup<NameVa
 
     public removeItem(index: number): void {
         this.control.removeAt(index);
+        this.control.markAsDirty();
     }
 }

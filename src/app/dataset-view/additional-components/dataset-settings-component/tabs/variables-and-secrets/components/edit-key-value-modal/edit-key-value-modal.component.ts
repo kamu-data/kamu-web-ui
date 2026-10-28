@@ -96,9 +96,9 @@ export class EditKeyValueModalComponent extends BaseComponent implements OnInit 
             .upsertEnvVariable({
                 accountId: this.datasetBasics.owner.id,
                 datasetId: this.datasetBasics.id,
-                key: this.keyControl.value ?? "",
-                value: this.keyValueForm.controls.value.value ?? "",
-                isSecret: this.keyValueForm.controls.isSecret.value ? true : false,
+                key: this.keyControl.value,
+                value: this.valueControl.value,
+                isSecret: this.isSecretControl.value,
             })
             .pipe(takeUntilDestroyed(this.destroyRef))
             .subscribe(() => {
@@ -112,9 +112,7 @@ export class EditKeyValueModalComponent extends BaseComponent implements OnInit 
             this.exposedValue = "";
         } else {
             this.fetchExposedValue();
-            this.keyValueForm.patchValue({
-                value: this.isShowExposedValue ? this.exposedValue : this.valueControl.value,
-            });
+            this.keyValueForm.patchValue({ value: this.exposedValue });
         }
     }
 

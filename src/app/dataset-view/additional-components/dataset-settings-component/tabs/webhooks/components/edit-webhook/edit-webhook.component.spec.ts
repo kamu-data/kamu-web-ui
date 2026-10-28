@@ -148,6 +148,57 @@ describe("EditWebhookComponent", () => {
         });
     });
 
+    it("should accept a label of 100 characters", async () => {
+        const page = await editWebhookHarness();
+        const form = await page.getForm();
+
+        await form.setLabel("l".repeat(100));
+
+        expect(await form.getLabelError()).toBeNull();
+        expect(await page.isSubmitDisabled()).toBe(false);
+    });
+
+    it("should clear the server error once the field is edited", async () => {
+        vi.spyOn(datasetWebhooksService, "datasetWebhookUpdateSubscription").mockReturnValue(
+            of({ ok: false, fieldError: { field: "label", message: "Label must be unique" } }),
+        );
+        const page = await editWebhookHarness();
+        const form = await page.getForm();
+        await page.submit();
+
+        await form.setLabel("another-hook");
+
+        expect(await form.getLabelError()).toBeNull();
+        expect(await page.isSubmitDisabled()).toBe(false);
+    });
+
+    it("should stay on the form without a field error when kamu-cli rejects the update for no field", async () => {
+        const backSpy = stubMethod(location, "back");
+        vi.spyOn(datasetWebhooksService, "datasetWebhookUpdateSubscription").mockReturnValue(
+            of({ ok: false, fieldError: null }),
+        );
+        const page = await editWebhookHarness();
+        const form = await page.getForm();
+
+        await page.submit();
+
+        expect(backSpy).not.toHaveBeenCalled();
+        expect(await form.getTargetUrlError()).toBeNull();
+        expect(await form.getLabelError()).toBeNull();
+        expect(await page.isSubmitDisabled()).toBe(false);
+    });
+
+    it("should go back without saving on cancel", async () => {
+        const backSpy = stubMethod(location, "back");
+        const updateSpy = vi.spyOn(datasetWebhooksService, "datasetWebhookUpdateSubscription");
+        const page = await editWebhookHarness();
+
+        await page.cancel();
+
+        expect(backSpy).toHaveBeenCalledTimes(1);
+        expect(updateSpy).not.toHaveBeenCalled();
+    });
+
     it("should keep updating disabled while the subscription is being updated", async () => {
         const updateSpy = vi.spyOn(datasetWebhooksService, "datasetWebhookUpdateSubscription").mockReturnValue(NEVER);
         const page = await editWebhookHarness();

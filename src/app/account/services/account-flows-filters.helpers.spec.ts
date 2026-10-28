@@ -15,7 +15,11 @@ describe("clampConsecutiveFailures", () => {
             { value: 1.5, expected: 2, reason: "not a whole number" },
             { value: Number.NaN, expected: min, reason: "not a number" },
             { value: null, expected: min, reason: "empty" },
+            { value: 0, expected: min, reason: "zero" },
+            { value: 1, expected: 1, reason: "one" },
             { value: 7, expected: 7, reason: "in range" },
+            { value: 10, expected: 10, reason: "the most kamu-cli allows" },
+            { value: 11, expected: 10, reason: "one above the most kamu-cli allows" },
         ].forEach(({ value, expected, reason }) => {
             it(`should turn ${String(value)}, ${reason}, into ${expected} when the minimum is ${min}`, () => {
                 expect(clampConsecutiveFailures(value, min)).toBe(expected);

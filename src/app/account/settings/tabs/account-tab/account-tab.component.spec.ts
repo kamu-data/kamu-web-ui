@@ -209,4 +209,63 @@ describe("AccountTabComponent", () => {
         expect(modalWindowSpy).toHaveBeenCalledTimes(1);
         expect(navigateToOwnerViewSpy).toHaveBeenCalledWith("new-account-username", AccountTabs.SETTINGS);
     });
+
+    function cancelEveryModal(): void {
+        vi.spyOn(modalService, "error").mockImplementation((options: ModalArgumentsInterface) => {
+            options.handler?.call(undefined, false);
+            return Promise.resolve("");
+        });
+    }
+
+    it("should keep the account when the user cancels the delete", async () => {
+        const deleteAccountByNameSpy = vi.spyOn(accountService, "deleteAccountByName");
+        cancelEveryModal();
+        const tab = await accountTabHarness();
+
+        await tab.deleteAccount();
+
+        expect(deleteAccountByNameSpy).not.toHaveBeenCalled();
+    });
+
+    it("should stay on the page when the server does not delete the account", async () => {
+        openPage(TEST_LOGIN, false);
+        vi.spyOn(accountService, "deleteAccountByName").mockReturnValue(of(false));
+        const navigateToHomeSpy = stubMethod(navigationService, "navigateToHome");
+        const logoutSpy = stubMethod(loggedUserService, "logout");
+        confirmEveryModal();
+        const tab = await accountTabHarness();
+
+        await tab.deleteAccount();
+
+        expect(navigateToHomeSpy).not.toHaveBeenCalled();
+        expect(logoutSpy).not.toHaveBeenCalled();
+    });
+
+    it("should keep the username when the user cancels the change", async () => {
+        const changeAccountUsernameSpy = vi.spyOn(accountService, "changeAccountUsername");
+        cancelEveryModal();
+        const tab = await accountTabHarness();
+
+        await tab.setUsername("new-account-username");
+        await tab.changeUsername();
+
+        expect(changeAccountUsernameSpy).not.toHaveBeenCalled();
+    });
+
+    it("should stay on the page when the server does not change the username", async () => {
+        openPage(TEST_LOGIN, false);
+        vi.spyOn(accountService, "changeAccountUsername").mockReturnValue(
+            of({ changed: false, name: "new-account-username" }),
+        );
+        const changeUserSpy = stubMethod(loggedUserService, "changeUser");
+        const navigateToOwnerViewSpy = stubMethod(navigationService, "navigateToOwnerView");
+        confirmEveryModal();
+        const tab = await accountTabHarness();
+
+        await tab.setUsername("new-account-username");
+        await tab.changeUsername();
+
+        expect(changeUserSpy).not.toHaveBeenCalled();
+        expect(navigateToOwnerViewSpy).not.toHaveBeenCalled();
+    });
 });

@@ -56,6 +56,13 @@ describe("PasswordAndAuthenticationTabComponent", () => {
         expect(await tab.getAdminChangePassword()).not.toBeNull();
     });
 
+    it("should not show the admin form when the account does not say it is an admin", async () => {
+        setComponentInput(fixture, "account", { ...mockAccountDetails, isAdmin: null });
+        const tab = await openChangePassword();
+
+        expect(await tab.getAdminChangePassword()).toBeNull();
+    });
+
     it("should require every field", async () => {
         const tab = await openChangePassword();
 
@@ -92,6 +99,36 @@ describe("PasswordAndAuthenticationTabComponent", () => {
 
             expect(await tab.getNewPasswordError()).toBeNull();
             expect(await tab.getConfirmPasswordError()).toBeNull();
+            expect(await tab.isUpdateDisabled()).toBe(false);
+        });
+    });
+
+    describe("with 12 characters configured", () => {
+        beforeEach(() => {
+            fixture.destroy();
+            vi.spyOn(TestBed.inject(AppConfigService), "minNewPasswordLength", "get").mockReturnValue(12);
+            fixture = TestBed.createComponent(PasswordAndAuthenticationTabComponent);
+            component = fixture.componentInstance;
+            setComponentInput(fixture, "account", mockAccountDetails);
+            fixture.detectChanges();
+        });
+
+        it("should ask for 12 characters", async () => {
+            const tab = await openChangePassword();
+
+            await tab.setNewPassword("12345678901");
+
+            expect(await tab.getNewPasswordError()).toBe("New password must be at least 12 characters");
+        });
+
+        it("should accept 12 characters", async () => {
+            const tab = await openChangePassword();
+
+            await tab.setOldPassword("old-password");
+            await tab.setNewPassword("123456789012");
+            await tab.setConfirmPassword("123456789012");
+
+            expect(await tab.getNewPasswordError()).toBeNull();
             expect(await tab.isUpdateDisabled()).toBe(false);
         });
     });
@@ -145,6 +182,22 @@ describe("PasswordAndAuthenticationTabComponent", () => {
             oldPassword: "",
             newPassword: "",
             confirmPassword: "",
+        });
+    });
+
+    it("should keep what the user typed when the server does not change the password", async () => {
+        vi.spyOn(accountService, "changeUserPassword").mockReturnValue(of(false));
+        const tab = await openChangePassword();
+
+        await tab.setOldPassword("old-password");
+        await tab.setNewPassword("password1");
+        await tab.setConfirmPassword("password1");
+        await tab.update();
+
+        expect(component.changeUserAccountPasswordForm.getRawValue()).toEqual({
+            oldPassword: "old-password",
+            newPassword: "password1",
+            confirmPassword: "password1",
         });
     });
 });

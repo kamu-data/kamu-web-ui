@@ -143,4 +143,20 @@ describe("BufferingBatchingRuleFormComponent", () => {
         });
         expect(await bufferingBatchingRuleHarness.getMaxBatchingIntervalError()).toBe("Value must be at most 60");
     });
+
+    it("should offer the batching interval in minutes and hours only, and accept at most 24 hours", async () => {
+        await bufferingBatchingRuleHarness.setMinRecordsToAwait(5);
+        expect(await bufferingBatchingRuleHarness.getBatchingIntervalUnits()).toEqual([
+            TimeUnit.Minutes,
+            TimeUnit.Hours,
+        ]);
+
+        await bufferingBatchingRuleHarness.setMaxBatchingInterval({ every: 24, unit: TimeUnit.Hours });
+        expect(await bufferingBatchingRuleHarness.getMaxBatchingIntervalError()).toBeNull();
+        expect(component.form.valid).toBe(true);
+
+        await bufferingBatchingRuleHarness.setMaxBatchingInterval({ every: 25, unit: TimeUnit.Hours });
+        expect(await bufferingBatchingRuleHarness.getMaxBatchingIntervalError()).toBe("Value must be at most 24");
+        expect(component.form.invalid).toBe(true);
+    });
 });

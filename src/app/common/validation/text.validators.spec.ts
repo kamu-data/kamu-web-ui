@@ -79,6 +79,10 @@ describe("Text validators", () => {
         });
     });
 
+    it("should leave a value that is not text to other validators", () => {
+        expect(new FormControl(12345, maxBytesValidator(4)).errors).toBeNull();
+    });
+
     describe("asciiValidator", () => {
         [
             { value: "", expected: null },

@@ -100,6 +100,17 @@ describe("LoadMoreComponent", () => {
         });
     });
 
+    it("should show and hide the row options", async () => {
+        const loadMore = await loadMoreHarness();
+        expect(await loadMore.areOptionsShown()).toBe(false);
+
+        await loadMore.toggleOptions();
+        expect(await loadMore.areOptionsShown()).toBe(true);
+
+        await loadMore.toggleOptions();
+        expect(await loadMore.areOptionsShown()).toBe(false);
+    });
+
     it("should load nothing more once all data is loaded", async () => {
         setComponentInput(fixture, "isAllDataLoaded", true);
         const loadMore = await loadMoreHarness();

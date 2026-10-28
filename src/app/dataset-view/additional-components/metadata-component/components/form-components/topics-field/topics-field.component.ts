@@ -41,5 +41,6 @@ export class TopicsFieldComponent extends BaseField<FormArray<FormGroup<TopicCon
 
     public removeItem(index: number): void {
         this.control.removeAt(index);
+        this.control.markAsDirty();
     }
 }

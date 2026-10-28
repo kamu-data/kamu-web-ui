@@ -17,6 +17,7 @@ import { provideToastr } from "ngx-toastr";
 import type { Mock } from "vitest";
 
 import { ModalService } from "@common/components/modal/modal.service";
+import { requireValue } from "@common/helpers/app.helpers";
 import { emitClickOnElementByDataTestId, setComponentInput, stubMethod } from "@common/helpers/base-test.helpers.spec";
 import AppValues from "@common/values/app.values";
 import { TEST_ACCOUNT_ID } from "@api/mock/auth.mock";
@@ -27,8 +28,14 @@ import { DatasetSettingsGeneralTabComponent } from "src/app/dataset-view/additio
 import { DatasetSettingsGeneralTabHarness } from "src/app/dataset-view/additional-components/dataset-settings-component/tabs/general/dataset-settings-general-tab.harness";
 import { DatasetResetMode } from "src/app/dataset-view/additional-components/dataset-settings-component/tabs/general/dataset-settings-general-tab.types";
 import { DatasetFlowsService } from "src/app/dataset-view/additional-components/flows-component/services/dataset-flows.service";
+import { DatasetViewTypeEnum } from "src/app/dataset-view/dataset-view.interface";
 import { DatasetService } from "src/app/dataset-view/dataset.service";
-import { mockDatasetBasicsDerivedFragment, mockFullPowerDatasetPermissionsFragment } from "src/app/search/mock.data";
+import {
+    mockDatasetBasicsDerivedFragment,
+    mockFullPowerDatasetPermissionsFragment,
+    mockPrivateDatasetVisibility,
+    mockPublicDatasetVisibility,
+} from "src/app/search/mock.data";
 import { NavigationService } from "src/app/services/navigation.service";
 
 describe("DatasetSettingsGeneralTabComponent", () => {
@@ -294,15 +301,106 @@ describe("DatasetSettingsGeneralTabComponent", () => {
         flush();
     }));
 
-    it("should check change dataset visibility", async () => {
-        const modalServiceSpy = answerEveryModal(true);
-        const setVisibilitySpy = vi.spyOn(datasetSettingsService, "setVisibility").mockImplementation(() => of());
+    [
+        {
+            visibility: mockPublicDatasetVisibility,
+            question: "Do you want to make dataset private?",
+            input: { private: {} },
+        },
+        {
+            visibility: mockPrivateDatasetVisibility,
+            question: "Do you want to make dataset public?",
+            input: { public: { anonymousAvailable: true } },
+        },
+    ].forEach(({ visibility, question, input }) => {
+        it(`should ask "${question}" and change the visibility, then open the overview`, async () => {
+            setComponentInput(fixture, "generalTabData", {
+                datasetBasics: { ...mockDatasetBasicsDerivedFragment, visibility },
+                datasetPermissions: structuredClone(mockFullPowerDatasetPermissionsFragment),
+            });
+            const modalServiceSpy = answerEveryModal(true);
+            const setVisibilitySpy = vi.spyOn(datasetSettingsService, "setVisibility").mockReturnValue(of(undefined));
+            const navigationSpy = stubMethod(navigationService, "navigateToDatasetView");
+            const tab = await generalTabHarness();
+
+            await tab.changeVisibility();
+
+            expect(requireValue(modalServiceSpy.mock.lastCall)[0].message).toBe(question);
+            expect(setVisibilitySpy).toHaveBeenCalledWith({
+                accountId: mockDatasetBasicsDerivedFragment.owner.id,
+                accountName: mockDatasetBasicsDerivedFragment.owner.accountName,
+                datasetId: mockDatasetBasicsDerivedFragment.id,
+                datasetName: mockDatasetBasicsDerivedFragment.name,
+                visibility: input,
+            });
+            expect(navigationSpy).toHaveBeenCalledWith({
+                accountName: mockDatasetBasicsDerivedFragment.owner.accountName,
+                datasetName: mockDatasetBasicsDerivedFragment.name,
+                tab: DatasetViewTypeEnum.Overview,
+            });
+        });
+    });
+
+    it("should keep the visibility when the change is cancelled", async () => {
+        answerEveryModal(false);
+        const setVisibilitySpy = stubMethod(datasetSettingsService, "setVisibility");
         const tab = await generalTabHarness();
 
         await tab.changeVisibility();
 
-        expect(modalServiceSpy).toHaveBeenCalledTimes(1);
-        expect(setVisibilitySpy).toHaveBeenCalledTimes(1);
+        expect(setVisibilitySpy).not.toHaveBeenCalled();
+    });
+
+    it("should not reset the dataset when the reset is cancelled", async () => {
+        answerEveryModal(false);
+        const resetSpy = stubMethod(datasetFlowsService, "datasetTriggerResetFlow");
+        const tab = await generalTabHarness();
+
+        await tab.resetDataset();
+
+        expect(resetSpy).not.toHaveBeenCalled();
+    });
+
+    [DatasetResetMode.RESET_TO_SEED, DatasetResetMode.RESET_METADATA_ONLY].forEach((mode) => {
+        it(`should stay on the page when the ${mode} reset fails to start`, fakeAsync(async () => {
+            component.resetDatasetForm.patchValue({ mode });
+            answerEveryModal(true);
+            vi.spyOn(datasetFlowsService, "datasetTriggerResetFlow").mockReturnValue(of(false));
+            vi.spyOn(datasetFlowsService, "datasetTriggerResetToMetadataFlow").mockReturnValue(of(false));
+            const navigationSpy = stubMethod(navigationService, "navigateToDatasetView");
+            const tab = await generalTabHarness();
+
+            await tab.resetDataset();
+            tick(AppValues.SIMULATION_START_CONDITION_DELAY_MS);
+
+            expect(navigationSpy).not.toHaveBeenCalled();
+            flush();
+        }));
+    });
+
+    it("should scroll to the section the URL fragment names when the tab opens", () => {
+        const scrollSpy = vi.spyOn(HTMLElement.prototype, "scrollIntoView").mockImplementation(() => {});
+        fixture.destroy();
+        Object.assign(TestBed.inject(ActivatedRoute), { fragment: of("visibility") });
+        fixture = TestBed.createComponent(DatasetSettingsGeneralTabComponent);
+        setComponentInput(fixture, "generalTabData", {
+            datasetBasics: mockDatasetBasicsDerivedFragment,
+            datasetPermissions: structuredClone(mockFullPowerDatasetPermissionsFragment),
+        });
+        fixture.detectChanges();
+        TestBed.inject(ApplicationRef).tick();
+
+        expect(scrollSpy).toHaveBeenCalledTimes(1);
+    });
+
+    it("should not scroll without a section", () => {
+        const scrollSpy = vi.spyOn(HTMLElement.prototype, "scrollIntoView").mockImplementation(() => {});
+
+        component.jumpToSection(null);
+        fixture.detectChanges();
+        TestBed.inject(ApplicationRef).tick();
+
+        expect(scrollSpy).not.toHaveBeenCalled();
     });
 
     it("should navigate to flows after a reset only once the delay passes, and not after destroy", fakeAsync(() => {

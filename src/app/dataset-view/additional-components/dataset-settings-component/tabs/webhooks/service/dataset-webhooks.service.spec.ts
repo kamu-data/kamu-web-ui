@@ -166,6 +166,35 @@ describe("DatasetWebhooksService", () => {
         expect(toastrServiceErrorSpy).not.toHaveBeenCalled();
     });
 
+    it("should toast a create error that belongs to no field", async () => {
+        const dataset = requireValue(mockDatasetWebhookCreateSubscriptionMutationError.datasets.byId);
+        const noEventTypes: DatasetWebhookCreateSubscriptionMutation = {
+            datasets: {
+                ...mockDatasetWebhookCreateSubscriptionMutationError.datasets,
+                byId: {
+                    ...dataset,
+                    webhooks: {
+                        ...dataset.webhooks,
+                        createSubscription: {
+                            __typename: "WebhookSubscriptionNoEventTypesProvided",
+                            numEventTypes: 0,
+                            message: "At least one event type must be provided",
+                        },
+                    },
+                },
+            },
+        };
+        vi.spyOn(webhooksApi, "datasetWebhookCreateSubscription").mockReturnValue(of(noEventTypes));
+        const toastrServiceErrorSpy = stubMethod(toastrService, "error");
+
+        const result = await firstValueFrom(
+            service.datasetWebhookCreateSubscription(DATASET_ID, mockWebhookSubscriptionInput),
+        );
+
+        expect(result).toEqual({ ok: false, fieldError: null });
+        expect(toastrServiceErrorSpy).toHaveBeenCalledWith("At least one event type must be provided");
+    });
+
     it("should check remove dataset webhook subscription with success", () => {
         const datasetWebhookRemoveSubscriptionSpy = vi
             .spyOn(webhooksApi, "datasetWebhookRemoveSubscription")
@@ -188,6 +217,26 @@ describe("DatasetWebhooksService", () => {
         });
 
         expect(datasetWebhookRotateSecretSpy).toHaveBeenCalledTimes(1);
+    });
+
+    it("should give an empty secret when the subscription to rotate is gone", async () => {
+        vi.spyOn(webhooksApi, "datasetWebhookRotateSecret").mockReturnValue(
+            of({
+                datasets: {
+                    ...mockDatasetWebhookRotateSecretMutation.datasets,
+                    byId: {
+                        ...requireValue(mockDatasetWebhookRotateSecretMutation.datasets.byId),
+                        webhooks: { __typename: "DatasetWebhooksMut", subscription: null },
+                    },
+                },
+            }),
+        );
+        const toastrServiceSuccessSpy = stubMethod(toastrService, "success");
+
+        const result = await firstValueFrom(service.datasetWebhookRotateSecret(DATASET_ID, MOCK_SUBSCRIPTION_ID));
+
+        expect(result).toBe("");
+        expect(toastrServiceSuccessSpy).not.toHaveBeenCalled();
     });
 
     it("should check remove dataset webhook subscription with error", () => {

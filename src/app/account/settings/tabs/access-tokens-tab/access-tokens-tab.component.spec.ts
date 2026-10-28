@@ -228,6 +228,43 @@ describe("AccessTokensTabComponent", () => {
         expect(modalWindowSpy).toHaveBeenCalledTimes(1);
     });
 
+    it("should keep the token when the user cancels the revoke", () => {
+        const revokeAccessTokensSpy = vi.spyOn(accessTokenService, "revokeAccessTokens");
+        vi.spyOn(modalService, "error").mockImplementation((options: ModalArgumentsInterface) => {
+            options.handler?.call(undefined, false);
+            return Promise.resolve("");
+        });
+
+        component.deleteToken(TOKEN_ID);
+
+        expect(revokeAccessTokensSpy).not.toHaveBeenCalled();
+        expect(navigateToSettingsSpy).not.toHaveBeenCalled();
+    });
+
+    it("should refresh the token list once a token is revoked", () => {
+        const revokeAccessTokensSpy = vi.spyOn(accessTokenService, "revokeAccessTokens").mockReturnValue(of(undefined));
+        vi.spyOn(modalService, "error").mockImplementation((options: ModalArgumentsInterface) => {
+            options.handler?.call(undefined, true);
+            return Promise.resolve("");
+        });
+
+        component.deleteToken(TOKEN_ID);
+
+        expect(revokeAccessTokensSpy).toHaveBeenCalledWith(mockAccountDetails.id, TOKEN_ID);
+        expect(navigateToSettingsSpy).toHaveBeenCalledWith(AccountSettingsTabs.ACCESS_TOKENS);
+    });
+
+    it("should keep the typed name and show no token when the server creates none", async () => {
+        vi.spyOn(accessTokenService, "createAccessTokens").mockReturnValue(of(null));
+        const tab = await openNewTokenForm();
+
+        await tab.setTokenName("token-name");
+        await tab.generate();
+
+        expect(component.composedToken).toEqual("");
+        expect(component.createTokenForm.controls.name.value).toEqual("token-name");
+    });
+
     it("should check toggle status tokens", () => {
         component.showRevokedToken = true;
         component.toggleTokens();

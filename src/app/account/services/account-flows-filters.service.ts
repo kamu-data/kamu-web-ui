@@ -113,9 +113,7 @@ export class AccountFlowsFiltersService {
                     lastAttemptBetween:
                         this.currentFiltersSnapshot.toFilterDate && this.currentFiltersSnapshot.fromFilterDate
                             ? {
-                                  start: this.currentFiltersSnapshot.fromFilterDate
-                                      ? stripSecondsFromDateToISOString(this.currentFiltersSnapshot.fromFilterDate)
-                                      : stripSecondsFromDateToISOString(sixHoursAgoDate),
+                                  start: stripSecondsFromDateToISOString(this.currentFiltersSnapshot.fromFilterDate),
                                   end: stripSecondsFromDateToISOString(this.currentFiltersSnapshot.toFilterDate),
                               }
                             : undefined,

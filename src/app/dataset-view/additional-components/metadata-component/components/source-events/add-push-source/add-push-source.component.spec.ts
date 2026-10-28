@@ -17,6 +17,7 @@ import { NgbModal, NgbModalRef } from "@ng-bootstrap/ng-bootstrap";
 import { Apollo } from "apollo-angular";
 import { ApolloTestingModule } from "apollo-angular/testing";
 
+import { requireValue } from "@common/helpers/app.helpers";
 import { registerMatSvgIcons, setComponentInput } from "@common/helpers/base-test.helpers.spec";
 import { mockAccountDetails } from "@api/mock/auth.mock";
 
@@ -184,6 +185,12 @@ describe("AddPushSourceComponent without query parameter name", () => {
         return navigation.isNextDisabled();
     }
 
+    async function save(): Promise<void> {
+        const loader = TestbedHarnessEnvironment.loader(fixture);
+        const navigations = await loader.getAllHarnesses(StepperNavigationHarness);
+        await requireValue(navigations.at(-1)).save();
+    }
+
     it("should require a source name and keep Next disabled until it is given", async () => {
         const sourceName = await sourceNameField();
 
@@ -213,6 +220,27 @@ describe("AddPushSourceComponent without query parameter name", () => {
         await sourceName.setValue("existing");
 
         expect(await sourceName.getErrorMessage()).toBe("Source name already exists");
+        expect(await isNextDisabled()).toBe(true);
+    });
+
+    it("should save the source name the user typed", async () => {
+        vi.spyOn(TestBed.inject(LoggedUserService), "currentlyLoggedInUser", "get").mockReturnValue(mockAccountDetails);
+        const commitSpy = vi.spyOn(TestBed.inject(DatasetCommitService), "commitEventToDataset").mockReturnValue(of());
+        const sourceName = await sourceNameField();
+        await sourceName.setValue("my-source");
+
+        await save();
+
+        expect(commitSpy).toHaveBeenCalledTimes(1);
+        expect(requireValue(commitSpy.mock.lastCall)[0].event).toContain("  sourceName: my-source\n");
+    });
+
+    it("should start with an empty name when there is no source to copy", async () => {
+        setComponentInput(fixture, "eventYamlByHash", "");
+        const sourceName = await sourceNameField();
+
+        expect(await sourceName.getValue()).toBe("");
+        expect(component.showPreprocessStep).toBe(false);
         expect(await isNextDisabled()).toBe(true);
     });
 });

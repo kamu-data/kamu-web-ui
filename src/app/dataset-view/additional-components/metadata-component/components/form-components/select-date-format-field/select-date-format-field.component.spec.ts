@@ -71,6 +71,14 @@ describe("SelectDateFormatFieldComponent", () => {
         expect(await harness.getPatternErrorMessage()).toBe("Pattern is required");
     });
 
+    it("should reject a pattern that is not a regular expression", async () => {
+        await harness.selectKind(EventTimeSourceKind.FROM_PATH);
+        await harness.setPattern("data-(.*");
+
+        expect(await harness.getPatternErrorMessage()).toBe("Pattern must be a valid regular expression");
+        expect(host.control.valid).toBe(false);
+    });
+
     it("should write the pattern and timestamp format into the group", async () => {
         await harness.selectKind(EventTimeSourceKind.FROM_PATH);
         await harness.setPattern("(\\d+).csv");

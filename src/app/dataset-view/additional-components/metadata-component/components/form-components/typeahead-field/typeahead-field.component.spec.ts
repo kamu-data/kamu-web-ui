@@ -10,6 +10,8 @@ import { Component } from "@angular/core";
 import { ComponentFixture, TestBed } from "@angular/core/testing";
 import { Validators } from "@angular/forms";
 
+import { singleCharValidator } from "@common/validation/text.validators";
+
 import { TypeaheadFieldComponent } from "src/app/dataset-view/additional-components/metadata-component/components/form-components/typeahead-field/typeahead-field.component";
 import { TypeaheadFieldHarness } from "src/app/dataset-view/additional-components/metadata-component/components/form-components/typeahead-field/typeahead-field.harness";
 import { textControl } from "src/app/dataset-view/additional-components/metadata-component/components/source-events/source-section";
@@ -60,6 +62,12 @@ describe("TypeaheadFieldComponent", () => {
         expect(await harness.getSuggestions()).toEqual(["iso8601"]);
     });
 
+    it("should suggest every format when the empty input is clicked", async () => {
+        await harness.openSuggestions();
+
+        expect(await harness.getSuggestions()).toEqual(["rfc3339", "iso8601"]);
+    });
+
     it("should write the picked suggestion into the control", async () => {
         await harness.typeText("rfc");
         await harness.selectSuggestion("rfc3339");
@@ -79,5 +87,13 @@ describe("TypeaheadFieldComponent", () => {
         await harness.touch();
 
         expect(await harness.getErrorMessage()).toBe("Date format is required");
+    });
+
+    it("should show the error of the control's own validator", async () => {
+        host.control.setValidators([Validators.required, singleCharValidator()]);
+
+        await harness.setValue(",;");
+
+        expect(await harness.getErrorMessage()).toBe("Date format must be a single ASCII character");
     });
 });

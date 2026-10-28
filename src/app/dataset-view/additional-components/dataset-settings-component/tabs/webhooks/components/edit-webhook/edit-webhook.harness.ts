@@ -15,12 +15,22 @@ export class EditWebhookHarness extends ComponentHarness {
     public static readonly hostSelector = "app-edit-webhook";
 
     private static readonly SUBMIT_BUTTON_TEST_ID = "update-subscription-button";
+    private static readonly CANCEL_BUTTON_TEST_ID = "cancel-update-button";
 
     public readonly getForm = this.locatorFor(WebhookFormHarness);
 
     private readonly locatorSubmitButton = this.locatorFor(
         `[data-test-id="${EditWebhookHarness.SUBMIT_BUTTON_TEST_ID}"]`,
     );
+
+    private readonly locatorCancelButton = this.locatorFor(
+        `[data-test-id="${EditWebhookHarness.CANCEL_BUTTON_TEST_ID}"]`,
+    );
+
+    public async cancel(): Promise<void> {
+        const button = await this.locatorCancelButton();
+        await button.click();
+    }
 
     public async isSubmitDisabled(): Promise<boolean> {
         const button = await this.locatorSubmitButton();

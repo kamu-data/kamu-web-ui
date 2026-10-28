@@ -147,6 +147,15 @@ describe("LoginComponent", () => {
             expect(spyGotoGithub).toHaveBeenCalledTimes(1);
         });
 
+        it("should sign in with a Web3 wallet when that method is picked", async () => {
+            const web3WalletLoginSpy = vi.spyOn(loginService, "web3WalletLogin").mockResolvedValue();
+            const login = await loginHarness();
+
+            await login.selectWeb3Wallet();
+
+            expect(web3WalletLoginSpy).toHaveBeenCalledWith(null);
+        });
+
         it("Select password method should switch on the password block and disable selection", async () => {
             const login = await loginHarness();
 
@@ -264,6 +273,15 @@ describe("LoginComponent", () => {
                 await login.setLogin(TEST_LOGIN);
 
                 expect(await login.getLoginFailure()).toBeNull();
+            });
+
+            it("should keep the login failure when Enter is pressed in a field", async () => {
+                stubMethod(loginService, "passwordLogin");
+                loginService.emitPasswordLoginErrorOccurred("Bad credentials");
+
+                await login.pressEnterInPassword();
+
+                expect(await login.getLoginFailure()).toBe("Bad credentials");
             });
 
             it("should clear the login failure once the password is edited", async () => {

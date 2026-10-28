@@ -8,6 +8,7 @@
 import { TestbedHarnessEnvironment } from "@angular/cdk/testing/testbed";
 import { Component } from "@angular/core";
 import { ComponentFixture, TestBed } from "@angular/core/testing";
+import { Validators } from "@angular/forms";
 
 import { uniqueItemsValidator } from "@common/validation/collection.validators";
 
@@ -86,6 +87,16 @@ describe("ArrayKeysFieldComponent", () => {
 
         expect(await harness.getItems()).toEqual(["event_time"]);
         expect(host.control.getRawValue()).toEqual(["event_time"]);
+    });
+
+    it("should say the list is required once its last key is removed", async () => {
+        host.control = textListControl()([Validators.required]);
+        host.control.push(listItemControl("id"));
+        await render();
+
+        await harness.removeItem(0);
+
+        expect(await harness.getErrorMessage()).toBe("Primary key is required");
     });
 
     it("should require each entry and reject a repeated one", async () => {

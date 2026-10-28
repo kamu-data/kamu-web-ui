@@ -7,12 +7,22 @@
 
 /// <reference types="vite/client" />
 
-// Every template, as text, keyed by its path relative to this file.
-const TEMPLATES: Record<string, string> = import.meta.glob("./**/*.html", {
-    query: "?raw",
-    import: "default",
-    eager: true,
-});
+const FOUND_TEMPLATES = Object.entries(
+    import.meta.glob<string>("./**/*.html", { query: "?raw", import: "default", eager: true }),
+);
+// A coverage run resolves the glob from the project root, so its keys start with this and include files outside the app.
+const ROOT_PREFIX = "./src/app/";
+const FROM_ROOT = FOUND_TEMPLATES.some(([path]) => path.startsWith(ROOT_PREFIX));
+
+// Every template of the app, as text, keyed by its path relative to this file.
+const TEMPLATES: Record<string, string> = Object.fromEntries(
+    FROM_ROOT
+        ? FOUND_TEMPLATES.filter(([path]) => path.startsWith(ROOT_PREFIX)).map(([path, template]) => [
+              `./${path.slice(ROOT_PREFIX.length)}`,
+              template,
+          ])
+        : FOUND_TEMPLATES,
+);
 
 /**
  * Form inputs that show no validation message, each with the reason it needs none. An input whose control has a

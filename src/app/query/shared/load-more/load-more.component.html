@@ -10,11 +10,22 @@
 </button>
 
 @if (!isAllDataLoaded) {
-    <button type="button" mat-button class="mr-4 btn-toggle" [class.opened]="isHolderVisible" (click)="toggleOptions()">
+    <button
+        type="button"
+        mat-button
+        class="mr-4 btn-toggle"
+        data-test-id="btn-row-options"
+        [class.opened]="isHolderVisible"
+        (click)="toggleOptions()"
+    >
         Options
         <mat-icon fontIcon="chevron_right" />
     </button>
-    <div class="d-flex flex-wrap align-items-center row-gap-3 holder" [class.hidden]="!isHolderVisible">
+    <div
+        class="d-flex flex-wrap align-items-center row-gap-3 holder"
+        data-test-id="row-options"
+        [class.hidden]="!isHolderVisible"
+    >
         <p class="mb-0 mr-4">Select number of rows to load:</p>
         <mat-button-toggle-group
             name="query-limits"

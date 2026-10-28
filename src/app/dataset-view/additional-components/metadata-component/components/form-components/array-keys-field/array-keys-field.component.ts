@@ -42,5 +42,6 @@ export class ArrayKeysFieldComponent extends BaseField<FormArray<TextControl>> {
 
     public removeItem(index: number): void {
         this.control.removeAt(index);
+        this.control.markAsDirty();
     }
 }

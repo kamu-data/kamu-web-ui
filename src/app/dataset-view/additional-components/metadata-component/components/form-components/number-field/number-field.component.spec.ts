@@ -74,10 +74,30 @@ describe("NumberFieldComponent", () => {
         expect(await harness.getErrorMessage()).toBe("Port is required");
     });
 
-    it("should show the range error for a number out of range", async () => {
+    it("should show the range error for a number below the range", async () => {
         await harness.setValue("0");
 
         expect(host.control.hasError("min")).toBe(true);
         expect(await harness.getErrorMessage()).toBe("Port must be at least 1");
+    });
+
+    it("should show the range error for a number above the range", async () => {
+        await harness.setValue("65536");
+
+        expect(await harness.getErrorMessage()).toBe("Port must be at most 65535");
+    });
+
+    it("should accept both ends of the range", async () => {
+        await harness.setValue("1");
+        expect(await harness.getErrorMessage()).toBeNull();
+
+        await harness.setValue("65535");
+        expect(await harness.getErrorMessage()).toBeNull();
+    });
+
+    it("should show the whole-number error for a fraction", async () => {
+        await harness.setValue("1.5");
+
+        expect(await harness.getErrorMessage()).toBe("Port must be a whole number");
     });
 });

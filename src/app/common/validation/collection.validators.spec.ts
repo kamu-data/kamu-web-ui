@@ -49,6 +49,10 @@ describe("Collection validators", () => {
             expect(validator(array("id", "name", "", ""))).toBeNull();
         });
 
+        it("should ignore a control that is not a list", () => {
+            expect(uniqueItemsValidator((item) => item.value)(new FormControl("id"))).toBeNull();
+        });
+
         it("should report the first repeated item", () => {
             const validator = uniqueItemsValidator((item) => item.value);
             expect(validator(array("id", "name", "id"))).toEqual({ duplicateItems: { value: "id" } });

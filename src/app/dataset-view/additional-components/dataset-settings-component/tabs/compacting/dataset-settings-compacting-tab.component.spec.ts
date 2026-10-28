@@ -149,6 +149,43 @@ describe("DatasetSettingsCompactingTabComponent", () => {
         });
     });
 
+    [
+        { unit: SliceUnit.KB, bytes: 1024 },
+        { unit: SliceUnit.MB, bytes: 1024 * 1024 },
+        { unit: SliceUnit.GB, bytes: 1024 * 1024 * 1024 },
+    ].forEach(({ unit, bytes }) => {
+        it(`should send a slice size of 1 ${unit} as ${bytes} bytes`, async () => {
+            const runHardCompactionSpy = vi
+                .spyOn(datasetFlowsService, "datasetTriggerCompactionFlow")
+                .mockReturnValue(of(false));
+            confirmEveryModal();
+            const tab = await compactingTabHarness();
+
+            await tab.setSliceSize("1");
+            await tab.setSliceUnit(unit);
+            await tab.setRecordsCount("1");
+            await tab.runCompaction();
+
+            expect(runHardCompactionSpy).toHaveBeenCalledWith({
+                datasetId: mockDatasetBasicsDerivedFragment.id,
+                compactionConfigInput: { maxSliceSize: bytes, maxSliceRecords: 1 },
+            });
+        });
+    });
+
+    it("should not run compaction when it is cancelled", async () => {
+        vi.spyOn(modalService, "error").mockImplementation((options: ModalArgumentsInterface) => {
+            options.handler?.call(undefined, false);
+            return Promise.resolve("");
+        });
+        const runHardCompactionSpy = stubMethod(datasetFlowsService, "datasetTriggerCompactionFlow");
+        const tab = await compactingTabHarness();
+
+        await tab.runCompaction();
+
+        expect(runHardCompactionSpy).not.toHaveBeenCalled();
+    });
+
     it("should check run hard compacting", fakeAsync(async () => {
         const navigateToDatasetViewSpy = vi
             .spyOn(navigationService, "navigateToDatasetView")

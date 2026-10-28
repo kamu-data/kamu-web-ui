@@ -51,8 +51,8 @@
                     <div class="dataset-box p-2 mx-2 my-4 rounded-3">
                         <div class="px-2 py-3">
                             <div class="fw-500">ID:</div>
-                            @if (datasetInfoObservables$[i] | async; as datasetInfo) {
-                                <div class="mt-2 text-break">
+                            <div class="mt-2 text-break">
+                                @if (datasetInfoObservables$[i] | async; as datasetInfo) {
                                     <a
                                         [class.error-color]="isDatasetNotFoundError(verifyError, dataset.id)"
                                         [routerLink]="
@@ -67,8 +67,16 @@
                                     >
                                         {{ dataset.id }}
                                     </a>
-                                </div>
-                            }
+                                } @else {
+                                    <span
+                                        [class.error-color]="isDatasetNotFoundError(verifyError, dataset.id)"
+                                        class="font-monospace"
+                                        attr.data-test-id="input-dataset-unresolved-id-{{ i }}"
+                                    >
+                                        {{ dataset.id }}
+                                    </span>
+                                }
+                            </div>
                         </div>
                         <div class="px-2 py-3">
                             <div class="fw-500">Alias:</div>
@@ -83,10 +91,11 @@
                                     [showCopyButton]="true"
                                     data-test-id="input-dataset-hash"
                                 />
-                                <span class="ms-4" attr.data-test-id="input-dataset-date-{{ i }}">
-                                    ( as of
-                                    {{ blockHashObservables$[i] | async | date: DISPLAY_TIME_FORMAT }} )
-                                </span>
+                                @if (blockHashObservables$[i] | async; as blockTime) {
+                                    <span class="ms-4" attr.data-test-id="input-dataset-date-{{ i }}">
+                                        ( as of {{ blockTime | date: DISPLAY_TIME_FORMAT }} )
+                                    </span>
+                                }
                             </div>
                         </div>
                     </div>

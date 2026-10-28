@@ -631,6 +631,10 @@ export class DatasetApi {
             );
     }
 
+    /**
+     * Errors when the node cannot serve the file content directly, as with local storage. The
+     * error gets no toast: the caller shows that the file is unavailable.
+     */
     public getVersionedFileContentUrl(datasetId: string, version: number): Observable<VersionedFileContentUrlQuery> {
         return this.versionedFileContentUrlGQL
             .watch({
@@ -641,10 +645,11 @@ export class DatasetApi {
                 ...noCacheFetchPolicy,
                 context: {
                     skipLoading: true,
+                    skipErrorToast: true,
                 },
             })
             .valueChanges.pipe(
-                onlyCompleteData(),
+                completeDataOrError(),
                 first(),
                 map((result: ObservableQuery.Result<VersionedFileContentUrlQuery, "complete">) => {
                     return result.data;

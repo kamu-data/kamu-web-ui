@@ -108,12 +108,16 @@
                 <app-block-row-data [tooltip]="POLLING_SOURCE_TOOLTIPS.MQTT_PORT" label="Port:">
                     <span>{{ pollingSource.fetch.port }}</span>
                 </app-block-row-data>
-                <app-block-row-data [tooltip]="POLLING_SOURCE_TOOLTIPS.MQTT_USERNAME" label="Username:">
-                    <span>{{ pollingSource.fetch.username }}</span>
-                </app-block-row-data>
-                <app-block-row-data [tooltip]="POLLING_SOURCE_TOOLTIPS.MQTT_PASSWORD" label="Password:">
-                    <span>{{ pollingSource.fetch.password }}</span>
-                </app-block-row-data>
+                @if (pollingSource.fetch.username) {
+                    <app-block-row-data [tooltip]="POLLING_SOURCE_TOOLTIPS.MQTT_USERNAME" label="Username:">
+                        <span data-test-id="fetch-mqtt-username">{{ pollingSource.fetch.username }}</span>
+                    </app-block-row-data>
+                }
+                @if (pollingSource.fetch.password) {
+                    <app-block-row-data [tooltip]="POLLING_SOURCE_TOOLTIPS.MQTT_PASSWORD" label="Password:">
+                        <span data-test-id="fetch-mqtt-password">{{ pollingSource.fetch.password }}</span>
+                    </app-block-row-data>
+                }
                 @if (pollingSource.fetch.topics.length) {
                     <app-block-row-data [tooltip]="POLLING_SOURCE_TOOLTIPS.MQTT_TOPICS" label="Topics:">
                         <app-topics-property [data]="pollingSource.fetch.topics" />

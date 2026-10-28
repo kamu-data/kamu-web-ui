@@ -1768,11 +1768,6 @@ export const mockVersionedFileEntryByVersion: VersionedFileEntryDataFragment = {
     contentType: "application/pdf",
     contentLength: 381846,
     contentHash: "f162037eb2f65a4e07a794a63c1bf1bcd37d2bd8d55dcce2b35d64a68ce6d79907d0f",
-    contentUrl: {
-        url: "https://s3.us-west-2.amazonaws.com/repo.dev.stg.kamu.dev.us-west-2/fed01dd0540db0ffb1d66922216063b4b12e750fede89",
-        expiresAt: "2026-04-20T17:04:26.013070937+00:00",
-        __typename: "VersionedFileContentDownload",
-    },
     __typename: "VersionedFileEntry",
 };
 
@@ -1801,11 +1796,6 @@ export const mockVersionedFileEntryLatest: VersionedFileEntryDataFragment = {
     contentType: "application/pdf",
     contentLength: 381846,
     contentHash: "f162037eb2f65a4e07a794a63c1bf1bcd37d2bd8d55dcce2b35d64a68ce6d79907d0f",
-    contentUrl: {
-        url: "https://s3.us-west-2.amazonaws.com/repo.dev.stg.kamu.dev.us-west-2/fed01dd0540db0ffb1d66922216063b4b12e750fede89",
-        expiresAt: "2026-04-20T17:06:49.060763118+00:00",
-        __typename: "VersionedFileContentDownload",
-    },
     __typename: "VersionedFileEntry",
 };
 

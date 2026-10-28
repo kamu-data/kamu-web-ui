@@ -8,6 +8,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Changed
 - Account flows, Processes: resuming an auto-stopped process asks for confirmation, as the dataset's Flows tab does, and "Update now" refreshes the card shortly after instead of on the next poll
 ### Fixed
+- Metadata tab, polling and push sources:
+  - a CSV source without a header setting shows "Header: false" instead of an empty row, and "Infer schema: false" is shown instead of left out
+  - a newline-delimited JSON source shows its encoding, date format and timestamp format
+  - an MQTT source without a username or password leaves those rows out instead of showing them empty
+- Collection: a folder whose first entry is a dataset or a missing dataset shows as a folder and opens in place, instead of showing as that entry
+- Global query: a link with a query opens that query in the editor instead of an empty one, and opening the page without a query restores the last one you ran
 - Forms: fields accept what kamu-cli accepts, and say why under the field when they don't:
   - polling source editor: an MQTT port outside 1–65535, a malformed fetch or node URL, a CSV separator, quote or escape longer than one character, a blank pipe command, an empty primary key, and an Ethereum source with neither chain id nor node URL are rejected before saving; a saved Zip decompress step shows in the editor again
   - dataset variables: adding a key the dataset already has is rejected instead of overwriting its value
@@ -28,10 +34,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   - a source can be saved after switching from a fetch kind with an event time "From path" to one without event time, instead of an unseen empty pattern blocking it
 - Account flows, Processes: clicking the selected flows mode again keeps it selected instead of clearing the selection and stopping the list from loading
 - Flows tables: a run whose start or finish time is missing shows its state alone or "unknown" instead of "57 years ago" or a 1970 date
+- Query explainer: an input block that can't be found no longer shows "as of" with no date, and an unknown dataset id shows as text instead of a link to the wrong account
 - Query explainer: a verification the server rejects without saying why shows an error message instead of an empty result
 - History tab, block page and dataset overview: data commits show how many records they added and license commits the license name again, and the block page shows each event's details instead of the header alone
 - Lineage tab: the graph loads again instead of failing with a query recursion error
 - License modal: an empty name shows "Name is required" instead of "Test is required"
+- Versioned files on a node that does not serve file content directly, such as one with local storage, say that the file can't be previewed or downloaded there, instead of an empty preview, an error message and a failing download
 - Header: a page whose URL only contains "v/login" or "github_callback", such as a dataset named "login-records", shows the header again
 - Signing in again after a session expired, or from the "page not found" page, returns to the page with its query string and fragment, such as an SQL query
 - "Run" buttons in README and query explainer SQL blocks keep `&`, `#` and `+` in the query instead of cutting it off or turning `+` into a space

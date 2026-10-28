@@ -46,8 +46,8 @@ import { VerifyQueryError, VerifyQueryKindError } from "src/app/query-explainer/
     ],
 })
 export class InputDataSectionComponent {
-    @Input({ required: true }) public blockHashObservables$: Observable<Date>[];
-    @Input({ required: true }) public datasetInfoObservables$: Observable<DatasetInfo>[];
+    @Input({ required: true }) public blockHashObservables$: Observable<MaybeNull<Date>>[];
+    @Input({ required: true }) public datasetInfoObservables$: Observable<MaybeNull<DatasetInfo>>[];
     @Input({ required: true }) public inputData: QueryExplainerComponentData;
     @ViewChild(MarkdownComponent, { read: ElementRef, static: true }) private markdownElement: ElementRef<HTMLElement>;
 

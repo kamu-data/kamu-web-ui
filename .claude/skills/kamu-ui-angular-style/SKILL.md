@@ -206,6 +206,11 @@ code added itself, or a third-party callback triggers none of them.
   generics, and in specs and harnesses as much as in app code.
 - An optional interface property stays `name?: T`.
 - Unwrap guaranteed values with `requireValue()` from `@common/helpers/app.helpers`, not with `!`.
+- A value the server or a lookup may not find (an entity by id or hash, an `Array.find` result,
+  an optional field) is not guaranteed: return `MaybeNull<T>` and have the template show its
+  absence. Neither `requireValue()` nor a stand-in value (`""`, `new Date("")`, the admin
+  account) fits it: the first throws on a valid response, the second renders an empty label, a
+  link that leads nowhere, or an Invalid Date the `date` pipe rejects with NG02100.
 
 ### Files, names and constants
 

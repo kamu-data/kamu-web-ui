@@ -21,15 +21,15 @@ import { MatIconModule, MatIconRegistry } from "@angular/material/icon";
 import { MatProgressBarModule } from "@angular/material/progress-bar";
 import { DomSanitizer, SafeUrl } from "@angular/platform-browser";
 
-import { BehaviorSubject, combineLatest, Observable, ReplaySubject } from "rxjs";
-import { switchMap, tap } from "rxjs/operators";
+import { BehaviorSubject, combineLatest, Observable, of, ReplaySubject } from "rxjs";
+import { map, startWith, switchMap, tap } from "rxjs/operators";
 
 import { NgbAlert } from "@ng-bootstrap/ng-bootstrap";
 import { ToastrService } from "ngx-toastr";
 
 import { BaseComponent } from "@common/components/base.component";
 import { ValueNotFoundComponent } from "@common/components/value-not-found/value-not-found.component";
-import { promiseWithCatch } from "@common/helpers/app.helpers";
+import { promiseWithCatch, trackBusy } from "@common/helpers/app.helpers";
 import { DatasetBasicsFragment } from "@api/kamu.graphql.interface";
 import { MaybeNull, MaybeUndefined } from "@interface/app.types";
 
@@ -39,6 +39,8 @@ import { NavigationService } from "src/app/services/navigation.service";
 import { DatasetAsVersionedFileService } from "../../services/dataset-as-versioned-file.service";
 import { PdfViewerContentComponent } from "./components/pdf-viewer/pdf-viewer-content.component";
 import { PreviewFileTypePipe } from "./pipes/preview-file-type.pipe";
+import { VersionedFileContentView } from "./versioned-file-view.model";
+import { VersionedFileViewTexts } from "./versioned-file-view.text";
 
 @Component({
     selector: "app-versioned-file-view",
@@ -67,13 +69,15 @@ export class VersionedFileViewComponent extends BaseComponent implements OnInit,
     public datasetBasics$ = new ReplaySubject<DatasetBasicsFragment>(1);
     public version$ = new BehaviorSubject<MaybeNull<number>>(null);
 
-    public fileInfo$: Observable<VersionedFileView>;
-    public loadingFileDetails$: Observable<boolean>;
+    public fileView$: Observable<MaybeNull<VersionedFileContentView>>;
+    public readonly loadingFileDetails$ = new BehaviorSubject(true);
     public contentText$: Observable<MaybeUndefined<object | string>>;
 
     public urlContentPath: SafeUrl;
     public pdfComponent: MaybeNull<Type<PdfViewerContentComponent>> = null;
     public fileLatestVersion: number;
+
+    public readonly CONTENT_UNAVAILABLE_TEXT = VersionedFileViewTexts.CONTENT_UNAVAILABLE;
 
     private isRedirectToLatestVersion = false;
 
@@ -86,18 +90,15 @@ export class VersionedFileViewComponent extends BaseComponent implements OnInit,
     private datasetAsVersionedFileService = inject(DatasetAsVersionedFileService);
 
     public ngOnInit(): void {
-        this.loadingFileDetails$ = this.datasetAsVersionedFileService.loadingFileDetailsChanges;
-
-        this.fileInfo$ = combineLatest([this.datasetBasics$, this.version$]).pipe(
-            switchMap(([dataset, version]) => {
-                const datasetId = dataset.id;
-                if (this.isRedirectToLatestVersion || !version) {
-                    this.isRedirectToLatestVersion = false;
-                    return this.datasetAsVersionedFileService.requestDatasetAsVersionedFile(datasetId);
-                }
-                return this.datasetAsVersionedFileService.requestDatasetAsVersionedFileByVersion(datasetId, version);
-            }),
-            tap((data) => promiseWithCatch(this.setPreviewFileStrategy(data))),
+        this.fileView$ = combineLatest([this.datasetBasics$, this.version$]).pipe(
+            switchMap(([dataset, version]) =>
+                this.requestFileDetails(dataset.id, version).pipe(
+                    switchMap((details) => this.requestContentUrl(dataset.id, details)),
+                    startWith(null),
+                    trackBusy(this.loadingFileDetails$),
+                ),
+            ),
+            tap((view) => promiseWithCatch(this.setPreviewFileStrategy(view))),
         );
     }
 
@@ -110,25 +111,34 @@ export class VersionedFileViewComponent extends BaseComponent implements OnInit,
         }
     }
 
-    public async setPreviewFileStrategy(details: MaybeNull<VersionedFileView>): Promise<void> {
-        if (!details?.fileInfo) return;
+    public async setPreviewFileStrategy(view: MaybeNull<VersionedFileContentView>): Promise<void> {
+        // The previous version's preview must not stay on screen
+        this.contentText$ = of(undefined);
+        this.urlContentPath = "";
+        this.pdfComponent = null;
 
-        const { version, contentUrl, contentType } = details.fileInfo;
+        if (!view) return;
+
+        const { details, contentUrl } = view;
+        if (!details.fileInfo) return;
+
+        const { version, contentType } = details.fileInfo;
         this.fileLatestVersion = version;
+        if (!contentUrl) return;
 
         const fileType = this.previewFileTypePipe.transform(contentType);
 
         switch (fileType) {
             case "text":
-                this.contentText$ = this.datasetAsVersionedFileService.requestFileAsText(contentUrl.url);
+                this.contentText$ = this.datasetAsVersionedFileService.requestFileAsText(contentUrl);
                 break;
 
             case "json":
-                this.contentText$ = this.datasetAsVersionedFileService.requestFileAsJson(contentUrl.url);
+                this.contentText$ = this.datasetAsVersionedFileService.requestFileAsJson(contentUrl);
                 break;
 
             case "pdf":
-                this.urlContentPath = contentUrl.url;
+                this.urlContentPath = contentUrl;
                 const { PdfViewerContentComponent } =
                     await import("./components/pdf-viewer/pdf-viewer-content.component");
                 this.pdfComponent = PdfViewerContentComponent;
@@ -136,16 +146,13 @@ export class VersionedFileViewComponent extends BaseComponent implements OnInit,
                 break;
 
             case "svg":
-                this.iconRegistry.addSvgIcon(
-                    "custom-svg",
-                    this.sanitizer.bypassSecurityTrustResourceUrl(contentUrl.url),
-                );
+                this.iconRegistry.addSvgIcon("custom-svg", this.sanitizer.bypassSecurityTrustResourceUrl(contentUrl));
                 break;
 
             case "video":
             case "audio":
             case "image":
-                this.urlContentPath = this.sanitizer.bypassSecurityTrustUrl(contentUrl.url);
+                this.urlContentPath = this.sanitizer.bypassSecurityTrustUrl(contentUrl);
                 break;
 
             default:
@@ -175,5 +182,20 @@ export class VersionedFileViewComponent extends BaseComponent implements OnInit,
 
     public downloadFile(fileDetails: VersionedFileView): void {
         this.datasetAsVersionedFileService.downloadFile(this.datasetBasics.id, fileDetails);
+    }
+
+    private requestFileDetails(datasetId: string, version: MaybeNull<number>): Observable<VersionedFileView> {
+        if (this.isRedirectToLatestVersion || !version) {
+            this.isRedirectToLatestVersion = false;
+            return this.datasetAsVersionedFileService.requestDatasetAsVersionedFile(datasetId);
+        }
+        return this.datasetAsVersionedFileService.requestDatasetAsVersionedFileByVersion(datasetId, version);
+    }
+
+    private requestContentUrl(datasetId: string, details: VersionedFileView): Observable<VersionedFileContentView> {
+        const contentUrl$ = details.fileInfo
+            ? this.datasetAsVersionedFileService.getVersionedFileContentUrl(datasetId, details.fileInfo.version)
+            : of(null);
+        return contentUrl$.pipe(map((contentUrl) => ({ details, contentUrl })));
     }
 }

@@ -19,7 +19,12 @@ import {
     setComponentInput,
 } from "@common/helpers/base-test.helpers.spec";
 import { SharedTestModule } from "@common/modules/shared-test.module";
+import { FetchStepMqttDataFragment } from "@api/kamu.graphql.interface";
 
+import {
+    mockFetchStepMqtt,
+    mockSetPollingSourceEventWithFetchStepMqtt,
+} from "src/app/dataset-block/metadata-block/components/event-details/mock.events";
 import { mockMetadataRootUpdate } from "src/app/dataset-view/additional-components/data-tabs.mock";
 import { MetadataPollingSourceTabComponent } from "src/app/dataset-view/additional-components/metadata-component/tabs/metadata-polling-source-tab/metadata-polling-source-tab.component";
 import { mockDatasetBasicsRootFragment, mockFullPowerDatasetPermissionsFragment } from "src/app/search/mock.data";
@@ -66,5 +71,44 @@ describe("MetadataPollingSourceTabComponent", () => {
         if (fetch?.__typename === "FetchStepUrl") {
             expect(url?.innerText.trim()).toEqual(fetch.url);
         }
+    });
+
+    describe("MQTT credentials", () => {
+        function showMqttSource(fetch: FetchStepMqttDataFragment): void {
+            const metadataSummary = mockMetadataRootUpdate.metadataSummary;
+            setComponentInput(fixture, "datasetMetadataTabData", {
+                datasetBasics: mockDatasetBasicsRootFragment,
+                datasetPermissions: mockFullPowerDatasetPermissionsFragment,
+                metadataSummary: {
+                    ...metadataSummary,
+                    metadata: {
+                        ...metadataSummary.metadata,
+                        currentPollingSource: {
+                            ...mockSetPollingSourceEventWithFetchStepMqtt,
+                            fetch: { ...mockFetchStepMqtt, ...fetch },
+                        },
+                    },
+                },
+            });
+            fixture.detectChanges();
+        }
+
+        it("should show the credentials that are set", () => {
+            showMqttSource(mockFetchStepMqtt);
+
+            expect(findElementByDataTestId(fixture, "fetch-mqtt-username")?.innerText.trim()).toEqual(
+                mockFetchStepMqtt.username,
+            );
+            expect(findElementByDataTestId(fixture, "fetch-mqtt-password")?.innerText.trim()).toEqual(
+                mockFetchStepMqtt.password,
+            );
+        });
+
+        it("should leave out the credentials that are not set", () => {
+            showMqttSource({ ...mockFetchStepMqtt, username: null, password: null });
+
+            expect(findElementByDataTestId(fixture, "fetch-mqtt-username")).toBeUndefined();
+            expect(findElementByDataTestId(fixture, "fetch-mqtt-password")).toBeUndefined();
+        });
     });
 });

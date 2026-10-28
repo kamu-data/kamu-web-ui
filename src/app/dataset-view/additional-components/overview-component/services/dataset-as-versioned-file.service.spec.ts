@@ -7,12 +7,13 @@
 
 import { provideHttpClient } from "@angular/common/http";
 import { HttpTestingController, provideHttpClientTesting } from "@angular/common/http/testing";
-import { fakeAsync, flush, TestBed, tick } from "@angular/core/testing";
+import { TestBed } from "@angular/core/testing";
 
-import { of } from "rxjs";
+import { firstValueFrom, of, throwError } from "rxjs";
 
 import { Apollo } from "apollo-angular";
 import { provideToastr, ToastrService } from "ngx-toastr";
+import { Mock } from "vitest";
 
 import { requireValue } from "@common/helpers/app.helpers";
 import { stubMethod } from "@common/helpers/base-test.helpers.spec";
@@ -29,6 +30,7 @@ import {
     mockVersionedFileEntryLatest,
 } from "src/app/search/mock.data";
 
+import { VersionedFileViewTexts } from "../components/versioned-file-view/versioned-file-view.text";
 import { DatasetAsVersionedFileService } from "./dataset-as-versioned-file.service";
 
 describe("DatasetAsVersionedFileService", () => {
@@ -131,9 +133,6 @@ describe("DatasetAsVersionedFileService", () => {
     });
 
     it("should check #requestDatasetAsVersionedFileByVersion method", () => {
-        const emitLoadingFileDetailsChangedSpy = vi
-            .spyOn(service, "emitLoadingFileDetailsChanged")
-            .mockImplementation(() => {});
         const mockVersionedFileView: VersionedFileView = {
             name: MOCK_VERSIONED_FILE_NAME,
             fileInfo: mockVersionedFileEntryByVersion,
@@ -150,10 +149,9 @@ describe("DatasetAsVersionedFileService", () => {
         service.versionedFileDetailsChanges.subscribe((data) => {
             expect(data).toEqual(mockVersionedFileView);
         });
-        expect(emitLoadingFileDetailsChangedSpy).toHaveBeenCalledTimes(2);
     });
 
-    it("should check #getVersionedFileContentUrl method", () => {
+    it("should check #getVersionedFileContentUrl method", async () => {
         const mockResult = requireValue(
             mockVersionedFileContentUrlQuery.datasets.byId?.asVersionedFile?.asOf?.contentUrl.url,
         );
@@ -161,64 +159,75 @@ describe("DatasetAsVersionedFileService", () => {
             .spyOn(datasetApi, "getVersionedFileContentUrl")
             .mockReturnValue(of(mockVersionedFileContentUrlQuery));
 
-        service.getVersionedFileContentUrl(TEST_DATASET_ID, MOCK_VERSION).subscribe((data) => {
-            expect(data).toEqual(mockResult);
-            expect(getVersionedFileContentUrlSpy).toHaveBeenCalledTimes(1);
+        const url = await firstValueFrom(service.getVersionedFileContentUrl(TEST_DATASET_ID, MOCK_VERSION));
+
+        expect(url).toEqual(mockResult);
+        expect(getVersionedFileContentUrlSpy).toHaveBeenCalledWith(TEST_DATASET_ID, MOCK_VERSION);
+    });
+
+    it("should give no content URL when the node cannot serve the file content", async () => {
+        vi.spyOn(datasetApi, "getVersionedFileContentUrl").mockReturnValue(
+            throwError(() => new Error("Repository does not support external transfers")),
+        );
+
+        const url = await firstValueFrom(service.getVersionedFileContentUrl(TEST_DATASET_ID, MOCK_VERSION));
+
+        expect(url).toBeNull();
+    });
+
+    describe("#downloadFile", () => {
+        const CONTENT_URL = "https://example.com/file-content";
+        const mockVersionedFileView: VersionedFileView = {
+            name: MOCK_VERSIONED_FILE_NAME,
+            fileInfo: mockVersionedFileEntryByVersion,
+            countVersions: mockDatasetAsVersionedFileByVersionQuery.datasets.byId?.asVersionedFile?.versions.totalCount,
+        };
+        let toastrServiceErrorSpy: Mock<ToastrService["error"]>;
+
+        beforeEach(() => {
+            toastrServiceErrorSpy = stubMethod(toastService, "error");
         });
-    });
 
-    it("should check #downloadFile method", () => {
-        const toastrServiceErrorSpy = stubMethod(toastService, "error");
-        let mockVersionedFileView: VersionedFileView = {
-            name: MOCK_VERSIONED_FILE_NAME,
-            fileInfo: mockVersionedFileEntryByVersion,
-            countVersions: mockDatasetAsVersionedFileByVersionQuery.datasets.byId?.asVersionedFile?.versions.totalCount,
-        };
-        mockVersionedFileView.fileInfo = null;
-        service.downloadFile(TEST_DATASET_ID, mockVersionedFileView);
-        expect(toastrServiceErrorSpy).toHaveBeenCalledTimes(1);
-    });
+        it("should do nothing for a file without versions", () => {
+            const getVersionedFileContentUrlSpy = vi.spyOn(service, "getVersionedFileContentUrl");
 
-    it("should check #downloadFile method when download file directly - URL is not expired", fakeAsync(() => {
-        vi.spyOn(service, "isUrlExpired").mockReturnValue(false);
-        const mockVersionedFileView: VersionedFileView = {
-            name: MOCK_VERSIONED_FILE_NAME,
-            fileInfo: mockVersionedFileEntryByVersion,
-            countVersions: mockDatasetAsVersionedFileByVersionQuery.datasets.byId?.asVersionedFile?.versions.totalCount,
-        };
-        service.downloadFile(TEST_DATASET_ID, mockVersionedFileView);
+            service.downloadFile(TEST_DATASET_ID, { ...mockVersionedFileView, fileInfo: null });
 
-        tick();
+            expect(getVersionedFileContentUrlSpy).not.toHaveBeenCalled();
+            expect(toastrServiceErrorSpy).not.toHaveBeenCalled();
+        });
 
-        const req = httpMock.expectOne(mockVersionedFileEntryByVersion.contentUrl.url);
-        expect(req.request.method).toBe("GET");
+        it("should download the file from a fresh content URL", () => {
+            const getVersionedFileContentUrlSpy = vi
+                .spyOn(service, "getVersionedFileContentUrl")
+                .mockReturnValue(of(CONTENT_URL));
 
-        flush();
-    }));
+            service.downloadFile(TEST_DATASET_ID, mockVersionedFileView);
 
-    it("should check #downloadFile method when download file directly - URL is  expired", () => {
-        const contentUrl = mockVersionedFileEntryByVersion.contentUrl.url;
-        vi.spyOn(service, "isUrlExpired").mockReturnValue(true);
-        const mockVersionedFileView: VersionedFileView = {
-            name: MOCK_VERSIONED_FILE_NAME,
-            fileInfo: mockVersionedFileEntryByVersion,
-            countVersions: mockDatasetAsVersionedFileByVersionQuery.datasets.byId?.asVersionedFile?.versions.totalCount,
-        };
-        const getVersionedFileContentUrlSpy = vi
-            .spyOn(service, "getVersionedFileContentUrl")
-            .mockReturnValue(of(contentUrl));
-        service.downloadFile(TEST_DATASET_ID, mockVersionedFileView);
+            const req = httpMock.expectOne(CONTENT_URL);
+            expect(req.request.method).toBe("GET");
+            expect(getVersionedFileContentUrlSpy).toHaveBeenCalledWith(
+                TEST_DATASET_ID,
+                mockVersionedFileEntryByVersion.version,
+            );
+        });
 
-        const req = httpMock.expectOne(contentUrl);
-        expect(req.request.method).toBe("GET");
-        expect(getVersionedFileContentUrlSpy).toHaveBeenCalledTimes(1);
-    });
+        it("should say the file can't be downloaded when the node cannot serve its content", () => {
+            vi.spyOn(service, "getVersionedFileContentUrl").mockReturnValue(of(null));
 
-    it("should check #isUrlExpired expired", () => {
-        let result = service.isUrlExpired(null);
-        expect(result).toEqual(true);
+            service.downloadFile(TEST_DATASET_ID, mockVersionedFileView);
 
-        result = service.isUrlExpired(new Date().toISOString());
-        expect(result).toEqual(true);
+            httpMock.expectNone(() => true);
+            expect(toastrServiceErrorSpy).toHaveBeenCalledWith(VersionedFileViewTexts.DOWNLOAD_UNAVAILABLE);
+        });
+
+        it("should report a failed download", () => {
+            vi.spyOn(service, "getVersionedFileContentUrl").mockReturnValue(of(CONTENT_URL));
+
+            service.downloadFile(TEST_DATASET_ID, mockVersionedFileView);
+            httpMock.expectOne(CONTENT_URL).flush(new Blob(), { status: 500, statusText: "Server Error" });
+
+            expect(toastrServiceErrorSpy).toHaveBeenCalledWith(VersionedFileViewTexts.DOWNLOAD_FAILED);
+        });
     });
 });

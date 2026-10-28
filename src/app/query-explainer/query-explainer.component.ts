@@ -16,7 +16,6 @@ import { ToastrService } from "ngx-toastr";
 import { BaseComponent } from "@common/components/base.component";
 import { parseJsonAs } from "@common/helpers/untyped-boundary.helpers";
 import { queryParamValue } from "@common/helpers/url-params.helpers";
-import AppValues from "@common/values/app.values";
 import { DatasetByIdQuery } from "@api/kamu.graphql.interface";
 import { MaybeNull, MaybeUndefined } from "@interface/app.types";
 import { DatasetInfo } from "@interface/navigation.interface";
@@ -71,8 +70,8 @@ export class QueryExplainerComponent extends BaseComponent implements OnInit {
     public commitment: string;
     public readonly VerifyQueryKindError: typeof VerifyQueryKindError = VerifyQueryKindError;
 
-    public blockHashObservables$: Observable<Date>[] = [];
-    public datasetInfoObservables$: Observable<DatasetInfo>[] = [];
+    public blockHashObservables$: Observable<MaybeNull<Date>>[] = [];
+    public datasetInfoObservables$: Observable<MaybeNull<DatasetInfo>>[] = [];
     public componentData$: Observable<MaybeNull<QueryExplainerComponentData>>;
 
     /* istanbul ignore next */
@@ -96,11 +95,8 @@ export class QueryExplainerComponent extends BaseComponent implements OnInit {
                 this.datasetInfoObservables$.push(
                     this.datasetService.requestDatasetInfoById(datasetId).pipe(
                         map((dataset: DatasetByIdQuery) => {
-                            return {
-                                accountName:
-                                    dataset.datasets.byId?.owner.accountName ?? AppValues.DEFAULT_ADMIN_ACCOUNT_NAME,
-                                datasetName: dataset.datasets.byId?.name ?? "",
-                            };
+                            const found = dataset.datasets.byId;
+                            return found ? { accountName: found.owner.accountName, datasetName: found.name } : null;
                         }),
                     ),
                 );

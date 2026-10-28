@@ -74,21 +74,23 @@ export class GlobalQueryComponent extends BaseComponent implements OnInit {
     }
 
     private async buildSqlRequestCode(): Promise<void> {
+        // A query from the URL wins over the saved one, so shared query links open what they carry
+        if (this.sqlRequestCode) {
+            return;
+        }
         const entry = await this.queryMicroDbTrackerService
             .getQuery(AppValues.MICRO_DB_GLOBAL_QUERY_SQL)
             .catch(() => undefined);
         if (entry) {
             this.sqlRequestCode = entry.query;
-        } else {
-            promiseWithCatch(
-                this.queryMicroDbTrackerService
-                    .saveQuery(AppValues.MICRO_DB_GLOBAL_QUERY_SQL, this.sqlRequestCode)
-                    .then(),
-            );
+            this.cdr.markForCheck();
         }
     }
 
     public runSQLRequest(params: DatasetRequestBySql): void {
+        promiseWithCatch(
+            this.queryMicroDbTrackerService.saveQuery(AppValues.MICRO_DB_GLOBAL_QUERY_SQL, params.query).then(),
+        );
         this.sqlLoading = true;
         this.sqlQueryService
             .requestDataSqlRun(params)

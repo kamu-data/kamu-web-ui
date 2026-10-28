@@ -12,7 +12,7 @@ import { CombinedGraphQLErrors } from "@apollo/client/errors";
 import { provideToastr, ToastrService } from "ngx-toastr";
 import type { Mock } from "vitest";
 
-import { createApolloErrorHandler } from "@common/helpers/apollo-error.helpers";
+import { ApolloErrorHandlingOptions, createApolloErrorHandler } from "@common/helpers/apollo-error.helpers";
 import { stubMethod } from "@common/helpers/base-test.helpers.spec";
 import { currentLocationPath } from "@common/helpers/url-params.helpers";
 import { ErrorTexts } from "@common/values/errors.text";
@@ -22,7 +22,7 @@ import { LocalStorageService } from "src/app/services/local-storage.service";
 import { NavigationService } from "src/app/services/navigation.service";
 
 describe("createApolloErrorHandler", () => {
-    let handleError: (error: unknown) => void;
+    let handleError: (error: unknown, options?: ApolloErrorHandlingOptions) => void;
     let navigationService: NavigationService;
     let localStorageService: LocalStorageService;
     let toastrErrorSpy: Mock;
@@ -100,6 +100,20 @@ describe("createApolloErrorHandler", () => {
         handleError(graphQLErrors("First", "Second"));
 
         expect(vi.mocked(toastrErrorSpy).mock.calls).toEqual([["First"], ["Second"]]);
+    });
+
+    it("should show no toast for GraphQL errors of an operation that skips them", () => {
+        handleError(graphQLErrors("Repository does not support external transfers"), { skipErrorToast: true });
+
+        expect(toastrErrorSpy).not.toHaveBeenCalled();
+    });
+
+    it("should still open the whitelist page for an operation that skips error toasts", () => {
+        const navigateSpy = stubMethod(navigationService, "navigateToPath");
+
+        handleError(graphQLErrors(ErrorTexts.ERROR_ACCOUNT_IS_NOT_WHITELISTED), { skipErrorToast: true });
+
+        expect(navigateSpy).toHaveBeenCalledWith(ProjectLinks.URL_ACCOUNT_WHITELIST_PAGE_NOT_FOUND);
     });
 
     it("should log a network error and show a toast that stays", () => {

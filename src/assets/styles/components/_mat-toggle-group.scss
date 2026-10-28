@@ -7,11 +7,6 @@
         border-right: none !important;
         border-bottom-color: #000 !important;
 
-        .mat-button-toggle-standalone.mat-button-toggle-appearance-standard,
-        .mat-button-toggle-group-appearance-standard {
-            border-radius: 0;
-        }
-
         .mat-button-toggle-checkbox-wrapper {
             display: none;
         }
@@ -48,17 +43,8 @@
         }
     }
 
-    .mat-button-toggle-disabled {
-        background: inherit;
-    }
-
     .mat-button-toggle-focus-overlay {
         background: inherit !important;
-    }
-
-    .mat-button-toggle-input {
-        background-color: transparent !important;
-        padding-left: 32px !important;
     }
 
     .mat-button-toggle-appearance-standard {

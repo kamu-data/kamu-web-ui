@@ -63,23 +63,8 @@ table {
     color: rgb(188 123 123);
 }
 
-.mat-header-cell {
-    background: #f6f8fa;
-}
-
 .ml-2px {
     margin-left: 2px;
-}
-
-td.mat-cell {
-    &:first-of-type {
-        padding-left: 12px;
-        width: 35%;
-    }
-
-    &:nth-child(2) {
-        width: 28%;
-    }
 }
 
 .selected-status {

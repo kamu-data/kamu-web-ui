@@ -417,13 +417,6 @@ $app-color-tooltip-border: #ced4da;
     border-radius: 2em;
 }
 
-.mat-menu-content {
-    &:not(:empty) {
-        padding-top: 0 !important;
-        padding-bottom: 0 !important;
-    }
-}
-
 .label {
     display: inline-block;
     padding: 0 7px;
@@ -634,18 +627,6 @@ markdown {
         padding-left: 12px;
         color: rgb(0 0 0 / 54%);
     }
-}
-
-.mat-standard-chip {
-    min-height: 25px;
-    border-radius: 16px;
-    padding: 10px;
-}
-
-.mat-chip {
-    color: $app-navy-blue;
-    background: $app-alice-blue;
-    font-size: 12px;
 }
 
 .user-mention,

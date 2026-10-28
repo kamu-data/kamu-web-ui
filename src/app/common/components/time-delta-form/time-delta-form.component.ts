@@ -7,38 +7,41 @@
 
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, inject, Input, OnChanges, OnInit } from "@angular/core";
 import { takeUntilDestroyed } from "@angular/core/rxjs-interop";
-import { FormControl, FormGroup, ReactiveFormsModule, ValidatorFn, Validators } from "@angular/forms";
-
-import { RxwebValidators } from "@rxweb/reactive-form-validators";
+import {
+    AbstractControl,
+    FormControl,
+    FormGroup,
+    ReactiveFormsModule,
+    ValidationErrors,
+    Validators,
+} from "@angular/forms";
 
 import { BaseComponent } from "@common/components/base.component";
 import { TimeDeltaFormType } from "@common/components/time-delta-form/time-delta-form.value";
-import { FormValidationErrorsDirective } from "@common/directives/form-validation-errors.directive";
+import { enumValueOf } from "@common/helpers/app.helpers";
+import { FormValidationErrorsDirective } from "@common/validation/form-validation-errors.directive";
+import { integerInRangeValidators } from "@common/validation/number.validators";
 import { TimeUnit } from "@api/kamu.graphql.interface";
 import { MaybeNull } from "@interface/app.types";
 
-const everyTimeMapperValidators: Record<TimeUnit, ValidatorFn> = {
-    [TimeUnit.Minutes]: RxwebValidators.range({
-        minimumNumber: 1,
-        maximumNumber: 60,
-        message: "Value should be between 1 to 60",
-    }),
-    [TimeUnit.Hours]: RxwebValidators.range({
-        minimumNumber: 1,
-        maximumNumber: 24,
-        message: "Value should be between 1 to 24",
-    }),
-    [TimeUnit.Days]: RxwebValidators.range({
-        minimumNumber: 1,
-        maximumNumber: 31,
-        message: "Value should be between 1 to 31",
-    }),
-    [TimeUnit.Weeks]: RxwebValidators.range({
-        minimumNumber: 1,
-        maximumNumber: 51,
-        message: "Value should be between 1 to 51",
-    }),
+/** The largest value each unit accepts. */
+const MAX_EVERY_PER_UNIT: Record<TimeUnit, number> = {
+    [TimeUnit.Minutes]: 60,
+    [TimeUnit.Hours]: 24,
+    [TimeUnit.Days]: 31,
+    [TimeUnit.Weeks]: 51,
 };
+
+/** Fails with `max` when the value is above what the sibling `unit` control's unit accepts. */
+function everyWithinUnitValidator(control: AbstractControl): MaybeNull<ValidationErrors> {
+    const unit = enumValueOf(TimeUnit, control.parent?.get("unit")?.value);
+    const value: unknown = control.value;
+    if (unit === undefined || typeof value !== "number") {
+        return null;
+    }
+    const max = MAX_EVERY_PER_UNIT[unit];
+    return value > max ? { max: { max, actual: value } } : null;
+}
 
 @Component({
     selector: "app-time-delta-form",
@@ -64,7 +67,6 @@ export class TimeDeltaFormComponent extends BaseComponent implements OnInit, OnC
 
     public ngOnInit(): void {
         this.updateAvailableUnits();
-        this.setEveryTimeValidator();
         this.subscribeToFormStatusChanges();
     }
 
@@ -83,13 +85,18 @@ export class TimeDeltaFormComponent extends BaseComponent implements OnInit, OnC
         this.availableUnits = allUnits.filter((unit) => !this.excludeUnits.includes(unit.value));
     }
 
-    private everyTimeMapperValidators: Record<TimeUnit, ValidatorFn> = everyTimeMapperValidators;
-
     public static buildForm(): FormGroup<TimeDeltaFormType> {
-        return new FormGroup<TimeDeltaFormType>({
-            every: new FormControl<MaybeNull<number>>({ value: null, disabled: false }, [Validators.required]),
+        const form = new FormGroup<TimeDeltaFormType>({
+            every: new FormControl<MaybeNull<number>>({ value: null, disabled: false }, [
+                Validators.required,
+                ...integerInRangeValidators(1),
+                everyWithinUnitValidator,
+            ]),
             unit: new FormControl<MaybeNull<TimeUnit>>({ value: null, disabled: false }, [Validators.required]),
         });
+        // The group owns both controls, so the subscription ends with it.
+        form.controls.unit.valueChanges.subscribe(() => form.controls.every.updateValueAndValidity());
+        return form;
     }
 
     public get everyControl(): FormControl<MaybeNull<number>> {
@@ -98,17 +105,6 @@ export class TimeDeltaFormComponent extends BaseComponent implements OnInit, OnC
 
     public get unitControl(): FormControl<MaybeNull<TimeUnit>> {
         return this.form.controls.unit;
-    }
-
-    private setEveryTimeValidator(): void {
-        this.unitControl.valueChanges
-            .pipe(takeUntilDestroyed(this.destroyRef))
-            .subscribe((data: MaybeNull<TimeUnit>) => {
-                if (data) {
-                    this.everyControl.setValidators([this.everyTimeMapperValidators[data], Validators.required]);
-                    this.everyControl.updateValueAndValidity();
-                }
-            });
     }
 
     private subscribeToFormStatusChanges(): void {

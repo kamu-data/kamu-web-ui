@@ -13,10 +13,12 @@ import { BehaviorSubject, map, Observable } from "rxjs";
 
 import { BaseComponent } from "@common/components/base.component";
 import { CopyToClipboardComponent } from "@common/components/copy-to-clipboard/copy-to-clipboard.component";
+import { trackBusy } from "@common/helpers/app.helpers";
 import RoutingResolvers from "@common/resolvers/routing-resolvers";
-import AppValues from "@common/values/app.values";
+import { setServerError } from "@common/validation/server-errors.helpers";
+import { urlValidator } from "@common/validation/url.validators";
 import { DatasetBasicsFragment } from "@api/kamu.graphql.interface";
-import { MaybeNull, MaybeUndefined } from "@interface/app.types";
+import { MaybeUndefined } from "@interface/app.types";
 
 import { WebhookFormComponent } from "src/app/dataset-view/additional-components/dataset-settings-component/tabs/webhooks/components/common/webhook-form/webhook-form.component";
 import {
@@ -24,7 +26,10 @@ import {
     SubscribedEventType,
     WebhookSubscriptionFormType,
 } from "src/app/dataset-view/additional-components/dataset-settings-component/tabs/webhooks/dataset-settings-webhooks-tab.component.types";
-import { DatasetWebhooksService } from "src/app/dataset-view/additional-components/dataset-settings-component/tabs/webhooks/service/dataset-webhooks.service";
+import {
+    DatasetWebhooksService,
+    WebhookMutationResult,
+} from "src/app/dataset-view/additional-components/dataset-settings-component/tabs/webhooks/service/dataset-webhooks.service";
 import { NavigationService } from "src/app/services/navigation.service";
 import { WebhooksService } from "src/app/services/webhooks.service";
 
@@ -46,6 +51,7 @@ export class AddWebhookComponent extends BaseComponent implements OnInit {
     @Input(RoutingResolvers.WEBHOOKS_ADD_NEW_KEY) public datasetBasics: DatasetBasicsFragment;
 
     public dropdownList$: Observable<SubscribedEventType[]>;
+    public readonly busy$ = new BehaviorSubject<boolean>(false);
     private secret$ = new BehaviorSubject<MaybeUndefined<string>>(undefined);
 
     private fb = inject(NonNullableFormBuilder);
@@ -54,7 +60,7 @@ export class AddWebhookComponent extends BaseComponent implements OnInit {
     private navigationService = inject(NavigationService);
 
     public createOrEditSubscriptionForm: FormGroup<WebhookSubscriptionFormType> = this.fb.group({
-        targetUrl: this.fb.control("", [Validators.required, Validators.pattern(AppValues.URL_PATTERN_ONLY_HTTPS)]),
+        targetUrl: this.fb.control("", [Validators.required, urlValidator(["https"])]),
         eventTypes: this.fb.control<string[]>([], [Validators.required]),
         label: this.fb.control("", [Validators.maxLength(100)]),
     });
@@ -74,15 +80,18 @@ export class AddWebhookComponent extends BaseComponent implements OnInit {
     public addWebhook(): void {
         this.datasetWebhooksService
             .datasetWebhookCreateSubscription(this.datasetBasics.id, this.createOrEditSubscriptionForm.getRawValue())
-
-            .subscribe((result: MaybeNull<CreateWebhookSubscriptionSuccess>) => {
-                if (result) {
+            .pipe(trackBusy(this.busy$))
+            .subscribe((result: WebhookMutationResult<CreateWebhookSubscriptionSuccess>) => {
+                if (result.ok) {
                     this.createOrEditSubscriptionForm.patchValue({
-                        targetUrl: result.input.targetUrl,
-                        eventTypes: result.input.eventTypes,
-                        label: result.input.label,
+                        targetUrl: result.value.input.targetUrl,
+                        eventTypes: result.value.input.eventTypes,
+                        label: result.value.input.label,
                     });
-                    this.secretChanged(result.secret);
+                    this.secretChanged(result.value.secret);
+                } else if (result.fieldError) {
+                    const { field, message } = result.fieldError;
+                    setServerError(this.createOrEditSubscriptionForm.controls[field], message);
                 }
             });
     }

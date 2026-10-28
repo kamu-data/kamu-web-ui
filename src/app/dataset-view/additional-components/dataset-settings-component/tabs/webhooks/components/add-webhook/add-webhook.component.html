@@ -32,9 +32,10 @@
             <button class="btn btn-light me-4" (click)="navigateToListWebhooks()" type="button">Cancel</button>
             <button
                 class="btn btn-success"
-                [disabled]="createOrEditSubscriptionForm.invalid"
+                [disabled]="createOrEditSubscriptionForm.invalid || ((busy$ | async) ?? false)"
                 (click)="addWebhook()"
                 type="button"
+                data-test-id="add-subscription-button"
             >
                 Add subscription
             </button>

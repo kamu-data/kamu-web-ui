@@ -1,12 +1,12 @@
-<div class="d-flex flex-column dynamic-table" [formGroup]="form">
+<div class="d-flex flex-column dynamic-table">
     <div class="d-flex">
         <app-tooltip-icon [tooltip]="tooltip" />
-        <label class="form-label">{{ label }} </label>
+        <label class="form-label" [attr.data-test-id]="dataTestId + '-label'">{{ label }} </label>
     </div>
 
     <app-edit-schema-table
         class="mb-2"
-        [fields]="schemaControl.value"
+        [fields]="control.value"
         [errors]="schemaErrors"
         (fieldsChange)="onFieldsChange($event)"
     />

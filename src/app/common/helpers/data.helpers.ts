@@ -5,7 +5,6 @@
  * included in the LICENSE file.
  */
 
-import { AbstractControl, ValidationErrors, ValidatorFn, Validators } from "@angular/forms";
 import { ActivatedRouteSnapshot } from "@angular/router";
 
 import { ErrorPolicy, WatchQueryFetchPolicy } from "@apollo/client";
@@ -27,7 +26,6 @@ import { MaybeNull, MaybeUndefined } from "@interface/app.types";
 import { EventPropertyLogo } from "src/app/dataset-block/metadata-block/components/event-details/supported.events";
 import { SliceUnit } from "src/app/dataset-view/additional-components/dataset-settings-component/tabs/compacting/dataset-settings-compacting-tab.types";
 import { SubscribedEventType } from "src/app/dataset-view/additional-components/dataset-settings-component/tabs/webhooks/dataset-settings-webhooks-tab.component.types";
-import { JsonFormValidators } from "src/app/dataset-view/additional-components/metadata-component/components/source-events/add-polling-source/add-polling-source-form.types";
 
 export class DataHelpers {
     public static readonly BLOCK_DESCRIBE_SEED = "Dataset initialized";
@@ -256,23 +254,6 @@ export class DataHelpers {
         }
     }
 }
-export const getValidators = (validators: JsonFormValidators): ValidatorFn[] => {
-    const validatorsToAdd: ValidatorFn[] = [];
-    if (validators.required) {
-        validatorsToAdd.push(Validators.required);
-    }
-    if (validators.pattern) {
-        validatorsToAdd.push(Validators.pattern(validators.pattern));
-    }
-    if (validators.maxLength) {
-        validatorsToAdd.push(Validators.maxLength(validators.maxLength));
-    }
-    if (validators.min !== undefined) {
-        validatorsToAdd.push(Validators.min(validators.min));
-    }
-    return validatorsToAdd;
-};
-
 export const MY_MOMENT_FORMATS = {
     parseInput: "YYYY-MM-DD, h:mm:ss A",
     fullPickerInput: "YYYY-MM-DD, h:mm A",
@@ -289,13 +270,6 @@ export const noCacheFetchPolicy: {
 } = {
     fetchPolicy: "no-cache",
     errorPolicy: "all",
-};
-
-export const noWhitespaceValidator = (): ValidatorFn => {
-    return (control: AbstractControl): MaybeNull<ValidationErrors> => {
-        const isSpace = typeof control.value === "string" && /\s/.test(control.value);
-        return isSpace ? { whitespace: true } : null;
-    };
 };
 
 export function sliceSizeMapperReverse(sizeInBytes: number): { size: number; unit: SliceUnit } {
@@ -394,25 +368,6 @@ export function getAllRouteParams(route: ActivatedRouteSnapshot): Record<string,
         currentRoute = currentRoute.parent;
     }
     return params;
-}
-
-export function matchFieldsValidator(controlName: string, matchingControlName: string): ValidatorFn {
-    return (formGroup: AbstractControl): MaybeNull<ValidationErrors> => {
-        const control = formGroup.get(controlName);
-        const matchingControl = formGroup.get(matchingControlName);
-
-        if (!control || !matchingControl) {
-            throw new Error(`[matchFieldsValidator]: One of the controls was not found.`);
-        }
-
-        if (control.value !== matchingControl.value) {
-            matchingControl.setErrors({ passwordsMismatch: true });
-        } else {
-            matchingControl.setErrors(null);
-        }
-
-        return null;
-    };
 }
 
 export function eventTypesMapper(name: string): SubscribedEventType {

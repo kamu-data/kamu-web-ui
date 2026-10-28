@@ -9,9 +9,9 @@ import { ChangeDetectionStrategy, Component, Input } from "@angular/core";
 import { FormGroup, FormsModule, ReactiveFormsModule } from "@angular/forms";
 
 import { NgSelectModule } from "@ng-select/ng-select";
+import { NgxTrimDirectiveModule } from "ngx-trim-directive";
 
-import { FormValidationErrorsDirective } from "@common/directives/form-validation-errors.directive";
-import { ErrorSets } from "@common/directives/form-validation-errors.types";
+import { FormValidationErrorsDirective } from "@common/validation/form-validation-errors.directive";
 
 import {
     SubscribedEventType,
@@ -26,6 +26,7 @@ import {
         ReactiveFormsModule,
         //-----//
         NgSelectModule,
+        NgxTrimDirectiveModule,
         //-----//
         FormValidationErrorsDirective,
     ],
@@ -36,6 +37,4 @@ export class WebhookFormComponent {
     @Input({ required: true }) public createOrEditSubscriptionForm: FormGroup<WebhookSubscriptionFormType>;
     @Input({ required: true }) public dropdownList: SubscribedEventType[] = [];
     @Input() public disabled: boolean;
-
-    public readonly ErrorSets: typeof ErrorSets = ErrorSets;
 }

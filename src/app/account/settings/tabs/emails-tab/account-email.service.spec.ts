@@ -7,7 +7,7 @@
 
 import { TestBed } from "@angular/core/testing";
 
-import { of } from "rxjs";
+import { firstValueFrom, of } from "rxjs";
 
 import { Apollo } from "apollo-angular";
 import { provideToastr, ToastrService } from "ngx-toastr";
@@ -43,14 +43,6 @@ describe("AccountEmailService", () => {
         expect(service).toBeTruthy();
     });
 
-    it("should check reset rename account error", () => {
-        const emitRenameAccountEmailErrorOccurredSpy = vi
-            .spyOn(service, "emitRenameAccountEmailErrorOccurred")
-            .mockImplementation(() => {});
-        service.resetChangeEmailError();
-        expect(emitRenameAccountEmailErrorOccurredSpy).toHaveBeenCalledWith("");
-    });
-
     it("should check fetch account with success", () => {
         const fetchAccountWithEmailSpy = vi
             .spyOn(accountApi, "fetchAccountWithEmail")
@@ -60,29 +52,35 @@ describe("AccountEmailService", () => {
         });
     });
 
-    it("should check change account email with success", () => {
+    it("should change the account email and report it", async () => {
         const toastrServiceSuccessSpy = stubMethod(toastrService, "success");
         const changeAccountEmailSpy = vi
             .spyOn(accountApi, "changeAccountEmail")
             .mockReturnValue(of(mockAccountChangeEmailMutationSuccess));
-        service.changeEmailAddress({ accountName: TEST_ACCOUNT_NAME, newEmail: TEST_ACCOUNT_EMAIL }).subscribe(() => {
-            expect(changeAccountEmailSpy).toHaveBeenCalledTimes(1);
-            expect(toastrServiceSuccessSpy).toHaveBeenCalledWith(
-                mockAccountChangeEmailMutationSuccess.accounts.byName?.updateEmail.message,
-            );
+
+        const result = await firstValueFrom(
+            service.changeEmailAddress({ accountName: TEST_ACCOUNT_NAME, newEmail: TEST_ACCOUNT_EMAIL }),
+        );
+
+        expect(result).toEqual({ ok: true, value: true });
+        expect(changeAccountEmailSpy).toHaveBeenCalledWith({
+            accountName: TEST_ACCOUNT_NAME,
+            newEmail: TEST_ACCOUNT_EMAIL,
         });
+        expect(toastrServiceSuccessSpy).toHaveBeenCalledWith(
+            mockAccountChangeEmailMutationSuccess.accounts.byName?.updateEmail.message,
+        );
     });
 
-    it("should check change account email with error", () => {
-        const emitRenameAccountEmailErrorOccurredSpy = vi
-            .spyOn(service, "emitRenameAccountEmailErrorOccurred")
-            .mockImplementation(() => {});
-        const changeAccountEmailSpy = vi
-            .spyOn(accountApi, "changeAccountEmail")
-            .mockReturnValue(of(mockAccountChangeEmailMutationError));
-        service.changeEmailAddress({ accountName: TEST_ACCOUNT_NAME, newEmail: TEST_ACCOUNT_EMAIL }).subscribe(() => {
-            expect(changeAccountEmailSpy).toHaveBeenCalledTimes(1);
-            expect(emitRenameAccountEmailErrorOccurredSpy).toHaveBeenCalledWith(MOCK_CHANGE_EMAIL_NON_UNIQUE_MESSAGE);
-        });
+    it("should return an email another account uses as the email field's error, without a toast", async () => {
+        const toastrServiceErrorSpy = stubMethod(toastrService, "error");
+        vi.spyOn(accountApi, "changeAccountEmail").mockReturnValue(of(mockAccountChangeEmailMutationError));
+
+        const result = await firstValueFrom(
+            service.changeEmailAddress({ accountName: TEST_ACCOUNT_NAME, newEmail: TEST_ACCOUNT_EMAIL }),
+        );
+
+        expect(result).toEqual({ ok: false, fieldError: MOCK_CHANGE_EMAIL_NON_UNIQUE_MESSAGE });
+        expect(toastrServiceErrorSpy).not.toHaveBeenCalled();
     });
 });

@@ -18,14 +18,21 @@
                         <div>
                             <label class="form-label"> Command <span class="text-danger">*</span> </label>
                         </div>
-                        <input class="form-control" formControlName="command" required #command />
+                        <input
+                            class="form-control"
+                            formControlName="command"
+                            required
+                            #command
+                            attr.data-test-id="pipe-command-{{ i }}"
+                        />
                         <div
                             class="text-danger fs-12"
                             [input]="command"
                             fieldLabel="Command"
                             [fieldControl]="pipe.controls.command"
-                            [appFieldError]="['required']"
+                            appFieldError
                             [group]="sectionForm"
+                            dataTestId="pipe-command-error-{{ i }}"
                         ></div>
                         <div class="buttons-section d-flex flex-row">
                             <button
@@ -66,14 +73,22 @@
                         <h3 class="text-center">Decompress</h3>
                         <div class="mb-3">
                             <label class="form-label">Format </label>
-                            <select class="form-select" formControlName="format">
-                                <option value="zip">ZIP</option>
-                                <option value="gzip">GZIP</option>
+                            <select
+                                class="form-select"
+                                formControlName="format"
+                                [attr.data-test-id]="'decompress-format-' + i"
+                            >
+                                <option [value]="DecompressFormat.ZIP">ZIP</option>
+                                <option [value]="DecompressFormat.GZIP">GZIP</option>
                             </select>
                         </div>
                         <div class="mb-3">
                             <label class="form-label">Path</label>
-                            <input class="form-control" formControlName="subPath" />
+                            <input
+                                class="form-control"
+                                formControlName="subPath"
+                                [attr.data-test-id]="'decompress-sub-path-' + i"
+                            />
                         </div>
                         <div class="buttons-section d-flex flex-row">
                             <button

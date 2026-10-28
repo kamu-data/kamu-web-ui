@@ -17,14 +17,15 @@
         class="text-danger fs-12"
         [input]="unit"
         fieldLabel="Unit"
-        [appFieldError]="['required']"
+        appFieldError
         [group]="form"
+        dataTestId="time-delta-unit-error-message"
     ></span>
     <span
         class="text-danger fs-12"
         [input]="every"
         fieldLabel="Value"
-        [appFieldError]="['required', 'range']"
+        appFieldError
         [group]="form"
         dataTestId="time-delta-error-message"
     ></span>

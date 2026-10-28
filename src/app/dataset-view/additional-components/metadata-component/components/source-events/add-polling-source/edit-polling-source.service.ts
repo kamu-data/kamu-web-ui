@@ -7,7 +7,7 @@
 
 import { DestroyRef, inject, Injectable } from "@angular/core";
 import { takeUntilDestroyed } from "@angular/core/rxjs-interop";
-import { FormArray, FormGroup, Validators } from "@angular/forms";
+import { FormArray, FormGroup } from "@angular/forms";
 
 import { Observable } from "rxjs";
 
@@ -21,7 +21,6 @@ import { BlockService } from "src/app/dataset-block/metadata-block/block.service
 import {
     AddPollingSourceEditFormType,
     EditFormParseType,
-    EventTimeSourceKind,
     FetchStepValue,
     MergeStepValue,
     PrepareKind,
@@ -40,7 +39,6 @@ import {
     listItemControl,
     nameValueGroup,
     pipeStepGroup,
-    textControl,
     topicGroup,
 } from "src/app/dataset-view/additional-components/metadata-component/components/source-events/source-section";
 
@@ -73,11 +71,11 @@ export class EditPollingSourceService {
         form.patchValue({ ...fields, cache: Boolean(cache) });
         const eventTimeForm = form.controls.eventTime;
         if (eventTime && eventTimeForm) {
-            eventTimeForm.controls.kind.setValue(eventTime.kind);
-            if (eventTime.kind === EventTimeSourceKind.FROM_PATH) {
-                eventTimeForm.addControl("pattern", textControl(eventTime.pattern ?? "", [Validators.required]));
-                eventTimeForm.addControl("timestampFormat", textControl(eventTime.timestampFormat ?? ""));
-            }
+            eventTimeForm.patchValue({
+                kind: eventTime.kind,
+                pattern: eventTime.pattern ?? "",
+                timestampFormat: eventTime.timestampFormat ?? "",
+            });
         }
         headers?.forEach(({ name, value }) => form.controls.headers?.push(nameValueGroup(name, value)));
         env?.forEach(({ name, value }) => form.controls.env?.push(nameValueGroup(name, value)));
@@ -124,9 +122,6 @@ export class EditPollingSourceService {
             ...(schema ? { schema } : {}),
             ...(subPath !== undefined ? { subPath } : {}),
         });
-        if (kind === ReadKind.JSON) {
-            form.addControl("subPath", textControl(subPath ?? ""));
-        }
         const schemaControl = form.controls.schema;
         if (datasetInfo && schemaControl) {
             this.blockService

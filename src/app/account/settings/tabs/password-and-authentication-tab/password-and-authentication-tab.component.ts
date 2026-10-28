@@ -5,14 +5,14 @@
  * included in the LICENSE file.
  */
 
-import { ChangeDetectionStrategy, Component, inject, Input, OnInit } from "@angular/core";
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, inject, Input, OnInit } from "@angular/core";
 import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators } from "@angular/forms";
 import { MatDividerModule } from "@angular/material/divider";
 
-import { FormValidationErrorsDirective } from "@common/directives/form-validation-errors.directive";
-import { ErrorSets } from "@common/directives/form-validation-errors.types";
-import { matchFieldsValidator } from "@common/helpers/data.helpers";
 import RoutingResolvers from "@common/resolvers/routing-resolvers";
+import { FormValidationErrorsDirective } from "@common/validation/form-validation-errors.directive";
+import { matchFieldsValidator, newPasswordValidators } from "@common/validation/password.validators";
+import { FieldMutationResult, setServerError } from "@common/validation/server-errors.helpers";
 import { AccountFragment } from "@api/kamu.graphql.interface";
 
 import { AccountService } from "src/app/account/account.service";
@@ -41,10 +41,10 @@ export class PasswordAndAuthenticationTabComponent implements OnInit {
     private fb = inject(FormBuilder);
     private accountService = inject(AccountService);
     private appConfigService = inject(AppConfigService);
+    private readonly cdr = inject(ChangeDetectorRef);
 
     public showChangePasswordView = false;
     public changeUserAccountPasswordForm: FormGroup<ChangeUserAccountPasswordFormType>;
-    public readonly ErrorSets: typeof ErrorSets = ErrorSets;
 
     public ngOnInit(): void {
         this.changeUserAccountPasswordForm = this.fb.nonNullable.group(
@@ -52,11 +52,11 @@ export class PasswordAndAuthenticationTabComponent implements OnInit {
                 oldPassword: ["", [Validators.required]],
                 newPassword: [
                     "",
-                    [Validators.required, Validators.minLength(this.appConfigService.minNewPasswordLength)],
+                    [Validators.required, ...newPasswordValidators(this.appConfigService.minNewPasswordLength)],
                 ],
                 confirmPassword: [
                     "",
-                    [Validators.required, Validators.minLength(this.appConfigService.minNewPasswordLength)],
+                    [Validators.required, ...newPasswordValidators(this.appConfigService.minNewPasswordLength)],
                 ],
             },
             {
@@ -76,10 +76,13 @@ export class PasswordAndAuthenticationTabComponent implements OnInit {
                 oldPassword: this.changeUserAccountPasswordForm.controls.oldPassword.value,
                 newPassword: this.changeUserAccountPasswordForm.controls.newPassword.value,
             })
-            .subscribe((success: boolean) => {
-                if (success) {
+            .subscribe((result: FieldMutationResult<true>) => {
+                if (result.ok) {
                     this.changeUserAccountPasswordForm.reset();
+                } else {
+                    setServerError(this.changeUserAccountPasswordForm.controls.oldPassword, result.fieldError);
                 }
+                this.cdr.markForCheck();
             });
     }
 }

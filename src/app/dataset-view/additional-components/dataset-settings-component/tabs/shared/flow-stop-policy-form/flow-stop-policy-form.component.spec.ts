@@ -15,6 +15,7 @@ import { Apollo } from "apollo-angular";
 import { provideToastr } from "ngx-toastr";
 
 import { SharedTestModule } from "@common/modules/shared-test.module";
+import { MAX_CONSECUTIVE_FAILURES } from "@common/validation/patterns";
 import { MaybeNull } from "@interface/app.types";
 
 import { FlowTriggerStopPolicyType } from "src/app/dataset-view/additional-components/dataset-settings-component/dataset-settings.model";
@@ -89,7 +90,7 @@ describe("FlowStopPolicyFormComponent", () => {
 
     it("should have default form values", () => {
         const expectedDefaults = {
-            stopPolicyType: null,
+            stopPolicyType: FlowTriggerStopPolicyType.AFTER_CONSECUTIVE_FAILURES,
             maxFailures: FlowStopPolicyFormComponent.DEFAULT_MAX_FAILURES,
         };
 
@@ -105,8 +106,8 @@ describe("FlowStopPolicyFormComponent", () => {
         fixture.detectChanges();
 
         expect(component.stopPolicyTypeControl.disabled).toBe(false);
-        // Max failures should still be disabled until "after consecutive failures" is selected
-        expect(component.maxFailuresControl.disabled).toBe(true);
+        // "After consecutive failures" starts selected, so its max failures can be edited at once
+        expect(component.maxFailuresControl.disabled).toBe(false);
     });
 
     it("should set 'never' stop policy type via harness and reflect in form", async () => {
@@ -187,30 +188,47 @@ describe("FlowStopPolicyFormComponent", () => {
         expect(component.form.errors).toBeNull();
     });
 
-    it("should validate form with 'after consecutive failures' policy and valid max failures", async () => {
-        // Enable updates first
+    async function enableAfterConsecutiveFailures(): Promise<void> {
         hostComponent.hostForm.controls.updatesEnabled.setValue(true);
         fixture.detectChanges();
         await stopPolicyFormHarness.setSelectedStopPolicyType(FlowTriggerStopPolicyType.AFTER_CONSECUTIVE_FAILURES);
-        await stopPolicyFormHarness.setMaxFailures(2);
+    }
 
-        expect(component.form.valid).toBe(true);
-        expect(component.form.errors).toBeNull();
-        expect(component.maxFailuresControl.hasError("min")).toBe(false);
-        expect(component.maxFailuresControl.hasError("required")).toBe(false);
+    [1, 2, MAX_CONSECUTIVE_FAILURES].forEach((maxFailures) => {
+        it(`should accept ${maxFailures} max failures`, async () => {
+            await enableAfterConsecutiveFailures();
+
+            await stopPolicyFormHarness.setMaxFailures(maxFailures);
+
+            expect(await stopPolicyFormHarness.getMaxFailuresError()).toBeNull();
+            expect(component.form.valid).toBe(true);
+            expect(component.form.getRawValue().maxFailures).toBe(maxFailures);
+        });
     });
 
-    it("should show validation error for max failures less than 1", async () => {
-        // Enable updates first
-        hostComponent.hostForm.controls.updatesEnabled.setValue(true);
-        fixture.detectChanges();
-        await stopPolicyFormHarness.setSelectedStopPolicyType(FlowTriggerStopPolicyType.AFTER_CONSECUTIVE_FAILURES);
+    [
+        { value: "", message: "Max failures is required" },
+        { value: "0", message: "Max failures must be at least 1" },
+        { value: "11", message: "Max failures must be at most 10" },
+        { value: "1.5", message: "Max failures must be a whole number" },
+    ].forEach(({ value, message }) => {
+        it(`should reject "${value}" max failures, which kamu-cli does not accept`, async () => {
+            await enableAfterConsecutiveFailures();
 
-        // Set invalid value (less than 1)
-        await stopPolicyFormHarness.setMaxFailures(0);
+            await stopPolicyFormHarness.setMaxFailures(value);
 
-        expect(component.form.valid).toBe(false);
-        expect(component.maxFailuresControl.hasError("min")).toBe(true);
+            expect(await stopPolicyFormHarness.getMaxFailuresError()).toBe(message);
+            expect(hostComponent.hostForm.invalid).toBe(true);
+        });
+    });
+
+    it("should not validate max failures while the policy is 'never'", async () => {
+        await enableAfterConsecutiveFailures();
+        await stopPolicyFormHarness.setMaxFailures("0");
+
+        await stopPolicyFormHarness.setSelectedStopPolicyType(FlowTriggerStopPolicyType.NEVER);
+
+        expect(hostComponent.hostForm.valid).toBe(true);
     });
 
     it("should build stop policy input for 'never' policy", () => {

@@ -18,11 +18,9 @@ import type { Mock } from "vitest";
 
 import { ModalService } from "@common/components/modal/modal.service";
 import { PagePastEndHarness } from "@common/components/page-past-end/page-past-end.harness";
-import {
-    emitClickOnElementByDataTestId,
-    registerMatSvgIcons,
-    setComponentInput,
-} from "@common/helpers/base-test.helpers.spec";
+import { registerMatSvgIcons, setComponentInput } from "@common/helpers/base-test.helpers.spec";
+import { FieldMutationResult } from "@common/validation/server-errors.helpers";
+import { CreatedAccessTokenDataFragment } from "@api/kamu.graphql.interface";
 import { mockAccessTokenConnectionData, mockCreatedAccessTokenData, TOKEN_ID } from "@api/mock/access-token.mock";
 import { mockAccountDetails } from "@api/mock/auth.mock";
 import { ModalArgumentsInterface } from "@interface/modal.interface";
@@ -30,8 +28,14 @@ import { ModalArgumentsInterface } from "@interface/modal.interface";
 import { AccountSettingsTabs, TokenCreateStep } from "src/app/account/settings/account-settings.constants";
 import { AccessTokenService } from "src/app/account/settings/tabs/access-tokens-tab/access-token.service";
 import { AccessTokensTabComponent } from "src/app/account/settings/tabs/access-tokens-tab/access-tokens-tab.component";
+import { AccessTokensTabHarness } from "src/app/account/settings/tabs/access-tokens-tab/access-tokens-tab.harness";
 import { LoggedUserService } from "src/app/auth/logged-user.service";
 import { NavigationService } from "src/app/services/navigation.service";
+
+const TOKEN_CREATED: FieldMutationResult<CreatedAccessTokenDataFragment> = {
+    ok: true,
+    value: mockCreatedAccessTokenData,
+};
 
 describe("AccessTokensTabComponent", () => {
     let component: AccessTokensTabComponent;
@@ -115,32 +119,81 @@ describe("AccessTokensTabComponent", () => {
         expect(navigateToSettingsSpy).toHaveBeenCalledWith(AccountSettingsTabs.ACCESS_TOKENS, 3);
     });
 
-    it("should check add new token button", () => {
-        fixture.detectChanges();
-        emitClickOnElementByDataTestId(fixture, "new-token-button");
+    function accessTokensTabHarness(): Promise<AccessTokensTabHarness> {
+        return TestbedHarnessEnvironment.harnessForFixture(fixture, AccessTokensTabHarness);
+    }
+
+    async function openNewTokenForm(): Promise<AccessTokensTabHarness> {
+        const tab = await accessTokensTabHarness();
+        await tab.startNewToken();
+        return tab;
+    }
+
+    it("should check add new token button", async () => {
+        const tab = await accessTokensTabHarness();
+        expect(await tab.isNewTokenFormShown()).toBe(false);
+
+        await tab.startNewToken();
+
+        expect(await tab.isNewTokenFormShown()).toBe(true);
         expect(component.currentCreateStep).toEqual(TokenCreateStep.GENERATE);
     });
 
-    it("should check generate new token button", () => {
-        component.currentCreateStep = TokenCreateStep.GENERATE;
-        const createAccessTokensSpy = vi
-            .spyOn(accessTokenService, "createAccessTokens")
-            .mockReturnValue(of(mockCreatedAccessTokenData));
-        component.createTokenForm.controls.name.setValue("token-name");
-        fixture.detectChanges();
+    [
+        { name: "", message: "Name is required" },
+        { name: "   ", message: "Name can't be blank" },
+        { name: "t".repeat(101), message: "Name can't exceed 100 characters" },
+    ].forEach(({ name, message }) => {
+        it(`should not generate a token named "${name}"`, async () => {
+            const createAccessTokensSpy = vi.spyOn(accessTokenService, "createAccessTokens");
+            const tab = await openNewTokenForm();
 
-        emitClickOnElementByDataTestId(fixture, "generate-new-token");
+            await tab.setTokenName(name);
+            expect(await tab.getTokenNameError()).toBe(message);
+            expect(await tab.isGenerateDisabled()).toBe(true);
+            await tab.generate();
+            await tab.submitNameForm();
 
-        expect(component.currentCreateStep).toEqual(TokenCreateStep.GENERATE);
-        expect(createAccessTokensSpy).toHaveBeenCalledTimes(1);
+            expect(createAccessTokensSpy).not.toHaveBeenCalled();
+        });
     });
 
-    it("should check return to initial step", () => {
-        component.currentCreateStep = TokenCreateStep.GENERATE;
-        fixture.detectChanges();
+    ["token-name", "t".repeat(100)].forEach((name) => {
+        it(`should generate a token named "${name}"`, async () => {
+            const createAccessTokensSpy = vi
+                .spyOn(accessTokenService, "createAccessTokens")
+                .mockReturnValue(of(TOKEN_CREATED));
+            const tab = await openNewTokenForm();
 
-        emitClickOnElementByDataTestId(fixture, "cancel-button");
+            await tab.setTokenName(name);
+            expect(await tab.getTokenNameError()).toBeNull();
+            await tab.generate();
+
+            expect(createAccessTokensSpy).toHaveBeenCalledWith(mockAccountDetails.id, name);
+            expect(component.composedToken).toEqual(mockCreatedAccessTokenData.composed);
+            expect(component.currentCreateStep).toEqual(TokenCreateStep.GENERATE);
+        });
+    });
+
+    it("should check return to initial step", async () => {
+        const tab = await openNewTokenForm();
+
+        await tab.cancel();
+
+        expect(await tab.isNewTokenFormShown()).toBe(false);
         expect(component.currentCreateStep).toEqual(TokenCreateStep.INITIAL);
+    });
+
+    it("should check done button", async () => {
+        vi.spyOn(accessTokenService, "createAccessTokens").mockReturnValue(of(TOKEN_CREATED));
+        const tab = await openNewTokenForm();
+        await tab.setTokenName("token-name");
+        await tab.generate();
+
+        await tab.done();
+
+        expect(component.currentCreateStep).toEqual(TokenCreateStep.FINISH);
+        expect(navigateToSettingsSpy).toHaveBeenCalledWith(AccountSettingsTabs.ACCESS_TOKENS);
     });
 
     function filteredTokenNames(): string[] {
@@ -182,11 +235,50 @@ describe("AccessTokensTabComponent", () => {
         expect(modalWindowSpy).toHaveBeenCalledTimes(1);
     });
 
-    it("should check done button", () => {
-        component.currentCreateStep = TokenCreateStep.GENERATE;
-        component.onDone();
+    it("should keep the token when the user cancels the revoke", () => {
+        const revokeAccessTokensSpy = vi.spyOn(accessTokenService, "revokeAccessTokens");
+        vi.spyOn(modalService, "error").mockImplementation((options: ModalArgumentsInterface) => {
+            options.handler?.call(undefined, false);
+            return Promise.resolve("");
+        });
 
-        expect(component.currentCreateStep).toEqual(TokenCreateStep.FINISH);
+        component.deleteToken(TOKEN_ID);
+
+        expect(revokeAccessTokensSpy).not.toHaveBeenCalled();
+        expect(navigateToSettingsSpy).not.toHaveBeenCalled();
+    });
+
+    it("should refresh the token list once a token is revoked", () => {
+        const revokeAccessTokensSpy = vi.spyOn(accessTokenService, "revokeAccessTokens").mockReturnValue(of(undefined));
+        vi.spyOn(modalService, "error").mockImplementation((options: ModalArgumentsInterface) => {
+            options.handler?.call(undefined, true);
+            return Promise.resolve("");
+        });
+
+        component.deleteToken(TOKEN_ID);
+
+        expect(revokeAccessTokensSpy).toHaveBeenCalledWith(mockAccountDetails.id, TOKEN_ID);
+        expect(navigateToSettingsSpy).toHaveBeenCalledWith(AccountSettingsTabs.ACCESS_TOKENS);
+    });
+
+    it("should show a name kamu-cli rejects under the name field until it is changed", async () => {
+        vi.spyOn(accessTokenService, "createAccessTokens").mockReturnValue(
+            of({ ok: false, fieldError: "Access token with token-name name already exists" } as const),
+        );
+        const tab = await openNewTokenForm();
+
+        await tab.setTokenName("token-name");
+        await tab.generate();
+
+        expect(await tab.getTokenNameError()).toBe("Access token with token-name name already exists");
+        expect(await tab.isGenerateDisabled()).toBe(true);
+        expect(component.composedToken).toEqual("");
+        expect(component.createTokenForm.controls.name.value).toEqual("token-name");
+
+        await tab.setTokenName("token-name-2");
+
+        expect(await tab.getTokenNameError()).toBeNull();
+        expect(await tab.isGenerateDisabled()).toBe(false);
     });
 
     it("should check toggle status tokens", () => {

@@ -46,7 +46,6 @@
     "@ng-bootstrap/ng-bootstrap": "^20.0.0",
     "@ng-select/ng-select": "^21.8.2",
     "@popperjs/core": "^2.11.8",
-    "@rxweb/reactive-form-validators": "^13.0.1",
     "@swimlane/ngx-graph": "^13.0.0",
     "angular2-multiselect-dropdown": "^10.0.0",
     "apollo-angular": "^14.2.0",

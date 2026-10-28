@@ -5,18 +5,24 @@
  * included in the LICENSE file.
  */
 
-import { ChangeDetectionStrategy, Component, inject, Input, OnInit } from "@angular/core";
+import { AsyncPipe } from "@angular/common";
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, inject, Input, OnInit } from "@angular/core";
 import { takeUntilDestroyed } from "@angular/core/rxjs-interop";
 import { AbstractControl, FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators } from "@angular/forms";
 import { MatDividerModule } from "@angular/material/divider";
 import { MatIconModule } from "@angular/material/icon";
 import { MatTooltipModule } from "@angular/material/tooltip";
 
+import { BehaviorSubject } from "rxjs";
+
 import { NgbActiveModal } from "@ng-bootstrap/ng-bootstrap";
 
 import { BaseComponent } from "@common/components/base.component";
-import { FormValidationErrorsDirective } from "@common/directives/form-validation-errors.directive";
-import { noWhitespaceValidator } from "@common/helpers/data.helpers";
+import { trackBusy } from "@common/helpers/app.helpers";
+import { uniqueValueValidator } from "@common/validation/collection.validators";
+import { FormValidationErrorsDirective } from "@common/validation/form-validation-errors.directive";
+import { envVarKeyValidators } from "@common/validation/identifier.validators";
+import { maxBytesValidator } from "@common/validation/text.validators";
 import { DatasetBasicsFragment, ViewDatasetEnvVarDataFragment } from "@api/kamu.graphql.interface";
 import { MaybeNull } from "@interface/app.types";
 
@@ -30,6 +36,7 @@ import { DatasetEnvironmentVariablesService } from "src/app/dataset-view/additio
     changeDetection: ChangeDetectionStrategy.OnPush,
     imports: [
         //-----//
+        AsyncPipe,
         FormsModule,
         ReactiveFormsModule,
         //-----//
@@ -44,18 +51,28 @@ export class EditKeyValueModalComponent extends BaseComponent implements OnInit 
     public activeModal = inject(NgbActiveModal);
     private fb = inject(FormBuilder);
     private evnironmentVariablesService = inject(DatasetEnvironmentVariablesService);
+    private readonly cdr = inject(ChangeDetectorRef);
 
     @Input({ required: true }) public row: MaybeNull<ViewDatasetEnvVarDataFragment>;
     @Input({ required: true }) public datasetBasics: DatasetBasicsFragment;
-    public readonly KEY_MAX_LENGTH = 200;
+    /** kamu-cli keeps at most 256 variables and 256 secrets per dataset, so one page of both holds every key. */
+    public static readonly MAX_ENTRIES = 2 * 256;
+    /** kamu-cli rejects a value over 16 KiB. */
+    public static readonly VALUE_MAX_BYTES = 16 * 1024;
     public readonly IS_SECRET_CONTROL_TOOLTIP =
         "While both secrets and variables are stored encrypted, making value a secret ensures that is used without ever being exposed by the system in task logs and other places. Use secrets for sensitive information like API keys and auth tokens.";
     public keyValueForm: FormGroup<EnvAndSecretsFormType> = this.fb.nonNullable.group({
-        keyEnvVariable: ["", [Validators.required, Validators.maxLength(this.KEY_MAX_LENGTH), noWhitespaceValidator()]],
-        value: ["", [Validators.required]],
+        keyEnvVariable: [
+            "",
+            [Validators.required, ...envVarKeyValidators(), uniqueValueValidator(() => this.existingKeys ?? [])],
+        ],
+        value: ["", [Validators.required, maxBytesValidator(EditKeyValueModalComponent.VALUE_MAX_BYTES)]],
         isSecret: [false],
     });
 
+    public readonly busy$ = new BehaviorSubject<boolean>(false);
+    /** The keys the dataset has: empty when editing, since a key can't change then; `null` until they load. */
+    private existingKeys: MaybeNull<readonly string[]> = null;
     public exposedValue: string;
     public isShowExposedValue: boolean = false;
     public readonly STUB_VALUE = "stub-value";
@@ -63,6 +80,16 @@ export class EditKeyValueModalComponent extends BaseComponent implements OnInit 
     public ngOnInit(): void {
         this.fetchExposedValue();
         this.setInitialFormValue();
+        if (this.row) {
+            this.existingKeys = [];
+        } else {
+            this.fetchExistingKeys();
+        }
+    }
+
+    /** Save waits for the existing keys, so that adding a key the dataset has can't overwrite its value. */
+    public get existingKeysLoaded(): boolean {
+        return this.existingKeys !== null;
     }
 
     public get keyControl(): AbstractControl<string> {
@@ -82,11 +109,11 @@ export class EditKeyValueModalComponent extends BaseComponent implements OnInit 
             .upsertEnvVariable({
                 accountId: this.datasetBasics.owner.id,
                 datasetId: this.datasetBasics.id,
-                key: this.keyControl.value ?? "",
-                value: this.keyValueForm.controls.value.value ?? "",
-                isSecret: this.keyValueForm.controls.isSecret.value ? true : false,
+                key: this.keyControl.value,
+                value: this.valueControl.value,
+                isSecret: this.isSecretControl.value,
             })
-            .pipe(takeUntilDestroyed(this.destroyRef))
+            .pipe(trackBusy(this.busy$), takeUntilDestroyed(this.destroyRef))
             .subscribe(() => {
                 this.activeModal.close("Success");
             });
@@ -98,9 +125,7 @@ export class EditKeyValueModalComponent extends BaseComponent implements OnInit 
             this.exposedValue = "";
         } else {
             this.fetchExposedValue();
-            this.keyValueForm.patchValue({
-                value: this.isShowExposedValue ? this.exposedValue : this.valueControl.value,
-            });
+            this.keyValueForm.patchValue({ value: this.exposedValue });
         }
     }
 
@@ -120,6 +145,22 @@ export class EditKeyValueModalComponent extends BaseComponent implements OnInit 
                     });
                 });
         }
+    }
+
+    private fetchExistingKeys(): void {
+        this.evnironmentVariablesService
+            .listEnvVariables({
+                accountName: this.datasetBasics.owner.accountName,
+                datasetName: this.datasetBasics.name,
+                page: 0,
+                perPage: EditKeyValueModalComponent.MAX_ENTRIES,
+            })
+            .pipe(takeUntilDestroyed(this.destroyRef))
+            .subscribe(({ nodes }) => {
+                this.existingKeys = nodes.map(({ key }) => key);
+                this.keyControl.updateValueAndValidity();
+                this.cdr.markForCheck();
+            });
     }
 
     private setInitialFormValue(): void {

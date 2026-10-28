@@ -20,7 +20,7 @@
                     <mat-step>
                         <ng-template matStepLabel>Source</ng-template>
                         <div class="container-step">
-                            <app-source-name-step [form]="addPushSourceForm" />
+                            <app-source-name-step [control]="addPushSourceForm.controls.sourceName" />
                             <app-stepper-navigation
                                 [prevStep]="null"
                                 [nextStep]="steps.READ"

@@ -5,6 +5,7 @@
             type="text"
             data-test-id="target-url"
             formControlName="targetUrl"
+            trim="blur"
             class="w-100 form-control"
             #targetUrl
             [readOnly]="disabled"
@@ -13,11 +14,12 @@
             class="text-danger fs-12"
             [input]="targetUrl"
             fieldLabel="Target URL"
-            [appFieldError]="ErrorSets.TargetUrl"
+            appFieldError
             [group]="createOrEditSubscriptionForm"
+            dataTestId="target-url-error"
         ></div>
 
-        <p class="text-muted fs-12">Must be publicly reachable via HTTPS. Localhost and private Ips are not allowed</p>
+        <p class="text-muted fs-12">Must be publicly reachable via HTTPS. Localhost and private IPs are not allowed</p>
     </div>
     <div class="d-flex flex-column mt-4">
         <label for="" class="form-label">Subscribed events <span class="text-danger">*</span></label>
@@ -28,19 +30,23 @@
             formControlName="eventTypes"
             [multiple]="true"
             [readonly]="disabled"
+            data-test-id="event-types"
             #eventTypes
         >
             <ng-template ng-option-tmp let-item="item" let-index="index">
-                <label class="fs-14 inline-block"> {{ item.name }} </label>
+                <label class="fs-14 inline-block" [attr.data-test-id]="'event-type-option-' + item.value">
+                    {{ item.name }}
+                </label>
             </ng-template>
         </ng-select>
         <div
             class="text-danger fs-12"
             [input]="eventTypes"
-            fieldLabel="Event selection"
-            appFieldError="required"
+            fieldLabel="Subscribed events"
+            appFieldError
             [fieldControl]="createOrEditSubscriptionForm.get('eventTypes')"
             [group]="createOrEditSubscriptionForm"
+            dataTestId="event-types-error"
         ></div>
     </div>
     <div class="d-flex flex-column mt-4">
@@ -51,15 +57,17 @@
             [readOnly]="disabled"
             data-test-id="webhook-label"
             formControlName="label"
+            trim="blur"
             class="w-100 form-control"
         />
         <div
             class="text-danger fs-12"
             [input]="label"
             fieldLabel="Label"
-            appFieldError="maxlength"
+            appFieldError
             [group]="createOrEditSubscriptionForm"
+            dataTestId="label-error"
         ></div>
-        <p class="text-muted fs-12">Optinal unique label to identify this webhook subscription</p>
+        <p class="text-muted fs-12">Optional unique label to identify this webhook subscription</p>
     </div>
 </form>

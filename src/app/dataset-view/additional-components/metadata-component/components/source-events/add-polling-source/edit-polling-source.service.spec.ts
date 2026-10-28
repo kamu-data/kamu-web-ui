@@ -9,10 +9,14 @@ import { DestroyRef } from "@angular/core";
 import { TestBed } from "@angular/core/testing";
 import { FormArray, FormControl, FormGroup } from "@angular/forms";
 
+import { of } from "rxjs";
+
 import { Apollo } from "apollo-angular";
 
+import { MetadataManifestFormat } from "@api/kamu.graphql.interface";
 import { DataSchemaField, OdfTypes } from "@interface/dataset-schema.interface";
 
+import { BlockService } from "src/app/dataset-block/metadata-block/block.service";
 import { mockSetPollingSourceEventYaml } from "src/app/dataset-view/additional-components/metadata-component/components/set-transform/mock.data";
 import {
     AddPollingSourceEditFormType,
@@ -34,7 +38,7 @@ import { SourceSection } from "src/app/dataset-view/additional-components/metada
 import { FETCH_FORM_DATA } from "src/app/dataset-view/additional-components/metadata-component/components/source-events/steps/data/fetch-form-data";
 import { MERGE_FORM_DATA } from "src/app/dataset-view/additional-components/metadata-component/components/source-events/steps/data/merge-form-data";
 import { READ_FORM_DATA } from "src/app/dataset-view/additional-components/metadata-component/components/source-events/steps/data/read-form-data";
-import { mockParseSetPollingSourceEventFromYamlToObject } from "src/app/search/mock.data";
+import { mockDatasetInfo, mockParseSetPollingSourceEventFromYamlToObject } from "src/app/search/mock.data";
 
 describe("EditPollingSourceService", () => {
     let service: EditPollingSourceService;
@@ -107,10 +111,11 @@ content:
         expect(form.getRawValue()).toEqual({
             kind: FetchKind.URL,
             url: "http://test.com",
-            eventTime: { kind: EventTimeSourceKind.FROM_METADATA },
+            eventTime: { kind: EventTimeSourceKind.FROM_METADATA, pattern: "", timestampFormat: "" },
             headers: [],
             cache: false,
         });
+        expect(form.valid).toBe(true);
     });
 
     it("should patch a url fetch step with its headers, cache and an event time from the path", () => {
@@ -130,6 +135,8 @@ content:
             headers: [{ name: "test_name", value: "test_value" }],
             cache: true,
         });
+        expect(form.controls.eventTime?.controls.pattern.enabled).toBe(true);
+        expect(form.valid).toBe(true);
     });
 
     it("should switch the fetch step to a container and fill its lists", () => {
@@ -145,11 +152,28 @@ content:
         expect(form.getRawValue()).toEqual({
             kind: FetchKind.CONTAINER,
             image: "test_image",
-            eventTime: { kind: EventTimeSourceKind.FROM_METADATA },
+            eventTime: { kind: EventTimeSourceKind.FROM_METADATA, pattern: "", timestampFormat: "" },
             command: ["-a"],
             args: ["arg1"],
             env: [{ name: "KEY", value: "value" }],
         });
+    });
+
+    it("should switch the fetch step to MQTT and fill its topics", () => {
+        const form = fetchForm();
+        service.patchFetchStep(form, {
+            kind: FetchKind.MQTT,
+            host: "broker.example.com",
+            port: 1883,
+            topics: [{ path: "sensors/a", qos: "AtLeastOnce" }, { path: "sensors/b" }],
+        });
+
+        expect(form.controls.port?.value).toBe(1883);
+        expect(form.controls.topics?.getRawValue()).toEqual([
+            { path: "sensors/a", qos: "AtLeastOnce" },
+            { path: "sensors/b", qos: "" },
+        ]);
+        expect(form.valid).toBe(true);
     });
 
     it("should patch a csv read step and keep the schema from the event without a dataset", () => {
@@ -169,6 +193,23 @@ content:
         expect(form.controls.kind.value).toEqual(ReadKind.All_JSON);
         expect(form.controls.jsonKind?.value).toEqual(ReadKind.JSON);
         expect(form.controls.subPath?.value).toEqual("items");
+    });
+
+    it("should patch a GeoJSON read step as the GeoJSON kind with its format", () => {
+        const form = readForm();
+        service.patchReadStep(form, { kind: ReadKind.ND_GEO_JSON }, null, destroyRef);
+
+        expect(form.controls.kind.value).toEqual(ReadKind.ALL_GEO);
+        expect(form.controls.jsonKind?.value).toEqual(ReadKind.ND_GEO_JSON);
+    });
+
+    it("should load the dataset's polling source event as YAML", () => {
+        const blockService = TestBed.inject(BlockService);
+        const getBlockSpy = vi.spyOn(blockService, "getPollingSourceBlock").mockReturnValue(of("kind: Url"));
+
+        service.getEventAsYaml(mockDatasetInfo).subscribe();
+
+        expect(getBlockSpy).toHaveBeenCalledWith({ ...mockDatasetInfo, encoding: MetadataManifestFormat.Yaml });
     });
 
     it("should patch a snapshot merge step with its keys", () => {

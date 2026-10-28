@@ -7,11 +7,12 @@
 
 import { inject, Injectable } from "@angular/core";
 
-import { Observable, Subject } from "rxjs";
+import { Observable } from "rxjs";
 import { map } from "rxjs/operators";
 
 import { ToastrService } from "ngx-toastr";
 
+import { FieldMutationResult } from "@common/validation/server-errors.helpers";
 import { DatasetNotFoundError, DatasetOperationError } from "@common/values/errors";
 import { DatasetApi } from "@api/dataset.api";
 import {
@@ -32,16 +33,7 @@ import { NavigationService } from "src/app/services/navigation.service";
 export class DatasetSettingsService {
     public static readonly NOT_LOGGED_USER_ERROR = "User must be logged in to configure dataset";
 
-    private renameDatasetError$: Subject<string> = new Subject<string>();
     private toastrService = inject(ToastrService);
-
-    public emitRenameDatasetErrorOccurred(message: string): void {
-        this.renameDatasetError$.next(message);
-    }
-
-    public get renameDatasetErrorOccurrences(): Observable<string> {
-        return this.renameDatasetError$.asObservable();
-    }
 
     private datasetApi = inject(DatasetApi);
     private navigationService = inject(NavigationService);
@@ -73,12 +65,12 @@ export class DatasetSettingsService {
         accountName: string;
         datasetId: string;
         newName: string;
-    }): Observable<void> {
+    }): Observable<FieldMutationResult<true>> {
         if (this.loggedUserService.isAuthenticated) {
             return this.datasetApi
                 .renameDataset({ datasetId: params.datasetId, newName: params.newName, accountId: params.accountId })
                 .pipe(
-                    map((data: RenameDatasetMutation) => {
+                    map((data: RenameDatasetMutation): FieldMutationResult<true> => {
                         if (data.datasets.byId) {
                             const renameType = data.datasets.byId.rename.__typename;
                             if (renameType === "RenameResultSuccess") {
@@ -93,11 +85,9 @@ export class DatasetSettingsService {
                                     datasetName: params.newName,
                                     tab: DatasetViewTypeEnum.Overview,
                                 });
-                            } else {
-                                // RenameResultNameCollision
-                                // RenameResultNoChanges
-                                this.emitRenameDatasetErrorOccurred(data.datasets.byId.rename.message);
+                                return { ok: true, value: true };
                             }
+                            return { ok: false, fieldError: data.datasets.byId.rename.message };
                         } else {
                             throw new DatasetNotFoundError();
                         }
@@ -106,10 +96,6 @@ export class DatasetSettingsService {
         } else {
             throw new DatasetOperationError([new Error(DatasetSettingsService.NOT_LOGGED_USER_ERROR)]);
         }
-    }
-
-    public resetRenameError(): void {
-        this.emitRenameDatasetErrorOccurred("");
     }
 
     public setVisibility(params: {

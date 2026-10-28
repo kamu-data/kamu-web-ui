@@ -6,9 +6,7 @@
  */
 
 import { ChangeDetectionStrategy, Component } from "@angular/core";
-import { ReactiveFormsModule } from "@angular/forms";
-
-import { RxReactiveFormsModule } from "@rxweb/reactive-form-validators";
+import { FormControl, ReactiveFormsModule } from "@angular/forms";
 
 import { TooltipIconComponent } from "@common/components/tooltip-icon/tooltip-icon.component";
 
@@ -22,9 +20,7 @@ import { BaseField } from "src/app/dataset-view/additional-components/metadata-c
         //-----//
         ReactiveFormsModule,
         //-----//
-        RxReactiveFormsModule,
-        //-----//
         TooltipIconComponent,
     ],
 })
-export class CacheFieldComponent extends BaseField {}
+export class CacheFieldComponent extends BaseField<FormControl<boolean>> {}

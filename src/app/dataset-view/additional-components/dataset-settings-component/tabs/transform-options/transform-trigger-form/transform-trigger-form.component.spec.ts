@@ -105,7 +105,7 @@ describe("TransformTriggerFormComponent", () => {
 
     it("should set batching rule type to immediate", async () => {
         hostComponent.hostForm.controls.updatesEnabled.setValue(true);
-        expect(component.batchingRuleTypeControl.value).toBeNull();
+        expect(component.batchingRuleTypeControl.value).toBe(BatchingRuleType.IMMEDIATE);
 
         await transformTriggerFormHarness.setSelectedBatchingRuleType(BatchingRuleType.IMMEDIATE);
 
@@ -115,7 +115,7 @@ describe("TransformTriggerFormComponent", () => {
 
     it("should set batching rule type to buffering", async () => {
         hostComponent.hostForm.controls.updatesEnabled.setValue(true);
-        expect(component.batchingRuleTypeControl.value).toBeNull();
+        expect(component.batchingRuleTypeControl.value).toBe(BatchingRuleType.IMMEDIATE);
 
         await transformTriggerFormHarness.setSelectedBatchingRuleType(BatchingRuleType.BUFFERING);
 
@@ -138,7 +138,7 @@ describe("TransformTriggerFormComponent", () => {
 
     it("should set breaking change rule to no action", async () => {
         hostComponent.hostForm.controls.updatesEnabled.setValue(true);
-        expect(component.forBreakingChangeControl.value).toBeNull();
+        expect(component.forBreakingChangeControl.value).toBe(FlowTriggerBreakingChangeRule.NoAction);
 
         await transformTriggerFormHarness.setSelectedBreakingChangeRule(FlowTriggerBreakingChangeRule.NoAction);
 
@@ -147,7 +147,7 @@ describe("TransformTriggerFormComponent", () => {
 
     it("should set breaking change rule to recover", async () => {
         hostComponent.hostForm.controls.updatesEnabled.setValue(true);
-        expect(component.forBreakingChangeControl.value).toBeNull();
+        expect(component.forBreakingChangeControl.value).toBe(FlowTriggerBreakingChangeRule.NoAction);
 
         await transformTriggerFormHarness.setSelectedBreakingChangeRule(FlowTriggerBreakingChangeRule.Recover);
 

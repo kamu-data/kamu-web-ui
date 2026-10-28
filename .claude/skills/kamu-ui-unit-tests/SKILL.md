@@ -91,7 +91,9 @@ beforeEach(async () => {
 an option.** That holds for display-only components too: reading texts, states, links and widths
 goes through harness methods as much as clicking and typing does. A harness keeps the test about
 behaviour rather than DOM structure, and is reused by every spec that hosts the component. Older
-specs written with the DOM helpers stay as they are until they are rewritten for another reason.
+specs written with the DOM helpers stay as they are until they are rewritten for another reason,
+except the spec of a component that owns a form: it uses harnesses, with the cases
+`kamu-ui-forms-and-validation` lists.
 
 - **Material components:** use the Material harnesses — `MatRadioButtonHarness`,
   `MatSlideToggleHarness`, `MatCheckboxHarness`, `MatTableHarness`, … from

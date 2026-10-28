@@ -7,14 +7,14 @@
 
 import { TestBed } from "@angular/core/testing";
 
-import { of } from "rxjs";
+import { firstValueFrom, of } from "rxjs";
 
 import { Apollo } from "apollo-angular";
 import { provideToastr, ToastrService } from "ngx-toastr";
 
 import { stubMethod } from "@common/helpers/base-test.helpers.spec";
 import { AccessTokenApi } from "@api/access-token.api";
-import { AccessTokenConnectionDataFragment, CreatedAccessTokenDataFragment } from "@api/kamu.graphql.interface";
+import { AccessTokenConnectionDataFragment } from "@api/kamu.graphql.interface";
 import {
     mockAccessTokenConnectionData,
     mockCreateAccessTokenMutation,
@@ -28,7 +28,6 @@ import {
     TOKEN_NAME,
 } from "@api/mock/access-token.mock";
 import { TEST_ACCOUNT_ID } from "@api/mock/auth.mock";
-import { MaybeNull } from "@interface/app.types";
 
 import { AccessTokenService } from "src/app/account/settings/tabs/access-tokens-tab/access-token.service";
 
@@ -64,37 +63,29 @@ describe("AccessTokenService", () => {
         expect(subscription$.closed).toBe(true);
     });
 
-    it("check create access token with success", () => {
-        const result = "ka_A55WZV0WB12CXBQ8GST7FC80T95JKMSXHJ93Q08TJFRVE0N5Q2APVQVZM0";
+    it("should create an access token and report it", async () => {
         const toastrServiceSuccessSpy = stubMethod(toastrService, "success");
         const createAccessTokensSpy = vi
             .spyOn(accessTokenApi, "createAccessToken")
             .mockReturnValue(of(mockCreateAccessTokenMutation));
-        const subscription$ = service
-            .createAccessTokens(TEST_ACCOUNT_ID, TOKEN_NAME)
-            .subscribe((data: MaybeNull<CreatedAccessTokenDataFragment>) => {
-                expect(data?.composed).toEqual(result);
-            });
 
+        const result = await firstValueFrom(service.createAccessTokens(TEST_ACCOUNT_ID, TOKEN_NAME));
+
+        expect(result.ok && result.value.composed).toEqual(
+            "ka_A55WZV0WB12CXBQ8GST7FC80T95JKMSXHJ93Q08TJFRVE0N5Q2APVQVZM0",
+        );
         expect(toastrServiceSuccessSpy).toHaveBeenCalledTimes(1);
-        expect(createAccessTokensSpy).toHaveBeenCalledTimes(1);
-        expect(subscription$.closed).toBe(true);
+        expect(createAccessTokensSpy).toHaveBeenCalledWith(TEST_ACCOUNT_ID, TOKEN_NAME);
     });
 
-    it("check create access token with error", () => {
+    it("should return a duplicate token name as the name field's error, without a toast", async () => {
         const toastrServiceErrorSpy = stubMethod(toastrService, "error");
-        const createAccessTokensSpy = vi
-            .spyOn(accessTokenApi, "createAccessToken")
-            .mockReturnValue(of(mockCreateAccessTokenMutationError));
-        const subscription$ = service
-            .createAccessTokens(TEST_ACCOUNT_ID, TOKEN_NAME)
-            .subscribe((data: MaybeNull<CreatedAccessTokenDataFragment>) => {
-                expect(data).toEqual(null);
-            });
+        vi.spyOn(accessTokenApi, "createAccessToken").mockReturnValue(of(mockCreateAccessTokenMutationError));
 
-        expect(toastrServiceErrorSpy).toHaveBeenCalledTimes(1);
-        expect(createAccessTokensSpy).toHaveBeenCalledTimes(1);
-        expect(subscription$.closed).toBe(true);
+        const result = await firstValueFrom(service.createAccessTokens(TEST_ACCOUNT_ID, TOKEN_NAME));
+
+        expect(result).toEqual({ ok: false, fieldError: "Access token with q1 name already exists" });
+        expect(toastrServiceErrorSpy).not.toHaveBeenCalled();
     });
 
     it("check revoke access token with succes", () => {

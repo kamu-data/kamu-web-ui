@@ -1,0 +1,24 @@
+/**
+ * Copyright Kamu Data, Inc. and contributors. All rights reserved.
+ *
+ * Use of this software is governed by the Business Source License
+ * included in the LICENSE file.
+ */
+
+/* istanbul ignore file */
+
+import { BaseFieldHarness } from "src/app/dataset-view/additional-components/metadata-component/components/form-components/base-field.harness";
+
+export class CheckboxFieldHarness extends BaseFieldHarness {
+    public static readonly hostSelector = "app-checkbox-field";
+
+    public async toggle(): Promise<void> {
+        const checkbox = await this.element("");
+        await checkbox.click();
+    }
+
+    public async isChecked(): Promise<boolean> {
+        const checkbox = await this.element("");
+        return this.isElementChecked(checkbox);
+    }
+}

@@ -5,23 +5,16 @@
  * included in the LICENSE file.
  */
 
-import { ChangeDetectionStrategy, Component, Input, OnInit } from "@angular/core";
-import { ReactiveFormsModule } from "@angular/forms";
-
-import { RxReactiveFormsModule } from "@rxweb/reactive-form-validators";
+import { ChangeDetectionStrategy, Component, Input } from "@angular/core";
+import { FormControl, ReactiveFormsModule } from "@angular/forms";
 
 import { TooltipIconComponent } from "@common/components/tooltip-icon/tooltip-icon.component";
-import { enumValueOf } from "@common/helpers/app.helpers";
-import { SourcesTooltipsTexts } from "@common/tooltips/sources.text";
-import { MaybeUndefined } from "@interface/app.types";
 
 import { BaseField } from "src/app/dataset-view/additional-components/metadata-component/components/form-components/base-field";
-import { InputFieldComponent } from "src/app/dataset-view/additional-components/metadata-component/components/form-components/input-field/input-field.component";
 import {
     ReadFormatControlType,
     ReadKind,
 } from "src/app/dataset-view/additional-components/metadata-component/components/source-events/add-polling-source/add-polling-source-form.types";
-import { textControl } from "src/app/dataset-view/additional-components/metadata-component/components/source-events/source-section";
 
 @Component({
     selector: "app-json-kind-field",
@@ -31,26 +24,9 @@ import { textControl } from "src/app/dataset-view/additional-components/metadata
         //-----//
         ReactiveFormsModule,
         //-----//
-        RxReactiveFormsModule,
-        //-----//
         TooltipIconComponent,
-        InputFieldComponent,
     ],
 })
-export class JsonKindFieldComponent extends BaseField implements OnInit {
+export class JsonKindFieldComponent extends BaseField<FormControl<ReadKind>> {
     @Input({ required: true }) public controlDescriptors: ReadFormatControlType[];
-    public ReadKind: typeof ReadKind = ReadKind;
-    public readonly TOOLTIP_SUB_PATH = SourcesTooltipsTexts.SUB_PATH;
-    public readonly READ_SUB_PATH_CONTROL = "subPath";
-    public readonly READ_SUB_PATH_TOOLTIP = "Path";
-    public readonly READ_SUB_PATH_PLACEHOLDER = "Enter path to data file...";
-    public readonly READ_JSON_KIND_CONTROL = "jsonKind";
-
-    public ngOnInit(): void {
-        this.form.addControl(this.READ_SUB_PATH_CONTROL, textControl(""));
-    }
-
-    public get currentJsonKind(): MaybeUndefined<ReadKind> {
-        return enumValueOf(ReadKind, this.form.get(this.READ_JSON_KIND_CONTROL)?.value);
-    }
 }

@@ -93,7 +93,7 @@ describe("TimeDeltaFormComponent", () => {
         expect(isUntouched).toBe(false);
 
         const errorMessage = await timeDeltaHarness.getErrorMessage();
-        expect(errorMessage).toEqual("Value should be between 1 to 60");
+        expect(errorMessage).toEqual("Value must be at least 1");
     });
 
     it("should show validation error for required fields", async () => {
@@ -133,6 +133,65 @@ describe("TimeDeltaFormComponent", () => {
 
         const errorMessage = await timeDeltaHarness.getErrorMessage();
         expect(errorMessage).toBeNull();
+    });
+
+    [
+        { value: "", message: "Value is required" },
+        { value: "0", message: "Value must be at least 1" },
+        { value: "1.5", message: "Value must be a whole number" },
+    ].forEach(({ value, message }) => {
+        it(`should reject the value "${value}" before a unit is chosen`, async () => {
+            await timeDeltaHarness.setEvery(value);
+
+            expect(await timeDeltaHarness.getErrorMessage()).toBe(message);
+            expect(component.form.invalid).toBe(true);
+        });
+    });
+
+    it("should accept the smallest value, 1", async () => {
+        await timeDeltaHarness.setTimeDelta(1, TimeUnit.Minutes);
+
+        expect(await timeDeltaHarness.getErrorMessage()).toBeNull();
+        expect(component.form.valid).toBe(true);
+    });
+
+    it("should leave the per-unit maximum until a unit is chosen", async () => {
+        await timeDeltaHarness.setEvery("1000");
+
+        expect(await timeDeltaHarness.getErrorMessage()).toBeNull();
+        expect(component.form.invalid).toBe(true);
+    });
+
+    it("should require a unit", async () => {
+        await timeDeltaHarness.touchUnit();
+
+        expect(await timeDeltaHarness.getUnitErrorMessage()).toBe("Unit is required");
+    });
+
+    [
+        { unit: TimeUnit.Minutes, max: 60 },
+        { unit: TimeUnit.Hours, max: 24 },
+        { unit: TimeUnit.Days, max: 31 },
+        { unit: TimeUnit.Weeks, max: 51 },
+    ].forEach(({ unit, max }) => {
+        it(`should accept at most ${max} ${unit}`, async () => {
+            await timeDeltaHarness.setTimeDelta(max, unit);
+            expect(await timeDeltaHarness.getErrorMessage()).toBeNull();
+            expect(component.form.valid).toBe(true);
+
+            await timeDeltaHarness.setEvery(String(max + 1));
+            expect(await timeDeltaHarness.getErrorMessage()).toBe(`Value must be at most ${max}`);
+            expect(component.form.invalid).toBe(true);
+        });
+    });
+
+    it("should check the value again when the unit changes", async () => {
+        await timeDeltaHarness.setTimeDelta(30, TimeUnit.Days);
+        expect(await timeDeltaHarness.getErrorMessage()).toBeNull();
+
+        await timeDeltaHarness.setUnit(TimeUnit.Hours);
+
+        expect(await timeDeltaHarness.getErrorMessage()).toBe("Value must be at most 24");
     });
 
     it("should show all units by default (no exclusions)", async () => {

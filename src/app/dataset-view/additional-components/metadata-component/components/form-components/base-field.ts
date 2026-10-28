@@ -5,16 +5,27 @@
  * included in the LICENSE file.
  */
 
-import { Directive, Input } from "@angular/core";
-import { FormGroup } from "@angular/forms";
+import { ChangeDetectorRef, DestroyRef, Directive, inject, Input, OnInit } from "@angular/core";
+import { takeUntilDestroyed } from "@angular/core/rxjs-interop";
+import { AbstractControl } from "@angular/forms";
 
-import { BaseComponent } from "@common/components/base.component";
-
+/**
+ * A field of the source event editor, bound to the control its step built for it. The field re-renders on any
+ * change of that control, including one made outside it, such as items an edit service pushes into a list.
+ */
 @Directive()
-export abstract class BaseField extends BaseComponent {
-    @Input({ required: true }) public form: FormGroup;
-    @Input({ required: true }) public controlName: string;
+export abstract class BaseField<C extends AbstractControl> implements OnInit {
+    @Input({ required: true }) public control: C;
     @Input({ required: true }) public label: string;
     @Input({ required: true }) public tooltip: string;
-    @Input() public dataTestId?: string;
+    @Input({ required: true }) public dataTestId: string;
+    /** Marks the label with an asterisk; the control's validators do the checking. */
+    @Input() public requiredField: boolean = false;
+
+    protected readonly cdr = inject(ChangeDetectorRef);
+    protected readonly destroyRef = inject(DestroyRef);
+
+    public ngOnInit(): void {
+        this.control.events.pipe(takeUntilDestroyed(this.destroyRef)).subscribe(() => this.cdr.markForCheck());
+    }
 }

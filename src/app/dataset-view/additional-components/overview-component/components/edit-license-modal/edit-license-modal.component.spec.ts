@@ -5,33 +5,37 @@
  * included in the LICENSE file.
  */
 
+import { TestbedHarnessEnvironment } from "@angular/cdk/testing/testbed";
 import { provideHttpClient } from "@angular/common/http";
 import { provideHttpClientTesting } from "@angular/common/http/testing";
 import { ComponentFixture, TestBed } from "@angular/core/testing";
+
+import { of } from "rxjs";
 
 import { NgbActiveModal } from "@ng-bootstrap/ng-bootstrap";
 import { Apollo } from "apollo-angular";
 
 import { requireValue } from "@common/helpers/app.helpers";
-import {
-    emitClickOnElementByDataTestId,
-    getElementByDataTestId,
-    getInputElementByDataTestId,
-    setComponentInput,
-} from "@common/helpers/base-test.helpers.spec";
+import { setComponentInput, stubMethod } from "@common/helpers/base-test.helpers.spec";
 import { SharedTestModule } from "@common/modules/shared-test.module";
+import { mockAccountDetails } from "@api/mock/auth.mock";
 
+import { LoggedUserService } from "src/app/auth/logged-user.service";
 import {
     mockMetadataDerivedUpdate,
     mockOverviewDataUpdate,
     mockOverviewWithSetLicense,
 } from "src/app/dataset-view/additional-components/data-tabs.mock";
 import { EditLicenseModalComponent } from "src/app/dataset-view/additional-components/overview-component/components/edit-license-modal/edit-license-modal.component";
+import { EditLicenseModalHarness } from "src/app/dataset-view/additional-components/overview-component/components/edit-license-modal/edit-license-modal.harness";
+import { DatasetCommitService } from "src/app/dataset-view/additional-components/overview-component/services/dataset-commit.service";
 import { mockDatasetBasicsDerivedFragment } from "src/app/search/mock.data";
+import { TemplatesYamlEventsService } from "src/app/services/templates-yaml-events.service";
 
 describe("EditLicenseModalComponent", () => {
     let component: EditLicenseModalComponent;
     let fixture: ComponentFixture<EditLicenseModalComponent>;
+    let datasetCommitService: DatasetCommitService;
 
     beforeEach(async () => {
         await TestBed.configureTestingModule({
@@ -39,6 +43,8 @@ describe("EditLicenseModalComponent", () => {
             providers: [Apollo, NgbActiveModal, provideHttpClient(), provideHttpClientTesting()],
         }).compileComponents();
 
+        datasetCommitService = TestBed.inject(DatasetCommitService);
+        vi.spyOn(TestBed.inject(LoggedUserService), "currentlyLoggedInUser", "get").mockReturnValue(mockAccountDetails);
         fixture = TestBed.createComponent(EditLicenseModalComponent);
         component = fixture.componentInstance;
         setComponentInput(fixture, "datasetBasics", mockDatasetBasicsDerivedFragment);
@@ -51,77 +57,92 @@ describe("EditLicenseModalComponent", () => {
         fixture.detectChanges();
     });
 
+    function editLicenseHarness(): Promise<EditLicenseModalHarness> {
+        return TestbedHarnessEnvironment.harnessForFixture(fixture, EditLicenseModalHarness);
+    }
+
     it("should create", () => {
         expect(component).toBeTruthy();
     });
 
-    it("should check initialize form", () => {
+    it("should check initialize form", async () => {
         const license = requireValue(mockOverviewWithSetLicense.metadata.currentLicense);
-        expect(component.licenseForm.controls.name.value).toBe(license.name);
-        expect(component.licenseForm.controls.shortName.value).toBe(license.shortName);
-        expect(component.licenseForm.controls.websiteUrl.value).toBe(license.websiteUrl);
+        const modal = await editLicenseHarness();
+
+        expect(await modal.getValue("name")).toBe(license.name);
+        expect(await modal.getValue("shortName")).toBe(license.shortName);
+        expect(await modal.getValue("websiteUrl")).toBe(license.websiteUrl);
         expect(component.licenseForm.controls.spdxId.value).toBe(license.spdxId ?? null);
     });
 
-    it("should check call onEditLicense", () => {
-        const onEditLicenseSpy = vi.spyOn(component, "onEditLicense").mockImplementation(() => {});
+    [
+        { field: "name" as const, label: "Name" },
+        { field: "shortName" as const, label: "Short name" },
+        { field: "websiteUrl" as const, label: "Url" },
+    ].forEach(({ field, label }) => {
+        it(`should require the ${field}`, async () => {
+            const modal = await editLicenseHarness();
 
-        emitClickOnElementByDataTestId(fixture, "save-license");
-        expect(onEditLicenseSpy).toHaveBeenCalledTimes(1);
+            await modal.setValue(field, "");
+
+            expect(await modal.getError(field)).toBe(`${label} is required`);
+            expect(await modal.isSaveDisabled()).toBe(true);
+        });
     });
 
-    it("should check licenseForm is valid", () => {
-        component.licenseForm.patchValue({
-            name: "",
-            shortName: "",
-            websiteUrl: "",
+    [
+        { field: "name" as const, label: "Name" },
+        { field: "shortName" as const, label: "Short name" },
+    ].forEach(({ field, label }) => {
+        it(`should not accept a blank ${field}`, async () => {
+            const modal = await editLicenseHarness();
+
+            await modal.setValue(field, "   ");
+
+            expect(await modal.getError(field)).toBe(`${label} can't be blank`);
+            expect(await modal.isSaveDisabled()).toBe(true);
         });
-        fixture.detectChanges();
-        expect(component.licenseForm.valid).toBe(false);
     });
 
-    it("should check validation url pattern", () => {
-        component.licenseForm.patchValue({
-            websiteUrl: "bad url",
+    ["bad url", "ftp://example.com/license", "example.com/license"].forEach((url) => {
+        it(`should reject the website URL "${url}"`, async () => {
+            const modal = await editLicenseHarness();
+
+            await modal.setValue("websiteUrl", url);
+
+            expect(await modal.getError("websiteUrl")).toBe("Url must be a URL starting with http://, https://");
+            expect(await modal.isSaveDisabled()).toBe(true);
         });
-        const inputEl: HTMLInputElement = getInputElementByDataTestId(fixture, `license-websiteUrl`);
-        const focusEvent = new InputEvent("focus");
-        inputEl.dispatchEvent(focusEvent);
-        fixture.detectChanges();
-
-        const blurEvent = new InputEvent("blur");
-        inputEl.dispatchEvent(blurEvent);
-        fixture.detectChanges();
-
-        const errorElement = getElementByDataTestId(fixture, `error-message-websiteUrl`);
-        expect(errorElement.innerText).toBe("Url format is wrong");
     });
 
-    it("should check validation messages are visible", () => {
-        component.licenseForm.patchValue({
-            name: "",
-            shortName: "",
-            websiteUrl: "",
-        });
-        fixture.detectChanges();
+    it("should not save while the form is invalid", async () => {
+        const commitSpy = vi.spyOn(datasetCommitService, "commitEventToDataset");
+        const modal = await editLicenseHarness();
 
-        [
-            { controlName: "name", message: "Name is required" },
-            { controlName: "shortName", message: "Short name is required" },
-            { controlName: "websiteUrl", message: "Url is required" },
-        ].forEach(({ controlName, message }) => {
-            const inputEl: HTMLInputElement = getInputElementByDataTestId(fixture, `license-${controlName}`);
+        await modal.setValue("name", "");
+        await modal.save();
 
-            const focusEvent = new InputEvent("focus");
-            inputEl.dispatchEvent(focusEvent);
-            fixture.detectChanges();
+        expect(commitSpy).not.toHaveBeenCalled();
+    });
 
-            const blurEvent = new InputEvent("blur");
-            inputEl.dispatchEvent(blurEvent);
-            fixture.detectChanges();
+    ["http://example.com/license", "https://example.com/license"].forEach((url) => {
+        it(`should save the license with the website URL "${url}"`, async () => {
+            const commitSpy = vi.spyOn(datasetCommitService, "commitEventToDataset").mockReturnValue(of());
+            const buildEventSpy = vi.spyOn(TestBed.inject(TemplatesYamlEventsService), "buildYamlSetLicenseEvent");
+            const closeSpy = stubMethod(TestBed.inject(NgbActiveModal), "close");
+            const modal = await editLicenseHarness();
 
-            const errorElement = getElementByDataTestId(fixture, `error-message-${controlName}`);
-            expect(errorElement.innerText).toBe(message);
+            await modal.setValue("name", "My License");
+            await modal.setValue("shortName", "ML");
+            await modal.setValue("websiteUrl", url);
+            expect(await modal.isSaveDisabled()).toBe(false);
+            await modal.save();
+
+            expect(buildEventSpy).toHaveBeenCalledWith(
+                expect.objectContaining({ name: "My License", shortName: "ML", websiteUrl: url }),
+            );
+            expect(commitSpy).toHaveBeenCalledTimes(1);
+            expect(closeSpy).toHaveBeenCalledTimes(1);
         });
     });
 });

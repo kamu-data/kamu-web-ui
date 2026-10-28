@@ -312,4 +312,51 @@ describe("AccountFlowsFiltersService", () => {
             }),
         );
     });
+
+    it("should query more failures than a stop policy allows, which a flow that never stops can reach", () => {
+        service.updateFilters({ minConsecutiveFailures: 25 });
+
+        const result = service.setFlowProcessFilters(ProcessCardFilterMode.CUSTOM);
+
+        expect(result.minConsecutiveFailures).toBe(25);
+        expect(service.currentFiltersSnapshot.minConsecutiveFailures).toBe(25);
+    });
+
+    it("should show the number of failures a custom filter uses, once it is clamped", () => {
+        service.updateFilters({ minConsecutiveFailures: 2.6 });
+
+        const result = service.setFlowProcessFilters(ProcessCardFilterMode.CUSTOM);
+
+        expect(result.minConsecutiveFailures).toBe(3);
+        expect(service.currentFiltersSnapshot.minConsecutiveFailures).toBe(3);
+    });
+
+    it("should pass the failure date of a triage filter to the query", () => {
+        const lastFailureDate = new Date("2024-03-14T11:22:29Z");
+        service.updateFilters({ lastFailureDate, minConsecutiveFailures: 0 });
+
+        const result = service.setFlowProcessFilters(ProcessCardFilterMode.TRIAGE);
+
+        expect(result.lastFailureSince).toBe("2024-03-14T11:22:00.000Z");
+        expect(result.minConsecutiveFailures).toBe(1);
+        expect(service.currentFiltersSnapshot.minConsecutiveFailures).toBe(1);
+    });
+
+    it("should pass every date of a custom filter to the query", () => {
+        service.updateFilters({
+            lastFailureDate: new Date("2024-03-14T11:22:29Z"),
+            nextPlannedBeforeDate: new Date("2024-03-15T08:00:45Z"),
+            nextPlannedAfterDate: new Date("2024-03-13T08:00:45Z"),
+        });
+
+        const result = service.setFlowProcessFilters(ProcessCardFilterMode.CUSTOM);
+
+        expect(result).toEqual(
+            expect.objectContaining({
+                lastFailureSince: "2024-03-14T11:22:00.000Z",
+                nextPlannedBefore: "2024-03-15T08:00:00.000Z",
+                nextPlannedAfter: "2024-03-13T08:00:00.000Z",
+            }),
+        );
+    });
 });

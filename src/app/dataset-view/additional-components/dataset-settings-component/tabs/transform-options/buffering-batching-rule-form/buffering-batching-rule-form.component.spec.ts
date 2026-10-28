@@ -88,7 +88,7 @@ describe("BufferingBatchingRuleFormComponent", () => {
             required: true,
         });
 
-        const errorMessage = await bufferingBatchingRuleHarness.getMinRecordsErrorMessage();
+        const errorMessage = await bufferingBatchingRuleHarness.getMinRecordsError();
         expect(errorMessage).toBe("Minimum records is required");
     });
 
@@ -105,8 +105,24 @@ describe("BufferingBatchingRuleFormComponent", () => {
             min: { min: 1, actual: 0 },
         });
 
-        const errorMessage = await bufferingBatchingRuleHarness.getMinRecordsErrorMessage();
-        expect(errorMessage).toBe("The minimum value must be 1");
+        const errorMessage = await bufferingBatchingRuleHarness.getMinRecordsError();
+        expect(errorMessage).toBe("Minimum records must be at least 1");
+    });
+
+    it("should check min records whole number error", async () => {
+        await bufferingBatchingRuleHarness.setMinRecordsToAwait("1.5");
+
+        expect(component.form.invalid).toBe(true);
+        expect(await bufferingBatchingRuleHarness.getMinRecordsError()).toBe("Minimum records must be a whole number");
+    });
+
+    it("should accept a single record as the minimum", async () => {
+        await bufferingBatchingRuleHarness.setMinRecordsToAwait(1);
+        await bufferingBatchingRuleHarness.setMaxBatchingInterval({ every: 24, unit: TimeUnit.Hours });
+
+        expect(await bufferingBatchingRuleHarness.getMinRecordsError()).toBeNull();
+        expect(await bufferingBatchingRuleHarness.getMaxBatchingIntervalError()).toBeNull();
+        expect(component.form.valid).toBe(true);
     });
 
     it("should check batching interval error", async () => {
@@ -123,10 +139,24 @@ describe("BufferingBatchingRuleFormComponent", () => {
 
         expect(component.form.controls.maxBatchingInterval.invalid).toBe(true);
         expect(component.form.controls.maxBatchingInterval.get("every")?.errors).toEqual({
-            range: {
-                message: "Value should be between 1 to 60",
-                refValues: [100, 1, 60],
-            },
+            max: { max: 60, actual: 100 },
         });
+        expect(await bufferingBatchingRuleHarness.getMaxBatchingIntervalError()).toBe("Value must be at most 60");
+    });
+
+    it("should offer the batching interval in minutes and hours only, and accept at most 24 hours", async () => {
+        await bufferingBatchingRuleHarness.setMinRecordsToAwait(5);
+        expect(await bufferingBatchingRuleHarness.getBatchingIntervalUnits()).toEqual([
+            TimeUnit.Minutes,
+            TimeUnit.Hours,
+        ]);
+
+        await bufferingBatchingRuleHarness.setMaxBatchingInterval({ every: 24, unit: TimeUnit.Hours });
+        expect(await bufferingBatchingRuleHarness.getMaxBatchingIntervalError()).toBeNull();
+        expect(component.form.valid).toBe(true);
+
+        await bufferingBatchingRuleHarness.setMaxBatchingInterval({ every: 25, unit: TimeUnit.Hours });
+        expect(await bufferingBatchingRuleHarness.getMaxBatchingIntervalError()).toBe("Value must be at most 24");
+        expect(component.form.invalid).toBe(true);
     });
 });

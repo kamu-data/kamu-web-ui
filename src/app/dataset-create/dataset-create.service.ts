@@ -7,9 +7,10 @@
 
 import { inject, Injectable } from "@angular/core";
 
-import { Observable, Subject } from "rxjs";
+import { Observable } from "rxjs";
 import { map } from "rxjs/operators";
 
+import { FieldMutationResult } from "@common/validation/server-errors.helpers";
 import { DatasetOperationError } from "@common/values/errors";
 import { DatasetApi } from "@api/dataset.api";
 import {
@@ -31,16 +32,6 @@ import { NavigationService } from "src/app/services/navigation.service";
 export class DatasetCreateService {
     public static readonly NOT_LOGGED_USER_ERROR = "User must be logged in to create a dataset";
 
-    private errorMessage$: Subject<string> = new Subject<string>();
-
-    public emitErrorMessageChanged(message: string): void {
-        this.errorMessage$.next(message);
-    }
-
-    public get errorMessageChanges(): Observable<string> {
-        return this.errorMessage$.asObservable();
-    }
-
     private datasetApi = inject(DatasetApi);
     private loggedUserService = inject(LoggedUserService);
     private navigationService = inject(NavigationService);
@@ -49,20 +40,20 @@ export class DatasetCreateService {
         datasetKind: DatasetKind;
         datasetAlias: string;
         datasetVisibility: DatasetVisibility;
-    }): Observable<void> {
+    }): Observable<FieldMutationResult<true>> {
         const loggedUser: MaybeNull<AccountFragment> = this.loggedUserService.maybeCurrentlyLoggedInUser;
         if (loggedUser) {
             return this.datasetApi.createEmptyDataset(params).pipe(
-                map((data: CreateEmptyDatasetMutation) => {
+                map((data: CreateEmptyDatasetMutation): FieldMutationResult<true> => {
                     if (data.datasets.createEmpty.__typename === "CreateDatasetResultSuccess") {
                         this.navigationService.navigateToDatasetView({
                             accountName: loggedUser.accountName,
                             datasetName: params.datasetAlias,
                             tab: DatasetViewTypeEnum.Overview,
                         });
-                    } else {
-                        this.emitErrorMessageChanged(data.datasets.createEmpty.message);
+                        return { ok: true, value: true };
                     }
+                    return { ok: false, fieldError: data.datasets.createEmpty.message };
                 }),
             );
         } else {
@@ -73,11 +64,11 @@ export class DatasetCreateService {
     public createDatasetFromSnapshot(params: {
         snapshot: string;
         datasetVisibility: DatasetVisibility;
-    }): Observable<void> {
+    }): Observable<FieldMutationResult<true>> {
         const loggedUser: MaybeNull<AccountFragment> = this.loggedUserService.maybeCurrentlyLoggedInUser;
         if (loggedUser) {
             return this.datasetApi.createDatasetFromSnapshot(params).pipe(
-                map((data: CreateDatasetFromSnapshotMutation) => {
+                map((data: CreateDatasetFromSnapshotMutation): FieldMutationResult<true> => {
                     if (data.datasets.createFromSnapshot.__typename === "CreateDatasetResultSuccess") {
                         const datasetName = data.datasets.createFromSnapshot.dataset.name;
                         this.navigationService.navigateToDatasetView({
@@ -85,9 +76,9 @@ export class DatasetCreateService {
                             datasetName,
                             tab: DatasetViewTypeEnum.Overview,
                         });
-                    } else {
-                        this.emitErrorMessageChanged(data.datasets.createFromSnapshot.message);
+                        return { ok: true, value: true };
                     }
+                    return { ok: false, fieldError: data.datasets.createFromSnapshot.message };
                 }),
             );
         } else {
@@ -95,11 +86,14 @@ export class DatasetCreateService {
         }
     }
 
-    public createCollection(params: { datasetAlias: string; datasetVisibility: DatasetVisibility }): Observable<void> {
+    public createCollection(params: {
+        datasetAlias: string;
+        datasetVisibility: DatasetVisibility;
+    }): Observable<FieldMutationResult<true>> {
         const loggedUser: MaybeNull<AccountFragment> = this.loggedUserService.maybeCurrentlyLoggedInUser;
         if (loggedUser) {
             return this.datasetApi.createDatasetAsCollection(params).pipe(
-                map((data: CreateDatasetAsCollectionMutation) => {
+                map((data: CreateDatasetAsCollectionMutation): FieldMutationResult<true> => {
                     if (data.datasets.createCollection.__typename === "CreateDatasetResultSuccess") {
                         const datasetName = data.datasets.createCollection.dataset.name;
                         this.navigationService.navigateToDatasetView({
@@ -107,9 +101,9 @@ export class DatasetCreateService {
                             datasetName,
                             tab: DatasetViewTypeEnum.Overview,
                         });
-                    } else {
-                        this.emitErrorMessageChanged(data.datasets.createCollection.message);
+                        return { ok: true, value: true };
                     }
+                    return { ok: false, fieldError: data.datasets.createCollection.message };
                 }),
             );
         } else {
@@ -120,11 +114,11 @@ export class DatasetCreateService {
     public createVersionedFile(params: {
         datasetAlias: string;
         datasetVisibility: DatasetVisibility;
-    }): Observable<void> {
+    }): Observable<FieldMutationResult<true>> {
         const loggedUser: MaybeNull<AccountFragment> = this.loggedUserService.maybeCurrentlyLoggedInUser;
         if (loggedUser) {
             return this.datasetApi.createDatasetAsVersionedFile(params).pipe(
-                map((data: CreateDatasetAsVersionedFileMutation) => {
+                map((data: CreateDatasetAsVersionedFileMutation): FieldMutationResult<true> => {
                     if (data.datasets.createVersionedFile.__typename === "CreateDatasetResultSuccess") {
                         const datasetName = data.datasets.createVersionedFile.dataset.name;
                         this.navigationService.navigateToDatasetView({
@@ -132,9 +126,9 @@ export class DatasetCreateService {
                             datasetName,
                             tab: DatasetViewTypeEnum.Overview,
                         });
-                    } else {
-                        this.emitErrorMessageChanged(data.datasets.createVersionedFile.message);
+                        return { ok: true, value: true };
                     }
+                    return { ok: false, fieldError: data.datasets.createVersionedFile.message };
                 }),
             );
         } else {

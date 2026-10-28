@@ -8,16 +8,18 @@
 import { AsyncPipe, NgTemplateOutlet } from "@angular/common";
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, inject, OnInit } from "@angular/core";
 import { takeUntilDestroyed } from "@angular/core/rxjs-interop";
-import { AbstractControl, FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators } from "@angular/forms";
+import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators } from "@angular/forms";
 import { MatIconModule } from "@angular/material/icon";
 import { ActivatedRoute, ParamMap } from "@angular/router";
 
 import { Observable, shareReplay } from "rxjs";
 
+import { NgxTrimDirectiveModule } from "ngx-trim-directive";
+
 import { BaseComponent } from "@common/components/base.component";
 import { SpinnerComponent } from "@common/components/spinner/spinner/spinner.component";
-import { FormValidationErrorsDirective } from "@common/directives/form-validation-errors.directive";
 import { inAppPathFromParam, isUuid } from "@common/helpers/url-params.helpers";
+import { FormValidationErrorsDirective } from "@common/validation/form-validation-errors.directive";
 import AppValues from "@common/values/app.values";
 import { ErrorTexts } from "@common/values/errors.text";
 import { AccountProvider } from "@api/kamu.graphql.interface";
@@ -42,6 +44,7 @@ import { NavigationService } from "src/app/services/navigation.service";
         FormsModule,
         NgTemplateOutlet,
         ReactiveFormsModule,
+        NgxTrimDirectiveModule,
         //-----//
         MatIconModule,
         //-----//
@@ -100,14 +103,6 @@ export class LoginComponent extends BaseComponent implements OnInit {
         }
     }
 
-    public get loginControl(): MaybeNull<AbstractControl> {
-        return this.passwordLoginForm.get("login");
-    }
-
-    public get passwordControl(): MaybeNull<AbstractControl> {
-        return this.passwordLoginForm.get("password");
-    }
-
     public get enableTermsOfService(): boolean {
         return this.appConfigService.featureFlags.enableTermsOfService;
     }
@@ -124,7 +119,13 @@ export class LoginComponent extends BaseComponent implements OnInit {
     }
 
     public onPasswordLogin(): void {
-        this.loginService.passwordLogin(this.passwordLoginForm.getRawValue(), this.redirectUrl);
+        if (this.passwordLoginForm.invalid) {
+            this.passwordLoginForm.markAllAsTouched();
+            return;
+        }
+        // The field trims on blur, and Enter in the field submits without one.
+        const { login, password } = this.passwordLoginForm.getRawValue();
+        this.loginService.passwordLogin({ login: login.trim(), password }, this.redirectUrl);
     }
 
     public resetPasswordLoginError(): void {

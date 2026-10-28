@@ -15,7 +15,7 @@ import { of } from "rxjs";
 import { provideMarkdown } from "ngx-markdown";
 import { provideToastr } from "ngx-toastr";
 
-import { HIGHLIGHT_OPTIONS_PROVIDER } from "@common/helpers/app.helpers";
+import { HIGHLIGHT_OPTIONS_PROVIDER, requireValue } from "@common/helpers/app.helpers";
 import {
     findElementByDataTestId,
     registerMatSvgIcons,
@@ -72,8 +72,8 @@ describe("InputDataSectionComponent", () => {
             sqlQueryExplainerResponse: mockQueryExplainerResponse,
             sqlQueryVerify: mockVerifyQueryResponseSuccess,
         });
-        component.blockHashObservables$ = [of(new Date("2024-10-22T11:54:24.234Z"))];
-        component.datasetInfoObservables$ = [of(mockDatasetInfo)];
+        setComponentInput(fixture, "blockHashObservables$", [of(new Date("2024-10-22T11:54:24.234Z"))]);
+        setComponentInput(fixture, "datasetInfoObservables$", [of(mockDatasetInfo)]);
     });
 
     it("should create", () => {
@@ -129,5 +129,30 @@ describe("InputDataSectionComponent", () => {
         fixture.detectChanges();
         const hashElem = findElementByDataTestId(fixture, "input-dataset-id-0");
         expect(hashElem?.classList.contains("error-color")).toBe(true);
+    });
+
+    it("should show the block date when the block is found", () => {
+        fixture.detectChanges();
+        const dateElem = findElementByDataTestId(fixture, "input-dataset-date-0");
+        expect(dateElem?.innerText).toContain("as of");
+    });
+
+    it("should leave out the block date when the block is not found", () => {
+        setComponentInput(fixture, "blockHashObservables$", [of(null)]);
+        fixture.detectChanges();
+        expect(findElementByDataTestId(fixture, "input-dataset-date-0")).toBeUndefined();
+    });
+
+    it("should show an unknown dataset id as plain text in the error color", () => {
+        setComponentInput(fixture, "inputData", {
+            sqlQueryExplainerResponse: mockQueryExplainerResponse,
+            sqlQueryVerify: mockDatasetNotFoundError,
+        });
+        setComponentInput(fixture, "datasetInfoObservables$", [of(null)]);
+        fixture.detectChanges();
+        expect(findElementByDataTestId(fixture, "input-dataset-id-0")).toBeUndefined();
+        const idElem = findElementByDataTestId(fixture, "input-dataset-unresolved-id-0");
+        expect(idElem?.innerText.trim()).toEqual(requireValue(mockQueryExplainerResponse.input.datasets)[0].id);
+        expect(idElem?.classList.contains("error-color")).toBe(true);
     });
 });

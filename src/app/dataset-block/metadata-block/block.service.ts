@@ -43,10 +43,11 @@ export class BlockService {
         );
     }
 
-    public requestSystemTimeBlockByHash(datasetId: string, blockHash: string): Observable<Date> {
+    public requestSystemTimeBlockByHash(datasetId: string, blockHash: string): Observable<MaybeNull<Date>> {
         return this.datasetApi.getSystemTimeBlockByHash(datasetId, blockHash).pipe(
             map((data) => {
-                return new Date(data.datasets.byId?.metadata.chain.blockByHash?.systemTime ?? "");
+                const systemTime = data.datasets.byId?.metadata.chain.blockByHash?.systemTime;
+                return systemTime ? new Date(systemTime) : null;
             }),
         );
     }

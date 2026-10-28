@@ -9,6 +9,7 @@
 
 import { Routes } from "@angular/router";
 
+import { identityQueryParams } from "@common/helpers/kamu-route-reuse-strategy";
 import { datasetInfoResolverFn } from "@common/resolvers/dataset-info.resolver";
 import RoutingResolvers from "@common/resolvers/routing-resolvers";
 
@@ -18,7 +19,7 @@ import { AddPollingSourceComponent } from "src/app/dataset-view/additional-compo
 import { addPollingSourceResolverFn } from "src/app/dataset-view/additional-components/metadata-component/components/source-events/add-polling-source/resolver/add-polling-source.resolver";
 import { AddPushSourceComponent } from "src/app/dataset-view/additional-components/metadata-component/components/source-events/add-push-source/add-push-source.component";
 import { addPushSourceResolverFn } from "src/app/dataset-view/additional-components/metadata-component/components/source-events/add-push-source/resolver/add-push-source.resolver";
-import { SourceEventEditor } from "src/app/project-links";
+import ProjectLinks, { SourceEventEditor } from "src/app/project-links";
 
 export const SOURCE_EVENTS_ROUTES: Routes = [
     {
@@ -32,6 +33,7 @@ export const SOURCE_EVENTS_ROUTES: Routes = [
     {
         path: SourceEventEditor.AddPushSource,
         component: AddPushSourceComponent,
+        ...identityQueryParams(ProjectLinks.URL_QUERY_PARAM_PUSH_SOURCE_NAME),
         resolve: {
             [RoutingResolvers.ADD_PUSH_SOURCE_KEY]: addPushSourceResolverFn,
             [RoutingResolvers.DATASET_INFO_KEY]: datasetInfoResolverFn,

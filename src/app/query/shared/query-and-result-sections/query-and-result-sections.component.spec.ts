@@ -18,6 +18,7 @@ import { provideToastr, ToastrService } from "ngx-toastr";
 
 import {
     emitClickOnElementByDataTestId,
+    findComponentInstance,
     findElementByDataTestId,
     getElementByDataTestId,
     setComponentInput,
@@ -30,6 +31,7 @@ import { DatasetRequestBySql } from "@interface/dataset.interface";
 import { mockSqlErrorUpdate } from "src/app/dataset-view/additional-components/data-tabs.mock";
 import { EngineService } from "src/app/dataset-view/additional-components/metadata-component/components/set-transform/components/engine-section/engine.service";
 import { mockEngines } from "src/app/dataset-view/additional-components/metadata-component/components/set-transform/mock.data";
+import { SqlEditorComponent } from "src/app/editor/components/sql-editor/sql-editor.component";
 import { QueryAndResultSectionsComponent } from "src/app/query/shared/query-and-result-sections/query-and-result-sections.component";
 import { FileUploadService } from "src/app/services/file-upload.service";
 
@@ -69,6 +71,16 @@ describe("QueryAndResultSectionsComponent", () => {
         expect(runSQLRequestSpy).toHaveBeenCalledTimes(1);
 
         expect(runSQLRequestSpy).toHaveBeenCalledWith({ query: "select * from 'mock-dataset'" }, true);
+    });
+
+    it("should report the text typed into the editor", () => {
+        fixture.detectChanges();
+        const sqlRequestCodeChangeSpy = vi.spyOn(component.sqlRequestCodeChange, "emit");
+
+        findComponentInstance(fixture, SqlEditorComponent).templateChange.emit("select 2");
+
+        expect(sqlRequestCodeChangeSpy).toHaveBeenCalledWith("select 2");
+        expect(component.sqlRequestCode).toEqual("select 2");
     });
 
     it("should check 'Run' button is disabled", () => {

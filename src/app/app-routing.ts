@@ -13,6 +13,7 @@ import { LoginUnavailableComponent } from "@common/components/login-unavailable/
 import { PageNotFoundComponent } from "@common/components/page-not-found/page-not-found.component";
 import { forbidAnonymousAccessGuardFn } from "@common/guards/forbid-anonymous-access.guard";
 import { validRouteParams } from "@common/guards/valid-route-params.guard";
+import { identityQueryParams } from "@common/helpers/kamu-route-reuse-strategy";
 import { isFlowId, isMultihash, isOdfName } from "@common/helpers/url-params.helpers";
 import RoutingResolvers from "@common/resolvers/routing-resolvers";
 
@@ -76,6 +77,7 @@ export const ANONYMOUS_GUARDED_ROUTES: Routes = [
     },
     {
         path: ProjectLinks.URL_QUERY_EXPLAINER,
+        ...identityQueryParams(ProjectLinks.URL_QUERY_PARAM_COMMITMENT_UPLOAD_TOKEN),
         loadComponent: () =>
             import(/* webpackChunkName: "query-explainer" */ "./query-explainer/query-explainer.component").then(
                 (m) => m.QueryExplainerComponent,

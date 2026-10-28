@@ -14,6 +14,7 @@ import { of } from "rxjs";
 import { NgbNavChangeEvent } from "@ng-bootstrap/ng-bootstrap";
 import { Apollo } from "apollo-angular";
 import { provideToastr } from "ngx-toastr";
+import { Mock } from "vitest";
 
 import { PagePastEndHarness } from "@common/components/page-past-end/page-past-end.harness";
 import { requireValue } from "@common/helpers/app.helpers";
@@ -21,10 +22,12 @@ import { setComponentInput, stubMethod } from "@common/helpers/base-test.helpers
 import { FlowStatus } from "@api/kamu.graphql.interface";
 import { mockAccountDetails } from "@api/mock/auth.mock";
 import { mockDatasetFlowsInitiatorsQuery, mockFlowsTableData } from "@api/mock/dataset-flow.mock";
+import { MaybeNull } from "@interface/app.types";
 
 import { AccountTabs } from "src/app/account/account.constants";
 import { AccountService } from "src/app/account/account.service";
 import { AccountFlowsActivitySubtabComponent } from "src/app/account/additional-components/account-flows-tab/account-flows-subtabs/account-flows-activity-subtab/account-flows-activity-subtab.component";
+import { flowStatusGroup } from "src/app/account/additional-components/account-flows-tab/account-flows-tab.helpers";
 import {
     AccountFlowsNav,
     ProcessCardFilterMode,
@@ -45,8 +48,10 @@ describe("AccountFlowsActivitySubtabComponent", () => {
     let accountService: AccountService;
     const MOCK_FLOW_ID = "1";
     const MOCK_ACCOUNT_NAME = "kamu";
+    let pageParam: MaybeNull<string>;
 
     beforeEach(() => {
+        pageParam = "1";
         TestBed.configureTestingModule({
             imports: [AccountFlowsActivitySubtabComponent],
             providers: [
@@ -60,7 +65,7 @@ describe("AccountFlowsActivitySubtabComponent", () => {
                                 get: (key: string) => {
                                     switch (key) {
                                         case "page":
-                                            return "1";
+                                            return pageParam;
                                     }
                                 },
                             },
@@ -308,4 +313,83 @@ describe("AccountFlowsActivitySubtabComponent", () => {
         expect(refreshNowSpy).not.toHaveBeenCalled();
         discardPeriodicTasks();
     }));
+    describe("after back or forward", () => {
+        let getAccountListFlowsSpy: Mock<AccountService["getAccountListFlows"]>;
+
+        function lastRequest(): Parameters<AccountService["getAccountListFlows"]>[0] {
+            return requireValue(getAccountListFlowsSpy.mock.lastCall)[0];
+        }
+
+        beforeEach(() => {
+            getAccountListFlowsSpy = vi
+                .spyOn(accountService, "getAccountListFlows")
+                .mockReturnValue(of(mockFlowsTableData));
+            stubMethod(navigationService, "navigateToOwnerView");
+        });
+
+        it("should list the status group the URL names", fakeAsync(() => {
+            setComponentInput(fixture, "accountFlowsData", {
+                ...component.accountFlowsData,
+                flowGroup: flowStatusGroup(FlowStatus.Running),
+            });
+            fixture.detectChanges();
+            tick();
+
+            expect(lastRequest().filters.byStatus).toEqual(flowStatusGroup(FlowStatus.Running));
+            discardPeriodicTasks();
+        }));
+
+        it("should list the page the URL names", fakeAsync(() => {
+            pageParam = "3";
+            setComponentInput(fixture, "accountFlowsData", { ...component.accountFlowsData });
+            fixture.detectChanges();
+            tick();
+
+            expect(component.currentPage).toEqual(3);
+            expect(lastRequest().page).toEqual(2);
+            discardPeriodicTasks();
+        }));
+
+        it("should not list again when the URL follows its own status tab change", fakeAsync(() => {
+            component.onNavStatusChange({
+                activeId: FlowStatus.Finished,
+                nextId: FlowStatus.Running,
+                preventDefault: () => undefined,
+            });
+            fixture.detectChanges();
+            tick();
+            getAccountListFlowsSpy.mockClear();
+
+            setComponentInput(fixture, "accountFlowsData", {
+                ...component.accountFlowsData,
+                flowGroup: flowStatusGroup(FlowStatus.Running),
+            });
+            fixture.detectChanges();
+            tick();
+
+            expect(getAccountListFlowsSpy).not.toHaveBeenCalled();
+            discardPeriodicTasks();
+        }));
+
+        it("should keep the status filter chosen in the panel when the URL follows a page change", fakeAsync(() => {
+            component.onSearchByFiltersChange({
+                accounts: [],
+                datasets: [],
+                status: [FlowStatus.Retrying],
+                onlySystemFlows: false,
+            });
+            component.onPageChange(2);
+            fixture.detectChanges();
+            tick();
+
+            pageParam = "2";
+            setComponentInput(fixture, "accountFlowsData", { ...component.accountFlowsData });
+            fixture.detectChanges();
+            tick();
+
+            expect(lastRequest().filters.byStatus).toEqual([FlowStatus.Retrying]);
+            expect(lastRequest().page).toEqual(1);
+            discardPeriodicTasks();
+        }));
+    });
 });

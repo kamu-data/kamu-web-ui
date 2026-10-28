@@ -88,7 +88,10 @@ its own routes file:
   `@Input(RoutingResolvers.FLOW_DETAILS_LOGS_KEY) public flowDetails: DatasetFlowByIdResponse;`.
   `KamuRouteReuseStrategy` (`@common/helpers/kamu-route-reuse-strategy`) keeps a routed component
   only while its path parameters stay the same, so another account, dataset, flow or block always
-  gets a new component. A kept component gets new inputs when its query parameters change or its
+  gets a new component. A query parameter that picks the entity a page shows, such as the push
+  source editor's `?name=`, joins them through `...identityQueryParams(...)` in its route, which
+  also sets `runGuardsAndResolvers`: the router runs resolvers apart from the reuse decision, and
+  would otherwise hand the new component the old data. A kept component gets new inputs when its query parameters change or its
   resolvers run again; anything derived from them goes in a setter or `ngOnChanges`, never in a
   `router.events` / `NavigationEnd` handler, which runs before the router sets the new inputs.
 - A resolver that cannot produce its data redirects by emitting a `RedirectCommand`, usually

@@ -17,7 +17,7 @@ import {
 import { RouterTestingHarness } from "@angular/router/testing";
 
 import { routeSnapshot } from "@common/helpers/base-test.helpers.spec";
-import { KamuRouteReuseStrategy } from "@common/helpers/kamu-route-reuse-strategy";
+import { identityQueryParams, KamuRouteReuseStrategy } from "@common/helpers/kamu-route-reuse-strategy";
 import { MaybeUndefined } from "@interface/app.types";
 
 @Component({
@@ -43,6 +43,7 @@ const TEST_ROUTES: Routes = [
         children: [
             { path: "tab", component: TestTabComponent },
             { path: "other", component: TestOtherTabComponent },
+            { path: "editor", component: TestTabComponent, ...identityQueryParams("name") },
         ],
     },
 ];
@@ -76,6 +77,24 @@ describe("KamuRouteReuseStrategy", () => {
                     routeSnapshot({ params: { accountName: "kamu" } }),
                 ),
             ).toBe(false);
+        });
+
+        it("should not reuse a route whose identity query parameter has another value", () => {
+            expect(
+                strategy.shouldReuseRoute(
+                    routeSnapshot({ queryParams: { name: "b" }, data: identityQueryParams("name").data }),
+                    routeSnapshot({ queryParams: { name: "a" }, data: identityQueryParams("name").data }),
+                ),
+            ).toBe(false);
+        });
+
+        it("should reuse a route whose other query parameters differ", () => {
+            expect(
+                strategy.shouldReuseRoute(
+                    routeSnapshot({ queryParams: { name: "a", page: "2" }, data: identityQueryParams("name").data }),
+                    routeSnapshot({ queryParams: { name: "a" }, data: identityQueryParams("name").data }),
+                ),
+            ).toBe(true);
         });
 
         it("should reuse a route whose query parameters alone differ", () => {
@@ -132,6 +151,28 @@ describe("KamuRouteReuseStrategy", () => {
             const second = await harness.navigateByUrl("/kamu/population/tab", TestTabComponent);
 
             expect(second).toBe(first);
+        });
+
+        it("should build the page afresh when its identity query parameter changes", async () => {
+            const first = await harness.navigateByUrl("/kamu/population/editor?name=a", TestTabComponent);
+            const second = await harness.navigateByUrl("/kamu/population/editor?name=b", TestTabComponent);
+
+            expect(second).not.toBe(first);
+        });
+
+        it("should build the page afresh when its identity query parameter appears", async () => {
+            const first = await harness.navigateByUrl("/kamu/population/editor", TestTabComponent);
+            const second = await harness.navigateByUrl("/kamu/population/editor?name=a", TestTabComponent);
+
+            expect(second).not.toBe(first);
+        });
+
+        it("should keep the page when a query parameter other than its identity changes", async () => {
+            const first = await harness.navigateByUrl("/kamu/population/editor?name=a", TestTabComponent);
+            const second = await harness.navigateByUrl("/kamu/population/editor?name=a&page=2", TestTabComponent);
+
+            expect(second).toBe(first);
+            expect(second.page).toEqual("2");
         });
 
         it("should build the page afresh after leaving it for another tab", async () => {

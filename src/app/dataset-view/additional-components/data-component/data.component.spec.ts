@@ -17,7 +17,11 @@ import { Apollo } from "apollo-angular";
 import { provideToastr } from "ngx-toastr";
 import type { Mock } from "vitest";
 
-import { emitClickOnElementByDataTestId, setComponentInput } from "@common/helpers/base-test.helpers.spec";
+import {
+    emitClickOnElementByDataTestId,
+    findComponentInstance,
+    setComponentInput,
+} from "@common/helpers/base-test.helpers.spec";
 import AppValues from "@common/values/app.values";
 
 import { DataComponent } from "src/app/dataset-view/additional-components/data-component/data.component";
@@ -27,7 +31,7 @@ import {
 } from "src/app/dataset-view/additional-components/data-tabs.mock";
 import { EngineService } from "src/app/dataset-view/additional-components/metadata-component/components/set-transform/components/engine-section/engine.service";
 import { mockEngines } from "src/app/dataset-view/additional-components/metadata-component/components/set-transform/mock.data";
-import ProjectLinks from "src/app/project-links";
+import { SqlEditorComponent } from "src/app/editor/components/sql-editor/sql-editor.component";
 import {
     mockDatasetBasicsDerivedFragment,
     mockDatasetBasicsRootFragment,
@@ -58,14 +62,6 @@ describe("DataComponent", () => {
                     provide: ActivatedRoute,
                     useValue: {
                         snapshot: {
-                            queryParamMap: {
-                                get: (key: string) => {
-                                    switch (key) {
-                                        case ProjectLinks.URL_QUERY_PARAM_SQL_QUERY:
-                                            return null;
-                                    }
-                                },
-                            },
                             paramMap: {
                                 get: (key: string) => {
                                     switch (key) {
@@ -122,6 +118,105 @@ describe("DataComponent", () => {
 
         expect(getQuerySpy).toHaveBeenCalledTimes(1);
         expect(component.sqlRequestCode).toEqual("select * from 'test.table'");
+    }));
+
+    it("should open and run the query the URL names", fakeAsync(() => {
+        const getQuerySpy = vi.spyOn(queryMicriDbTrackerService, "getQuery");
+        setComponentInput(fixture, "sqlQuery", "select 1");
+        fixture.detectChanges();
+        flush();
+
+        expect(component.sqlRequestCode).toEqual("select 1");
+        expect(requestDataSqlRunSpy).toHaveBeenCalledWith(expect.objectContaining({ query: "select 1" }));
+        expect(getQuerySpy).not.toHaveBeenCalled();
+    }));
+
+    it("should show the query of the run that back or forward leads to", fakeAsync(() => {
+        setComponentInput(fixture, "sqlQuery", "select 1");
+        fixture.detectChanges();
+        flush();
+
+        setComponentInput(fixture, "sqlQuery", "select 2");
+        fixture.detectChanges();
+
+        expect(component.sqlRequestCode).toEqual("select 2");
+    }));
+
+    it("should keep the whole script when a run of its selected part puts that part into the URL", fakeAsync(() => {
+        setComponentInput(fixture, "sqlQuery", "select 1");
+        fixture.detectChanges();
+        flush();
+        requestDataSqlRunSpy.mockReturnValue(of(void 0));
+        component.sqlRequestCode = "select 1;\nselect 2";
+
+        component.runSQLRequest({ query: "select 2" });
+        setComponentInput(fixture, "sqlQuery", "select 2");
+        fixture.detectChanges();
+        flush();
+
+        expect(component.sqlRequestCode).toEqual("select 1;\nselect 2");
+    }));
+
+    it("should show the query of an earlier run after back leads to it", fakeAsync(() => {
+        setComponentInput(fixture, "sqlQuery", "select 1");
+        fixture.detectChanges();
+        flush();
+        requestDataSqlRunSpy.mockReturnValue(of(void 0));
+        component.sqlRequestCode = "select 1;\nselect 2";
+        component.runSQLRequest({ query: "select 2" });
+        setComponentInput(fixture, "sqlQuery", "select 2");
+        fixture.detectChanges();
+        flush();
+
+        setComponentInput(fixture, "sqlQuery", "select 1");
+        fixture.detectChanges();
+
+        expect(component.sqlRequestCode).toEqual("select 1");
+    }));
+
+    it("should show a later run's query after forward leads back to it", fakeAsync(() => {
+        setComponentInput(fixture, "sqlQuery", "select 1");
+        fixture.detectChanges();
+        flush();
+        requestDataSqlRunSpy.mockReturnValue(of(void 0));
+        component.runSQLRequest({ query: "select 1" });
+        flush();
+
+        setComponentInput(fixture, "sqlQuery", "select 2");
+        fixture.detectChanges();
+        setComponentInput(fixture, "sqlQuery", "select 1");
+        fixture.detectChanges();
+
+        expect(component.sqlRequestCode).toEqual("select 1");
+    }));
+
+    it("should keep the editor's text after back leads to a URL without a query", fakeAsync(() => {
+        setComponentInput(fixture, "sqlQuery", "select 1");
+        fixture.detectChanges();
+        flush();
+
+        setComponentInput(fixture, "sqlQuery", undefined);
+        fixture.detectChanges();
+
+        expect(component.sqlRequestCode).toEqual("select 1");
+    }));
+
+    it("should show the URL's query in the editor after back, once the user has edited and run another", fakeAsync(() => {
+        setComponentInput(fixture, "sqlQuery", "select 1");
+        fixture.detectChanges();
+        flush();
+        requestDataSqlRunSpy.mockReturnValue(of(void 0));
+        const editor = findComponentInstance(fixture, SqlEditorComponent);
+        editor.templateChange.emit("select 2");
+        component.runSQLRequest({ query: "select 2" });
+        setComponentInput(fixture, "sqlQuery", "select 2");
+        fixture.detectChanges();
+        flush();
+
+        setComponentInput(fixture, "sqlQuery", "select 1");
+        fixture.detectChanges();
+
+        expect(editor.template).toEqual("select 1");
     }));
 
     it("should check add data", () => {

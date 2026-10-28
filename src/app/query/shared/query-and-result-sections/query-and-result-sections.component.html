@@ -96,7 +96,8 @@
     }
 
     <app-sql-editor
-        [(template)]="sqlRequestCode"
+        [template]="sqlRequestCode"
+        (templateChange)="onSqlRequestCodeChange($event)"
         [error]="sqlError"
         [placeholder]="monacoPlaceholder"
         (onRunSql)="runSql($event)"

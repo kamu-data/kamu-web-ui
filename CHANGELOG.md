@@ -23,6 +23,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   - a source can be saved after switching from a fetch kind with an event time "From path" to one without event time, instead of an unseen empty pattern blocking it
 - Account flows, Processes: clicking the selected flows mode again keeps it selected instead of clearing the selection and stopping the list from loading
 - Flows tables: a run whose start or finish time is missing shows its state alone or "unknown" instead of "57 years ago" or a 1970 date
+- Query explainer: an input block that can't be found no longer shows "as of" with no date, and an unknown dataset id shows as text instead of a link to the wrong account
 - Query explainer: a verification the server rejects without saying why shows an error message instead of an empty result
 - History tab, block page and dataset overview: data commits show how many records they added and license commits the license name again, and the block page shows each event's details instead of the header alone
 - Lineage tab: the graph loads again instead of failing with a query recursion error

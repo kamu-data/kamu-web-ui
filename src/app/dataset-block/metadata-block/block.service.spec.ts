@@ -18,16 +18,17 @@ import {
     DataSchemaFormat,
     DatasetBlocksEncodedByEventTypeQuery,
     DatasetBlocksSchemaByEventTypeQuery,
+    DatasetSystemTimeBlockByHashQuery,
     MetadataEventType,
     MetadataManifestFormat,
     ReadStepCsvDataFragment,
 } from "@api/kamu.graphql.interface";
-import { mockGetMetadataBlockQuery, TEST_BLOCK_HASH } from "@api/mock/dataset.mock";
+import { mockGetMetadataBlockQuery, TEST_BLOCK_HASH, TEST_DATASET_ID } from "@api/mock/dataset.mock";
 import { MaybeNull, MaybeNullOrUndefined } from "@interface/app.types";
 import { DataSchemaField, OdfTypes } from "@interface/dataset-schema.interface";
 
 import { BlockService } from "src/app/dataset-block/metadata-block/block.service";
-import { mockDatasetInfo } from "src/app/search/mock.data";
+import { mockDatasetBasicsRootFragment, mockDatasetInfo } from "src/app/search/mock.data";
 
 describe("BlockService", () => {
     let service: BlockService;
@@ -389,6 +390,54 @@ describe("BlockService", () => {
 
             expect(result).toBeNull();
             expect(service.sourceNames).toEqual(["source-a", "source-b"]);
+        });
+    });
+
+    describe("requestSystemTimeBlockByHash", () => {
+        function systemTimeQuery(
+            blockByHash: MaybeNull<{ __typename: "MetadataBlockExtended"; systemTime: string }>,
+        ): DatasetSystemTimeBlockByHashQuery {
+            return {
+                datasets: {
+                    __typename: "Datasets",
+                    byId: {
+                        ...mockDatasetBasicsRootFragment,
+                        metadata: {
+                            __typename: "DatasetMetadata",
+                            chain: { __typename: "MetadataChain", blockByHash },
+                        },
+                    },
+                },
+            };
+        }
+
+        it("should emit the block's system time", async () => {
+            const systemTime = "2024-10-22T11:54:24.234Z";
+            vi.spyOn(datasetApi, "getSystemTimeBlockByHash").mockReturnValue(
+                of(systemTimeQuery({ __typename: "MetadataBlockExtended", systemTime })),
+            );
+
+            const result = await firstValueFrom(service.requestSystemTimeBlockByHash(TEST_DATASET_ID, TEST_BLOCK_HASH));
+
+            expect(result).toEqual(new Date(systemTime));
+        });
+
+        it("should emit null for a block hash the dataset does not have", async () => {
+            vi.spyOn(datasetApi, "getSystemTimeBlockByHash").mockReturnValue(of(systemTimeQuery(null)));
+
+            const result = await firstValueFrom(service.requestSystemTimeBlockByHash(TEST_DATASET_ID, TEST_BLOCK_HASH));
+
+            expect(result).toBeNull();
+        });
+
+        it("should emit null for an unknown dataset id", async () => {
+            vi.spyOn(datasetApi, "getSystemTimeBlockByHash").mockReturnValue(
+                of({ datasets: { __typename: "Datasets", byId: null } }),
+            );
+
+            const result = await firstValueFrom(service.requestSystemTimeBlockByHash(TEST_DATASET_ID, TEST_BLOCK_HASH));
+
+            expect(result).toBeNull();
         });
     });
 });

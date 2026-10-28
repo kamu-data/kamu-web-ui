@@ -94,7 +94,7 @@ describe("EditLicenseModalComponent", () => {
         fixture.detectChanges();
 
         const errorElement = getElementByDataTestId(fixture, `error-message-websiteUrl`);
-        expect(errorElement.innerText).toBe("Url format is wrong");
+        expect(errorElement.innerText).toBe("Url must be a URL starting with http://, https://");
     });
 
     it("should check validation messages are visible", () => {

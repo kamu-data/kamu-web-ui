@@ -9,7 +9,7 @@ import { ChangeDetectionStrategy, Component, Input } from "@angular/core";
 import { ControlContainer, FormArray, FormGroup, FormGroupDirective, ReactiveFormsModule } from "@angular/forms";
 import { MatIconModule } from "@angular/material/icon";
 
-import { FormValidationErrorsDirective } from "@common/directives/form-validation-errors.directive";
+import { FormValidationErrorsDirective } from "@common/validation/form-validation-errors.directive";
 import { MaybeNull } from "@interface/app.types";
 
 import {

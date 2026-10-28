@@ -11,7 +11,7 @@ import { ReactiveFormsModule } from "@angular/forms";
 import { RxReactiveFormsModule } from "@rxweb/reactive-form-validators";
 
 import { TooltipIconComponent } from "@common/components/tooltip-icon/tooltip-icon.component";
-import { FormValidationErrorsDirective } from "@common/directives/form-validation-errors.directive";
+import { FormValidationErrorsDirective } from "@common/validation/form-validation-errors.directive";
 
 import { BaseField } from "src/app/dataset-view/additional-components/metadata-component/components/form-components/base-field";
 

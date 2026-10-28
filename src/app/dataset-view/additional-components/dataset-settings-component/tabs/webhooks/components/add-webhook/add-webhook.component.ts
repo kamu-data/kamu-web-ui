@@ -14,7 +14,7 @@ import { BehaviorSubject, map, Observable } from "rxjs";
 import { BaseComponent } from "@common/components/base.component";
 import { CopyToClipboardComponent } from "@common/components/copy-to-clipboard/copy-to-clipboard.component";
 import RoutingResolvers from "@common/resolvers/routing-resolvers";
-import AppValues from "@common/values/app.values";
+import { urlValidator } from "@common/validation/url.validators";
 import { DatasetBasicsFragment } from "@api/kamu.graphql.interface";
 import { MaybeNull, MaybeUndefined } from "@interface/app.types";
 
@@ -54,7 +54,7 @@ export class AddWebhookComponent extends BaseComponent implements OnInit {
     private navigationService = inject(NavigationService);
 
     public createOrEditSubscriptionForm: FormGroup<WebhookSubscriptionFormType> = this.fb.group({
-        targetUrl: this.fb.control("", [Validators.required, Validators.pattern(AppValues.URL_PATTERN_ONLY_HTTPS)]),
+        targetUrl: this.fb.control("", [Validators.required, urlValidator(["https"])]),
         eventTypes: this.fb.control<string[]>([], [Validators.required]),
         label: this.fb.control("", [Validators.maxLength(100)]),
     });

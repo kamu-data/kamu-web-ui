@@ -18,8 +18,8 @@ import { Observable } from "rxjs";
 import { NgSelectModule } from "@ng-select/ng-select";
 
 import { BaseComponent } from "@common/components/base.component";
-import { FormValidationErrorsDirective } from "@common/directives/form-validation-errors.directive";
-import AppValues from "@common/values/app.values";
+import { FormValidationErrorsDirective } from "@common/validation/form-validation-errors.directive";
+import { odfNameValidators } from "@common/validation/identifier.validators";
 import { AccountProvider, DatasetKind, DatasetVisibility } from "@api/kamu.graphql.interface";
 import { MaybeNull } from "@interface/app.types";
 
@@ -74,7 +74,7 @@ export class DatasetCreateComponent extends BaseComponent {
     public archetype: ArchetypeViewType = ArchetypeViewType.DATASET_WITH_DATA;
     public createDatasetForm: FormGroup<CreateDatasetFormType> = this.fb.nonNullable.group({
         owner: ["", [Validators.required]],
-        datasetName: ["", [Validators.required, Validators.pattern(AppValues.DATASET_NAME_PATTERN)]],
+        datasetName: ["", [Validators.required, ...odfNameValidators()]],
         kind: [DatasetKind.Root, [Validators.required]],
         visibility: [DatasetVisibility.Private],
     });

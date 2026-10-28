@@ -42,7 +42,7 @@
                 class="text-danger fs-12"
                 [input]="key"
                 fieldLabel="Key"
-                [appFieldError]="['required', 'maxlength', 'whitespace']"
+                appFieldError
                 [group]="keyValueForm"
                 dataTestId="error-key"
             ></div>
@@ -72,7 +72,7 @@
                 class="text-danger fs-12"
                 [input]="value"
                 fieldLabel="Value"
-                [appFieldError]="['required']"
+                appFieldError
                 [group]="keyValueForm"
             ></div>
         </div>

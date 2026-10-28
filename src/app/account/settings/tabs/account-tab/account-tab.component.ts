@@ -15,11 +15,11 @@ import { ToastrService } from "ngx-toastr";
 
 import { BaseComponent } from "@common/components/base.component";
 import { ModalService } from "@common/components/modal/modal.service";
-import { FormValidationErrorsDirective } from "@common/directives/form-validation-errors.directive";
 import { promiseWithCatch } from "@common/helpers/app.helpers";
 import { isUrlWithin } from "@common/helpers/url-params.helpers";
 import RoutingResolvers from "@common/resolvers/routing-resolvers";
-import AppValues from "@common/values/app.values";
+import { FormValidationErrorsDirective } from "@common/validation/form-validation-errors.directive";
+import { odfNameValidators } from "@common/validation/identifier.validators";
 import { AccountWithEmailFragment } from "@api/kamu.graphql.interface";
 import { MaybeNullOrUndefined, MaybeUndefined } from "@interface/app.types";
 
@@ -63,10 +63,7 @@ export class AccountTabComponent extends BaseComponent implements OnInit {
 
     public ngOnInit(): void {
         this.changeUsernameForm = this.fb.nonNullable.group({
-            username: [
-                this.editedAccountName,
-                [Validators.required, Validators.pattern(AppValues.DATASET_NAME_PATTERN)],
-            ],
+            username: [this.editedAccountName, [Validators.required, ...odfNameValidators()]],
         });
     }
 

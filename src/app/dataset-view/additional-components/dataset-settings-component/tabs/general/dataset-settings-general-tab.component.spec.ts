@@ -210,7 +210,9 @@ describe("DatasetSettingsGeneralTabComponent", () => {
         expect(renameDatasetSpy).not.toHaveBeenCalled();
 
         const errorElement = findElementByDataTestId(fixture, "rename-dataset-error");
-        expect(errorElement?.textContent?.trim()).toEqual("Dataset name format is wrong");
+        expect(errorElement?.textContent?.trim()).toEqual(
+            "Dataset name may only contain letters, digits, single hyphens and dots between them",
+        );
     });
 
     it("should check renameError is empty after keyup", fakeAsync(() => {

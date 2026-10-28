@@ -10,8 +10,7 @@ import { FormGroup, FormsModule, ReactiveFormsModule } from "@angular/forms";
 
 import { NgSelectModule } from "@ng-select/ng-select";
 
-import { FormValidationErrorsDirective } from "@common/directives/form-validation-errors.directive";
-import { ErrorSets } from "@common/directives/form-validation-errors.types";
+import { FormValidationErrorsDirective } from "@common/validation/form-validation-errors.directive";
 
 import {
     SubscribedEventType,
@@ -36,6 +35,4 @@ export class WebhookFormComponent {
     @Input({ required: true }) public createOrEditSubscriptionForm: FormGroup<WebhookSubscriptionFormType>;
     @Input({ required: true }) public dropdownList: SubscribedEventType[] = [];
     @Input() public disabled: boolean;
-
-    public readonly ErrorSets: typeof ErrorSets = ErrorSets;
 }

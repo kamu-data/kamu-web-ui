@@ -13,7 +13,7 @@ import { RouterOutlet } from "@angular/router";
 import { BaseComponent } from "@common/components/base.component";
 import { eventTypesMapper } from "@common/helpers/data.helpers";
 import RoutingResolvers from "@common/resolvers/routing-resolvers";
-import AppValues from "@common/values/app.values";
+import { urlValidator } from "@common/validation/url.validators";
 
 import { WebhookFormComponent } from "src/app/dataset-view/additional-components/dataset-settings-component/tabs/webhooks/components/common/webhook-form/webhook-form.component";
 import { EditWebhooksType } from "src/app/dataset-view/additional-components/dataset-settings-component/tabs/webhooks/components/edit-webhook/edit-webhooks.types";
@@ -46,7 +46,7 @@ export class EditWebhookComponent extends BaseComponent implements OnInit {
     private location = inject(Location);
 
     public createOrEditSubscriptionForm: FormGroup<WebhookSubscriptionFormType> = this.fb.group({
-        targetUrl: this.fb.control("", [Validators.required, Validators.pattern(AppValues.URL_PATTERN_ONLY_HTTPS)]),
+        targetUrl: this.fb.control("", [Validators.required, urlValidator(["https"])]),
         eventTypes: this.fb.control<string[]>([], [Validators.required]),
         label: this.fb.control("", [Validators.maxLength(100)]),
     });

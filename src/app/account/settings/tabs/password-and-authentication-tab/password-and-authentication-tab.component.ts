@@ -9,10 +9,9 @@ import { ChangeDetectionStrategy, Component, inject, Input, OnInit } from "@angu
 import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators } from "@angular/forms";
 import { MatDividerModule } from "@angular/material/divider";
 
-import { FormValidationErrorsDirective } from "@common/directives/form-validation-errors.directive";
-import { ErrorSets } from "@common/directives/form-validation-errors.types";
-import { matchFieldsValidator } from "@common/helpers/data.helpers";
 import RoutingResolvers from "@common/resolvers/routing-resolvers";
+import { FormValidationErrorsDirective } from "@common/validation/form-validation-errors.directive";
+import { matchFieldsValidator, newPasswordValidators } from "@common/validation/password.validators";
 import { AccountFragment } from "@api/kamu.graphql.interface";
 
 import { AccountService } from "src/app/account/account.service";
@@ -44,7 +43,6 @@ export class PasswordAndAuthenticationTabComponent implements OnInit {
 
     public showChangePasswordView = false;
     public changeUserAccountPasswordForm: FormGroup<ChangeUserAccountPasswordFormType>;
-    public readonly ErrorSets: typeof ErrorSets = ErrorSets;
 
     public ngOnInit(): void {
         this.changeUserAccountPasswordForm = this.fb.nonNullable.group(
@@ -52,11 +50,11 @@ export class PasswordAndAuthenticationTabComponent implements OnInit {
                 oldPassword: ["", [Validators.required]],
                 newPassword: [
                     "",
-                    [Validators.required, Validators.minLength(this.appConfigService.minNewPasswordLength)],
+                    [Validators.required, ...newPasswordValidators(this.appConfigService.minNewPasswordLength)],
                 ],
                 confirmPassword: [
                     "",
-                    [Validators.required, Validators.minLength(this.appConfigService.minNewPasswordLength)],
+                    [Validators.required, ...newPasswordValidators(this.appConfigService.minNewPasswordLength)],
                 ],
             },
             {

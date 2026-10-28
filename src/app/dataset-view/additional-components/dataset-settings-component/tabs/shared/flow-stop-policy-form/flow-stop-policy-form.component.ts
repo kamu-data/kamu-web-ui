@@ -12,8 +12,8 @@ import { MatRadioModule } from "@angular/material/radio";
 
 import { BaseComponent } from "@common/components/base.component";
 import { TooltipIconComponent } from "@common/components/tooltip-icon/tooltip-icon.component";
-import { FormValidationErrorsDirective } from "@common/directives/form-validation-errors.directive";
 import { FlowTooltipsTexts } from "@common/tooltips/flow-tooltips.text";
+import { FormValidationErrorsDirective } from "@common/validation/form-validation-errors.directive";
 import { FlowTriggerStopPolicyInput } from "@api/kamu.graphql.interface";
 import { MaybeNull } from "@interface/app.types";
 

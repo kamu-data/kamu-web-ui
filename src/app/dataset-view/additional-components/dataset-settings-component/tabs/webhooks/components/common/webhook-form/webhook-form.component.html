@@ -13,7 +13,7 @@
             class="text-danger fs-12"
             [input]="targetUrl"
             fieldLabel="Target URL"
-            [appFieldError]="ErrorSets.TargetUrl"
+            appFieldError
             [group]="createOrEditSubscriptionForm"
         ></div>
 
@@ -38,7 +38,7 @@
             class="text-danger fs-12"
             [input]="eventTypes"
             fieldLabel="Event selection"
-            appFieldError="required"
+            appFieldError
             [fieldControl]="createOrEditSubscriptionForm.get('eventTypes')"
             [group]="createOrEditSubscriptionForm"
         ></div>
@@ -57,7 +57,7 @@
             class="text-danger fs-12"
             [input]="label"
             fieldLabel="Label"
-            appFieldError="maxlength"
+            appFieldError
             [group]="createOrEditSubscriptionForm"
         ></div>
         <p class="text-muted fs-12">Optinal unique label to identify this webhook subscription</p>

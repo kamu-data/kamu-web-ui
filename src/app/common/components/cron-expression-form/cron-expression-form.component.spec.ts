@@ -14,7 +14,7 @@ import { ActivatedRoute } from "@angular/router";
 
 import { CronExpressionFormComponent } from "@common/components/cron-expression-form/cron-expression-form.component";
 import { CronExpressionFormHarness } from "@common/components/cron-expression-form/cron-expression-form.harness";
-import { FormValidationErrorsDirective } from "@common/directives/form-validation-errors.directive";
+import { FormValidationErrorsDirective } from "@common/validation/form-validation-errors.directive";
 
 @Component({
     imports: [CronExpressionFormComponent, ReactiveFormsModule],

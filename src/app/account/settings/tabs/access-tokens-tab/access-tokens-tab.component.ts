@@ -21,9 +21,9 @@ import { CopyToClipboardComponent } from "@common/components/copy-to-clipboard/c
 import { ModalService } from "@common/components/modal/modal.service";
 import { PagePastEndComponent } from "@common/components/page-past-end/page-past-end.component";
 import { PaginationComponent } from "@common/components/pagination-component/pagination.component";
-import { FormValidationErrorsDirective } from "@common/directives/form-validation-errors.directive";
 import { promiseWithCatch } from "@common/helpers/app.helpers";
 import RoutingResolvers from "@common/resolvers/routing-resolvers";
+import { FormValidationErrorsDirective } from "@common/validation/form-validation-errors.directive";
 import AppValues from "@common/values/app.values";
 import {
     AccessTokenConnectionDataFragment,

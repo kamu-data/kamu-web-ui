@@ -8,9 +8,9 @@
 import { ComponentFixture, TestBed } from "@angular/core/testing";
 import { FormControl, FormGroup, Validators } from "@angular/forms";
 
-import { FormValidationErrorsDirective } from "@common/directives/form-validation-errors.directive";
 import { dispatchInputEvent, getElementByDataTestId, setComponentInput } from "@common/helpers/base-test.helpers.spec";
 import { SharedTestModule } from "@common/modules/shared-test.module";
+import { FormValidationErrorsDirective } from "@common/validation/form-validation-errors.directive";
 import AppValues from "@common/values/app.values";
 
 import { InputFieldComponent } from "src/app/dataset-view/additional-components/metadata-component/components/form-components/input-field/input-field.component";
@@ -73,6 +73,6 @@ describe("InputFieldComponent", () => {
         dispatchInputEvent(fixture, "input", "mock");
 
         const patternMessage = getElementByDataTestId(fixture, "error-message");
-        expect(patternMessage.textContent?.trim()).toBe("Input format is wrong");
+        expect(patternMessage.textContent?.trim()).toBe("Input has the wrong format");
     });
 });

@@ -15,8 +15,8 @@ import { MatTooltipModule } from "@angular/material/tooltip";
 import { NgbActiveModal } from "@ng-bootstrap/ng-bootstrap";
 
 import { BaseComponent } from "@common/components/base.component";
-import { FormValidationErrorsDirective } from "@common/directives/form-validation-errors.directive";
-import { noWhitespaceValidator } from "@common/helpers/data.helpers";
+import { FormValidationErrorsDirective } from "@common/validation/form-validation-errors.directive";
+import { noWhitespaceValidator } from "@common/validation/text.validators";
 import { DatasetBasicsFragment, ViewDatasetEnvVarDataFragment } from "@api/kamu.graphql.interface";
 import { MaybeNull } from "@interface/app.types";
 

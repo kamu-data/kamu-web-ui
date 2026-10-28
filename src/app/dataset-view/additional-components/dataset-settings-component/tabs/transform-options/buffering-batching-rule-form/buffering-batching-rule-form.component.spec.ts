@@ -106,7 +106,7 @@ describe("BufferingBatchingRuleFormComponent", () => {
         });
 
         const errorMessage = await bufferingBatchingRuleHarness.getMinRecordsErrorMessage();
-        expect(errorMessage).toBe("The minimum value must be 1");
+        expect(errorMessage).toBe("Minimum records must be at least 1");
     });
 
     it("should check batching interval error", async () => {

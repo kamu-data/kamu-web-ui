@@ -31,7 +31,7 @@
         class="text-danger fs-12"
         [input]="emailAddress"
         fieldLabel="Email address"
-        [appFieldError]="['required', 'email']"
+        appFieldError
         [group]="changeEmailForm"
     ></div>
     @if (changeEmailError$ | async; as changeEmailError) {

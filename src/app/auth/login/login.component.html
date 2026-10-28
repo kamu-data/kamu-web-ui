@@ -74,7 +74,7 @@
                     class="text-danger fs-12"
                     [input]="login"
                     fieldLabel="Login"
-                    [appFieldError]="['required']"
+                    appFieldError
                     [group]="passwordLoginForm"
                     dataTestId="input-login-error-required"
                 ></div>
@@ -96,7 +96,7 @@
                     class="text-danger fs-12"
                     [input]="password"
                     fieldLabel="Password"
-                    [appFieldError]="['required']"
+                    appFieldError
                     [group]="passwordLoginForm"
                     dataTestId="input-password-error-required"
                 ></div>

@@ -15,10 +15,10 @@ import { timer } from "rxjs";
 import { BaseComponent } from "@common/components/base.component";
 import { ModalService } from "@common/components/modal/modal.service";
 import { TooltipIconComponent } from "@common/components/tooltip-icon/tooltip-icon.component";
-import { FormValidationErrorsDirective } from "@common/directives/form-validation-errors.directive";
 import { promiseWithCatch } from "@common/helpers/app.helpers";
 import RoutingResolvers from "@common/resolvers/routing-resolvers";
 import { CompactionTooltipsTexts } from "@common/tooltips/compacting.text";
+import { FormValidationErrorsDirective } from "@common/validation/form-validation-errors.directive";
 import AppValues from "@common/values/app.values";
 import { DatasetBasicsFragment } from "@api/kamu.graphql.interface";
 

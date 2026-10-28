@@ -33,7 +33,7 @@
                             class="text-danger ms-4 fs-12 d-flex align-items-end text-break"
                             [input]="sliceTest"
                             fieldLabel="Slice size"
-                            [appFieldError]="['min', 'required']"
+                            appFieldError
                             [group]="hardCompactionForm"
                         ></span>
                     </div>
@@ -59,7 +59,7 @@
                             class="text-danger ms-4 fs-12 d-flex align-items-end text-break"
                             [input]="recordsCount"
                             fieldLabel="Max slice records"
-                            [appFieldError]="['min', 'required']"
+                            appFieldError
                             [group]="hardCompactionForm"
                         ></span>
                     </div>

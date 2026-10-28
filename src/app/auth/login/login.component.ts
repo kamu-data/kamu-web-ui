@@ -16,8 +16,8 @@ import { Observable, shareReplay } from "rxjs";
 
 import { BaseComponent } from "@common/components/base.component";
 import { SpinnerComponent } from "@common/components/spinner/spinner/spinner.component";
-import { FormValidationErrorsDirective } from "@common/directives/form-validation-errors.directive";
 import { inAppPathFromParam, isUuid } from "@common/helpers/url-params.helpers";
+import { FormValidationErrorsDirective } from "@common/validation/form-validation-errors.directive";
 import AppValues from "@common/values/app.values";
 import { ErrorTexts } from "@common/values/errors.text";
 import { AccountProvider } from "@api/kamu.graphql.interface";

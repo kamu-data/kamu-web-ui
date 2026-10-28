@@ -28,10 +28,11 @@ import { DatasetVisibilityComponent } from "@common/components/dataset-visibilit
 import { ModalService } from "@common/components/modal/modal.service";
 import { TooltipIconComponent } from "@common/components/tooltip-icon/tooltip-icon.component";
 import { FeatureFlagDirective } from "@common/directives/feature-flag.directive";
-import { FormValidationErrorsDirective } from "@common/directives/form-validation-errors.directive";
 import { promiseWithCatch } from "@common/helpers/app.helpers";
 import RoutingResolvers from "@common/resolvers/routing-resolvers";
 import { CompactionTooltipsTexts } from "@common/tooltips/compacting.text";
+import { FormValidationErrorsDirective } from "@common/validation/form-validation-errors.directive";
+import { odfNameValidators } from "@common/validation/identifier.validators";
 import AppValues from "@common/values/app.values";
 import {
     DatasetBasicsFragment,
@@ -105,10 +106,7 @@ export class DatasetSettingsGeneralTabComponent extends BaseComponent implements
     public ngOnInit(): void {
         this.renameError$ = this.datasetSettingsService.renameDatasetErrorOccurrences.pipe(shareReplay());
         this.renameDatasetForm = this.fb.nonNullable.group({
-            datasetName: [
-                this.datasetBasics.name,
-                [Validators.required, Validators.pattern(AppValues.DATASET_NAME_PATTERN)],
-            ],
+            datasetName: [this.datasetBasics.name, [Validators.required, ...odfNameValidators()]],
         });
 
         this.resetDatasetForm = this.fb.nonNullable.group({

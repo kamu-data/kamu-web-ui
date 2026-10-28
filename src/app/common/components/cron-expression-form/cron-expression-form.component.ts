@@ -11,9 +11,9 @@ import { FormControl, FormGroup, ReactiveFormsModule, Validators } from "@angula
 
 import { BaseComponent } from "@common/components/base.component";
 import { CronExpressionFormType } from "@common/components/cron-expression-form/cron-expression-form.value";
-import { FormValidationErrorsDirective } from "@common/directives/form-validation-errors.directive";
 import { cronExpressionNextTime } from "@common/helpers/app.helpers";
-import { cronValidator } from "@common/helpers/cron-expression-validator.helper";
+import { cronValidator } from "@common/validation/cron.validators";
+import { FormValidationErrorsDirective } from "@common/validation/form-validation-errors.directive";
 
 @Component({
     selector: "app-cron-expression-form",

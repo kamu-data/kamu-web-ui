@@ -14,9 +14,9 @@ import { BaseComponent } from "@common/components/base.component";
 import { TimeDeltaFormComponent } from "@common/components/time-delta-form/time-delta-form.component";
 import { TimeDeltaFormType } from "@common/components/time-delta-form/time-delta-form.value";
 import { TooltipIconComponent } from "@common/components/tooltip-icon/tooltip-icon.component";
-import { FormValidationErrorsDirective } from "@common/directives/form-validation-errors.directive";
 import { requireValue } from "@common/helpers/app.helpers";
 import { FlowTooltipsTexts } from "@common/tooltips/flow-tooltips.text";
+import { FormValidationErrorsDirective } from "@common/validation/form-validation-errors.directive";
 import {
     FlowRetryBackoffType,
     FlowRetryPolicyDataFragment,

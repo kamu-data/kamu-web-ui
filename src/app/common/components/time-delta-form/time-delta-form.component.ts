@@ -13,7 +13,7 @@ import { RxwebValidators } from "@rxweb/reactive-form-validators";
 
 import { BaseComponent } from "@common/components/base.component";
 import { TimeDeltaFormType } from "@common/components/time-delta-form/time-delta-form.value";
-import { FormValidationErrorsDirective } from "@common/directives/form-validation-errors.directive";
+import { FormValidationErrorsDirective } from "@common/validation/form-validation-errors.directive";
 import { TimeUnit } from "@api/kamu.graphql.interface";
 import { MaybeNull } from "@interface/app.types";
 

@@ -5,7 +5,7 @@
  * included in the LICENSE file.
  */
 
-import { AbstractControl, ValidationErrors, ValidatorFn, Validators } from "@angular/forms";
+import { ValidatorFn, Validators } from "@angular/forms";
 import { ActivatedRouteSnapshot } from "@angular/router";
 
 import { ErrorPolicy, WatchQueryFetchPolicy } from "@apollo/client";
@@ -291,13 +291,6 @@ export const noCacheFetchPolicy: {
     errorPolicy: "all",
 };
 
-export const noWhitespaceValidator = (): ValidatorFn => {
-    return (control: AbstractControl): MaybeNull<ValidationErrors> => {
-        const isSpace = typeof control.value === "string" && /\s/.test(control.value);
-        return isSpace ? { whitespace: true } : null;
-    };
-};
-
 export function sliceSizeMapperReverse(sizeInBytes: number): { size: number; unit: SliceUnit } {
     if (sizeInBytes % Math.pow(2, 30) === 0) {
         return { size: sizeInBytes / Math.pow(2, 30), unit: SliceUnit.GB };
@@ -394,25 +387,6 @@ export function getAllRouteParams(route: ActivatedRouteSnapshot): Record<string,
         currentRoute = currentRoute.parent;
     }
     return params;
-}
-
-export function matchFieldsValidator(controlName: string, matchingControlName: string): ValidatorFn {
-    return (formGroup: AbstractControl): MaybeNull<ValidationErrors> => {
-        const control = formGroup.get(controlName);
-        const matchingControl = formGroup.get(matchingControlName);
-
-        if (!control || !matchingControl) {
-            throw new Error(`[matchFieldsValidator]: One of the controls was not found.`);
-        }
-
-        if (control.value !== matchingControl.value) {
-            matchingControl.setErrors({ passwordsMismatch: true });
-        } else {
-            matchingControl.setErrors(null);
-        }
-
-        return null;
-    };
 }
 
 export function eventTypesMapper(name: string): SubscribedEventType {

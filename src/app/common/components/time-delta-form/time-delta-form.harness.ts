@@ -9,6 +9,7 @@
 
 import { ComponentHarness } from "@angular/cdk/testing";
 
+import { FieldErrorHarness } from "@common/validation/field-error.harness";
 import { TimeUnit } from "@api/kamu.graphql.interface";
 import { MaybeNull } from "@interface/app.types";
 
@@ -18,6 +19,7 @@ export class TimeDeltaFormHarness extends ComponentHarness {
     private static readonly EVERY_INPUT_TEST_ID = "time-delta-every";
     private static readonly UNIT_SELECT_TEST_ID = "time-delta-unit";
     private static readonly ERROR_TEST_ID = "time-delta-error-message";
+    private static readonly UNIT_ERROR_TEST_ID = "time-delta-unit-error-message";
 
     private readonly locatorEveryInput = this.locatorFor(
         `[data-test-id="${TimeDeltaFormHarness.EVERY_INPUT_TEST_ID}"]`,
@@ -27,6 +29,9 @@ export class TimeDeltaFormHarness extends ComponentHarness {
     );
 
     private readonly locatorError = this.locatorForOptional(`[data-test-id="${TimeDeltaFormHarness.ERROR_TEST_ID}"]`);
+    private readonly locatorUnitError = this.locatorFor(
+        FieldErrorHarness.with({ dataTestId: TimeDeltaFormHarness.UNIT_ERROR_TEST_ID }),
+    );
 
     private static readonly DEFAULT_UNIT_ORDER: TimeUnit[] = [
         TimeUnit.Minutes,
@@ -66,15 +71,42 @@ export class TimeDeltaFormHarness extends ComponentHarness {
         if (unit === null) {
             await select.clear();
         } else {
-            // Get available units and find the index
-            const availableUnits = await this.getAvailableUnits();
-            const index = availableUnits.indexOf(unit);
-            if (index === -1) {
-                throw new Error(`Unit ${unit} is not available in the current configuration`);
-            }
-            await select.selectOptions(index);
-            await select.blur();
+            await this.setUnit(unit);
         }
+    }
+
+    /** Types the value as a user would, leaving the unit as it is; an empty string leaves the field blank. */
+    public async setEvery(value: string): Promise<void> {
+        const input = await this.locatorEveryInput();
+        await input.clear();
+        if (value !== "") {
+            await input.sendKeys(value);
+        }
+        await input.blur();
+    }
+
+    /** Picks a unit, leaving the value as it is. */
+    public async setUnit(unit: TimeUnit): Promise<void> {
+        const select = await this.locatorUnitSelect();
+        const availableUnits = await this.getAvailableUnits();
+        const index = availableUnits.indexOf(unit);
+        if (index === -1) {
+            throw new Error(`Unit ${unit} is not available in the current configuration`);
+        }
+        await select.selectOptions(index);
+        await select.blur();
+    }
+
+    /** Focuses the unit select and leaves it without choosing. */
+    public async touchUnit(): Promise<void> {
+        const select = await this.locatorUnitSelect();
+        await select.focus();
+        await select.blur();
+    }
+
+    public async getUnitErrorMessage(): Promise<MaybeNull<string>> {
+        const error = await this.locatorUnitError();
+        return error.getMessage();
     }
 
     public async getTimeDelta(): Promise<{ every: number; unit: MaybeNull<TimeUnit> }> {

@@ -5,6 +5,7 @@
  * included in the LICENSE file.
  */
 
+import { TestbedHarnessEnvironment } from "@angular/cdk/testing/testbed";
 import { provideHttpClient } from "@angular/common/http";
 import { provideHttpClientTesting } from "@angular/common/http/testing";
 import { ComponentFixture, TestBed } from "@angular/core/testing";
@@ -19,26 +20,17 @@ import { ApolloTestingModule } from "apollo-angular/testing";
 import type { Mock } from "vitest";
 
 import { SpinnerComponent } from "@common/components/spinner/spinner/spinner.component";
-import { requireValue } from "@common/helpers/app.helpers";
-import {
-    checkButtonDisabled,
-    checkVisible,
-    emitClickOnElementByDataTestId,
-    findElementByDataTestId,
-    getElementByDataTestId,
-    registerMatSvgIcons,
-    setFieldValue,
-    stubMethod,
-} from "@common/helpers/base-test.helpers.spec";
+import { registerMatSvgIcons, stubMethod } from "@common/helpers/base-test.helpers.spec";
 import { AuthApi } from "@api/auth.api";
 import { PasswordLoginCredentials } from "@api/auth.api.model";
 import { AccountProvider } from "@api/kamu.graphql.interface";
 import { mockPasswordLoginResponse, TEST_LOGIN, TEST_PASSWORD } from "@api/mock/auth.mock";
-import { MaybeNull, MaybeUndefined } from "@interface/app.types";
+import { MaybeNull } from "@interface/app.types";
 
 import { AppConfigService } from "src/app/app-config.service";
 import { LoginMethodsService } from "src/app/auth/login-methods.service";
 import { LoginComponent } from "src/app/auth/login/login.component";
+import { LoginHarness } from "src/app/auth/login/login.harness";
 import { LoginService } from "src/app/auth/login/login.service";
 import ProjectLinks from "src/app/project-links";
 import { LocalStorageService } from "src/app/services/local-storage.service";
@@ -61,25 +53,6 @@ describe("LoginComponent", () => {
         enableTermsOfService: true,
         allowAnonymous: true,
     };
-
-    enum Elements {
-        METHOD_SELECTION_BLOCK = "method-selection-block",
-        GITHUB_SPINNER = "github-spinner",
-        PASSWORD_METHOD_BLOCK = "password-method-block",
-
-        SELECT_METHOD_GITHUB = "select-method-github",
-        SELECT_METHOD_PASSWORD = "select-method-password",
-        SELECT_METHOD_WEB3_WALLET = "select-method-web3-wallet",
-
-        INPUT_LOGIN = "input-login",
-        INPUT_PASSWORD = "input-password",
-        SUBMIT_PASSWORD = "submit-password",
-
-        INPUT_LOGIN_ERROR_REQUIRED = "input-login-error-required",
-        INPUT_PASSWORD_ERROR_REQUIRED = "input-password-error-required",
-        PASSWORD_METHOD_ERROR = "password-method-error",
-        INVALID_DEVICE_CODE = "invalid-device-code",
-    }
 
     const mockQueryParams: BehaviorSubject<Params> = new BehaviorSubject<Params>({});
 
@@ -149,50 +122,55 @@ describe("LoginComponent", () => {
             expect(component).toBeTruthy();
         });
 
-        it("should not select any method with 2 login methods allowed", () => {
-            expect(component.selectedLoginMethod).toBeUndefined();
+        function loginHarness(): Promise<LoginHarness> {
+            return TestbedHarnessEnvironment.harnessForFixture(fixture, LoginHarness);
+        }
 
-            checkVisible(fixture, Elements.METHOD_SELECTION_BLOCK, true);
-            checkVisible(fixture, Elements.GITHUB_SPINNER, false);
-            checkVisible(fixture, Elements.PASSWORD_METHOD_BLOCK, false);
+        it("should not select any method with 2 login methods allowed", async () => {
+            const login = await loginHarness();
+
+            expect(component.selectedLoginMethod).toBeUndefined();
+            expect(await login.isMethodSelectionShown()).toBe(true);
+            expect(await login.isGithubSpinnerShown()).toBe(false);
+            expect(await login.isPasswordFormShown()).toBe(false);
         });
 
-        it("select Github method should redirect to Github endpoint and show spinner", () => {
-            const spyGotoGithub = vi.spyOn(loginService, "gotoGithub").mockImplementation(() => {});
+        it("select Github method should redirect to Github endpoint and show spinner", async () => {
+            const spyGotoGithub = stubMethod(loginService, "gotoGithub");
+            const login = await loginHarness();
 
-            emitClickOnElementByDataTestId(fixture, Elements.SELECT_METHOD_GITHUB);
-            fixture.detectChanges();
+            await login.selectGithub();
 
-            checkVisible(fixture, Elements.METHOD_SELECTION_BLOCK, false);
-            checkVisible(fixture, Elements.GITHUB_SPINNER, true);
-            checkVisible(fixture, Elements.PASSWORD_METHOD_BLOCK, false);
-
+            expect(await login.isMethodSelectionShown()).toBe(false);
+            expect(await login.isGithubSpinnerShown()).toBe(true);
+            expect(await login.isPasswordFormShown()).toBe(false);
             expect(spyGotoGithub).toHaveBeenCalledTimes(1);
         });
 
-        it("Select password method should switch on the password block and disable selection", () => {
-            emitClickOnElementByDataTestId(fixture, Elements.SELECT_METHOD_PASSWORD);
-            fixture.detectChanges();
+        it("Select password method should switch on the password block and disable selection", async () => {
+            const login = await loginHarness();
 
-            checkVisible(fixture, Elements.METHOD_SELECTION_BLOCK, false);
-            checkVisible(fixture, Elements.GITHUB_SPINNER, false);
-            checkVisible(fixture, Elements.PASSWORD_METHOD_BLOCK, true);
+            await login.selectPassword();
+
+            expect(await login.isMethodSelectionShown()).toBe(false);
+            expect(await login.isGithubSpinnerShown()).toBe(false);
+            expect(await login.isPasswordFormShown()).toBe(true);
         });
 
         describe("Password login method", () => {
-            beforeEach(() => {
-                emitClickOnElementByDataTestId(fixture, Elements.SELECT_METHOD_PASSWORD);
-                fixture.detectChanges();
+            let login: LoginHarness;
+
+            beforeEach(async () => {
+                login = await loginHarness();
+                await login.selectPassword();
             });
 
-            it("should submit the password login form from the keyboard", () => {
+            it("should submit the password login form from the keyboard", async () => {
                 const loginServicePasswordSubmit = stubMethod(loginService, "passwordLogin");
-                setFieldValue(fixture, Elements.INPUT_LOGIN, TEST_LOGIN);
-                setFieldValue(fixture, Elements.INPUT_PASSWORD, TEST_PASSWORD);
-                fixture.detectChanges();
+                await login.setLogin(TEST_LOGIN);
+                await login.setPassword(TEST_PASSWORD);
 
-                const submitButton = getElementByDataTestId(fixture, Elements.SUBMIT_PASSWORD, HTMLButtonElement);
-                requireValue(submitButton.form).requestSubmit();
+                await login.submitForm();
 
                 expect(loginServicePasswordSubmit).toHaveBeenCalledWith(
                     { login: TEST_LOGIN, password: TEST_PASSWORD },
@@ -200,92 +178,90 @@ describe("LoginComponent", () => {
                 );
             });
 
-            it("Submit good password login form", () => {
-                const loginServicePasswordSubmit = vi.spyOn(loginService, "passwordLogin").mockImplementation(() => {});
+            it("Submit good password login form", async () => {
+                const loginServicePasswordSubmit = stubMethod(loginService, "passwordLogin");
 
-                setFieldValue(fixture, Elements.INPUT_LOGIN, TEST_LOGIN);
-                setFieldValue(fixture, Elements.INPUT_PASSWORD, TEST_PASSWORD);
-                fixture.detectChanges();
+                await login.setLogin(TEST_LOGIN);
+                await login.setPassword(TEST_PASSWORD);
 
-                checkButtonDisabled(fixture, Elements.SUBMIT_PASSWORD, false);
-                expect(component.passwordLoginForm.valid).toBe(true);
-
-                emitClickOnElementByDataTestId(fixture, Elements.SUBMIT_PASSWORD);
+                expect(await login.getLoginError()).toBeNull();
+                expect(await login.getPasswordError()).toBeNull();
+                expect(await login.isSubmitDisabled()).toBe(false);
+                await login.submit();
 
                 expect(loginServicePasswordSubmit).toHaveBeenCalledTimes(1);
-
                 expect(loginServicePasswordSubmit).toHaveBeenCalledWith(
-                    {
-                        login: TEST_LOGIN,
-                        password: TEST_PASSWORD,
-                    },
+                    { login: TEST_LOGIN, password: TEST_PASSWORD },
                     null,
                 );
             });
 
-            it("Missing login or password leads to disable submit", () => {
-                checkButtonDisabled(fixture, Elements.SUBMIT_PASSWORD, true);
-                expect(component.passwordLoginForm.valid).toBe(false);
+            it("should trim the login", async () => {
+                const loginServicePasswordSubmit = stubMethod(loginService, "passwordLogin");
 
-                setFieldValue(fixture, Elements.INPUT_LOGIN, TEST_LOGIN);
-                fixture.detectChanges();
+                await login.setLogin(`  ${TEST_LOGIN} `);
+                await login.setPassword(TEST_PASSWORD);
+                await login.submit();
 
-                checkButtonDisabled(fixture, Elements.SUBMIT_PASSWORD, true);
-                expect(component.passwordLoginForm.valid).toBe(false);
-
-                setFieldValue(fixture, Elements.INPUT_PASSWORD, TEST_PASSWORD);
-                fixture.detectChanges();
-
-                checkButtonDisabled(fixture, Elements.SUBMIT_PASSWORD, false);
-                expect(component.passwordLoginForm.valid).toBe(true);
+                expect(loginServicePasswordSubmit).toHaveBeenCalledWith(
+                    { login: TEST_LOGIN, password: TEST_PASSWORD },
+                    null,
+                );
             });
 
-            [
-                [Elements.INPUT_LOGIN, Elements.INPUT_LOGIN_ERROR_REQUIRED],
-                [Elements.INPUT_PASSWORD, Elements.INPUT_PASSWORD_ERROR_REQUIRED],
-            ].forEach(([inputElementName, inputErrorElementName]: Elements[]) => {
-                it(`Test touching element '${Elements.INPUT_LOGIN}' creates required error`, () => {
-                    const element: MaybeUndefined<HTMLElement> = findElementByDataTestId(
-                        fixture,
-                        inputErrorElementName,
-                    );
-                    expect(element?.textContent?.trim()).toEqual("");
+            it("Missing login or password leads to disable submit", async () => {
+                const loginServicePasswordSubmit = stubMethod(loginService, "passwordLogin");
+                expect(await login.isSubmitDisabled()).toBe(true);
 
-                    setFieldValue(fixture, inputElementName, "");
-                    fixture.detectChanges();
-                    expect(element?.textContent?.trim()).toBeDefined();
-                });
+                await login.setLogin(TEST_LOGIN);
+                expect(await login.isSubmitDisabled()).toBe(true);
+                await login.submit();
+                expect(loginServicePasswordSubmit).not.toHaveBeenCalled();
+
+                await login.setPassword(TEST_PASSWORD);
+                expect(await login.isSubmitDisabled()).toBe(false);
             });
 
-            it("Service emits an error during password login", () => {
-                checkVisible(fixture, Elements.PASSWORD_METHOD_ERROR, false);
+            it("should require a login", async () => {
+                expect(await login.getLoginError()).toBeNull();
 
-                const errorMessage = "Bad credentials";
-                loginService.emitPasswordLoginErrorOccurred(errorMessage);
-                fixture.detectChanges();
+                await login.setLogin("");
 
-                checkVisible(fixture, Elements.PASSWORD_METHOD_ERROR, true);
+                expect(await login.getLoginError()).toBe("Login is required");
+                expect(await login.isSubmitDisabled()).toBe(true);
             });
 
-            [Elements.INPUT_LOGIN, Elements.INPUT_PASSWORD].forEach((inputElementName: Elements) => {
-                it(`Error is cleared after touching input ${inputElementName}`, () => {
-                    const errorMessage = "Bad credentials";
-                    loginService.emitPasswordLoginErrorOccurred(errorMessage);
-                    fixture.detectChanges();
+            it("should require a password", async () => {
+                expect(await login.getPasswordError()).toBeNull();
 
-                    checkVisible(fixture, Elements.PASSWORD_METHOD_ERROR, true);
+                await login.setPassword("");
 
-                    const inputElement: HTMLInputElement = getElementByDataTestId(
-                        fixture,
-                        inputElementName,
-                        HTMLInputElement,
-                    );
-                    inputElement.dispatchEvent(new KeyboardEvent("keyup", { key: " " }));
+                expect(await login.getPasswordError()).toBe("Password is required");
+                expect(await login.isSubmitDisabled()).toBe(true);
+            });
 
-                    fixture.detectChanges();
+            it("Service emits an error during password login", async () => {
+                expect(await login.getLoginFailure()).toBeNull();
 
-                    checkVisible(fixture, Elements.PASSWORD_METHOD_ERROR, false);
-                });
+                loginService.emitPasswordLoginErrorOccurred("Bad credentials");
+
+                expect(await login.getLoginFailure()).toBe("Bad credentials");
+            });
+
+            it("should clear the login failure once the login is edited", async () => {
+                loginService.emitPasswordLoginErrorOccurred("Bad credentials");
+
+                await login.setLogin(TEST_LOGIN);
+
+                expect(await login.getLoginFailure()).toBeNull();
+            });
+
+            it("should clear the login failure once the password is edited", async () => {
+                loginService.emitPasswordLoginErrorOccurred("Bad credentials");
+
+                await login.setPassword(TEST_PASSWORD);
+
+                expect(await login.getLoginFailure()).toBeNull();
             });
         });
 
@@ -310,15 +286,15 @@ describe("LoginComponent", () => {
             expect(navigationSpy).toHaveBeenCalledTimes(1);
         });
 
-        it("should not keep a device code that is not a UUID, and say the link is invalid", () => {
+        it("should not keep a device code that is not a UUID, and say the link is invalid", async () => {
             localStorageService.setDeviceCode("3f8e1c52-6c1d-4f7a-9b8e-2d4c6a1b0e9f");
-            checkVisible(fixture, Elements.INVALID_DEVICE_CODE, false);
+            const login = await loginHarness();
+            expect(await login.isInvalidDeviceCodeShown()).toBe(false);
 
             mockQueryParams.next({ [ProjectLinks.URL_QUERY_PARAM_DEVICE_CODE]: "not-a-device-code" });
-            fixture.detectChanges();
 
             expect(localStorageService.loginDeviceCode).toBeNull();
-            checkVisible(fixture, Elements.INVALID_DEVICE_CODE, true);
+            expect(await login.isInvalidDeviceCodeShown()).toBe(true);
         });
     });
 

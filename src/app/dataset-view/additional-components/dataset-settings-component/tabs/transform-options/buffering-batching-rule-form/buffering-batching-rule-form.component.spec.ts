@@ -109,6 +109,24 @@ describe("BufferingBatchingRuleFormComponent", () => {
         expect(errorMessage).toBe("Minimum records must be at least 1");
     });
 
+    it("should check min records whole number error", async () => {
+        await bufferingBatchingRuleHarness.setMinRecordsToAwait("1.5");
+
+        expect(component.form.invalid).toBe(true);
+        expect(await bufferingBatchingRuleHarness.getMinRecordsErrorMessage()).toBe(
+            "Minimum records must be a whole number",
+        );
+    });
+
+    it("should accept a single record as the minimum", async () => {
+        await bufferingBatchingRuleHarness.setMinRecordsToAwait(1);
+        await bufferingBatchingRuleHarness.setMaxBatchingInterval({ every: 24, unit: TimeUnit.Hours });
+
+        expect(await bufferingBatchingRuleHarness.getMinRecordsErrorMessage()).toBeNull();
+        expect(await bufferingBatchingRuleHarness.getMaxBatchingIntervalError()).toBeNull();
+        expect(component.form.valid).toBe(true);
+    });
+
     it("should check batching interval error", async () => {
         // Set invalid batching interval
         await bufferingBatchingRuleHarness.setMinRecordsToAwait(5);
@@ -125,5 +143,6 @@ describe("BufferingBatchingRuleFormComponent", () => {
         expect(component.form.controls.maxBatchingInterval.get("every")?.errors).toEqual({
             max: { max: 60, actual: 100 },
         });
+        expect(await bufferingBatchingRuleHarness.getMaxBatchingIntervalError()).toBe("Value must be at most 60");
     });
 });

@@ -261,6 +261,43 @@ describe("FlowRetryPolicyFormComponent", () => {
         expect(component.form.errors).toBeNull();
     });
 
+    [1, 100].forEach((maxAttempts) => {
+        it(`should accept ${maxAttempts} max attempts`, async () => {
+            await flowRetryPolicyFormHarness.enableRetries();
+
+            await flowRetryPolicyFormHarness.setMaxAttempts(maxAttempts);
+
+            expect(await flowRetryPolicyFormHarness.getMaxAttemptsError()).toBeNull();
+            expect(component.form.valid).toBe(true);
+            expect(component.maxAttempts.value).toBe(maxAttempts);
+        });
+    });
+
+    [
+        { value: "", message: "Max attempts is required" },
+        { value: "0", message: "Max attempts must be at least 1" },
+        { value: "101", message: "Max attempts must be at most 100" },
+        { value: "2.5", message: "Max attempts must be a whole number" },
+    ].forEach(({ value, message }) => {
+        it(`should reject "${value}" max attempts, which kamu-cli does not accept`, async () => {
+            await flowRetryPolicyFormHarness.enableRetries();
+
+            await flowRetryPolicyFormHarness.setMaxAttempts(value);
+
+            expect(await flowRetryPolicyFormHarness.getMaxAttemptsError()).toBe(message);
+            expect(hostComponent.hostForm.invalid).toBe(true);
+        });
+    });
+
+    it("should not validate max attempts while retries are disabled", async () => {
+        await flowRetryPolicyFormHarness.enableRetries();
+        await flowRetryPolicyFormHarness.setMaxAttempts("0");
+
+        await flowRetryPolicyFormHarness.disableRetries();
+
+        expect(hostComponent.hostForm.valid).toBe(true);
+    });
+
     it("should show validation error for invalid min delay", async () => {
         await flowRetryPolicyFormHarness.enableRetries();
 

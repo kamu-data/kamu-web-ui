@@ -5,16 +5,14 @@
  * included in the LICENSE file.
  */
 
-import { ComponentFixture, fakeAsync, TestBed } from "@angular/core/testing";
+import { TestbedHarnessEnvironment } from "@angular/cdk/testing/testbed";
+import { ComponentFixture, TestBed } from "@angular/core/testing";
 
-import {
-    dispatchInputEvent,
-    emitClickOnElement,
-    emitClickOnElementByDataTestId,
-} from "@common/helpers/base-test.helpers.spec";
+import { setComponentInput, stubMethod } from "@common/helpers/base-test.helpers.spec";
 import AppValues from "@common/values/app.values";
 
 import { LoadMoreComponent } from "src/app/query/shared/load-more/load-more.component";
+import { LoadMoreHarness } from "src/app/query/shared/load-more/load-more.harness";
 
 describe("LoadMoreComponent", () => {
     let component: LoadMoreComponent;
@@ -27,31 +25,69 @@ describe("LoadMoreComponent", () => {
 
         fixture = TestBed.createComponent(LoadMoreComponent);
         component = fixture.componentInstance;
+        setComponentInput(fixture, "isAllDataLoaded", false);
         fixture.detectChanges();
+        await fixture.whenStable();
     });
+
+    function loadMoreHarness(): Promise<LoadMoreHarness> {
+        return TestbedHarnessEnvironment.harnessForFixture(fixture, LoadMoreHarness);
+    }
 
     it("should create", () => {
         expect(component).toBeTruthy();
     });
 
-    it("should change number of rows on button click", fakeAsync(() => {
+    it("should change number of rows on button click", async () => {
         const options = component.ROWS_OPTIONS;
-        expect(component.rowsNumber).toEqual(AppValues.SQL_QUERY_LIMIT);
-        emitClickOnElement(fixture, `[data-test-id="row-limit-${options[0]}"] button`);
+        const loadMore = await loadMoreHarness();
+        expect(await loadMore.getRowLimit()).toBe(String(AppValues.SQL_QUERY_LIMIT));
+
+        await loadMore.selectRowLimitOption(options[0]);
+
         expect(component.rowsNumber).toEqual(options[0]);
-    }));
+        expect(await loadMore.getRowLimit()).toBe(String(options[0]));
+    });
 
-    it("should change number of rows on new input value", fakeAsync(() => {
-        const newRowsNumber = 76;
-        expect(component.rowsNumber).toEqual(AppValues.SQL_QUERY_LIMIT);
-        dispatchInputEvent(fixture, "row-limit-input", newRowsNumber.toString());
-        expect(component.rowsNumber).toEqual(newRowsNumber);
-    }));
+    it("should load the number of rows entered", async () => {
+        const loadMoreEmit = stubMethod(component.loadMoreEmit, "emit");
+        const loadMore = await loadMoreHarness();
 
-    it("button click should emmit output with default limit", () => {
-        const defaultLimit = AppValues.SQL_QUERY_LIMIT;
-        const loadMoreEmit = vi.spyOn(component.loadMoreEmit, "emit").mockImplementation(() => {});
-        emitClickOnElementByDataTestId(fixture, "btn-load-more");
-        expect(loadMoreEmit).toHaveBeenCalledWith(defaultLimit);
+        await loadMore.setRowLimit("76");
+        expect(await loadMore.getRowLimitError()).toBeNull();
+        expect(await loadMore.isLoadMoreDisabled()).toBe(false);
+        await loadMore.loadMore();
+
+        expect(loadMoreEmit).toHaveBeenCalledWith(76);
+    });
+
+    it("button click should emmit output with default limit", async () => {
+        const loadMoreEmit = stubMethod(component.loadMoreEmit, "emit");
+        const loadMore = await loadMoreHarness();
+
+        await loadMore.loadMore();
+
+        expect(loadMoreEmit).toHaveBeenCalledWith(AppValues.SQL_QUERY_LIMIT);
+    });
+
+    ["", "0", "-5", "2.5"].forEach((rows) => {
+        it(`should not load "${rows}" rows`, async () => {
+            const loadMoreEmit = stubMethod(component.loadMoreEmit, "emit");
+            const loadMore = await loadMoreHarness();
+
+            await loadMore.setRowLimit(rows);
+            expect(await loadMore.getRowLimitError()).toBe("Enter a whole number of rows, at least 1");
+            expect(await loadMore.isLoadMoreDisabled()).toBe(true);
+            await loadMore.loadMore();
+
+            expect(loadMoreEmit).not.toHaveBeenCalled();
+        });
+    });
+
+    it("should load nothing more once all data is loaded", async () => {
+        setComponentInput(fixture, "isAllDataLoaded", true);
+        const loadMore = await loadMoreHarness();
+
+        expect(await loadMore.isLoadMoreDisabled()).toBe(true);
     });
 });

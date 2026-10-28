@@ -10,6 +10,8 @@
 <input
     type="number"
     class="form-control"
+    [min]="min"
+    [max]="max ?? null"
     [placeholder]="placeholder"
     [formControl]="control"
     [attr.data-test-id]="dataTestId"

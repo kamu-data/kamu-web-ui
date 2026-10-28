@@ -5,6 +5,7 @@
  * included in the LICENSE file.
  */
 
+import { TestbedHarnessEnvironment } from "@angular/cdk/testing/testbed";
 import { ApplicationRef } from "@angular/core";
 import { ComponentFixture, fakeAsync, flush, TestBed, tick } from "@angular/core/testing";
 import { ActivatedRoute } from "@angular/router";
@@ -13,24 +14,17 @@ import { of } from "rxjs";
 
 import { Apollo } from "apollo-angular";
 import { provideToastr } from "ngx-toastr";
+import type { Mock } from "vitest";
 
 import { ModalService } from "@common/components/modal/modal.service";
-import {
-    checkVisible,
-    dispatchInputEvent,
-    emitClickOnElementByDataTestId,
-    findElementByDataTestId,
-    getElementByDataTestId,
-    getInputElementByDataTestId,
-    setComponentInput,
-    stubMethod,
-} from "@common/helpers/base-test.helpers.spec";
+import { emitClickOnElementByDataTestId, setComponentInput, stubMethod } from "@common/helpers/base-test.helpers.spec";
 import AppValues from "@common/values/app.values";
 import { TEST_ACCOUNT_ID } from "@api/mock/auth.mock";
 import { ModalArgumentsInterface } from "@interface/modal.interface";
 
 import { DatasetSettingsService } from "src/app/dataset-view/additional-components/dataset-settings-component/services/dataset-settings.service";
 import { DatasetSettingsGeneralTabComponent } from "src/app/dataset-view/additional-components/dataset-settings-component/tabs/general/dataset-settings-general-tab.component";
+import { DatasetSettingsGeneralTabHarness } from "src/app/dataset-view/additional-components/dataset-settings-component/tabs/general/dataset-settings-general-tab.harness";
 import { DatasetResetMode } from "src/app/dataset-view/additional-components/dataset-settings-component/tabs/general/dataset-settings-general-tab.types";
 import { DatasetFlowsService } from "src/app/dataset-view/additional-components/flows-component/services/dataset-flows.service";
 import { DatasetService } from "src/app/dataset-view/dataset.service";
@@ -93,15 +87,18 @@ describe("DatasetSettingsGeneralTabComponent", () => {
     });
 
     enum Elements {
-        RenameDatasetButton = "rename-dataset-button",
-        RenameDatasetInput = "rename-dataset-input",
-
-        RenameDatasetErrorName = "rename-dataset-error-name",
-        RenameDatasetErrorCustom = "rename-dataset-error-custom",
-
-        DeleteDatasetButton = "delete-dataset-button",
-
         ResetDatasetButton = "reset-dataset-button",
+    }
+
+    function generalTabHarness(): Promise<DatasetSettingsGeneralTabHarness> {
+        return TestbedHarnessEnvironment.harnessForFixture(fixture, DatasetSettingsGeneralTabHarness);
+    }
+
+    function answerEveryModal(ok: boolean): Mock<ModalService["error"]> {
+        return vi.spyOn(modalService, "error").mockImplementation((options: ModalArgumentsInterface) => {
+            options.handler?.call(undefined, ok);
+            return Promise.resolve("");
+        });
     }
 
     it("should create", () => {
@@ -120,9 +117,11 @@ describe("DatasetSettingsGeneralTabComponent", () => {
         expect(scrollSpy).toHaveBeenCalledWith({ behavior: "smooth" });
     });
 
-    it("should check default state of properties", () => {
-        expect(component.isAllowedToDeleteDataset).toEqual(true);
-        expect(component.renameDatasetForm.disabled).toEqual(false);
+    it("should check default state of properties", async () => {
+        const tab = await generalTabHarness();
+
+        expect(await tab.isDeleteShown()).toBe(true);
+        expect(await tab.isRenameDisabled()).toBe(false);
     });
 
     function setDatasetPermissions(general: { canDelete?: boolean; canRename?: boolean }): void {
@@ -134,150 +133,113 @@ describe("DatasetSettingsGeneralTabComponent", () => {
         });
     }
 
-    it("should check missing canDelete permission", () => {
+    it("should check missing canDelete permission", async () => {
         setDatasetPermissions({ canDelete: false });
-        fixture.detectChanges();
+        const tab = await generalTabHarness();
 
-        expect(component.isAllowedToDeleteDataset).toEqual(false);
-        expect(findElementByDataTestId(fixture, Elements.DeleteDatasetButton)).toBeUndefined();
-        expect(component.renameDatasetForm.disabled).toEqual(false);
+        expect(await tab.isDeleteShown()).toBe(false);
+        expect(await tab.isRenameDisabled()).toBe(false);
     });
 
-    it("should check missing rename permission", () => {
+    it("should check missing rename permission", async () => {
+        fixture.destroy();
         fixture = TestBed.createComponent(DatasetSettingsGeneralTabComponent);
         component = fixture.componentInstance;
         setDatasetPermissions({ canRename: false });
-        fixture.detectChanges();
+        const tab = await generalTabHarness();
 
-        expect(component.isAllowedToDeleteDataset).toEqual(true);
+        expect(await tab.isDeleteShown()).toBe(true);
         expect(component.renameDatasetForm.disabled).toEqual(true);
-        expect(getElementByDataTestId(fixture, Elements.RenameDatasetButton, HTMLButtonElement).disabled).toEqual(true);
+        expect(await tab.isRenameDisabled()).toBe(true);
     });
 
-    it("should check rename dataset", () => {
-        const renameDatasetSpy = vi.spyOn(datasetSettingsService, "renameDataset").mockReturnValue(of());
+    ["someName", "my.dataset-1", "a".repeat(100)].forEach((newName) => {
+        it(`should rename the dataset to "${newName}"`, async () => {
+            const renameDatasetSpy = vi.spyOn(datasetSettingsService, "renameDataset").mockReturnValue(of());
+            const tab = await generalTabHarness();
 
-        dispatchInputEvent(fixture, Elements.RenameDatasetInput, "someName");
-        emitClickOnElementByDataTestId(fixture, Elements.RenameDatasetButton);
+            await tab.setDatasetName(newName);
+            expect(await tab.getDatasetNameError()).toBeNull();
+            await tab.rename();
 
-        expect(renameDatasetSpy).toHaveBeenCalledTimes(1);
-
-        expect(renameDatasetSpy).toHaveBeenCalledWith({
-            accountId: TEST_ACCOUNT_ID,
-            accountName: component.datasetBasics.owner.accountName,
-            datasetId: component.datasetBasics.id,
-            newName: "someName",
+            expect(renameDatasetSpy).toHaveBeenCalledWith({
+                accountId: TEST_ACCOUNT_ID,
+                accountName: component.datasetBasics.owner.accountName,
+                datasetId: component.datasetBasics.id,
+                newName,
+            });
         });
     });
 
-    it("should check init renameError", fakeAsync(() => {
-        const errorMessage = "Dataset is already exist.";
-        datasetSettingsService.emitRenameDatasetErrorOccurred(errorMessage);
-        fixture.detectChanges();
+    [
+        { newName: "", message: "Dataset name is required" },
+        ...["a-", "a--b", "a_b", "-a", "a.", "#illegal#"].map((newName) => ({
+            newName,
+            message: "Dataset name may only contain letters, digits, single hyphens and dots between them",
+        })),
+        { newName: "a".repeat(101), message: "Dataset name can't exceed 100 characters" },
+    ].forEach(({ newName, message }) => {
+        it(`should not rename the dataset to "${newName}"`, async () => {
+            const renameDatasetSpy = vi.spyOn(datasetSettingsService, "renameDataset");
+            const tab = await generalTabHarness();
 
-        tick();
+            await tab.setDatasetName(newName);
+            expect(await tab.getDatasetNameError()).toBe(message);
+            expect(await tab.isRenameDisabled()).toBe(true);
+            await tab.rename();
 
-        const elemInput = getInputElementByDataTestId(fixture, "rename-dataset-input");
-        expect(elemInput.classList.contains("error-border-color")).toBe(true);
-
-        checkVisible(fixture, Elements.RenameDatasetErrorCustom, true);
-
-        flush();
-    }));
-
-    it("should check rename validation required", () => {
-        const renameDatasetSpy = vi.spyOn(component, "renameDataset").mockImplementation(() => {});
-
-        dispatchInputEvent(fixture, Elements.RenameDatasetInput, "");
-        emitClickOnElementByDataTestId(fixture, Elements.RenameDatasetButton);
-
-        fixture.detectChanges();
-
-        expect(renameDatasetSpy).not.toHaveBeenCalled();
-
-        const errorElement = findElementByDataTestId(fixture, "rename-dataset-error");
-        expect(errorElement?.textContent?.trim()).toEqual("Dataset name is required");
+            expect(renameDatasetSpy).not.toHaveBeenCalled();
+        });
     });
 
-    it("should check rename validation pattern", () => {
-        const renameDatasetSpy = vi.spyOn(component, "renameDataset").mockImplementation(() => {});
+    it("should show the error the server returned for the rename", async () => {
+        const tab = await generalTabHarness();
 
-        dispatchInputEvent(fixture, Elements.RenameDatasetInput, "#illegal#");
-        emitClickOnElementByDataTestId(fixture, Elements.RenameDatasetButton);
+        datasetSettingsService.emitRenameDatasetErrorOccurred("Dataset is already exist.");
 
-        fixture.detectChanges();
-
-        expect(renameDatasetSpy).not.toHaveBeenCalled();
-
-        const errorElement = findElementByDataTestId(fixture, "rename-dataset-error");
-        expect(errorElement?.textContent?.trim()).toEqual(
-            "Dataset name may only contain letters, digits, single hyphens and dots between them",
-        );
+        expect(await tab.getRenameServerError()).toBe("Dataset is already exist.");
+        expect(await tab.isDatasetNameMarkedInvalid()).toBe(true);
     });
 
-    it("should check renameError is empty after keyup", fakeAsync(() => {
-        const errorMessage = "Dataset is already exist.";
-        datasetSettingsService.emitRenameDatasetErrorOccurred(errorMessage);
+    it("should clear the server error once the name is edited", async () => {
+        const tab = await generalTabHarness();
+        datasetSettingsService.emitRenameDatasetErrorOccurred("Dataset is already exist.");
 
-        const renameDatasetInput = getInputElementByDataTestId(fixture, Elements.RenameDatasetInput);
-        renameDatasetInput.dispatchEvent(new Event("keyup"));
-        fixture.detectChanges();
+        await tab.setDatasetName("another-name");
 
-        tick();
+        expect(await tab.getRenameServerError()).toBeNull();
+        expect(await tab.isDatasetNameMarkedInvalid()).toBe(false);
+    });
 
-        expect(renameDatasetInput.classList.contains("error-border-color")).toBe(false);
-        flush();
-    }));
-
-    it("should check delete modal window is shown and sends API call after confirm", fakeAsync(() => {
+    it("should check delete modal window is shown and sends API call after confirm", async () => {
         const hasOutOfSyncPushRemotesSpy = vi
             .spyOn(datasetService, "hasOutOfSyncPushRemotes")
             .mockReturnValue(of(true));
-        const modalServiceSpy = vi
-            .spyOn(modalService, "error")
-            .mockImplementation((options: ModalArgumentsInterface) => {
-                options.handler?.call(undefined, true);
-                return Promise.resolve("");
-            });
+        const modalServiceSpy = answerEveryModal(true);
         const deleteDatasetSpy = vi.spyOn(datasetSettingsService, "deleteDataset").mockReturnValue(of());
+        const tab = await generalTabHarness();
 
-        emitClickOnElementByDataTestId(fixture, Elements.DeleteDatasetButton);
+        await tab.deleteDataset();
+
         expect(modalServiceSpy).toHaveBeenCalledTimes(1);
         expect(hasOutOfSyncPushRemotesSpy).toHaveBeenCalledTimes(1);
-        fixture.detectChanges();
-
-        tick();
-
-        expect(deleteDatasetSpy).toHaveBeenCalledTimes(1);
-
         expect(deleteDatasetSpy).toHaveBeenCalledWith(component.datasetBasics.owner.id, component.datasetBasics.id);
+    });
 
-        flush();
-    }));
-
-    it("should check delete modal window is shown and does not send API call after reject", fakeAsync(() => {
+    it("should check delete modal window is shown and does not send API call after reject", async () => {
         const hasOutOfSyncPushRemotesSpy = vi
             .spyOn(datasetService, "hasOutOfSyncPushRemotes")
             .mockReturnValue(of(false));
-        const modalServiceSpy = vi
-            .spyOn(modalService, "error")
-            .mockImplementation((options: ModalArgumentsInterface) => {
-                options.handler?.call(undefined, false);
-                return Promise.resolve("");
-            });
+        const modalServiceSpy = answerEveryModal(false);
         const deleteDatasetSpy = stubMethod(datasetSettingsService, "deleteDataset");
+        const tab = await generalTabHarness();
 
-        emitClickOnElementByDataTestId(fixture, Elements.DeleteDatasetButton);
+        await tab.deleteDataset();
+
         expect(modalServiceSpy).toHaveBeenCalledTimes(1);
         expect(hasOutOfSyncPushRemotesSpy).toHaveBeenCalledTimes(1);
-        fixture.detectChanges();
-
-        tick();
-
         expect(deleteDatasetSpy).not.toHaveBeenCalled();
-
-        flush();
-    }));
+    });
 
     it("should check reset modal window is shown and sends API call after confirm for Reset to Seed mode", fakeAsync(() => {
         const modalServiceSpy = vi
@@ -331,16 +293,13 @@ describe("DatasetSettingsGeneralTabComponent", () => {
         flush();
     }));
 
-    it("should check change dataset visibility", () => {
-        const modalServiceSpy = vi
-            .spyOn(modalService, "error")
-            .mockImplementation((options: ModalArgumentsInterface) => {
-                options.handler?.call(undefined, true);
-                return Promise.resolve("");
-            });
+    it("should check change dataset visibility", async () => {
+        const modalServiceSpy = answerEveryModal(true);
         const setVisibilitySpy = vi.spyOn(datasetSettingsService, "setVisibility").mockImplementation(() => of());
+        const tab = await generalTabHarness();
 
-        component.changeVisibilityDataset();
+        await tab.changeVisibility();
+
         expect(modalServiceSpy).toHaveBeenCalledTimes(1);
         expect(setVisibilitySpy).toHaveBeenCalledTimes(1);
     });

@@ -5,7 +5,9 @@
  * included in the LICENSE file.
  */
 
-import { AbstractControl, FormArray, FormControl, FormGroup } from "@angular/forms";
+import { AbstractControl, FormArray, FormControl, FormGroup, ValidatorFn } from "@angular/forms";
+
+import { integerInRangeValidators } from "@common/validation/number.validators";
 
 import { MaybeNull } from "@interface/app.types";
 import { DataSchemaField } from "@interface/dataset-schema.interface";
@@ -82,6 +84,11 @@ function isNameValueGroup(control: AbstractControl): control is FormGroup<NameVa
 
 function isTopicGroup(control: AbstractControl): control is FormGroup<TopicControls> {
     return control instanceof FormGroup && "path" in control.controls && "qos" in control.controls;
+}
+
+/** The validators a layout implies by its type, besides `required` and the ones it lists. */
+export function layoutValidators(layout: ControlLayout): ValidatorFn[] {
+    return layout.type === ControlType.NUMBER ? integerInRangeValidators(layout.min, layout.max) : [];
 }
 
 /** Pairs a config entry's layout with the control the step created for it; throws when their types disagree. */

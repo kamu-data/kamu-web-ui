@@ -25,6 +25,8 @@ import { numberInputControl } from "src/app/dataset-view/additional-components/m
             tooltip="Broker port"
             placeholder="Enter port"
             [requiredField]="true"
+            [min]="1"
+            [max]="65535"
             dataTestId="fetch-port"
         />
     `,
@@ -52,6 +54,10 @@ describe("NumberFieldComponent", () => {
     it("should render the label with the required marker", async () => {
         expect(await harness.getLabel()).toBe("Port");
         expect(await harness.isRequiredMarked()).toBe(true);
+    });
+
+    it("should give the input the range of the field", async () => {
+        expect(await harness.getRange()).toEqual({ min: "1", max: "65535" });
     });
 
     it("should write the typed number into the control", async () => {

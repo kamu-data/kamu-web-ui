@@ -161,6 +161,11 @@ export class AccessTokensTabComponent extends BaseComponent {
     }
 
     public onGenerateToken(): void {
+        // Enter in the name field submits the form, which the disabled button does not prevent.
+        if (this.createTokenForm.invalid) {
+            this.createTokenForm.markAllAsTouched();
+            return;
+        }
         this.accessTokenService
             .createAccessTokens(this.accountId, this.createTokenForm.controls.name.value)
             .pipe(takeUntilDestroyed(this.destroyRef))

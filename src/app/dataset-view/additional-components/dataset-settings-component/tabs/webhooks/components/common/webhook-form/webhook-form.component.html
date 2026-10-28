@@ -30,10 +30,13 @@
             formControlName="eventTypes"
             [multiple]="true"
             [readonly]="disabled"
+            data-test-id="event-types"
             #eventTypes
         >
             <ng-template ng-option-tmp let-item="item" let-index="index">
-                <label class="fs-14 inline-block"> {{ item.name }} </label>
+                <label class="fs-14 inline-block" [attr.data-test-id]="'event-type-option-' + item.value">
+                    {{ item.name }}
+                </label>
             </ng-template>
         </ng-select>
         <div

@@ -144,7 +144,8 @@ interface ArrayFieldOptions {
 
 type TextLayout = ControlLayoutBase & { type: ControlType.TEXT; placeholder?: string; inputType?: "text" | "password" };
 type TypeaheadLayout = ControlLayoutBase & { type: ControlType.TYPEAHEAD; placeholder?: string; list: string[] };
-type NumberLayout = ControlLayoutBase & { type: ControlType.NUMBER; placeholder?: string };
+/** A number field states its range: the step builds its whole-number and range validators, and its input, from it. */
+type NumberLayout = ControlLayoutBase & { type: ControlType.NUMBER; placeholder?: string; min: number; max?: number };
 type CheckboxLayout = ControlLayoutBase & { type: ControlType.CHECKBOX };
 type CacheLayout = ControlLayoutBase & { type: ControlType.CACHE };
 type OrderLayout = ControlLayoutBase & { type: ControlType.ORDER };

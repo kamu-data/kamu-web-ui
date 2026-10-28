@@ -5,25 +5,24 @@
  * included in the LICENSE file.
  */
 
+import { TestbedHarnessEnvironment } from "@angular/cdk/testing/testbed";
 import { provideHttpClient } from "@angular/common/http";
 import { provideHttpClientTesting } from "@angular/common/http/testing";
-import { ComponentFixture, fakeAsync, flush, TestBed, tick } from "@angular/core/testing";
+import { ChangeDetectorRef } from "@angular/core";
+import { ComponentFixture, TestBed } from "@angular/core/testing";
 
 import { of } from "rxjs";
 
 import { ApolloTestingModule } from "apollo-angular/testing";
 
-import {
-    getElementByDataTestId,
-    getInputElementByDataTestId,
-    registerMatSvgIcons,
-} from "@common/helpers/base-test.helpers.spec";
+import { getElementByDataTestId, registerMatSvgIcons } from "@common/helpers/base-test.helpers.spec";
 import { SharedTestModule } from "@common/modules/shared-test.module";
 import { DatasetVisibility } from "@api/kamu.graphql.interface";
 import { mockAccountDetails } from "@api/mock/auth.mock";
 
 import { LoggedUserService } from "src/app/auth/logged-user.service";
 import { DatasetCreateComponent } from "src/app/dataset-create/dataset-create.component";
+import { DatasetCreateHarness } from "src/app/dataset-create/dataset-create.harness";
 import { DatasetCreateService } from "src/app/dataset-create/dataset-create.service";
 import { ArchetypeViewType } from "src/app/dataset-create/dataset-create.types";
 
@@ -58,15 +57,17 @@ describe("DatasetCreateComponent", () => {
         expect(component.createDatasetForm.controls.owner.value).toEqual(mockAccountDetails.accountName);
     });
 
-    it("should check error message is exist", fakeAsync(() => {
-        const errorMessage = "testMessage";
-        datasetCreateService.emitErrorMessageChanged(errorMessage);
-        tick();
-        fixture.detectChanges();
-        const element = getElementByDataTestId(fixture, "create-error-message");
-        expect(element.textContent).toEqual(errorMessage);
-        flush();
-    }));
+    function datasetCreateHarness(): Promise<DatasetCreateHarness> {
+        return TestbedHarnessEnvironment.harnessForFixture(fixture, DatasetCreateHarness);
+    }
+
+    it("should check error message is exist", async () => {
+        const page = await datasetCreateHarness();
+
+        datasetCreateService.emitErrorMessageChanged("testMessage");
+
+        expect(await page.getCreateError()).toEqual("testMessage");
+    });
 
     it("should check getter isFormValid()", () => {
         component.yamlTemplate = "testYaml";
@@ -141,17 +142,15 @@ describe("DatasetCreateComponent", () => {
         expect(component.createDatasetForm.controls.kind.enabled).toBe(true);
     });
 
-    it("should disable snapshot initialization in the template for non-structured archetypes", fakeAsync(() => {
-        tick();
-        component.archetype = ArchetypeViewType.VERSIONED_FILE;
-        fixture.detectChanges();
-        tick();
-        fixture.detectChanges();
+    it("should disable snapshot initialization in the template for non-structured archetypes", async () => {
+        const page = await datasetCreateHarness();
+        expect(await page.isYamlSnapshotDisabled()).toBe(false);
 
-        const checkboxInput = getInputElementByDataTestId(fixture, "show-monaco-editor");
-        expect(checkboxInput.disabled).toBe(true);
-        flush();
-    }));
+        component.archetype = ArchetypeViewType.VERSIONED_FILE;
+        fixture.debugElement.injector.get(ChangeDetectorRef).markForCheck();
+
+        expect(await page.isYamlSnapshotDisabled()).toBe(true);
+    });
 
     it("should check call createDatasetFromSnapshot()", () => {
         component.showMonacoEditor = true;
@@ -165,27 +164,25 @@ describe("DatasetCreateComponent", () => {
         expect(createDatasetFromSnapshotSpy).toHaveBeenCalledTimes(1);
     });
 
-    it("should check switch checkbox `Initialize from YAML snapshot`)", () => {
-        const checkboxInput = getInputElementByDataTestId(fixture, "show-monaco-editor");
-        expect(checkboxInput.checked).toBe(false);
+    it("should check switch checkbox `Initialize from YAML snapshot`)", async () => {
+        const page = await datasetCreateHarness();
+        expect(await page.isYamlSnapshotChecked()).toBe(false);
         expect(component.showMonacoEditor).toBe(false);
 
-        checkboxInput.click();
+        await page.toggleYamlSnapshot();
 
-        expect(checkboxInput.checked).toBe(true);
+        expect(await page.isYamlSnapshotChecked()).toBe(true);
         expect(component.showMonacoEditor).toBe(true);
 
-        checkboxInput.click();
+        await page.toggleYamlSnapshot();
 
-        expect(checkboxInput.checked).toBe(false);
+        expect(await page.isYamlSnapshotChecked()).toBe(false);
         expect(component.showMonacoEditor).toBe(false);
     });
 
     it("should check call uploadFile when file picked)", async () => {
-        const checkboxInput = getInputElementByDataTestId(fixture, "show-monaco-editor");
-
-        checkboxInput.click();
-        fixture.detectChanges();
+        const page = await datasetCreateHarness();
+        await page.toggleYamlSnapshot();
 
         const mockFile = new File(["test content"], "test.yaml", {
             type: "text/html",
@@ -202,10 +199,8 @@ describe("DatasetCreateComponent", () => {
     });
 
     it("should check call uploadFile when file not picked)", async () => {
-        const checkboxInput = getInputElementByDataTestId(fixture, "show-monaco-editor");
-
-        checkboxInput.click();
-        fixture.detectChanges();
+        const page = await datasetCreateHarness();
+        await page.toggleYamlSnapshot();
 
         const fileInput = getElementByDataTestId(fixture, "input-file", HTMLInputElement);
         const onFileSelectedSpy = vi.spyOn(component, "onFileSelected");
@@ -215,23 +210,44 @@ describe("DatasetCreateComponent", () => {
         await vi.waitFor(() => expect(onFileSelectedSpy).toHaveResolvedWith(""));
     });
 
-    [
-        { datasetName: "test.test", valid: true },
-        { datasetName: "t-test.test", valid: true },
-        { datasetName: "test.t-test", valid: true },
-        { datasetName: "t-test.t-test", valid: true },
-        { datasetName: "-test.test", valid: false },
-        { datasetName: "test.-tests", valid: false },
-        { datasetName: "test.", valid: false },
-        { datasetName: ".test", valid: false },
-        { datasetName: "", valid: false },
-    ].forEach((item: { datasetName: string; valid: boolean }) => {
-        it(`should check valid form with datasetName=${item.datasetName}`, () => {
-            component.createDatasetForm.patchValue({
-                datasetName: item.datasetName,
+    ["test.test", "t-test.test", "test.t-test", "t-test.t-test", "my.dataset-1", "a".repeat(100)].forEach(
+        (datasetName) => {
+            it(`should create a dataset named "${datasetName}"`, async () => {
+                const createEmptyDatasetSpy = vi
+                    .spyOn(datasetCreateService, "createEmptyDataset")
+                    .mockReturnValue(of());
+                const page = await datasetCreateHarness();
+
+                await page.setDatasetName(datasetName);
+                expect(await page.getDatasetNameError()).toBeNull();
+                expect(await page.isCreateDisabled()).toBe(false);
+                await page.create();
+
+                expect(createEmptyDatasetSpy).toHaveBeenCalledWith(
+                    expect.objectContaining({ datasetAlias: datasetName }),
+                );
             });
-            fixture.detectChanges();
-            expect(component.createDatasetForm.valid).toBe(item.valid);
+        },
+    );
+
+    [
+        { datasetName: "", message: "Dataset name is required" },
+        ...["-test.test", "test.-tests", "test.", ".test", "a-", "a--b", "a_b"].map((datasetName) => ({
+            datasetName,
+            message: "Dataset name may only contain letters, digits, single hyphens and dots between them",
+        })),
+        { datasetName: "a".repeat(101), message: "Dataset name can't exceed 100 characters" },
+    ].forEach(({ datasetName, message }) => {
+        it(`should not create a dataset named "${datasetName}"`, async () => {
+            const createEmptyDatasetSpy = vi.spyOn(datasetCreateService, "createEmptyDataset");
+            const page = await datasetCreateHarness();
+
+            await page.setDatasetName(datasetName);
+            expect(await page.getDatasetNameError()).toBe(message);
+            expect(await page.isCreateDisabled()).toBe(true);
+            await page.create();
+
+            expect(createEmptyDatasetSpy).not.toHaveBeenCalled();
         });
     });
 });

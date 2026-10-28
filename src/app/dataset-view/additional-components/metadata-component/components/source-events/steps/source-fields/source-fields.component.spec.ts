@@ -59,7 +59,7 @@ function fieldOfEveryType(): SourceField[] {
             ALWAYS,
         ),
         sourceField(
-            { name: "port", label: "Port", tooltip: "", type: ControlType.NUMBER },
+            { name: "port", label: "Port", tooltip: "", type: ControlType.NUMBER, min: 1, max: 65535 },
             numberInputControl()([]),
             ALWAYS,
         ),

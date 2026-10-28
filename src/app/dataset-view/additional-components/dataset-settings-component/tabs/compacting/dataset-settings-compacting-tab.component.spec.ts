@@ -5,6 +5,7 @@
  * included in the LICENSE file.
  */
 
+import { TestbedHarnessEnvironment } from "@angular/cdk/testing/testbed";
 import { ComponentFixture, fakeAsync, flush, TestBed, tick } from "@angular/core/testing";
 import { ActivatedRoute } from "@angular/router";
 
@@ -14,11 +15,13 @@ import { Apollo } from "apollo-angular";
 import { provideToastr } from "ngx-toastr";
 
 import { ModalService } from "@common/components/modal/modal.service";
-import { emitClickOnElementByDataTestId, setComponentInput } from "@common/helpers/base-test.helpers.spec";
+import { emitClickOnElementByDataTestId, setComponentInput, stubMethod } from "@common/helpers/base-test.helpers.spec";
 import AppValues from "@common/values/app.values";
 import { ModalArgumentsInterface } from "@interface/modal.interface";
 
 import { DatasetSettingsCompactingTabComponent } from "src/app/dataset-view/additional-components/dataset-settings-component/tabs/compacting/dataset-settings-compacting-tab.component";
+import { DatasetSettingsCompactingTabHarness } from "src/app/dataset-view/additional-components/dataset-settings-component/tabs/compacting/dataset-settings-compacting-tab.harness";
+import { SliceUnit } from "src/app/dataset-view/additional-components/dataset-settings-component/tabs/compacting/dataset-settings-compacting-tab.types";
 import { DatasetFlowsService } from "src/app/dataset-view/additional-components/flows-component/services/dataset-flows.service";
 import { mockDatasetBasicsDerivedFragment, mockFullPowerDatasetPermissionsFragment } from "src/app/search/mock.data";
 import { NavigationService } from "src/app/services/navigation.service";
@@ -73,6 +76,74 @@ describe("DatasetSettingsCompactingTabComponent", () => {
 
     it("should create", () => {
         expect(component).toBeTruthy();
+    });
+
+    function compactingTabHarness(): Promise<DatasetSettingsCompactingTabHarness> {
+        return TestbedHarnessEnvironment.harnessForFixture(fixture, DatasetSettingsCompactingTabHarness);
+    }
+
+    function confirmEveryModal(): void {
+        vi.spyOn(modalService, "error").mockImplementation((options: ModalArgumentsInterface) => {
+            options.handler?.call(undefined, true);
+            return Promise.resolve("");
+        });
+    }
+
+    [
+        { value: "", message: "is required" },
+        { value: "0", message: "must be at least 1" },
+        { value: "1.5", message: "must be a whole number" },
+    ].forEach(({ value, message }) => {
+        it(`should reject the slice size "${value}" and keep compaction disabled`, async () => {
+            const tab = await compactingTabHarness();
+
+            await tab.setSliceSize(value);
+
+            expect(await tab.getSliceSizeError()).toBe(`Slice size ${message}`);
+            expect(await tab.isRunCompactionDisabled()).toBe(true);
+        });
+
+        it(`should reject the slice records "${value}" and keep compaction disabled`, async () => {
+            const tab = await compactingTabHarness();
+
+            await tab.setRecordsCount(value);
+
+            expect(await tab.getRecordsCountError()).toBe(`Max slice records ${message}`);
+            expect(await tab.isRunCompactionDisabled()).toBe(true);
+        });
+    });
+
+    it("should not ask to run compaction while a field is invalid", async () => {
+        const modalServiceSpy = vi.spyOn(modalService, "error");
+        const tab = await compactingTabHarness();
+
+        await tab.setRecordsCount("0");
+        await tab.runCompaction();
+
+        expect(modalServiceSpy).not.toHaveBeenCalled();
+    });
+
+    it("should run compaction with the entered slice size and records", async () => {
+        stubMethod(navigationService, "navigateToDatasetView");
+        const runHardCompactionSpy = vi
+            .spyOn(datasetFlowsService, "datasetTriggerCompactionFlow")
+            .mockReturnValue(of(false));
+        confirmEveryModal();
+        const tab = await compactingTabHarness();
+
+        await tab.setSliceSize("1");
+        await tab.setSliceUnit(SliceUnit.KB);
+        await tab.setRecordsCount("500");
+
+        expect(await tab.getSliceSizeError()).toBeNull();
+        expect(await tab.getRecordsCountError()).toBeNull();
+        expect(await tab.isRunCompactionDisabled()).toBe(false);
+        await tab.runCompaction();
+
+        expect(runHardCompactionSpy).toHaveBeenCalledWith({
+            datasetId: mockDatasetBasicsDerivedFragment.id,
+            compactionConfigInput: { maxSliceSize: 1024, maxSliceRecords: 500 },
+        });
     });
 
     it("should check run hard compacting", fakeAsync(() => {

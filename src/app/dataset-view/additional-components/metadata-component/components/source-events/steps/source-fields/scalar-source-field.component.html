@@ -25,6 +25,8 @@
     @case (ControlType.NUMBER) {
         <app-number-field
             [control]="f.control"
+            [min]="f.min"
+            [max]="f.max"
             [label]="f.label"
             [requiredField]="f.required"
             [placeholder]="f.placeholder"

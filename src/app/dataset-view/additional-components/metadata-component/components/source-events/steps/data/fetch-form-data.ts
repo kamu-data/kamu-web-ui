@@ -9,7 +9,7 @@ import { SetPollingSourceTooltipsTexts } from "@common/tooltips/set-polling-sour
 import { SourcesTooltipsTexts } from "@common/tooltips/sources.text";
 import { uniqueItemsValidator } from "@common/validation/collection.validators";
 import { requiredUnlessValidator } from "@common/validation/cross-field.validators";
-import { integerInRangeValidators, portValidators } from "@common/validation/number.validators";
+import { PORT_MAX, PORT_MIN } from "@common/validation/number.validators";
 import { urlValidator } from "@common/validation/url.validators";
 
 import { ControlType } from "src/app/dataset-view/additional-components/metadata-component/components/source-events/add-polling-source/add-polling-source-form.types";
@@ -181,7 +181,8 @@ export const FETCH_FORM_DATA: JsonFormData<FetchControls> = {
                 placeholder: "Enter port",
                 tooltip: SetPollingSourceTooltipsTexts.MQTT_PORT,
                 required: true,
-                validators: portValidators(),
+                min: PORT_MIN,
+                max: PORT_MAX,
             },
             {
                 name: "username",
@@ -223,7 +224,8 @@ export const FETCH_FORM_DATA: JsonFormData<FetchControls> = {
                 type: ControlType.NUMBER,
                 placeholder: "Enter id",
                 tooltip: SetPollingSourceTooltipsTexts.ETHEREUM_LOGS_CHAIN_ID,
-                validators: [...integerInRangeValidators(1), requiredUnlessValidator("nodeUrl", "Node URL")],
+                min: 1,
+                validators: [requiredUnlessValidator("nodeUrl", "Node URL")],
                 dependsOn: ["nodeUrl"],
             },
             {

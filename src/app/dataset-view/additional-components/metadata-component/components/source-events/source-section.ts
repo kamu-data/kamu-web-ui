@@ -42,7 +42,10 @@ import {
     TextControl,
     TopicControls,
 } from "src/app/dataset-view/additional-components/metadata-component/components/source-events/source-event-controls.types";
-import { sourceField } from "src/app/dataset-view/additional-components/metadata-component/components/source-events/source-field";
+import {
+    layoutValidators,
+    sourceField,
+} from "src/app/dataset-view/additional-components/metadata-component/components/source-events/source-field";
 
 /** A control holding `value` until the user changes it. */
 export function valueControl<V>(value: V): ControlFactory<FormControl<V>> {
@@ -191,7 +194,11 @@ export class SourceSection<T extends ControlsOf<T>> implements SourceStepSection
 
     private addControls(kind: string): void {
         this.builtFields = this.entries(kind).map((item) => {
-            const validators = [...(item.required ? [Validators.required] : []), ...(item.validators ?? [])];
+            const validators = [
+                ...(item.required ? [Validators.required] : []),
+                ...layoutValidators(item),
+                ...(item.validators ?? []),
+            ];
             const created = item.create(validators);
             // A kept control of the same name stays in the form, and the field binds to it.
             this.form.addControl(item.name, created);

@@ -29,4 +29,6 @@ import { NumberInputControl } from "src/app/dataset-view/additional-components/m
 export class NumberFieldComponent extends BaseField<NumberInputControl> {
     @Input() public placeholder?: string;
     @Input() public requiredField?: boolean;
+    @Input({ required: true }) public min: number;
+    @Input() public max?: number;
 }

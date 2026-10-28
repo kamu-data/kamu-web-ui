@@ -12,6 +12,7 @@ import { MatSlideToggleHarness } from "@angular/material/slide-toggle/testing";
 
 import { TimeDeltaFormHarness } from "@common/components/time-delta-form/time-delta-form.harness";
 import { TimeDeltaFormValue } from "@common/components/time-delta-form/time-delta-form.value";
+import { FieldErrorHarness } from "@common/validation/field-error.harness";
 import { FlowRetryBackoffType, TimeUnit } from "@api/kamu.graphql.interface";
 import { MaybeNull } from "@interface/app.types";
 
@@ -22,6 +23,7 @@ export class FlowRetryPolicyFormHarness extends ComponentHarness {
 
     private static readonly ENABLED_TOGGLE_TEST_ID = "retry-policy-enabled-toggle";
     private static readonly MAX_ATTEMPTS_INPUT_TEST_ID = "retry-policy-max-attempts-input";
+    private static readonly MAX_ATTEMPTS_ERROR_TEST_ID = "retry-policy-max-attempts-error";
     private static readonly BACKOFF_SELECT_TEST_ID = "retry-policy-backoff-select";
 
     private readonly locatorRetriesEnabledToggle = this.locatorFor(
@@ -32,6 +34,10 @@ export class FlowRetryPolicyFormHarness extends ComponentHarness {
 
     private readonly locatorMaxAttemptsInput = this.locatorFor(
         `[data-test-id="${FlowRetryPolicyFormHarness.MAX_ATTEMPTS_INPUT_TEST_ID}"]`,
+    );
+
+    private readonly locatorMaxAttemptsError = this.locatorFor(
+        FieldErrorHarness.with({ dataTestId: FlowRetryPolicyFormHarness.MAX_ATTEMPTS_ERROR_TEST_ID }),
     );
 
     private readonly locatorMinDelayForm = this.locatorForOptional(TimeDeltaFormHarness);
@@ -66,15 +72,23 @@ export class FlowRetryPolicyFormHarness extends ComponentHarness {
         return toggle.isChecked();
     }
 
-    public async setMaxAttempts(value: number): Promise<void> {
+    /** Types the value as a user would; an empty string leaves the field blank. */
+    public async setMaxAttempts(value: number | string): Promise<void> {
         if (!(await this.isRetriesEnabled())) {
             throw new Error("Cannot set max attempts when retries are disabled");
         }
 
         const input = await this.locatorMaxAttemptsInput();
         await input.clear();
-        await input.sendKeys(value.toString());
+        if (value !== "") {
+            await input.sendKeys(value.toString());
+        }
         await input.blur();
+    }
+
+    public async getMaxAttemptsError(): Promise<MaybeNull<string>> {
+        const error = await this.locatorMaxAttemptsError();
+        return error.getMessage();
     }
 
     public async getMaxAttempts(): Promise<number> {

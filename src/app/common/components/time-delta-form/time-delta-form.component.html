@@ -13,7 +13,14 @@
         data-test-id="time-delta-every"
         #every
     />
-    <span class="text-danger fs-12" [input]="unit" fieldLabel="Unit" appFieldError [group]="form"></span>
+    <span
+        class="text-danger fs-12"
+        [input]="unit"
+        fieldLabel="Unit"
+        appFieldError
+        [group]="form"
+        dataTestId="time-delta-unit-error-message"
+    ></span>
     <span
         class="text-danger fs-12"
         [input]="every"

@@ -11,7 +11,7 @@
     <p class="text-muted mt-3">
         Personal access tokens can be used to access Kamu API from tools, scripts, and other applications
     </p>
-    <form class="mt-60" [formGroup]="createTokenForm" (ngSubmit)="onGenerateToken()">
+    <form class="mt-60" [formGroup]="createTokenForm" (ngSubmit)="onGenerateToken()" data-test-id="new-token-form">
         <label for="token-name" class="form-label">Name</label>
         <div class="d-flex align-items-center">
             <input

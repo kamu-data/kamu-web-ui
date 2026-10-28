@@ -30,7 +30,7 @@ export class BufferingBatchingRuleFormHarness extends ComponentHarness {
 
     private readonly locatorTimeDeltaForm = this.locatorForOptional(TimeDeltaFormHarness);
 
-    public async setMinRecordsToAwait(value: MaybeNull<number | "">): Promise<void> {
+    public async setMinRecordsToAwait(value: MaybeNull<number | string>): Promise<void> {
         const input = await this.locatorMinRecordsInput();
         await input.clear();
         if (value === "") {
@@ -77,6 +77,14 @@ export class BufferingBatchingRuleFormHarness extends ComponentHarness {
             return message === "" ? null : message;
         }
         return null;
+    }
+
+    public async getMaxBatchingIntervalError(): Promise<MaybeNull<string>> {
+        const timeDeltaForm = await this.locatorTimeDeltaForm();
+        if (!timeDeltaForm) {
+            throw new Error("Time delta form did not appear");
+        }
+        return timeDeltaForm.getErrorMessage();
     }
 
     public async getMaxBatchingInterval(): Promise<TimeDeltaFormValue> {

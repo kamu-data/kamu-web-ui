@@ -5,6 +5,7 @@
  * included in the LICENSE file.
  */
 
+import { TestbedHarnessEnvironment } from "@angular/cdk/testing/testbed";
 import { ComponentFixture, TestBed } from "@angular/core/testing";
 
 import { of } from "rxjs";
@@ -12,12 +13,14 @@ import { of } from "rxjs";
 import { Apollo } from "apollo-angular";
 import { provideToastr } from "ngx-toastr";
 
-import { registerMatSvgIcons, setComponentInput } from "@common/helpers/base-test.helpers.spec";
+import { registerMatSvgIcons, setComponentInput, stubMethod } from "@common/helpers/base-test.helpers.spec";
 import { SharedTestModule } from "@common/modules/shared-test.module";
 import { mockCreateWebhookSubscriptionSuccess } from "@api/mock/webhooks.mock";
 
 import { AddWebhookComponent } from "src/app/dataset-view/additional-components/dataset-settings-component/tabs/webhooks/components/add-webhook/add-webhook.component";
+import { AddWebhookHarness } from "src/app/dataset-view/additional-components/dataset-settings-component/tabs/webhooks/components/add-webhook/add-webhook.harness";
 import { WebhookFormComponent } from "src/app/dataset-view/additional-components/dataset-settings-component/tabs/webhooks/components/common/webhook-form/webhook-form.component";
+import { WebhookFormHarness } from "src/app/dataset-view/additional-components/dataset-settings-component/tabs/webhooks/components/common/webhook-form/webhook-form.harness";
 import { DatasetWebhooksService } from "src/app/dataset-view/additional-components/dataset-settings-component/tabs/webhooks/service/dataset-webhooks.service";
 import { mockDatasetBasicsRootFragment } from "src/app/search/mock.data";
 import { NavigationService } from "src/app/services/navigation.service";
@@ -29,6 +32,8 @@ describe("AddWebhookComponent", () => {
     let webhooksService: WebhooksService;
     let datasetWebhooksService: DatasetWebhooksService;
     let navigationService: NavigationService;
+
+    const EVENT_TYPE = { name: "Dataset Updated", value: "DATASET.REF.UPDATED" };
 
     beforeEach(() => {
         TestBed.configureTestingModule({
@@ -42,26 +47,133 @@ describe("AddWebhookComponent", () => {
         datasetWebhooksService = TestBed.inject(DatasetWebhooksService);
         navigationService = TestBed.inject(NavigationService);
         component = fixture.componentInstance;
-        vi.spyOn(webhooksService, "eventTypes").mockReturnValue(of([]));
+        vi.spyOn(webhooksService, "eventTypes").mockReturnValue(of([EVENT_TYPE]));
         setComponentInput(fixture, "datasetBasics", mockDatasetBasicsRootFragment);
         fixture.detectChanges();
     });
+
+    function addWebhookHarness(): Promise<AddWebhookHarness> {
+        return TestbedHarnessEnvironment.harnessForFixture(fixture, AddWebhookHarness);
+    }
+
+    async function fillValidForm(page: AddWebhookHarness): Promise<WebhookFormHarness> {
+        const form = await page.getForm();
+        await form.setTargetUrl("https://example.com/hook");
+        await form.selectEventType(EVENT_TYPE.value);
+        await form.setLabel("my-hook");
+        return form;
+    }
 
     it("should create", () => {
         expect(component).toBeTruthy();
     });
 
-    it("should check to add webhook", () => {
-        const datasetWebhookCreateSubscriptionSpy = vi
+    it("should require a target URL", async () => {
+        const page = await addWebhookHarness();
+        const form = await page.getForm();
+
+        await form.setTargetUrl("");
+
+        expect(await form.getTargetUrlError()).toBe("Target URL is required");
+    });
+
+    ["http://example.com/hook", "example.com", "https://"].forEach((url) => {
+        it(`should reject the target URL "${url}", which is not an HTTPS URL`, async () => {
+            const page = await addWebhookHarness();
+            const form = await page.getForm();
+
+            await form.setTargetUrl(url);
+
+            expect(await form.getTargetUrlError()).toBe("Target URL must be a URL starting with https://");
+        });
+    });
+
+    it("should require an event type", async () => {
+        const page = await addWebhookHarness();
+        const form = await page.getForm();
+
+        await form.touchEventTypes();
+
+        expect(await form.getEventTypesError()).toBe("Event selection is required");
+    });
+
+    it("should limit the label to 100 characters", async () => {
+        const page = await addWebhookHarness();
+        const form = await page.getForm();
+
+        await form.setLabel("l".repeat(100));
+        expect(await form.getLabelError()).toBeNull();
+
+        await form.setLabel("l".repeat(101));
+        expect(await form.getLabelError()).toBe("Label can't exceed 100 characters");
+    });
+
+    it("should keep adding disabled while the form is invalid", async () => {
+        const createSpy = vi.spyOn(datasetWebhooksService, "datasetWebhookCreateSubscription");
+        const page = await addWebhookHarness();
+        const form = await fillValidForm(page);
+
+        await form.setTargetUrl("http://example.com/hook");
+        expect(await page.isSubmitDisabled()).toBe(true);
+        await page.submit();
+
+        expect(createSpy).not.toHaveBeenCalled();
+    });
+
+    it("should add a webhook with the entered fields", async () => {
+        const createSpy = vi
             .spyOn(datasetWebhooksService, "datasetWebhookCreateSubscription")
             .mockReturnValue(of({ ok: true, value: mockCreateWebhookSubscriptionSuccess }));
+        const page = await addWebhookHarness();
+        const form = await fillValidForm(page);
 
-        component.addWebhook();
-        expect(datasetWebhookCreateSubscriptionSpy).toHaveBeenCalledTimes(1);
+        expect(await form.getSelectedEventTypes()).toEqual([EVENT_TYPE.name]);
+        expect(await page.isSubmitDisabled()).toBe(false);
+        await page.submit();
+
+        expect(createSpy).toHaveBeenCalledWith(mockDatasetBasicsRootFragment.id, {
+            targetUrl: "https://example.com/hook",
+            eventTypes: [EVENT_TYPE.value],
+            label: "my-hook",
+        });
+        expect(await form.isReadonly()).toBe(true);
+    });
+
+    [
+        { field: "label" as const, message: "Label must be unique" },
+        { field: "targetUrl" as const, message: "Target URL is not reachable" },
+    ].forEach(({ field, message }) => {
+        it(`should show the error the server returns for the ${field} under that field`, async () => {
+            vi.spyOn(datasetWebhooksService, "datasetWebhookCreateSubscription").mockReturnValue(
+                of({ ok: false, fieldError: { field, message } }),
+            );
+            const page = await addWebhookHarness();
+            const form = await fillValidForm(page);
+
+            await page.submit();
+
+            const error = field === "label" ? form.getLabelError() : form.getTargetUrlError();
+            expect(await error).toBe(message);
+            expect(await page.isSubmitDisabled()).toBe(true);
+        });
+    });
+
+    it("should clear the server error once the field is edited", async () => {
+        vi.spyOn(datasetWebhooksService, "datasetWebhookCreateSubscription").mockReturnValue(
+            of({ ok: false, fieldError: { field: "label", message: "Label must be unique" } }),
+        );
+        const page = await addWebhookHarness();
+        const form = await fillValidForm(page);
+        await page.submit();
+
+        await form.setLabel("another-hook");
+
+        expect(await form.getLabelError()).toBeNull();
+        expect(await page.isSubmitDisabled()).toBe(false);
     });
 
     it("should check to navigate to webhooks list", () => {
-        const navigateToWebhooksSpy = vi.spyOn(navigationService, "navigateToWebhooks").mockImplementation(() => {});
+        const navigateToWebhooksSpy = stubMethod(navigationService, "navigateToWebhooks");
         component.navigateToListWebhooks();
         expect(navigateToWebhooksSpy).toHaveBeenCalledTimes(1);
     });

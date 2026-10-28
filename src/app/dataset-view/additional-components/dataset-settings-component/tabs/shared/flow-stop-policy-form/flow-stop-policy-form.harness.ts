@@ -74,7 +74,8 @@ export class FlowStopPolicyFormHarness extends ComponentHarness {
         return null;
     }
 
-    public async setMaxFailures(value: number): Promise<void> {
+    /** Types the value as a user would; an empty string leaves the field blank. */
+    public async setMaxFailures(value: number | string): Promise<void> {
         const stopPolicyType = await this.getStopPolicyType();
         if (stopPolicyType !== FlowTriggerStopPolicyType.AFTER_CONSECUTIVE_FAILURES) {
             throw new Error("Cannot set max failures when stop policy is not 'after consecutive failures'");
@@ -82,7 +83,9 @@ export class FlowStopPolicyFormHarness extends ComponentHarness {
 
         const input = await this.locatorMaxFailuresInput();
         await input.clear();
-        await input.sendKeys(value.toString());
+        if (value !== "") {
+            await input.sendKeys(value.toString());
+        }
         await input.blur();
     }
 

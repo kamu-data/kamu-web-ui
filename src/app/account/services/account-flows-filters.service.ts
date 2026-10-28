@@ -171,6 +171,12 @@ export class AccountFlowsFiltersService {
                 };
             }
             case ProcessCardFilterMode.CUSTOM: {
+                const minConsecutiveFailures = clampConsecutiveFailures(
+                    this.currentFiltersSnapshot.minConsecutiveFailures,
+                    0,
+                );
+                this.updateFilters({ minConsecutiveFailures });
+
                 return {
                     effectiveStateIn: this.currentFiltersSnapshot.selectedFlowProcessStates.length
                         ? this.currentFiltersSnapshot.selectedFlowProcessStates
@@ -182,10 +188,7 @@ export class AccountFlowsFiltersService {
                                   end: stripSecondsFromDateToISOString(this.currentFiltersSnapshot.toFilterDate),
                               }
                             : undefined,
-                    minConsecutiveFailures: clampConsecutiveFailures(
-                        this.currentFiltersSnapshot.minConsecutiveFailures,
-                        0,
-                    ),
+                    minConsecutiveFailures,
                     lastFailureSince: this.currentFiltersSnapshot.lastFailureDate
                         ? stripSecondsFromDateToISOString(this.currentFiltersSnapshot.lastFailureDate)
                         : undefined,

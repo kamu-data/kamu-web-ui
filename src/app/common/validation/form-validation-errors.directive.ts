@@ -44,6 +44,8 @@ export function validationErrorMessage(label: string, error: ValidationError, de
             return `${label} must be at least ${numberDetail(details, "requiredLength")} characters`;
         case "maxlength":
             return `${label} can't exceed ${numberDetail(details, "requiredLength")} characters`;
+        case "maxBytes":
+            return `${label} can't exceed ${numberDetail(details, "max")} bytes`;
         case "pattern":
             return `${label} has the wrong format`;
         case "passwordsMismatch":
@@ -61,7 +63,7 @@ export function validationErrorMessage(label: string, error: ValidationError, de
         case "blank":
             return `${label} can't be blank`;
         case "singleChar":
-            return `${label} must be a single character`;
+            return `${label} must be a single ASCII character`;
         case "format":
             return `${label} ${stringDetail(details, "message")}`;
         case "url":
@@ -118,14 +120,13 @@ export class FormValidationErrorsDirective implements OnChanges {
     public ngOnChanges(): void {
         this.nativeElement.setAttribute("data-test-id", this.dataTestId);
         const control = this.fieldControl ?? this.boundControl();
-        if (control === this.control) {
-            return;
+        if (control !== this.control) {
+            this.control = control;
+            this.controlSubscription?.unsubscribe();
+            this.controlSubscription = control.events
+                .pipe(takeUntilDestroyed(this.destroyRef))
+                .subscribe(() => this.renderError());
         }
-        this.control = control;
-        this.controlSubscription?.unsubscribe();
-        this.controlSubscription = control.events
-            .pipe(takeUntilDestroyed(this.destroyRef))
-            .subscribe(() => this.renderError());
         this.renderError();
     }
 

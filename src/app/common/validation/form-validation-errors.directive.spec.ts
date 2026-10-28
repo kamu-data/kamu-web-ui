@@ -25,12 +25,13 @@ import { setServerError } from "@common/validation/server-errors.helpers";
     template: `
         <form [formGroup]="form">
             <input #nameInput formControlName="name" data-test-id="name-input" />
-            <div [input]="nameInput" [group]="form" fieldLabel="Name" dataTestId="name-error" appFieldError></div>
+            <div [input]="nameInput" [group]="form" [fieldLabel]="label" dataTestId="name-error" appFieldError></div>
         </form>
     `,
     imports: [ReactiveFormsModule, FormValidationErrorsDirective],
 })
 class TestHostComponent {
+    public label = "Name";
     public form = new FormGroup({
         name: new FormControl("", { nonNullable: true, validators: [Validators.required, Validators.maxLength(3)] }),
     });
@@ -83,6 +84,16 @@ describe("FormValidationErrorsDirective", () => {
         await input.setValue("abd");
         expect(await error.getMessage()).toBeNull();
     });
+
+    it("should use a new label in the message", async () => {
+        const input = await nameInput();
+        await input.touch();
+
+        fixture.componentInstance.label = "Title";
+        fixture.detectChanges();
+
+        expect(await error.getMessage()).toBe("Title is required");
+    });
 });
 
 describe("fieldErrorMessage", () => {
@@ -102,6 +113,7 @@ describe("validationErrorMessage", () => {
         { error: "required", details: true, message: "Port is required" },
         { error: "minlength", details: { requiredLength: 8 }, message: "Port must be at least 8 characters" },
         { error: "maxlength", details: { requiredLength: 100 }, message: "Port can't exceed 100 characters" },
+        { error: "maxBytes", details: { max: 16384, actual: 16385 }, message: "Port can't exceed 16384 bytes" },
         { error: "pattern", details: { requiredPattern: "^a$" }, message: "Port has the wrong format" },
         { error: "passwordsMismatch", details: true, message: "Passwords mismatch" },
         { error: "email", details: true, message: "Please provide a valid email address" },
@@ -110,7 +122,7 @@ describe("validationErrorMessage", () => {
         { error: "integer", details: true, message: "Port must be a whole number" },
         { error: "whitespace", details: true, message: "Port can't contain spaces" },
         { error: "blank", details: true, message: "Port can't be blank" },
-        { error: "singleChar", details: true, message: "Port must be a single character" },
+        { error: "singleChar", details: true, message: "Port must be a single ASCII character" },
         { error: "format", details: { message: "may only contain digits" }, message: "Port may only contain digits" },
         {
             error: "url",

@@ -10,6 +10,7 @@ import { FormControl, ValidationErrors, ValidatorFn } from "@angular/forms";
 import {
     asciiValidator,
     formatValidator,
+    maxBytesValidator,
     notBlankValidator,
     noWhitespaceValidator,
     regexValidator,
@@ -68,10 +69,26 @@ describe("Text validators", () => {
         [
             { value: "", expected: null },
             { value: ",", expected: null },
+            { value: "\t", expected: null },
             { value: ",;", expected: { singleChar: true } },
+            { value: "é", expected: { singleChar: true } },
+            { value: "😀", expected: { singleChar: true } },
         ].forEach(({ value, expected }) => {
             it(`should check ${JSON.stringify(value)}`, () => {
                 expect(check(singleCharValidator(), value)).toEqual(expected);
+            });
+        });
+    });
+
+    describe("maxBytesValidator", () => {
+        [
+            { value: "abcd", expected: null },
+            { value: "abé", expected: null },
+            { value: "abcé", expected: { maxBytes: { max: 4, actual: 5 } } },
+            { value: "😀!", expected: { maxBytes: { max: 4, actual: 5 } } },
+        ].forEach(({ value, expected }) => {
+            it(`should check ${JSON.stringify(value)}`, () => {
+                expect(check(maxBytesValidator(4), value)).toEqual(expected);
             });
         });
     });

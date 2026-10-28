@@ -18,7 +18,7 @@ export abstract class BaseField<C extends AbstractControl> implements OnInit {
     @Input({ required: true }) public control: C;
     @Input({ required: true }) public label: string;
     @Input({ required: true }) public tooltip: string;
-    @Input() public dataTestId?: string;
+    @Input({ required: true }) public dataTestId: string;
 
     protected readonly cdr = inject(ChangeDetectorRef);
     protected readonly destroyRef = inject(DestroyRef);

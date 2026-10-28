@@ -9,6 +9,7 @@
                 class="form-check-input"
                 type="radio"
                 [formControl]="control"
+                [name]="dataTestId"
                 [value]="option.value"
                 attr.data-test-id="radio-{{ option.value }}-control"
             />

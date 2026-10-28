@@ -37,11 +37,26 @@ export function noWhitespaceValidator(): ValidatorFn {
     };
 }
 
-/** Fails with `singleChar` when a non-empty value is longer than one character. */
+/** Fails with `singleChar` when a non-empty value is anything but one ASCII character: kamu-cli counts bytes. */
 export function singleCharValidator(): ValidatorFn {
     return (control: AbstractControl): MaybeNull<ValidationErrors> => {
         const value: unknown = control.value;
-        return typeof value === "string" && value.length > 1 ? { singleChar: true } : null;
+        return typeof value === "string" && (value.length > 1 || value.charCodeAt(0) >= 128)
+            ? { singleChar: true }
+            : null;
+    };
+}
+
+/** Fails with `maxBytes` when the value takes more than `max` bytes in UTF-8, the length kamu-cli checks. */
+export function maxBytesValidator(max: number): ValidatorFn {
+    const encoder = new TextEncoder();
+    return (control: AbstractControl): MaybeNull<ValidationErrors> => {
+        const value: unknown = control.value;
+        if (typeof value !== "string") {
+            return null;
+        }
+        const actual = encoder.encode(value).length;
+        return actual > max ? { maxBytes: { max, actual } } : null;
     };
 }
 

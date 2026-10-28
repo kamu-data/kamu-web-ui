@@ -125,14 +125,25 @@ describe("EditKeyValueModalComponent", () => {
         expect(listSpy).not.toHaveBeenCalled();
     });
 
-    it("should require a value and limit it to 16 KiB", async () => {
+    it("should require a value and limit it to 16 KiB of UTF-8", async () => {
         const modal = await openForAdding();
 
         await modal.touchValue();
         expect(await modal.getValueError()).toBe("Value is required");
 
-        await modal.setValue("v".repeat(16 * 1024 + 1));
-        expect(await modal.getValueError()).toBe("Value can't exceed 16384 characters");
+        await modal.setValue("v".repeat(16 * 1024));
+        expect(await modal.getValueError()).toBeNull();
+
+        await modal.setValue("é".repeat(8 * 1024 + 1));
+        expect(await modal.getValueError()).toBe("Value can't exceed 16384 bytes");
+    });
+
+    it("should reject a key over 200 characters", async () => {
+        const modal = await openForAdding();
+
+        await modal.setKey("K".repeat(201));
+
+        expect(await modal.getKeyError()).toBe("Key can't exceed 200 characters");
     });
 
     it("should check toggle exposed value if exist", () => {

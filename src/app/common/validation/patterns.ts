@@ -26,3 +26,5 @@ export const ValidationPatterns = {
 
 /** kamu-cli stores dataset and account names in VARCHAR(100) columns. */
 export const ODF_NAME_MAX_LENGTH = 100;
+/** kamu-cli stores variable and secret keys in a VARCHAR(200) column. */
+export const ENV_VAR_KEY_MAX_LENGTH = 200;

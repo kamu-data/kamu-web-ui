@@ -8,6 +8,7 @@
             class="form-check-input"
             type="radio"
             [formControl]="control.controls.kind"
+            [name]="dataTestId"
             [value]="EventTimeSourceKind.FROM_METADATA"
             data-test-id="event-time-from-metadata"
         />
@@ -19,6 +20,7 @@
             class="form-check-input"
             type="radio"
             [formControl]="control.controls.kind"
+            [name]="dataTestId"
             [value]="EventTimeSourceKind.FROM_SYSTEM_TIME"
             data-test-id="event-time-from-system-time"
         />
@@ -30,6 +32,7 @@
             class="form-check-input"
             type="radio"
             [formControl]="control.controls.kind"
+            [name]="dataTestId"
             [value]="EventTimeSourceKind.FROM_PATH"
             data-test-id="event-time-from-path"
         />

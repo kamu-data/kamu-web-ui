@@ -222,6 +222,16 @@ describe("eventTimeControl", () => {
         expect(group.valid).toBe(true);
     });
 
+    it("should drop the check of an invalid pattern once the kind no longer shows it", () => {
+        const group = eventTimeControl()([]);
+        group.controls.kind.setValue(EventTimeSourceKind.FROM_PATH);
+        group.controls.pattern.setValue("data-(.*");
+        expect(group.valid).toBe(false);
+
+        group.controls.kind.setValue(EventTimeSourceKind.FROM_METADATA);
+        expect(group.valid).toBe(true);
+    });
+
     it("should give each call its own group", () => {
         const factory = eventTimeControl();
 

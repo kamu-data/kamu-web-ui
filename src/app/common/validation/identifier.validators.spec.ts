@@ -46,8 +46,8 @@ describe("Identifier validators", () => {
     });
 
     describe("envVarKeyValidators", () => {
-        ["A", "_A", "API_KEY_2", "lower_case"].forEach((key) => {
-            it(`should accept "${key}"`, () => {
+        ["A", "_A", "API_KEY_2", "lower_case", "K".repeat(200)].forEach((key) => {
+            it(`should accept "${key.length > 20 ? `${key.length} characters` : key}"`, () => {
                 expect(check(envVarKeyValidators(), key)).toBeNull();
             });
         });
@@ -57,6 +57,12 @@ describe("Identifier validators", () => {
                 expect(check(envVarKeyValidators(), key)).toEqual({
                     format: { message: ValidationPatterns.ENV_VAR_KEY.message },
                 });
+            });
+        });
+
+        it("should reject a key over 200 characters", () => {
+            expect(check(envVarKeyValidators(), "K".repeat(201))).toEqual({
+                maxlength: { requiredLength: 200, actualLength: 201 },
             });
         });
     });

@@ -316,6 +316,15 @@ describe("AccountFlowsFiltersService", () => {
         );
     });
 
+    it("should show the number of failures a custom filter uses, once it is clamped", () => {
+        service.updateFilters({ minConsecutiveFailures: 25 });
+
+        const result = service.setFlowProcessFilters(ProcessCardFilterMode.CUSTOM);
+
+        expect(result.minConsecutiveFailures).toBe(10);
+        expect(service.currentFiltersSnapshot.minConsecutiveFailures).toBe(10);
+    });
+
     describe("clampConsecutiveFailures", () => {
         [0, 1].forEach((min) => {
             [

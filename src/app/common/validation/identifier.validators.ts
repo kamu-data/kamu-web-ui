@@ -7,7 +7,7 @@
 
 import { ValidatorFn, Validators } from "@angular/forms";
 
-import { ODF_NAME_MAX_LENGTH, ValidationPatterns } from "@common/validation/patterns";
+import { ENV_VAR_KEY_MAX_LENGTH, ODF_NAME_MAX_LENGTH, ValidationPatterns } from "@common/validation/patterns";
 import { formatValidator } from "@common/validation/text.validators";
 
 /** A dataset or account name as kamu-cli parses it. */
@@ -17,5 +17,5 @@ export function odfNameValidators(): ValidatorFn[] {
 
 /** A dataset variable or secret key as kamu-cli accepts it. */
 export function envVarKeyValidators(): ValidatorFn[] {
-    return [formatValidator(ValidationPatterns.ENV_VAR_KEY)];
+    return [Validators.maxLength(ENV_VAR_KEY_MAX_LENGTH), formatValidator(ValidationPatterns.ENV_VAR_KEY)];
 }

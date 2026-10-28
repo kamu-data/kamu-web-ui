@@ -68,17 +68,22 @@ export function topicListControl(): ControlFactory<FormArray<FormGroup<TopicCont
     return (validators) => new FormArray<FormGroup<TopicControls>>([], validators);
 }
 
-/** Requires a pattern only while the event time comes from the path. */
-function patternRequiredFromPath(control: AbstractControl): MaybeNull<ValidationErrors> {
-    return control.parent?.get("kind")?.value === EventTimeSourceKind.FROM_PATH ? Validators.required(control) : null;
+const regexPattern = regexValidator();
+
+/** Checks the pattern only while the event time comes from the path, the one kind that shows it. */
+function patternFromPath(control: AbstractControl): MaybeNull<ValidationErrors> {
+    if (control.parent?.get("kind")?.value !== EventTimeSourceKind.FROM_PATH) {
+        return null;
+    }
+    return Validators.required(control) ?? regexPattern(control);
 }
 
-/** The event time group; its pattern is required only while the kind is "From path". */
+/** The event time group; its pattern is checked only while the kind is "From path". */
 export function eventTimeControl(): ControlFactory<FormGroup<EventTimeControls>> {
     return () => {
         const group = new FormGroup<EventTimeControls>({
             kind: new FormControl(EventTimeSourceKind.FROM_METADATA, { nonNullable: true }),
-            pattern: textControl("", [patternRequiredFromPath, regexValidator()]),
+            pattern: textControl("", [patternFromPath]),
             timestampFormat: textControl(""),
         });
         // The group owns both controls, so the subscription ends with it. `onlySelf` leaves the group's status to

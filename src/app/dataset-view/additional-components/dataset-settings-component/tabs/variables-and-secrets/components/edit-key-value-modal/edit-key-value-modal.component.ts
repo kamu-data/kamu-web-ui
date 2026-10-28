@@ -5,7 +5,7 @@
  * included in the LICENSE file.
  */
 
-import { ChangeDetectionStrategy, Component, inject, Input, OnInit } from "@angular/core";
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, inject, Input, OnInit } from "@angular/core";
 import { takeUntilDestroyed } from "@angular/core/rxjs-interop";
 import { AbstractControl, FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators } from "@angular/forms";
 import { MatDividerModule } from "@angular/material/divider";
@@ -18,6 +18,7 @@ import { BaseComponent } from "@common/components/base.component";
 import { uniqueValueValidator } from "@common/validation/collection.validators";
 import { FormValidationErrorsDirective } from "@common/validation/form-validation-errors.directive";
 import { envVarKeyValidators } from "@common/validation/identifier.validators";
+import { maxBytesValidator } from "@common/validation/text.validators";
 import { DatasetBasicsFragment, ViewDatasetEnvVarDataFragment } from "@api/kamu.graphql.interface";
 import { MaybeNull } from "@interface/app.types";
 
@@ -45,13 +46,14 @@ export class EditKeyValueModalComponent extends BaseComponent implements OnInit 
     public activeModal = inject(NgbActiveModal);
     private fb = inject(FormBuilder);
     private evnironmentVariablesService = inject(DatasetEnvironmentVariablesService);
+    private readonly cdr = inject(ChangeDetectorRef);
 
     @Input({ required: true }) public row: MaybeNull<ViewDatasetEnvVarDataFragment>;
     @Input({ required: true }) public datasetBasics: DatasetBasicsFragment;
-    /** kamu-cli keeps at most 256 variables and secrets per dataset, so one page holds every key. */
-    public static readonly MAX_ENTRIES = 256;
+    /** kamu-cli keeps at most 256 variables and 256 secrets per dataset, so one page of both holds every key. */
+    public static readonly MAX_ENTRIES = 2 * 256;
     /** kamu-cli rejects a value over 16 KiB. */
-    public static readonly VALUE_MAX_LENGTH = 16 * 1024;
+    public static readonly VALUE_MAX_BYTES = 16 * 1024;
     public readonly IS_SECRET_CONTROL_TOOLTIP =
         "While both secrets and variables are stored encrypted, making value a secret ensures that is used without ever being exposed by the system in task logs and other places. Use secrets for sensitive information like API keys and auth tokens.";
     public keyValueForm: FormGroup<EnvAndSecretsFormType> = this.fb.nonNullable.group({
@@ -59,7 +61,7 @@ export class EditKeyValueModalComponent extends BaseComponent implements OnInit 
             "",
             [Validators.required, ...envVarKeyValidators(), uniqueValueValidator(() => this.existingKeys)],
         ],
-        value: ["", [Validators.required, Validators.maxLength(EditKeyValueModalComponent.VALUE_MAX_LENGTH)]],
+        value: ["", [Validators.required, maxBytesValidator(EditKeyValueModalComponent.VALUE_MAX_BYTES)]],
         isSecret: [false],
     });
 
@@ -146,6 +148,7 @@ export class EditKeyValueModalComponent extends BaseComponent implements OnInit 
             .subscribe(({ nodes }) => {
                 this.existingKeys = nodes.map(({ key }) => key);
                 this.keyControl.updateValueAndValidity();
+                this.cdr.markForCheck();
             });
     }
 

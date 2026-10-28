@@ -10,6 +10,7 @@ export const VALIDATION_ERRORS = [
     "required",
     "minlength",
     "maxlength",
+    "maxBytes",
     "pattern",
     "passwordsMismatch",
     "email",

@@ -30,6 +30,7 @@ import { TopicsFieldHarness } from "src/app/dataset-view/additional-components/m
 import { TypeaheadFieldHarness } from "src/app/dataset-view/additional-components/metadata-component/components/form-components/typeahead-field/typeahead-field.harness";
 import {
     ControlType,
+    EventTimeSourceKind,
     ReadKind,
 } from "src/app/dataset-view/additional-components/metadata-component/components/source-events/add-polling-source/add-polling-source-form.types";
 import { SourceOrder } from "src/app/dataset-view/additional-components/metadata-component/components/source-events/add-polling-source/process-form.service.types";
@@ -213,6 +214,16 @@ describe("SourceFieldsComponent", () => {
         await url.setValue("https://example.com");
 
         expect(host.fields[0].control.value).toBe("https://example.com");
+    });
+
+    it("should keep the radios of one field checked when another field's radio is picked", async () => {
+        const order = await loader.getHarness(OrderFieldHarness);
+        const eventTime = await loader.getHarness(SelectDateFormatFieldHarness);
+
+        await eventTime.selectKind(EventTimeSourceKind.FROM_SYSTEM_TIME);
+
+        expect(await order.isOrderSelected(SourceOrder.NONE)).toBe(true);
+        expect(await eventTime.isKindSelected(EventTimeSourceKind.FROM_SYSTEM_TIME)).toBe(true);
     });
 
     it("should use the test id the layout names over the section's one", async () => {

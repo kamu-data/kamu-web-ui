@@ -144,7 +144,7 @@ describe("Source event step rules", () => {
     });
 
     describe("CSV", () => {
-        it("should require a separator and a quote of exactly one character", () => {
+        it("should require a separator and a quote of exactly one ASCII character", () => {
             const form = readForm(ReadKind.CSV);
             const separator = requireValue(form.controls.separator);
             const quote = requireValue(form.controls.quote);
@@ -152,6 +152,8 @@ describe("Source event step rules", () => {
             separator.setValue("");
             expect(separator.errors).toEqual({ required: true });
             separator.setValue(",;");
+            expect(separator.errors).toEqual({ singleChar: true });
+            separator.setValue("é");
             expect(separator.errors).toEqual({ singleChar: true });
             quote.setValue("");
             expect(quote.errors).toEqual({ required: true });

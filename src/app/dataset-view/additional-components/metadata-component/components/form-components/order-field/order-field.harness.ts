@@ -15,9 +15,6 @@ import { SourceOrder } from "src/app/dataset-view/additional-components/metadata
 export class OrderFieldHarness extends BaseFieldHarness {
     public static readonly hostSelector = "app-order-field";
 
-    private static readonly RADIO_TEST_ID_PREFIX = "radio-";
-    private static readonly RADIO_TEST_ID_SUFFIX = "-control";
-
     public async selectOrder(order: SourceOrder): Promise<void> {
         const radio = await this.radio(order);
         await radio.click();
@@ -28,9 +25,8 @@ export class OrderFieldHarness extends BaseFieldHarness {
         return this.isElementChecked(radio);
     }
 
+    /** The radio of `order`, whose test id is the field's `dataTestId`, a dash and the order. */
     private async radio(order: SourceOrder): Promise<TestElement> {
-        return this.locatorFor(
-            `[data-test-id="${OrderFieldHarness.RADIO_TEST_ID_PREFIX}${order}${OrderFieldHarness.RADIO_TEST_ID_SUFFIX}"]`,
-        )();
+        return this.element(`-${order}`);
     }
 }

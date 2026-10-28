@@ -1,6 +1,11 @@
 <div class="d-flex">
     <app-tooltip-icon [tooltip]="tooltip" />
-    <label class="form-label" [attr.data-test-id]="dataTestId + '-label'">{{ label }} </label>
+    <label class="form-label" [attr.data-test-id]="dataTestId + '-label'"
+        >{{ label }}
+        @if (requiredField) {
+            <span class="text-danger" [attr.data-test-id]="dataTestId + '-required'">*</span>
+        }
+    </label>
 </div>
 @for (key of control.controls; track key; let i = $index) {
     <div class="row mt-3">
@@ -25,7 +30,7 @@
                 class="btn btn-light"
                 type="button"
                 [attr.data-test-id]="dataTestId + '-remove-' + i"
-                (click)="removePrimaryKey(i)"
+                (click)="removeItem(i)"
             >
                 x
             </button>
@@ -43,7 +48,7 @@
     <button
         type="button"
         class="add-primary-key-button mt-2"
-        (click)="addPrimaryKey()"
+        (click)="addItem()"
         [attr.data-test-id]="dataTestId + '-add'"
     >
         <span>{{ buttonText }}</span>

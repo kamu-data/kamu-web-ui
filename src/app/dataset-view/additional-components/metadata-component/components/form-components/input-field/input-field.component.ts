@@ -33,6 +33,5 @@ import { TextControl } from "src/app/dataset-view/additional-components/metadata
 })
 export class InputFieldComponent extends BaseField<TextControl> {
     @Input() public placeholder?: string;
-    @Input() public requiredField?: boolean;
     @Input() public inputType: "text" | "password" = "text";
 }

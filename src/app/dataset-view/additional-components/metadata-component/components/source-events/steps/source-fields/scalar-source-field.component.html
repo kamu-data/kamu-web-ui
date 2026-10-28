@@ -4,7 +4,7 @@
         <app-input-field
             [control]="f.control"
             [label]="f.label"
-            [requiredField]="f.required"
+            [requiredField]="f.required ?? false"
             [placeholder]="f.placeholder"
             [inputType]="f.inputType ?? 'text'"
             [tooltip]="f.tooltip"
@@ -28,7 +28,7 @@
             [min]="f.min"
             [max]="f.max"
             [label]="f.label"
-            [requiredField]="f.required"
+            [requiredField]="f.required ?? false"
             [placeholder]="f.placeholder"
             [tooltip]="f.tooltip"
             [dataTestId]="dataTestId"

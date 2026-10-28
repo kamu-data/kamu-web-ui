@@ -3,7 +3,7 @@
     mat-button
     class="mr-4"
     data-test-id="btn-load-more"
-    [disabled]="isAllDataLoaded || !isRowsNumberValid"
+    [disabled]="isAllDataLoaded || rowsControl.invalid"
     (click)="loadMore()"
 >
     Load more data
@@ -16,33 +16,37 @@
     </button>
     <div class="d-flex flex-wrap align-items-center row-gap-3 holder" [class.hidden]="!isHolderVisible">
         <p class="mb-0 mr-4">Select number of rows to load:</p>
-        <mat-button-toggle-group name="query-limits" [(ngModel)]="rowsNumber" class="mr-4">
+        <mat-button-toggle-group
+            name="query-limits"
+            [value]="rowsControl.value"
+            (change)="rowsControl.setValue($event.value)"
+            class="mr-4"
+        >
             @for (option of ROWS_OPTIONS; track option) {
-                <mat-button-toggle
-                    [checked]="option === rowsNumber"
-                    [value]="option"
-                    [attr.data-test-id]="'row-limit-' + option"
-                >
+                <mat-button-toggle [value]="option" [attr.data-test-id]="'row-limit-' + option">
                     {{ option }}
                 </mat-button-toggle>
             }
         </mat-button-toggle-group>
         <div class="d-flex flex-nowrap align-items-center">
-            <p class="mb-0 mr-4">Or enter your number:</p>
+            <label class="mb-0 mr-4" for="row-limit-input">Or enter the number of rows:</label>
             <input
                 type="number"
                 class="form-control small-width"
+                id="row-limit-input"
                 data-test-id="row-limit-input"
                 placeholder="Enter number of rows"
                 min="1"
                 step="1"
-                [(ngModel)]="rowsNumber"
+                [formControl]="rowsControl"
             />
-            @if (!isRowsNumberValid) {
-                <span class="text-danger fs-12 ms-2" data-test-id="row-limit-error"
-                    >Enter a whole number of rows, at least 1</span
-                >
-            }
+            <span
+                class="text-danger fs-12 ms-2"
+                appFieldError
+                [fieldControl]="rowsControl"
+                fieldLabel="Number of rows"
+                dataTestId="row-limit-error"
+            ></span>
         </div>
     </div>
 } @else {

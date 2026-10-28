@@ -15,6 +15,7 @@ import { TooltipIconComponent } from "@common/components/tooltip-icon/tooltip-ic
 import { FlowTooltipsTexts } from "@common/tooltips/flow-tooltips.text";
 import { FormValidationErrorsDirective } from "@common/validation/form-validation-errors.directive";
 import { integerInRangeValidators } from "@common/validation/number.validators";
+import { MAX_CONSECUTIVE_FAILURES } from "@common/validation/patterns";
 import { FlowTriggerStopPolicyInput } from "@api/kamu.graphql.interface";
 import { MaybeNull } from "@interface/app.types";
 
@@ -45,8 +46,7 @@ export class FlowStopPolicyFormComponent extends BaseComponent implements OnInit
     @Input({ required: true }) public updatesEnabledControl: FormControl<boolean>;
 
     public static readonly DEFAULT_MAX_FAILURES: number = 1;
-    /** kamu-cli accepts 1 to 10 consecutive failures. */
-    public static readonly MAX_FAILURES_LIMIT: number = 10;
+    public readonly MAX_FAILURES: number = MAX_CONSECUTIVE_FAILURES;
 
     public readonly StopPolicyType: typeof FlowTriggerStopPolicyType = FlowTriggerStopPolicyType;
 
@@ -64,10 +64,7 @@ export class FlowStopPolicyFormComponent extends BaseComponent implements OnInit
                 { value: FlowStopPolicyFormComponent.DEFAULT_MAX_FAILURES, disabled: true },
                 {
                     nonNullable: true,
-                    validators: [
-                        Validators.required,
-                        ...integerInRangeValidators(1, FlowStopPolicyFormComponent.MAX_FAILURES_LIMIT),
-                    ],
+                    validators: [Validators.required, ...integerInRangeValidators(1, MAX_CONSECUTIVE_FAILURES)],
                 },
             ),
         });

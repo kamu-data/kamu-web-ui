@@ -11,7 +11,7 @@
                 [formControl]="control"
                 [name]="dataTestId"
                 [value]="option.value"
-                attr.data-test-id="radio-{{ option.value }}-control"
+                [attr.data-test-id]="dataTestId + '-' + option.value"
             />
             <label class="form-check-label" for=""> {{ option.label }} </label>
         </div>

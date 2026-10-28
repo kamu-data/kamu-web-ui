@@ -126,6 +126,21 @@ describe("SourceSection", () => {
         expect(form.controls.url?.value).toEqual("https://example.com");
     });
 
+    it("should stop revalidating a removed control once another kind is selected", () => {
+        form.controls.kind.setValue(FetchKind.ETHEREUM_LOGS);
+        const removedNodeUrl = requireValue(form.controls.nodeUrl);
+        const removedChainId = requireValue(form.controls.chainId);
+        const revalidate = vi.spyOn(removedChainId, "updateValueAndValidity");
+
+        form.controls.kind.setValue(FetchKind.URL);
+        removedNodeUrl.setValue("wss://old.example.com");
+        expect(revalidate).not.toHaveBeenCalled();
+
+        form.controls.kind.setValue(FetchKind.ETHEREUM_LOGS);
+        requireValue(form.controls.nodeUrl).setValue("wss://node.example.com");
+        expect(requireValue(form.controls.chainId).valid).toBe(true);
+    });
+
     it("should hold only the kept controls for a kind the config has no entry for", () => {
         const urlOnlyForm = new FormGroup<FetchControls>({
             kind: new FormControl(FetchKind.URL, { nonNullable: true }),

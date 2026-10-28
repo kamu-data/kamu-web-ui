@@ -7,7 +7,7 @@
 
 import { FormControl, ValidationErrors, Validators } from "@angular/forms";
 
-import { integerInRangeValidators, integerValidator, portValidators } from "@common/validation/number.validators";
+import { integerInRangeValidators, integerValidator } from "@common/validation/number.validators";
 import { MaybeNull } from "@interface/app.types";
 
 describe("Number validators", () => {
@@ -43,25 +43,6 @@ describe("Number validators", () => {
 
         it("should leave the upper bound open when it is not given", () => {
             expect(check(1_000_000, 1)).toBeNull();
-        });
-    });
-
-    describe("portValidators", () => {
-        function check(value: number): MaybeNull<ValidationErrors> {
-            return new FormControl(value, Validators.compose(portValidators())).errors;
-        }
-
-        [1, 1883, 65535].forEach((port) => {
-            it(`should accept ${port}`, () => {
-                expect(check(port)).toBeNull();
-            });
-        });
-
-        it("should reject ports outside 1..65535 and fractions", () => {
-            expect(check(-5)).toEqual({ min: { min: 1, actual: -5 } });
-            expect(check(0)).toEqual({ min: { min: 1, actual: 0 } });
-            expect(check(70000)).toEqual({ max: { max: 65535, actual: 70000 } });
-            expect(check(1.5)).toEqual({ integer: true });
         });
     });
 });

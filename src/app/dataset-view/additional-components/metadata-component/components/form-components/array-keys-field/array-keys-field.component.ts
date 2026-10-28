@@ -36,11 +36,11 @@ export class ArrayKeysFieldComponent extends BaseField<FormArray<TextControl>> {
     @Input({ required: true }) public buttonText: string;
     @Input({ required: true }) public placeholder: string;
 
-    public addPrimaryKey(): void {
+    public addItem(): void {
         this.control.push(listItemControl());
     }
 
-    public removePrimaryKey(index: number): void {
+    public removeItem(index: number): void {
         this.control.removeAt(index);
     }
 }

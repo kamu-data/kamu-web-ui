@@ -27,6 +27,7 @@ import {
             tooltip="Columns that identify a row"
             buttonText="+ Add primary key"
             placeholder="Enter column name"
+            [requiredField]="true"
             dataTestId="merge-primaryKey"
         />
     `,
@@ -57,6 +58,7 @@ describe("ArrayKeysFieldComponent", () => {
         await render();
 
         expect(await harness.getLabel()).toBe("Primary key");
+        expect(await harness.isRequiredMarked()).toBe(true);
         expect(await harness.getButtonText()).toBe("+ Add primary key");
         expect(await harness.getItems()).toEqual([]);
     });

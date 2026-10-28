@@ -16,22 +16,26 @@ import {
     ReadKind,
 } from "src/app/dataset-view/additional-components/metadata-component/components/source-events/add-polling-source/add-polling-source-form.types";
 import {
+    JsonFormControl,
     JsonFormData,
     ReadControls,
 } from "src/app/dataset-view/additional-components/metadata-component/components/source-events/source-event-controls.types";
 import { valueControl } from "src/app/dataset-view/additional-components/metadata-component/components/source-events/source-section";
 
+/** The schema field, the same for every reader that takes one. */
+const SCHEMA: JsonFormControl<ReadControls> = {
+    name: "schema",
+    create: valueControl<DataSchemaField[]>([]),
+    label: "Schema",
+    type: ControlType.SCHEMA,
+    validators: [schemaValidator],
+    tooltip: SourcesTooltipsTexts.SCHEMA,
+};
+
 export const READ_FORM_DATA: JsonFormData<ReadControls> = {
     Csv: {
         controls: [
-            {
-                name: "schema",
-                create: valueControl<DataSchemaField[]>([]),
-                label: "Schema",
-                type: ControlType.SCHEMA,
-                validators: [schemaValidator],
-                tooltip: SourcesTooltipsTexts.SCHEMA,
-            },
+            SCHEMA,
             {
                 name: "header",
                 create: valueControl(OdfDefaultValues.CSV_HEADER),
@@ -119,14 +123,7 @@ export const READ_FORM_DATA: JsonFormData<ReadControls> = {
     },
     AllGeo: {
         controls: [
-            {
-                name: "schema",
-                create: valueControl<DataSchemaField[]>([]),
-                label: "Schema",
-                type: ControlType.SCHEMA,
-                validators: [schemaValidator],
-                tooltip: SourcesTooltipsTexts.SCHEMA,
-            },
+            SCHEMA,
             {
                 name: "jsonKind",
                 create: valueControl(ReadKind.GEO_JSON),
@@ -142,14 +139,7 @@ export const READ_FORM_DATA: JsonFormData<ReadControls> = {
     },
     EsriShapefile: {
         controls: [
-            {
-                name: "schema",
-                create: valueControl<DataSchemaField[]>([]),
-                label: "Schema",
-                type: ControlType.SCHEMA,
-                validators: [schemaValidator],
-                tooltip: SourcesTooltipsTexts.SCHEMA,
-            },
+            SCHEMA,
             {
                 name: "subPath",
                 create: valueControl(""),
@@ -161,27 +151,11 @@ export const READ_FORM_DATA: JsonFormData<ReadControls> = {
         ],
     },
     Parquet: {
-        controls: [
-            {
-                name: "schema",
-                create: valueControl<DataSchemaField[]>([]),
-                label: "Schema",
-                tooltip: SourcesTooltipsTexts.SCHEMA,
-                type: ControlType.SCHEMA,
-                validators: [schemaValidator],
-            },
-        ],
+        controls: [SCHEMA],
     },
     AllJson: {
         controls: [
-            {
-                name: "schema",
-                create: valueControl<DataSchemaField[]>([]),
-                label: "Schema",
-                type: ControlType.SCHEMA,
-                validators: [schemaValidator],
-                tooltip: SourcesTooltipsTexts.SCHEMA,
-            },
+            SCHEMA,
             {
                 name: "jsonKind",
                 create: valueControl(ReadKind.JSON),

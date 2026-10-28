@@ -88,7 +88,7 @@ describe("BufferingBatchingRuleFormComponent", () => {
             required: true,
         });
 
-        const errorMessage = await bufferingBatchingRuleHarness.getMinRecordsErrorMessage();
+        const errorMessage = await bufferingBatchingRuleHarness.getMinRecordsError();
         expect(errorMessage).toBe("Minimum records is required");
     });
 
@@ -105,7 +105,7 @@ describe("BufferingBatchingRuleFormComponent", () => {
             min: { min: 1, actual: 0 },
         });
 
-        const errorMessage = await bufferingBatchingRuleHarness.getMinRecordsErrorMessage();
+        const errorMessage = await bufferingBatchingRuleHarness.getMinRecordsError();
         expect(errorMessage).toBe("Minimum records must be at least 1");
     });
 
@@ -113,16 +113,14 @@ describe("BufferingBatchingRuleFormComponent", () => {
         await bufferingBatchingRuleHarness.setMinRecordsToAwait("1.5");
 
         expect(component.form.invalid).toBe(true);
-        expect(await bufferingBatchingRuleHarness.getMinRecordsErrorMessage()).toBe(
-            "Minimum records must be a whole number",
-        );
+        expect(await bufferingBatchingRuleHarness.getMinRecordsError()).toBe("Minimum records must be a whole number");
     });
 
     it("should accept a single record as the minimum", async () => {
         await bufferingBatchingRuleHarness.setMinRecordsToAwait(1);
         await bufferingBatchingRuleHarness.setMaxBatchingInterval({ every: 24, unit: TimeUnit.Hours });
 
-        expect(await bufferingBatchingRuleHarness.getMinRecordsErrorMessage()).toBeNull();
+        expect(await bufferingBatchingRuleHarness.getMinRecordsError()).toBeNull();
         expect(await bufferingBatchingRuleHarness.getMaxBatchingIntervalError()).toBeNull();
         expect(component.form.valid).toBe(true);
     });

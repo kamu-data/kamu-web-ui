@@ -10,13 +10,17 @@ import { provideHttpClient } from "@angular/common/http";
 import { provideHttpClientTesting } from "@angular/common/http/testing";
 import { ComponentFixture, TestBed } from "@angular/core/testing";
 
+import { of } from "rxjs";
+
 import { NgbActiveModal } from "@ng-bootstrap/ng-bootstrap";
 import { Apollo } from "apollo-angular";
 
-import { setComponentInput } from "@common/helpers/base-test.helpers.spec";
+import { setComponentInput, stubMethod } from "@common/helpers/base-test.helpers.spec";
 import { SharedTestModule } from "@common/modules/shared-test.module";
 import { DatasetOverviewFragment } from "@api/kamu.graphql.interface";
+import { mockAccountDetails } from "@api/mock/auth.mock";
 
+import { LoggedUserService } from "src/app/auth/logged-user.service";
 import {
     mockMetadataDerivedUpdate,
     mockOverviewDataUpdate,
@@ -24,7 +28,9 @@ import {
 } from "src/app/dataset-view/additional-components/data-tabs.mock";
 import { EditDetailsModalComponent } from "src/app/dataset-view/additional-components/overview-component/components/edit-details-modal/edit-details-modal.component";
 import { EditDetailsModalHarness } from "src/app/dataset-view/additional-components/overview-component/components/edit-details-modal/edit-details-modal.harness";
+import { DatasetCommitService } from "src/app/dataset-view/additional-components/overview-component/services/dataset-commit.service";
 import { mockDatasetBasicsDerivedFragment } from "src/app/search/mock.data";
+import { TemplatesYamlEventsService } from "src/app/services/templates-yaml-events.service";
 
 describe("EditDetailsModalComponent", () => {
     let component: EditDetailsModalComponent;
@@ -35,6 +41,7 @@ describe("EditDetailsModalComponent", () => {
             imports: [SharedTestModule, EditDetailsModalComponent],
             providers: [Apollo, NgbActiveModal, provideHttpClient(), provideHttpClientTesting()],
         }).compileComponents();
+        vi.spyOn(TestBed.inject(LoggedUserService), "currentlyLoggedInUser", "get").mockReturnValue(mockAccountDetails);
     });
 
     function openModal(overview: DatasetOverviewFragment): Promise<EditDetailsModalHarness> {
@@ -65,15 +72,19 @@ describe("EditDetailsModalComponent", () => {
         expect(await modal.isSaveDisabled()).toBe(true);
     });
 
-    it("should check commit event", async () => {
+    it("should commit the trimmed keywords it was given", async () => {
         const modal = await openModal(mockOverviewDataUpdate.overview);
-        const commitSetInfoEventSpy = vi.spyOn(component, "commitSetInfoEvent").mockImplementation(() => {});
+        const commitSpy = vi.spyOn(TestBed.inject(DatasetCommitService), "commitEventToDataset").mockReturnValue(of());
+        const buildEventSpy = vi.spyOn(TestBed.inject(TemplatesYamlEventsService), "buildYamlSetInfoEvent");
+        stubMethod(TestBed.inject(NgbActiveModal), "close");
 
-        await modal.addKeyword("keyword1");
+        await modal.addKeyword("  keyword1 ");
+        await modal.addKeyword("KEYWORD1");
         expect(await modal.isSaveDisabled()).toBe(false);
         await modal.save();
 
-        expect(commitSetInfoEventSpy).toHaveBeenCalledTimes(1);
+        expect(buildEventSpy).toHaveBeenCalledWith("", ["keyword1"]);
+        expect(commitSpy).toHaveBeenCalledTimes(1);
     });
 
     it("should check add keyword", async () => {
@@ -105,7 +116,7 @@ describe("EditDetailsModalComponent", () => {
     });
 
     ["mock1", "MOCK1", " Mock2 "].forEach((keyword) => {
-        it(`should not add "${keyword}", which the dataset has already in another letter case`, async () => {
+        it(`should not add "${keyword}", which the dataset has already in any letter case`, async () => {
             const modal = await openModal(mockOverviewWithSetInfo);
 
             await modal.addKeyword(keyword);

@@ -45,7 +45,7 @@ describe("LoadMoreComponent", () => {
 
         await loadMore.selectRowLimitOption(options[0]);
 
-        expect(component.rowsNumber).toEqual(options[0]);
+        expect(component.rowsControl.value).toEqual(options[0]);
         expect(await loadMore.getRowLimit()).toBe(String(options[0]));
     });
 
@@ -70,13 +70,29 @@ describe("LoadMoreComponent", () => {
         expect(loadMoreEmit).toHaveBeenCalledWith(AppValues.SQL_QUERY_LIMIT);
     });
 
-    ["", "0", "-5", "2.5"].forEach((rows) => {
+    it("should load a single row", async () => {
+        const loadMoreEmit = stubMethod(component.loadMoreEmit, "emit");
+        const loadMore = await loadMoreHarness();
+
+        await loadMore.setRowLimit("1");
+        expect(await loadMore.getRowLimitError()).toBeNull();
+        await loadMore.loadMore();
+
+        expect(loadMoreEmit).toHaveBeenCalledWith(1);
+    });
+
+    [
+        { rows: "", message: "Number of rows is required" },
+        { rows: "0", message: "Number of rows must be at least 1" },
+        { rows: "-5", message: "Number of rows must be at least 1" },
+        { rows: "2.5", message: "Number of rows must be a whole number" },
+    ].forEach(({ rows, message }) => {
         it(`should not load "${rows}" rows`, async () => {
             const loadMoreEmit = stubMethod(component.loadMoreEmit, "emit");
             const loadMore = await loadMoreHarness();
 
             await loadMore.setRowLimit(rows);
-            expect(await loadMore.getRowLimitError()).toBe("Enter a whole number of rows, at least 1");
+            expect(await loadMore.getRowLimitError()).toBe(message);
             expect(await loadMore.isLoadMoreDisabled()).toBe(true);
             await loadMore.loadMore();
 

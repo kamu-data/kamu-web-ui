@@ -13,6 +13,7 @@ import { BehaviorSubject, map, Observable } from "rxjs";
 
 import { BaseComponent } from "@common/components/base.component";
 import { CopyToClipboardComponent } from "@common/components/copy-to-clipboard/copy-to-clipboard.component";
+import { trackBusy } from "@common/helpers/app.helpers";
 import RoutingResolvers from "@common/resolvers/routing-resolvers";
 import { setServerError } from "@common/validation/server-errors.helpers";
 import { urlValidator } from "@common/validation/url.validators";
@@ -50,6 +51,7 @@ export class AddWebhookComponent extends BaseComponent implements OnInit {
     @Input(RoutingResolvers.WEBHOOKS_ADD_NEW_KEY) public datasetBasics: DatasetBasicsFragment;
 
     public dropdownList$: Observable<SubscribedEventType[]>;
+    public readonly busy$ = new BehaviorSubject<boolean>(false);
     private secret$ = new BehaviorSubject<MaybeUndefined<string>>(undefined);
 
     private fb = inject(NonNullableFormBuilder);
@@ -78,7 +80,7 @@ export class AddWebhookComponent extends BaseComponent implements OnInit {
     public addWebhook(): void {
         this.datasetWebhooksService
             .datasetWebhookCreateSubscription(this.datasetBasics.id, this.createOrEditSubscriptionForm.getRawValue())
-
+            .pipe(trackBusy(this.busy$))
             .subscribe((result: WebhookMutationResult<CreateWebhookSubscriptionSuccess>) => {
                 if (result.ok) {
                     this.createOrEditSubscriptionForm.patchValue({

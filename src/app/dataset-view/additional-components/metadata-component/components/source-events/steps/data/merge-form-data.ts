@@ -13,47 +13,37 @@ import {
     MergeKind,
 } from "src/app/dataset-view/additional-components/metadata-component/components/source-events/add-polling-source/add-polling-source-form.types";
 import {
+    JsonFormControl,
     JsonFormData,
     MergeControls,
 } from "src/app/dataset-view/additional-components/metadata-component/components/source-events/source-event-controls.types";
 import { textListControl } from "src/app/dataset-view/additional-components/metadata-component/components/source-events/source-section";
+
+/** The primary key field, the same for every merge strategy that needs one. */
+const PRIMARY_KEY: JsonFormControl<MergeControls> = {
+    name: "primaryKey",
+    create: textListControl(),
+    required: true,
+    validators: [uniqueItemsValidator((key) => key.value)],
+    label: "Primary keys",
+    type: ControlType.ARRAY_KEY,
+    placeholder: "Enter primary key...",
+    tooltip: SourcesTooltipsTexts.PRIMARY_KEYS,
+    options: {
+        buttonText: "+ Add primary key",
+    },
+};
 
 export const MERGE_FORM_DATA: JsonFormData<MergeControls> = {
     [MergeKind.APPEND]: {
         controls: [],
     },
     [MergeKind.LEDGER]: {
-        controls: [
-            {
-                name: "primaryKey",
-                create: textListControl(),
-                required: true,
-                validators: [uniqueItemsValidator((key) => key.value)],
-                label: "Primary keys",
-                type: ControlType.ARRAY_KEY,
-                placeholder: "Enter primary key...",
-                tooltip: SourcesTooltipsTexts.PRIMARY_KEYS,
-                options: {
-                    buttonText: "+ Add primary key",
-                },
-            },
-        ],
+        controls: [PRIMARY_KEY],
     },
     [MergeKind.SNAPSHOT]: {
         controls: [
-            {
-                name: "primaryKey",
-                create: textListControl(),
-                required: true,
-                validators: [uniqueItemsValidator((key) => key.value)],
-                label: "Primary keys",
-                placeholder: "Enter primary key...",
-                tooltip: SourcesTooltipsTexts.PRIMARY_KEYS,
-                type: ControlType.ARRAY_KEY,
-                options: {
-                    buttonText: "+ Add primary key",
-                },
-            },
+            PRIMARY_KEY,
             {
                 name: "compareColumns",
                 create: textListControl(),
@@ -70,37 +60,9 @@ export const MERGE_FORM_DATA: JsonFormData<MergeControls> = {
     },
 
     [MergeKind.CHANGELOG_STREAM]: {
-        controls: [
-            {
-                name: "primaryKey",
-                create: textListControl(),
-                required: true,
-                validators: [uniqueItemsValidator((key) => key.value)],
-                label: "Primary keys",
-                placeholder: "Enter primary key...",
-                tooltip: SourcesTooltipsTexts.PRIMARY_KEYS,
-                type: ControlType.ARRAY_KEY,
-                options: {
-                    buttonText: "+ Add primary key",
-                },
-            },
-        ],
+        controls: [PRIMARY_KEY],
     },
     [MergeKind.UPSERT_STREAM]: {
-        controls: [
-            {
-                name: "primaryKey",
-                create: textListControl(),
-                required: true,
-                validators: [uniqueItemsValidator((key) => key.value)],
-                label: "Primary keys",
-                placeholder: "Enter primary key...",
-                tooltip: SourcesTooltipsTexts.PRIMARY_KEYS,
-                type: ControlType.ARRAY_KEY,
-                options: {
-                    buttonText: "+ Add primary key",
-                },
-            },
-        ],
+        controls: [PRIMARY_KEY],
     },
 };

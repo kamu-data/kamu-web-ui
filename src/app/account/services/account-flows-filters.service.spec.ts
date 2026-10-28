@@ -10,10 +10,7 @@ import { TestBed } from "@angular/core/testing";
 import { FlowProcessEffectiveState, OrderingDirection } from "@api/kamu.graphql.interface";
 
 import { ProcessCardFilterMode } from "src/app/account/additional-components/account-flows-tab/account-flows-tab.types";
-import {
-    AccountFlowsFiltersService,
-    clampConsecutiveFailures,
-} from "src/app/account/services/account-flows-filters.service";
+import { AccountFlowsFiltersService } from "src/app/account/services/account-flows-filters.service";
 
 describe("AccountFlowsFiltersService", () => {
     let service: AccountFlowsFiltersService;
@@ -323,22 +320,5 @@ describe("AccountFlowsFiltersService", () => {
 
         expect(result.minConsecutiveFailures).toBe(10);
         expect(service.currentFiltersSnapshot.minConsecutiveFailures).toBe(10);
-    });
-
-    describe("clampConsecutiveFailures", () => {
-        [0, 1].forEach((min) => {
-            [
-                { value: -3, expected: min, reason: "below the minimum" },
-                { value: 25, expected: 10, reason: "above the 10 failures kamu-cli stops at" },
-                { value: 1.5, expected: 2, reason: "not a whole number" },
-                { value: Number.NaN, expected: min, reason: "not a number" },
-                { value: null, expected: min, reason: "empty" },
-                { value: 7, expected: 7, reason: "in range" },
-            ].forEach(({ value, expected, reason }) => {
-                it(`should turn ${String(value)}, ${reason}, into ${expected} when the minimum is ${min}`, () => {
-                    expect(clampConsecutiveFailures(value, min)).toBe(expected);
-                });
-            });
-        });
     });
 });

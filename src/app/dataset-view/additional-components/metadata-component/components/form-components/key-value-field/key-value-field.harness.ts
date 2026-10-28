@@ -7,33 +7,20 @@
 
 /* istanbul ignore file */
 
-import { MaybeNull } from "@interface/app.types";
-
-import { BaseFieldHarness } from "src/app/dataset-view/additional-components/metadata-component/components/form-components/base-field.harness";
+import { BaseListFieldHarness } from "src/app/dataset-view/additional-components/metadata-component/components/form-components/base-field.harness";
 
 export interface KeyValueItem {
     name: string;
     value: string;
 }
 
-export class KeyValueFieldHarness extends BaseFieldHarness {
+export class KeyValueFieldHarness extends BaseListFieldHarness {
     public static readonly hostSelector = "app-key-value-field";
 
     private static readonly NAME_TEST_ID_PREFIX = "-name-";
     private static readonly VALUE_TEST_ID_PREFIX = "-value-";
-    private static readonly REMOVE_TEST_ID_PREFIX = "-remove-";
-    private static readonly ADD_TEST_ID_SUFFIX = "-add";
 
-    public async getButtonText(): Promise<string> {
-        const button = await this.element(KeyValueFieldHarness.ADD_TEST_ID_SUFFIX);
-        const text = await button.text();
-        return text.trim();
-    }
-
-    public async addItem(): Promise<void> {
-        const button = await this.element(KeyValueFieldHarness.ADD_TEST_ID_SUFFIX);
-        await button.click();
-    }
+    protected readonly itemTestIdPrefix = KeyValueFieldHarness.NAME_TEST_ID_PREFIX;
 
     public async setItem(index: number, item: KeyValueItem): Promise<void> {
         const name = await this.input(`${KeyValueFieldHarness.NAME_TEST_ID_PREFIX}${index}`);
@@ -42,29 +29,14 @@ export class KeyValueFieldHarness extends BaseFieldHarness {
         await value.setValue(item.value);
     }
 
-    public async removeItem(index: number): Promise<void> {
-        const button = await this.element(`${KeyValueFieldHarness.REMOVE_TEST_ID_PREFIX}${index}`);
-        await button.click();
-    }
-
     public async getItems(): Promise<KeyValueItem[]> {
-        const names = await this.elements(KeyValueFieldHarness.NAME_TEST_ID_PREFIX);
+        const count = await this.itemCount();
         const items: KeyValueItem[] = [];
-        for (let index = 0; index < names.length; index++) {
+        for (let index = 0; index < count; index++) {
             const name = await this.input(`${KeyValueFieldHarness.NAME_TEST_ID_PREFIX}${index}`);
             const value = await this.input(`${KeyValueFieldHarness.VALUE_TEST_ID_PREFIX}${index}`);
             items.push({ name: await name.getValue(), value: await value.getValue() });
         }
         return items;
-    }
-
-    /** The message about the list as a whole, such as a missing or repeated entry, or `null`. */
-    public async getErrorMessage(): Promise<MaybeNull<string>> {
-        return this.errorMessage("");
-    }
-
-    /** The message under the entry at `index`, or `null`. */
-    public async getItemErrorMessage(index: number): Promise<MaybeNull<string>> {
-        return this.errorMessage(`${KeyValueFieldHarness.NAME_TEST_ID_PREFIX}${index}`);
     }
 }

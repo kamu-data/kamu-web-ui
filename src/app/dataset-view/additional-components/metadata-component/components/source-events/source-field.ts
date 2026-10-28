@@ -8,7 +8,6 @@
 import { AbstractControl, FormArray, FormControl, FormGroup, ValidatorFn } from "@angular/forms";
 
 import { integerInRangeValidators } from "@common/validation/number.validators";
-
 import { MaybeNull } from "@interface/app.types";
 import { DataSchemaField } from "@interface/dataset-schema.interface";
 
@@ -27,8 +26,8 @@ import {
     TopicControls,
 } from "src/app/dataset-view/additional-components/metadata-component/components/source-events/source-event-controls.types";
 
-// The config types tie each layout type to the type of control its entry creates. These checks confirm the
-// control's class and current value at runtime, where the generic step section can no longer see that link.
+// The config types tie each layout type to the type of control its entry creates. The generic step section cannot
+// see that link, so these checks confirm the control's class and current value at runtime.
 
 function isFormControlOf<V>(
     control: AbstractControl,

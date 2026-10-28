@@ -64,16 +64,8 @@ export class DatasetSettingsCompactingTabComponent extends BaseComponent {
     public readonly MAX_SLICE_RECORDS_TOOLTIP = CompactionTooltipsTexts.MAX_SLICE_RECORDS;
     public readonly RECURSIVE_TOOLTIP = CompactionTooltipsTexts.HARD_COMPACTION_RECURSIVE;
 
-    public get sliceUnit(): FormControl<SliceUnit> {
-        return this.hardCompactionForm.controls.sliceUnit;
-    }
-
     public get recordsCount(): FormControl<number> {
         return this.hardCompactionForm.controls.recordsCount;
-    }
-
-    public get sliceSize(): FormControl<number> {
-        return this.hardCompactionForm.controls.sliceSize;
     }
 
     public get sliceSizeInBytes(): number {

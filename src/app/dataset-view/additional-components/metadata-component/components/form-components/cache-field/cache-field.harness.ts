@@ -12,17 +12,15 @@ import { BaseFieldHarness } from "src/app/dataset-view/additional-components/met
 export class CacheFieldHarness extends BaseFieldHarness {
     public static readonly hostSelector = "app-cache-field";
 
-    private static readonly CHECKBOX_TEST_ID = "cache-control";
-
-    private readonly locatorCheckbox = this.locatorFor(`[data-test-id="${CacheFieldHarness.CHECKBOX_TEST_ID}"]`);
+    private static readonly CHECKBOX_TEST_ID_SUFFIX = "-checkbox";
 
     public async toggle(): Promise<void> {
-        const checkbox = await this.locatorCheckbox();
+        const checkbox = await this.element(CacheFieldHarness.CHECKBOX_TEST_ID_SUFFIX);
         await checkbox.click();
     }
 
     public async isChecked(): Promise<boolean> {
-        const checkbox = await this.locatorCheckbox();
+        const checkbox = await this.element(CacheFieldHarness.CHECKBOX_TEST_ID_SUFFIX);
         return this.isElementChecked(checkbox);
     }
 }

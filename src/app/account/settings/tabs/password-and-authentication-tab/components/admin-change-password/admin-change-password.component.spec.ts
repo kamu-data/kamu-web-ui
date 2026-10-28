@@ -65,6 +65,23 @@ describe("AdminChangePasswordComponent", () => {
         });
     });
 
+    [
+        { configuredMinLength: 4, password: "12345678" },
+        { configuredMinLength: 12, password: "123456789012" },
+        { configuredMinLength: 12, password: "  123456789012 " },
+    ].forEach(({ configuredMinLength, password }) => {
+        it(`should accept "${password}" when ${configuredMinLength} characters are configured`, async () => {
+            const form = await createHarness(configuredMinLength);
+
+            await form.setNewPassword(password);
+            await form.setConfirmPassword(password);
+
+            expect(await form.getNewPasswordError()).toBeNull();
+            expect(await form.getConfirmPasswordError()).toBeNull();
+            expect(await form.isUpdateDisabled()).toBe(false);
+        });
+    });
+
     it("should reject a password with characters other than ASCII", async () => {
         const form = await createHarness(8);
 

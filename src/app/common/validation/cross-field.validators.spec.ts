@@ -22,7 +22,7 @@ describe("requiredUnlessValidator", () => {
 
     it("should fail while both fields are empty", () => {
         expect(form("", "").controls.chainId.errors).toEqual({
-            format: { message: "is required unless Node URL is set" },
+            requiredUnless: { sibling: "Node URL" },
         });
     });
 

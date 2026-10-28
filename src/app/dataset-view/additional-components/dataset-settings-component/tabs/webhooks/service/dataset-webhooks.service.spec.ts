@@ -14,7 +14,7 @@ import { provideToastr, ToastrService } from "ngx-toastr";
 
 import { requireValue } from "@common/helpers/app.helpers";
 import { stubMethod } from "@common/helpers/base-test.helpers.spec";
-import { WebhookSubscriptionDataFragment } from "@api/kamu.graphql.interface";
+import { DatasetWebhookCreateSubscriptionMutation, WebhookSubscriptionDataFragment } from "@api/kamu.graphql.interface";
 import { TEST_DATASET_ID } from "@api/mock/dataset.mock";
 import {
     MOCK_ROTATED_WEBHOOK_SECRET,
@@ -130,6 +130,38 @@ describe("DatasetWebhooksService", () => {
         expect(result).toEqual({
             ok: false,
             fieldError: { field: "label", message: "A webhook with this label already exists" },
+        });
+        expect(toastrServiceErrorSpy).not.toHaveBeenCalled();
+    });
+
+    it("should report a rejected target URL as an error of the URL field, with kamu-cli's message", async () => {
+        const dataset = requireValue(mockDatasetWebhookCreateSubscriptionMutationError.datasets.byId);
+        const invalidUrl: DatasetWebhookCreateSubscriptionMutation = {
+            datasets: {
+                ...mockDatasetWebhookCreateSubscriptionMutationError.datasets,
+                byId: {
+                    ...dataset,
+                    webhooks: {
+                        ...dataset.webhooks,
+                        createSubscription: {
+                            __typename: "WebhookSubscriptionInvalidTargetUrl",
+                            innerMessage: "loopback",
+                            message: "Invalid target URL: loopback",
+                        },
+                    },
+                },
+            },
+        };
+        vi.spyOn(webhooksApi, "datasetWebhookCreateSubscription").mockReturnValue(of(invalidUrl));
+        const toastrServiceErrorSpy = stubMethod(toastrService, "error");
+
+        const result = await firstValueFrom(
+            service.datasetWebhookCreateSubscription(DATASET_ID, mockWebhookSubscriptionInput),
+        );
+
+        expect(result).toEqual({
+            ok: false,
+            fieldError: { field: "targetUrl", message: "Invalid target URL: loopback" },
         });
         expect(toastrServiceErrorSpy).not.toHaveBeenCalled();
     });

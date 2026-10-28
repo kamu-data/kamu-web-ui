@@ -13,11 +13,12 @@ import { FormControl, FormGroup } from "@angular/forms";
 
 import { Apollo } from "apollo-angular";
 
-import { emitClickOnElementByDataTestId, setComponentInput } from "@common/helpers/base-test.helpers.spec";
+import { setComponentInput } from "@common/helpers/base-test.helpers.spec";
 import { SharedTestModule } from "@common/modules/shared-test.module";
 
 import { CacheFieldHarness } from "src/app/dataset-view/additional-components/metadata-component/components/form-components/cache-field/cache-field.harness";
 import { InputFieldHarness } from "src/app/dataset-view/additional-components/metadata-component/components/form-components/input-field/input-field.harness";
+import { SelectKindFieldHarness } from "src/app/dataset-view/additional-components/metadata-component/components/form-components/select-kind-field/select-kind-field.harness";
 import {
     EventTimeSourceKind,
     FetchKind,
@@ -64,7 +65,12 @@ describe("BaseStepComponent", () => {
         expect(component).toBeTruthy();
     });
 
-    it("should switch the fetch step's controls with its kind", () => {
+    async function selectKind(kind: FetchKind): Promise<void> {
+        const kindField = await loader.getHarness(SelectKindFieldHarness);
+        await kindField.selectKind(kind);
+    }
+
+    it("should switch the fetch step's controls with its kind", async () => {
         expect(fetchForm.getRawValue()).toEqual({
             kind: FetchKind.URL,
             url: "",
@@ -73,8 +79,7 @@ describe("BaseStepComponent", () => {
             cache: false,
         });
 
-        emitClickOnElementByDataTestId(fixture, "radio-FilesGlob-control");
-        fixture.detectChanges();
+        await selectKind(FetchKind.FILES_GLOB);
         expect(fetchForm.getRawValue()).toEqual({
             kind: FetchKind.FILES_GLOB,
             path: "",
@@ -83,8 +88,7 @@ describe("BaseStepComponent", () => {
             cache: false,
         });
 
-        emitClickOnElementByDataTestId(fixture, "radio-Container-control");
-        fixture.detectChanges();
+        await selectKind(FetchKind.CONTAINER);
         expect(fetchForm.getRawValue()).toEqual({
             kind: FetchKind.CONTAINER,
             image: "",
@@ -98,16 +102,14 @@ describe("BaseStepComponent", () => {
     it("should render the fields of the selected kind with the section's test ids", async () => {
         expect(await loader.getHarnessOrNull(InputFieldHarness.with({ dataTestId: "fetch-url" }))).not.toBeNull();
 
-        emitClickOnElementByDataTestId(fixture, "radio-FilesGlob-control");
-        fixture.detectChanges();
+        await selectKind(FetchKind.FILES_GLOB);
 
         expect(await loader.getHarnessOrNull(InputFieldHarness.with({ dataTestId: "fetch-url" }))).toBeNull();
         expect(await loader.getHarnessOrNull(InputFieldHarness.with({ dataTestId: "fetch-path" }))).not.toBeNull();
     });
 
     it("should bind a field the new kind shares by name to that kind's control", async () => {
-        emitClickOnElementByDataTestId(fixture, "radio-FilesGlob-control");
-        fixture.detectChanges();
+        await selectKind(FetchKind.FILES_GLOB);
 
         const cacheField = await loader.getHarness(CacheFieldHarness);
         await cacheField.toggle();

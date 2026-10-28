@@ -36,15 +36,13 @@ const INPUTS_WITHOUT_MESSAGE: Record<string, string> = {
         "optional, and kamu-cli accepts any path",
 };
 
-interface FormInput {
-    key: string;
-    control: string;
-}
-
-/** The text inputs, selects and text areas bound to a reactive form control that no `appFieldError` element reports on. */
-function inputsWithoutMessage(path: string, template: string): FormInput[] {
+/**
+ * The keys of the text inputs, selects and text areas bound to a reactive form control that no `appFieldError`
+ * element reports on, either through the input's template reference or through the same control expression.
+ */
+function inputsWithoutMessage(path: string, template: string): string[] {
     const errorElements = [...template.matchAll(/<[^>]*\bappFieldError\b[^>]*>/gs)].map(([element]) => element);
-    const found: FormInput[] = [];
+    const found: string[] = [];
     for (const [, , attributes] of template.matchAll(/<(input|select|textarea|ng-select)\b([^>]*?)\/?>/gs)) {
         const binding = /formControlName="([\w.]+)"|\[formControl(?:Name)?\]="([^"]+)"/.exec(attributes);
         if (!binding || /type="(checkbox|radio|hidden)"/.test(attributes)) {
@@ -52,14 +50,13 @@ function inputsWithoutMessage(path: string, template: string): FormInput[] {
         }
         const control = binding[1] ?? binding[2];
         const reference = /#(\w+)(?![\w=])/.exec(attributes)?.[1];
-        const controlName = control.split(".").pop() ?? control;
         const reported = errorElements.some(
             (element) =>
                 (reference !== undefined && element.includes(`[input]="${reference}"`)) ||
-                new RegExp(`\\[fieldControl\\]="[^"]*\\b${controlName}\\b[^"]*"`).test(element),
+                element.includes(`[fieldControl]="${control}"`),
         );
         if (!reported) {
-            found.push({ key: `${path} ${control}`, control });
+            found.push(`${path} ${control}`);
         }
     }
     return found;
@@ -74,13 +71,13 @@ describe("Form fields", () => {
     });
 
     it("should show a validation message for every form input, or list the input with a reason", () => {
-        const offenders = unreported.map(({ key }) => key).filter((key) => !(key in INPUTS_WITHOUT_MESSAGE));
+        const offenders = unreported.filter((key) => !(key in INPUTS_WITHOUT_MESSAGE));
 
         expect(offenders).toEqual([]);
     });
 
     it("should list only inputs that still show no message", () => {
-        const current = new Set(unreported.map(({ key }) => key));
+        const current = new Set(unreported);
         const stale = Object.keys(INPUTS_WITHOUT_MESSAGE).filter((key) => !current.has(key));
 
         expect(stale).toEqual([]);

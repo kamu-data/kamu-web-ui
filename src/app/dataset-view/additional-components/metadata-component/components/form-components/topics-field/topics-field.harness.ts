@@ -7,9 +7,7 @@
 
 /* istanbul ignore file */
 
-import { MaybeNull } from "@interface/app.types";
-
-import { BaseFieldHarness } from "src/app/dataset-view/additional-components/metadata-component/components/form-components/base-field.harness";
+import { BaseListFieldHarness } from "src/app/dataset-view/additional-components/metadata-component/components/form-components/base-field.harness";
 
 export interface TopicItem {
     path: string;
@@ -17,22 +15,13 @@ export interface TopicItem {
     qos: string;
 }
 
-export class TopicsFieldHarness extends BaseFieldHarness {
+export class TopicsFieldHarness extends BaseListFieldHarness {
     public static readonly hostSelector = "app-topics-field";
 
     private static readonly PATH_TEST_ID_PREFIX = "-path-";
     private static readonly QOS_TEST_ID_PREFIX = "-qos-";
-    private static readonly REMOVE_TEST_ID_PREFIX = "-remove-";
-    private static readonly ADD_TEST_ID_SUFFIX = "-add";
 
-    public async isRequiredMarked(): Promise<boolean> {
-        return this.hasRequiredMarker();
-    }
-
-    public async addItem(): Promise<void> {
-        const button = await this.element(TopicsFieldHarness.ADD_TEST_ID_SUFFIX);
-        await button.click();
-    }
+    protected readonly itemTestIdPrefix = TopicsFieldHarness.PATH_TEST_ID_PREFIX;
 
     public async setItem(index: number, item: TopicItem): Promise<void> {
         const path = await this.input(`${TopicsFieldHarness.PATH_TEST_ID_PREFIX}${index}`);
@@ -41,29 +30,14 @@ export class TopicsFieldHarness extends BaseFieldHarness {
         await qos.selectValue(item.qos);
     }
 
-    public async removeItem(index: number): Promise<void> {
-        const button = await this.element(`${TopicsFieldHarness.REMOVE_TEST_ID_PREFIX}${index}`);
-        await button.click();
-    }
-
     public async getItems(): Promise<TopicItem[]> {
-        const paths = await this.elements(TopicsFieldHarness.PATH_TEST_ID_PREFIX);
+        const count = await this.itemCount();
         const items: TopicItem[] = [];
-        for (let index = 0; index < paths.length; index++) {
+        for (let index = 0; index < count; index++) {
             const path = await this.input(`${TopicsFieldHarness.PATH_TEST_ID_PREFIX}${index}`);
             const qos = await this.input(`${TopicsFieldHarness.QOS_TEST_ID_PREFIX}${index}`);
             items.push({ path: await path.getValue(), qos: await qos.getValue() });
         }
         return items;
-    }
-
-    /** The message about the list as a whole, such as a missing or repeated entry, or `null`. */
-    public async getErrorMessage(): Promise<MaybeNull<string>> {
-        return this.errorMessage("");
-    }
-
-    /** The message under the entry at `index`, or `null`. */
-    public async getItemErrorMessage(index: number): Promise<MaybeNull<string>> {
-        return this.errorMessage(`${TopicsFieldHarness.PATH_TEST_ID_PREFIX}${index}`);
     }
 }

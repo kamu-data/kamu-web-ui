@@ -78,6 +78,9 @@ describe("DatasetSettingsCompactingTabComponent", () => {
         expect(component).toBeTruthy();
     });
 
+    // Inside fakeAsync a harness flushes every pending timer, so the test of the delay clicks the button directly.
+    const RUN_COMPACTION_BUTTON = "run-compaction-btn";
+
     function compactingTabHarness(): Promise<DatasetSettingsCompactingTabHarness> {
         return TestbedHarnessEnvironment.harnessForFixture(fixture, DatasetSettingsCompactingTabHarness);
     }
@@ -99,7 +102,7 @@ describe("DatasetSettingsCompactingTabComponent", () => {
 
             await tab.setSliceSize(value);
 
-            expect(await tab.getSliceSizeError()).toBe(`Slice size ${message}`);
+            expect(await tab.getSliceSizeError()).toBe(`Max slice size ${message}`);
             expect(await tab.isRunCompactionDisabled()).toBe(true);
         });
 
@@ -146,7 +149,7 @@ describe("DatasetSettingsCompactingTabComponent", () => {
         });
     });
 
-    it("should check run hard compacting", fakeAsync(() => {
+    it("should check run hard compacting", fakeAsync(async () => {
         const navigateToDatasetViewSpy = vi
             .spyOn(navigationService, "navigateToDatasetView")
             .mockImplementation(() => {});
@@ -159,7 +162,8 @@ describe("DatasetSettingsCompactingTabComponent", () => {
                 options.handler?.call(undefined, true);
                 return Promise.resolve("");
             });
-        emitClickOnElementByDataTestId(fixture, "run-compaction-btn");
+        const tab = await compactingTabHarness();
+        await tab.runCompaction();
 
         expect(modalServiceSpy).toHaveBeenCalledTimes(1);
         expect(runHardCompactionSpy).toHaveBeenCalledTimes(1);
@@ -177,7 +181,7 @@ describe("DatasetSettingsCompactingTabComponent", () => {
             options.handler?.call(undefined, true);
             return Promise.resolve("");
         });
-        emitClickOnElementByDataTestId(fixture, "run-compaction-btn");
+        emitClickOnElementByDataTestId(fixture, RUN_COMPACTION_BUTTON);
 
         tick(AppValues.SIMULATION_START_CONDITION_DELAY_MS - 1);
         expect(navigateToDatasetViewSpy).not.toHaveBeenCalled();

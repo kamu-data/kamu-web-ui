@@ -9,6 +9,7 @@
 
 import { BaseHarnessFilters, ComponentHarness, HarnessPredicate } from "@angular/cdk/testing";
 
+import { withDataTestId } from "@common/helpers/native-input.harness";
 import { MaybeNull } from "@interface/app.types";
 
 export interface FieldErrorHarnessFilters extends BaseHarnessFilters {
@@ -21,15 +22,7 @@ export class FieldErrorHarness extends ComponentHarness {
     public static readonly hostSelector = "[appFieldError]";
 
     public static with(options: FieldErrorHarnessFilters = {}): HarnessPredicate<FieldErrorHarness> {
-        return new HarnessPredicate(FieldErrorHarness, options).addOption(
-            "dataTestId",
-            options.dataTestId,
-            async (harness, dataTestId) => {
-                const host = await harness.host();
-                const value = await host.getAttribute("data-test-id");
-                return value === dataTestId;
-            },
-        );
+        return withDataTestId(new HarnessPredicate(FieldErrorHarness, options), options.dataTestId);
     }
 
     /** The message shown, or `null` when the field shows none. */

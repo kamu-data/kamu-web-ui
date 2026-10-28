@@ -86,9 +86,8 @@ describe("DatasetSettingsGeneralTabComponent", () => {
         fixture.detectChanges();
     });
 
-    enum Elements {
-        ResetDatasetButton = "reset-dataset-button",
-    }
+    // Inside fakeAsync a harness flushes every pending timer, so the test of the delay clicks the button directly.
+    const RESET_DATASET_BUTTON = "reset-dataset-button";
 
     function generalTabHarness(): Promise<DatasetSettingsGeneralTabHarness> {
         return TestbedHarnessEnvironment.harnessForFixture(fixture, DatasetSettingsGeneralTabHarness);
@@ -241,7 +240,7 @@ describe("DatasetSettingsGeneralTabComponent", () => {
         expect(deleteDatasetSpy).not.toHaveBeenCalled();
     });
 
-    it("should check reset modal window is shown and sends API call after confirm for Reset to Seed mode", fakeAsync(() => {
+    it("should check reset modal window is shown and sends API call after confirm for Reset to Seed mode", fakeAsync(async () => {
         const modalServiceSpy = vi
             .spyOn(modalService, "error")
             .mockImplementation((options: ModalArgumentsInterface) => {
@@ -252,7 +251,8 @@ describe("DatasetSettingsGeneralTabComponent", () => {
             .spyOn(datasetFlowsService, "datasetTriggerResetFlow")
             .mockReturnValue(of(true));
         const navigationServiceSpy = vi.spyOn(navigationService, "navigateToDatasetView").mockImplementation(() => {});
-        emitClickOnElementByDataTestId(fixture, Elements.ResetDatasetButton);
+        const tab = await generalTabHarness();
+        await tab.resetDataset();
         tick(AppValues.SIMULATION_START_CONDITION_DELAY_MS);
 
         expect(navigationServiceSpy).toHaveBeenCalledTimes(1);
@@ -268,7 +268,7 @@ describe("DatasetSettingsGeneralTabComponent", () => {
         flush();
     }));
 
-    it("should check reset modal window is shown and sends API call after confirm for Flatten metadata mode", fakeAsync(() => {
+    it("should check reset modal window is shown and sends API call after confirm for Flatten metadata mode", fakeAsync(async () => {
         component.resetDatasetForm.patchValue({ mode: DatasetResetMode.RESET_METADATA_ONLY });
         const modalServiceSpy = vi
             .spyOn(modalService, "error")
@@ -281,7 +281,8 @@ describe("DatasetSettingsGeneralTabComponent", () => {
             .spyOn(datasetFlowsService, "datasetTriggerResetToMetadataFlow")
             .mockReturnValue(of(true));
 
-        emitClickOnElementByDataTestId(fixture, Elements.ResetDatasetButton);
+        const tab = await generalTabHarness();
+        await tab.resetDataset();
         tick(AppValues.SIMULATION_START_CONDITION_DELAY_MS);
 
         expect(navigationServiceSpy).toHaveBeenCalledTimes(1);
@@ -311,7 +312,7 @@ describe("DatasetSettingsGeneralTabComponent", () => {
         });
         vi.spyOn(datasetFlowsService, "datasetTriggerResetFlow").mockReturnValue(of(true));
         const navigationServiceSpy = vi.spyOn(navigationService, "navigateToDatasetView").mockImplementation(() => {});
-        emitClickOnElementByDataTestId(fixture, Elements.ResetDatasetButton);
+        emitClickOnElementByDataTestId(fixture, RESET_DATASET_BUTTON);
 
         tick(AppValues.SIMULATION_START_CONDITION_DELAY_MS - 1);
         expect(navigationServiceSpy).not.toHaveBeenCalled();

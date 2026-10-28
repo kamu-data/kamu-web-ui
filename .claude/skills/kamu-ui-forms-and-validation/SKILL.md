@@ -17,7 +17,7 @@ Go through it for each field a change adds or touches.
 |---|---|
 | Is it required? Can it be blank (only spaces)? | `Validators.required`; `notBlankValidator()`, or `trim="blur"` from `NgxTrimDirectiveModule` when kamu-cli trims |
 | Is it a number? Whole? Its smallest and largest value? | `integerInRangeValidators(min, max)` and the same `min` / `max` on the input |
-| Is it a name, key or identifier with a grammar? A length limit? | `odfNameValidators()`, `envVarKeyValidators()`, a `FormatRule` in `patterns.ts` with `formatValidator()`, `Validators.maxLength` |
+| Is it a name, key or identifier with a grammar? A length limit? | `odfNameValidators()`, `envVarKeyValidators()`, a `FormatRule` in `patterns.ts` with `formatValidator()`, `Validators.maxLength`; `maxBytesValidator(max)` where kamu-cli counts UTF-8 bytes |
 | Is it a URL? Which schemes? | `urlValidator([...schemes])` |
 | Must it differ from existing values or other entries of the list? Ignoring case? | `uniqueValueValidator(() => existing, options)`, `uniqueItemsValidator(key, options)` |
 | Does it depend on another field? | `requiredUnlessValidator`, `matchFieldsValidator`; revalidate on the sibling's changes |
@@ -35,14 +35,16 @@ each file with its spec:
 |---|---|
 | `patterns.ts` | `FormatRule`s (a regex and the message shown after the label) and limits taken from kamu-cli |
 | `identifier.validators.ts` | dataset and account names, variable keys |
-| `url.validators.ts`, `number.validators.ts`, `text.validators.ts` | URLs, whole numbers and ranges, ports; blank, one character, ASCII, regular expressions |
+| `url.validators.ts`, `number.validators.ts`, `text.validators.ts` | URLs; whole numbers and ranges; blank, one ASCII character, a byte length, ASCII, regular expressions |
 | `collection.validators.ts` | a value not among existing ones; list entries not repeated |
-| `password.validators.ts`, `cross-field.validators.ts` | new passwords as kamu-cli checks them, matching confirmation; one of two fields required |
+| `password.validators.ts`, `cross-field.validators.ts` | new passwords as kamu-cli checks them, matching confirmation; one of two fields required (`requiredUnless`) |
+| `cron.validators.ts` | cron expressions as kamu-cli parses them |
 | `form-validation-errors.directive.ts`, `.types.ts` | `appFieldError` and the message for each error key |
 | `server-errors.helpers.ts` | `setServerError(control, message)` |
 
 A new rule is a validator here with a spec, whose error key is in `VALIDATION_ERRORS` with a message in
-`validationErrorMessage`. eslint rejects `Validators.pattern` and rxweb validators elsewhere.
+`validationErrorMessage`. eslint rejects `Validators.pattern` everywhere: a pattern is a `FormatRule` with its
+message, checked by `formatValidator()`.
 
 ## Showing errors
 

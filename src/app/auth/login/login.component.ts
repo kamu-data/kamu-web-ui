@@ -8,7 +8,7 @@
 import { AsyncPipe, NgTemplateOutlet } from "@angular/common";
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, inject, OnInit } from "@angular/core";
 import { takeUntilDestroyed } from "@angular/core/rxjs-interop";
-import { AbstractControl, FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators } from "@angular/forms";
+import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators } from "@angular/forms";
 import { MatIconModule } from "@angular/material/icon";
 import { ActivatedRoute, ParamMap } from "@angular/router";
 
@@ -103,14 +103,6 @@ export class LoginComponent extends BaseComponent implements OnInit {
         }
     }
 
-    public get loginControl(): MaybeNull<AbstractControl> {
-        return this.passwordLoginForm.get("login");
-    }
-
-    public get passwordControl(): MaybeNull<AbstractControl> {
-        return this.passwordLoginForm.get("password");
-    }
-
     public get enableTermsOfService(): boolean {
         return this.appConfigService.featureFlags.enableTermsOfService;
     }
@@ -127,6 +119,10 @@ export class LoginComponent extends BaseComponent implements OnInit {
     }
 
     public onPasswordLogin(): void {
+        if (this.passwordLoginForm.invalid) {
+            this.passwordLoginForm.markAllAsTouched();
+            return;
+        }
         this.loginService.passwordLogin(this.passwordLoginForm.getRawValue(), this.redirectUrl);
     }
 

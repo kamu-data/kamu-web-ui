@@ -46,16 +46,12 @@ const fragmentSliceRestrictions = [
 ];
 
 // Form rules live in @common/validation, where each validator has its message and its spec: a bare
-// Validators.pattern shows a generic message, and rxweb validators bring messages the directive doesn't own
+// Validators.pattern carries no message of its own
 const formValidationRestrictions = [
   {
     selector: "CallExpression[callee.object.name='Validators'][callee.property.name='pattern']",
     message:
       "Add the pattern with its message to @common/validation/patterns.ts and validate it with formatValidator(), or add a validator to @common/validation.",
-  },
-  {
-    selector: "ImportDeclaration[source.value='@rxweb/reactive-form-validators']",
-    message: "Use the validators in @common/validation, whose errors FormValidationErrorsDirective has messages for.",
   },
 ];
 

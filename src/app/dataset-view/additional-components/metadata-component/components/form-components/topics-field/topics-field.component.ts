@@ -34,7 +34,6 @@ import { topicGroup } from "src/app/dataset-view/additional-components/metadata-
 })
 export class TopicsFieldComponent extends BaseField<FormArray<FormGroup<TopicControls>>> {
     @Input({ required: true }) public buttonText: string;
-    @Input() public requiredField?: boolean;
 
     public addItem(): void {
         this.control.push(topicGroup());

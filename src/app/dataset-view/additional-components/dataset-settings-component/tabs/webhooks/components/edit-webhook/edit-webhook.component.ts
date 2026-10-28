@@ -5,12 +5,15 @@
  * included in the LICENSE file.
  */
 
-import { Location } from "@angular/common";
+import { AsyncPipe, Location } from "@angular/common";
 import { ChangeDetectionStrategy, Component, inject, Input, OnInit } from "@angular/core";
 import { FormGroup, NonNullableFormBuilder, Validators } from "@angular/forms";
 import { RouterOutlet } from "@angular/router";
 
+import { BehaviorSubject } from "rxjs";
+
 import { BaseComponent } from "@common/components/base.component";
+import { trackBusy } from "@common/helpers/app.helpers";
 import { eventTypesMapper } from "@common/helpers/data.helpers";
 import RoutingResolvers from "@common/resolvers/routing-resolvers";
 import { setServerError } from "@common/validation/server-errors.helpers";
@@ -32,6 +35,7 @@ import { NavigationService } from "src/app/services/navigation.service";
     selector: "app-edit-webhook",
     imports: [
         //-----//
+        AsyncPipe,
         RouterOutlet,
         //-----//
         WebhookFormComponent,
@@ -43,6 +47,7 @@ export class EditWebhookComponent extends BaseComponent implements OnInit {
     @Input(RoutingResolvers.WEBHOOKS_EDIT_KEY) public editWebhooksData: EditWebhooksType;
 
     public dropdownList: SubscribedEventType[] = [];
+    public readonly busy$ = new BehaviorSubject<boolean>(false);
 
     private fb = inject(NonNullableFormBuilder);
     private datasetWebhooksService = inject(DatasetWebhooksService);
@@ -71,6 +76,7 @@ export class EditWebhookComponent extends BaseComponent implements OnInit {
                 id: this.editWebhooksData.subscription.id,
                 input: this.createOrEditSubscriptionForm.getRawValue(),
             })
+            .pipe(trackBusy(this.busy$))
             .subscribe((result: WebhookMutationResult<true>) => {
                 if (result.ok) {
                     this.location.back();

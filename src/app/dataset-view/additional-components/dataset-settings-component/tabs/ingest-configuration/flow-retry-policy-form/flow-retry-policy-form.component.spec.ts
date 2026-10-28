@@ -261,7 +261,7 @@ describe("FlowRetryPolicyFormComponent", () => {
         expect(component.form.errors).toBeNull();
     });
 
-    [1, 100].forEach((maxAttempts) => {
+    [1, FlowRetryPolicyFormComponent.MAX_ATTEMPTS_LIMIT].forEach((maxAttempts) => {
         it(`should accept ${maxAttempts} max attempts`, async () => {
             await flowRetryPolicyFormHarness.enableRetries();
 

@@ -15,7 +15,7 @@ import { NgSelectComponent } from "@ng-select/ng-select";
 
 import { isRecord, oneOf } from "@common/helpers/app.helpers";
 import { VALIDATION_ERRORS, ValidationError } from "@common/validation/form-validation-errors.types";
-import { MaybeNull, MaybeUndefined } from "@interface/app.types";
+import { MaybeNull, MaybeNullOrUndefined, MaybeUndefined } from "@interface/app.types";
 
 /** A number a validator stored in its error details. */
 function numberDetail(details: unknown, key: string): MaybeUndefined<number> {
@@ -46,8 +46,6 @@ export function validationErrorMessage(label: string, error: ValidationError, de
             return `${label} can't exceed ${numberDetail(details, "requiredLength")} characters`;
         case "maxBytes":
             return `${label} can't exceed ${numberDetail(details, "max")} bytes`;
-        case "pattern":
-            return `${label} has the wrong format`;
         case "passwordsMismatch":
             return "Passwords mismatch";
         case "email":
@@ -58,8 +56,6 @@ export function validationErrorMessage(label: string, error: ValidationError, de
             return `${label} must be at most ${numberDetail(details, "max")}`;
         case "integer":
             return `${label} must be a whole number`;
-        case "whitespace":
-            return `${label} can't contain spaces`;
         case "blank":
             return `${label} can't be blank`;
         case "singleChar":
@@ -72,6 +68,8 @@ export function validationErrorMessage(label: string, error: ValidationError, de
             return typeof details === "string" ? details : `${label} is not a valid cron expression`;
         case "duplicate":
             return `${label} already exists`;
+        case "requiredUnless":
+            return `${label} is required unless ${stringDetail(details, "sibling")} is set`;
         case "duplicateItems":
             return `${label} contains "${stringDetail(details, "value")}" more than once`;
         case "server":
@@ -108,7 +106,7 @@ export class FormValidationErrorsDirective implements OnChanges {
         HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement | NgSelectComponent
     >;
     @Input() public group: MaybeUndefined<FormGroup | FormArray>;
-    @Input() public fieldControl: MaybeNull<AbstractControl>;
+    @Input() public fieldControl: MaybeNullOrUndefined<AbstractControl>;
     @Input({ required: true }) public fieldLabel: string;
     @Input() public dataTestId: string = "";
 

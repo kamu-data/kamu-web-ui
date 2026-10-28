@@ -29,14 +29,6 @@ export function notBlankValidator(): ValidatorFn {
     };
 }
 
-/** Fails with `whitespace` when the value contains any whitespace character. */
-export function noWhitespaceValidator(): ValidatorFn {
-    return (control: AbstractControl): MaybeNull<ValidationErrors> => {
-        const value: unknown = control.value;
-        return typeof value === "string" && /\s/.test(value) ? { whitespace: true } : null;
-    };
-}
-
 /** Fails with `singleChar` when a non-empty value is anything but one ASCII character: kamu-cli counts bytes. */
 export function singleCharValidator(): ValidatorFn {
     return (control: AbstractControl): MaybeNull<ValidationErrors> => {

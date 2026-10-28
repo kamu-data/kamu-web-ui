@@ -33,6 +33,9 @@ export class AccessTokensTabHarness extends ComponentHarness {
     private readonly locatorTokenNameError = this.locatorFor(
         FieldErrorHarness.with({ dataTestId: AccessTokensTabHarness.TOKEN_NAME_ERROR_TEST_ID }),
     );
+    private readonly locatorNewTokenForm = this.locatorFor(
+        `[data-test-id="${AccessTokensTabHarness.NEW_TOKEN_FORM_TEST_ID}"]`,
+    );
     private readonly locatorGenerateButton = this.locatorFor(
         `[data-test-id="${AccessTokensTabHarness.GENERATE_BUTTON_TEST_ID}"]`,
     );
@@ -80,7 +83,7 @@ export class AccessTokensTabHarness extends ComponentHarness {
 
     /** Submits the name form the way Enter in the name field does, without the Generate button. */
     public async submitNameForm(): Promise<void> {
-        const form = await this.locatorFor(`[data-test-id="${AccessTokensTabHarness.NEW_TOKEN_FORM_TEST_ID}"]`)();
+        const form = await this.locatorNewTokenForm();
         await form.dispatchEvent("submit");
     }
 

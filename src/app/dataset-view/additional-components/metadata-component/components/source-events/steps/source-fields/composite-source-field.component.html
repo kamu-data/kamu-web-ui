@@ -16,6 +16,7 @@
         <app-key-value-field
             [control]="f.control"
             [label]="f.label"
+            [requiredField]="f.required ?? false"
             [buttonText]="f.options.buttonText"
             [tooltip]="f.tooltip"
             [dataTestId]="dataTestId"
@@ -26,7 +27,7 @@
             [control]="f.control"
             [label]="f.label"
             [buttonText]="f.options.buttonText"
-            [requiredField]="f.required"
+            [requiredField]="f.required ?? false"
             [tooltip]="f.tooltip"
             [dataTestId]="dataTestId"
         />
@@ -35,6 +36,7 @@
         <app-array-keys-field
             [control]="f.control"
             [label]="f.label"
+            [requiredField]="f.required ?? false"
             [buttonText]="f.options.buttonText"
             [placeholder]="f.placeholder"
             [tooltip]="f.tooltip"

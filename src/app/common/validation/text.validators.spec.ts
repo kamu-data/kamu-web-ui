@@ -12,7 +12,6 @@ import {
     formatValidator,
     maxBytesValidator,
     notBlankValidator,
-    noWhitespaceValidator,
     regexValidator,
     singleCharValidator,
 } from "@common/validation/text.validators";
@@ -48,19 +47,6 @@ describe("Text validators", () => {
         ].forEach(({ value, expected }) => {
             it(`should check ${JSON.stringify(value)}`, () => {
                 expect(check(notBlankValidator(), value)).toEqual(expected);
-            });
-        });
-    });
-
-    describe("noWhitespaceValidator", () => {
-        [
-            { value: "", expected: null },
-            { value: "KEY", expected: null },
-            { value: "A KEY", expected: { whitespace: true } },
-            { value: "KEY\t", expected: { whitespace: true } },
-        ].forEach(({ value, expected }) => {
-            it(`should check ${JSON.stringify(value)}`, () => {
-                expect(check(noWhitespaceValidator(), value)).toEqual(expected);
             });
         });
     });

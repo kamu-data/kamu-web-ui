@@ -12,6 +12,7 @@ import { MatSlideToggleHarness } from "@angular/material/slide-toggle/testing";
 
 import { TimeDeltaFormHarness } from "@common/components/time-delta-form/time-delta-form.harness";
 import { TimeDeltaFormValue } from "@common/components/time-delta-form/time-delta-form.value";
+import { NativeInputHarness } from "@common/helpers/native-input.harness";
 import { FieldErrorHarness } from "@common/validation/field-error.harness";
 import { FlowRetryBackoffType, TimeUnit } from "@api/kamu.graphql.interface";
 import { MaybeNull } from "@interface/app.types";
@@ -33,7 +34,7 @@ export class FlowRetryPolicyFormHarness extends ComponentHarness {
     );
 
     private readonly locatorMaxAttemptsInput = this.locatorFor(
-        `[data-test-id="${FlowRetryPolicyFormHarness.MAX_ATTEMPTS_INPUT_TEST_ID}"]`,
+        NativeInputHarness.with({ dataTestId: FlowRetryPolicyFormHarness.MAX_ATTEMPTS_INPUT_TEST_ID }),
     );
 
     private readonly locatorMaxAttemptsError = this.locatorFor(
@@ -79,11 +80,7 @@ export class FlowRetryPolicyFormHarness extends ComponentHarness {
         }
 
         const input = await this.locatorMaxAttemptsInput();
-        await input.clear();
-        if (value !== "") {
-            await input.sendKeys(value.toString());
-        }
-        await input.blur();
+        await input.setValue(value.toString());
     }
 
     public async getMaxAttemptsError(): Promise<MaybeNull<string>> {
@@ -93,7 +90,7 @@ export class FlowRetryPolicyFormHarness extends ComponentHarness {
 
     public async getMaxAttempts(): Promise<number> {
         const input = await this.locatorMaxAttemptsInput();
-        const value = await input.getProperty<string>("value");
+        const value = await input.getValue();
         return Number(value) || 0;
     }
 

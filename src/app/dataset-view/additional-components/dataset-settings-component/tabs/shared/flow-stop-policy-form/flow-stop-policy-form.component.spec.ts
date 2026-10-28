@@ -15,6 +15,7 @@ import { Apollo } from "apollo-angular";
 import { provideToastr } from "ngx-toastr";
 
 import { SharedTestModule } from "@common/modules/shared-test.module";
+import { MAX_CONSECUTIVE_FAILURES } from "@common/validation/patterns";
 import { MaybeNull } from "@interface/app.types";
 
 import { FlowTriggerStopPolicyType } from "src/app/dataset-view/additional-components/dataset-settings-component/dataset-settings.model";
@@ -193,13 +194,13 @@ describe("FlowStopPolicyFormComponent", () => {
         await stopPolicyFormHarness.setSelectedStopPolicyType(FlowTriggerStopPolicyType.AFTER_CONSECUTIVE_FAILURES);
     }
 
-    [1, 2, FlowStopPolicyFormComponent.MAX_FAILURES_LIMIT].forEach((maxFailures) => {
+    [1, 2, MAX_CONSECUTIVE_FAILURES].forEach((maxFailures) => {
         it(`should accept ${maxFailures} max failures`, async () => {
             await enableAfterConsecutiveFailures();
 
             await stopPolicyFormHarness.setMaxFailures(maxFailures);
 
-            expect(await stopPolicyFormHarness.getErrorMessage()).toBeNull();
+            expect(await stopPolicyFormHarness.getMaxFailuresError()).toBeNull();
             expect(component.form.valid).toBe(true);
             expect(component.form.getRawValue().maxFailures).toBe(maxFailures);
         });
@@ -216,7 +217,7 @@ describe("FlowStopPolicyFormComponent", () => {
 
             await stopPolicyFormHarness.setMaxFailures(value);
 
-            expect(await stopPolicyFormHarness.getErrorMessage()).toBe(message);
+            expect(await stopPolicyFormHarness.getMaxFailuresError()).toBe(message);
             expect(hostComponent.hostForm.invalid).toBe(true);
         });
     });

@@ -88,6 +88,20 @@ describe("AccountTabComponent", () => {
         });
     }
 
+    it("should show the change password form to an admin on another account's page", async () => {
+        openPage(TEST_LOGIN, false);
+        const tab = await accountTabHarness();
+
+        expect(await tab.getAdminChangePassword()).not.toBeNull();
+    });
+
+    it("should not show the change password form on the user's own page", async () => {
+        openPage(undefined, true);
+        const tab = await accountTabHarness();
+
+        expect(await tab.getAdminChangePassword()).toBeNull();
+    });
+
     it("should show the current username", async () => {
         const tab = await accountTabHarness();
 

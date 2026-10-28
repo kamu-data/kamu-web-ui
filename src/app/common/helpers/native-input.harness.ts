@@ -9,8 +9,22 @@
 
 import { BaseHarnessFilters, ComponentHarness, HarnessPredicate } from "@angular/cdk/testing";
 
+import { MaybeUndefined } from "@interface/app.types";
+
 export interface NativeInputHarnessFilters extends BaseHarnessFilters {
     dataTestId?: string;
+}
+
+/** Narrows a predicate to the element whose `data-test-id` is `dataTestId`, when one is given. */
+export function withDataTestId<T extends ComponentHarness>(
+    predicate: HarnessPredicate<T>,
+    dataTestId: MaybeUndefined<string>,
+): HarnessPredicate<T> {
+    return predicate.addOption("dataTestId", dataTestId, async (harness, id) => {
+        const host = await harness.host();
+        const value = await host.getAttribute("data-test-id");
+        return value === id;
+    });
 }
 
 /**
@@ -21,15 +35,7 @@ export class NativeInputHarness extends ComponentHarness {
     public static readonly hostSelector = "input, textarea, select";
 
     public static with(options: NativeInputHarnessFilters = {}): HarnessPredicate<NativeInputHarness> {
-        return new HarnessPredicate(NativeInputHarness, options).addOption(
-            "dataTestId",
-            options.dataTestId,
-            async (harness, dataTestId) => {
-                const host = await harness.host();
-                const value = await host.getAttribute("data-test-id");
-                return value === dataTestId;
-            },
-        );
+        return withDataTestId(new HarnessPredicate(NativeInputHarness, options), options.dataTestId);
     }
 
     /** Types the value as a user would, replacing the current one, then leaves the field. */

@@ -14,7 +14,7 @@ function isEmpty(value: unknown): boolean {
 }
 
 /**
- * Fails with `format` while both this control and its sibling `siblingName` are empty, for a pair of fields where
+ * Fails with `requiredUnless` while both this control and its sibling `siblingName` are empty, for a pair of fields where
  * either one is enough. The sibling's changes do not run this validator; the form revalidates it.
  */
 export function requiredUnlessValidator(siblingName: string, siblingLabel: string): ValidatorFn {
@@ -23,6 +23,6 @@ export function requiredUnlessValidator(siblingName: string, siblingLabel: strin
         if (!sibling || !isEmpty(control.value) || !isEmpty(sibling.value)) {
             return null;
         }
-        return { format: { message: `is required unless ${siblingLabel} is set` } };
+        return { requiredUnless: { sibling: siblingLabel } };
     };
 }

@@ -10,6 +10,7 @@ import { SourcesTooltipsTexts } from "@common/tooltips/sources.text";
 import { uniqueItemsValidator } from "@common/validation/collection.validators";
 import { requiredUnlessValidator } from "@common/validation/cross-field.validators";
 import { PORT_MAX, PORT_MIN } from "@common/validation/number.validators";
+import { notBlankValidator } from "@common/validation/text.validators";
 import { urlValidator } from "@common/validation/url.validators";
 
 import { ControlType } from "src/app/dataset-view/additional-components/metadata-component/components/source-events/add-polling-source/add-polling-source-form.types";
@@ -26,6 +27,12 @@ import {
     topicListControl,
     valueControl,
 } from "src/app/dataset-view/additional-components/metadata-component/components/source-events/source-section";
+
+const EVENT_TIME_INNER_TOOLTIPS: Record<string, string> = {
+    fromMetadata: SetPollingSourceTooltipsTexts.EVENT_TIME_FROM_METADATA,
+    fromPath: SetPollingSourceTooltipsTexts.EVENT_TIME_FROM_PATH,
+    fromSystemTime: SetPollingSourceTooltipsTexts.EVENT_TIME_SYSTEM_TIME,
+};
 
 export const FETCH_FORM_DATA: JsonFormData<FetchControls> = {
     Url: {
@@ -47,11 +54,7 @@ export const FETCH_FORM_DATA: JsonFormData<FetchControls> = {
                 type: ControlType.EVENT_TIME,
                 tooltip: SetPollingSourceTooltipsTexts.EVENT_TIME,
                 options: {
-                    innerTooltips: {
-                        fromMetadata: SetPollingSourceTooltipsTexts.EVENT_TIME_FROM_METADATA,
-                        fromPath: SetPollingSourceTooltipsTexts.EVENT_TIME_FROM_PATH,
-                        fromSystemTime: SetPollingSourceTooltipsTexts.EVENT_TIME_SYSTEM_TIME,
-                    },
+                    innerTooltips: EVENT_TIME_INNER_TOOLTIPS,
                 },
             },
             {
@@ -84,6 +87,7 @@ export const FETCH_FORM_DATA: JsonFormData<FetchControls> = {
                 placeholder: "Enter path",
                 tooltip: SetPollingSourceTooltipsTexts.PATH,
                 required: true,
+                validators: [notBlankValidator()],
             },
 
             {
@@ -100,10 +104,7 @@ export const FETCH_FORM_DATA: JsonFormData<FetchControls> = {
                 type: ControlType.EVENT_TIME,
                 tooltip: SetPollingSourceTooltipsTexts.EVENT_TIME,
                 options: {
-                    innerTooltips: {
-                        fromMetadata: SetPollingSourceTooltipsTexts.EVENT_TIME_FROM_METADATA,
-                        fromPath: SetPollingSourceTooltipsTexts.EVENT_TIME_FROM_PATH,
-                    },
+                    innerTooltips: EVENT_TIME_INNER_TOOLTIPS,
                 },
             },
             {
@@ -125,6 +126,7 @@ export const FETCH_FORM_DATA: JsonFormData<FetchControls> = {
                 placeholder: "Enter image..",
                 tooltip: SetPollingSourceTooltipsTexts.IMAGE,
                 required: true,
+                validators: [notBlankValidator()],
             },
             {
                 name: "command",
@@ -172,6 +174,7 @@ export const FETCH_FORM_DATA: JsonFormData<FetchControls> = {
                 placeholder: "Enter host",
                 tooltip: SetPollingSourceTooltipsTexts.MQTT_HOST,
                 required: true,
+                validators: [notBlankValidator()],
             },
             {
                 name: "port",

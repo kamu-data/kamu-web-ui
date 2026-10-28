@@ -11,6 +11,8 @@ import { ComponentHarness } from "@angular/cdk/testing";
 import { MatRadioButtonHarness } from "@angular/material/radio/testing";
 
 import { unexpectedValueError } from "@common/helpers/app.helpers";
+import { NativeInputHarness } from "@common/helpers/native-input.harness";
+import { FieldErrorHarness } from "@common/validation/field-error.harness";
 import { MaybeNull } from "@interface/app.types";
 
 import { FlowTriggerStopPolicyType } from "src/app/dataset-view/additional-components/dataset-settings-component/dataset-settings.model";
@@ -34,12 +36,12 @@ export class FlowStopPolicyFormHarness extends ComponentHarness {
         }),
     );
 
-    private readonly locatorError = this.locatorForOptional(
-        `[data-test-id="${FlowStopPolicyFormHarness.MAX_FAILURES_ERROR_TEST_ID}"]`,
+    private readonly locatorMaxFailuresError = this.locatorForOptional(
+        FieldErrorHarness.with({ dataTestId: FlowStopPolicyFormHarness.MAX_FAILURES_ERROR_TEST_ID }),
     );
 
     private readonly locatorMaxFailuresInput = this.locatorFor(
-        `[data-test-id="${FlowStopPolicyFormHarness.MAX_FAILURES_INPUT_TEST_ID}"]`,
+        NativeInputHarness.with({ dataTestId: FlowStopPolicyFormHarness.MAX_FAILURES_INPUT_TEST_ID }),
     );
 
     public async setSelectedStopPolicyType(stopPolicyType: FlowTriggerStopPolicyType): Promise<void> {
@@ -82,27 +84,18 @@ export class FlowStopPolicyFormHarness extends ComponentHarness {
         }
 
         const input = await this.locatorMaxFailuresInput();
-        await input.clear();
-        if (value !== "") {
-            await input.sendKeys(value.toString());
-        }
-        await input.blur();
+        await input.setValue(value.toString());
     }
 
     public async getMaxFailures(): Promise<number> {
         const input = await this.locatorMaxFailuresInput();
-        const value = await input.getProperty<string>("value");
+        const value = await input.getValue();
         return Number(value) || 0;
     }
 
-    public async getErrorMessage(): Promise<MaybeNull<string>> {
-        const errorElement = await this.locatorError();
-        if (errorElement) {
-            const message = await errorElement.text();
-            return message === "" ? null : message;
-        }
-
-        return null;
+    public async getMaxFailuresError(): Promise<MaybeNull<string>> {
+        const error = await this.locatorMaxFailuresError();
+        return error ? error.getMessage() : null;
     }
 
     public async currentFormValue(): Promise<FlowStopPolicyFormValue> {

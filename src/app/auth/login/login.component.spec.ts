@@ -178,6 +178,16 @@ describe("LoginComponent", () => {
                 );
             });
 
+            it("should not submit from the keyboard without a password, and show why", async () => {
+                const loginServicePasswordSubmit = stubMethod(loginService, "passwordLogin");
+                await login.setLogin(TEST_LOGIN);
+
+                await login.submitForm();
+
+                expect(loginServicePasswordSubmit).not.toHaveBeenCalled();
+                expect(await login.getPasswordError()).toBe("Password is required");
+            });
+
             it("Submit good password login form", async () => {
                 const loginServicePasswordSubmit = stubMethod(loginService, "passwordLogin");
 

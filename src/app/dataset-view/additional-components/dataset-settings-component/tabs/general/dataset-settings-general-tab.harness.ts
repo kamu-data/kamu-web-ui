@@ -22,6 +22,7 @@ export class DatasetSettingsGeneralTabHarness extends ComponentHarness {
     private static readonly RENAME_SERVER_ERROR_TEST_ID = "rename-dataset-error-custom";
     private static readonly DELETE_BUTTON_TEST_ID = "delete-dataset-button";
     private static readonly CHANGE_VISIBILITY_BUTTON_TEST_ID = "change-visibility-dataset-button";
+    private static readonly RESET_BUTTON_TEST_ID = "reset-dataset-button";
 
     private static readonly ERROR_BORDER_CLASS = "error-border-color";
 
@@ -42,6 +43,10 @@ export class DatasetSettingsGeneralTabHarness extends ComponentHarness {
     );
     private readonly locatorChangeVisibilityButton = this.locatorFor(
         `[data-test-id="${DatasetSettingsGeneralTabHarness.CHANGE_VISIBILITY_BUTTON_TEST_ID}"]`,
+    );
+
+    private readonly locatorResetButton = this.locatorFor(
+        `[data-test-id="${DatasetSettingsGeneralTabHarness.RESET_BUTTON_TEST_ID}"]`,
     );
 
     public async setDatasetName(name: string): Promise<void> {
@@ -92,6 +97,11 @@ export class DatasetSettingsGeneralTabHarness extends ComponentHarness {
 
     public async changeVisibility(): Promise<void> {
         const button = await this.locatorChangeVisibilityButton();
+        await button.click();
+    }
+
+    public async resetDataset(): Promise<void> {
+        const button = await this.locatorResetButton();
         await button.click();
     }
 }

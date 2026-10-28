@@ -148,6 +148,13 @@ describe("TimeDeltaFormComponent", () => {
         });
     });
 
+    it("should accept the smallest value, 1", async () => {
+        await timeDeltaHarness.setTimeDelta(1, TimeUnit.Minutes);
+
+        expect(await timeDeltaHarness.getErrorMessage()).toBeNull();
+        expect(component.form.valid).toBe(true);
+    });
+
     it("should leave the per-unit maximum until a unit is chosen", async () => {
         await timeDeltaHarness.setEvery("1000");
 

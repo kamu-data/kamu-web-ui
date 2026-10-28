@@ -11,6 +11,7 @@ import { ComponentHarness } from "@angular/cdk/testing";
 import { MatButtonToggleHarness } from "@angular/material/button-toggle/testing";
 
 import { NativeInputHarness } from "@common/helpers/native-input.harness";
+import { FieldErrorHarness } from "@common/validation/field-error.harness";
 import { MaybeNull } from "@interface/app.types";
 
 export class LoadMoreHarness extends ComponentHarness {
@@ -27,8 +28,8 @@ export class LoadMoreHarness extends ComponentHarness {
     private readonly locatorRowLimitInput = this.locatorFor(
         NativeInputHarness.with({ dataTestId: LoadMoreHarness.ROW_LIMIT_INPUT_TEST_ID }),
     );
-    private readonly locatorRowLimitError = this.locatorForOptional(
-        `[data-test-id="${LoadMoreHarness.ROW_LIMIT_ERROR_TEST_ID}"]`,
+    private readonly locatorRowLimitError = this.locatorFor(
+        FieldErrorHarness.with({ dataTestId: LoadMoreHarness.ROW_LIMIT_ERROR_TEST_ID }),
     );
 
     public async selectRowLimitOption(rows: number): Promise<void> {
@@ -53,11 +54,7 @@ export class LoadMoreHarness extends ComponentHarness {
 
     public async getRowLimitError(): Promise<MaybeNull<string>> {
         const error = await this.locatorRowLimitError();
-        if (!error) {
-            return null;
-        }
-        const text = await error.text();
-        return text.trim();
+        return error.getMessage();
     }
 
     public async isLoadMoreDisabled(): Promise<boolean> {

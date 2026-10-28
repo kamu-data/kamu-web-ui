@@ -8,7 +8,7 @@
 import { TestbedHarnessEnvironment } from "@angular/cdk/testing/testbed";
 import { ComponentFixture, TestBed } from "@angular/core/testing";
 
-import { of } from "rxjs";
+import { NEVER, of } from "rxjs";
 
 import { Apollo } from "apollo-angular";
 import { provideToastr } from "ngx-toastr";
@@ -94,7 +94,7 @@ describe("AddWebhookComponent", () => {
 
         await form.touchEventTypes();
 
-        expect(await form.getEventTypesError()).toBe("Event selection is required");
+        expect(await form.getEventTypesError()).toBe("Subscribed events is required");
     });
 
     it("should limit the label to 100 characters", async () => {
@@ -137,6 +137,18 @@ describe("AddWebhookComponent", () => {
             label: "my-hook",
         });
         expect(await form.isReadonly()).toBe(true);
+    });
+
+    it("should keep adding disabled while the subscription is being created", async () => {
+        const createSpy = vi.spyOn(datasetWebhooksService, "datasetWebhookCreateSubscription").mockReturnValue(NEVER);
+        const page = await addWebhookHarness();
+        await fillValidForm(page);
+
+        await page.submit();
+        await page.submit();
+
+        expect(await page.isSubmitDisabled()).toBe(true);
+        expect(createSpy).toHaveBeenCalledTimes(1);
     });
 
     [

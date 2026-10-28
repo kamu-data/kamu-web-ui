@@ -142,3 +142,49 @@ export abstract class BaseTextFieldHarness extends BaseFieldHarness {
         return this.errorMessage("");
     }
 }
+
+/**
+ * A field that edits a list: an add button, a remove button per entry, a message for each entry and one for the
+ * list. `itemTestIdPrefix` follows the field's `dataTestId` on each entry's first input.
+ */
+export abstract class BaseListFieldHarness extends BaseFieldHarness {
+    private static readonly REMOVE_TEST_ID_PREFIX = "-remove-";
+    private static readonly ADD_TEST_ID_SUFFIX = "-add";
+
+    protected abstract readonly itemTestIdPrefix: string;
+
+    public async getButtonText(): Promise<string> {
+        const button = await this.element(BaseListFieldHarness.ADD_TEST_ID_SUFFIX);
+        const text = await button.text();
+        return text.trim();
+    }
+
+    public async addItem(): Promise<void> {
+        const button = await this.element(BaseListFieldHarness.ADD_TEST_ID_SUFFIX);
+        await button.click();
+    }
+
+    public async removeItem(index: number): Promise<void> {
+        const button = await this.element(`${BaseListFieldHarness.REMOVE_TEST_ID_PREFIX}${index}`);
+        await button.click();
+    }
+
+    public async isRequiredMarked(): Promise<boolean> {
+        return this.hasRequiredMarker();
+    }
+
+    /** The message about the list as a whole, such as a missing or repeated entry, or `null`. */
+    public async getErrorMessage(): Promise<MaybeNull<string>> {
+        return this.errorMessage("");
+    }
+
+    /** The message under the entry at `index`, or `null`. */
+    public async getItemErrorMessage(index: number): Promise<MaybeNull<string>> {
+        return this.errorMessage(`${this.itemTestIdPrefix}${index}`);
+    }
+
+    protected async itemCount(): Promise<number> {
+        const items = await this.elements(this.itemTestIdPrefix);
+        return items.length;
+    }
+}

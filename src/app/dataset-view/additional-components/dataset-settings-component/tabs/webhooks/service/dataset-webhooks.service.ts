@@ -12,6 +12,7 @@ import { map, Observable } from "rxjs";
 import { ToastrService } from "ngx-toastr";
 
 import { requireValue } from "@common/helpers/app.helpers";
+import { ErrorTexts } from "@common/values/errors.text";
 import {
     DatasetWebhookByIdQuery,
     DatasetWebhookCreateSubscriptionMutation,
@@ -22,8 +23,12 @@ import {
     DatasetWebhookRotateSecretMutation,
     DatasetWebhookSubscriptionsQuery,
     DatasetWebhookUpdateSubscriptionMutation,
+    UpdateWebhookSubscriptionResultUnexpected,
     WebhookSubscriptionDataFragment,
+    WebhookSubscriptionDuplicateLabel,
     WebhookSubscriptionInput,
+    WebhookSubscriptionInvalidTargetUrl,
+    WebhookSubscriptionNoEventTypesProvided,
 } from "@api/kamu.graphql.interface";
 import { WebhooksApi } from "@api/webhooks.api";
 import { MaybeNull } from "@interface/app.types";
@@ -38,13 +43,23 @@ export interface WebhookFieldError {
 
 export type WebhookMutationResult<T> = { ok: true; value: T } | { ok: false; fieldError: MaybeNull<WebhookFieldError> };
 
-function webhookFieldError(result: { __typename?: string; message: string }): MaybeNull<WebhookFieldError> {
+/** Every result of a create or update that kamu-cli returns instead of the subscription. */
+type WebhookRejection = Pick<
+    | WebhookSubscriptionDuplicateLabel
+    | WebhookSubscriptionInvalidTargetUrl
+    | WebhookSubscriptionNoEventTypesProvided
+    | UpdateWebhookSubscriptionResultUnexpected,
+    "__typename" | "message"
+>;
+
+function webhookFieldError(result: WebhookRejection): MaybeNull<WebhookFieldError> {
     switch (result.__typename) {
         case "WebhookSubscriptionDuplicateLabel":
-            return { field: "label", message: "A webhook with this label already exists" };
+            return { field: "label", message: ErrorTexts.ERROR_WEBHOOK_DUPLICATE_LABEL };
         case "WebhookSubscriptionInvalidTargetUrl":
             return { field: "targetUrl", message: result.message };
-        default:
+        case "WebhookSubscriptionNoEventTypesProvided":
+        case "UpdateWebhookSubscriptionResultUnexpected":
             return null;
     }
 }
@@ -186,10 +201,7 @@ export class DatasetWebhooksService {
     }
 
     /** A rejection the form shows on a field, or a toast for one that belongs to no field. */
-    private rejected(result: { __typename?: string; message: string }): {
-        ok: false;
-        fieldError: MaybeNull<WebhookFieldError>;
-    } {
+    private rejected(result: WebhookRejection): WebhookMutationResult<never> {
         const fieldError = webhookFieldError(result);
         if (!fieldError) {
             this.toastrService.error(result.message);

@@ -35,7 +35,6 @@ import { TextControl } from "src/app/dataset-view/additional-components/metadata
 })
 export class TypeaheadFieldComponent extends BaseField<TextControl> {
     @Input({ required: true }) public data: string[];
-    @Input() public requiredField = false;
     @Input() public placeholder?: string;
     @ViewChild("instance", { static: true }) public instance: NgbTypeahead;
     public focus$ = new Subject<string>();

@@ -52,6 +52,25 @@ describe("Source event step rules", () => {
         return form;
     }
 
+    describe("Required text fields", () => {
+        (
+            [
+                { kind: FetchKind.FILES_GLOB, name: "path" },
+                { kind: FetchKind.CONTAINER, name: "image" },
+                { kind: FetchKind.MQTT, name: "host" },
+            ] as const
+        ).forEach(({ kind, name }) => {
+            it(`should reject a ${kind} ${name} of spaces only`, () => {
+                const control = requireValue(fetchForm(kind).controls[name]);
+                control.setValue("   ");
+                expect(control.errors).toEqual({ blank: true });
+
+                control.setValue("value");
+                expect(control.valid).toBe(true);
+            });
+        });
+    });
+
     describe("MQTT", () => {
         [-5, 0, 1.5, 70000].forEach((port) => {
             it(`should reject port ${port}`, () => {

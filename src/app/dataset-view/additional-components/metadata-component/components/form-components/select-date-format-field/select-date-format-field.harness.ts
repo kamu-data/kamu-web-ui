@@ -20,20 +20,13 @@ import { EventTimeSourceKind } from "src/app/dataset-view/additional-components/
 export class SelectDateFormatFieldHarness extends BaseFieldHarness {
     public static readonly hostSelector = "app-select-date-format-field";
 
-    private static readonly KIND_TEST_IDS: Record<EventTimeSourceKind, string> = {
-        [EventTimeSourceKind.FROM_METADATA]: "event-time-from-metadata",
-        [EventTimeSourceKind.FROM_SYSTEM_TIME]: "event-time-from-system-time",
-        [EventTimeSourceKind.FROM_PATH]: "event-time-from-path",
+    private static readonly KIND_TEST_ID_SUFFIXES: Record<EventTimeSourceKind, string> = {
+        [EventTimeSourceKind.FROM_METADATA]: "-from-metadata",
+        [EventTimeSourceKind.FROM_SYSTEM_TIME]: "-from-system-time",
+        [EventTimeSourceKind.FROM_PATH]: "-from-path",
     };
-    private static readonly PATTERN_TEST_ID = "event-time-pattern";
-    private static readonly TIMESTAMP_FORMAT_TEST_ID = "event-time-timestamp-format";
-
-    private readonly locatorPattern = this.locatorForOptional(
-        InputFieldHarness.with({ dataTestId: SelectDateFormatFieldHarness.PATTERN_TEST_ID }),
-    );
-    private readonly locatorTimestampFormat = this.locatorForOptional(
-        TypeaheadFieldHarness.with({ dataTestId: SelectDateFormatFieldHarness.TIMESTAMP_FORMAT_TEST_ID }),
-    );
+    private static readonly PATTERN_TEST_ID_SUFFIX = "-pattern";
+    private static readonly TIMESTAMP_FORMAT_TEST_ID_SUFFIX = "-timestamp-format";
 
     public async selectKind(kind: EventTimeSourceKind): Promise<void> {
         const radio = await this.kindRadio(kind);
@@ -47,8 +40,8 @@ export class SelectDateFormatFieldHarness extends BaseFieldHarness {
 
     /** Whether the pattern and timestamp format inputs are shown, as they are for "From path". */
     public async hasPatternFields(): Promise<boolean> {
-        const pattern = await this.locatorPattern();
-        const timestampFormat = await this.locatorTimestampFormat();
+        const pattern = await this.optionalPatternField();
+        const timestampFormat = await this.optionalTimestampFormatField();
         return pattern !== null && timestampFormat !== null;
     }
 
@@ -72,15 +65,31 @@ export class SelectDateFormatFieldHarness extends BaseFieldHarness {
         await timestampFormat.setValue(value);
     }
 
+    private async optionalPatternField(): Promise<MaybeNull<InputFieldHarness>> {
+        const testId = await this.getTestId();
+        return this.locatorForOptional(
+            InputFieldHarness.with({ dataTestId: `${testId}${SelectDateFormatFieldHarness.PATTERN_TEST_ID_SUFFIX}` }),
+        )();
+    }
+
+    private async optionalTimestampFormatField(): Promise<MaybeNull<TypeaheadFieldHarness>> {
+        const testId = await this.getTestId();
+        return this.locatorForOptional(
+            TypeaheadFieldHarness.with({
+                dataTestId: `${testId}${SelectDateFormatFieldHarness.TIMESTAMP_FORMAT_TEST_ID_SUFFIX}`,
+            }),
+        )();
+    }
+
     private async patternField(): Promise<InputFieldHarness> {
-        return requireValue(await this.locatorPattern(), "The pattern input is not shown");
+        return requireValue(await this.optionalPatternField(), "The pattern input is not shown");
     }
 
     private async timestampFormatField(): Promise<TypeaheadFieldHarness> {
-        return requireValue(await this.locatorTimestampFormat(), "The timestamp format input is not shown");
+        return requireValue(await this.optionalTimestampFormatField(), "The timestamp format input is not shown");
     }
 
     private async kindRadio(kind: EventTimeSourceKind): Promise<TestElement> {
-        return this.locatorFor(`[data-test-id="${SelectDateFormatFieldHarness.KIND_TEST_IDS[kind]}"]`)();
+        return this.element(SelectDateFormatFieldHarness.KIND_TEST_ID_SUFFIXES[kind]);
     }
 }

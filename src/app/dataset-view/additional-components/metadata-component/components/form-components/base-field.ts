@@ -19,6 +19,8 @@ export abstract class BaseField<C extends AbstractControl> implements OnInit {
     @Input({ required: true }) public label: string;
     @Input({ required: true }) public tooltip: string;
     @Input({ required: true }) public dataTestId: string;
+    /** Marks the label with an asterisk; the control's validators do the checking. */
+    @Input() public requiredField: boolean = false;
 
     protected readonly cdr = inject(ChangeDetectorRef);
     protected readonly destroyRef = inject(DestroyRef);

@@ -28,3 +28,5 @@ export const ValidationPatterns = {
 export const ODF_NAME_MAX_LENGTH = 100;
 /** kamu-cli stores variable and secret keys in a VARCHAR(200) column. */
 export const ENV_VAR_KEY_MAX_LENGTH = 200;
+/** kamu-cli stops a flow after at most 10 consecutive failures (`MAX_CONSECUTIVE_FAILURES_COUNT`). */
+export const MAX_CONSECUTIVE_FAILURES = 10;

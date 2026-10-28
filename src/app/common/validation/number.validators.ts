@@ -26,10 +26,6 @@ export function integerInRangeValidators(min: number, max?: number): ValidatorFn
     return max === undefined ? validators : [...validators, Validators.max(max)];
 }
 
+/** The TCP port range. */
 export const PORT_MIN = 1;
 export const PORT_MAX = 65535;
-
-/** A TCP port number. */
-export function portValidators(): ValidatorFn[] {
-    return integerInRangeValidators(PORT_MIN, PORT_MAX);
-}

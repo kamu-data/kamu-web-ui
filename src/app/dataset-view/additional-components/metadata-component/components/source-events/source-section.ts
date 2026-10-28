@@ -17,7 +17,7 @@ import {
     Validators,
 } from "@angular/forms";
 
-import { distinctUntilChanged } from "rxjs";
+import { distinctUntilChanged, Subject, takeUntil } from "rxjs";
 
 import { regexValidator } from "@common/validation/text.validators";
 import { MaybeNull, MaybeUndefined } from "@interface/app.types";
@@ -134,7 +134,6 @@ export function decompressStepGroup(format = DecompressFormat.ZIP, subPath = "")
 /** What the step component needs of a section: the form, and the fields of the selected kind. */
 export interface SourceStepSection {
     readonly form: FormGroup;
-    readonly kindControl: FormControl<string>;
     readonly fields: readonly SourceField[];
 }
 
@@ -142,15 +141,17 @@ export interface SourceStepSection {
  * One step of the source event editor: its form holds `kindControl` and the controls the config
  * lists for the kind selected there. Choosing another kind removes the previous kind's controls and
  * adds the new ones, except those named in `kept`, which carry their value from kind to kind. A kept
- * control the selected kind does not list is disabled, so its validators do not block the form.
+ * control the selected kind does not list is disabled, so its validators do not block the form, and it keeps
+ * the validators of the kind that built it first, so every kind that lists it must give it the same ones.
  */
 export class SourceSection<T extends ControlsOf<T>> implements SourceStepSection {
     private builtKind: string;
     private builtFields: readonly SourceField[] = [];
+    private readonly kindSwitched$ = new Subject<void>();
 
     public constructor(
         public readonly form: FormGroup<T>,
-        public readonly kindControl: FormControl<string>,
+        private readonly kindControl: FormControl<string>,
         private readonly config: JsonFormData<T>,
         private readonly destroyRef: DestroyRef,
         private readonly kept: readonly OptionalControlName<T>[] = [],
@@ -178,6 +179,7 @@ export class SourceSection<T extends ControlsOf<T>> implements SourceStepSection
             return;
         }
         this.builtKind = kind;
+        this.kindSwitched$.next();
         Object.values(this.config).forEach(({ controls }) => {
             controls.forEach((item) => {
                 if (!this.kept.includes(item.name)) {
@@ -219,7 +221,11 @@ export class SourceSection<T extends ControlsOf<T>> implements SourceStepSection
                 // that depend on each other.
                 this.form
                     .get(name)
-                    ?.valueChanges.pipe(distinctUntilChanged(), takeUntilDestroyed(this.destroyRef))
+                    ?.valueChanges.pipe(
+                        distinctUntilChanged(),
+                        takeUntil(this.kindSwitched$),
+                        takeUntilDestroyed(this.destroyRef),
+                    )
                     .subscribe(() => control?.updateValueAndValidity());
             });
             if (item.dependsOn) {

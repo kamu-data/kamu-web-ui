@@ -7,7 +7,7 @@
 
 import { ChangeDetectionStrategy, Component, inject, Input, OnInit } from "@angular/core";
 import { takeUntilDestroyed } from "@angular/core/rxjs-interop";
-import { AbstractControl, FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators } from "@angular/forms";
+import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators } from "@angular/forms";
 import { MatDividerModule } from "@angular/material/divider";
 import { ParamMap, Router } from "@angular/router";
 
@@ -128,10 +128,6 @@ export class AccountTabComponent extends BaseComponent implements OnInit {
                 },
             }),
         );
-    }
-
-    public get usernameControl(): AbstractControl {
-        return this.changeUsernameForm.controls.username;
     }
 
     public get isOwnerPage(): boolean {

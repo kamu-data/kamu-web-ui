@@ -23,9 +23,9 @@ export class LoginHarness extends ComponentHarness {
     private static readonly SELECT_METHOD_PASSWORD_TEST_ID = "select-method-password";
     private static readonly PASSWORD_LOGIN_FORM_TEST_ID = "password-login-form";
     private static readonly LOGIN_INPUT_TEST_ID = "input-login";
-    private static readonly LOGIN_ERROR_TEST_ID = "input-login-error-required";
+    private static readonly LOGIN_ERROR_TEST_ID = "input-login-error";
     private static readonly PASSWORD_INPUT_TEST_ID = "input-password";
-    private static readonly PASSWORD_ERROR_TEST_ID = "input-password-error-required";
+    private static readonly PASSWORD_ERROR_TEST_ID = "input-password-error";
     private static readonly SUBMIT_BUTTON_TEST_ID = "submit-password";
     private static readonly PASSWORD_METHOD_ERROR_TEST_ID = "password-method-error";
     private static readonly INVALID_DEVICE_CODE_TEST_ID = "invalid-device-code";

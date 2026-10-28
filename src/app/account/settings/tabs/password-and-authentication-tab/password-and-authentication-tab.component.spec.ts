@@ -82,6 +82,20 @@ describe("PasswordAndAuthenticationTabComponent", () => {
         });
     });
 
+    ["12345678", "  12345678 "].forEach((password) => {
+        it(`should accept "${password}", which has the server's minimum of 8 characters`, async () => {
+            const tab = await openChangePassword();
+
+            await tab.setOldPassword("old-password");
+            await tab.setNewPassword(password);
+            await tab.setConfirmPassword(password);
+
+            expect(await tab.getNewPasswordError()).toBeNull();
+            expect(await tab.getConfirmPasswordError()).toBeNull();
+            expect(await tab.isUpdateDisabled()).toBe(false);
+        });
+    });
+
     it("should reject a password with characters other than ASCII", async () => {
         const tab = await openChangePassword();
 

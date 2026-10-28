@@ -1,17 +1,12 @@
 <!-- A kind switch builds new controls, so tracking the control rebuilds the fields of the new kind -->
 @for (field of fields; track field.control) {
     @if (field.shown()) {
+        @let fieldTestId = field.dataTestId ?? sectionName + "-" + field.name;
         <div class="col-md-8 offset-md-2 mt-4">
             @if (isScalarSourceField(field)) {
-                <app-scalar-source-field
-                    [field]="field"
-                    [dataTestId]="field.dataTestId ?? sectionName + '-' + field.name"
-                />
+                <app-scalar-source-field [field]="field" [dataTestId]="fieldTestId" />
             } @else {
-                <app-composite-source-field
-                    [field]="field"
-                    [dataTestId]="field.dataTestId ?? sectionName + '-' + field.name"
-                />
+                <app-composite-source-field [field]="field" [dataTestId]="fieldTestId" />
             }
         </div>
     }

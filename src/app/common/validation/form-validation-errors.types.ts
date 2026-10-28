@@ -5,19 +5,17 @@
  * included in the LICENSE file.
  */
 
-/** Every error key a form control in the app can carry; `FormValidationErrorsDirective` has a message for each. */
+/** The error keys `appFieldError` has a message for; a validator whose errors it shows uses one of them. */
 export const VALIDATION_ERRORS = [
     "required",
     "minlength",
     "maxlength",
     "maxBytes",
-    "pattern",
     "passwordsMismatch",
     "email",
     "min",
     "max",
     "integer",
-    "whitespace",
     "blank",
     "singleChar",
     "format",
@@ -25,6 +23,7 @@ export const VALIDATION_ERRORS = [
     "invalidCronExpression",
     "duplicate",
     "duplicateItems",
+    "requiredUnless",
     "server",
 ] as const;
 

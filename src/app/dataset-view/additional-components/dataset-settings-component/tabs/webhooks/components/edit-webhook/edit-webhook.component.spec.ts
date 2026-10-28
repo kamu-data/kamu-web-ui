@@ -9,7 +9,7 @@ import { TestbedHarnessEnvironment } from "@angular/cdk/testing/testbed";
 import { Location } from "@angular/common";
 import { ComponentFixture, TestBed } from "@angular/core/testing";
 
-import { of } from "rxjs";
+import { NEVER, of } from "rxjs";
 
 import { Apollo } from "apollo-angular";
 import { provideToastr } from "ngx-toastr";
@@ -146,6 +146,17 @@ describe("EditWebhookComponent", () => {
             expect(await page.isSubmitDisabled()).toBe(true);
             expect(backSpy).not.toHaveBeenCalled();
         });
+    });
+
+    it("should keep updating disabled while the subscription is being updated", async () => {
+        const updateSpy = vi.spyOn(datasetWebhooksService, "datasetWebhookUpdateSubscription").mockReturnValue(NEVER);
+        const page = await editWebhookHarness();
+
+        await page.submit();
+        await page.submit();
+
+        expect(await page.isSubmitDisabled()).toBe(true);
+        expect(updateSpy).toHaveBeenCalledTimes(1);
     });
 
     it("should check to navigate to webhooks list", () => {

@@ -112,6 +112,7 @@ describe("EditWebhookComponent", () => {
     [
         { url: "", message: "Target URL is required" },
         { url: "http://example.com", message: "Target URL must be a URL starting with https://" },
+        { url: "ftp://example.com", message: "Target URL must be a URL starting with https://" },
     ].forEach(({ url, message }) => {
         it(`should not update the webhook with the target URL "${url}"`, async () => {
             const updateSpy = vi.spyOn(datasetWebhooksService, "datasetWebhookUpdateSubscription");

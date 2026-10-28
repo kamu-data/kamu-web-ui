@@ -18,6 +18,7 @@ export class WebhookFormHarness extends ComponentHarness {
 
     private static readonly TARGET_URL_INPUT_TEST_ID = "target-url";
     private static readonly TARGET_URL_ERROR_TEST_ID = "target-url-error";
+    private static readonly TARGET_URL_HINT_TEST_ID = "target-url-hint";
     private static readonly EVENT_TYPES_SELECT_TEST_ID = "event-types";
     private static readonly EVENT_TYPE_OPTION_TEST_ID_PREFIX = "event-type-option-";
     private static readonly EVENT_TYPES_ERROR_TEST_ID = "event-types-error";
@@ -29,6 +30,9 @@ export class WebhookFormHarness extends ComponentHarness {
     );
     private readonly locatorTargetUrlError = this.locatorFor(
         FieldErrorHarness.with({ dataTestId: WebhookFormHarness.TARGET_URL_ERROR_TEST_ID }),
+    );
+    private readonly locatorTargetUrlHint = this.locatorFor(
+        `[data-test-id="${WebhookFormHarness.TARGET_URL_HINT_TEST_ID}"]`,
     );
     private readonly locatorEventTypesContainer = this.locatorFor(
         `[data-test-id="${WebhookFormHarness.EVENT_TYPES_SELECT_TEST_ID}"] .ng-select-container`,
@@ -62,6 +66,11 @@ export class WebhookFormHarness extends ComponentHarness {
     public async getTargetUrlError(): Promise<MaybeNull<string>> {
         const error = await this.locatorTargetUrlError();
         return error.getMessage();
+    }
+
+    public async getTargetUrlHint(): Promise<string> {
+        const hint = await this.locatorTargetUrlHint();
+        return hint.text();
     }
 
     /** Picks an event type, by its value, from the dropdown. */

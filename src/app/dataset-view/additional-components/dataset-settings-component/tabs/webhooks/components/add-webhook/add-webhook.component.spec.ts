@@ -87,7 +87,7 @@ describe("AddWebhookComponent", () => {
         expect(await form.getTargetUrlError()).toBe("Target URL is required");
     });
 
-    ["http://example.com/hook", "example.com", "https://"].forEach((url) => {
+    ["http://example.com/hook", "ftp://example.com/hook", "example.com", "https://"].forEach((url) => {
         it(`should reject the target URL "${url}", which is not an HTTPS URL`, async () => {
             const page = await addWebhookHarness();
             const form = await page.getForm();

@@ -18,7 +18,10 @@
         @if (sourceEvent.read.__typename === "ReadStepCsv") {
             <div class="mx-4">
                 <app-block-row-data [tooltip]="SOURCES_TOOLTIPS.HEADER" label="Header:">
-                    <span>{{ sourceEvent.read.header }}</span>
+                    <span data-test-id="read-csv-header">{{ sourceEvent.read.header ?? false }}</span>
+                </app-block-row-data>
+                <app-block-row-data [tooltip]="SOURCES_TOOLTIPS.INFER_SCHEMA" label="Infer schema:">
+                    <span data-test-id="read-csv-infer-schema">{{ sourceEvent.read.inferSchema ?? false }}</span>
                 </app-block-row-data>
                 @if (sourceEvent.read.separator) {
                     <app-block-row-data [tooltip]="SOURCES_TOOLTIPS.SEPARATOR" label="Separator:">
@@ -38,11 +41,6 @@
                 @if (sourceEvent.read.escape) {
                     <app-block-row-data [tooltip]="SOURCES_TOOLTIPS.ESCAPE" label="Escape character:">
                         <span>{{ sourceEvent.read.escape }}</span>
-                    </app-block-row-data>
-                }
-                @if (sourceEvent.read.inferSchema) {
-                    <app-block-row-data [tooltip]="SOURCES_TOOLTIPS.INFER_SCHEMA" label="Infer schema:">
-                        <span>{{ sourceEvent.read.inferSchema }}</span>
                     </app-block-row-data>
                 }
                 @if (sourceEvent.read.nullValue) {
@@ -83,6 +81,26 @@
                 @if (sourceEvent.read.subPath) {
                     <app-block-row-data [tooltip]="SOURCES_TOOLTIPS.SUB_PATH" label="SubPath:">
                         <span>{{ sourceEvent.read.subPath }}</span>
+                    </app-block-row-data>
+                }
+            </div>
+        }
+
+        @if (sourceEvent.read.__typename === "ReadStepNdJson") {
+            <div class="mx-4">
+                @if (sourceEvent.read.encoding) {
+                    <app-block-row-data [tooltip]="SOURCES_TOOLTIPS.ENCODING" label="Encoding:">
+                        <span data-test-id="read-nd-json-encoding">{{ sourceEvent.read.encoding }}</span>
+                    </app-block-row-data>
+                }
+                @if (sourceEvent.read.dateFormat) {
+                    <app-block-row-data [tooltip]="SOURCES_TOOLTIPS.DATE_FORMAT" label="Date format:">
+                        <span>{{ sourceEvent.read.dateFormat }}</span>
+                    </app-block-row-data>
+                }
+                @if (sourceEvent.read.timestampFormat) {
+                    <app-block-row-data [tooltip]="SOURCES_TOOLTIPS.TIMESTAMP_FORMAT" label="Timestamp format:">
+                        <span>{{ sourceEvent.read.timestampFormat }}</span>
                     </app-block-row-data>
                 }
             </div>

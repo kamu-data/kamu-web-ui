@@ -1,16 +1,5 @@
 @use "var" as *;
 
-.clickable-row {
-    .mat-cell {
-        color: $app-navy-blue;
-
-        &:hover {
-            cursor: pointer;
-            text-decoration: underline;
-        }
-    }
-}
-
 table {
     width: 100%;
 

@@ -88,10 +88,6 @@ table {
             opacity: 0;
             visibility: hidden;
             transition: opacity 0.2s ease-in-out;
-
-            .action-button {
-                background-color: transparent;
-            }
         }
 
         &:hover {

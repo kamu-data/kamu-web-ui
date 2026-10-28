@@ -414,39 +414,6 @@ markdown {
     }
 }
 
-.mat-drawer-inner-container {
-    .navbar-nav {
-        width: 100%;
-        padding: 16px;
-
-        .nav-item {
-            width: 100%;
-            margin-bottom: 8px;
-            border-radius: 4px;
-            padding: 12px 16px;
-            box-sizing: border-box;
-            color: $app-emperor;
-        }
-
-        .nav-link {
-            &:hover,
-            &:focus {
-                background: $app-dark-sea-green;
-                color: $app-white;
-            }
-        }
-    }
-
-    .mat-drawer.mat-drawer-side {
-        width: 208px;
-    }
-
-    .mat-drawer-container {
-        background: inherit;
-        overflow: auto;
-    }
-}
-
 .app-content {
     display: grid;
     padding: 0 16px 16px;
@@ -589,12 +556,6 @@ router-outlet {
 
         ul {
             list-style-type: none;
-        }
-
-        .mat-checkbox-layout {
-            .mat-checkbox-label {
-                font-size: 16px;
-            }
         }
     }
 }
@@ -811,10 +772,6 @@ router-outlet {
     &:focus {
         box-shadow: 0 0 0 0.2rem #85bb906e;
     }
-}
-
-.mat-header-cell {
-    font-size: 20px;
 }
 
 [data-test-id="searchInput"],
@@ -1210,16 +1167,6 @@ app-account .dropdown-menu {
     right: 0;
 }
 
-.account-additional-main-info__list {
-    .mail-outline {
-        .mat-icon {
-            font-size: 20px;
-            height: 20px;
-            width: 20px;
-        }
-    }
-}
-
 .layout {
     &.layout--sidebar-position-start {
         .layout-main {
@@ -1232,12 +1179,6 @@ app-account .dropdown-menu {
     display: flex;
     overflow: auto hidden;
     justify-content: space-between;
-
-    .mat-icon {
-        height: 20px;
-        width: 20px;
-        font-size: 20px;
-    }
 }
 
 [role="menu"] {
@@ -1403,10 +1344,6 @@ pre {
 }
 
 .cdk-drag-animating {
-    transition: transform 250ms cubic-bezier(0, 0, 0.2, 1);
-}
-
-.cdk-drop-list-dragging .mat-row:not(.cdk-drag-placeholder) {
     transition: transform 250ms cubic-bezier(0, 0, 0.2, 1);
 }
 
@@ -1657,11 +1594,4 @@ pre.language-sql {
     --mat-slide-toggle-unselected-hover-track-color: #7986cb;
     --mat-slide-toggle-unselected-focus-track-color: #7986cb;
     --mat-slide-toggle-unselected-track-color: #7986cb;
-
-    &:hover {
-        --mat-slide-toggle-unselected-pressed-track-color: #7986cb;
-        --mat-slide-toggle-unselected-hover-track-color: #7986cb;
-        --mat-slide-toggle-unselected-focus-track-color: #7986cb;
-        --mat-slide-toggle-unselected-track-color: #7986cb;
-    }
 }

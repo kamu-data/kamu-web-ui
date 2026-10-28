@@ -29,8 +29,14 @@ export abstract class BaseEditorComponent implements OnChanges {
     public getErrorDetails: (error: string) => EditorError = getDefaultError;
 
     private monacoService = inject(MonacoService);
+    // ngx-monaco-editor reports the text it was given as a change once it shows it, after a timeout that can
+    // land after the parent has moved on to newer text; only a text other than the last one known is an edit
+    private lastKnownTemplate = "";
 
     public ngOnChanges(changes: SimpleChanges) {
+        if (changes.template) {
+            this.lastKnownTemplate = this.template;
+        }
         if (changes.error && this.editorModel) {
             if (this.error) {
                 this.monacoService.setErrorMarker(this.editorModel, this.getErrorDetails(this.error));
@@ -41,6 +47,10 @@ export abstract class BaseEditorComponent implements OnChanges {
     }
 
     public modelChange(): void {
+        if (this.template === this.lastKnownTemplate) {
+            return;
+        }
+        this.lastKnownTemplate = this.template;
         this.templateChange.emit(this.template);
     }
 

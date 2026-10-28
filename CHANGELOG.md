@@ -8,6 +8,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Changed
 - Account flows, Processes: resuming an auto-stopped process asks for confirmation, as the dataset's Flows tab does, and "Update now" refreshes the card shortly after instead of on the next poll
 ### Fixed
+- Moving straight from one dataset, account or flow to another, with back and forward or a link, shows the new one's data on every page instead of keeping the previous one's: dataset settings tabs no longer save the previous dataset's schedule, ingest or transform settings to the new dataset, and a webhook's edit form shows that webhook
+- Dataset settings, Access: back and forward between pages of collaborators show the page in the address bar
 - Metadata tab, polling and push sources:
   - a CSV source without a header setting shows "Header: false" instead of an empty row, and "Infer schema: false" is shown instead of left out
   - a newline-delimited JSON source shows its encoding, date format and timestamp format

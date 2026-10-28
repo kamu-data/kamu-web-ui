@@ -9,7 +9,13 @@ import {
 } from "@angular/core";
 import { MAT_RIPPLE_GLOBAL_OPTIONS } from "@angular/material/core";
 import { bootstrapApplication } from "@angular/platform-browser";
-import { provideRouter, UrlSerializer, withComponentInputBinding, withRouterConfig } from "@angular/router";
+import {
+    provideRouter,
+    RouteReuseStrategy,
+    UrlSerializer,
+    withComponentInputBinding,
+    withRouterConfig,
+} from "@angular/router";
 
 import { firstValueFrom } from "rxjs";
 
@@ -23,6 +29,7 @@ import { spinnerInterceptor } from "@common/components/spinner/spinner.intercept
 import { apolloCache } from "@common/helpers/apollo-cache.helper";
 import { createApolloErrorLink } from "@common/helpers/apollo-error.helpers";
 import { HIGHLIGHT_OPTIONS_PROVIDER, logError } from "@common/helpers/app.helpers";
+import { KamuRouteReuseStrategy } from "@common/helpers/kamu-route-reuse-strategy";
 import { KamuUrlSerializer } from "@common/helpers/kamu-url-serializer";
 import { authInterceptor } from "@common/interceptors/auth.interceptor";
 import AppValues from "@common/values/app.values";
@@ -61,6 +68,7 @@ bootstrapApplication(AppComponent, {
             sanitize: { provide: SANITIZE, useValue: SecurityContext.NONE },
         }),
         { provide: UrlSerializer, useClass: KamuUrlSerializer },
+        { provide: RouteReuseStrategy, useClass: KamuRouteReuseStrategy },
         provideHttpClient(withInterceptors([spinnerInterceptor, authInterceptor])),
 
         // 3-phase routing table:

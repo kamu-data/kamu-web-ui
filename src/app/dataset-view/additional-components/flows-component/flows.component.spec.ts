@@ -936,104 +936,23 @@ describe("FlowsComponent", () => {
         }));
     });
 
-    describe("switching to another dataset's Flows tab", () => {
-        const otherDatasetFlowsData = {
-            datasetBasics: { ...mockDatasetBasicsDerivedFragment, id: "other-dataset-id" },
-            datasetPermissions: mockFullPowerDatasetPermissionsFragment,
-            overviewUpdate: mockOverviewUpdate,
-        };
-        let datasetFlowsProcessesSpy: Mock;
+    it("should not load the flows again when the data of the same dataset is resolved again", fakeAsync(() => {
+        const datasetFlowsProcessesSpy = vi
+            .spyOn(datasetFlowsService, "datasetFlowsProcesses")
+            .mockReturnValue(of(requireValue(mockDatasetFlowsProcessesQuery.datasets.byId?.flows.processes)));
+        vi.spyOn(datasetFlowsService, "datasetFlowsList").mockReturnValue(of(mockFlowsTableData));
+        vi.spyOn(datasetFlowsService, "flowsInitiators").mockReturnValue(of([]));
+        fixture.detectChanges();
+        tick();
+        datasetFlowsProcessesSpy.mockClear();
 
-        beforeEach(() => {
-            datasetFlowsProcessesSpy = vi
-                .spyOn(datasetFlowsService, "datasetFlowsProcesses")
-                .mockReturnValue(of(requireValue(mockDatasetFlowsProcessesQuery.datasets.byId?.flows.processes)));
-            vi.spyOn(datasetFlowsService, "datasetFlowsList").mockReturnValue(of(mockFlowsTableData));
-            vi.spyOn(datasetFlowsService, "flowsInitiators").mockReturnValue(of([]));
-            setComponentInput(fixture, "flowsData", component.flowsData);
-        });
+        setComponentInput(fixture, "flowsData", { ...component.flowsData });
+        fixture.detectChanges();
+        tick();
 
-        function switchTo(flowsData: typeof component.flowsData): void {
-            setComponentInput(fixture, "flowsData", flowsData);
-            fixture.detectChanges();
-            tick();
-        }
-
-        it("should load the other dataset's flows", fakeAsync(() => {
-            fixture.detectChanges();
-            tick();
-            datasetFlowsProcessesSpy.mockClear();
-
-            switchTo(otherDatasetFlowsData);
-
-            expect(datasetFlowsProcessesSpy).toHaveBeenCalledTimes(1);
-
-            expect(datasetFlowsProcessesSpy).toHaveBeenCalledWith({ datasetId: "other-dataset-id" });
-            discardPeriodicTasks();
-        }));
-
-        it("should keep only the selection the current URL asks for", fakeAsync(() => {
-            const selectionStateService = fixture.debugElement.injector.get(FlowsSelectionStateService);
-            setComponentInput(fixture, "setWebhookId", "d20a935e-0ccb-4844-b1bb-f4b5b9b0279c");
-            fixture.detectChanges();
-            tick();
-            selectionStateService.addWebhookId("subscription-of-the-previous-dataset");
-
-            switchTo(otherDatasetFlowsData);
-
-            expect(selectionStateService.snapshot.webhooksIds).toEqual(["d20a935e-0ccb-4844-b1bb-f4b5b9b0279c"]);
-            discardPeriodicTasks();
-        }));
-
-        it("should clear the filters chosen for the previous dataset", fakeAsync(() => {
-            fixture.detectChanges();
-            tick();
-            component.onSearchByFiltersChange({
-                status: [FlowStatus.Finished],
-                accounts: [mockAccountDetails],
-                datasets: [],
-                onlySystemFlows: false,
-            });
-            tick();
-
-            switchTo(otherDatasetFlowsData);
-
-            expect(component.searchByAccount).toEqual([]);
-            expect(component.selectedStatusItems).toEqual([]);
-            expect(component.onlySystemFlows).toBe(false);
-            discardPeriodicTasks();
-        }));
-
-        it("should leave a card action of the previous dataset out of the new tab", fakeAsync(() => {
-            vi.spyOn(flowsService, "datasetPauseFlows").mockReturnValue(of(void 0));
-            fixture.detectChanges();
-            tick();
-            component.toggleStateDatasetFlowConfigs({
-                state: FlowProcessEffectiveState.Failing,
-                datasetBasics: mockDatasetBasicsRootFragment,
-            });
-
-            switchTo(otherDatasetFlowsData);
-            expect(component.busyIds$.value.has("other-dataset-id")).toBe(false);
-
-            const refreshFlowSpy = vi.spyOn(component, "refreshFlow").mockImplementation(() => {});
-            tick(component.TIMEOUT_REFRESH_FLOW);
-            expect(refreshFlowSpy).not.toHaveBeenCalled();
-            expect(component.busyIds$.value.size).toEqual(0);
-            discardPeriodicTasks();
-        }));
-
-        it("should not start over when the data of the same dataset is resolved again", fakeAsync(() => {
-            fixture.detectChanges();
-            tick();
-            datasetFlowsProcessesSpy.mockClear();
-
-            switchTo({ ...component.flowsData });
-
-            expect(datasetFlowsProcessesSpy).not.toHaveBeenCalled();
-            discardPeriodicTasks();
-        }));
-    });
+        expect(datasetFlowsProcessesSpy).not.toHaveBeenCalled();
+        discardPeriodicTasks();
+    }));
 
     describe("webhook subscription action in progress", () => {
         const SUBSCRIPTION_ID = "1234-4444-43222";

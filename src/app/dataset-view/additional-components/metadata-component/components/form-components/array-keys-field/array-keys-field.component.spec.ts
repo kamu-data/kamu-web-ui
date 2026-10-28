@@ -9,6 +9,8 @@ import { TestbedHarnessEnvironment } from "@angular/cdk/testing/testbed";
 import { Component } from "@angular/core";
 import { ComponentFixture, TestBed } from "@angular/core/testing";
 
+import { uniqueItemsValidator } from "@common/validation/collection.validators";
+
 import { ArrayKeysFieldComponent } from "src/app/dataset-view/additional-components/metadata-component/components/form-components/array-keys-field/array-keys-field.component";
 import { ArrayKeysFieldHarness } from "src/app/dataset-view/additional-components/metadata-component/components/form-components/array-keys-field/array-keys-field.harness";
 import {
@@ -46,8 +48,6 @@ describe("ArrayKeysFieldComponent", () => {
         fixture = TestBed.createComponent(TestArrayKeysFieldHostComponent);
         host = fixture.componentInstance;
     });
-
-    /** The field is OnPush and does not watch its control, so a test fills the list before rendering it. */
     async function render(): Promise<void> {
         fixture.detectChanges();
         harness = await TestbedHarnessEnvironment.loader(fixture).getHarness(ArrayKeysFieldHarness);
@@ -84,5 +84,20 @@ describe("ArrayKeysFieldComponent", () => {
 
         expect(await harness.getItems()).toEqual(["event_time"]);
         expect(host.control.getRawValue()).toEqual(["event_time"]);
+    });
+
+    it("should require each entry and reject a repeated one", async () => {
+        host.control.addValidators(uniqueItemsValidator((key) => key.value));
+        await render();
+        await harness.addItem();
+        await harness.setItem(0, "");
+        expect(await harness.getItemErrorMessage(0)).toBe("Entry is required");
+
+        await harness.setItem(0, "id");
+        await harness.addItem();
+        await harness.setItem(1, "id");
+
+        expect(await harness.getErrorMessage()).toContain('"id" more than once');
+        expect(host.control.valid).toBe(false);
     });
 });

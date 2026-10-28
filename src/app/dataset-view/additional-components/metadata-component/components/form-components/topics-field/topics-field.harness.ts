@@ -7,6 +7,8 @@
 
 /* istanbul ignore file */
 
+import { MaybeNull } from "@interface/app.types";
+
 import { BaseFieldHarness } from "src/app/dataset-view/additional-components/metadata-component/components/form-components/base-field.harness";
 
 export interface TopicItem {
@@ -53,5 +55,15 @@ export class TopicsFieldHarness extends BaseFieldHarness {
             items.push({ path: await path.getValue(), qos: await qos.getValue() });
         }
         return items;
+    }
+
+    /** The message about the list as a whole, such as a missing or repeated entry, or `null`. */
+    public async getErrorMessage(): Promise<MaybeNull<string>> {
+        return this.errorMessage("");
+    }
+
+    /** The message under the entry at `index`, or `null`. */
+    public async getItemErrorMessage(index: number): Promise<MaybeNull<string>> {
+        return this.errorMessage(`${TopicsFieldHarness.PATH_TEST_ID_PREFIX}${index}`);
     }
 }

@@ -238,6 +238,8 @@ export type JsonFormControl<T extends ControlsOf<T>> = {
         create: ControlFactory<Required<T>[K]>;
         /** Shows the field only while this holds; the control stays in the form either way. */
         shownWhen?: (form: FormGroup<T>) => boolean;
+        /** Controls of the same step whose changes revalidate this one, for validators that read them. */
+        dependsOn?: readonly OptionalControlName<T>[];
     };
 }[OptionalControlName<T>];
 

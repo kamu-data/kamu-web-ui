@@ -66,11 +66,8 @@ export function validationErrorMessage(label: string, error: ValidationError, de
             return `${label} ${stringDetail(details, "message")}`;
         case "url":
             return `${label} must be a URL starting with ${urlSchemesDetail(details)}`;
-        case "range":
-            return stringDetail(details, "message") ?? `${label} is out of range`;
         case "invalidCronExpression":
             return typeof details === "string" ? details : `${label} is not a valid cron expression`;
-        case "noneOf":
         case "duplicate":
             return `${label} already exists`;
         case "duplicateItems":

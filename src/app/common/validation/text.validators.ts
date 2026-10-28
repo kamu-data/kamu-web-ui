@@ -55,3 +55,19 @@ export function asciiValidator(): ValidatorFn {
         return { format: { message: "may only contain ASCII characters" } };
     };
 }
+
+/** Fails with `format` when a non-empty value is not a regular expression the browser can compile. */
+export function regexValidator(): ValidatorFn {
+    return (control: AbstractControl): MaybeNull<ValidationErrors> => {
+        const value: unknown = control.value;
+        if (typeof value !== "string" || value === "") {
+            return null;
+        }
+        try {
+            new RegExp(value);
+            return null;
+        } catch {
+            return { format: { message: "must be a valid regular expression" } };
+        }
+    };
+}

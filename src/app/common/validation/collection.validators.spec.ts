@@ -45,17 +45,17 @@ describe("Collection validators", () => {
         }
 
         it("should accept distinct items and ignore empty ones", () => {
-            const validator = uniqueItemsValidator((item) => String(item.value));
+            const validator = uniqueItemsValidator((item) => item.value);
             expect(validator(array("id", "name", "", ""))).toBeNull();
         });
 
         it("should report the first repeated item", () => {
-            const validator = uniqueItemsValidator((item) => String(item.value));
+            const validator = uniqueItemsValidator((item) => item.value);
             expect(validator(array("id", "name", "id"))).toEqual({ duplicateItems: { value: "id" } });
         });
 
         it("should compare ignoring case when asked", () => {
-            const validator = uniqueItemsValidator((item) => String(item.value), { caseInsensitive: true });
+            const validator = uniqueItemsValidator((item) => item.value, { caseInsensitive: true });
             expect(validator(array("Id", "id"))).toEqual({ duplicateItems: { value: "id" } });
         });
     });

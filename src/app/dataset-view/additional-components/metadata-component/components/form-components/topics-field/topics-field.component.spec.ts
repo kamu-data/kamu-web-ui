@@ -10,6 +10,8 @@ import { Component } from "@angular/core";
 import { ComponentFixture, TestBed } from "@angular/core/testing";
 import { Validators } from "@angular/forms";
 
+import { uniqueItemsValidator } from "@common/validation/collection.validators";
+
 import { TopicsFieldComponent } from "src/app/dataset-view/additional-components/metadata-component/components/form-components/topics-field/topics-field.component";
 import { TopicsFieldHarness } from "src/app/dataset-view/additional-components/metadata-component/components/form-components/topics-field/topics-field.harness";
 import {
@@ -31,7 +33,10 @@ import {
     `,
 })
 class TestTopicsFieldHostComponent {
-    public control = topicListControl()([Validators.required]);
+    public control = topicListControl()([
+        Validators.required,
+        uniqueItemsValidator((topic) => topic.get("path")?.value),
+    ]);
 }
 
 describe("TopicsFieldComponent", () => {
@@ -47,8 +52,6 @@ describe("TopicsFieldComponent", () => {
         fixture = TestBed.createComponent(TestTopicsFieldHostComponent);
         host = fixture.componentInstance;
     });
-
-    /** The field is OnPush and does not watch its control, so a test fills the list before rendering it. */
     async function render(): Promise<void> {
         fixture.detectChanges();
         harness = await TestbedHarnessEnvironment.loader(fixture).getHarness(TopicsFieldHarness);
@@ -84,5 +87,20 @@ describe("TopicsFieldComponent", () => {
 
         expect(await harness.getItems()).toEqual([{ path: "second", qos: "ExactlyOnce" }]);
         expect(host.control.getRawValue()).toEqual([{ path: "second", qos: "ExactlyOnce" }]);
+    });
+
+    it("should show a missing path under its topic and a repeated path under the list", async () => {
+        await render();
+        await harness.addItem();
+        await harness.setItem(0, { path: "", qos: "" });
+        expect(await harness.getItemErrorMessage(0)).toBe("Path is required");
+
+        await harness.setItem(0, { path: "sensors/a", qos: "" });
+        await harness.addItem();
+        await harness.setItem(1, { path: "sensors/a", qos: "" });
+
+        expect(await harness.getItemErrorMessage(0)).toBeNull();
+        expect(await harness.getErrorMessage()).toBe('Topics contains "sensors/a" more than once');
+        expect(host.control.valid).toBe(false);
     });
 });

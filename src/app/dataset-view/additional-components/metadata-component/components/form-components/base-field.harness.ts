@@ -32,6 +32,7 @@ export interface FieldHarnessFilters extends BaseHarnessFilters {
 export abstract class BaseFieldHarness extends ComponentHarness {
     private static readonly LABEL_TEST_ID_SUFFIX = "-label";
     private static readonly REQUIRED_TEST_ID_SUFFIX = "-required";
+    private static readonly ERROR_TEST_ID_SUFFIX = "-error";
 
     private readonly locatorLabel = this.locatorFor(`[data-test-id$="${BaseFieldHarness.LABEL_TEST_ID_SUFFIX}"]`);
 
@@ -81,9 +82,21 @@ export abstract class BaseFieldHarness extends ComponentHarness {
         return this.locatorForOptional(`[data-test-id="${testId}${suffix}"]`)();
     }
 
+    /** The elements whose test id starts with the field's `dataTestId` and `suffixPrefix`, leaving out error messages. */
     protected async elements(suffixPrefix: string): Promise<TestElement[]> {
         const testId = await this.getTestId();
-        return this.locatorForAll(`[data-test-id^="${testId}${suffixPrefix}"]`)();
+        return this.locatorForAll(
+            `[data-test-id^="${testId}${suffixPrefix}"]:not([data-test-id$="${BaseFieldHarness.ERROR_TEST_ID_SUFFIX}"])`,
+        )();
+    }
+
+    /** The validation message whose test id is the field's `dataTestId`, `suffix` and "-error", or `null`. */
+    protected async errorMessage(suffix: string): Promise<MaybeNull<string>> {
+        const testId = await this.getTestId();
+        const error = await this.locatorFor(
+            FieldErrorHarness.with({ dataTestId: `${testId}${suffix}${BaseFieldHarness.ERROR_TEST_ID_SUFFIX}` }),
+        )();
+        return error.getMessage();
     }
 
     protected async input(suffix: string): Promise<NativeInputHarness> {
@@ -99,8 +112,6 @@ export abstract class BaseFieldHarness extends ComponentHarness {
 
 /** A field with one text input, its required marker and its validation message. */
 export abstract class BaseTextFieldHarness extends BaseFieldHarness {
-    private static readonly ERROR_TEST_ID_SUFFIX = "-error";
-
     public async setValue(value: string): Promise<void> {
         const input = await this.input("");
         await input.setValue(value);
@@ -128,10 +139,6 @@ export abstract class BaseTextFieldHarness extends BaseFieldHarness {
 
     /** The validation message under the input, or `null` when it shows none. */
     public async getErrorMessage(): Promise<MaybeNull<string>> {
-        const testId = await this.getTestId();
-        const error = await this.locatorFor(
-            FieldErrorHarness.with({ dataTestId: `${testId}${BaseTextFieldHarness.ERROR_TEST_ID_SUFFIX}` }),
-        )();
-        return error.getMessage();
+        return this.errorMessage("");
     }
 }

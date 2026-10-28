@@ -11,6 +11,7 @@ import { FormArray, FormGroup, ReactiveFormsModule } from "@angular/forms";
 import { NgxTrimDirectiveModule } from "ngx-trim-directive";
 
 import { TooltipIconComponent } from "@common/components/tooltip-icon/tooltip-icon.component";
+import { FormValidationErrorsDirective } from "@common/validation/form-validation-errors.directive";
 
 import { BaseField } from "src/app/dataset-view/additional-components/metadata-component/components/form-components/base-field";
 import { TopicControls } from "src/app/dataset-view/additional-components/metadata-component/components/source-events/source-event-controls.types";
@@ -28,6 +29,7 @@ import { topicGroup } from "src/app/dataset-view/additional-components/metadata-
         NgxTrimDirectiveModule,
         //-----//
         TooltipIconComponent,
+        FormValidationErrorsDirective,
     ],
 })
 export class TopicsFieldComponent extends BaseField<FormArray<FormGroup<TopicControls>>> {

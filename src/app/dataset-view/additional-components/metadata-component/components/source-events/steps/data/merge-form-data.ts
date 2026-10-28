@@ -6,6 +6,7 @@
  */
 
 import { SourcesTooltipsTexts } from "@common/tooltips/sources.text";
+import { uniqueItemsValidator } from "@common/validation/collection.validators";
 
 import {
     ControlType,
@@ -26,6 +27,8 @@ export const MERGE_FORM_DATA: JsonFormData<MergeControls> = {
             {
                 name: "primaryKey",
                 create: textListControl(),
+                required: true,
+                validators: [uniqueItemsValidator((key) => key.value)],
                 label: "Primary keys",
                 type: ControlType.ARRAY_KEY,
                 placeholder: "Enter primary key...",
@@ -41,6 +44,8 @@ export const MERGE_FORM_DATA: JsonFormData<MergeControls> = {
             {
                 name: "primaryKey",
                 create: textListControl(),
+                required: true,
+                validators: [uniqueItemsValidator((key) => key.value)],
                 label: "Primary keys",
                 placeholder: "Enter primary key...",
                 tooltip: SourcesTooltipsTexts.PRIMARY_KEYS,
@@ -52,6 +57,7 @@ export const MERGE_FORM_DATA: JsonFormData<MergeControls> = {
             {
                 name: "compareColumns",
                 create: textListControl(),
+                validators: [uniqueItemsValidator((column) => column.value)],
                 label: "Compare columns",
                 placeholder: "Enter column name...",
                 type: ControlType.ARRAY_KEY,
@@ -68,6 +74,8 @@ export const MERGE_FORM_DATA: JsonFormData<MergeControls> = {
             {
                 name: "primaryKey",
                 create: textListControl(),
+                required: true,
+                validators: [uniqueItemsValidator((key) => key.value)],
                 label: "Primary keys",
                 placeholder: "Enter primary key...",
                 tooltip: SourcesTooltipsTexts.PRIMARY_KEYS,
@@ -83,6 +91,8 @@ export const MERGE_FORM_DATA: JsonFormData<MergeControls> = {
             {
                 name: "primaryKey",
                 create: textListControl(),
+                required: true,
+                validators: [uniqueItemsValidator((key) => key.value)],
                 label: "Primary keys",
                 placeholder: "Enter primary key...",
                 tooltip: SourcesTooltipsTexts.PRIMARY_KEYS,

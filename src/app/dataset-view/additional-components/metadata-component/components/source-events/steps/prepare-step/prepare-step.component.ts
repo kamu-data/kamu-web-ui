@@ -13,6 +13,7 @@ import { FormValidationErrorsDirective } from "@common/validation/form-validatio
 import { MaybeNull } from "@interface/app.types";
 
 import {
+    DecompressFormat,
     PrepareKind,
     SetPollingSourceSection,
 } from "src/app/dataset-view/additional-components/metadata-component/components/source-events/add-polling-source/add-polling-source-form.types";
@@ -41,6 +42,7 @@ import {
     ],
 })
 export class PrepareStepComponent {
+    public readonly DecompressFormat: typeof DecompressFormat = DecompressFormat;
     @Input({ required: true }) public sectionName: SetPollingSourceSection;
     @Input({ required: true }) public sectionForm: FormArray<PrepareStepForm>;
 

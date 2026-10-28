@@ -17,6 +17,9 @@ import {
     Validators,
 } from "@angular/forms";
 
+import { distinctUntilChanged } from "rxjs";
+
+import { regexValidator } from "@common/validation/text.validators";
 import { MaybeNull, MaybeUndefined } from "@interface/app.types";
 
 import {
@@ -72,7 +75,7 @@ export function eventTimeControl(): ControlFactory<FormGroup<EventTimeControls>>
     return () => {
         const group = new FormGroup<EventTimeControls>({
             kind: new FormControl(EventTimeSourceKind.FROM_METADATA, { nonNullable: true }),
-            pattern: textControl("", [patternRequiredFromPath]),
+            pattern: textControl("", [patternRequiredFromPath, regexValidator()]),
             timestampFormat: textControl(""),
         });
         // The group owns both controls, so the subscription ends with it. `onlySelf` leaves the group's status to
@@ -95,7 +98,10 @@ export function listItemControl(value = ""): TextControl {
 }
 
 export function nameValueGroup(name = "", value = ""): FormGroup<NameValueControls> {
-    return new FormGroup<NameValueControls>({ name: textControl(name), value: textControl(value) });
+    return new FormGroup<NameValueControls>({
+        name: textControl(name, [Validators.required]),
+        value: textControl(value),
+    });
 }
 
 export function topicGroup(path = "", qos = ""): FormGroup<TopicControls> {
@@ -138,12 +144,12 @@ export class SourceSection<T extends ControlsOf<T>> implements SourceStepSection
         public readonly form: FormGroup<T>,
         public readonly kindControl: FormControl<string>,
         private readonly config: JsonFormData<T>,
-        destroyRef: DestroyRef,
+        private readonly destroyRef: DestroyRef,
         private readonly kept: readonly OptionalControlName<T>[] = [],
     ) {
         this.builtKind = this.kindControl.value;
         this.addControls(this.builtKind);
-        this.kindControl.valueChanges.pipe(takeUntilDestroyed(destroyRef)).subscribe((kind: string) => {
+        this.kindControl.valueChanges.pipe(takeUntilDestroyed(this.destroyRef)).subscribe((kind: string) => {
             this.switchKind(kind);
         });
     }
@@ -192,6 +198,21 @@ export class SourceSection<T extends ControlsOf<T>> implements SourceStepSection
             const control = this.form.get(item.name) ?? created;
             const shown = (): boolean => item.shownWhen?.(this.form) ?? true;
             return sourceField(item, control, shown);
+        });
+        // A control can depend on one listed after it, so these are wired once all of the kind's controls exist.
+        this.entries(kind).forEach((item) => {
+            const control = this.form.get(item.name);
+            item.dependsOn?.forEach((name) => {
+                // Revalidating re-emits an unchanged value; skipping it ends the round trip between two controls
+                // that depend on each other.
+                this.form
+                    .get(name)
+                    ?.valueChanges.pipe(distinctUntilChanged(), takeUntilDestroyed(this.destroyRef))
+                    .subscribe(() => control?.updateValueAndValidity());
+            });
+            if (item.dependsOn) {
+                control?.updateValueAndValidity();
+            }
         });
     }
 }

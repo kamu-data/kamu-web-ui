@@ -7,7 +7,9 @@
 
 import { SetPollingSourceTooltipsTexts } from "@common/tooltips/set-polling-source-tooltips.text";
 import { SourcesTooltipsTexts } from "@common/tooltips/sources.text";
-import { integerInRangeValidators } from "@common/validation/number.validators";
+import { uniqueItemsValidator } from "@common/validation/collection.validators";
+import { requiredUnlessValidator } from "@common/validation/cross-field.validators";
+import { integerInRangeValidators, portValidators } from "@common/validation/number.validators";
 import { urlValidator } from "@common/validation/url.validators";
 
 import { ControlType } from "src/app/dataset-view/additional-components/metadata-component/components/source-events/add-polling-source/add-polling-source-form.types";
@@ -36,7 +38,7 @@ export const FETCH_FORM_DATA: JsonFormData<FetchControls> = {
                 placeholder: "Enter url",
                 tooltip: SetPollingSourceTooltipsTexts.URL,
                 required: true,
-                validators: [urlValidator(["http", "https"])],
+                validators: [urlValidator(["http", "https", "ftp", "ftps"])],
             },
             {
                 name: "eventTime",
@@ -57,6 +59,7 @@ export const FETCH_FORM_DATA: JsonFormData<FetchControls> = {
                 create: nameValueListControl(),
                 label: "Headers",
                 type: ControlType.ARRAY_KEY_VALUE,
+                validators: [uniqueItemsValidator((pair) => pair.get("name")?.value)],
                 tooltip: SourcesTooltipsTexts.HEADERS,
                 options: {
                     buttonText: "+ Add headers",
@@ -88,7 +91,7 @@ export const FETCH_FORM_DATA: JsonFormData<FetchControls> = {
                 create: valueControl(SourceOrder.NONE),
                 label: "Order",
                 type: ControlType.ORDER,
-                tooltip: SetPollingSourceTooltipsTexts.PATH,
+                tooltip: SetPollingSourceTooltipsTexts.ORDER,
             },
             {
                 name: "eventTime",
@@ -151,6 +154,7 @@ export const FETCH_FORM_DATA: JsonFormData<FetchControls> = {
                 create: nameValueListControl(),
                 label: "Environment variables",
                 type: ControlType.ARRAY_KEY_VALUE,
+                validators: [uniqueItemsValidator((pair) => pair.get("name")?.value)],
                 tooltip: SetPollingSourceTooltipsTexts.ENVIRONMENT_VARIABLES,
                 options: {
                     buttonText: "+ Add variable",
@@ -177,6 +181,7 @@ export const FETCH_FORM_DATA: JsonFormData<FetchControls> = {
                 placeholder: "Enter port",
                 tooltip: SetPollingSourceTooltipsTexts.MQTT_PORT,
                 required: true,
+                validators: portValidators(),
             },
             {
                 name: "username",
@@ -191,6 +196,7 @@ export const FETCH_FORM_DATA: JsonFormData<FetchControls> = {
                 create: valueControl(""),
                 label: "Password",
                 type: ControlType.TEXT,
+                inputType: "password",
                 placeholder: "Enter password",
                 tooltip: SetPollingSourceTooltipsTexts.MQTT_PASSWORD,
             },
@@ -204,6 +210,7 @@ export const FETCH_FORM_DATA: JsonFormData<FetchControls> = {
                     buttonText: "+ Add new topic",
                 },
                 required: true,
+                validators: [uniqueItemsValidator((topic) => topic.get("path")?.value)],
             },
         ],
     },
@@ -216,16 +223,21 @@ export const FETCH_FORM_DATA: JsonFormData<FetchControls> = {
                 type: ControlType.NUMBER,
                 placeholder: "Enter id",
                 tooltip: SetPollingSourceTooltipsTexts.ETHEREUM_LOGS_CHAIN_ID,
-                validators: integerInRangeValidators(0),
+                validators: [...integerInRangeValidators(1), requiredUnlessValidator("nodeUrl", "Node URL")],
+                dependsOn: ["nodeUrl"],
             },
             {
                 name: "nodeUrl",
                 create: valueControl(""),
-                label: "Node url",
+                label: "Node URL",
                 type: ControlType.TEXT,
                 placeholder: "Enter url",
                 tooltip: SetPollingSourceTooltipsTexts.ETHEREUM_LOGS_NODE_URL,
-                validators: [urlValidator(["http", "https"])],
+                validators: [
+                    urlValidator(["http", "https", "ws", "wss"]),
+                    requiredUnlessValidator("chainId", "Chain ID"),
+                ],
+                dependsOn: ["chainId"],
             },
             {
                 name: "filter",

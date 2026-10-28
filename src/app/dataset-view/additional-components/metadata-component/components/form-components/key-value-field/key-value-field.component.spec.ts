@@ -9,6 +9,8 @@ import { TestbedHarnessEnvironment } from "@angular/cdk/testing/testbed";
 import { Component } from "@angular/core";
 import { ComponentFixture, TestBed } from "@angular/core/testing";
 
+import { uniqueItemsValidator } from "@common/validation/collection.validators";
+
 import { KeyValueFieldComponent } from "src/app/dataset-view/additional-components/metadata-component/components/form-components/key-value-field/key-value-field.component";
 import { KeyValueFieldHarness } from "src/app/dataset-view/additional-components/metadata-component/components/form-components/key-value-field/key-value-field.harness";
 import {
@@ -45,8 +47,6 @@ describe("KeyValueFieldComponent", () => {
         fixture = TestBed.createComponent(TestKeyValueFieldHostComponent);
         host = fixture.componentInstance;
     });
-
-    /** The field is OnPush and does not watch its control, so a test fills the list before rendering it. */
     async function render(): Promise<void> {
         fixture.detectChanges();
         harness = await TestbedHarnessEnvironment.loader(fixture).getHarness(KeyValueFieldHarness);
@@ -86,5 +86,20 @@ describe("KeyValueFieldComponent", () => {
 
         expect(await harness.getItems()).toEqual([{ name: "second", value: "2" }]);
         expect(host.control.getRawValue()).toEqual([{ name: "second", value: "2" }]);
+    });
+
+    it("should require a name for each entry and reject a repeated name", async () => {
+        host.control.addValidators(uniqueItemsValidator((pair) => pair.get("name")?.value));
+        await render();
+        await harness.addItem();
+        await harness.setItem(0, { name: "", value: "x" });
+        expect(await harness.getItemErrorMessage(0)).toBe("Name is required");
+
+        await harness.setItem(0, { name: "Accept", value: "x" });
+        await harness.addItem();
+        await harness.setItem(1, { name: "Accept", value: "y" });
+
+        expect(await harness.getErrorMessage()).toContain('"Accept" more than once');
+        expect(host.control.valid).toBe(false);
     });
 });

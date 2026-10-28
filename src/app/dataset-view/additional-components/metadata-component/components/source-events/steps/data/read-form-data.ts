@@ -56,6 +56,7 @@ export const READ_FORM_DATA: JsonFormData<ReadControls> = {
                 placeholder: "--Select character--",
                 tooltip: SourcesTooltipsTexts.SEPARATOR,
                 list: [",", ";", "|"],
+                required: true,
                 validators: [singleCharValidator()],
             },
 
@@ -67,6 +68,7 @@ export const READ_FORM_DATA: JsonFormData<ReadControls> = {
                 placeholder: "--Select character--",
                 tooltip: SourcesTooltipsTexts.QUOTE,
                 list: ['"', "'"],
+                required: true,
                 validators: [singleCharValidator()],
             },
             {
@@ -151,7 +153,7 @@ export const READ_FORM_DATA: JsonFormData<ReadControls> = {
             {
                 name: "subPath",
                 create: valueControl(""),
-                label: "Path",
+                label: "Path to data file",
                 type: ControlType.TEXT,
                 tooltip: SourcesTooltipsTexts.SUB_PATH,
                 placeholder: "Enter path to data file...",

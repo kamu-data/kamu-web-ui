@@ -10,7 +10,6 @@ import { FormGroup, ReactiveFormsModule } from "@angular/forms";
 import { MatIconModule } from "@angular/material/icon";
 
 import { NgbTooltip, NgbTooltipConfig } from "@ng-bootstrap/ng-bootstrap";
-import { RxReactiveFormsModule } from "@rxweb/reactive-form-validators";
 
 import AppValues from "@common/values/app.values";
 
@@ -28,7 +27,6 @@ import { RadioControlType } from "src/app/dataset-view/additional-components/met
         //-----//
         MatIconModule,
         NgbTooltip,
-        RxReactiveFormsModule,
     ],
 })
 export class SelectKindFieldComponent {

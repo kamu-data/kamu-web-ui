@@ -34,10 +34,10 @@ export function uniqueValueValidator(existing: () => readonly string[], options:
 
 /**
  * Fails with `duplicateItems` on a `FormArray` whose items, read from each item control by `key`, repeat.
- * The error carries the first repeated value. Empty values are left to the items' own validators.
+ * The error carries the first repeated value. Empty and non-text values are left to the items' own validators.
  */
 export function uniqueItemsValidator(
-    key: (itemControl: AbstractControl) => string,
+    key: (itemControl: AbstractControl) => unknown,
     options: UniquenessOptions = {},
 ): ValidatorFn {
     return (control: AbstractControl): MaybeNull<ValidationErrors> => {
@@ -47,7 +47,7 @@ export function uniqueItemsValidator(
         const seen = new Set<string>();
         for (const itemControl of control.controls) {
             const raw = key(itemControl);
-            if (raw === "") {
+            if (typeof raw !== "string" || raw === "") {
                 continue;
             }
             const value = normalized(raw, options);

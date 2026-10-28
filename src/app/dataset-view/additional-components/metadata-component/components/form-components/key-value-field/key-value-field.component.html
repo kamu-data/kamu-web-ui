@@ -12,6 +12,13 @@
                 [attr.data-test-id]="dataTestId + '-name-' + i"
                 trim="blur"
             />
+            <div
+                class="text-danger fs-12"
+                [fieldControl]="item.controls.name"
+                fieldLabel="Name"
+                [dataTestId]="dataTestId + '-name-' + i + '-error'"
+                appFieldError
+            ></div>
         </div>
         <div class="col-md-6">
             <input
@@ -34,6 +41,13 @@
         </div>
     </div>
 }
+<div
+    class="text-danger fs-12"
+    [fieldControl]="control"
+    [fieldLabel]="label"
+    [dataTestId]="dataTestId + '-error'"
+    appFieldError
+></div>
 <div class="ms-4">
     <button type="button" class="add-header-button" [attr.data-test-id]="dataTestId + '-add'" (click)="addItem()">
         <span>{{ buttonText }}</span>

@@ -12,6 +12,13 @@
                 [attr.data-test-id]="dataTestId + '-item-' + i"
                 trim="blur"
             />
+            <div
+                class="text-danger fs-12"
+                [fieldControl]="key"
+                fieldLabel="Entry"
+                [dataTestId]="dataTestId + '-item-' + i + '-error'"
+                appFieldError
+            ></div>
         </div>
         <div class="col-md-2 d-flex justify-content-end align-items-center">
             <button
@@ -25,6 +32,13 @@
         </div>
     </div>
 }
+<div
+    class="text-danger fs-12"
+    [fieldControl]="control"
+    [fieldLabel]="label"
+    [dataTestId]="dataTestId + '-error'"
+    appFieldError
+></div>
 <div class="ms-4">
     <button
         type="button"

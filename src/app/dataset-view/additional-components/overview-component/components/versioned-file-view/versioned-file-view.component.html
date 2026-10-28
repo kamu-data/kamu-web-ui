@@ -1,3 +1,5 @@
+@let fileView = fileView$ | async;
+
 @if (loadingFileDetails$ | async) {
     <div>
         <mat-progress-bar data-test-id="editor-progress-bar" class="w-100 mt-4" mode="indeterminate" />
@@ -5,7 +7,7 @@
     </div>
 }
 
-@if (fileView$ | async; as fileView) {
+@if (fileView) {
     @let fileDetails = fileView.details;
     @if (isMissingVersion(fileDetails)) {
         <app-value-not-found
@@ -75,7 +77,7 @@
                             }
                             @case ("text") {
                                 <div class="box p-2 bg-light mt-4">
-                                    <p>{{ contentText$ | async }}</p>
+                                    <p data-test-id="file-content-text">{{ contentText$ | async }}</p>
                                 </div>
                             }
                             @case ("video") {

@@ -22,14 +22,14 @@ import { MatProgressBarModule } from "@angular/material/progress-bar";
 import { DomSanitizer, SafeUrl } from "@angular/platform-browser";
 
 import { BehaviorSubject, combineLatest, Observable, of, ReplaySubject } from "rxjs";
-import { map, switchMap, tap } from "rxjs/operators";
+import { map, startWith, switchMap, tap } from "rxjs/operators";
 
 import { NgbAlert } from "@ng-bootstrap/ng-bootstrap";
 import { ToastrService } from "ngx-toastr";
 
 import { BaseComponent } from "@common/components/base.component";
 import { ValueNotFoundComponent } from "@common/components/value-not-found/value-not-found.component";
-import { promiseWithCatch } from "@common/helpers/app.helpers";
+import { promiseWithCatch, trackBusy } from "@common/helpers/app.helpers";
 import { DatasetBasicsFragment } from "@api/kamu.graphql.interface";
 import { MaybeNull, MaybeUndefined } from "@interface/app.types";
 
@@ -69,8 +69,8 @@ export class VersionedFileViewComponent extends BaseComponent implements OnInit,
     public datasetBasics$ = new ReplaySubject<DatasetBasicsFragment>(1);
     public version$ = new BehaviorSubject<MaybeNull<number>>(null);
 
-    public fileView$: Observable<VersionedFileContentView>;
-    public loadingFileDetails$: Observable<boolean>;
+    public fileView$: Observable<MaybeNull<VersionedFileContentView>>;
+    public readonly loadingFileDetails$ = new BehaviorSubject(true);
     public contentText$: Observable<MaybeUndefined<object | string>>;
 
     public urlContentPath: SafeUrl;
@@ -90,12 +90,12 @@ export class VersionedFileViewComponent extends BaseComponent implements OnInit,
     private datasetAsVersionedFileService = inject(DatasetAsVersionedFileService);
 
     public ngOnInit(): void {
-        this.loadingFileDetails$ = this.datasetAsVersionedFileService.loadingFileDetailsChanges;
-
         this.fileView$ = combineLatest([this.datasetBasics$, this.version$]).pipe(
             switchMap(([dataset, version]) =>
                 this.requestFileDetails(dataset.id, version).pipe(
                     switchMap((details) => this.requestContentUrl(dataset.id, details)),
+                    startWith(null),
+                    trackBusy(this.loadingFileDetails$),
                 ),
             ),
             tap((view) => promiseWithCatch(this.setPreviewFileStrategy(view))),
@@ -111,11 +111,13 @@ export class VersionedFileViewComponent extends BaseComponent implements OnInit,
         }
     }
 
-    public async setPreviewFileStrategy(view: VersionedFileContentView): Promise<void> {
+    public async setPreviewFileStrategy(view: MaybeNull<VersionedFileContentView>): Promise<void> {
         // The previous version's preview must not stay on screen
         this.contentText$ = of(undefined);
         this.urlContentPath = "";
         this.pdfComponent = null;
+
+        if (!view) return;
 
         const { details, contentUrl } = view;
         if (!details.fileInfo) return;

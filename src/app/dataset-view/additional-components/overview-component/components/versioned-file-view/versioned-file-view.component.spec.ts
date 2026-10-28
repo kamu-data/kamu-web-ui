@@ -9,20 +9,24 @@ import { TestbedHarnessEnvironment } from "@angular/cdk/testing/testbed";
 import { provideHttpClient } from "@angular/common/http";
 import { ComponentFixture, TestBed } from "@angular/core/testing";
 
-import { of } from "rxjs";
+import { of, Subject } from "rxjs";
 
 import { Apollo } from "apollo-angular";
 import { provideToastr, ToastrService } from "ngx-toastr";
 import { Mock } from "vitest";
 
 import { ValueNotFoundHarness } from "@common/components/value-not-found/value-not-found.harness";
+import { requireValue } from "@common/helpers/app.helpers";
 import { findElementByDataTestId, setComponentInput, stubMethod } from "@common/helpers/base-test.helpers.spec";
 import { SharedTestModule } from "@common/modules/shared-test.module";
+import { DatasetApi } from "@api/dataset.api";
+import { DatasetAsVersionedFileByVersionQuery } from "@api/kamu.graphql.interface";
 import { MaybeNull } from "@interface/app.types";
 
 import { DatasetViewTypeEnum, VersionedFileView } from "src/app/dataset-view/dataset-view.interface";
 import {
     MOCK_VERSIONED_FILE_NAME,
+    mockDatasetAsVersionedFileByVersionQuery,
     mockDatasetAsVersionedFileQuery,
     mockDatasetBasicsRootFragment,
     mockVersionedFileEntryLatest,
@@ -120,6 +124,73 @@ describe("VersionedFileViewComponent", () => {
         expect(requestDatasetAsVersionedFileByVersionSpy).toHaveBeenCalledTimes(1);
         expect(requestDatasetAsVersionedFileSpy).not.toHaveBeenCalled();
     });
+
+    it.each([MOCK_CONTENT_URL, null])(
+        "should clear the previous version until its replacement content URL resolves to %s",
+        (contentUrl) => {
+            const dataset = requireValue(mockDatasetAsVersionedFileByVersionQuery.datasets.byId);
+            const versionedFile = requireValue(dataset.asVersionedFile);
+            const responseForVersion = (version: number): DatasetAsVersionedFileByVersionQuery => ({
+                datasets: {
+                    ...mockDatasetAsVersionedFileByVersionQuery.datasets,
+                    byId: {
+                        ...dataset,
+                        asVersionedFile: {
+                            ...versionedFile,
+                            asOf: { ...mockVersionedFileEntryLatest, version, contentType: "text/plain" },
+                        },
+                    },
+                },
+            });
+            const metadata$ = new Subject<DatasetAsVersionedFileByVersionQuery>();
+            const contentUrl$ = new Subject<MaybeNull<string>>();
+            vi.spyOn(TestBed.inject(DatasetApi), "getDatasetAsVersionedFileByVersion")
+                .mockReturnValueOnce(of(responseForVersion(1)))
+                .mockReturnValue(metadata$);
+            vi.spyOn(datasetAsVersionedFileService, "getVersionedFileContentUrl")
+                .mockReturnValueOnce(of("https://example.com/version-1"))
+                .mockReturnValue(contentUrl$);
+            vi.spyOn(datasetAsVersionedFileService, "requestFileAsText")
+                .mockReturnValueOnce(of("Version 1 content"))
+                .mockReturnValue(of("Version 2 content"));
+
+            setComponentInput(fixture, "version", 1);
+            fixture.detectChanges();
+            expect(findElementByDataTestId(fixture, "file-content-text")?.textContent).toBe("Version 1 content");
+            expect(findElementByDataTestId(fixture, "download-file-button")).toBeDefined();
+            expect(findElementByDataTestId(fixture, "editor-progress-bar")).toBeUndefined();
+
+            setComponentInput(fixture, "version", 2);
+            fixture.detectChanges();
+            expect(findElementByDataTestId(fixture, "file-content-text")).toBeUndefined();
+            expect(findElementByDataTestId(fixture, "download-file-button")).toBeUndefined();
+            expect(findElementByDataTestId(fixture, "editor-progress-bar")).toBeDefined();
+
+            metadata$.next(responseForVersion(2));
+            fixture.detectChanges();
+            expect(findElementByDataTestId(fixture, "file-content-text")).toBeUndefined();
+            expect(findElementByDataTestId(fixture, "download-file-button")).toBeUndefined();
+            expect(findElementByDataTestId(fixture, "file-content-unavailable")).toBeUndefined();
+            expect(findElementByDataTestId(fixture, "editor-progress-bar")).toBeDefined();
+
+            contentUrl$.next(contentUrl);
+            contentUrl$.complete();
+            fixture.detectChanges();
+            expect(findElementByDataTestId(fixture, "editor-progress-bar")).toBeUndefined();
+            if (contentUrl) {
+                expect(findElementByDataTestId(fixture, "file-content-text")?.textContent).toBe("Version 2 content");
+                const downloadSpy = stubMethod(datasetAsVersionedFileService, "downloadFile");
+                findElementByDataTestId(fixture, "download-file-button")?.click();
+                const [datasetId, details] = requireValue(downloadSpy.mock.lastCall);
+                expect(datasetId).toBe(mockDatasetBasicsRootFragment.id);
+                expect(details.fileInfo?.version).toBe(2);
+            } else {
+                expect(findElementByDataTestId(fixture, "file-content-text")).toBeUndefined();
+                expect(findElementByDataTestId(fixture, "download-file-button")).toBeUndefined();
+                expect(findElementByDataTestId(fixture, "file-content-unavailable")).toBeDefined();
+            }
+        },
+    );
 
     it("should check setPreviewFileStrategy method for pdf file", async () => {
         await component.setPreviewFileStrategy(contentViewOf("application/pdf"));

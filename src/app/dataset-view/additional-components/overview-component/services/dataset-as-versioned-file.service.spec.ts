@@ -133,9 +133,6 @@ describe("DatasetAsVersionedFileService", () => {
     });
 
     it("should check #requestDatasetAsVersionedFileByVersion method", () => {
-        const emitLoadingFileDetailsChangedSpy = vi
-            .spyOn(service, "emitLoadingFileDetailsChanged")
-            .mockImplementation(() => {});
         const mockVersionedFileView: VersionedFileView = {
             name: MOCK_VERSIONED_FILE_NAME,
             fileInfo: mockVersionedFileEntryByVersion,
@@ -152,7 +149,6 @@ describe("DatasetAsVersionedFileService", () => {
         service.versionedFileDetailsChanges.subscribe((data) => {
             expect(data).toEqual(mockVersionedFileView);
         });
-        expect(emitLoadingFileDetailsChangedSpy).toHaveBeenCalledTimes(2);
     });
 
     it("should check #getVersionedFileContentUrl method", async () => {

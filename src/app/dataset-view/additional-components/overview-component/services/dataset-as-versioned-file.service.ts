@@ -8,7 +8,7 @@
 import { HttpClient } from "@angular/common/http";
 import { inject, Injectable } from "@angular/core";
 
-import { BehaviorSubject, catchError, EMPTY, finalize, map, Observable, of, ReplaySubject, Subject } from "rxjs";
+import { catchError, EMPTY, map, Observable, of, ReplaySubject, Subject } from "rxjs";
 import { switchMap, take } from "rxjs/operators";
 
 import saveAs from "file-saver";
@@ -46,16 +46,6 @@ export class DatasetAsVersionedFileService {
         return this.versionedFileDetails$.asObservable();
     }
 
-    private loadingFileDetails$: BehaviorSubject<boolean> = new BehaviorSubject(true);
-
-    public emitLoadingFileDetailsChanged(value: boolean): void {
-        this.loadingFileDetails$.next(value);
-    }
-
-    public get loadingFileDetailsChanges(): Observable<boolean> {
-        return this.loadingFileDetails$.asObservable();
-    }
-
     private selectFileVersion$: Subject<number> = new Subject();
 
     public emitSelectFileVersionChanged(value: number): void {
@@ -67,7 +57,6 @@ export class DatasetAsVersionedFileService {
     }
 
     public requestDatasetAsVersionedFile(datasetId: string): Observable<VersionedFileView> {
-        this.emitLoadingFileDetailsChanged(true);
         return this.datasetApi.getDatasetAsVersionedFile(datasetId).pipe(
             take(1),
             map((result: DatasetAsVersionedFileQuery) => {
@@ -81,14 +70,10 @@ export class DatasetAsVersionedFileService {
                 this.emitVersionedFileDetailsChanged(data);
                 return data;
             }),
-            finalize(() => {
-                this.emitLoadingFileDetailsChanged(false);
-            }),
         );
     }
 
     public requestDatasetAsVersionedFileByVersion(datasetId: string, version: number): Observable<VersionedFileView> {
-        this.emitLoadingFileDetailsChanged(true);
         return this.datasetApi.getDatasetAsVersionedFileByVersion(datasetId, version).pipe(
             take(1),
             map((result: DatasetAsVersionedFileByVersionQuery) => {
@@ -101,9 +86,6 @@ export class DatasetAsVersionedFileService {
                 };
                 this.emitVersionedFileDetailsChanged(data);
                 return data;
-            }),
-            finalize(() => {
-                this.emitLoadingFileDetailsChanged(false);
             }),
         );
     }

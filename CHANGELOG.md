@@ -8,6 +8,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Changed
 - Account flows, Processes: resuming an auto-stopped process asks for confirmation, as the dataset's Flows tab does, and "Update now" refreshes the card shortly after instead of on the next poll
 ### Fixed
+- Collection: a folder whose first entry is a dataset or a missing dataset shows as a folder and opens in place, instead of showing as that entry
 - Global query: a link with a query opens that query in the editor instead of an empty one, and opening the page without a query restores the last one you ran
 - Flow process cards on the dataset's Flows tab and the account's Processes:
   - triggering, pausing or resuming no longer refreshes the page after you have left it

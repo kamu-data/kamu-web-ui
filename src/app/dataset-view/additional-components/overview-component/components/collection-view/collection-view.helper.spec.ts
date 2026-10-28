@@ -5,6 +5,7 @@
  * included in the LICENSE file.
  */
 
+import { requireValue } from "@common/helpers/app.helpers";
 import { MaybeNullOrUndefined } from "@interface/app.types";
 
 import { mockCollectionEntryConnection } from "src/app/search/mock.data";
@@ -106,4 +107,38 @@ it(`should check #sortCollectionEntryData`, () => {
         "dummy.pdf",
         "e61fa65-507e-4289-af19-dab466fa8620.png",
     ]);
+});
+
+describe("#sortCollectionEntryData folder grouping", () => {
+    const datasetNode = requireValue(
+        mockCollectionEntryConnection.nodes.find((node) => node.path === "/test-folder/molecule-dataset"),
+    );
+    const brokenNode = requireValue(
+        mockCollectionEntryConnection.nodes.find((node) => node.path === "/unknown-dataset"),
+    );
+
+    [
+        { name: "a dataset", node: datasetNode },
+        { name: "a missing dataset", node: brokenNode },
+    ].forEach(({ name, node }) => {
+        it(`should show a folder whose first entry is ${name} as a folder`, () => {
+            const result = sortCollectionEntryData(
+                [
+                    { ...node, path: "/reports/first" },
+                    { ...datasetNode, path: "/reports/second" },
+                ],
+                0,
+            );
+
+            expect(result).toEqual([
+                expect.objectContaining({
+                    nodeType: CollectionViewNode.Folder,
+                    displayName: "reports",
+                    alias: null,
+                    hash: null,
+                    owner: null,
+                }),
+            ]);
+        });
+    });
 });

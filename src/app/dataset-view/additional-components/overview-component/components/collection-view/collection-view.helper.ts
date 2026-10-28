@@ -25,7 +25,21 @@ export function sortCollectionEntryData(
         const groupKey = isFolder ? `dir:${displayName}` : `file:${node.ref}`;
         if (grouped.has(groupKey)) return;
 
-        if (node.asDataset) {
+        // A folder row stands for every entry under it, whatever kind the first one is
+        if (isFolder) {
+            grouped.set(groupKey, {
+                ...node,
+                nodeType: CollectionViewNode.Folder,
+                alias: null,
+                displayName,
+                systemTime: node.systemTime,
+                hash: null,
+                size: 0,
+                contentType: null,
+                owner: null,
+                extraData: node.extraData,
+            });
+        } else if (node.asDataset) {
             const latest = node.asDataset.asVersionedFile?.latest;
             const owner: AccountSummaryFragment = {
                 __typename: "Account",
@@ -33,33 +47,18 @@ export function sortCollectionEntryData(
                 avatarUrl: node.asDataset.owner.avatarUrl,
             };
 
-            if (isFolder && node.asDataset.asVersionedFile) {
-                grouped.set(groupKey, {
-                    ...node,
-                    nodeType: CollectionViewNode.Folder,
-                    alias: null,
-                    displayName,
-                    systemTime: node.systemTime,
-                    hash: latest?.contentHash || null,
-                    size: 0,
-                    contentType: null,
-                    owner,
-                    extraData: node.extraData,
-                });
-            } else {
-                grouped.set(groupKey, {
-                    ...node,
-                    nodeType: latest ? CollectionViewNode.File : CollectionViewNode.Dataset,
-                    alias: node.asDataset.alias,
-                    displayName,
-                    systemTime: node.systemTime,
-                    hash: latest?.contentHash ?? node.asDataset.head,
-                    size: latest?.contentLength ?? node.asDataset.data.estimatedSizeBytes,
-                    contentType: latest?.contentType ?? null,
-                    owner,
-                    extraData: node.extraData,
-                });
-            }
+            grouped.set(groupKey, {
+                ...node,
+                nodeType: latest ? CollectionViewNode.File : CollectionViewNode.Dataset,
+                alias: node.asDataset.alias,
+                displayName,
+                systemTime: node.systemTime,
+                hash: latest?.contentHash ?? node.asDataset.head,
+                size: latest?.contentLength ?? node.asDataset.data.estimatedSizeBytes,
+                contentType: latest?.contentType ?? null,
+                owner,
+                extraData: node.extraData,
+            });
         } else {
             // Case without asDataset
             grouped.set(groupKey, {

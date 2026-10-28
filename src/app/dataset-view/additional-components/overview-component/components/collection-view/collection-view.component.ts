@@ -34,7 +34,7 @@ import { ValueNotFoundComponent } from "@common/components/value-not-found/value
 import { DisplayDatasetIdPipe } from "@common/pipes/display-dataset-id.pipe";
 import { DisplaySizePipe } from "@common/pipes/display-size.pipe";
 import AppValues from "@common/values/app.values";
-import { CollectionEntryDataFragment, DatasetBasicsFragment } from "@api/kamu.graphql.interface";
+import { DatasetBasicsFragment } from "@api/kamu.graphql.interface";
 import { MaybeNull } from "@interface/app.types";
 
 import { DatasetViewTypeEnum } from "src/app/dataset-view/dataset-view.interface";
@@ -165,7 +165,7 @@ export class CollectionViewComponent extends UnsubscribeDestroyRefAdapter implem
                     this.entriesTotalCount = connection.totalCount;
                     this.isAllDataLoaded = !connection.pageInfo.hasNextPage;
                     const nodes = sortCollectionEntryData(connection.nodes, this.maxDepth);
-                    this.prepareDisplayColumns(connection.nodes);
+                    this.prepareDisplayColumns(nodes);
                     if (connection.totalCount !== this.dataSource.data.length) {
                         this.datasetAsCollectionService.cacheEntries.set(this.pathPrefix, {
                             entries: [...this.dataSource.data, ...nodes],
@@ -184,9 +184,8 @@ export class CollectionViewComponent extends UnsubscribeDestroyRefAdapter implem
             );
     }
 
-    private prepareDisplayColumns(nodes: CollectionEntryDataFragment[]): void {
-        this.extraDataKeys =
-            nodes.length > 0 ? Object.keys(sortCollectionEntryData(nodes, this.maxDepth)[0].extraData) : [];
+    private prepareDisplayColumns(entries: CollectionEntryViewType[]): void {
+        this.extraDataKeys = entries.length > 0 ? Object.keys(entries[0].extraData) : [];
 
         if (this.displayedColumns.length) {
             this.displayedColumns = [...this.INITIAL_DISPLAYED_COLUMNS, ...this.extraDataKeys];
@@ -274,6 +273,7 @@ export class CollectionViewComponent extends UnsubscribeDestroyRefAdapter implem
                 const cachedFolder = this.datasetAsCollectionService.cacheEntries.get(this.pathPrefix);
                 if (cachedFolder) {
                     this.dataSource.data = cachedFolder.entries;
+                    this.prepareDisplayColumns(cachedFolder.entries);
                     this.entriesTotalCount = cachedFolder.totalCount;
                     this.currentPage = cachedFolder.loadedPages;
                     this.isAllDataLoaded = cachedFolder.isAllDataLoaded;

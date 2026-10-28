@@ -271,6 +271,12 @@ describe("CollectionViewComponent", () => {
             return Promise.all(rows.map(async (row) => (await row.getCellTextByColumnName()).name));
         }
 
+        async function columnHeaders(): Promise<string[]> {
+            const table = await TestbedHarnessEnvironment.loader(fixture).getHarness(MatTableHarness);
+            const [headerRow] = await table.getHeaderRows();
+            return headerRow.getCellTextByIndex();
+        }
+
         it("should list the entries of a folder the URL changes to", async () => {
             createAt("/");
             await fixture.whenStable();
@@ -302,6 +308,23 @@ describe("CollectionViewComponent", () => {
 
             expect(await listedNames()).toEqual(rootNames);
             expect(getElementByDataTestId(fixture, "collection-total-count").textContent).toContain("5");
+        });
+
+        it("should show the extra data columns of a cached folder after a folder without entries", async () => {
+            createAt("/");
+            await listedNames();
+            const rootHeaders = await columnHeaders();
+            setComponentInput(fixture, "pathPrefix", "/missing");
+            fixture.detectChanges();
+            await fixture.whenStable();
+            fixture.detectChanges();
+
+            setComponentInput(fixture, "pathPrefix", "/");
+            fixture.detectChanges();
+            await listedNames();
+
+            expect(rootHeaders).toContain("content_length");
+            expect(await columnHeaders()).toEqual(rootHeaders);
         });
 
         it("should load the next page of a cached folder after a folder that had no more pages", async () => {

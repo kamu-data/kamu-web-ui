@@ -6,7 +6,7 @@
  */
 
 import { AsyncPipe, NgClass } from "@angular/common";
-import { ChangeDetectionStrategy, Component, inject, Input, OnChanges, OnInit, SimpleChanges } from "@angular/core";
+import { ChangeDetectionStrategy, Component, inject, Input, OnInit } from "@angular/core";
 import { takeUntilDestroyed } from "@angular/core/rxjs-interop";
 import { FormsModule } from "@angular/forms";
 import { MatChipListboxChange, MatChipsModule } from "@angular/material/chips";
@@ -90,28 +90,20 @@ import { ProcessDatasetCardInteractionService } from "src/app/services/process-d
         SourceEventEditorLinkPipe,
     ],
 })
-export class FlowsComponent extends FlowsTableProcessingBaseComponent implements OnInit, OnChanges {
+export class FlowsComponent extends FlowsTableProcessingBaseComponent implements OnInit {
     @Input(RoutingResolvers.DATASET_VIEW_FLOWS_KEY) public flowsData: DatasetOverviewTabData;
     @Input({ alias: ProjectLinks.URL_QUERY_PARAM_WEBHOOK_ID, transform: queryParamValue })
     public set setWebhookId(value: MaybeUndefined<string>) {
-        this.webhookIdParam = value;
-        this.applyWebhookIdParam();
+        this.applyWebhookIdParam(value);
     }
     @Input({ alias: ProjectLinks.URL_QUERY_PARAM_WEBHOOKS_STATE, transform: queryParamValue })
     public set setWebhookState(value: MaybeUndefined<string>) {
-        this.webhookStateParam = value;
-        this.applyWebhookStateParam();
+        this.applyWebhookStateParam(value);
     }
     @Input({ alias: ProjectLinks.URL_QUERY_PARAM_FLOWS_CATEGORY, transform: queryParamValue })
     public set setFlowsCategory(value: MaybeUndefined<string>) {
-        this.flowsCategoryParam = oneOf(FLOWS_CATEGORIES, value);
-        this.applyFlowsCategoryParam();
+        this.applyFlowsCategoryParam(oneOf(FLOWS_CATEGORIES, value));
     }
-
-    // The query parameters as last bound: the router does not bind an unchanged one again
-    private webhookIdParam: MaybeUndefined<string>;
-    private webhookStateParam: MaybeUndefined<string>;
-    private flowsCategoryParam: MaybeUndefined<FlowsCategoryUnion>;
 
     public selectedDatasetItems: DatasetBasicsFragment[] = [];
     public selectedAccountItems: AccountFragment[] = [];
@@ -141,45 +133,19 @@ export class FlowsComponent extends FlowsTableProcessingBaseComponent implements
         this.refreshFlow();
     }
 
-    public ngOnChanges(changes: SimpleChanges<FlowsComponent>): void {
-        const flowsDataChange = changes.flowsData;
-        if (
-            flowsDataChange &&
-            !flowsDataChange.firstChange &&
-            flowsDataChange.previousValue.datasetBasics.id !== this.flowsData.datasetBasics.id
-        ) {
-            this.startOverForAnotherDataset();
-        }
-    }
-
-    // The router keeps this component when it moves to another dataset's Flows tab
-    private startOverForAnotherDataset(): void {
-        this.flowsSelectionStateService.reset();
-        this.applyWebhookIdParam();
-        this.applyWebhookStateParam();
-        this.applyFlowsCategoryParam();
-        this.filterByStatus = null;
-        this.filterInitiator = null;
-        this.onlySystemFlows = false;
-        this.searchByAccount = [];
-        this.onResetFilters();
-        this.currentPage = this.pageFromUrl() ?? 1;
-        this.refreshFlow();
-    }
-
     // For changes that lead to the URL without a page
     private refreshFromFirstPage(): void {
         this.currentPage = 1;
         this.refreshFlow();
     }
 
-    private applyWebhookIdParam(): void {
-        const ids = (this.webhookIdParam ?? "").split(",").filter(isUuid);
+    private applyWebhookIdParam(webhookIdParam: MaybeUndefined<string>): void {
+        const ids = (webhookIdParam ?? "").split(",").filter(isUuid);
         ids.forEach((id: string) => this.flowsSelectionStateService.addWebhookId(id));
     }
 
-    private applyWebhookStateParam(): void {
-        const states = (this.webhookStateParam ?? "")
+    private applyWebhookStateParam(webhookStateParam: MaybeUndefined<string>): void {
+        const states = (webhookStateParam ?? "")
             .split(",")
             .flatMap((state) => enumValueOf(FlowProcessEffectiveState, state) ?? []);
         this.flowsSelectionStateService.setWebhookFilterButtons(states);
@@ -188,11 +154,11 @@ export class FlowsComponent extends FlowsTableProcessingBaseComponent implements
         }
     }
 
-    private applyFlowsCategoryParam(): void {
-        if (this.flowsCategoryParam === "webhooks") {
-            this.flowsSelectionStateService.setWebhooksCategory(this.flowsCategoryParam);
-        } else if (this.flowsCategoryParam) {
-            this.flowsSelectionStateService.setFlowsCategory(this.flowsCategoryParam);
+    private applyFlowsCategoryParam(flowsCategoryParam: MaybeUndefined<FlowsCategoryUnion>): void {
+        if (flowsCategoryParam === "webhooks") {
+            this.flowsSelectionStateService.setWebhooksCategory(flowsCategoryParam);
+        } else if (flowsCategoryParam) {
+            this.flowsSelectionStateService.setFlowsCategory(flowsCategoryParam);
         } else {
             this.flowsSelectionStateService.clearFlowsCategory();
         }

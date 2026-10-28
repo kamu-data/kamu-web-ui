@@ -7,13 +7,13 @@
 
 import { SelectionModel } from "@angular/cdk/collections";
 import { TitleCasePipe } from "@angular/common";
-import { ChangeDetectionStrategy, ChangeDetectorRef, Component, inject, Input, OnInit } from "@angular/core";
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, inject, Input, OnChanges } from "@angular/core";
 import { takeUntilDestroyed } from "@angular/core/rxjs-interop";
 import { FormsModule } from "@angular/forms";
 import { MatCheckboxModule } from "@angular/material/checkbox";
 import { MatIconModule } from "@angular/material/icon";
 import { MatTableDataSource, MatTableModule } from "@angular/material/table";
-import { NavigationEnd, Router, RouterLink } from "@angular/router";
+import { RouterLink } from "@angular/router";
 
 import { catchError, filter, firstValueFrom, from, map, of, switchMap, take } from "rxjs";
 
@@ -25,6 +25,7 @@ import { PagePastEndComponent } from "@common/components/page-past-end/page-past
 import { PaginationComponent } from "@common/components/pagination-component/pagination.component";
 import { promiseWithCatch } from "@common/helpers/app.helpers";
 import { openModal } from "@common/helpers/modal.helpers";
+import { positiveIntegerFromParam, queryParamValue } from "@common/helpers/url-params.helpers";
 import { DatasetLinkPipe } from "@common/pipes/dataset-link.pipe";
 import RoutingResolvers from "@common/resolvers/routing-resolvers";
 import AppValues from "@common/values/app.values";
@@ -34,6 +35,7 @@ import {
     DatasetBasicsFragment,
     DatasetPageInfoFragment,
 } from "@api/kamu.graphql.interface";
+import { MaybeUndefined } from "@interface/app.types";
 
 import { LoggedUserService } from "src/app/auth/logged-user.service";
 import { SettingsTabsEnum } from "src/app/dataset-view/additional-components/dataset-settings-component/dataset-settings.model";
@@ -42,6 +44,7 @@ import { CollaboratorModalResultType } from "src/app/dataset-view/additional-com
 import { DatasetCollaborationsService } from "src/app/dataset-view/additional-components/dataset-settings-component/tabs/access/dataset-settings-access-tab/dataset-collaborations.service";
 import { EditCollaboratorModalComponent } from "src/app/dataset-view/additional-components/dataset-settings-component/tabs/access/dataset-settings-access-tab/edit-collaborator-modal/edit-collaborator-modal.component";
 import { DatasetViewData, DatasetViewTypeEnum } from "src/app/dataset-view/dataset-view.interface";
+import ProjectLinks from "src/app/project-links";
 import { NavigationService } from "src/app/services/navigation.service";
 
 @Component({
@@ -64,8 +67,12 @@ import { NavigationService } from "src/app/services/navigation.service";
         DatasetLinkPipe,
     ],
 })
-export class DatasetSettingsAccessTabComponent extends BaseComponent implements OnInit {
+export class DatasetSettingsAccessTabComponent extends BaseComponent implements OnChanges {
     @Input(RoutingResolvers.DATASET_SETTINGS_ACCESS_KEY) public accessViewData: DatasetViewData;
+    @Input({ alias: ProjectLinks.URL_QUERY_PARAM_PAGE, transform: queryParamValue })
+    public set page(value: MaybeUndefined<string>) {
+        this.currentPage = positiveIntegerFromParam(value) ?? 1;
+    }
 
     public dataSource = new MatTableDataSource<AccountWithRoleDataFragment>();
     public currentPage = 1;
@@ -84,7 +91,6 @@ export class DatasetSettingsAccessTabComponent extends BaseComponent implements 
     private modalService = inject(ModalService);
     private datasetCollaborationsService = inject(DatasetCollaborationsService);
     private cdr = inject(ChangeDetectorRef);
-    private router = inject(Router);
     private loggedUserService = inject(LoggedUserService);
 
     public get datasetBasics(): DatasetBasicsFragment {
@@ -95,15 +101,8 @@ export class DatasetSettingsAccessTabComponent extends BaseComponent implements 
         return this.datasetBasics.visibility.__typename === "PrivateDatasetVisibility";
     }
 
-    public ngOnInit(): void {
-        this.currentPage = this.pageFromUrl() ?? this.currentPage;
+    public ngOnChanges(): void {
         this.updateTable(this.currentPage);
-        this.router.events
-            .pipe(filter((event) => event instanceof NavigationEnd))
-            .pipe(takeUntilDestroyed(this.destroyRef))
-            .subscribe(() => {
-                this.updateTable(this.currentPage);
-            });
     }
 
     private updateTable(page: number): void {

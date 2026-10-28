@@ -9,7 +9,6 @@ import { TestbedHarnessEnvironment } from "@angular/cdk/testing/testbed";
 import { provideHttpClient } from "@angular/common/http";
 import { provideHttpClientTesting } from "@angular/common/http/testing";
 import { ComponentFixture, TestBed } from "@angular/core/testing";
-import { ActivatedRoute } from "@angular/router";
 
 import { of } from "rxjs";
 
@@ -20,7 +19,7 @@ import { Mock } from "vitest";
 import { PagePastEndHarness } from "@common/components/page-past-end/page-past-end.harness";
 import { registerMatSvgIcons, setComponentInput, stubMethod } from "@common/helpers/base-test.helpers.spec";
 import { SharedTestModule } from "@common/modules/shared-test.module";
-import { MaybeNull } from "@interface/app.types";
+import { MaybeUndefined } from "@interface/app.types";
 
 import { mockHistoryUpdate } from "src/app/dataset-view/additional-components/data-tabs.mock";
 import { HistoryComponent } from "src/app/dataset-view/additional-components/history-component/history.component";
@@ -29,7 +28,6 @@ import { DatasetViewTypeEnum } from "src/app/dataset-view/dataset-view.interface
 import { DatasetService } from "src/app/dataset-view/dataset.service";
 import { DatasetHistoryUpdate } from "src/app/dataset-view/dataset.subscriptions.interface";
 import { DatasetSubscriptionsService } from "src/app/dataset-view/dataset.subscriptions.service";
-import ProjectLinks from "src/app/project-links";
 import { NavigationService } from "src/app/services/navigation.service";
 
 describe("HistoryComponent", () => {
@@ -39,43 +37,11 @@ describe("HistoryComponent", () => {
     let datasetService: DatasetService;
     let datasetSubsService: DatasetSubscriptionsService;
     let requestDatasetHistorySpy: Mock<DatasetService["requestDatasetHistory"]>;
-    let pageParam: MaybeNull<string>;
 
     beforeEach(async () => {
-        pageParam = null;
         await TestBed.configureTestingModule({
             imports: [SharedTestModule, HistoryComponent],
-            providers: [
-                Apollo,
-                provideToastr(),
-                {
-                    provide: ActivatedRoute,
-                    useValue: {
-                        snapshot: {
-                            paramMap: {
-                                get: (key: string) => {
-                                    switch (key) {
-                                        case "accountName":
-                                            return "accountName";
-                                        case "datasetName":
-                                            return "datasetName";
-                                    }
-                                },
-                            },
-                            queryParamMap: {
-                                get: (key: string) => {
-                                    switch (key) {
-                                        case ProjectLinks.URL_QUERY_PARAM_PAGE:
-                                            return pageParam;
-                                    }
-                                },
-                            },
-                        },
-                    },
-                },
-                provideHttpClient(),
-                provideHttpClientTesting(),
-            ],
+            providers: [Apollo, provideToastr(), provideHttpClient(), provideHttpClientTesting()],
         }).compileComponents();
 
         registerMatSvgIcons();
@@ -86,10 +52,14 @@ describe("HistoryComponent", () => {
         requestDatasetHistorySpy = vi.spyOn(datasetService, "requestDatasetHistory").mockReturnValue(of());
     });
 
-    function createComponent(historyUpdate: DatasetHistoryUpdate = mockHistoryUpdate): void {
+    function createComponent(
+        historyUpdate: DatasetHistoryUpdate = mockHistoryUpdate,
+        page: MaybeUndefined<string> = undefined,
+    ): void {
         fixture = TestBed.createComponent(HistoryComponent);
         component = fixture.componentInstance;
         setComponentInput(fixture, "datasetInfo", MOCK_DATASET_INFO);
+        setComponentInput(fixture, "page", page);
         datasetSubsService.emitHistoryChanged(historyUpdate);
         fixture.detectChanges();
     }
@@ -100,26 +70,43 @@ describe("HistoryComponent", () => {
     });
 
     it("should request the page from the URL", () => {
-        pageParam = "3";
-        createComponent();
+        createComponent(mockHistoryUpdate, "3");
+        expect(requestDatasetHistorySpy).toHaveBeenCalledTimes(1);
         expect(requestDatasetHistorySpy).toHaveBeenCalledWith(MOCK_DATASET_INFO, 10, 2);
+    });
+
+    it("should request the first page when the URL has no page", () => {
+        createComponent();
+        expect(requestDatasetHistorySpy).toHaveBeenCalledWith(MOCK_DATASET_INFO, 10, 0);
+    });
+
+    it("should request the new page when the URL page changes", () => {
+        createComponent(mockHistoryUpdate, "2");
+        requestDatasetHistorySpy.mockClear();
+
+        setComponentInput(fixture, "page", "4");
+        fixture.detectChanges();
+
+        expect(requestDatasetHistorySpy).toHaveBeenCalledTimes(1);
+        expect(requestDatasetHistorySpy).toHaveBeenCalledWith(MOCK_DATASET_INFO, 10, 3);
     });
 
     ["abc", "0", "-2", "1.5", ""].forEach((invalidPage: string) => {
         it(`should request the first page when the URL page is "${invalidPage}"`, () => {
-            pageParam = invalidPage;
-            createComponent();
+            createComponent(mockHistoryUpdate, invalidPage);
             expect(requestDatasetHistorySpy).toHaveBeenCalledWith(MOCK_DATASET_INFO, 10, 0);
         });
     });
 
     it("should say a page past the last one has no commits and lead to the last page", async () => {
-        pageParam = "99";
         const navigateToDatasetViewSpy = stubMethod(navigationService, "navigateToDatasetView");
-        createComponent({
-            history: [],
-            pageInfo: { ...mockHistoryUpdate.pageInfo, currentPage: 98, totalPages: 3 },
-        });
+        createComponent(
+            {
+                history: [],
+                pageInfo: { ...mockHistoryUpdate.pageInfo, currentPage: 98, totalPages: 3 },
+            },
+            "99",
+        );
 
         const pagePastEnd = await TestbedHarnessEnvironment.loader(fixture).getHarness(PagePastEndHarness);
         expect(await pagePastEnd.getMessage()).toEqual("There are no commits on this page.");

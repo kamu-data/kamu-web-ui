@@ -15,6 +15,7 @@ import { NEVER, of } from "rxjs";
 import { NgbModal } from "@ng-bootstrap/ng-bootstrap";
 import { Apollo } from "apollo-angular";
 import { provideToastr } from "ngx-toastr";
+import { Mock } from "vitest";
 
 import { ModalService } from "@common/components/modal/modal.service";
 import { PagePastEndHarness } from "@common/components/page-past-end/page-past-end.harness";
@@ -40,6 +41,7 @@ describe("DatasetSettingsAccessTabComponent", () => {
     let ngbModal: NgbModal;
     let modalService: ModalService;
     let loggedUserService: LoggedUserService;
+    let listCollaboratorsSpy: Mock<DatasetCollaborationsService["listCollaborators"]>;
 
     beforeEach(() => {
         TestBed.configureTestingModule({
@@ -51,14 +53,6 @@ describe("DatasetSettingsAccessTabComponent", () => {
                     provide: ActivatedRoute,
                     useValue: {
                         snapshot: {
-                            queryParamMap: {
-                                get: (key: string) => {
-                                    switch (key) {
-                                        case "page":
-                                            return 2;
-                                    }
-                                },
-                            },
                             paramMap: {
                                 get: (key: string) => {
                                     switch (key) {
@@ -84,19 +78,54 @@ describe("DatasetSettingsAccessTabComponent", () => {
         ngbModal = TestBed.inject(NgbModal);
         modalService = TestBed.inject(ModalService);
         vi.spyOn(loggedUserService, "currentlyLoggedInUser", "get").mockReturnValue(mockAccountDetails);
-        vi.spyOn(datasetCollaborationsService, "listCollaborators").mockReturnValue(
-            of(mockDatasetCollaboratorsConnection),
-        );
+        listCollaboratorsSpy = vi
+            .spyOn(datasetCollaborationsService, "listCollaborators")
+            .mockReturnValue(of(mockDatasetCollaboratorsConnection));
         component = fixture.componentInstance;
         setComponentInput(fixture, "accessViewData", {
             datasetBasics: mockDatasetBasicsRootFragment,
             datasetPermissions: mockFullPowerDatasetPermissionsFragment,
         });
+        setComponentInput(fixture, "page", "2");
         fixture.detectChanges();
     });
 
     it("should create", () => {
         expect(component).toBeTruthy();
+    });
+
+    it("should load the page from the URL", () => {
+        expect(component.currentPage).toEqual(2);
+        expect(listCollaboratorsSpy).toHaveBeenCalledWith({
+            datasetId: mockDatasetBasicsRootFragment.id,
+            page: 1,
+            perPage: component.PER_PAGE,
+        });
+    });
+
+    it("should load the new page when the URL page changes", () => {
+        listCollaboratorsSpy.mockClear();
+
+        setComponentInput(fixture, "page", "3");
+        fixture.detectChanges();
+
+        expect(component.currentPage).toEqual(3);
+        expect(listCollaboratorsSpy).toHaveBeenCalledTimes(1);
+        expect(listCollaboratorsSpy).toHaveBeenCalledWith({
+            datasetId: mockDatasetBasicsRootFragment.id,
+            page: 2,
+            perPage: component.PER_PAGE,
+        });
+    });
+
+    it("should load the first page when the URL has no page", () => {
+        listCollaboratorsSpy.mockClear();
+
+        setComponentInput(fixture, "page", undefined);
+        fixture.detectChanges();
+
+        expect(component.currentPage).toEqual(1);
+        expect(listCollaboratorsSpy).toHaveBeenCalledWith(expect.objectContaining({ page: 0 }));
     });
 
     it("should check change page", () => {
@@ -126,6 +155,7 @@ describe("DatasetSettingsAccessTabComponent", () => {
             datasetBasics: mockDatasetBasicsRootFragment,
             datasetPermissions: mockFullPowerDatasetPermissionsFragment,
         });
+        setComponentInput(pastEndFixture, "page", "2");
         const navigateToDatasetViewSpy = stubMethod(navigationService, "navigateToDatasetView");
 
         const pagePastEnd = await TestbedHarnessEnvironment.loader(pastEndFixture).getHarness(PagePastEndHarness);
@@ -142,6 +172,7 @@ describe("DatasetSettingsAccessTabComponent", () => {
             datasetBasics: mockDatasetBasicsRootFragment,
             datasetPermissions: mockFullPowerDatasetPermissionsFragment,
         });
+        setComponentInput(loadingFixture, "page", "2");
 
         const pagePastEnd = await TestbedHarnessEnvironment.loader(loadingFixture).getAllHarnesses(PagePastEndHarness);
         expect(pagePastEnd).toEqual([]);

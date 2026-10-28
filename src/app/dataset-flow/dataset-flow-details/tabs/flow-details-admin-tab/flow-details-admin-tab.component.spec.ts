@@ -7,6 +7,8 @@
 
 import { ComponentFixture, TestBed } from "@angular/core/testing";
 
+import { getElementByDataTestId } from "@common/helpers/base-test.helpers.spec";
+
 import { FlowDetailsAdminTabComponent } from "src/app/dataset-flow/dataset-flow-details/tabs/flow-details-admin-tab/flow-details-admin-tab.component";
 
 describe("FlowDetailsAdminTabComponent", () => {
@@ -24,5 +26,9 @@ describe("FlowDetailsAdminTabComponent", () => {
 
     it("should create", () => {
         expect(component).toBeTruthy();
+    });
+
+    it("should name the Admin tab in its placeholder", () => {
+        expect(getElementByDataTestId(fixture, "admin-tab-placeholder").textContent).toBe("Admin tab coming soon");
     });
 });

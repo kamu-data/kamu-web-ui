@@ -71,12 +71,12 @@ describe("SelectDateFormatFieldComponent", () => {
         expect(await harness.getPatternErrorMessage()).toBe("Pattern is required");
     });
 
-    it("should reject a pattern that is not a regular expression", async () => {
+    it("should accept a pattern in Rust's regex syntax, which kamu-cli compiles it with", async () => {
         await harness.selectKind(EventTimeSourceKind.FROM_PATH);
-        await harness.setPattern("data-(.*");
+        await harness.setPattern("(?i)data-(\\d{4}-\\d{2}-\\d{2})");
 
-        expect(await harness.getPatternErrorMessage()).toBe("Pattern must be a valid regular expression");
-        expect(host.control.valid).toBe(false);
+        expect(await harness.getPatternErrorMessage()).toBeNull();
+        expect(host.control.valid).toBe(true);
     });
 
     it("should write the pattern and timestamp format into the group", async () => {

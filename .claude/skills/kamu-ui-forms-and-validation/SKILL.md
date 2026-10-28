@@ -35,7 +35,7 @@ each file with its spec:
 |---|---|
 | `patterns.ts` | `FormatRule`s (a regex and the message shown after the label) and limits taken from kamu-cli |
 | `identifier.validators.ts` | dataset and account names, variable keys |
-| `url.validators.ts`, `number.validators.ts`, `text.validators.ts` | URLs; whole numbers and ranges; blank, one ASCII character, a byte length, ASCII, regular expressions |
+| `url.validators.ts`, `number.validators.ts`, `text.validators.ts` | URLs; whole numbers and ranges; blank, one ASCII character, a byte length, ASCII |
 | `collection.validators.ts` | a value not among existing ones; list entries not repeated |
 | `password.validators.ts`, `cross-field.validators.ts` | new passwords as kamu-cli checks them, matching confirmation; one of two fields required (`requiredUnless`) |
 | `cron.validators.ts` | cron expressions as kamu-cli parses them |

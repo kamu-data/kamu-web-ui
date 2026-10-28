@@ -19,7 +19,7 @@ import {
 
 import { distinctUntilChanged, Subject, takeUntil } from "rxjs";
 
-import { notBlankValidator, regexValidator } from "@common/validation/text.validators";
+import { notBlankValidator } from "@common/validation/text.validators";
 import { MaybeNull, MaybeUndefined } from "@interface/app.types";
 
 import {
@@ -68,14 +68,15 @@ export function topicListControl(): ControlFactory<FormArray<FormGroup<TopicCont
     return (validators) => new FormArray<FormGroup<TopicControls>>([], validators);
 }
 
-const regexPattern = regexValidator();
-
-/** Checks the pattern only while the event time comes from the path, the one kind that shows it. */
+/**
+ * Requires the pattern only while the event time comes from the path, the one kind that shows it. kamu-cli compiles
+ * it with Rust's regex syntax (`(?i)` and the like), which the browser's `RegExp` can't check.
+ */
 function patternFromPath(control: AbstractControl): MaybeNull<ValidationErrors> {
     if (control.parent?.get("kind")?.value !== EventTimeSourceKind.FROM_PATH) {
         return null;
     }
-    return Validators.required(control) ?? regexPattern(control);
+    return Validators.required(control);
 }
 
 /** The event time group; its pattern is checked only while the kind is "From path". */

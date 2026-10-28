@@ -194,13 +194,13 @@ describe("Source event step rules", () => {
     });
 
     describe("Event time", () => {
-        it("should reject a pattern that is not a regular expression", () => {
+        it("should require a pattern from the path, and accept one in Rust's regex syntax", () => {
             const eventTime = requireValue(fetchForm(FetchKind.URL).controls.eventTime);
             eventTime.controls.kind.setValue(EventTimeSourceKind.FROM_PATH);
-            eventTime.controls.pattern.setValue("data-(.*");
-            expect(eventTime.controls.pattern.errors).toEqual({
-                format: { message: "must be a valid regular expression" },
-            });
+            expect(eventTime.controls.pattern.errors).toEqual({ required: true });
+
+            eventTime.controls.pattern.setValue("(?i)data-(\\d{4}-\\d{2}-\\d{2})");
+            expect(eventTime.controls.pattern.errors).toBeNull();
         });
     });
 

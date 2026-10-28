@@ -13,9 +13,14 @@ export type UrlScheme = "http" | "https" | "ws" | "wss" | "ftp" | "ftps";
 
 /** A kamu-cli `${{ ... }}` template, which kamu-cli replaces with a dataset variable's value when it fetches. */
 const TEMPLATE = /\$\{\{[^}]*\}\}/g;
+const TEMPLATE_START = "${{";
 
 export interface UrlValidatorOptions {
-    /** Accept templates in the URL, checking the rest of it as if each template were a plain word. */
+    /**
+     * Accept templates in the URL. A template's value is unknown until kamu-cli fetches, so only the text around the
+     * templates is checked: no whitespace, an accepted scheme where the scheme is written out, and a valid host where
+     * no template touches it.
+     */
     templates?: boolean;
 }
 
@@ -29,16 +34,38 @@ export function urlValidator(schemes: readonly UrlScheme[], options: UrlValidato
         if (typeof value !== "string" || value === "") {
             return null;
         }
-        if (options.templates && value.replace(TEMPLATE, "").trim() === "") {
-            return null;
-        }
-        const checked = options.templates ? value.replace(TEMPLATE, "template") : value;
-        const url = URL.canParse(checked) ? new URL(checked) : null;
         const valid =
-            url !== null &&
-            url.hostname !== "" &&
-            schemes.some((scheme) => url.protocol === `${scheme}:`) &&
-            !/\s/.test(checked);
+            options.templates && value.includes(TEMPLATE_START)
+                ? isTemplatedUrlWithScheme(value, schemes)
+                : isUrlWithScheme(value, schemes);
         return valid ? null : { url: { schemes } };
     };
+}
+
+function isTemplatedUrlWithScheme(value: string, schemes: readonly UrlScheme[]): boolean {
+    if (/\s/.test(value.replace(TEMPLATE, ""))) {
+        return false;
+    }
+    const head = value.slice(0, value.indexOf(TEMPLATE_START)).toLowerCase();
+    const schemeEnd = head.indexOf("://");
+    if (schemeEnd === -1) {
+        // The first template can still complete the scheme, or hold it, as in `${{ env.BASE_URL }}/data.csv`.
+        return schemes.some((scheme) => `${scheme}://`.startsWith(head));
+    }
+    const scheme = head.slice(0, schemeEnd);
+    if (!schemes.some((accepted) => accepted === scheme)) {
+        return false;
+    }
+    const authority = value.slice(schemeEnd + 3).split(/[/?#]/)[0];
+    return authority.includes(TEMPLATE_START) || isUrlWithScheme(`${scheme}://${authority}/`, schemes);
+}
+
+function isUrlWithScheme(value: string, schemes: readonly UrlScheme[]): boolean {
+    const url = URL.canParse(value) ? new URL(value) : null;
+    return (
+        url !== null &&
+        url.hostname !== "" &&
+        schemes.some((scheme) => url.protocol === `${scheme}:`) &&
+        !/\s/.test(value)
+    );
 }

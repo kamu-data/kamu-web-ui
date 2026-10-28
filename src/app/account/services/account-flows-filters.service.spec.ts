@@ -313,13 +313,22 @@ describe("AccountFlowsFiltersService", () => {
         );
     });
 
-    it("should show the number of failures a custom filter uses, once it is clamped", () => {
+    it("should query more failures than a stop policy allows, which a flow that never stops can reach", () => {
         service.updateFilters({ minConsecutiveFailures: 25 });
 
         const result = service.setFlowProcessFilters(ProcessCardFilterMode.CUSTOM);
 
-        expect(result.minConsecutiveFailures).toBe(10);
-        expect(service.currentFiltersSnapshot.minConsecutiveFailures).toBe(10);
+        expect(result.minConsecutiveFailures).toBe(25);
+        expect(service.currentFiltersSnapshot.minConsecutiveFailures).toBe(25);
+    });
+
+    it("should show the number of failures a custom filter uses, once it is clamped", () => {
+        service.updateFilters({ minConsecutiveFailures: 2.6 });
+
+        const result = service.setFlowProcessFilters(ProcessCardFilterMode.CUSTOM);
+
+        expect(result.minConsecutiveFailures).toBe(3);
+        expect(service.currentFiltersSnapshot.minConsecutiveFailures).toBe(3);
     });
 
     it("should pass the failure date of a triage filter to the query", () => {

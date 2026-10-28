@@ -42,19 +42,34 @@ describe("urlValidator", () => {
             "https://${{ env.HOST }}/data.csv",
             "https://example.com/${{ env.PATH || 'latest' }}.csv",
             "${{ env.SOURCE_URL }}",
+            "https://example.com:${{ env.PORT }}/data.csv",
+            "https://${{ env.HOST }}:${{ env.PORT }}/data.csv",
+            "${{ env.SCHEME }}://example.com/data.csv",
+            "${{ env.BASE_URL }}/data.csv",
+            "https://[${{ env.IPV6_HOST }}]/data.csv",
+            "https://[${{ env.IPV6_HOST }}]:${{ env.PORT }}/data.csv",
+            "https://[2001:${{ env.IPV6_TAIL }}]/data.csv",
+            "https://${{ a }}.${{ b }}.${{ c }}.${{ d }}/${{ e }}",
+            "HTTPS://example.com/${{ env.FILE }}",
+            "https:${{ env.REST }}",
         ].forEach((value) => {
             it(`should accept ${JSON.stringify(value)}`, () => {
                 expect(withTemplates(new FormControl(value))).toBeNull();
             });
         });
 
-        ["ftp://example.com/${{ env.FILE }}", "${{ env.HOST }}/data.csv", "https://example.com/a b"].forEach(
-            (value) => {
-                it(`should reject ${JSON.stringify(value)}`, () => {
-                    expect(withTemplates(new FormControl(value))).toEqual({ url: { schemes: ["http", "https"] } });
-                });
-            },
-        );
+        [
+            "ftp://example.com/${{ env.FILE }}",
+            "example.com/${{ env.FILE }}",
+            "https://example.com/a b",
+            "ftp://example.com/${{ a }}${{ b }}${{ c }}${{ d }}",
+            "https:///${{ env.FILE }}",
+            "https://exa mple.com/${{ env.FILE }}",
+        ].forEach((value) => {
+            it(`should reject ${JSON.stringify(value)}`, () => {
+                expect(withTemplates(new FormControl(value))).toEqual({ url: { schemes: ["http", "https"] } });
+            });
+        });
 
         it("should reject a template where templates are not substituted", () => {
             expect(httpOrHttps(new FormControl("https://example.com/?key=${{ env.API_KEY }}"))).toEqual({

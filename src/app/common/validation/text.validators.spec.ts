@@ -12,7 +12,6 @@ import {
     formatValidator,
     maxBytesValidator,
     notBlankValidator,
-    regexValidator,
     singleCharValidator,
 } from "@common/validation/text.validators";
 import { MaybeNull } from "@interface/app.types";
@@ -92,18 +91,6 @@ describe("Text validators", () => {
         ].forEach(({ value, expected }) => {
             it(`should check ${JSON.stringify(value)}`, () => {
                 expect(check(asciiValidator(), value)).toEqual(expected);
-            });
-        });
-    });
-
-    describe("regexValidator", () => {
-        [
-            { value: "", expected: null },
-            { value: "(\\d{4}-\\d{2}-\\d{2}).csv", expected: null },
-            { value: "data-(.*", expected: { format: { message: "must be a valid regular expression" } } },
-        ].forEach(({ value, expected }) => {
-            it(`should check ${JSON.stringify(value)}`, () => {
-                expect(check(regexValidator(), value)).toEqual(expected);
             });
         });
     });

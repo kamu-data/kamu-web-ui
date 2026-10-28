@@ -244,4 +244,13 @@ describe("QueryExplainerService", () => {
             disableTimeOut: "timeOut",
         });
     });
+
+    it("should keep an upload token with path or query characters inside its path segment", () => {
+        service.fetchCommitmentDataByUploadToken("../x?y").subscribe();
+
+        const req = httpTestingController.expectOne(
+            `${appConfigService.apiServerHttpUrl}/platform/file/upload/..%2Fx%3Fy`,
+        );
+        req.flush(mockQueryExplainerResponse);
+    });
 });

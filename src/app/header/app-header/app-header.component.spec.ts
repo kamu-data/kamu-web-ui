@@ -8,7 +8,7 @@
 import { provideHttpClient } from "@angular/common/http";
 import { provideHttpClientTesting } from "@angular/common/http/testing";
 import { ComponentFixture, fakeAsync, flush, TestBed, tick } from "@angular/core/testing";
-import { ActivatedRoute, Router } from "@angular/router";
+import { ActivatedRoute, convertToParamMap, Router } from "@angular/router";
 
 import { of } from "rxjs";
 import { first } from "rxjs/operators";
@@ -49,7 +49,9 @@ describe("AppHeaderComponent", () => {
                 {
                     provide: ActivatedRoute,
                     useValue: {
-                        queryParams: of({ query: DEFAULT_SEARCH_QUERY }),
+                        queryParamMap: of(
+                            convertToParamMap({ [ProjectLinks.URL_QUERY_PARAM_QUERY]: DEFAULT_SEARCH_QUERY }),
+                        ),
                     },
                 },
                 provideHttpClient(),

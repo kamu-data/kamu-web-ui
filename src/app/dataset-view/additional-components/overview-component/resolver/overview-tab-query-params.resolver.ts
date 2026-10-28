@@ -8,6 +8,7 @@
 import { ActivatedRouteSnapshot, ResolveFn } from "@angular/router";
 
 import { positiveIntegerFromParam } from "@common/helpers/app.helpers";
+import { collectionPathFromParam } from "@common/helpers/url-params.helpers";
 
 import { OverviewTabQueryParamsType } from "src/app/dataset-view/dataset-view.interface";
 import ProjectLinks from "src/app/project-links";
@@ -15,7 +16,7 @@ import ProjectLinks from "src/app/project-links";
 export const overviewTabQueryParamsResolverFn: ResolveFn<OverviewTabQueryParamsType> = (
     route: ActivatedRouteSnapshot,
 ) => {
-    const pathPrefix = route.queryParamMap.get(ProjectLinks.URL_QUERY_PARAM_PATH_PREFIX) ?? "/";
+    const pathPrefix = collectionPathFromParam(route.queryParamMap.get(ProjectLinks.URL_QUERY_PARAM_PATH_PREFIX));
     // 0 stands for the latest version
     const version = positiveIntegerFromParam(route.queryParamMap.get(ProjectLinks.URL_QUERY_PARAM_VERSION)) ?? 0;
     return {

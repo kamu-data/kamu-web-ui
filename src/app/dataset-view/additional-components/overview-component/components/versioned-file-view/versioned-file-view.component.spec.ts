@@ -5,6 +5,7 @@
  * included in the LICENSE file.
  */
 
+import { TestbedHarnessEnvironment } from "@angular/cdk/testing/testbed";
 import { provideHttpClient } from "@angular/common/http";
 import { ComponentFixture, TestBed } from "@angular/core/testing";
 
@@ -13,6 +14,7 @@ import { of } from "rxjs";
 import { Apollo } from "apollo-angular";
 import { provideToastr, ToastrService } from "ngx-toastr";
 
+import { ValueNotFoundHarness } from "@common/components/value-not-found/value-not-found.harness";
 import { setComponentInput, stubMethod } from "@common/helpers/base-test.helpers.spec";
 import { SharedTestModule } from "@common/modules/shared-test.module";
 
@@ -164,5 +166,30 @@ describe("VersionedFileViewComponent", () => {
         const downloadFileSpy = vi.spyOn(datasetAsVersionedFileService, "downloadFile").mockImplementation(() => {});
         component.downloadFile(MOCK_VERSIONED_VIEW_FILE);
         expect(downloadFileSpy).toHaveBeenCalledTimes(1);
+    });
+
+    describe("a version the file does not have", () => {
+        beforeEach(() => {
+            vi.spyOn(datasetAsVersionedFileService, "requestDatasetAsVersionedFileByVersion").mockReturnValue(
+                of({ ...MOCK_VERSIONED_VIEW_FILE, fileInfo: null }),
+            );
+            setComponentInput(fixture, "version", 99);
+            fixture.detectChanges();
+        });
+
+        it("says there is no such version", async () => {
+            const notFound = await TestbedHarnessEnvironment.loader(fixture).getHarness(ValueNotFoundHarness);
+
+            expect(await notFound.getMessage()).toBe("There is no version 99 of this file.");
+        });
+
+        it("leads to the latest version", async () => {
+            const goToLatestSpy = stubMethod(component, "goToLatestVersionedFile");
+            const notFound = await TestbedHarnessEnvironment.loader(fixture).getHarness(ValueNotFoundHarness);
+
+            await notFound.runAction();
+
+            expect(goToLatestSpy).toHaveBeenCalledTimes(1);
+        });
     });
 });

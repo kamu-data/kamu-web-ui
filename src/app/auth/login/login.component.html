@@ -1,3 +1,8 @@
+@if (invalidDeviceCode) {
+    <div class="error-block text-center my-2" role="alert" data-test-id="invalid-device-code">
+        {{ ERROR_INVALID_DEVICE_CODE }}
+    </div>
+}
 @if (!selectedLoginMethod || selectedLoginMethod === AccountProvider.Web3Wallet) {
     <div class="d-flex flex-column align-items-center login-container__buttons" data-test-id="method-selection-block">
         <img [src]="APP_LOGO" class="logo" alt="Application logo" />

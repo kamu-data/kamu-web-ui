@@ -34,7 +34,7 @@ import { AuthApi } from "@api/auth.api";
 import { PasswordLoginCredentials } from "@api/auth.api.model";
 import { AccountProvider } from "@api/kamu.graphql.interface";
 import { mockPasswordLoginResponse, TEST_LOGIN, TEST_PASSWORD } from "@api/mock/auth.mock";
-import { MaybeUndefined } from "@interface/app.types";
+import { MaybeNull, MaybeUndefined } from "@interface/app.types";
 
 import { AppConfigService } from "src/app/app-config.service";
 import { LoginMethodsService } from "src/app/auth/login-methods.service";
@@ -78,11 +78,15 @@ describe("LoginComponent", () => {
         INPUT_LOGIN_ERROR_REQUIRED = "input-login-error-required",
         INPUT_PASSWORD_ERROR_REQUIRED = "input-password-error-required",
         PASSWORD_METHOD_ERROR = "password-method-error",
+        INVALID_DEVICE_CODE = "invalid-device-code",
     }
 
     const mockQueryParams: BehaviorSubject<Params> = new BehaviorSubject<Params>({});
+    let redirectUrlParam: MaybeNull<string>;
 
     beforeEach(async () => {
+        mockQueryParams.next({});
+        redirectUrlParam = null;
         await TestBed.configureTestingModule({
             imports: [ApolloTestingModule, ReactiveFormsModule, MatIconModule, LoginComponent, SpinnerComponent],
             providers: [
@@ -96,7 +100,7 @@ describe("LoginComponent", () => {
                                 get: (key: string) => {
                                     switch (key) {
                                         case ProjectLinks.URL_QUERY_PARAM_REDIRECT_URL:
-                                            return "";
+                                            return redirectUrlParam;
                                     }
                                 },
                             },
@@ -190,7 +194,7 @@ describe("LoginComponent", () => {
 
                 expect(loginServicePasswordSubmit).toHaveBeenCalledWith(
                     { login: TEST_LOGIN, password: TEST_PASSWORD },
-                    "",
+                    null,
                 );
             });
 
@@ -213,7 +217,7 @@ describe("LoginComponent", () => {
                         login: TEST_LOGIN,
                         password: TEST_PASSWORD,
                     },
-                    "",
+                    null,
                 );
             });
 
@@ -284,7 +288,7 @@ describe("LoginComponent", () => {
         });
 
         it("login callback setup in localStorage via query parameter", () => {
-            const SOME_DEVICE_CODE = "23da-ewewr-fdgf-fghgfh";
+            const SOME_DEVICE_CODE = "3f8e1c52-6c1d-4f7a-9b8e-2d4c6a1b0e9f";
             mockQueryParams.next({
                 [ProjectLinks.URL_QUERY_PARAM_DEVICE_CODE]: SOME_DEVICE_CODE,
             });
@@ -302,6 +306,17 @@ describe("LoginComponent", () => {
 
             expect(authApiSpy).toHaveBeenCalledWith(credentials, SOME_DEVICE_CODE);
             expect(navigationSpy).toHaveBeenCalledTimes(1);
+        });
+
+        it("a device code that is not a UUID is not kept, and the page says the link is invalid", () => {
+            localStorageService.setDeviceCode("3f8e1c52-6c1d-4f7a-9b8e-2d4c6a1b0e9f");
+            checkVisible(fixture, Elements.INVALID_DEVICE_CODE, false);
+
+            mockQueryParams.next({ [ProjectLinks.URL_QUERY_PARAM_DEVICE_CODE]: "not-a-device-code" });
+            fixture.detectChanges();
+
+            expect(localStorageService.loginDeviceCode).toBeNull();
+            checkVisible(fixture, Elements.INVALID_DEVICE_CODE, true);
         });
     });
 
@@ -347,6 +362,33 @@ describe("LoginComponent", () => {
 
         it("component should throw error", () => {
             expect(() => createFixture()).toThrow(new Error(LoginComponent.ERROR_ZERO_METHODS_IN_CONFIG));
+        });
+    });
+
+    describe("redirect URL", () => {
+        beforeEach(() => {
+            vi.spyOn(loginMethodsService, "loginMethods", "get").mockReturnValue([AccountProvider.Password]);
+            localStorageService.setAccessToken("some-token");
+        });
+
+        it("returns a signed-in user to a page inside the app", () => {
+            const navigateSpy = stubMethod(navigationService, "navigateToReplacedPath");
+            redirectUrlParam = "/kamu/dataset?page=2";
+
+            createFixture();
+
+            expect(navigateSpy).toHaveBeenCalledWith("/kamu/dataset?page=2");
+        });
+
+        ["//evil.example/path", "/\\evil.example", "https://evil.example", "kamu/dataset"].forEach((url) => {
+            it(`ignores "${url}", which is not a path inside the app`, () => {
+                const navigateSpy = stubMethod(navigationService, "navigateToReplacedPath");
+                redirectUrlParam = url;
+
+                createFixture();
+
+                expect(navigateSpy).not.toHaveBeenCalled();
+            });
         });
     });
 });

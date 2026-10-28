@@ -15,9 +15,10 @@ import { ToastrService } from "ngx-toastr";
 
 import { BaseComponent } from "@common/components/base.component";
 import { parseJsonAs } from "@common/helpers/untyped-boundary.helpers";
+import { queryParamValue } from "@common/helpers/url-params.helpers";
 import AppValues from "@common/values/app.values";
 import { DatasetByIdQuery } from "@api/kamu.graphql.interface";
-import { MaybeNull } from "@interface/app.types";
+import { MaybeNull, MaybeUndefined } from "@interface/app.types";
 import { DatasetInfo } from "@interface/navigation.interface";
 
 import { BlockService } from "src/app/dataset-block/metadata-block/block.service";
@@ -57,7 +58,8 @@ export interface QueryExplainerComponentData {
     ],
 })
 export class QueryExplainerComponent extends BaseComponent implements OnInit {
-    @Input(ProjectLinks.URL_QUERY_PARAM_COMMITMENT_UPLOAD_TOKEN) public set uploadToken(value: string) {
+    @Input({ alias: ProjectLinks.URL_QUERY_PARAM_COMMITMENT_UPLOAD_TOKEN, transform: queryParamValue })
+    public set uploadToken(value: MaybeUndefined<string>) {
         this.commitmentUploadToken = value ?? "";
     }
 

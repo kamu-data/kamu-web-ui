@@ -7,6 +7,8 @@
 
 import { Routes } from "@angular/router";
 
+import { validRouteParams } from "@common/guards/valid-route-params.guard";
+import { isUuid } from "@common/helpers/url-params.helpers";
 import RoutingResolvers from "@common/resolvers/routing-resolvers";
 
 import { AddWebhookComponent } from "src/app/dataset-view/additional-components/dataset-settings-component/tabs/webhooks/components/add-webhook/add-webhook.component";
@@ -35,19 +37,16 @@ export const WEBHOOKS_TAB_ROUTING: Routes = [
         component: AddWebhookComponent,
     },
     {
-        path: ProjectLinks.URL_WEBHOOK_ROTATE_SECRET,
-        children: [
-            {
-                path: `:${ProjectLinks.URL_PARAM_WEBHOOK_ID}`,
-                resolve: {
-                    [RoutingResolvers.WEBHOOKS_ROTATE_SECRET]: webhooksDatasetResolverFn,
-                },
-                component: RotateSecretWebhookComponent,
-            },
-        ],
+        path: `${ProjectLinks.URL_WEBHOOK_ROTATE_SECRET}/:${ProjectLinks.URL_PARAM_WEBHOOK_ID}`,
+        canActivate: [validRouteParams({ [ProjectLinks.URL_PARAM_WEBHOOK_ID]: isUuid })],
+        resolve: {
+            [RoutingResolvers.WEBHOOKS_ROTATE_SECRET]: editWebhookResolverFn,
+        },
+        component: RotateSecretWebhookComponent,
     },
     {
         path: `:${ProjectLinks.URL_PARAM_WEBHOOK_ID}`,
+        canActivate: [validRouteParams({ [ProjectLinks.URL_PARAM_WEBHOOK_ID]: isUuid })],
         resolve: {
             [RoutingResolvers.WEBHOOKS_EDIT_KEY]: editWebhookResolverFn,
         },

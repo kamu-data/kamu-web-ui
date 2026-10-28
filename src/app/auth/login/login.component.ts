@@ -6,7 +6,7 @@
  */
 
 import { AsyncPipe, NgTemplateOutlet } from "@angular/common";
-import { ChangeDetectionStrategy, Component, inject, OnInit } from "@angular/core";
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, inject, OnInit } from "@angular/core";
 import { takeUntilDestroyed } from "@angular/core/rxjs-interop";
 import { AbstractControl, FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators } from "@angular/forms";
 import { MatIconModule } from "@angular/material/icon";
@@ -17,7 +17,9 @@ import { Observable, shareReplay } from "rxjs";
 import { BaseComponent } from "@common/components/base.component";
 import { SpinnerComponent } from "@common/components/spinner/spinner/spinner.component";
 import { FormValidationErrorsDirective } from "@common/directives/form-validation-errors.directive";
+import { inAppPathFromParam, isUuid } from "@common/helpers/url-params.helpers";
 import AppValues from "@common/values/app.values";
+import { ErrorTexts } from "@common/values/errors.text";
 import { AccountProvider } from "@api/kamu.graphql.interface";
 import { MaybeNull } from "@interface/app.types";
 
@@ -58,10 +60,13 @@ export class LoginComponent extends BaseComponent implements OnInit {
     private loginMethodsService = inject(LoginMethodsService);
     private appConfigService = inject(AppConfigService);
     private navigationService = inject(NavigationService);
+    private cdr = inject(ChangeDetectorRef);
     private redirectUrl: MaybeNull<string>;
 
     public readonly APP_LOGO = `/${AppValues.APP_LOGO}`;
     public readonly AccountProvider = AccountProvider;
+    public readonly ERROR_INVALID_DEVICE_CODE = ErrorTexts.ERROR_INVALID_DEVICE_CODE;
+    public invalidDeviceCode = false;
 
     public selectedLoginMethod?: AccountProvider = undefined;
     public passwordLoginForm: FormGroup<LoginFormType> = this.fb.nonNullable.group({
@@ -72,7 +77,9 @@ export class LoginComponent extends BaseComponent implements OnInit {
         this.loginService.passwordLoginErrorOccurrences.pipe(shareReplay());
 
     public ngOnInit(): void {
-        this.redirectUrl = this.route.snapshot.queryParamMap.get(ProjectLinks.URL_QUERY_PARAM_REDIRECT_URL);
+        this.redirectUrl =
+            inAppPathFromParam(this.route.snapshot.queryParamMap.get(ProjectLinks.URL_QUERY_PARAM_REDIRECT_URL)) ??
+            null;
         if (this.redirectUrl && this.localStorageService.accessToken) {
             this.navigationService.navigateToReplacedPath(this.redirectUrl);
         } else {
@@ -84,7 +91,11 @@ export class LoginComponent extends BaseComponent implements OnInit {
             }
 
             this.route.queryParamMap.pipe(takeUntilDestroyed(this.destroyRef)).subscribe((queryParamMap: ParamMap) => {
-                this.localStorageService.setDeviceCode(queryParamMap.get(ProjectLinks.URL_QUERY_PARAM_DEVICE_CODE));
+                const deviceCode = queryParamMap.get(ProjectLinks.URL_QUERY_PARAM_DEVICE_CODE);
+                // A device code the API would refuse is not kept, so signing in still works for the web UI
+                this.invalidDeviceCode = deviceCode !== null && !isUuid(deviceCode);
+                this.localStorageService.setDeviceCode(this.invalidDeviceCode ? null : deviceCode);
+                this.cdr.markForCheck();
             });
         }
     }

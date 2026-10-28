@@ -190,7 +190,7 @@ One case per api method: assert the variables sent, flush a fixture typed with t
   the app's guards and resolvers read.
 - A guard redirect is asserted by where it leads, not by `false`:
   `` expectRedirectTo(await runCanActivate(guard, route, url), `/${ProjectLinks.URL_LOGIN}`) ``
-  (`account/guards/account.guard.spec.ts`).
+  (`auth/guards/authenticated.guard.spec.ts`).
 - An expected resolver error is checked with
   `await expect(runResolver(...)).rejects.toThrow(...)`. A page-not-found redirect is
   checked with `expectPageNotFoundRedirect(data)`; a resolver built on another one also gets a
@@ -200,6 +200,13 @@ One case per api method: assert the variables sent, flush a fixture typed with t
 - Interceptors: `provideHttpClient(withInterceptors([fn]))` + `provideHttpClientTesting()`,
   requests driven through `HttpClient` and answered with `HttpTestingController`; timing runs in
   `fakeAsync` (`common/components/spinner/spinner.interceptor.spec.ts`).
+- Every value a URL can carry gets a malformed, a missing and, for query parameters, a repeated
+  case. Parsers are tested in `common/helpers/url-params.helpers.spec.ts`. A route that rejects
+  a URL gets a row in the "URL validation" table of `app-routing.spec.ts`, which asserts that the
+  page-not-found component is activated and that the stubbed resolvers were not called; a redirect
+  with `skipLocationChange` leaves the mocked `Location` on the previous URL, so it does not assert
+  on that. `route-config.spec.ts` walks every route, lazy ones included, and fails when a path
+  parameter has no `validRouteParams` check or a parent route has no empty-path child.
 - Route wiring is tested end to end in `app-routing.spec.ts` through the real `Router`. The
   router looks a functional resolver up in the injector before calling it, so
   `{ provide: someResolverFn, useValue: { resolve: () => of(data) } }` replaces it there. A URL

@@ -12,6 +12,7 @@ import { FlowStatus } from "@api/kamu.graphql.interface";
 
 import {
     AccountFlowsNav,
+    flowStatusGroup,
     ProcessCardFilterMode,
 } from "src/app/account/additional-components/account-flows-tab/account-flows-tab.types";
 import ProjectLinks from "src/app/project-links";
@@ -27,8 +28,12 @@ export const accountFlowsResolverFn: ResolveFn<AccountFlowsType> = (route: Activ
         enumValueOf(AccountFlowsNav, route.queryParamMap.get(ProjectLinks.URL_QUERY_PARAM_ACCOUNT_NAV)) ??
         AccountFlowsNav.ACTIVITY;
     const currentNav = route.queryParamMap.get(ProjectLinks.URL_QUERY_PARAM_ACCOUNT_FLOW_STATUS) ?? "";
-    const statuses = currentNav.split(",").flatMap((status) => enumValueOf(FlowStatus, status) ?? []);
-    const flowGroup = statuses.length ? statuses : [FlowStatus.Finished];
+    // Only the groups the activity tabs list can be shown, so the first known status picks its tab's group
+    const firstStatus = currentNav
+        .split(",")
+        .map((status) => enumValueOf(FlowStatus, status))
+        .find((status) => status !== undefined);
+    const flowGroup = firstStatus ? flowStatusGroup(firstStatus) : [FlowStatus.Finished];
     const datasetsFiltersMode =
         enumValueOf(
             ProcessCardFilterMode,

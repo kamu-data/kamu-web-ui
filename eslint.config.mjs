@@ -8,6 +8,28 @@ import licenseHeaderPlugin from "eslint-plugin-license-header";
 
 // Code that needs part of a query result types it with a named sub-fragment, not a type cut out of a
 // bigger generated one
+// The router binds a query parameter repeated in the URL as an array, so app code reads one through
+// queryParamMap.get() or an input transform, which both give its first value as a string
+const urlParamRestrictions = [
+  {
+    selector:
+      "Decorator > CallExpression[callee.name='Input'] > MemberExpression.arguments[property.name=/^URL_QUERY_PARAM_/]",
+    message:
+      "Bind a query parameter with @Input({ alias: ProjectLinks.URL_QUERY_PARAM_…, transform: queryParamValue }) from @common/helpers/url-params.helpers.",
+  },
+  {
+    selector:
+      "Decorator > CallExpression[callee.name='Input'] > ObjectExpression.arguments:has(Property[key.name='alias'][value.property.name=/^URL_QUERY_PARAM_/]):not(:has(Property[key.name='transform']))",
+    message:
+      "Give a query-parameter input transform: queryParamValue from @common/helpers/url-params.helpers, then parse the string in its setter.",
+  },
+  {
+    selector: "MemberExpression[property.name='queryParams']",
+    message:
+      "Read query parameters with queryParamMap.get(), which gives a repeated parameter's first value; queryParams gives an array.",
+  },
+];
+
 const fragmentSliceRestrictions = [
   {
     selector:
@@ -96,7 +118,7 @@ export default [
       "vitest/no-focused-tests": "error",
       "vitest/no-disabled-tests": "error",
 
-      "no-restricted-syntax": ["error", ...fragmentSliceRestrictions],
+      "no-restricted-syntax": ["error", ...fragmentSliceRestrictions, ...urlParamRestrictions],
 
       // Spec files share one module cache: a spec imported by another runs its tests inside that
       // file, and Vitest then finds no tests in it. Only the two helper files without tests of
@@ -146,6 +168,13 @@ export default [
           message: "Destroy the component with fixture.destroy(), which runs ngOnDestroy as the app does.",
         },
       ],
+    },
+  },
+  // The spec helpers build route snapshots, so they set queryParams as the router does
+  {
+    files: ["src/app/common/helpers/base-test.helpers.spec.ts"],
+    rules: {
+      "no-restricted-syntax": ["error", ...fragmentSliceRestrictions],
     },
   },
   // No code asserts a type: an assertion hides missing, misspelled and stale fields, a missing null

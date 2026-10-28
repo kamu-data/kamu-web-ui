@@ -15,4 +15,6 @@ export class ErrorTexts {
     public static readonly ERROR_ACCOUNT_IS_NOT_WHITELISTED = "Your account is not whitelisted";
     public static readonly ERROR_ACCESS_TOKEN = "Access token error";
     public static readonly ERROR_ACCESS_TOKEN_EXPIRED = "Access token expired";
+    public static readonly ERROR_INVALID_DEVICE_CODE =
+        "The sign-in link from the command line is not valid. Run the login command again to get a new one.";
 }

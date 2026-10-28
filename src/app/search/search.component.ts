@@ -14,6 +14,7 @@ import { PagePastEndComponent } from "@common/components/page-past-end/page-past
 import { PaginationComponent } from "@common/components/pagination-component/pagination.component";
 import { FeatureFlagDirective } from "@common/directives/feature-flag.directive";
 import { positiveIntegerFromParam } from "@common/helpers/app.helpers";
+import { queryParamValue } from "@common/helpers/url-params.helpers";
 import RoutingResolvers from "@common/resolvers/routing-resolvers";
 import { MaybeUndefined } from "@interface/app.types";
 import { DatasetSearchResult, SearchFilters } from "@interface/search.interface";
@@ -39,10 +40,12 @@ import { NavigationService } from "src/app/services/navigation.service";
     ],
 })
 export class SearchComponent implements OnInit {
-    @Input(ProjectLinks.URL_QUERY_PARAM_QUERY) public set search(value: string) {
+    @Input({ alias: ProjectLinks.URL_QUERY_PARAM_QUERY, transform: queryParamValue })
+    public set search(value: MaybeUndefined<string>) {
         this.searchValue = value ?? "";
     }
-    @Input(ProjectLinks.URL_QUERY_PARAM_PAGE) public set page(value: MaybeUndefined<string>) {
+    @Input({ alias: ProjectLinks.URL_QUERY_PARAM_PAGE, transform: queryParamValue })
+    public set page(value: MaybeUndefined<string>) {
         this.currentPage = positiveIntegerFromParam(value) ?? 1;
     }
     @Input(RoutingResolvers.SEARCH_KEY) public data: DatasetSearchResult;

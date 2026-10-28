@@ -31,6 +31,11 @@ export const ACCOUNT_SELECT_ROUTES: Routes = [
         resolve: { [RoutingResolvers.ACCOUNT_ACTIVE_TAB_KEY]: accountActiveTabResolverFn },
         children: [
             {
+                path: "",
+                redirectTo: `${ProjectLinks.URL_ACCOUNT_SELECT}/${AccountTabs.DATASETS}`,
+                pathMatch: "full",
+            },
+            {
                 path: ProjectLinks.URL_ACCOUNT_SELECT,
                 children: [
                     {

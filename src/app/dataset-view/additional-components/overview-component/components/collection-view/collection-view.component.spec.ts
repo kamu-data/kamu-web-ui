@@ -5,6 +5,7 @@
  * included in the LICENSE file.
  */
 
+import { TestbedHarnessEnvironment } from "@angular/cdk/testing/testbed";
 import { provideHttpClient } from "@angular/common/http";
 import { ComponentFixture, fakeAsync, flush, TestBed, tick } from "@angular/core/testing";
 
@@ -13,6 +14,7 @@ import { delay, of } from "rxjs";
 import { Apollo } from "apollo-angular";
 import { provideToastr } from "ngx-toastr";
 
+import { ValueNotFoundHarness } from "@common/components/value-not-found/value-not-found.harness";
 import {
     findElementByDataTestId,
     registerMatSvgIcons,
@@ -184,6 +186,38 @@ describe("CollectionViewComponent", () => {
             datasetName: mockDatasetBasicsRootFragment.name,
             tab: DatasetViewTypeEnum.Overview,
             [ProjectLinks.URL_QUERY_PARAM_PATH_PREFIX]: "/",
+        });
+    });
+
+    describe("a folder the collection does not have", () => {
+        function createWithNoEntries(pathPrefix: string): void {
+            fixture.destroy();
+            vi.spyOn(datasetAsCollectionService, "loadCollectionInfo").mockReturnValue(
+                of({ headChanged: false, connection: { ...mockCollectionEntryConnection, totalCount: 0, nodes: [] } }),
+            );
+            fixture = TestBed.createComponent(CollectionViewComponent);
+            component = fixture.componentInstance;
+            setComponentInput(fixture, "datasetBasics", mockDatasetBasicsRootFragment);
+            setComponentInput(fixture, "pathPrefix", pathPrefix);
+            fixture.detectChanges();
+        }
+
+        it("says there is no such folder and leads to the root", async () => {
+            createWithNoEntries("/missing");
+            const openFolderSpy = stubMethod(component, "openFolder");
+            const notFound = await TestbedHarnessEnvironment.loader(fixture).getHarness(ValueNotFoundHarness);
+
+            expect(await notFound.getMessage()).toBe("There is no folder /missing in this collection.");
+            await notFound.runAction();
+            expect(openFolderSpy).toHaveBeenCalledWith("/");
+        });
+
+        it("keeps the empty-collection message at the root", async () => {
+            createWithNoEntries("/");
+
+            const notFound = await TestbedHarnessEnvironment.loader(fixture).getHarnessOrNull(ValueNotFoundHarness);
+
+            expect(notFound).toBeNull();
         });
     });
 });

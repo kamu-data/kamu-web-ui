@@ -22,7 +22,7 @@ import { FormsModule } from "@angular/forms";
 import { MatIconModule } from "@angular/material/icon";
 import { MatMenuModule } from "@angular/material/menu";
 import { MatProgressSpinnerModule } from "@angular/material/progress-spinner";
-import { ActivatedRoute, NavigationEnd, Params, Router, RouterLink } from "@angular/router";
+import { ActivatedRoute, NavigationEnd, ParamMap, Router, RouterLink } from "@angular/router";
 
 import { Observable, OperatorFunction } from "rxjs";
 import { debounceTime, distinctUntilChanged, filter, finalize, switchMap, take, tap } from "rxjs/operators";
@@ -126,9 +126,10 @@ export class AppHeaderComponent extends BaseComponent implements OnInit {
                 this.searchQuery = urlObj.searchParams.get(ProjectLinks.URL_QUERY_PARAM_QUERY) ?? "";
                 this.cdr.detectChanges();
             });
-        this.route.queryParams.pipe(takeUntilDestroyed(this.destroyRef)).subscribe((param: Params) => {
-            const query: unknown = param.query;
-            if (typeof query === "string" && query) {
+        // The header can be created after the navigation it shows has ended, which the handler above never sees
+        this.route.queryParamMap.pipe(takeUntilDestroyed(this.destroyRef)).subscribe((params: ParamMap) => {
+            const query = params.get(ProjectLinks.URL_QUERY_PARAM_QUERY);
+            if (query) {
                 this.searchQuery = query;
             }
         });

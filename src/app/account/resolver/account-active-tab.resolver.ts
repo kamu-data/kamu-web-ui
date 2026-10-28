@@ -14,7 +14,7 @@ import ProjectLinks from "src/app/project-links";
 
 export const accountActiveTabResolverFn: ResolveFn<AccountTabs> = (route: ActivatedRouteSnapshot) => {
     const activeTab = requireValue(
-        enumValueOf(AccountTabs, route.children[0].children[0].data[ProjectLinks.URL_PARAM_TAB]),
+        enumValueOf(AccountTabs, route.children[0]?.children[0]?.data[ProjectLinks.URL_PARAM_TAB]),
         "Route has no AccountTabs tab",
     );
     return activeTab;

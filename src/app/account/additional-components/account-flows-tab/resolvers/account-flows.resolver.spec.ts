@@ -68,7 +68,7 @@ describe("accountFlowsResolverFn", () => {
 
         expect(result).toEqual({
             activeNav: AccountFlowsNav.ACTIVITY,
-            flowGroup: [FlowStatus.Running],
+            flowGroup: [FlowStatus.Running, FlowStatus.Retrying],
             datasetsFiltersMode: ProcessCardFilterMode.RECENT_ACTIVITY,
         });
     });
@@ -85,6 +85,22 @@ describe("accountFlowsResolverFn", () => {
             activeNav: AccountFlowsNav.ACTIVITY,
             flowGroup: [FlowStatus.Finished],
             datasetsFiltersMode: ProcessCardFilterMode.RECENT_ACTIVITY,
+        });
+    });
+
+    [
+        { status: "RETRYING", flowGroup: [FlowStatus.Running, FlowStatus.Retrying] },
+        { status: "WAITING,FINISHED", flowGroup: [FlowStatus.Waiting] },
+        { status: "running", flowGroup: [FlowStatus.Finished] },
+    ].forEach(({ status, flowGroup }) => {
+        it(`should read the status "${status}" as the group of the tab that lists it`, async () => {
+            const route = routeSnapshot({
+                queryParams: { [ProjectLinks.URL_QUERY_PARAM_ACCOUNT_FLOW_STATUS]: status },
+            });
+
+            const result = await runResolver(accountFlowsResolverFn, route);
+
+            expect(result).toEqual(expect.objectContaining({ flowGroup }));
         });
     });
 });

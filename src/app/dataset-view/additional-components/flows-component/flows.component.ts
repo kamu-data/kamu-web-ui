@@ -19,6 +19,7 @@ import { environment } from "@env/environment";
 import { PagePastEndComponent } from "@common/components/page-past-end/page-past-end.component";
 import { PaginationComponent } from "@common/components/pagination-component/pagination.component";
 import { enumValueOf, oneOf, trackBusyKey } from "@common/helpers/app.helpers";
+import { isUuid, queryParamValue } from "@common/helpers/url-params.helpers";
 import { DatasetLinkPipe } from "@common/pipes/dataset-link.pipe";
 import { SourceEventEditorLinkPipe } from "@common/pipes/source-event-editor-link.pipe";
 import RoutingResolvers from "@common/resolvers/routing-resolvers";
@@ -52,6 +53,7 @@ import {
     FlowsCategoryUnion,
     FlowsSelectedCategory,
     FlowsSelectionState,
+    WEBHOOKS_SELECTED_CATEGORIES,
     WebhooksSelectedCategory,
 } from "src/app/dataset-view/additional-components/flows-component/flows.helpers";
 import { FlowsSelectionStateService } from "src/app/dataset-view/additional-components/flows-component/services/flows-selection-state.service";
@@ -90,23 +92,27 @@ import { ProcessDatasetCardInteractionService } from "src/app/services/process-d
 })
 export class FlowsComponent extends FlowsTableProcessingBaseComponent implements OnInit, OnChanges {
     @Input(RoutingResolvers.DATASET_VIEW_FLOWS_KEY) public flowsData: DatasetOverviewTabData;
-    @Input(ProjectLinks.URL_QUERY_PARAM_WEBHOOK_ID) public set setWebhookId(value: MaybeNull<string>) {
+    @Input({ alias: ProjectLinks.URL_QUERY_PARAM_WEBHOOK_ID, transform: queryParamValue })
+    public set setWebhookId(value: MaybeUndefined<string>) {
         this.webhookIdParam = value;
         this.applyWebhookIdParam();
     }
-    @Input(ProjectLinks.URL_QUERY_PARAM_WEBHOOKS_STATE) public set setWebhookState(value: MaybeNull<string>) {
+    @Input({ alias: ProjectLinks.URL_QUERY_PARAM_WEBHOOKS_STATE, transform: queryParamValue })
+    public set setWebhookState(value: MaybeUndefined<string>) {
         this.webhookStateParam = value;
         this.applyWebhookStateParam();
     }
-    @Input(ProjectLinks.URL_QUERY_PARAM_FLOWS_CATEGORY) public set setFlowsCategory(value: FlowsCategoryUnion) {
-        this.flowsCategoryParam = value;
+    @Input({ alias: ProjectLinks.URL_QUERY_PARAM_FLOWS_CATEGORY, transform: queryParamValue })
+    public set setFlowsCategory(value: MaybeUndefined<string>) {
+        this.flowsCategoryParam =
+            oneOf([...FLOWS_SELECTED_CATEGORIES, ...WEBHOOKS_SELECTED_CATEGORIES], value) ?? "all";
         this.applyFlowsCategoryParam();
     }
 
     // The query parameters as last bound: the router does not bind an unchanged one again
-    private webhookIdParam: MaybeNull<string> = null;
-    private webhookStateParam: MaybeNull<string> = null;
-    private flowsCategoryParam: FlowsCategoryUnion;
+    private webhookIdParam: MaybeUndefined<string>;
+    private webhookStateParam: MaybeUndefined<string>;
+    private flowsCategoryParam: FlowsCategoryUnion = "all";
 
     public selectedDatasetItems: DatasetBasicsFragment[] = [];
     public selectedAccountItems: AccountFragment[] = [];
@@ -169,7 +175,7 @@ export class FlowsComponent extends FlowsTableProcessingBaseComponent implements
     }
 
     private applyWebhookIdParam(): void {
-        const ids = this.webhookIdParam ? this.webhookIdParam.split(",") : [];
+        const ids = (this.webhookIdParam ?? "").split(",").filter(isUuid);
         ids.forEach((id: string) => this.flowsSelectionStateService.addWebhookId(id));
     }
 

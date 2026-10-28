@@ -27,7 +27,15 @@ export interface CollectionEntryViewType {
     extraData: Record<string, unknown>;
 }
 
+export interface CollectionCachedFolder {
+    entries: CollectionEntryViewType[];
+    totalCount: number;
+    loadedPages: number;
+    isAllDataLoaded: boolean;
+}
+
 export interface CollectionEntriesResult {
+    path: string;
     connection: CollectionEntryConnectionDataFragment;
     headChanged?: boolean;
 }

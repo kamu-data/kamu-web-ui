@@ -5,9 +5,9 @@
     </div>
 }
 
-@if (collectionInfo$ | async; as collectionEntry) {
+@if (collectionInfo$ | async) {
     <div>
-        @if (collectionEntry.connection.totalCount) {
+        @if (entriesTotalCount) {
             <div class="main-container">
                 @if (dataSource.data.length) {
                     <div
@@ -172,7 +172,9 @@
                 <!-- Collection summary footer -->
                 @if (dataSource.data.length) {
                     <div class="d-flex justify-content-end mt-4 text-muted">
-                        <span class="fw-500">Total entries: {{ entriesTotalCount }}</span>
+                        <span class="fw-500" data-test-id="collection-total-count"
+                            >Total entries: {{ entriesTotalCount }}</span
+                        >
                     </div>
                 }
             </div>
@@ -185,7 +187,7 @@
             <app-value-not-found
                 [message]="'There is no folder ' + pathPrefix + ' in this collection.'"
                 actionLabel="Go to the collection root"
-                (actionEvent)="openCollectionRoot()"
+                (actionEvent)="openFolder('/')"
             />
         }
     </div>

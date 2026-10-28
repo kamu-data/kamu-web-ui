@@ -5,7 +5,7 @@
             [sqlLoading]="sqlLoading"
             [sqlError]="sqlErrorMarker$ | async"
             [sqlQueryResponse]="sqlQueryResponse$ | async"
-            [sqlRequestCode]="sqlRequestCode"
+            [(sqlRequestCode)]="sqlRequestCode"
             [monacoPlaceholder]="MONACO_PLACEHOLDER"
             (runSQLRequestEmit)="runSQLRequest($event)"
         >

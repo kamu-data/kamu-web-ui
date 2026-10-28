@@ -92,6 +92,9 @@ export class QueryAndResultSectionsComponent extends BaseComponent implements On
     @Input({ required: true }) public sqlQueryResponse: MaybeNull<SqlQueryBasicResponse>;
     @Input({ required: true }) public monacoPlaceholder: string = "";
     @Output() public runSQLRequestEmit = new EventEmitter<DatasetRequestBySql>();
+    // Keeps the page's copy of the editor text current, so a query from the URL that equals the
+    // text the page set last still replaces what the user has typed since
+    @Output() public sqlRequestCodeChange = new EventEmitter<string>();
 
     private loggedUserService = inject(LoggedUserService);
     private fileUploadService = inject(FileUploadService);
@@ -115,6 +118,11 @@ export class QueryAndResultSectionsComponent extends BaseComponent implements On
 
     public ngOnInit(): void {
         this.knownEngines$ = this.engineService.engines().pipe(map((result) => result.data.knownEngines));
+    }
+
+    public onSqlRequestCodeChange(code: string): void {
+        this.sqlRequestCode = code;
+        this.sqlRequestCodeChange.emit(code);
     }
 
     public inferTableSchema(schema: DataSchemaField[]): DynamicTableColumnDescriptor[] {

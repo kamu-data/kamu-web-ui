@@ -15,13 +15,14 @@ import { Apollo } from "apollo-angular";
 import { provideToastr } from "ngx-toastr";
 import type { Mock } from "vitest";
 
-import { setComponentInput, stubMethod } from "@common/helpers/base-test.helpers.spec";
+import { findComponentInstance, setComponentInput, stubMethod } from "@common/helpers/base-test.helpers.spec";
 import { SharedTestModule } from "@common/modules/shared-test.module";
 import AppValues from "@common/values/app.values";
 import { MaybeUndefined } from "@interface/app.types";
 
 import { EngineService } from "src/app/dataset-view/additional-components/metadata-component/components/set-transform/components/engine-section/engine.service";
 import { mockEngines } from "src/app/dataset-view/additional-components/metadata-component/components/set-transform/mock.data";
+import { SqlEditorComponent } from "src/app/editor/components/sql-editor/sql-editor.component";
 import { GlobalQueryComponent } from "src/app/query/global-query/global-query.component";
 import { NavigationService } from "src/app/services/navigation.service";
 import { QueryMicroDbTrackerService } from "src/app/services/query-micro-db-tracker.service";
@@ -123,6 +124,38 @@ describe("GlobalQueryComponent", () => {
         fixture.detectChanges();
 
         expect(component.sqlRequestCode).toEqual("select 1");
+    });
+
+    it("should show the URL's query in the editor after back, once the user has edited and run another", () => {
+        createComponent("select 1");
+        vi.spyOn(sqlQueryService, "requestDataSqlRun").mockReturnValue(of(void 0));
+        stubMethod(navigationService, "navigateWithSqlQuery");
+        const editor = findComponentInstance(fixture, SqlEditorComponent);
+        editor.templateChange.emit("select 2");
+        component.runSQLRequest({ query: "select 2" });
+        setComponentInput(fixture, "sqlQuery", "select 2");
+        fixture.detectChanges();
+
+        setComponentInput(fixture, "sqlQuery", "select 1");
+        fixture.detectChanges();
+
+        expect(editor.template).toEqual("select 1");
+    });
+
+    it("should clear the editor after back leads from a run to a URL without a query", () => {
+        createComponent(undefined);
+        vi.spyOn(sqlQueryService, "requestDataSqlRun").mockReturnValue(of(void 0));
+        stubMethod(navigationService, "navigateWithSqlQuery");
+        const editor = findComponentInstance(fixture, SqlEditorComponent);
+        editor.templateChange.emit("select 2");
+        component.runSQLRequest({ query: "select 2" });
+        setComponentInput(fixture, "sqlQuery", "select 2");
+        fixture.detectChanges();
+
+        setComponentInput(fixture, "sqlQuery", undefined);
+        fixture.detectChanges();
+
+        expect(editor.template).toEqual("");
     });
 
     it("should clear the editor after back leads to a URL without a query", () => {

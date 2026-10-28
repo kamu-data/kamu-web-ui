@@ -17,7 +17,11 @@ import { Apollo } from "apollo-angular";
 import { provideToastr } from "ngx-toastr";
 import type { Mock } from "vitest";
 
-import { emitClickOnElementByDataTestId, setComponentInput } from "@common/helpers/base-test.helpers.spec";
+import {
+    emitClickOnElementByDataTestId,
+    findComponentInstance,
+    setComponentInput,
+} from "@common/helpers/base-test.helpers.spec";
 import AppValues from "@common/values/app.values";
 
 import { DataComponent } from "src/app/dataset-view/additional-components/data-component/data.component";
@@ -27,6 +31,7 @@ import {
 } from "src/app/dataset-view/additional-components/data-tabs.mock";
 import { EngineService } from "src/app/dataset-view/additional-components/metadata-component/components/set-transform/components/engine-section/engine.service";
 import { mockEngines } from "src/app/dataset-view/additional-components/metadata-component/components/set-transform/mock.data";
+import { SqlEditorComponent } from "src/app/editor/components/sql-editor/sql-editor.component";
 import {
     mockDatasetBasicsDerivedFragment,
     mockDatasetBasicsRootFragment,
@@ -194,6 +199,24 @@ describe("DataComponent", () => {
         fixture.detectChanges();
 
         expect(component.sqlRequestCode).toEqual("select 1");
+    }));
+
+    it("should show the URL's query in the editor after back, once the user has edited and run another", fakeAsync(() => {
+        setComponentInput(fixture, "sqlQuery", "select 1");
+        fixture.detectChanges();
+        flush();
+        requestDataSqlRunSpy.mockReturnValue(of(void 0));
+        const editor = findComponentInstance(fixture, SqlEditorComponent);
+        editor.templateChange.emit("select 2");
+        component.runSQLRequest({ query: "select 2" });
+        setComponentInput(fixture, "sqlQuery", "select 2");
+        fixture.detectChanges();
+        flush();
+
+        setComponentInput(fixture, "sqlQuery", "select 1");
+        fixture.detectChanges();
+
+        expect(editor.template).toEqual("select 1");
     }));
 
     it("should check add data", () => {

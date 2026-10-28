@@ -1,6 +1,8 @@
 @if (invalidDeviceCode) {
-    <div class="error-block text-center my-2" role="alert" data-test-id="invalid-device-code">
-        {{ ERROR_INVALID_DEVICE_CODE }}
+    <div class="d-flex justify-content-center mt-4">
+        <div class="alert alert-danger mb-0" role="alert" data-test-id="invalid-device-code">
+            {{ ERROR_INVALID_DEVICE_CODE }}
+        </div>
     </div>
 }
 @if (!selectedLoginMethod || selectedLoginMethod === AccountProvider.Web3Wallet) {

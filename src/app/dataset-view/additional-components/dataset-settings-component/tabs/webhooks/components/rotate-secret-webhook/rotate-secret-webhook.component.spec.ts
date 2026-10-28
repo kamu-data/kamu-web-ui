@@ -13,9 +13,12 @@ import { of } from "rxjs";
 
 import { Apollo } from "apollo-angular";
 import { provideToastr } from "ngx-toastr";
+import { Mock } from "vitest";
 
-import { registerMatSvgIcons, setComponentInput } from "@common/helpers/base-test.helpers.spec";
+import { requireValue } from "@common/helpers/app.helpers";
+import { registerMatSvgIcons, setComponentInput, stubMethod } from "@common/helpers/base-test.helpers.spec";
 import { SharedTestModule } from "@common/modules/shared-test.module";
+import { mockDatasetWebhookByIdQuery } from "@api/mock/webhooks.mock";
 
 import { RotateSecretWebhookComponent } from "src/app/dataset-view/additional-components/dataset-settings-component/tabs/webhooks/components/rotate-secret-webhook/rotate-secret-webhook.component";
 import { DatasetWebhooksService } from "src/app/dataset-view/additional-components/dataset-settings-component/tabs/webhooks/service/dataset-webhooks.service";
@@ -27,6 +30,9 @@ describe("RotateSecretWebhookComponent", () => {
     let fixture: ComponentFixture<RotateSecretWebhookComponent>;
     let datasetWebhooksService: DatasetWebhooksService;
     let navigationService: NavigationService;
+    let rotateSecretSpy: Mock<DatasetWebhooksService["datasetWebhookRotateSecret"]>;
+
+    const mockWebhookSubscription = requireValue(mockDatasetWebhookByIdQuery.datasets.byId?.webhooks.subscription);
 
     beforeEach(() => {
         TestBed.configureTestingModule({
@@ -39,9 +45,14 @@ describe("RotateSecretWebhookComponent", () => {
 
         fixture = TestBed.createComponent(RotateSecretWebhookComponent);
         component = fixture.componentInstance;
-        setComponentInput(fixture, "datasetBasics", mockDatasetBasicsRootFragment);
-        setComponentInput(fixture, "webhookId", "55-23456-888-890");
-        vi.spyOn(datasetWebhooksService, "datasetWebhookRotateSecret").mockReturnValue(of("mock-secret"));
+        setComponentInput(fixture, "webhookData", {
+            datasetBasics: mockDatasetBasicsRootFragment,
+            subscription: mockWebhookSubscription,
+        });
+
+        rotateSecretSpy = vi
+            .spyOn(datasetWebhooksService, "datasetWebhookRotateSecret")
+            .mockReturnValue(of("mock-secret"));
 
         fixture.detectChanges();
     });
@@ -50,13 +61,16 @@ describe("RotateSecretWebhookComponent", () => {
         expect(component).toBeTruthy();
     });
 
-    it("should check secret", () => {
+    it("should rotate the secret of the resolved subscription", () => {
+        expect(rotateSecretSpy).toHaveBeenCalledWith(mockDatasetBasicsRootFragment.id, mockWebhookSubscription.id);
         expect(component.secret).toEqual("mock-secret");
     });
 
     it("should check navigate to webhooks list", () => {
-        const navigateToWebhooksSpy = vi.spyOn(navigationService, "navigateToWebhooks").mockImplementation(() => {});
+        const navigateToWebhooksSpy = stubMethod(navigationService, "navigateToWebhooks");
+
         component.navigateToListWebhooks();
+
         expect(navigateToWebhooksSpy).toHaveBeenCalledTimes(1);
     });
 });

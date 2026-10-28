@@ -30,6 +30,7 @@ import { InfiniteScrollDirective } from "ngx-infinite-scroll";
 import { ToastrService } from "ngx-toastr";
 
 import { UnsubscribeDestroyRefAdapter } from "@common/components/unsubscribe.ondestroy.adapter";
+import { ValueNotFoundComponent } from "@common/components/value-not-found/value-not-found.component";
 import { DisplayDatasetIdPipe } from "@common/pipes/display-dataset-id.pipe";
 import { DisplaySizePipe } from "@common/pipes/display-size.pipe";
 import AppValues from "@common/values/app.values";
@@ -59,6 +60,7 @@ import { CollectionEntriesResult, CollectionEntryViewType, CollectionViewNode } 
         MatTableModule,
         MatProgressSpinnerModule,
         //-----//
+        ValueNotFoundComponent,
         DisplaySizePipe,
         DisplayDatasetIdPipe,
     ],
@@ -226,7 +228,11 @@ export class CollectionViewComponent extends UnsubscribeDestroyRefAdapter implem
 
     public goUp(): void {
         const lastSlashIndex = this.pathPrefix.lastIndexOf("/");
-        this.pathPrefix = lastSlashIndex === 0 ? "/" : this.pathPrefix.substring(0, lastSlashIndex);
+        this.openFolder(lastSlashIndex === 0 ? "/" : this.pathPrefix.substring(0, lastSlashIndex));
+    }
+
+    public openFolder(path: string): void {
+        this.pathPrefix = path;
         this.currentPage = 1;
         this.checkHeadAndLoadCollection();
         this.navigationService.navigateToDatasetView({
@@ -235,6 +241,12 @@ export class CollectionViewComponent extends UnsubscribeDestroyRefAdapter implem
             tab: DatasetViewTypeEnum.Overview,
             [ProjectLinks.URL_QUERY_PARAM_PATH_PREFIX]: this.pathPrefix,
         });
+    }
+
+    /** Loads the root again rather than from the cache, since the page shows the last response's totalCount */
+    public openCollectionRoot(): void {
+        this.datasetAsCollectionService.cacheEntries.delete("/");
+        this.openFolder("/");
     }
 
     public onCellEventClick(value: string, nodeType: MaybeNull<CollectionViewNode>) {

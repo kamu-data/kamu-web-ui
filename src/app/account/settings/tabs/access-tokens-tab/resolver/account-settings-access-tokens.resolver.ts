@@ -8,7 +8,7 @@
 import { inject } from "@angular/core";
 import { ActivatedRouteSnapshot, ResolveFn } from "@angular/router";
 
-import { positiveIntegerFromParam } from "@common/helpers/app.helpers";
+import { positiveIntegerFromParam } from "@common/helpers/url-params.helpers";
 import { AccessTokenConnectionDataFragment } from "@api/kamu.graphql.interface";
 
 import { AccessTokenService } from "src/app/account/settings/tabs/access-tokens-tab/access-token.service";

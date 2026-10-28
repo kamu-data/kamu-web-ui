@@ -58,7 +58,8 @@ export class TimeDeltaFormComponent extends BaseComponent implements OnInit {
   neither the app nor its specs need a cast to pass data in:
   - GraphQL data: the type rules are in `kamu-ui-graphql-api`, "Documents".
   - An input bound from a route or query parameter is `MaybeUndefined<T>`: the router sets it to
-    `undefined` when the parameter is missing.
+    `undefined` when the parameter is missing. A query parameter input also takes
+    `transform: queryParamValue` (`kamu-ui-routing`, "Route anatomy").
 - Templates use the built-in control flow: `@if` / `@else`, `@for` and `@switch`. Never
   `*ngIf`, `*ngFor` or `[ngSwitch]`, which Angular deprecates for removal. Pick the `@for`
   `track` expression by where the list comes from:

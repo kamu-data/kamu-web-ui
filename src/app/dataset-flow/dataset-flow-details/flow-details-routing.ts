@@ -9,6 +9,7 @@
 
 import { Routes } from "@angular/router";
 
+import { featureFlagGuard } from "@common/guards/feature-flag.guard";
 import { datasetInfoResolverFn } from "@common/resolvers/dataset-info.resolver";
 import RoutingResolvers from "@common/resolvers/routing-resolvers";
 
@@ -35,6 +36,11 @@ export const FLOW_DETAILS_ROUTES: Routes = [
             [RoutingResolvers.DATASET_INFO_KEY]: datasetInfoResolverFn,
         },
         children: [
+            {
+                path: "",
+                redirectTo: FlowDetailsTabs.HISTORY,
+                pathMatch: "full",
+            },
             {
                 path: FlowDetailsTabs.HISTORY,
                 component: FlowDetailsHistoryTabComponent,
@@ -70,6 +76,7 @@ export const FLOW_DETAILS_ROUTES: Routes = [
             },
             {
                 path: FlowDetailsTabs.USAGE,
+                canActivate: [featureFlagGuard("flowDetails.usage")],
                 component: FlowDetailsUsageTabComponent,
                 data: {
                     [ProjectLinks.URL_PARAM_TAB]: FlowDetailsTabs.USAGE,
@@ -77,6 +84,7 @@ export const FLOW_DETAILS_ROUTES: Routes = [
             },
             {
                 path: FlowDetailsTabs.ADMIN,
+                canActivate: [featureFlagGuard("flowDetails.admin")],
                 component: FlowDetailsAdminTabComponent,
                 data: {
                     [ProjectLinks.URL_PARAM_TAB]: FlowDetailsTabs.ADMIN,

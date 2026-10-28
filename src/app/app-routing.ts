@@ -12,9 +12,10 @@ import { AccountWhitelistNotFoundComponent } from "@common/components/account-wh
 import { LoginUnavailableComponent } from "@common/components/login-unavailable/login-unavailable.component";
 import { PageNotFoundComponent } from "@common/components/page-not-found/page-not-found.component";
 import { forbidAnonymousAccessGuardFn } from "@common/guards/forbid-anonymous-access.guard";
+import { validRouteParams } from "@common/guards/valid-route-params.guard";
+import { isFlowId, isMultihash, isOdfName } from "@common/helpers/url-params.helpers";
 import RoutingResolvers from "@common/resolvers/routing-resolvers";
 
-import { accountGuard } from "src/app/account/guards/account.guard";
 import { AdminDashboardComponent } from "src/app/admin-view/admin-dashboard/admin-dashboard.component";
 import { AppConfigService } from "src/app/app-config.service";
 import { adminGuard } from "src/app/auth/guards/admin.guard";
@@ -106,10 +107,10 @@ export const ANONYMOUS_GUARDED_ROUTES: Routes = [
     },
     {
         path: `:${ProjectLinks.URL_PARAM_ACCOUNT_NAME}`,
+        canActivate: [validRouteParams({ [ProjectLinks.URL_PARAM_ACCOUNT_NAME]: isOdfName })],
         children: [
             {
                 path: "",
-                canActivate: [accountGuard],
                 runGuardsAndResolvers: "always",
                 loadChildren: () =>
                     import(
@@ -119,6 +120,7 @@ export const ANONYMOUS_GUARDED_ROUTES: Routes = [
             },
             {
                 path: `:${ProjectLinks.URL_PARAM_DATASET_NAME}`,
+                canActivate: [validRouteParams({ [ProjectLinks.URL_PARAM_DATASET_NAME]: isOdfName })],
                 runGuardsAndResolvers: "always",
                 loadChildren: () =>
                     import(
@@ -130,9 +132,16 @@ export const ANONYMOUS_GUARDED_ROUTES: Routes = [
     },
     {
         path: `:${ProjectLinks.URL_PARAM_ACCOUNT_NAME}/:${ProjectLinks.URL_PARAM_DATASET_NAME}`,
+        canActivate: [
+            validRouteParams({
+                [ProjectLinks.URL_PARAM_ACCOUNT_NAME]: isOdfName,
+                [ProjectLinks.URL_PARAM_DATASET_NAME]: isOdfName,
+            }),
+        ],
         children: [
             {
                 path: `${ProjectLinks.URL_BLOCK}/:${ProjectLinks.URL_PARAM_BLOCK_HASH}`,
+                canActivate: [validRouteParams({ [ProjectLinks.URL_PARAM_BLOCK_HASH]: isMultihash })],
                 loadComponent: () =>
                     import(
                         /* webpackChunkName: "metadata-block" */
@@ -142,7 +151,7 @@ export const ANONYMOUS_GUARDED_ROUTES: Routes = [
             },
             {
                 path: `${ProjectLinks.URL_FLOW_DETAILS}/:${ProjectLinks.URL_PARAM_FLOW_ID}`,
-                canActivate: [authenticatedGuard],
+                canActivate: [validRouteParams({ [ProjectLinks.URL_PARAM_FLOW_ID]: isFlowId }), authenticatedGuard],
                 loadChildren: () =>
                     import(
                         /* webpackChunkName: "flow-details" */

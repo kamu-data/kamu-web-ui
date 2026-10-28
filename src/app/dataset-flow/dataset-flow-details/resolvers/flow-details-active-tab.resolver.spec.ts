@@ -34,7 +34,7 @@ describe("flowDetailsActiveTabResolverFn", () => {
         });
     });
 
-    describe("should return null when no tab data is available", () => {
+    describe("should throw when the route has no tab, which the default-tab redirect rules out", () => {
         [
             {
                 description: "route has no children",
@@ -52,7 +52,9 @@ describe("flowDetailsActiveTabResolverFn", () => {
             },
         ].forEach(({ description, route }) => {
             it(`when ${description}`, async () => {
-                expect(await runResolver(flowDetailsActiveTabResolverFn, route)).toBeNull();
+                await expect(runResolver(flowDetailsActiveTabResolverFn, route)).rejects.toThrow(
+                    "Route has no FlowDetailsTabs tab",
+                );
             });
         });
     });

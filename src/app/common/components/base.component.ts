@@ -11,7 +11,8 @@ import { ActivatedRoute, ParamMap } from "@angular/router";
 import { map, Observable } from "rxjs";
 
 import { UnsubscribeDestroyRefAdapter } from "@common/components/unsubscribe.ondestroy.adapter";
-import { positiveIntegerFromParam, requireValue } from "@common/helpers/app.helpers";
+import { requireValue } from "@common/helpers/app.helpers";
+import { positiveIntegerFromParam } from "@common/helpers/url-params.helpers";
 import { MaybeNull } from "@interface/app.types";
 import { DatasetInfo } from "@interface/navigation.interface";
 

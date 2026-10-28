@@ -28,6 +28,7 @@ import { NgbAlert } from "@ng-bootstrap/ng-bootstrap";
 import { ToastrService } from "ngx-toastr";
 
 import { BaseComponent } from "@common/components/base.component";
+import { ValueNotFoundComponent } from "@common/components/value-not-found/value-not-found.component";
 import { promiseWithCatch } from "@common/helpers/app.helpers";
 import { DatasetBasicsFragment } from "@api/kamu.graphql.interface";
 import { MaybeNull, MaybeUndefined } from "@interface/app.types";
@@ -51,6 +52,7 @@ import { PreviewFileTypePipe } from "./pipes/preview-file-type.pipe";
         MatProgressBarModule,
         NgbAlert,
         //-----//
+        ValueNotFoundComponent,
         PreviewFileTypePipe,
     ],
     templateUrl: "./versioned-file-view.component.html",
@@ -160,6 +162,11 @@ export class VersionedFileViewComponent extends BaseComponent implements OnInit,
             datasetName: this.datasetBasics.name,
             tab: DatasetViewTypeEnum.Overview,
         });
+    }
+
+    /** Whether the URL asks for a version the file does not have */
+    public isMissingVersion(fileDetails: VersionedFileView): boolean {
+        return this.version > 0 && !fileDetails.fileInfo;
     }
 
     public isLatestVersion(fileDetails: VersionedFileView): boolean {

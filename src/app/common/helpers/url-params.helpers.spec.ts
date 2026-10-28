@@ -1,0 +1,154 @@
+/**
+ * Copyright Kamu Data, Inc. and contributors. All rights reserved.
+ *
+ * Use of this software is governed by the Business Source License
+ * included in the LICENSE file.
+ */
+
+import {
+    collectionPathFromParam,
+    currentLocationPath,
+    inAppPathFromParam,
+    isFlowId,
+    isMultihash,
+    isOdfName,
+    isUrlWithin,
+    isUuid,
+    positiveIntegerFromParam,
+    queryParamValue,
+} from "@common/helpers/url-params.helpers";
+
+describe("URL parameter helpers", () => {
+    [
+        {
+            name: "isFlowId",
+            check: isFlowId,
+            valid: ["0", "42", "+7", "18446744073709551615", "000000000000000000000042"],
+            invalid: ["", "abc", "-1", "1.5", " 2", "18446744073709551616", "1".repeat(21), "+", "++1"],
+        },
+        {
+            name: "isUuid",
+            check: isUuid,
+            valid: [
+                "d20a935e-0ccb-4844-b1bb-f4b5b9b0279a",
+                "D20A935E-0CCB-4844-B1BB-F4B5B9B0279A",
+                "d20a935e0ccb4844b1bbf4b5b9b0279a",
+                "{d20a935e-0ccb-4844-b1bb-f4b5b9b0279a}",
+                "urn:uuid:d20a935e-0ccb-4844-b1bb-f4b5b9b0279a",
+            ],
+            invalid: ["", "not-a-uuid", "d20a935e-0ccb-4844-b1bb-f4b5b9b0279", "g20a935e-0ccb-4844-b1bb-f4b5b9b0279a"],
+        },
+        {
+            name: "isOdfName",
+            check: isOdfName,
+            valid: ["kamu", "com.example.data", "my-dataset", "0xAbC123", "a1.b-2"],
+            invalid: ["", "bad_name", "-leading", "trailing-", "double--dash", "a..b", ".dot", "name!", "a/b"],
+        },
+        {
+            name: "isMultihash",
+            check: isMultihash,
+            valid: [
+                "f1620ff7f5beaf16900218a3ac4aae82cdccf764816986c7c739c716cf7dc03112a2f",
+                "uEiD_f1vq8WkAIYo6xKrgLNzPdkgWmGx8c5xxbPfcAxEqLw",
+                "zQmYwAPJzv5CZsnA625s3Xf2nemtYgPpHdWEz79ojWnPbdG",
+            ],
+            invalid: ["", "xyz!", "f162", "f16g", "zQm0OIl", "u+/="],
+        },
+    ].forEach(({ name, check, valid, invalid }) => {
+        describe(name, () => {
+            valid.forEach((value) => {
+                it(`should accept "${value}"`, () => {
+                    expect(check(value)).toBe(true);
+                });
+            });
+            invalid.forEach((value) => {
+                it(`should refuse "${value}"`, () => {
+                    expect(check(value)).toBe(false);
+                });
+            });
+        });
+    });
+
+    describe("queryParamValue", () => {
+        [
+            { value: "abc", expected: "abc" },
+            { value: "", expected: "" },
+            { value: ["first", "second"], expected: "first" },
+            { value: [], expected: undefined },
+            { value: undefined, expected: undefined },
+            { value: null, expected: undefined },
+            { value: 42, expected: undefined },
+        ].forEach(({ value, expected }) => {
+            it(`should read ${JSON.stringify(value)} as ${JSON.stringify(expected)}`, () => {
+                expect(queryParamValue(value)).toBe(expected);
+            });
+        });
+    });
+
+    describe("positiveIntegerFromParam", () => {
+        it("should read only positive whole numbers", () => {
+            expect(positiveIntegerFromParam("1")).toEqual(1);
+            expect(positiveIntegerFromParam("42")).toEqual(42);
+            ["abc", "0", "-1", "1.5", "1e3", " 2", "", null, undefined, "99999999999999999999"].forEach((param) => {
+                expect(positiveIntegerFromParam(param)).toBeNull();
+            });
+        });
+    });
+
+    describe("inAppPathFromParam", () => {
+        ["/", "/kamu/dataset", "/v/query?sqlQuery=select%201#top"].forEach((path) => {
+            it(`should keep the app path "${path}"`, () => {
+                expect(inAppPathFromParam(path)).toBe(path);
+            });
+        });
+
+        ["", null, undefined, "kamu/dataset", "//evil.example", "/\\evil.example", "https://evil.example"].forEach(
+            (param) => {
+                it(`should refuse ${JSON.stringify(param)}`, () => {
+                    expect(inAppPathFromParam(param)).toBeUndefined();
+                });
+            },
+        );
+    });
+
+    describe("isUrlWithin", () => {
+        [
+            { url: "/v/settings", expected: true },
+            { url: "/v/settings/account", expected: true },
+            { url: "/v/settings?tab=1", expected: true },
+            { url: "/v/settings#top", expected: true },
+            { url: "/v/settingsx", expected: false },
+            { url: "/dev/v/settings", expected: false },
+            { url: "/kamu/notes?redirectUrl=/v/settings", expected: false },
+        ].forEach(({ url, expected }) => {
+            it(`should ${expected ? "" : "not "}put "${url}" within v/settings`, () => {
+                expect(isUrlWithin(url, "v/settings")).toBe(expected);
+            });
+        });
+    });
+
+    describe("currentLocationPath", () => {
+        it("should keep the query string and fragment of the address bar", () => {
+            const { pathname, search, hash } = window.location;
+
+            expect(currentLocationPath()).toBe(pathname + search + hash);
+        });
+    });
+
+    describe("collectionPathFromParam", () => {
+        [
+            { param: "/", expected: "/" },
+            { param: "/docs", expected: "/docs" },
+            { param: "/docs/2024/", expected: "/docs/2024" },
+            { param: "//docs//2024", expected: "/docs/2024" },
+            { param: "docs", expected: "/" },
+            { param: "", expected: "/" },
+            { param: null, expected: "/" },
+            { param: undefined, expected: "/" },
+        ].forEach(({ param, expected }) => {
+            it(`should read ${JSON.stringify(param)} as "${expected}"`, () => {
+                expect(collectionPathFromParam(param)).toBe(expected);
+            });
+        });
+    });
+});

@@ -10,10 +10,9 @@ import { FormsModule } from "@angular/forms";
 
 import { CopyToClipboardComponent } from "@common/components/copy-to-clipboard/copy-to-clipboard.component";
 import RoutingResolvers from "@common/resolvers/routing-resolvers";
-import { DatasetBasicsFragment } from "@api/kamu.graphql.interface";
 
+import { EditWebhooksType } from "src/app/dataset-view/additional-components/dataset-settings-component/tabs/webhooks/components/edit-webhook/edit-webhooks.types";
 import { DatasetWebhooksService } from "src/app/dataset-view/additional-components/dataset-settings-component/tabs/webhooks/service/dataset-webhooks.service";
-import ProjectLinks from "src/app/project-links";
 import { NavigationService } from "src/app/services/navigation.service";
 
 @Component({
@@ -28,8 +27,7 @@ import { NavigationService } from "src/app/services/navigation.service";
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class RotateSecretWebhookComponent implements OnInit {
-    @Input(RoutingResolvers.WEBHOOKS_ROTATE_SECRET) public datasetBasics: DatasetBasicsFragment;
-    @Input(ProjectLinks.URL_PARAM_WEBHOOK_ID) public webhookId: string;
+    @Input(RoutingResolvers.WEBHOOKS_ROTATE_SECRET) public webhookData: EditWebhooksType;
 
     private navigationService = inject(NavigationService);
     private datasetWebhooksService = inject(DatasetWebhooksService);
@@ -39,7 +37,7 @@ export class RotateSecretWebhookComponent implements OnInit {
 
     public ngOnInit(): void {
         this.datasetWebhooksService
-            .datasetWebhookRotateSecret(this.datasetBasics.id, this.webhookId)
+            .datasetWebhookRotateSecret(this.webhookData.datasetBasics.id, this.webhookData.subscription.id)
             .subscribe((data) => {
                 this.secret = data;
                 this.cdr.detectChanges();
@@ -48,8 +46,8 @@ export class RotateSecretWebhookComponent implements OnInit {
 
     public navigateToListWebhooks(): void {
         this.navigationService.navigateToWebhooks({
-            accountName: this.datasetBasics.owner.accountName,
-            datasetName: this.datasetBasics.name,
+            accountName: this.webhookData.datasetBasics.owner.accountName,
+            datasetName: this.webhookData.datasetBasics.name,
         });
     }
 }

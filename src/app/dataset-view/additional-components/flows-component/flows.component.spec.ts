@@ -392,16 +392,24 @@ describe("FlowsComponent", () => {
     it("should check to show panel buttons init filter without webhook id", () => {
         const serviceInComponent = fixture.debugElement.injector.get(FlowsSelectionStateService);
         const addWebhookIdSpy = vi.spyOn(serviceInComponent, "addWebhookId").mockImplementation(() => {});
-        const mockWebhookId = null;
-        setComponentInput(fixture, "setWebhookId", mockWebhookId);
+        setComponentInput(fixture, "setWebhookId", undefined);
         expect(addWebhookIdSpy).not.toHaveBeenCalled();
+    });
+
+    it("should keep only the webhook ids that are UUIDs", () => {
+        const serviceInComponent = fixture.debugElement.injector.get(FlowsSelectionStateService);
+        const addWebhookIdSpy = stubMethod(serviceInComponent, "addWebhookId");
+
+        setComponentInput(fixture, "setWebhookId", "not-an-id,d20a935e-0ccb-4844-b1bb-f4b5b9b0279a,");
+
+        expect(addWebhookIdSpy).toHaveBeenCalledTimes(1);
+        expect(addWebhookIdSpy).toHaveBeenCalledWith("d20a935e-0ccb-4844-b1bb-f4b5b9b0279a");
     });
 
     it("should check to show panel buttons init webhook filter buttons without states", () => {
         const serviceInComponent = fixture.debugElement.injector.get(FlowsSelectionStateService);
         const setWebhooksCategorySpy = vi.spyOn(serviceInComponent, "setWebhooksCategory").mockImplementation(() => {});
-        const mockStates = null;
-        setComponentInput(fixture, "setWebhookState", mockStates);
+        setComponentInput(fixture, "setWebhookState", undefined);
         expect(setWebhooksCategorySpy).not.toHaveBeenCalled();
     });
 
@@ -427,6 +435,21 @@ describe("FlowsComponent", () => {
         const category = "updates";
         setComponentInput(fixture, "setFlowsCategory", category);
         expect(setFlowsCategorySpy).toHaveBeenCalledTimes(1);
+    });
+
+    ["bogus", "WEBHOOKS", undefined].forEach((category) => {
+        it(`should read the category "${category}" as no category, as a missing one`, () => {
+            const serviceInComponent = fixture.debugElement.injector.get(FlowsSelectionStateService);
+            const setFlowsCategorySpy = stubMethod(serviceInComponent, "setFlowsCategory");
+            const setWebhooksCategorySpy = stubMethod(serviceInComponent, "setWebhooksCategory");
+            const clearFlowsCategorySpy = stubMethod(serviceInComponent, "clearFlowsCategory");
+
+            setComponentInput(fixture, "setFlowsCategory", category);
+
+            expect(clearFlowsCategorySpy).toHaveBeenCalledTimes(1);
+            expect(setFlowsCategorySpy).not.toHaveBeenCalled();
+            expect(setWebhooksCategorySpy).not.toHaveBeenCalled();
+        });
     });
 
     it("should check has push sources", () => {
@@ -951,14 +974,14 @@ describe("FlowsComponent", () => {
 
         it("should keep only the selection the current URL asks for", fakeAsync(() => {
             const selectionStateService = fixture.debugElement.injector.get(FlowsSelectionStateService);
-            setComponentInput(fixture, "setWebhookId", "subscription-from-url");
+            setComponentInput(fixture, "setWebhookId", "d20a935e-0ccb-4844-b1bb-f4b5b9b0279c");
             fixture.detectChanges();
             tick();
             selectionStateService.addWebhookId("subscription-of-the-previous-dataset");
 
             switchTo(otherDatasetFlowsData);
 
-            expect(selectionStateService.snapshot.webhooksIds).toEqual(["subscription-from-url"]);
+            expect(selectionStateService.snapshot.webhooksIds).toEqual(["d20a935e-0ccb-4844-b1bb-f4b5b9b0279c"]);
             discardPeriodicTasks();
         }));
 

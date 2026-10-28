@@ -13,8 +13,10 @@ import { RouterLink } from "@angular/router";
 import { RxwebValidators } from "@rxweb/reactive-form-validators";
 
 import { enumValueOf, requireValue } from "@common/helpers/app.helpers";
+import { queryParamValue } from "@common/helpers/url-params.helpers";
 import { DatasetLinkPipe } from "@common/pipes/dataset-link.pipe";
 import RoutingResolvers from "@common/resolvers/routing-resolvers";
+import { MaybeUndefined } from "@interface/app.types";
 import { DatasetInfo } from "@interface/navigation.interface";
 
 import { BlockService } from "src/app/dataset-block/metadata-block/block.service";
@@ -57,7 +59,8 @@ import ProjectLinks from "src/app/project-links";
     ],
 })
 export class AddPushSourceComponent extends BaseSourceEventComponent implements AfterViewInit {
-    @Input(ProjectLinks.URL_QUERY_PARAM_PUSH_SOURCE_NAME) public queryParamName: string;
+    @Input({ alias: ProjectLinks.URL_QUERY_PARAM_PUSH_SOURCE_NAME, transform: queryParamValue })
+    public queryParamName: MaybeUndefined<string>;
     @Input(RoutingResolvers.ADD_PUSH_SOURCE_KEY) public eventYamlByHash: string;
     @Input(RoutingResolvers.DATASET_INFO_KEY) public datasetInfo: DatasetInfo;
 

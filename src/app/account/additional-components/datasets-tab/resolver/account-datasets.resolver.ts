@@ -10,7 +10,8 @@ import { ActivatedRouteSnapshot, ResolveFn } from "@angular/router";
 
 import { map } from "rxjs";
 
-import { positiveIntegerFromParam, requireValue } from "@common/helpers/app.helpers";
+import { requireValue } from "@common/helpers/app.helpers";
+import { positiveIntegerFromParam } from "@common/helpers/url-params.helpers";
 import { DatasetsAccountResolverResponse, DatasetsAccountResponse } from "@interface/dataset.interface";
 
 import { AccountService } from "src/app/account/account.service";

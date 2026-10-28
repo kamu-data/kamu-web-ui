@@ -8,6 +8,7 @@
 import { ChangeDetectionStrategy, Component, inject, Input, OnInit } from "@angular/core";
 
 import { BaseComponent } from "@common/components/base.component";
+import { queryParamValue } from "@common/helpers/url-params.helpers";
 import { MaybeUndefined } from "@interface/app.types";
 
 import { LoginService } from "src/app/auth/login/login.service";
@@ -21,8 +22,10 @@ import { SessionStorageService } from "src/app/services/session-storage.service"
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class GithubCallbackComponent extends BaseComponent implements OnInit {
-    @Input(ProjectLinks.URL_QUERY_PARAM_CODE) public code: MaybeUndefined<string>;
-    @Input(ProjectLinks.URL_QUERY_PARAM_STATE) public state: MaybeUndefined<string>;
+    @Input({ alias: ProjectLinks.URL_QUERY_PARAM_CODE, transform: queryParamValue })
+    public code: MaybeUndefined<string>;
+    @Input({ alias: ProjectLinks.URL_QUERY_PARAM_STATE, transform: queryParamValue })
+    public state: MaybeUndefined<string>;
 
     private navigationService = inject(NavigationService);
     private loginService = inject(LoginService);

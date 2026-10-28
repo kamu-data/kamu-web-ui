@@ -28,6 +28,7 @@ import { ModalComponent } from "@common/components/modal/modal.component";
 import { ModalService } from "@common/components/modal/modal.service";
 import { SpinnerComponent } from "@common/components/spinner/spinner/spinner.component";
 import { isMobileView, promiseWithCatch } from "@common/helpers/app.helpers";
+import { isUrlWithin } from "@common/helpers/url-params.helpers";
 import AppValues from "@common/values/app.values";
 import { AccountFragment, AccountProvider, AccountType } from "@api/kamu.graphql.interface";
 import { MaybeNull } from "@interface/app.types";
@@ -248,7 +249,7 @@ export class AppComponent extends BaseComponent implements OnInit {
     }
 
     private shouldHeaderBeVisible(url: string): boolean {
-        return !ALL_URLS_WITHOUT_HEADER.some((item) => url.toLowerCase().includes(item));
+        return !ALL_URLS_WITHOUT_HEADER.some((item) => isUrlWithin(url, item));
     }
 
     private outputAppVersion(): void {

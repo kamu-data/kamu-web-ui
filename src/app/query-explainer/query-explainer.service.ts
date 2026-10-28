@@ -104,7 +104,7 @@ export class QueryExplainerService {
     }
 
     public fetchCommitmentDataByUploadToken(token: string): Observable<QueryExplainerResponse> {
-        const url = new URL(`${this.baseUrl}/platform/file/upload/${token}`);
+        const url = new URL(`${this.baseUrl}/platform/file/upload/${encodeURIComponent(token)}`);
         return this.http
             .get<QueryExplainerResponse>(url.href)
             .pipe(catchError((e: unknown) => this.showRequestError(e)));

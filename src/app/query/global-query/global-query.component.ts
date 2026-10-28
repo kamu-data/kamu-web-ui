@@ -13,8 +13,9 @@ import { filter, finalize, fromEvent, map, Observable, takeUntil } from "rxjs";
 
 import { BaseComponent } from "@common/components/base.component";
 import { promiseWithCatch } from "@common/helpers/app.helpers";
+import { queryParamValue } from "@common/helpers/url-params.helpers";
 import AppValues from "@common/values/app.values";
-import { MaybeNull } from "@interface/app.types";
+import { MaybeNull, MaybeUndefined } from "@interface/app.types";
 import { DatasetRequestBySql } from "@interface/dataset.interface";
 
 import { DataSqlErrorUpdate } from "src/app/dataset-view/dataset.subscriptions.interface";
@@ -41,7 +42,8 @@ import { SqlQueryService } from "src/app/services/sql-query.service";
     ],
 })
 export class GlobalQueryComponent extends BaseComponent implements OnInit {
-    @Input(ProjectLinks.URL_QUERY_PARAM_SQL_QUERY) public set sqlQuery(value: string) {
+    @Input({ alias: ProjectLinks.URL_QUERY_PARAM_SQL_QUERY, transform: queryParamValue })
+    public set sqlQuery(value: MaybeUndefined<string>) {
         this.sqlRequestCode = value ?? "";
     }
     public sqlRequestCode = "";

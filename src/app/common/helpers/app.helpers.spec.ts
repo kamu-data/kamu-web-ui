@@ -21,7 +21,6 @@ import {
     isStringArray,
     momentConvertDateToLocalWithFormat,
     oneOf,
-    positiveIntegerFromParam,
     promiseWithCatch,
     requireValue,
     trackBusy,
@@ -75,14 +74,6 @@ describe("AppHelpers", () => {
         expect(oneOf(categories, "updates")).toEqual("updates");
         expect(oneOf(categories, "webhooks")).toBeUndefined();
         expect(oneOf(categories, undefined)).toBeUndefined();
-    });
-
-    it("should check positiveIntegerFromParam reads only positive whole numbers", () => {
-        expect(positiveIntegerFromParam("1")).toEqual(1);
-        expect(positiveIntegerFromParam("42")).toEqual(42);
-        ["abc", "0", "-1", "1.5", "1e3", " 2", "", null, undefined, "99999999999999999999"].forEach((param) => {
-            expect(positiveIntegerFromParam(param)).toBeNull();
-        });
     });
 
     it("should check promiseWithCatch with success", () => {
@@ -202,6 +193,17 @@ describe("AppHelpers", () => {
             expect(runButtons.length).toEqual(1);
             expect(runButtons[0].getAttribute("href")).toEqual("/query?sqlQuery=select%201");
             expect(other.querySelectorAll(RUN_BUTTON_SELECTOR).length).toEqual(0);
+        });
+
+        it("should keep characters that end a query value inside the linked query", () => {
+            const target = createMarkdownContainer();
+
+            addMarkdownRunButton(target, ["select 'a&b' as x, 1+2 # c"], "/query?sqlQuery");
+
+            const runButton = requireValue(target.querySelector<HTMLAnchorElement>(RUN_BUTTON_SELECTOR));
+            expect(runButton.getAttribute("href")).toEqual(
+                "/query?sqlQuery=select%20'a%26b'%20as%20x%2C%201%2B2%20%23%20c",
+            );
         });
 
         it("should not add a second Run button when called again for the same render", () => {

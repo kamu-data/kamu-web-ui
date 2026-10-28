@@ -10,7 +10,7 @@ import { ActivatedRouteSnapshot, ResolveFn } from "@angular/router";
 
 import { of, switchMap } from "rxjs";
 
-import { positiveIntegerFromParam } from "@common/helpers/app.helpers";
+import { positiveIntegerFromParam } from "@common/helpers/url-params.helpers";
 import { DatasetSearchResult } from "@interface/search.interface";
 
 import { AppConfigService } from "src/app/app-config.service";

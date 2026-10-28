@@ -99,22 +99,42 @@ its own routes file:
   an account's settings tab, is a guard (`accountSettingsTabGuard`).
 - Tabs are child routes: an empty-path `redirectTo` the default tab with `pathMatch: "full"`,
   then one child per tab with `data: { [ProjectLinks.URL_PARAM_TAB]: XxxTabs.SOME_TAB }` and an
-  `xxxActiveTabResolverFn` on the parent.
+  `xxxActiveTabResolverFn` on the parent. Every route with children, other than an empty-path
+  route with no component, has an empty-path child: without one, the URL that ends at the parent
+  matches it and renders an empty outlet. A tab hidden behind a feature flag gets
+  `canActivate: [featureFlagGuard("area.feature")]` (`@common/guards/feature-flag.guard`), the same
+  name its menu item's `appFeatureFlag` uses, so typing its URL is a 404 too.
+- The route that declares a path parameter checks its format with
+  `canActivate: [validRouteParams({ [ProjectLinks.URL_PARAM_X]: isX })]`
+  (`@common/guards/valid-route-params.guard`), listed before the other guards. The checks live in
+  `@common/helpers/url-params.helpers` (`isOdfName`, `isFlowId`, `isUuid`, `isMultihash`) and
+  follow the API's scalar parsers, never stricter. A malformed value is a 404 before any resolver
+  sends it to the API, where it would fail as a GraphQL input error; a well-formed value the API
+  does not know is the resolver's 404.
 - Guards and resolvers read the URL through typed accessors, never a cast:
-  - a path parameter, which the router guarantees: `requireValue(route.paramMap.get(...),
-    "Route has no …")`;
+  - a path parameter, which the router guarantees and `validRouteParams` has checked:
+    `requireValue(route.paramMap.get(...), "Route has no …")`;
   - a tab from route data, which the route config sets: `requireValue(enumValueOf(XxxTabs,
     route.children[0]?.data[ProjectLinks.URL_PARAM_TAB]), "…")`;
   - a query parameter, which the user can edit: `enumValueOf(...) ?? default`, and for a
     comma-separated list `.flatMap((s) => enumValueOf(Enum, s) ?? [])`, so an unknown value is
     dropped rather than passed on; a page, a version or another positive whole number:
-    `positiveIntegerFromParam(...) ?? default` from `@common/helpers/app.helpers`, which a
-    component reads through `pageFromUrl()` and a routed input through a setter of
-    `MaybeUndefined<string>` (`SearchComponent.page`).
+    `positiveIntegerFromParam(...) ?? default`, which a component reads through `pageFromUrl()`.
+    Every URL parser lives in `@common/helpers/url-params.helpers`, with `collectionPathFromParam`
+    and `inAppPathFromParam` beside it. A query parameter bound to
+    a component input is declared
+    `@Input({ alias: ProjectLinks.URL_QUERY_PARAM_X, transform: queryParamValue })` with a setter
+    of `MaybeUndefined<string>` that parses it (`SearchComponent.page`): the router binds a
+    repeated parameter as an array, which the transform reads as its first value, as
+    `queryParamMap.get` does. eslint rejects the plain `@Input(ProjectLinks.URL_QUERY_PARAM_X)`
+    and reads of `queryParams`.
+  - a query value that is well-formed but names nothing, such as a version past the last one or a
+    missing folder, shows `app-value-not-found` with an action back to the default, as a page past
+    the last one shows `app-page-past-end`.
 - Routes whose data must refresh when only query parameters change set
   `runGuardsAndResolvers: "always"`, as their neighbours do.
 - Guards are functional `CanActivateFn`s in a `guards/` folder (`authenticatedGuard`,
-  `adminGuard`, `accountGuard`). A guard returns `true` or the `UrlTree` to redirect to, built by
+  `adminGuard`, `accountSettingsTabGuard`). A guard returns `true` or the `UrlTree` to redirect to, built by
   a `NavigationService` `…UrlTree()` method such as `homeUrlTree()` or `loginUrlTree()`.
 - Navigation from code goes through `NavigationService` methods; add a method there for a new
   destination instead of calling `router.navigate` with assembled segments in components. Its
@@ -153,6 +173,8 @@ The dev build (`npm run build`) does not optimize and its chunk sizes are not re
 | Fetching page data in `ngOnInit` instead of a resolver | The page renders empty first and the data does not refresh with `runGuardsAndResolvers`; resolvers keep loading and navigation in one place |
 | Relying on `webpackChunkName` to name chunks | Ignored by the esbuild builder; the file name decides |
 | `Number(param)`, `+param` or `numberAttribute` for a page in the URL | Each turns what the user typed into a number unchecked: `?page=abc` sent `NaN` to the API and the pager, and `?page=0` asked for page -1, which the API refused with a parse error before the app redirected home |
+| A guard that reads the URL string to decide where a route leads, such as the former account guard that redirected unless the last segment was a tab name | The URL holds user data too: an account named `datasets` passed the check and crashed the active-tab resolver. An empty-path `redirectTo` child decides it from the route config |
+| Leaving a malformed path parameter for the API to refuse | The error link shows the GraphQL input error as a toast, and the resolver then waits forever (`onlyCompleteData()` drops the failed result) or throws on partial data and lands on the home page; a flow-details URL with `abc` as the flow id did the latter |
 | A guard or resolver that calls `navigateTo…()` and then returns `false`, `EMPTY` or `null` | Starts a second navigation from inside the first, which the router then cancels. A resolver returning `EMPTY` cancels the navigation on its own, so the 404 page appeared only because the second navigation won. A `UrlTree` or `RedirectCommand` redirects within the same navigation, and a spec can check where it leads |
 
 ## What lives elsewhere

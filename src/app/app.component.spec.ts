@@ -139,6 +139,14 @@ describe("AppComponent", () => {
         });
     });
 
+    ["/dev/login-records", "/kamu/notes?query=v/login", "/kamu/github_callback-mirror"].forEach((url: string) => {
+        it(`should show header for ${url}, which only contains the path of a page without it`, async () => {
+            await TestBed.inject(Router).navigateByUrl(url);
+
+            expect(component.isHeaderVisible).toBe(true);
+        });
+    });
+
     it("should react on login/logout changes", () => {
         vi.spyOn(fetchAccountDetailsGQL, "mutate").mockReturnValue(
             of({

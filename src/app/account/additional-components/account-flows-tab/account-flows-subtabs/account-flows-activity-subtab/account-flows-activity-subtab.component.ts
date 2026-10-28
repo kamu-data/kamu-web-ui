@@ -32,6 +32,7 @@ import { MaybeNull } from "@interface/app.types";
 
 import { AccountTabs } from "src/app/account/account.constants";
 import { AccountService } from "src/app/account/account.service";
+import { flowStatusGroup } from "src/app/account/additional-components/account-flows-tab/account-flows-tab.helpers";
 import {
     AccountFiltersParams,
     AccountFlowsNav,
@@ -195,7 +196,7 @@ export class AccountFlowsActivitySubtabComponent extends FlowsTableProcessingBas
 
     public onNavStatusChange(event: NgbNavChangeEvent): void {
         const currentNav = requireValue(enumValueOf(FlowStatus, event.nextId), "Unknown flow status tab");
-        const nextNav = currentNav === FlowStatus.Running ? [FlowStatus.Running, FlowStatus.Retrying] : [currentNav];
+        const nextNav = flowStatusGroup(currentNav);
         this.currentPage = 1;
         this.filterByStatus = nextNav;
         this.navigationService.navigateToOwnerView(

@@ -9,29 +9,39 @@ import { Location } from "@angular/common";
 import { provideHttpClient } from "@angular/common/http";
 import { provideHttpClientTesting } from "@angular/common/http/testing";
 import { provideLocationMocks } from "@angular/common/testing";
+import { Type } from "@angular/core";
 import { ComponentFixture, fakeAsync, flush, TestBed, tick } from "@angular/core/testing";
 import { Router, ROUTES } from "@angular/router";
 
-import { of } from "rxjs";
+import { NEVER, Observable, of } from "rxjs";
 
 import { Apollo } from "apollo-angular";
 import { ApolloTestingModule } from "apollo-angular/testing";
 import { provideToastr } from "ngx-toastr";
+import { Mock } from "vitest";
 
 import { PageNotFoundComponent } from "@common/components/page-not-found/page-not-found.component";
 import { promiseWithCatch } from "@common/helpers/app.helpers";
 import { AccountProvider } from "@api/kamu.graphql.interface";
 import { mockAccessTokenConnectionData } from "@api/mock/access-token.mock";
 import { mockAccountDetails } from "@api/mock/auth.mock";
-import { MaybeUndefined } from "@interface/app.types";
+import { mockDatasetFlowByIdResponse } from "@api/mock/dataset-flow.mock";
+import { mockDatasetsAccountResponse } from "@api/mock/dataset.mock";
+import { MaybeNull, MaybeUndefined } from "@interface/app.types";
+import { FeatureVisibility } from "@interface/feature-flags.interface";
 
+import { accountDatasetsResolverFn } from "src/app/account/additional-components/datasets-tab/resolver/account-datasets.resolver";
 import { accountSettingsAccessTokensResolverFn } from "src/app/account/settings/tabs/access-tokens-tab/resolver/account-settings-access-tokens.resolver";
 import { AppConfigService } from "src/app/app-config.service";
 import { provideCatchAllRoute, provideConditionalGuardedRoutes, PUBLIC_ROUTES } from "src/app/app-routing";
 import { LoggedUserService } from "src/app/auth/logged-user.service";
 import { LoginMethodsService } from "src/app/auth/login-methods.service";
 import { LoginComponent } from "src/app/auth/login/login.component";
+import { blockMetadataResolverFn } from "src/app/dataset-block/metadata-block/resolver/block-metadata.resolver";
+import { DatasetFlowByIdResponse } from "src/app/dataset-flow/dataset-flow-details/dataset-flow-details.types";
+import { flowDetailsResolverFn } from "src/app/dataset-flow/dataset-flow-details/resolvers/flow-details.resolver";
 import { mockDerivedOverviewUpdate } from "src/app/dataset-view/additional-components/data-tabs.mock";
+import { editWebhookResolverFn } from "src/app/dataset-view/additional-components/dataset-settings-component/tabs/webhooks/components/edit-webhook/resolvers/edit-webhook.resolver";
 import { datasetOverviewTabResolverFn } from "src/app/dataset-view/additional-components/overview-component/resolver/dataset-overview-tab.resolver";
 import { datasetViewResolverFn } from "src/app/dataset-view/resolvers/dataset-view.resolver";
 import ProjectLinks from "src/app/project-links";
@@ -41,6 +51,7 @@ import {
     mockFullPowerDatasetPermissionsFragment,
 } from "src/app/search/mock.data";
 import { searchResolverFn } from "src/app/search/resolver/search.resolver";
+import { FeatureFlagsService } from "src/app/services/feature-flags.service";
 
 describe("Router", () => {
     let router: Router;
@@ -48,8 +59,24 @@ describe("Router", () => {
     let location: Location;
     let loggedUserService: LoggedUserService;
     let loginMethodsService: LoginMethodsService;
+    let flowDetailsResolveSpy: Mock<() => Observable<DatasetFlowByIdResponse>>;
+    let editWebhookResolveSpy: Mock<() => Observable<never>>;
+    let blockMetadataResolveSpy: Mock<() => Observable<never>>;
+
+    /** The component of the deepest route the last navigation activated */
+    function activatedComponent(): MaybeNull<Type<unknown> | string> {
+        let route = router.routerState.snapshot.root;
+        while (route.firstChild) {
+            route = route.firstChild;
+        }
+        return route.component;
+    }
 
     async function configureRouter(allowAnonymous: boolean): Promise<void> {
+        flowDetailsResolveSpy = vi.fn(() => of(mockDatasetFlowByIdResponse));
+        editWebhookResolveSpy = vi.fn(() => NEVER);
+        blockMetadataResolveSpy = vi.fn(() => NEVER);
+
         await TestBed.configureTestingModule({
             imports: [ApolloTestingModule, PageNotFoundComponent, LoginComponent],
             providers: [
@@ -99,6 +126,15 @@ describe("Router", () => {
                                 datasetPermissions: mockFullPowerDatasetPermissionsFragment,
                                 overviewUpdate: mockDerivedOverviewUpdate,
                             }),
+                    },
+                },
+                { provide: flowDetailsResolverFn, useValue: { resolve: flowDetailsResolveSpy } },
+                { provide: editWebhookResolverFn, useValue: { resolve: editWebhookResolveSpy } },
+                { provide: blockMetadataResolverFn, useValue: { resolve: blockMetadataResolveSpy } },
+                {
+                    provide: accountDatasetsResolverFn,
+                    useValue: {
+                        resolve: () => of({ datasetsResponse: mockDatasetsAccountResponse, accountName: "datasets" }),
                     },
                 },
                 provideHttpClient(),
@@ -252,6 +288,60 @@ describe("Router", () => {
                 expect(location.path()).toBe("/" + ProjectLinks.URL_LOGIN);
                 flush();
             }));
+        });
+    });
+
+    describe("URL validation", () => {
+        beforeEach(async () => {
+            await configureRouter(true);
+
+            vi.spyOn(loggedUserService, "isAuthenticated", "get").mockReturnValue(true);
+            vi.spyOn(loggedUserService, "currentlyLoggedInUser", "get").mockReturnValue(mockAccountDetails);
+            vi.spyOn(TestBed.inject(FeatureFlagsService), "featureVisibility").mockImplementation((name) =>
+                name === "flowDetails.usage" ? FeatureVisibility.INVISIBLE : FeatureVisibility.VISIBLE,
+            );
+        });
+
+        it("should open the history tab for a flow-details URL without a tab", async () => {
+            await router.navigateByUrl("/kamu/dataset/flow-details/42");
+
+            expect(location.path()).toBe("/kamu/dataset/flow-details/42/history");
+            expect(activatedComponent()).not.toBe(PageNotFoundComponent);
+        });
+
+        [
+            { description: "a flow id that is not a number", url: "/kamu/dataset/flow-details/abc/summary" },
+            { description: "a webhook id that is not a UUID", url: "/kamu/dataset/settings/webhooks/not-a-uuid" },
+            {
+                description: "a webhook id to rotate that is not a UUID",
+                url: "/kamu/dataset/settings/webhooks/rotate-secret/not-a-uuid",
+            },
+            { description: "a block hash that is not a multihash", url: "/kamu/dataset/block/xyz!" },
+            { description: "an account name outside the name grammar", url: "/bad_name" },
+            { description: "a dataset name outside the name grammar", url: "/kamu/bad_name" },
+            {
+                description: "a flow-details tab hidden behind a feature flag",
+                url: "/kamu/dataset/flow-details/42/usage",
+            },
+            {
+                description: "a rotate-secret URL without a webhook id",
+                url: "/kamu/dataset/settings/webhooks/rotate-secret",
+            },
+        ].forEach(({ description, url }) => {
+            it(`should show page-not-found for ${description} and resolve nothing`, async () => {
+                await router.navigateByUrl(url);
+
+                expect(activatedComponent()).toBe(PageNotFoundComponent);
+                expect(flowDetailsResolveSpy).not.toHaveBeenCalled();
+                expect(editWebhookResolveSpy).not.toHaveBeenCalled();
+                expect(blockMetadataResolveSpy).not.toHaveBeenCalled();
+            });
+        });
+
+        it("should open the datasets tab of an account named after an account tab", async () => {
+            await router.navigateByUrl("/datasets?page=2");
+
+            expect(location.path()).toBe("/datasets/~select/datasets?page=2");
         });
     });
 

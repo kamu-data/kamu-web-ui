@@ -176,11 +176,17 @@
                     </div>
                 }
             </div>
-        } @else {
+        } @else if (pathPrefix === "/") {
             <div class="box p-5 bg-light text-center mt-4">
                 <mat-icon class="text-muted mb-2">folder_open</mat-icon>
                 <p class="mb-0">Collection is empty</p>
             </div>
+        } @else {
+            <app-value-not-found
+                [message]="'There is no folder ' + pathPrefix + ' in this collection.'"
+                actionLabel="Go to the collection root"
+                (actionEvent)="openCollectionRoot()"
+            />
         }
     </div>
 }

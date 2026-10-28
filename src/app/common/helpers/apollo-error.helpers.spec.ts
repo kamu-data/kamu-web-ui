@@ -14,6 +14,7 @@ import type { Mock } from "vitest";
 
 import { createApolloErrorHandler } from "@common/helpers/apollo-error.helpers";
 import { stubMethod } from "@common/helpers/base-test.helpers.spec";
+import { currentLocationPath } from "@common/helpers/url-params.helpers";
 import { ErrorTexts } from "@common/values/errors.text";
 
 import ProjectLinks from "src/app/project-links";
@@ -70,7 +71,7 @@ describe("createApolloErrorHandler", () => {
 
         expect(toastrErrorSpy).toHaveBeenCalledWith(ErrorTexts.ERROR_ACCESS_TOKEN_EXPIRED);
         expect(navigateSpy).toHaveBeenCalledTimes(1);
-        expect(navigateSpy).toHaveBeenCalledWith(window.location.pathname);
+        expect(navigateSpy).toHaveBeenCalledWith(currentLocationPath());
     });
 
     it("should report an access token error for a token that has not expired", () => {
@@ -83,7 +84,7 @@ describe("createApolloErrorHandler", () => {
 
         expect(toastrErrorSpy).toHaveBeenCalledWith(ErrorTexts.ERROR_ACCESS_TOKEN);
         expect(navigateSpy).toHaveBeenCalledTimes(1);
-        expect(navigateSpy).toHaveBeenCalledWith(window.location.pathname);
+        expect(navigateSpy).toHaveBeenCalledWith(currentLocationPath());
     });
 
     it("should ignore an access token error when there is no token", () => {

@@ -10,7 +10,12 @@ import { inject, Injectable } from "@angular/core";
 import { environment } from "@env/environment";
 import { parseJsonAs } from "@common/helpers/untyped-boundary.helpers";
 import { MaybeNull, MaybeUndefined } from "@interface/app.types";
-import { Feature, FeatureShowMode } from "@interface/feature-flags.interface";
+import {
+    Feature,
+    FeatureDevelopmentState,
+    FeatureShowMode,
+    FeatureVisibility,
+} from "@interface/feature-flags.interface";
 
 import { AppConfigService } from "src/app/app-config.service";
 
@@ -31,6 +36,26 @@ export class FeatureFlagsService {
 
     public getEffectiveFeatureShowMode(): FeatureShowMode {
         return this.appConfigService.featuresRuntimeConfig?.showMode || FeatureShowMode.PRODUCTION;
+    }
+
+    /** How the UI shows the feature in the effective show mode; a feature missing from the list is invisible */
+    public featureVisibility(name: string): FeatureVisibility {
+        const feature = this.findFeature(name);
+        if (!feature) {
+            return FeatureVisibility.INVISIBLE;
+        }
+        switch (this.getEffectiveFeatureShowMode()) {
+            case FeatureShowMode.PRODUCTION:
+                return feature.developmentState === FeatureDevelopmentState.STABLE
+                    ? FeatureVisibility.VISIBLE
+                    : FeatureVisibility.INVISIBLE;
+            case FeatureShowMode.DEMO:
+                return feature.developmentState === FeatureDevelopmentState.STABLE
+                    ? FeatureVisibility.VISIBLE
+                    : FeatureVisibility.DISABLED;
+            case FeatureShowMode.DEVELOP:
+                return FeatureVisibility.VISIBLE;
+        }
     }
 
     public findFeature(name: string): MaybeNull<Feature> {

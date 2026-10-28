@@ -21,11 +21,12 @@ import {
     DatasetAsVersionedFileQuery,
     VersionedFileContentUrlQuery,
 } from "@api/kamu.graphql.interface";
-import { MaybeNullOrUndefined, MaybeUndefined } from "@interface/app.types";
+import { MaybeNull, MaybeUndefined } from "@interface/app.types";
 
 import { VersionedFileView } from "src/app/dataset-view/dataset-view.interface";
 
 import { extractAndAddExtension } from "../components/versioned-file-view/versioned-file-view.model";
+import { VersionedFileViewTexts } from "../components/versioned-file-view/versioned-file-view.text";
 
 @Injectable({
     providedIn: "root",
@@ -127,43 +128,44 @@ export class DatasetAsVersionedFileService {
 
     public downloadFile(datasetId: string, fileDetails: VersionedFileView): void {
         const info = fileDetails.fileInfo;
-        if (!info?.contentUrl?.url) {
-            this.toastrService.error(`Missing URL for file: ${fileDetails.name}, version: ${info?.version}`);
-            return;
-        }
+        if (!info) return;
 
-        const url$ = this.isUrlExpired(info.contentUrl.expiresAt)
-            ? this.getVersionedFileContentUrl(datasetId, info.version)
-            : of(info.contentUrl.url);
-
-        url$.pipe(
-            switchMap((url) => this.http.get(url, { responseType: "blob" })),
-            take(1),
-        ).subscribe({
-            next: (blob: Blob) => {
-                const fileName = extractAndAddExtension(fileDetails.name);
-                saveAs(blob, fileName);
-            },
-            error: () => {
-                this.toastrService.error("Failed to download file");
-            },
-        });
+        this.getVersionedFileContentUrl(datasetId, info.version)
+            .pipe(
+                switchMap((url) => {
+                    if (!url) {
+                        this.toastrService.error(VersionedFileViewTexts.DOWNLOAD_UNAVAILABLE);
+                        return EMPTY;
+                    }
+                    return this.http.get(url, { responseType: "blob" });
+                }),
+                take(1),
+            )
+            .subscribe({
+                next: (blob: Blob) => {
+                    const fileName = extractAndAddExtension(fileDetails.name);
+                    saveAs(blob, fileName);
+                },
+                error: () => {
+                    this.toastrService.error(VersionedFileViewTexts.DOWNLOAD_FAILED);
+                },
+            });
     }
 
-    public getVersionedFileContentUrl(datasetId: string, version: number): Observable<string> {
+    /**
+     * A fresh download URL of the file content, or `null` when the node cannot serve the content
+     * directly, as with local storage, or the URL could not be requested
+     */
+    public getVersionedFileContentUrl(datasetId: string, version: number): Observable<MaybeNull<string>> {
         return this.datasetApi.getVersionedFileContentUrl(datasetId, version).pipe(
             map((data: VersionedFileContentUrlQuery) => {
                 const versionedFile = requireValue(
                     data.datasets.byId?.asVersionedFile,
                     "Dataset is not a versioned file",
                 );
-                return requireValue(versionedFile.asOf, "File version not found").contentUrl.url;
+                return versionedFile.asOf?.contentUrl.url ?? null;
             }),
+            catchError(() => of(null)),
         );
-    }
-
-    public isUrlExpired(expiredAt: MaybeNullOrUndefined<string>): boolean {
-        if (!expiredAt) return true;
-        return new Date() >= new Date(expiredAt);
     }
 }

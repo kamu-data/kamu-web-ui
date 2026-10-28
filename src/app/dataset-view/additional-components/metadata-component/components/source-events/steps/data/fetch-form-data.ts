@@ -7,7 +7,8 @@
 
 import { SetPollingSourceTooltipsTexts } from "@common/tooltips/set-polling-source-tooltips.text";
 import { SourcesTooltipsTexts } from "@common/tooltips/sources.text";
-import AppValues from "@common/values/app.values";
+import { integerInRangeValidators } from "@common/validation/number.validators";
+import { urlValidator } from "@common/validation/url.validators";
 
 import { ControlType } from "src/app/dataset-view/additional-components/metadata-component/components/source-events/add-polling-source/add-polling-source-form.types";
 import { SourceOrder } from "src/app/dataset-view/additional-components/metadata-component/components/source-events/add-polling-source/process-form.service.types";
@@ -34,10 +35,8 @@ export const FETCH_FORM_DATA: JsonFormData<FetchControls> = {
                 type: ControlType.TEXT,
                 placeholder: "Enter url",
                 tooltip: SetPollingSourceTooltipsTexts.URL,
-                validators: {
-                    required: true,
-                    pattern: AppValues.URL_PATTERN,
-                },
+                required: true,
+                validators: [urlValidator(["http", "https"])],
             },
             {
                 name: "eventTime",
@@ -52,7 +51,6 @@ export const FETCH_FORM_DATA: JsonFormData<FetchControls> = {
                         fromSystemTime: SetPollingSourceTooltipsTexts.EVENT_TIME_SYSTEM_TIME,
                     },
                 },
-                validators: {},
             },
             {
                 name: "headers",
@@ -63,7 +61,6 @@ export const FETCH_FORM_DATA: JsonFormData<FetchControls> = {
                 options: {
                     buttonText: "+ Add headers",
                 },
-                validators: {},
             },
             {
                 name: "cache",
@@ -71,7 +68,6 @@ export const FETCH_FORM_DATA: JsonFormData<FetchControls> = {
                 label: "Use cache",
                 tooltip: SetPollingSourceTooltipsTexts.CACHE,
                 type: ControlType.CACHE,
-                validators: {},
             },
         ],
     },
@@ -84,9 +80,7 @@ export const FETCH_FORM_DATA: JsonFormData<FetchControls> = {
                 type: ControlType.TEXT,
                 placeholder: "Enter path",
                 tooltip: SetPollingSourceTooltipsTexts.PATH,
-                validators: {
-                    required: true,
-                },
+                required: true,
             },
 
             {
@@ -95,7 +89,6 @@ export const FETCH_FORM_DATA: JsonFormData<FetchControls> = {
                 label: "Order",
                 type: ControlType.ORDER,
                 tooltip: SetPollingSourceTooltipsTexts.PATH,
-                validators: {},
             },
             {
                 name: "eventTime",
@@ -103,7 +96,6 @@ export const FETCH_FORM_DATA: JsonFormData<FetchControls> = {
                 label: "Event time",
                 type: ControlType.EVENT_TIME,
                 tooltip: SetPollingSourceTooltipsTexts.EVENT_TIME,
-                validators: {},
                 options: {
                     innerTooltips: {
                         fromMetadata: SetPollingSourceTooltipsTexts.EVENT_TIME_FROM_METADATA,
@@ -117,7 +109,6 @@ export const FETCH_FORM_DATA: JsonFormData<FetchControls> = {
                 label: "Use cache",
                 type: ControlType.CACHE,
                 tooltip: SetPollingSourceTooltipsTexts.CACHE,
-                validators: {},
             },
         ],
     },
@@ -130,9 +121,7 @@ export const FETCH_FORM_DATA: JsonFormData<FetchControls> = {
                 type: ControlType.TEXT,
                 placeholder: "Enter image..",
                 tooltip: SetPollingSourceTooltipsTexts.IMAGE,
-                validators: {
-                    required: true,
-                },
+                required: true,
             },
             {
                 name: "command",
@@ -144,7 +133,6 @@ export const FETCH_FORM_DATA: JsonFormData<FetchControls> = {
                 options: {
                     buttonText: "+ Add command",
                 },
-                validators: {},
             },
             {
                 name: "args",
@@ -156,7 +144,6 @@ export const FETCH_FORM_DATA: JsonFormData<FetchControls> = {
                 options: {
                     buttonText: "+ Add argument",
                 },
-                validators: {},
             },
 
             {
@@ -168,7 +155,6 @@ export const FETCH_FORM_DATA: JsonFormData<FetchControls> = {
                 options: {
                     buttonText: "+ Add variable",
                 },
-                validators: {},
             },
         ],
     },
@@ -181,9 +167,7 @@ export const FETCH_FORM_DATA: JsonFormData<FetchControls> = {
                 type: ControlType.TEXT,
                 placeholder: "Enter host",
                 tooltip: SetPollingSourceTooltipsTexts.MQTT_HOST,
-                validators: {
-                    required: true,
-                },
+                required: true,
             },
             {
                 name: "port",
@@ -192,9 +176,7 @@ export const FETCH_FORM_DATA: JsonFormData<FetchControls> = {
                 type: ControlType.NUMBER,
                 placeholder: "Enter port",
                 tooltip: SetPollingSourceTooltipsTexts.MQTT_PORT,
-                validators: {
-                    required: true,
-                },
+                required: true,
             },
             {
                 name: "username",
@@ -203,7 +185,6 @@ export const FETCH_FORM_DATA: JsonFormData<FetchControls> = {
                 type: ControlType.TEXT,
                 placeholder: "Enter username",
                 tooltip: SetPollingSourceTooltipsTexts.MQTT_USERNAME,
-                validators: {},
             },
             {
                 name: "password",
@@ -212,7 +193,6 @@ export const FETCH_FORM_DATA: JsonFormData<FetchControls> = {
                 type: ControlType.TEXT,
                 placeholder: "Enter password",
                 tooltip: SetPollingSourceTooltipsTexts.MQTT_PASSWORD,
-                validators: {},
             },
             {
                 name: "topics",
@@ -223,9 +203,7 @@ export const FETCH_FORM_DATA: JsonFormData<FetchControls> = {
                 options: {
                     buttonText: "+ Add new topic",
                 },
-                validators: {
-                    required: true,
-                },
+                required: true,
             },
         ],
     },
@@ -238,7 +216,7 @@ export const FETCH_FORM_DATA: JsonFormData<FetchControls> = {
                 type: ControlType.NUMBER,
                 placeholder: "Enter id",
                 tooltip: SetPollingSourceTooltipsTexts.ETHEREUM_LOGS_CHAIN_ID,
-                validators: { min: 0, pattern: AppValues.ZERO_OR_POSITIVE_PATTERN },
+                validators: integerInRangeValidators(0),
             },
             {
                 name: "nodeUrl",
@@ -247,9 +225,7 @@ export const FETCH_FORM_DATA: JsonFormData<FetchControls> = {
                 type: ControlType.TEXT,
                 placeholder: "Enter url",
                 tooltip: SetPollingSourceTooltipsTexts.ETHEREUM_LOGS_NODE_URL,
-                validators: {
-                    pattern: AppValues.URL_PATTERN,
-                },
+                validators: [urlValidator(["http", "https"])],
             },
             {
                 name: "filter",
@@ -258,7 +234,6 @@ export const FETCH_FORM_DATA: JsonFormData<FetchControls> = {
                 type: ControlType.TEXT,
                 placeholder: "Enter filter",
                 tooltip: SetPollingSourceTooltipsTexts.ETHEREUM_LOGS_FILTER,
-                validators: {},
             },
             {
                 name: "signature",
@@ -267,7 +242,6 @@ export const FETCH_FORM_DATA: JsonFormData<FetchControls> = {
                 type: ControlType.TEXT,
                 placeholder: "Enter signature",
                 tooltip: SetPollingSourceTooltipsTexts.ETHEREUM_LOGS_SIGNATURE,
-                validators: {},
             },
         ],
     },

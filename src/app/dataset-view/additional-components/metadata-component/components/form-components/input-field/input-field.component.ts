@@ -8,13 +8,13 @@
 import { ChangeDetectionStrategy, Component, Input } from "@angular/core";
 import { ReactiveFormsModule } from "@angular/forms";
 
-import { RxReactiveFormsModule } from "@rxweb/reactive-form-validators";
 import { NgxTrimDirectiveModule } from "ngx-trim-directive";
 
 import { TooltipIconComponent } from "@common/components/tooltip-icon/tooltip-icon.component";
 import { FormValidationErrorsDirective } from "@common/validation/form-validation-errors.directive";
 
 import { BaseField } from "src/app/dataset-view/additional-components/metadata-component/components/form-components/base-field";
+import { TextControl } from "src/app/dataset-view/additional-components/metadata-component/components/source-events/source-event-controls.types";
 
 @Component({
     selector: "app-input-field",
@@ -26,13 +26,13 @@ import { BaseField } from "src/app/dataset-view/additional-components/metadata-c
         ReactiveFormsModule,
         //-----//
         NgxTrimDirectiveModule,
-        RxReactiveFormsModule,
         //-----//
         TooltipIconComponent,
         FormValidationErrorsDirective,
     ],
 })
-export class InputFieldComponent extends BaseField {
+export class InputFieldComponent extends BaseField<TextControl> {
     @Input() public placeholder?: string;
     @Input() public requiredField?: boolean;
+    @Input() public inputType: "text" | "password" = "text";
 }

@@ -107,10 +107,11 @@ content:
         expect(form.getRawValue()).toEqual({
             kind: FetchKind.URL,
             url: "http://test.com",
-            eventTime: { kind: EventTimeSourceKind.FROM_METADATA },
+            eventTime: { kind: EventTimeSourceKind.FROM_METADATA, pattern: "", timestampFormat: "" },
             headers: [],
             cache: false,
         });
+        expect(form.valid).toBe(true);
     });
 
     it("should patch a url fetch step with its headers, cache and an event time from the path", () => {
@@ -130,6 +131,8 @@ content:
             headers: [{ name: "test_name", value: "test_value" }],
             cache: true,
         });
+        expect(form.controls.eventTime?.controls.pattern.enabled).toBe(true);
+        expect(form.valid).toBe(true);
     });
 
     it("should switch the fetch step to a container and fill its lists", () => {
@@ -145,7 +148,7 @@ content:
         expect(form.getRawValue()).toEqual({
             kind: FetchKind.CONTAINER,
             image: "test_image",
-            eventTime: { kind: EventTimeSourceKind.FROM_METADATA },
+            eventTime: { kind: EventTimeSourceKind.FROM_METADATA, pattern: "", timestampFormat: "" },
             command: ["-a"],
             args: ["arg1"],
             env: [{ name: "KEY", value: "value" }],

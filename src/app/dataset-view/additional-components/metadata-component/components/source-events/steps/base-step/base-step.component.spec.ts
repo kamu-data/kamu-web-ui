@@ -5,19 +5,19 @@
  * included in the LICENSE file.
  */
 
+import { HarnessLoader } from "@angular/cdk/testing";
+import { TestbedHarnessEnvironment } from "@angular/cdk/testing/testbed";
 import { DestroyRef } from "@angular/core";
 import { ComponentFixture, TestBed } from "@angular/core/testing";
 import { FormControl, FormGroup } from "@angular/forms";
 
 import { Apollo } from "apollo-angular";
 
-import {
-    emitClickOnElementByDataTestId,
-    getElementByDataTestId,
-    setComponentInput,
-} from "@common/helpers/base-test.helpers.spec";
+import { emitClickOnElementByDataTestId, setComponentInput } from "@common/helpers/base-test.helpers.spec";
 import { SharedTestModule } from "@common/modules/shared-test.module";
 
+import { CacheFieldHarness } from "src/app/dataset-view/additional-components/metadata-component/components/form-components/cache-field/cache-field.harness";
+import { InputFieldHarness } from "src/app/dataset-view/additional-components/metadata-component/components/form-components/input-field/input-field.harness";
 import {
     EventTimeSourceKind,
     FetchKind,
@@ -34,6 +34,7 @@ describe("BaseStepComponent", () => {
     let component: BaseStepComponent;
     let fixture: ComponentFixture<BaseStepComponent>;
     let fetchForm: FormGroup<FetchControls>;
+    let loader: HarnessLoader;
 
     beforeEach(async () => {
         await TestBed.configureTestingModule({
@@ -56,6 +57,7 @@ describe("BaseStepComponent", () => {
         setComponentInput(fixture, "sectionName", SetPollingSourceSection.FETCH);
         setComponentInput(fixture, "description", "Determines where data is sourced from");
         fixture.detectChanges();
+        loader = TestbedHarnessEnvironment.loader(fixture);
     });
 
     it("should create", () => {
@@ -66,7 +68,7 @@ describe("BaseStepComponent", () => {
         expect(fetchForm.getRawValue()).toEqual({
             kind: FetchKind.URL,
             url: "",
-            eventTime: { kind: EventTimeSourceKind.FROM_METADATA },
+            eventTime: { kind: EventTimeSourceKind.FROM_METADATA, pattern: "", timestampFormat: "" },
             headers: [],
             cache: false,
         });
@@ -76,7 +78,7 @@ describe("BaseStepComponent", () => {
         expect(fetchForm.getRawValue()).toEqual({
             kind: FetchKind.FILES_GLOB,
             path: "",
-            eventTime: { kind: EventTimeSourceKind.FROM_METADATA },
+            eventTime: { kind: EventTimeSourceKind.FROM_METADATA, pattern: "", timestampFormat: "" },
             order: SourceOrder.NONE,
             cache: false,
         });
@@ -89,18 +91,28 @@ describe("BaseStepComponent", () => {
             command: [],
             args: [],
             env: [],
-            eventTime: { kind: EventTimeSourceKind.FROM_METADATA },
+            eventTime: { kind: EventTimeSourceKind.FROM_METADATA, pattern: "", timestampFormat: "" },
         });
     });
 
-    it("should bind a field the new kind shares by name to that kind's control", () => {
+    it("should render the fields of the selected kind with the section's test ids", async () => {
+        expect(await loader.getHarnessOrNull(InputFieldHarness.with({ dataTestId: "fetch-url" }))).not.toBeNull();
+
         emitClickOnElementByDataTestId(fixture, "radio-FilesGlob-control");
         fixture.detectChanges();
 
-        emitClickOnElementByDataTestId(fixture, "cache-control");
+        expect(await loader.getHarnessOrNull(InputFieldHarness.with({ dataTestId: "fetch-url" }))).toBeNull();
+        expect(await loader.getHarnessOrNull(InputFieldHarness.with({ dataTestId: "fetch-path" }))).not.toBeNull();
+    });
+
+    it("should bind a field the new kind shares by name to that kind's control", async () => {
+        emitClickOnElementByDataTestId(fixture, "radio-FilesGlob-control");
         fixture.detectChanges();
 
-        expect(getElementByDataTestId(fixture, "cache-control", HTMLInputElement).checked).toBe(true);
+        const cacheField = await loader.getHarness(CacheFieldHarness);
+        await cacheField.toggle();
+
+        expect(await cacheField.isChecked()).toBe(true);
         expect(fetchForm.getRawValue().cache).toBe(true);
     });
 });

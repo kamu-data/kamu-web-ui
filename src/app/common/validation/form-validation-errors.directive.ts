@@ -5,7 +5,7 @@
  * included in the LICENSE file.
  */
 
-import { DestroyRef, Directive, ElementRef, inject, Input, isDevMode, OnChanges, OnInit } from "@angular/core";
+import { DestroyRef, Directive, ElementRef, inject, Input, isDevMode, OnChanges } from "@angular/core";
 import { takeUntilDestroyed } from "@angular/core/rxjs-interop";
 import { AbstractControl, FormArray, FormGroup, ValidationErrors } from "@angular/forms";
 
@@ -104,11 +104,11 @@ export function fieldErrorMessage(label: string, errors: ValidationErrors): stri
 @Directive({
     selector: "[appFieldError]",
 })
-export class FormValidationErrorsDirective implements OnInit, OnChanges {
+export class FormValidationErrorsDirective implements OnChanges {
     @Input() public input: MaybeUndefined<
         HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement | NgSelectComponent
     >;
-    @Input({ required: true }) public group: FormGroup | FormArray;
+    @Input() public group: MaybeUndefined<FormGroup | FormArray>;
     @Input() public fieldControl: MaybeNull<AbstractControl>;
     @Input({ required: true }) public fieldLabel: string;
     @Input() public dataTestId: string = "";
@@ -118,11 +118,8 @@ export class FormValidationErrorsDirective implements OnInit, OnChanges {
     private control: MaybeNull<AbstractControl> = null;
     private controlSubscription: MaybeUndefined<Subscription>;
 
-    public ngOnInit(): void {
-        this.nativeElement.setAttribute("data-test-id", this.dataTestId);
-    }
-
     public ngOnChanges(): void {
+        this.nativeElement.setAttribute("data-test-id", this.dataTestId);
         const control = this.fieldControl ?? this.boundControl();
         if (control === this.control) {
             return;
@@ -140,7 +137,7 @@ export class FormValidationErrorsDirective implements OnInit, OnChanges {
             this.input && !(this.input instanceof NgSelectComponent)
                 ? this.input.getAttribute("formControlName")
                 : null;
-        const control = controlName === null ? null : this.group.get(controlName);
+        const control = controlName === null ? null : this.group?.get(controlName);
         if (!control) {
             throw new Error(`[appFieldError] "${this.fieldLabel}" is bound to no control`);
         }

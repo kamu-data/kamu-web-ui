@@ -6,9 +6,9 @@
  */
 
 import { ChangeDetectionStrategy, Component, Input } from "@angular/core";
-import { FormGroup } from "@angular/forms";
 
 import { InputFieldComponent } from "src/app/dataset-view/additional-components/metadata-component/components/form-components/input-field/input-field.component";
+import { TextControl } from "src/app/dataset-view/additional-components/metadata-component/components/source-events/source-event-controls.types";
 
 @Component({
     selector: "app-source-name-step",
@@ -20,5 +20,5 @@ import { InputFieldComponent } from "src/app/dataset-view/additional-components/
     ],
 })
 export class SourceNameStepComponent {
-    @Input({ required: true }) public form: FormGroup;
+    @Input({ required: true }) public control: TextControl;
 }

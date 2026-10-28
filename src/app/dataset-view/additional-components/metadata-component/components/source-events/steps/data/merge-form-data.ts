@@ -33,7 +33,6 @@ export const MERGE_FORM_DATA: JsonFormData<MergeControls> = {
                 options: {
                     buttonText: "+ Add primary key",
                 },
-                validators: {},
             },
         ],
     },
@@ -49,7 +48,6 @@ export const MERGE_FORM_DATA: JsonFormData<MergeControls> = {
                 options: {
                     buttonText: "+ Add primary key",
                 },
-                validators: {},
             },
             {
                 name: "compareColumns",
@@ -61,7 +59,6 @@ export const MERGE_FORM_DATA: JsonFormData<MergeControls> = {
                 options: {
                     buttonText: "+ Add column name",
                 },
-                validators: {},
             },
         ],
     },
@@ -78,7 +75,6 @@ export const MERGE_FORM_DATA: JsonFormData<MergeControls> = {
                 options: {
                     buttonText: "+ Add primary key",
                 },
-                validators: {},
             },
         ],
     },
@@ -94,7 +90,6 @@ export const MERGE_FORM_DATA: JsonFormData<MergeControls> = {
                 options: {
                     buttonText: "+ Add primary key",
                 },
-                validators: {},
             },
         ],
     },

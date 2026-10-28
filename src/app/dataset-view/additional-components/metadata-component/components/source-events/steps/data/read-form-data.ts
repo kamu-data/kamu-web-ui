@@ -6,9 +6,11 @@
  */
 
 import { SourcesTooltipsTexts } from "@common/tooltips/sources.text";
+import { singleCharValidator } from "@common/validation/text.validators";
 import { OdfDefaultValues } from "@common/values/app-odf-default.values";
 import { DataSchemaField } from "@interface/dataset-schema.interface";
 
+import { schemaValidator } from "src/app/dataset-view/additional-components/metadata-component/components/form-components/schema-field/schema-field.component.helpers";
 import {
     ControlType,
     ReadKind,
@@ -27,8 +29,8 @@ export const READ_FORM_DATA: JsonFormData<ReadControls> = {
                 create: valueControl<DataSchemaField[]>([]),
                 label: "Schema",
                 type: ControlType.SCHEMA,
+                validators: [schemaValidator],
                 tooltip: SourcesTooltipsTexts.SCHEMA,
-                validators: {},
             },
             {
                 name: "header",
@@ -36,7 +38,6 @@ export const READ_FORM_DATA: JsonFormData<ReadControls> = {
                 label: "Header",
                 type: ControlType.CHECKBOX,
                 tooltip: SourcesTooltipsTexts.HEADER,
-                validators: {},
                 dataTestId: "header",
             },
             {
@@ -46,7 +47,6 @@ export const READ_FORM_DATA: JsonFormData<ReadControls> = {
                 type: ControlType.TEXT,
                 tooltip: SourcesTooltipsTexts.ENCODING,
                 placeholder: "Enter encoding type...",
-                validators: {},
             },
             {
                 name: "separator",
@@ -56,9 +56,7 @@ export const READ_FORM_DATA: JsonFormData<ReadControls> = {
                 placeholder: "--Select character--",
                 tooltip: SourcesTooltipsTexts.SEPARATOR,
                 list: [",", ";", "|"],
-                validators: {
-                    maxLength: 1,
-                },
+                validators: [singleCharValidator()],
             },
 
             {
@@ -69,9 +67,7 @@ export const READ_FORM_DATA: JsonFormData<ReadControls> = {
                 placeholder: "--Select character--",
                 tooltip: SourcesTooltipsTexts.QUOTE,
                 list: ['"', "'"],
-                validators: {
-                    maxLength: 1,
-                },
+                validators: [singleCharValidator()],
             },
             {
                 name: "escape",
@@ -81,9 +77,7 @@ export const READ_FORM_DATA: JsonFormData<ReadControls> = {
                 placeholder: "Enter escape character...",
                 tooltip: SourcesTooltipsTexts.ESCAPE,
                 list: ["\\"],
-                validators: {
-                    maxLength: 1,
-                },
+                validators: [singleCharValidator()],
             },
             {
                 name: "nullValue",
@@ -92,7 +86,6 @@ export const READ_FORM_DATA: JsonFormData<ReadControls> = {
                 type: ControlType.TEXT,
                 tooltip: SourcesTooltipsTexts.NULL_VALUE,
                 placeholder: "Enter null value...",
-                validators: {},
             },
             {
                 name: "dateFormat",
@@ -102,7 +95,6 @@ export const READ_FORM_DATA: JsonFormData<ReadControls> = {
                 tooltip: SourcesTooltipsTexts.DATE_FORMAT,
                 placeholder: "--Select format--",
                 list: ["rfc3339"],
-                validators: {},
             },
             {
                 name: "timestampFormat",
@@ -112,7 +104,6 @@ export const READ_FORM_DATA: JsonFormData<ReadControls> = {
                 placeholder: "--Select format--",
                 tooltip: SourcesTooltipsTexts.TIMESTAMP_FORMAT,
                 list: ["rfc3339"],
-                validators: {},
             },
             {
                 name: "inferSchema",
@@ -120,7 +111,6 @@ export const READ_FORM_DATA: JsonFormData<ReadControls> = {
                 label: "Infer schema",
                 type: ControlType.CHECKBOX,
                 tooltip: SourcesTooltipsTexts.INFER_SCHEMA,
-                validators: {},
                 dataTestId: "inferSchema",
             },
         ],
@@ -132,8 +122,8 @@ export const READ_FORM_DATA: JsonFormData<ReadControls> = {
                 create: valueControl<DataSchemaField[]>([]),
                 label: "Schema",
                 type: ControlType.SCHEMA,
+                validators: [schemaValidator],
                 tooltip: SourcesTooltipsTexts.SCHEMA,
-                validators: {},
             },
             {
                 name: "jsonKind",
@@ -141,7 +131,6 @@ export const READ_FORM_DATA: JsonFormData<ReadControls> = {
                 label: "Select reader format",
                 type: ControlType.JSON_KIND,
                 tooltip: SourcesTooltipsTexts.READ_JSON,
-                validators: {},
                 readFormatDescriptors: [
                     { label: "Geo JSON", value: ReadKind.GEO_JSON },
                     { label: "Newline-delimited Geo JSON", value: ReadKind.ND_GEO_JSON },
@@ -156,8 +145,8 @@ export const READ_FORM_DATA: JsonFormData<ReadControls> = {
                 create: valueControl<DataSchemaField[]>([]),
                 label: "Schema",
                 type: ControlType.SCHEMA,
+                validators: [schemaValidator],
                 tooltip: SourcesTooltipsTexts.SCHEMA,
-                validators: {},
             },
             {
                 name: "subPath",
@@ -166,7 +155,6 @@ export const READ_FORM_DATA: JsonFormData<ReadControls> = {
                 type: ControlType.TEXT,
                 tooltip: SourcesTooltipsTexts.SUB_PATH,
                 placeholder: "Enter path to data file...",
-                validators: {},
             },
         ],
     },
@@ -178,7 +166,7 @@ export const READ_FORM_DATA: JsonFormData<ReadControls> = {
                 label: "Schema",
                 tooltip: SourcesTooltipsTexts.SCHEMA,
                 type: ControlType.SCHEMA,
-                validators: {},
+                validators: [schemaValidator],
             },
         ],
     },
@@ -189,8 +177,8 @@ export const READ_FORM_DATA: JsonFormData<ReadControls> = {
                 create: valueControl<DataSchemaField[]>([]),
                 label: "Schema",
                 type: ControlType.SCHEMA,
+                validators: [schemaValidator],
                 tooltip: SourcesTooltipsTexts.SCHEMA,
-                validators: {},
             },
             {
                 name: "jsonKind",
@@ -198,11 +186,19 @@ export const READ_FORM_DATA: JsonFormData<ReadControls> = {
                 label: "Select reader format",
                 type: ControlType.JSON_KIND,
                 tooltip: SourcesTooltipsTexts.READ_JSON,
-                validators: {},
                 readFormatDescriptors: [
                     { label: "JSON", value: ReadKind.JSON },
                     { label: "Newline-delimited JSON", value: ReadKind.ND_JSON },
                 ],
+            },
+            {
+                name: "subPath",
+                create: valueControl(""),
+                label: "Path to data file",
+                type: ControlType.TEXT,
+                tooltip: SourcesTooltipsTexts.SUB_PATH,
+                placeholder: "Enter path to data file...",
+                shownWhen: (form) => form.controls.jsonKind?.value === ReadKind.JSON,
             },
             {
                 name: "encoding",
@@ -211,7 +207,6 @@ export const READ_FORM_DATA: JsonFormData<ReadControls> = {
                 type: ControlType.TEXT,
                 tooltip: SourcesTooltipsTexts.ENCODING,
                 placeholder: "Enter encoding...",
-                validators: {},
             },
             {
                 name: "dateFormat",
@@ -221,7 +216,6 @@ export const READ_FORM_DATA: JsonFormData<ReadControls> = {
                 tooltip: SourcesTooltipsTexts.DATE_FORMAT,
                 placeholder: "--Select format--",
                 list: ["rfc3339"],
-                validators: {},
             },
             {
                 name: "timestampFormat",
@@ -231,7 +225,6 @@ export const READ_FORM_DATA: JsonFormData<ReadControls> = {
                 placeholder: "--Select format--",
                 tooltip: SourcesTooltipsTexts.TIMESTAMP_FORMAT,
                 list: ["rfc3339"],
-                validators: {},
             },
         ],
     },

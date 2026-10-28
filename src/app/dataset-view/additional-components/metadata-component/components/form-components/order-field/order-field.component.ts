@@ -6,14 +6,13 @@
  */
 
 import { ChangeDetectionStrategy, Component } from "@angular/core";
-import { ReactiveFormsModule } from "@angular/forms";
-
-import { RxReactiveFormsModule } from "@rxweb/reactive-form-validators";
+import { FormControl, ReactiveFormsModule } from "@angular/forms";
 
 import { TooltipIconComponent } from "@common/components/tooltip-icon/tooltip-icon.component";
 
 import { BaseField } from "src/app/dataset-view/additional-components/metadata-component/components/form-components/base-field";
 import { ORDER_RADIO_CONTROL } from "src/app/dataset-view/additional-components/metadata-component/components/form-components/order-field/order-field.types";
+import { SourceOrder } from "src/app/dataset-view/additional-components/metadata-component/components/source-events/add-polling-source/process-form.service.types";
 
 @Component({
     selector: "app-order-field",
@@ -23,11 +22,9 @@ import { ORDER_RADIO_CONTROL } from "src/app/dataset-view/additional-components/
         //-----//
         ReactiveFormsModule,
         //-----//
-        RxReactiveFormsModule,
-        //-----//
         TooltipIconComponent,
     ],
 })
-export class OrderFieldComponent extends BaseField {
+export class OrderFieldComponent extends BaseField<FormControl<SourceOrder>> {
     public readonly ORDER_RADIO_CONTROL = ORDER_RADIO_CONTROL;
 }

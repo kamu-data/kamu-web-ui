@@ -6,15 +6,14 @@
  */
 
 import { ChangeDetectionStrategy, Component, Input } from "@angular/core";
-import { FormArray, ReactiveFormsModule } from "@angular/forms";
+import { FormArray, FormGroup, ReactiveFormsModule } from "@angular/forms";
 
-import { RxReactiveFormsModule } from "@rxweb/reactive-form-validators";
 import { NgxTrimDirectiveModule } from "ngx-trim-directive";
 
 import { TooltipIconComponent } from "@common/components/tooltip-icon/tooltip-icon.component";
-import { requireFormArray } from "@common/helpers/form.helpers";
 
 import { BaseField } from "src/app/dataset-view/additional-components/metadata-component/components/form-components/base-field";
+import { NameValueControls } from "src/app/dataset-view/additional-components/metadata-component/components/source-events/source-event-controls.types";
 import { nameValueGroup } from "src/app/dataset-view/additional-components/metadata-component/components/source-events/source-section";
 
 @Component({
@@ -27,23 +26,18 @@ import { nameValueGroup } from "src/app/dataset-view/additional-components/metad
         ReactiveFormsModule,
         //-----//
         NgxTrimDirectiveModule,
-        RxReactiveFormsModule,
         //-----//
         TooltipIconComponent,
     ],
 })
-export class KeyValueFieldComponent extends BaseField {
+export class KeyValueFieldComponent extends BaseField<FormArray<FormGroup<NameValueControls>>> {
     @Input({ required: true }) public buttonText: string;
 
-    public get items(): FormArray {
-        return requireFormArray(this.form, this.controlName);
-    }
-
     public addItem(): void {
-        this.items.push(nameValueGroup());
+        this.control.push(nameValueGroup());
     }
 
     public removeItem(index: number): void {
-        this.items.removeAt(index);
+        this.control.removeAt(index);
     }
 }

@@ -1,27 +1,25 @@
-<div [formGroup]="form">
-    <div class="d-flex">
-        <app-tooltip-icon [tooltip]="tooltip" />
-        <label class="form-label"
-            >{{ label }}
-            @if (requiredField) {
-                <span class="text-danger">*</span>
-            }
-        </label>
-    </div>
-    <input
-        type="number"
-        class="form-control"
-        [placeholder]="placeholder"
-        [formControlName]="controlName"
-        [attr.data-test-id]="dataTestId"
-        #control
-    />
-    <div
-        class="text-danger fs-12"
-        [input]="control"
-        [fieldControl]="form.get(controlName)"
-        [fieldLabel]="label"
-        appFieldError
-        [group]="form"
-    ></div>
+<div class="d-flex">
+    <app-tooltip-icon [tooltip]="tooltip" />
+    <label class="form-label" [attr.data-test-id]="dataTestId + '-label'"
+        >{{ label }}
+        @if (requiredField) {
+            <span class="text-danger" [attr.data-test-id]="dataTestId + '-required'">*</span>
+        }
+    </label>
 </div>
+<input
+    type="number"
+    class="form-control"
+    [placeholder]="placeholder"
+    [formControl]="control"
+    [attr.data-test-id]="dataTestId"
+    #input
+/>
+<div
+    class="text-danger fs-12"
+    [input]="input"
+    [fieldControl]="control"
+    [fieldLabel]="label"
+    [dataTestId]="dataTestId + '-error'"
+    appFieldError
+></div>

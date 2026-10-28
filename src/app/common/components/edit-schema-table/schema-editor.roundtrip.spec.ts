@@ -146,8 +146,7 @@ describe("Schema editor round-trip (Load → Edit → Serialize)", () => {
         schemaControl.addValidators(schemaValidator);
 
         fixture = TestBed.createComponent(SchemaFieldComponent);
-        setComponentInput(fixture, "form", new FormGroup({ schema: schemaControl }));
-        setComponentInput(fixture, "controlName", "schema");
+        setComponentInput(fixture, "control", schemaControl);
         setComponentInput(fixture, "label", "Schema");
         setComponentInput(fixture, "tooltip", "Schema tooltip");
         fixture.detectChanges();

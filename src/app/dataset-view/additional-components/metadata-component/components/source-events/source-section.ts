@@ -7,10 +7,17 @@
 
 import { DestroyRef } from "@angular/core";
 import { takeUntilDestroyed } from "@angular/core/rxjs-interop";
-import { FormArray, FormControl, FormGroup, ValidatorFn, Validators } from "@angular/forms";
+import {
+    AbstractControl,
+    FormArray,
+    FormControl,
+    FormGroup,
+    ValidationErrors,
+    ValidatorFn,
+    Validators,
+} from "@angular/forms";
 
-import { getValidators } from "@common/helpers/data.helpers";
-import { MaybeUndefined } from "@interface/app.types";
+import { MaybeNull, MaybeUndefined } from "@interface/app.types";
 
 import {
     DecompressFormat,
@@ -24,14 +31,15 @@ import {
     EventTimeControls,
     JsonFormControl,
     JsonFormData,
-    KindControlLayout,
     NameValueControls,
     NumberInputControl,
     OptionalControlName,
     PipeStepControls,
+    SourceField,
     TextControl,
     TopicControls,
 } from "src/app/dataset-view/additional-components/metadata-component/components/source-events/source-event-controls.types";
+import { sourceField } from "src/app/dataset-view/additional-components/metadata-component/components/source-events/source-field";
 
 /** A control holding `value` until the user changes it. */
 export function valueControl<V>(value: V): ControlFactory<FormControl<V>> {
@@ -54,11 +62,27 @@ export function topicListControl(): ControlFactory<FormArray<FormGroup<TopicCont
     return (validators) => new FormArray<FormGroup<TopicControls>>([], validators);
 }
 
+/** Requires a pattern only while the event time comes from the path. */
+function patternRequiredFromPath(control: AbstractControl): MaybeNull<ValidationErrors> {
+    return control.parent?.get("kind")?.value === EventTimeSourceKind.FROM_PATH ? Validators.required(control) : null;
+}
+
+/** The event time group; its pattern is required only while the kind is "From path". */
 export function eventTimeControl(): ControlFactory<FormGroup<EventTimeControls>> {
-    return () =>
-        new FormGroup<EventTimeControls>({
+    return () => {
+        const group = new FormGroup<EventTimeControls>({
             kind: new FormControl(EventTimeSourceKind.FROM_METADATA, { nonNullable: true }),
+            pattern: textControl("", [patternRequiredFromPath]),
+            timestampFormat: textControl(""),
         });
+        // The group owns both controls, so the subscription ends with it. `onlySelf` leaves the group's status to
+        // `kind`, which updates its parent after this handler; revalidating the group here would re-enable it in
+        // the middle of `group.disable()`.
+        group.controls.kind.valueChanges.subscribe(() =>
+            group.controls.pattern.updateValueAndValidity({ onlySelf: true }),
+        );
+        return group;
+    };
 }
 
 export function textControl(value: string, validators: ValidatorFn[] = []): TextControl {
@@ -93,11 +117,11 @@ export function decompressStepGroup(format = DecompressFormat.ZIP, subPath = "")
     });
 }
 
-/** What the step component needs of a section: the form its fields bind into, and the layout per kind. */
+/** What the step component needs of a section: the form, and the fields of the selected kind. */
 export interface SourceStepSection {
     readonly form: FormGroup;
     readonly kindControl: FormControl<string>;
-    layout(kind: string): readonly KindControlLayout[];
+    readonly fields: readonly SourceField[];
 }
 
 /**
@@ -108,7 +132,7 @@ export interface SourceStepSection {
  */
 export class SourceSection<T extends ControlsOf<T>> implements SourceStepSection {
     private builtKind: string;
-    private readonly layouts = new Map<string, readonly KindControlLayout[]>();
+    private builtFields: readonly SourceField[] = [];
 
     public constructor(
         public readonly form: FormGroup<T>,
@@ -124,14 +148,9 @@ export class SourceSection<T extends ControlsOf<T>> implements SourceStepSection
         });
     }
 
-    /** The same array for the same kind on every call, so change detection sees no new rows. */
-    public layout(kind: string): readonly KindControlLayout[] {
-        let rows = this.layouts.get(kind);
-        if (!rows) {
-            rows = this.entries(kind).map((entry): KindControlLayout => ({ ...entry, kind }));
-            this.layouts.set(kind, rows);
-        }
-        return rows;
+    /** The fields of the selected kind, each with the control built for it; a new array only when the kind changes. */
+    public get fields(): readonly SourceField[] {
+        return this.builtFields;
     }
 
     private entries(kind: string): readonly JsonFormControl<T>[] {
@@ -165,8 +184,14 @@ export class SourceSection<T extends ControlsOf<T>> implements SourceStepSection
     }
 
     private addControls(kind: string): void {
-        this.entries(kind).forEach((item) => {
-            this.form.addControl(item.name, item.create(getValidators(item.validators)));
+        this.builtFields = this.entries(kind).map((item) => {
+            const validators = [...(item.required ? [Validators.required] : []), ...(item.validators ?? [])];
+            const created = item.create(validators);
+            // A kept control of the same name stays in the form, and the field binds to it.
+            this.form.addControl(item.name, created);
+            const control = this.form.get(item.name) ?? created;
+            const shown = (): boolean => item.shownWhen?.(this.form) ?? true;
+            return sourceField(item, control, shown);
         });
     }
 }

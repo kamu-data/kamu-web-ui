@@ -5,48 +5,84 @@
  * included in the LICENSE file.
  */
 
+import { TestbedHarnessEnvironment } from "@angular/cdk/testing/testbed";
+import { Component } from "@angular/core";
 import { ComponentFixture, TestBed } from "@angular/core/testing";
-import { FormArray, FormGroup } from "@angular/forms";
-
-import { setComponentInput } from "@common/helpers/base-test.helpers.spec";
-import { SharedTestModule } from "@common/modules/shared-test.module";
+import { Validators } from "@angular/forms";
 
 import { TopicsFieldComponent } from "src/app/dataset-view/additional-components/metadata-component/components/form-components/topics-field/topics-field.component";
+import { TopicsFieldHarness } from "src/app/dataset-view/additional-components/metadata-component/components/form-components/topics-field/topics-field.harness";
+import {
+    topicGroup,
+    topicListControl,
+} from "src/app/dataset-view/additional-components/metadata-component/components/source-events/source-section";
+
+@Component({
+    imports: [TopicsFieldComponent],
+    template: `
+        <app-topics-field
+            [control]="control"
+            label="Topics"
+            tooltip="Topics to subscribe to"
+            buttonText="+ Add new topic"
+            [requiredField]="true"
+            dataTestId="fetch-topics"
+        />
+    `,
+})
+class TestTopicsFieldHostComponent {
+    public control = topicListControl()([Validators.required]);
+}
 
 describe("TopicsFieldComponent", () => {
-    let component: TopicsFieldComponent;
-    let fixture: ComponentFixture<TopicsFieldComponent>;
+    let fixture: ComponentFixture<TestTopicsFieldHostComponent>;
+    let host: TestTopicsFieldHostComponent;
+    let harness: TopicsFieldHarness;
 
     beforeEach(async () => {
         await TestBed.configureTestingModule({
-            imports: [SharedTestModule, TopicsFieldComponent],
+            imports: [TestTopicsFieldHostComponent],
         }).compileComponents();
 
-        fixture = TestBed.createComponent(TopicsFieldComponent);
-        component = fixture.componentInstance;
-        setComponentInput(fixture, "controlName", "topics");
-        setComponentInput(fixture, "buttonText", "Add new topics");
-        setComponentInput(fixture, "form", new FormGroup({ topics: new FormArray([]) }));
+        fixture = TestBed.createComponent(TestTopicsFieldHostComponent);
+        host = fixture.componentInstance;
+    });
+
+    /** The field is OnPush and does not watch its control, so a test fills the list before rendering it. */
+    async function render(): Promise<void> {
         fixture.detectChanges();
+        harness = await TestbedHarnessEnvironment.loader(fixture).getHarness(TopicsFieldHarness);
+    }
+
+    it("should render the label with the required marker and no topics", async () => {
+        await render();
+
+        expect(await harness.getLabel()).toBe("Topics");
+        expect(await harness.isRequiredMarked()).toBe(true);
+        expect(await harness.getItems()).toEqual([]);
     });
 
-    it("should create", () => {
-        expect(component).toBeTruthy();
+    it("should add a topic and write its path and quality of service into the control", async () => {
+        await render();
+
+        await harness.addItem();
+        expect(host.control.valid).toBe(false);
+
+        await harness.setItem(0, { path: "sensors/temperature", qos: "AtLeastOnce" });
+
+        expect(await harness.getItems()).toEqual([{ path: "sensors/temperature", qos: "AtLeastOnce" }]);
+        expect(host.control.getRawValue()).toEqual([{ path: "sensors/temperature", qos: "AtLeastOnce" }]);
+        expect(host.control.valid).toBe(true);
     });
 
-    it("should name the missing form array", () => {
-        setComponentInput(fixture, "controlName", "missing");
-        expect(() => component.items).toThrowError(`Expecting form control "missing" to be a FormArray`);
-    });
+    it("should remove the chosen topic", async () => {
+        host.control.push(topicGroup("first", ""));
+        host.control.push(topicGroup("second", "ExactlyOnce"));
+        await render();
 
-    it("should check add item", () => {
-        component.addItem();
-        expect(component.items.length).toEqual(1);
-    });
+        await harness.removeItem(0);
 
-    it("should check remove item", () => {
-        component.addItem();
-        component.removeItem(0);
-        expect(component.items.length).toEqual(0);
+        expect(await harness.getItems()).toEqual([{ path: "second", qos: "ExactlyOnce" }]);
+        expect(host.control.getRawValue()).toEqual([{ path: "second", qos: "ExactlyOnce" }]);
     });
 });

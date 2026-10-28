@@ -5,45 +5,51 @@
  * included in the LICENSE file.
  */
 
+import { TestbedHarnessEnvironment } from "@angular/cdk/testing/testbed";
+import { Component } from "@angular/core";
 import { ComponentFixture, TestBed } from "@angular/core/testing";
-import { FormControl, FormGroup } from "@angular/forms";
-
-import { getElementByDataTestId, setComponentInput } from "@common/helpers/base-test.helpers.spec";
-import { SharedTestModule } from "@common/modules/shared-test.module";
 
 import { CacheFieldComponent } from "src/app/dataset-view/additional-components/metadata-component/components/form-components/cache-field/cache-field.component";
+import { CacheFieldHarness } from "src/app/dataset-view/additional-components/metadata-component/components/form-components/cache-field/cache-field.harness";
+import { valueControl } from "src/app/dataset-view/additional-components/metadata-component/components/source-events/source-section";
+
+@Component({
+    imports: [CacheFieldComponent],
+    template: `
+        <app-cache-field [control]="control" label="Use cache" tooltip="Cache fetched data" dataTestId="fetch-cache" />
+    `,
+})
+class TestCacheFieldHostComponent {
+    public control = valueControl(false)([]);
+}
 
 describe("CacheFieldComponent", () => {
-    let component: CacheFieldComponent;
-    let fixture: ComponentFixture<CacheFieldComponent>;
-    const dataTestId = "cache-control";
-    let cacheControl: FormControl<boolean>;
+    let fixture: ComponentFixture<TestCacheFieldHostComponent>;
+    let host: TestCacheFieldHostComponent;
+    let harness: CacheFieldHarness;
 
     beforeEach(async () => {
         await TestBed.configureTestingModule({
-            imports: [SharedTestModule, CacheFieldComponent],
+            imports: [TestCacheFieldHostComponent],
         }).compileComponents();
 
-        fixture = TestBed.createComponent(CacheFieldComponent);
-        component = fixture.componentInstance;
-        setComponentInput(fixture, "controlName", "cache");
-        cacheControl = new FormControl(false, { nonNullable: true });
-        setComponentInput(fixture, "form", new FormGroup({ cache: cacheControl }));
-        setComponentInput(fixture, "dataTestId", dataTestId);
+        fixture = TestBed.createComponent(TestCacheFieldHostComponent);
+        host = fixture.componentInstance;
         fixture.detectChanges();
+        harness = await TestbedHarnessEnvironment.loader(fixture).getHarness(CacheFieldHarness);
     });
 
-    it("should create", () => {
-        expect(component).toBeTruthy();
+    it("should render the label", async () => {
+        expect(await harness.getLabel()).toBe("Use cache");
     });
 
-    it("should check and uncheck caching", () => {
-        const cacheCheckbox = getElementByDataTestId(fixture, "cache-control", HTMLInputElement);
+    it("should check and uncheck caching", async () => {
+        await harness.toggle();
+        expect(await harness.isChecked()).toBe(true);
+        expect(host.control.value).toBe(true);
 
-        cacheCheckbox.click();
-        expect(cacheControl.value).toBe(true);
-
-        cacheCheckbox.click();
-        expect(cacheControl.value).toBe(false);
+        await harness.toggle();
+        expect(await harness.isChecked()).toBe(false);
+        expect(host.control.value).toBe(false);
     });
 });

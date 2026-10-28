@@ -1,38 +1,41 @@
-<div [formGroup]="form">
-    <div class="d-flex">
-        <app-tooltip-icon [tooltip]="tooltip" />
-        <label class="form-label">{{ label }} </label><br />
+<div class="d-flex">
+    <app-tooltip-icon [tooltip]="tooltip" />
+    <label class="form-label" [attr.data-test-id]="dataTestId + '-label'">{{ label }} </label><br />
+</div>
+@for (item of control.controls; track item; let i = $index) {
+    <div class="row mb-2">
+        <div class="col-md-5">
+            <input
+                class="form-control"
+                placeholder="Please enter name"
+                [formControl]="item.controls.name"
+                [attr.data-test-id]="dataTestId + '-name-' + i"
+                trim="blur"
+            />
+        </div>
+        <div class="col-md-6">
+            <input
+                class="form-control col-md-5"
+                placeholder="Please enter value"
+                [formControl]="item.controls.value"
+                [attr.data-test-id]="dataTestId + '-value-' + i"
+                trim="blur"
+            />
+        </div>
+        <div class="col-md-1 d-flex justify-content-end align-items-center">
+            <button
+                type="button"
+                class="btn btn-light"
+                (click)="removeItem(i)"
+                [attr.data-test-id]="dataTestId + '-remove-' + i"
+            >
+                x
+            </button>
+        </div>
     </div>
-    @for (item of items.controls; track item; let i = $index) {
-        <ng-container [formArrayName]="controlName">
-            <div class="row mb-2" [formGroupName]="i">
-                <div class="col-md-5">
-                    <input class="form-control" placeholder="Please enter name" formControlName="name" trim />
-                </div>
-                <div class="col-md-6">
-                    <input
-                        class="form-control col-md-5"
-                        placeholder="Please enter value"
-                        formControlName="value"
-                        trim
-                    />
-                </div>
-                <div class="col-md-1 d-flex justify-content-end align-items-center">
-                    <button
-                        type="button"
-                        class="btn btn-light"
-                        (click)="removeItem(i)"
-                        attr.data-test-id="item-{{ i }}"
-                    >
-                        x
-                    </button>
-                </div>
-            </div>
-        </ng-container>
-    }
-    <div class="ms-4">
-        <button type="button" class="add-header-button" data-test-id="add-button" (click)="addItem()">
-            <span>{{ buttonText }}</span>
-        </button>
-    </div>
+}
+<div class="ms-4">
+    <button type="button" class="add-header-button" [attr.data-test-id]="dataTestId + '-add'" (click)="addItem()">
+        <span>{{ buttonText }}</span>
+    </button>
 </div>

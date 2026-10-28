@@ -5,31 +5,66 @@
  * included in the LICENSE file.
  */
 
+import { TestbedHarnessEnvironment } from "@angular/cdk/testing/testbed";
+import { Component } from "@angular/core";
 import { ComponentFixture, TestBed } from "@angular/core/testing";
-import { FormControl, FormGroup } from "@angular/forms";
-
-import { setComponentInput } from "@common/helpers/base-test.helpers.spec";
-import { SharedTestModule } from "@common/modules/shared-test.module";
 
 import { JsonKindFieldComponent } from "src/app/dataset-view/additional-components/metadata-component/components/form-components/json-kind-field/json-kind-field.component";
-import { ReadKind } from "src/app/dataset-view/additional-components/metadata-component/components/source-events/add-polling-source/add-polling-source-form.types";
+import { JsonKindFieldHarness } from "src/app/dataset-view/additional-components/metadata-component/components/form-components/json-kind-field/json-kind-field.harness";
+import {
+    ReadFormatControlType,
+    ReadKind,
+} from "src/app/dataset-view/additional-components/metadata-component/components/source-events/add-polling-source/add-polling-source-form.types";
+import { valueControl } from "src/app/dataset-view/additional-components/metadata-component/components/source-events/source-section";
+
+@Component({
+    imports: [JsonKindFieldComponent],
+    template: `
+        <app-json-kind-field
+            [control]="control"
+            label="Select reader format"
+            tooltip="JSON format"
+            [controlDescriptors]="descriptors"
+            dataTestId="read-jsonKind"
+        />
+    `,
+})
+class TestJsonKindFieldHostComponent {
+    public control = valueControl(ReadKind.JSON)([]);
+    public descriptors: ReadFormatControlType[] = [
+        { label: "JSON", value: ReadKind.JSON },
+        { label: "Newline-delimited JSON", value: ReadKind.ND_JSON },
+    ];
+}
 
 describe("JsonKindFieldComponent", () => {
-    let component: JsonKindFieldComponent;
-    let fixture: ComponentFixture<JsonKindFieldComponent>;
+    let fixture: ComponentFixture<TestJsonKindFieldHostComponent>;
+    let host: TestJsonKindFieldHostComponent;
+    let harness: JsonKindFieldHarness;
 
     beforeEach(async () => {
         await TestBed.configureTestingModule({
-            imports: [SharedTestModule, JsonKindFieldComponent],
+            imports: [TestJsonKindFieldHostComponent],
         }).compileComponents();
 
-        fixture = TestBed.createComponent(JsonKindFieldComponent);
-        component = fixture.componentInstance;
-        setComponentInput(fixture, "form", new FormGroup({ jsonKind: new FormControl(ReadKind.JSON) }));
+        fixture = TestBed.createComponent(TestJsonKindFieldHostComponent);
+        host = fixture.componentInstance;
         fixture.detectChanges();
+        harness = await TestbedHarnessEnvironment.loader(fixture).getHarness(JsonKindFieldHarness);
     });
 
-    it("should create", () => {
-        expect(component).toBeTruthy();
+    it("should offer the formats it is given, with the control's one selected", async () => {
+        expect(await harness.getLabel()).toBe("Select reader format");
+        expect(await harness.hasKind(ReadKind.JSON)).toBe(true);
+        expect(await harness.hasKind(ReadKind.ND_JSON)).toBe(true);
+        expect(await harness.hasKind(ReadKind.GEO_JSON)).toBe(false);
+        expect(await harness.isKindSelected(ReadKind.JSON)).toBe(true);
+    });
+
+    it("should write the selected format into the control", async () => {
+        await harness.selectKind(ReadKind.ND_JSON);
+
+        expect(host.control.value).toBe(ReadKind.ND_JSON);
+        expect(await harness.isKindSelected(ReadKind.JSON)).toBe(false);
     });
 });

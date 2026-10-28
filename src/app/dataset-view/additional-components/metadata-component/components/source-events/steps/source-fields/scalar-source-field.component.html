@@ -1,0 +1,53 @@
+@let f = field;
+@switch (f.type) {
+    @case (ControlType.TEXT) {
+        <app-input-field
+            [control]="f.control"
+            [label]="f.label"
+            [requiredField]="f.required"
+            [placeholder]="f.placeholder"
+            [inputType]="f.inputType ?? 'text'"
+            [tooltip]="f.tooltip"
+            [dataTestId]="dataTestId"
+        />
+    }
+    @case (ControlType.TYPEAHEAD) {
+        <app-typeahead-field
+            [control]="f.control"
+            [label]="f.label"
+            [requiredField]="f.required ?? false"
+            [placeholder]="f.placeholder"
+            [data]="f.list"
+            [tooltip]="f.tooltip"
+            [dataTestId]="dataTestId"
+        />
+    }
+    @case (ControlType.NUMBER) {
+        <app-number-field
+            [control]="f.control"
+            [label]="f.label"
+            [requiredField]="f.required"
+            [placeholder]="f.placeholder"
+            [tooltip]="f.tooltip"
+            [dataTestId]="dataTestId"
+        />
+    }
+    @case (ControlType.CHECKBOX) {
+        <app-checkbox-field [control]="f.control" [label]="f.label" [tooltip]="f.tooltip" [dataTestId]="dataTestId" />
+    }
+    @case (ControlType.CACHE) {
+        <app-cache-field [control]="f.control" [label]="f.label" [tooltip]="f.tooltip" [dataTestId]="dataTestId" />
+    }
+    @case (ControlType.ORDER) {
+        <app-order-field [control]="f.control" [label]="f.label" [tooltip]="f.tooltip" [dataTestId]="dataTestId" />
+    }
+    @case (ControlType.JSON_KIND) {
+        <app-json-kind-field
+            [control]="f.control"
+            [label]="f.label"
+            [tooltip]="f.tooltip"
+            [controlDescriptors]="f.readFormatDescriptors"
+            [dataTestId]="dataTestId"
+        />
+    }
+}

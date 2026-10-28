@@ -44,8 +44,16 @@ import { SqlQueryService } from "src/app/services/sql-query.service";
 export class GlobalQueryComponent extends BaseComponent implements OnInit {
     @Input({ alias: ProjectLinks.URL_QUERY_PARAM_SQL_QUERY, transform: queryParamValue })
     public set sqlQuery(value: MaybeUndefined<string>) {
-        this.sqlRequestCode = value ?? "";
+        this.sqlQueryFromUrl = value;
+        // A run of the selected part only must not replace the rest of the editor's text
+        if (this.queryOfOwnRun !== undefined && value === this.queryOfOwnRun) {
+            this.queryOfOwnRun = undefined;
+        } else {
+            this.sqlRequestCode = value ?? "";
+        }
     }
+    private sqlQueryFromUrl: MaybeUndefined<string>;
+    private queryOfOwnRun: MaybeUndefined<string>;
     public sqlRequestCode = "";
     public sqlLoading = false;
     public sqlErrorMarker$: Observable<string>;
@@ -104,6 +112,9 @@ export class GlobalQueryComponent extends BaseComponent implements OnInit {
                 takeUntilDestroyed(this.destroyRef),
             )
             .subscribe(() => {
+                if (params.query !== this.sqlQueryFromUrl) {
+                    this.queryOfOwnRun = params.query;
+                }
                 this.navigationService.navigateWithSqlQuery(params.query);
             });
     }

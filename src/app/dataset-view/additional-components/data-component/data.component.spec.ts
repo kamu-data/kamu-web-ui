@@ -137,6 +137,65 @@ describe("DataComponent", () => {
         expect(component.sqlRequestCode).toEqual("select 2");
     }));
 
+    it("should keep the whole script when a run of its selected part puts that part into the URL", fakeAsync(() => {
+        setComponentInput(fixture, "sqlQuery", "select 1");
+        fixture.detectChanges();
+        flush();
+        requestDataSqlRunSpy.mockReturnValue(of(void 0));
+        component.sqlRequestCode = "select 1;\nselect 2";
+
+        component.runSQLRequest({ query: "select 2" });
+        setComponentInput(fixture, "sqlQuery", "select 2");
+        fixture.detectChanges();
+        flush();
+
+        expect(component.sqlRequestCode).toEqual("select 1;\nselect 2");
+    }));
+
+    it("should show the query of an earlier run after back leads to it", fakeAsync(() => {
+        setComponentInput(fixture, "sqlQuery", "select 1");
+        fixture.detectChanges();
+        flush();
+        requestDataSqlRunSpy.mockReturnValue(of(void 0));
+        component.sqlRequestCode = "select 1;\nselect 2";
+        component.runSQLRequest({ query: "select 2" });
+        setComponentInput(fixture, "sqlQuery", "select 2");
+        fixture.detectChanges();
+        flush();
+
+        setComponentInput(fixture, "sqlQuery", "select 1");
+        fixture.detectChanges();
+
+        expect(component.sqlRequestCode).toEqual("select 1");
+    }));
+
+    it("should show a later run's query after forward leads back to it", fakeAsync(() => {
+        setComponentInput(fixture, "sqlQuery", "select 1");
+        fixture.detectChanges();
+        flush();
+        requestDataSqlRunSpy.mockReturnValue(of(void 0));
+        component.runSQLRequest({ query: "select 1" });
+        flush();
+
+        setComponentInput(fixture, "sqlQuery", "select 2");
+        fixture.detectChanges();
+        setComponentInput(fixture, "sqlQuery", "select 1");
+        fixture.detectChanges();
+
+        expect(component.sqlRequestCode).toEqual("select 1");
+    }));
+
+    it("should keep the editor's text after back leads to a URL without a query", fakeAsync(() => {
+        setComponentInput(fixture, "sqlQuery", "select 1");
+        fixture.detectChanges();
+        flush();
+
+        setComponentInput(fixture, "sqlQuery", undefined);
+        fixture.detectChanges();
+
+        expect(component.sqlRequestCode).toEqual("select 1");
+    }));
+
     it("should check add data", () => {
         const ngbModalServiceSpy = vi.spyOn(ngbModalService, "open");
 

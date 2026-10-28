@@ -436,11 +436,15 @@ describe("FlowsComponent", () => {
     });
 
     ["bogus", "WEBHOOKS", undefined].forEach((category) => {
-        it(`should read the category "${category}" as all flows`, () => {
+        it(`should read the category "${category}" as no category, as a missing one`, () => {
             const serviceInComponent = fixture.debugElement.injector.get(FlowsSelectionStateService);
             const setFlowsCategorySpy = stubMethod(serviceInComponent, "setFlowsCategory");
+            const setWebhooksCategorySpy = stubMethod(serviceInComponent, "setWebhooksCategory");
+            const clearFlowsCategorySpy = stubMethod(serviceInComponent, "clearFlowsCategory");
             setComponentInput(fixture, "setFlowsCategory", category);
-            expect(setFlowsCategorySpy).toHaveBeenCalledWith("all");
+            expect(clearFlowsCategorySpy).toHaveBeenCalledTimes(1);
+            expect(setFlowsCategorySpy).not.toHaveBeenCalled();
+            expect(setWebhooksCategorySpy).not.toHaveBeenCalled();
         });
     });
 

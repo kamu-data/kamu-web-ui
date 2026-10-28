@@ -104,15 +104,14 @@ export class FlowsComponent extends FlowsTableProcessingBaseComponent implements
     }
     @Input({ alias: ProjectLinks.URL_QUERY_PARAM_FLOWS_CATEGORY, transform: queryParamValue })
     public set setFlowsCategory(value: MaybeUndefined<string>) {
-        this.flowsCategoryParam =
-            oneOf([...FLOWS_SELECTED_CATEGORIES, ...WEBHOOKS_SELECTED_CATEGORIES], value) ?? "all";
+        this.flowsCategoryParam = oneOf([...FLOWS_SELECTED_CATEGORIES, ...WEBHOOKS_SELECTED_CATEGORIES], value);
         this.applyFlowsCategoryParam();
     }
 
     // The query parameters as last bound: the router does not bind an unchanged one again
     private webhookIdParam: MaybeUndefined<string>;
     private webhookStateParam: MaybeUndefined<string>;
-    private flowsCategoryParam: FlowsCategoryUnion = "all";
+    private flowsCategoryParam: MaybeUndefined<FlowsCategoryUnion>;
 
     public selectedDatasetItems: DatasetBasicsFragment[] = [];
     public selectedAccountItems: AccountFragment[] = [];
@@ -192,8 +191,10 @@ export class FlowsComponent extends FlowsTableProcessingBaseComponent implements
     private applyFlowsCategoryParam(): void {
         if (this.flowsCategoryParam === "webhooks") {
             this.flowsSelectionStateService.setWebhooksCategory(this.flowsCategoryParam);
-        } else {
+        } else if (this.flowsCategoryParam) {
             this.flowsSelectionStateService.setFlowsCategory(this.flowsCategoryParam);
+        } else {
+            this.flowsSelectionStateService.clearFlowsCategory();
         }
     }
 

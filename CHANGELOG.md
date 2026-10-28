@@ -34,7 +34,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   - an account named like an account tab, such as "datasets", opens instead of a blank page
   - a versioned file at a version it does not have, or a collection folder that does not exist, says so and links to the latest version or the collection root
   - Dataset Flows tab: a repeated or malformed webhook, state or category filter no longer breaks the tab
-  - Account flows: a status filter that matches no tab opens the tab for that status, or Finished
+  - Account flows: a status filter such as "RETRYING" opens the tab that lists it instead of selecting no tab
   - Sign-in: a return address outside the app is ignored, and a malformed device code from the CLI is reported instead of failing the sign-in
 
 ## [0.72.0] - 2026-10-21

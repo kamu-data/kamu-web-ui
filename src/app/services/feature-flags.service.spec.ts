@@ -9,7 +9,12 @@ import { provideHttpClient } from "@angular/common/http";
 import { provideHttpClientTesting } from "@angular/common/http/testing";
 import { TestBed } from "@angular/core/testing";
 
-import { Feature, FeatureDevelopmentState, FeatureShowMode } from "@interface/feature-flags.interface";
+import {
+    Feature,
+    FeatureDevelopmentState,
+    FeatureShowMode,
+    FeatureVisibility,
+} from "@interface/feature-flags.interface";
 
 import { AppConfigService } from "src/app/app-config.service";
 import { FeatureFlagsService } from "src/app/services/feature-flags.service";
@@ -75,5 +80,46 @@ describe("FeatureFlagsService", () => {
         };
         service.features = [mockFeature];
         expect(service.findFeature("dataset.badgePrivacy")).toEqual(subFeature);
+    });
+
+    describe("#featureVisibility", () => {
+        beforeEach(() => {
+            service.features = [
+                { id: "stable", developmentState: FeatureDevelopmentState.STABLE, subfeatures: undefined },
+                { id: "mockup", developmentState: FeatureDevelopmentState.MOCKUP, subfeatures: undefined },
+                { id: "reserved", developmentState: FeatureDevelopmentState.RESERVED, subfeatures: undefined },
+            ];
+        });
+
+        [
+            {
+                showMode: FeatureShowMode.PRODUCTION,
+                expected: [FeatureVisibility.VISIBLE, FeatureVisibility.INVISIBLE, FeatureVisibility.INVISIBLE],
+            },
+            {
+                showMode: FeatureShowMode.DEMO,
+                expected: [FeatureVisibility.VISIBLE, FeatureVisibility.DISABLED, FeatureVisibility.DISABLED],
+            },
+            {
+                showMode: FeatureShowMode.DEVELOP,
+                expected: [FeatureVisibility.VISIBLE, FeatureVisibility.VISIBLE, FeatureVisibility.VISIBLE],
+            },
+        ].forEach(({ showMode, expected }) => {
+            it(`should show stable, mockup and reserved features in ${showMode} mode as ${expected.join(", ")}`, () => {
+                vi.spyOn(appConfigService, "featuresRuntimeConfig", "get").mockReturnValue({ showMode });
+
+                expect(["stable", "mockup", "reserved"].map((name) => service.featureVisibility(name))).toEqual(
+                    expected,
+                );
+            });
+        });
+
+        it("should hide a feature missing from the list", () => {
+            vi.spyOn(appConfigService, "featuresRuntimeConfig", "get").mockReturnValue({
+                showMode: FeatureShowMode.DEVELOP,
+            });
+
+            expect(service.featureVisibility("unknown")).toEqual(FeatureVisibility.INVISIBLE);
+        });
     });
 });

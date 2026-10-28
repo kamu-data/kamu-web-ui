@@ -28,6 +28,7 @@ import { mockAccountDetails } from "@api/mock/auth.mock";
 import { mockDatasetFlowByIdResponse } from "@api/mock/dataset-flow.mock";
 import { mockDatasetsAccountResponse } from "@api/mock/dataset.mock";
 import { MaybeNull, MaybeUndefined } from "@interface/app.types";
+import { FeatureVisibility } from "@interface/feature-flags.interface";
 
 import { accountDatasetsResolverFn } from "src/app/account/additional-components/datasets-tab/resolver/account-datasets.resolver";
 import { accountSettingsAccessTokensResolverFn } from "src/app/account/settings/tabs/access-tokens-tab/resolver/account-settings-access-tokens.resolver";
@@ -50,6 +51,7 @@ import {
     mockFullPowerDatasetPermissionsFragment,
 } from "src/app/search/mock.data";
 import { searchResolverFn } from "src/app/search/resolver/search.resolver";
+import { FeatureFlagsService } from "src/app/services/feature-flags.service";
 
 describe("Router", () => {
     let router: Router;
@@ -293,6 +295,9 @@ describe("Router", () => {
             await configureRouter(true);
             vi.spyOn(loggedUserService, "isAuthenticated", "get").mockReturnValue(true);
             vi.spyOn(loggedUserService, "currentlyLoggedInUser", "get").mockReturnValue(mockAccountDetails);
+            vi.spyOn(TestBed.inject(FeatureFlagsService), "featureVisibility").mockImplementation((name) =>
+                name === "flowDetails.usage" ? FeatureVisibility.INVISIBLE : FeatureVisibility.VISIBLE,
+            );
         });
 
         it("a flow-details URL without a tab opens the history tab", async () => {

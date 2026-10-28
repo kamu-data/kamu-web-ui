@@ -6,6 +6,7 @@
  */
 
 import { TestBed } from "@angular/core/testing";
+import { RedirectCommand } from "@angular/router";
 
 import { routeSnapshot, runResolver } from "@common/helpers/base-test.helpers.spec";
 import { FlowStatus } from "@api/kamu.graphql.interface";
@@ -102,5 +103,20 @@ describe("accountFlowsResolverFn", () => {
 
             expect(result).toEqual(expect.objectContaining({ flowGroup }));
         });
+    });
+
+    it("should give each navigation its own status group, since the activity tabs write to it", async () => {
+        const route = routeSnapshot({
+            queryParams: { [ProjectLinks.URL_QUERY_PARAM_ACCOUNT_FLOW_STATUS]: FlowStatus.Running },
+        });
+        const first = await runResolver(accountFlowsResolverFn, route);
+        if (first instanceof RedirectCommand) {
+            expect.fail("the resolver never redirects");
+        }
+        first.flowGroup[0] = FlowStatus.Waiting;
+
+        const second = await runResolver(accountFlowsResolverFn, route);
+
+        expect(second).toEqual(expect.objectContaining({ flowGroup: [FlowStatus.Running, FlowStatus.Retrying] }));
     });
 });

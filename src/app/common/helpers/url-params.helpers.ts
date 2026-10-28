@@ -17,7 +17,7 @@ const MULTIBASE_PATTERN = /^(f([0-9a-f]{2})+|u[A-Za-z0-9_-]+|z[1-9A-HJ-NP-Za-km-
 
 /** Whether `value` is a `FlowID`: an unsigned 64-bit integer in decimal */
 export function isFlowId(value: string): boolean {
-    return /^\+?\d{1,20}$/.test(value) && BigInt(value.replace("+", "")) <= MAX_U64;
+    return /^\+?\d+$/.test(value) && BigInt(value.replace("+", "")) <= MAX_U64;
 }
 
 /** Whether `value` is a UUID, the format of `WebhookSubscriptionID` and `DeviceCode` */

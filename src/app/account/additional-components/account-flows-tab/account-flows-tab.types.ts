@@ -26,15 +26,16 @@ export enum AccountFlowsNav {
 }
 
 /** The statuses each tab of the activity view lists; a retrying flow is listed with the running ones */
-export const FLOW_STATUS_GROUPS: readonly FlowStatus[][] = [
+export const FLOW_STATUS_GROUPS: readonly (readonly FlowStatus[])[] = [
     [FlowStatus.Finished],
     [FlowStatus.Running, FlowStatus.Retrying],
     [FlowStatus.Waiting],
 ];
 
-/** The tab group a status belongs to */
+/** The tab group a status belongs to, as a new array: the activity tabs bind to its first item two-way */
 export function flowStatusGroup(status: FlowStatus): FlowStatus[] {
-    return FLOW_STATUS_GROUPS.find((group) => group.includes(status)) ?? [status];
+    const group = FLOW_STATUS_GROUPS.find((statuses) => statuses.includes(status));
+    return group ? [...group] : [status];
 }
 
 export enum ProcessCardFilterMode {

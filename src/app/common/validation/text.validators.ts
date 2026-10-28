@@ -29,7 +29,7 @@ export function notBlankValidator(): ValidatorFn {
     };
 }
 
-/** Fails with `singleChar` when a non-empty value is anything but one ASCII character: kamu-cli counts bytes. */
+/** Fails with `singleChar` when a non-empty value is anything but one ASCII character: the backend counts bytes. */
 export function singleCharValidator(): ValidatorFn {
     return (control: AbstractControl): MaybeNull<ValidationErrors> => {
         const value: unknown = control.value;
@@ -39,7 +39,7 @@ export function singleCharValidator(): ValidatorFn {
     };
 }
 
-/** Fails with `maxBytes` when the value takes more than `max` bytes in UTF-8, the length kamu-cli checks. */
+/** Fails with `maxBytes` when the value takes more than `max` bytes in UTF-8, the length the backend checks. */
 export function maxBytesValidator(max: number): ValidatorFn {
     const encoder = new TextEncoder();
     return (control: AbstractControl): MaybeNull<ValidationErrors> => {

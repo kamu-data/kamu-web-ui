@@ -69,7 +69,7 @@ export function topicListControl(): ControlFactory<FormArray<FormGroup<TopicCont
 }
 
 /**
- * Requires the pattern only while the event time comes from the path, the one kind that shows it. kamu-cli compiles
+ * Requires the pattern only while the event time comes from the path, the one kind that shows it. The backend compiles
  * it with Rust's regex syntax (`(?i)` and the like), which the browser's `RegExp` can't check.
  */
 function patternFromPath(control: AbstractControl): MaybeNull<ValidationErrors> {

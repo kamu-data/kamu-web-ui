@@ -12,11 +12,13 @@ import { NEVER, of } from "rxjs";
 
 import { Apollo } from "apollo-angular";
 import { provideToastr } from "ngx-toastr";
+import type { Mock } from "vitest";
 
 import { registerMatSvgIcons, setComponentInput, stubMethod } from "@common/helpers/base-test.helpers.spec";
 import { SharedTestModule } from "@common/modules/shared-test.module";
 import { mockCreateWebhookSubscriptionSuccess } from "@api/mock/webhooks.mock";
 
+import { AppConfigService } from "src/app/app-config.service";
 import { AddWebhookComponent } from "src/app/dataset-view/additional-components/dataset-settings-component/tabs/webhooks/components/add-webhook/add-webhook.component";
 import { AddWebhookHarness } from "src/app/dataset-view/additional-components/dataset-settings-component/tabs/webhooks/components/add-webhook/add-webhook.harness";
 import { WebhookFormComponent } from "src/app/dataset-view/additional-components/dataset-settings-component/tabs/webhooks/components/common/webhook-form/webhook-form.component";
@@ -32,6 +34,7 @@ describe("AddWebhookComponent", () => {
     let webhooksService: WebhooksService;
     let datasetWebhooksService: DatasetWebhooksService;
     let navigationService: NavigationService;
+    let loopbackTargetsOnlySpy: Mock<() => boolean>;
 
     const EVENT_TYPE = { name: "Dataset Updated", value: "DATASET.REF.UPDATED" };
 
@@ -42,15 +45,22 @@ describe("AddWebhookComponent", () => {
         });
         registerMatSvgIcons();
 
-        fixture = TestBed.createComponent(AddWebhookComponent);
         webhooksService = TestBed.inject(WebhooksService);
         datasetWebhooksService = TestBed.inject(DatasetWebhooksService);
         navigationService = TestBed.inject(NavigationService);
-        component = fixture.componentInstance;
         vi.spyOn(webhooksService, "eventTypes").mockReturnValue(of([EVENT_TYPE]));
+        loopbackTargetsOnlySpy = vi
+            .spyOn(TestBed.inject(AppConfigService), "webhookLoopbackTargetsOnly", "get")
+            .mockReturnValue(false);
+        createComponent();
+    });
+
+    function createComponent(): void {
+        fixture = TestBed.createComponent(AddWebhookComponent);
+        component = fixture.componentInstance;
         setComponentInput(fixture, "datasetBasics", mockDatasetBasicsRootFragment);
         fixture.detectChanges();
-    });
+    }
 
     function addWebhookHarness(): Promise<AddWebhookHarness> {
         return TestbedHarnessEnvironment.harnessForFixture(fixture, AddWebhookHarness);
@@ -77,7 +87,7 @@ describe("AddWebhookComponent", () => {
         expect(await form.getTargetUrlError()).toBe("Target URL is required");
     });
 
-    ["http://example.com/hook", "example.com", "https://"].forEach((url) => {
+    ["http://example.com/hook", "ftp://example.com/hook", "example.com", "https://"].forEach((url) => {
         it(`should reject the target URL "${url}", which is not an HTTPS URL`, async () => {
             const page = await addWebhookHarness();
             const form = await page.getForm();
@@ -85,6 +95,41 @@ describe("AddWebhookComponent", () => {
             await form.setTargetUrl(url);
 
             expect(await form.getTargetUrlError()).toBe("Target URL must be a URL starting with https://");
+        });
+    });
+
+    describe("against a node that accepts only loopback targets", () => {
+        beforeEach(() => {
+            fixture.destroy();
+            loopbackTargetsOnlySpy.mockReturnValue(true);
+            createComponent();
+        });
+
+        it("should add a webhook with an http target URL", async () => {
+            const createSpy = vi
+                .spyOn(datasetWebhooksService, "datasetWebhookCreateSubscription")
+                .mockReturnValue(of({ ok: true, value: mockCreateWebhookSubscriptionSuccess }));
+            const page = await addWebhookHarness();
+            const form = await fillValidForm(page);
+
+            await form.setTargetUrl("http://localhost:8080/hook");
+            expect(await form.getTargetUrlError()).toBeNull();
+            await page.submit();
+
+            expect(createSpy).toHaveBeenCalledWith(mockDatasetBasicsRootFragment.id, {
+                targetUrl: "http://localhost:8080/hook",
+                eventTypes: [EVENT_TYPE.value],
+                label: "my-hook",
+            });
+        });
+
+        it("should reject a target URL that is not an HTTP or HTTPS URL", async () => {
+            const page = await addWebhookHarness();
+            const form = await page.getForm();
+
+            await form.setTargetUrl("ftp://localhost/hook");
+
+            expect(await form.getTargetUrlError()).toBe("Target URL must be a URL starting with http://, https://");
         });
     });
 
@@ -184,7 +229,7 @@ describe("AddWebhookComponent", () => {
         expect(await page.isSubmitDisabled()).toBe(false);
     });
 
-    it("should keep the form editable without a field error when kamu-cli rejects it for no field", async () => {
+    it("should keep the form editable without a field error when the backend rejects it for no field", async () => {
         vi.spyOn(datasetWebhooksService, "datasetWebhookCreateSubscription").mockReturnValue(
             of({ ok: false, fieldError: null }),
         );

@@ -212,7 +212,7 @@ describe("DatasetSettingsGeneralTabComponent", () => {
         expect(renameDatasetSpy).toHaveBeenCalledTimes(1);
     });
 
-    it("should show a name kamu-cli rejects under the name field until it is changed", async () => {
+    it("should show a name the backend rejects under the name field until it is changed", async () => {
         vi.spyOn(datasetSettingsService, "renameDataset").mockReturnValue(
             of({ ok: false, fieldError: "Dataset 'account.portfolio' already exists" } as const),
         );

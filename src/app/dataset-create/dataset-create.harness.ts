@@ -59,7 +59,7 @@ export class DatasetCreateHarness extends ComponentHarness {
         await button.click();
     }
 
-    /** Why kamu-cli rejected the snapshot, shown above the form, or `null` when none is shown. */
+    /** Why the backend rejected the snapshot, shown above the form, or `null` when none is shown. */
     public async getCreateError(): Promise<MaybeNull<string>> {
         const error = await this.locatorCreateError();
         return error ? error.text() : null;

@@ -37,6 +37,12 @@ export interface AppUIConfig {
     minNewPasswordLength: number;
     semanticSearchThresholdScore?: number;
     featureFlags: AppUIConfigFeatureFlags;
+    webhooks?: AppUIConfigWebhooks;
+}
+
+export interface AppUIConfigWebhooks {
+    /** The backend accepts only targets that resolve to loopback addresses, over http or https */
+    loopbackTargetsOnly: boolean;
 }
 
 export interface AppUIConfigFeatureFlags {

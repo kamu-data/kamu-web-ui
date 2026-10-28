@@ -62,6 +62,18 @@ class AddedTextTest(unittest.TestCase):
         self.assertTrue(flagged("<!-- see JIRA-12 -->", "src/app/x.component.html"))
         self.assertTrue(flagged("// renamed from foo", "src/app/x.component.scss"))
 
+    def test_app_text_never_names_kamu_cli(self):
+        for line in ["/** kamu-cli rejects a value over 16 KiB. */", '    it("should show a name kamu-cli rejects", async () => {',
+                     "<!-- as Kamu-CLI parses it -->"]:
+            with self.subTest(line=line):
+                self.assertTrue(flagged(line, "src/app/x.component.ts") or flagged(line, "src/app/x.component.html"))
+        for line in ['import { DataAccessKamuCliTabComponent } from "src/app/data-access-panel/data-access-modal/tabs/data-access-kamu-cli-tab/data-access-kamu-cli-tab.component";',
+                     '    selector: "app-data-access-kamu-cli-tab",', '        name: "Kamu CLI",',
+                     "/** The backend rejects a value over 16 KiB. */"]:
+            with self.subTest(line=line):
+                self.assertFalse(flagged(line, "src/app/x.component.ts"))
+        self.assertFalse(flagged("# kamu-cli build", "scripts/agents/project.py"))
+
     def test_legitimate_text_passes(self):
         for line in ["        //-----//", "// UTF-8 bytes, SHA-256 digest, ISO-8601 dates", "// Step 1: load the plan",
                      'const url = "http://host/plan 7";', "    console.error(e);", "    standalone: false,",

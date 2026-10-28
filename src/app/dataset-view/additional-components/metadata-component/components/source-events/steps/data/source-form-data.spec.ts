@@ -131,7 +131,7 @@ describe("Source event step rules", () => {
             expect(url.errors).toEqual({ required: true });
         });
 
-        it("should accept a dataset variable template, which kamu-cli substitutes when it fetches", () => {
+        it("should accept a dataset variable template, which the backend substitutes when it fetches", () => {
             const url$ = requireValue(fetchForm(FetchKind.URL).controls.url);
             url$.setValue("https://example.com/data.csv?key=${{ env.API_KEY }}");
             expect(url$.valid).toBe(true);

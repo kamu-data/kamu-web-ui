@@ -35,7 +35,7 @@ const INPUTS_WITHOUT_MESSAGE: Record<string, string> = {
     "./dataset-view/additional-components/dataset-settings-component/tabs/ingest-configuration/flow-retry-policy-form/flow-retry-policy-form.component.html backoffType":
         "a select that always holds a backoff type",
     "./dataset-view/additional-components/overview-component/components/edit-license-modal/edit-license-modal.component.html spdxId":
-        "optional, and kamu-cli accepts any text",
+        "optional, and the backend accepts any text",
     "./dataset-view/additional-components/metadata-component/components/form-components/topics-field/topics-field.component.html item.controls.qos":
         "a select whose empty option means the broker's default",
     "./dataset-view/additional-components/metadata-component/components/form-components/key-value-field/key-value-field.component.html item.controls.value":
@@ -43,7 +43,7 @@ const INPUTS_WITHOUT_MESSAGE: Record<string, string> = {
     "./dataset-view/additional-components/metadata-component/components/source-events/steps/prepare-step/prepare-step.component.html format":
         "a select that always holds a format",
     "./dataset-view/additional-components/metadata-component/components/source-events/steps/prepare-step/prepare-step.component.html subPath":
-        "optional, and kamu-cli accepts any path",
+        "optional, and the backend accepts any path",
 };
 
 /**

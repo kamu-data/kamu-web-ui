@@ -20,6 +20,7 @@ import { urlValidator } from "@common/validation/url.validators";
 import { DatasetBasicsFragment } from "@api/kamu.graphql.interface";
 import { MaybeUndefined } from "@interface/app.types";
 
+import { AppConfigService } from "src/app/app-config.service";
 import { WebhookFormComponent } from "src/app/dataset-view/additional-components/dataset-settings-component/tabs/webhooks/components/common/webhook-form/webhook-form.component";
 import {
     CreateWebhookSubscriptionSuccess,
@@ -30,6 +31,7 @@ import {
     DatasetWebhooksService,
     WebhookMutationResult,
 } from "src/app/dataset-view/additional-components/dataset-settings-component/tabs/webhooks/service/dataset-webhooks.service";
+import { WebhooksHelpers } from "src/app/dataset-view/additional-components/dataset-settings-component/tabs/webhooks/webhooks.helpers";
 import { NavigationService } from "src/app/services/navigation.service";
 import { WebhooksService } from "src/app/services/webhooks.service";
 
@@ -55,12 +57,16 @@ export class AddWebhookComponent extends BaseComponent implements OnInit {
     private secret$ = new BehaviorSubject<MaybeUndefined<string>>(undefined);
 
     private fb = inject(NonNullableFormBuilder);
+    private appConfigService = inject(AppConfigService);
     private webhooksService = inject(WebhooksService);
     private datasetWebhooksService = inject(DatasetWebhooksService);
     private navigationService = inject(NavigationService);
 
     public createOrEditSubscriptionForm: FormGroup<WebhookSubscriptionFormType> = this.fb.group({
-        targetUrl: this.fb.control("", [Validators.required, urlValidator(["https"])]),
+        targetUrl: this.fb.control("", [
+            Validators.required,
+            urlValidator(WebhooksHelpers.targetUrlSchemes(this.appConfigService.webhookLoopbackTargetsOnly)),
+        ]),
         eventTypes: this.fb.control<string[]>([], [Validators.required]),
         label: this.fb.control("", [Validators.maxLength(100)]),
     });

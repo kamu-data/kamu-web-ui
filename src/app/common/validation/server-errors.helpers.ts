@@ -8,7 +8,7 @@
 import { AbstractControl } from "@angular/forms";
 
 /**
- * What a service returns for a mutation that kamu-cli can reject because of one field of the form: the result, or
+ * What a service returns for a mutation that the backend can reject because of one field of the form: the result, or
  * the message for that field, which the component shows with `setServerError`.
  */
 export type FieldMutationResult<T> = { ok: true; value: T } | { ok: false; fieldError: string };

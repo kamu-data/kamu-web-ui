@@ -35,9 +35,15 @@ emits, when it errors — not its implementation.
 building blocks, then Material and third-party modules, then app components), not comments to
 remove or extend with text.
 
+**The server is "the backend".** Comments, test names and UI text under `src/app` never name
+kamu-cli: deployments run kamu-api-server, built on the same core libraries, and the UI must not
+depend on which one answers. The Data access modal's "Kamu CLI" tab is the exception, since it
+names the client users install. Docs and skills still name the kamu-cli repository where they
+point at its source or at running it locally.
+
 The post-edit hook rejects added comments that cite plans or tickets or narrate change, in
-`.ts`, `.html`, `.scss` and `.js` files. It catches the common phrasings only, so the rules above
-still apply in full.
+`.ts`, `.html`, `.scss` and `.js` files, and any added `src/app` line that names kamu-cli. It
+catches the common phrasings only, so the rules above still apply in full.
 
 ## Documentation prose
 

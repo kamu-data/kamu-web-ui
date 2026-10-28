@@ -212,7 +212,7 @@ describe("FlowStopPolicyFormComponent", () => {
         { value: "11", message: "Max failures must be at most 10" },
         { value: "1.5", message: "Max failures must be a whole number" },
     ].forEach(({ value, message }) => {
-        it(`should reject "${value}" max failures, which kamu-cli does not accept`, async () => {
+        it(`should reject "${value}" max failures, which the backend does not accept`, async () => {
             await enableAfterConsecutiveFailures();
 
             await stopPolicyFormHarness.setMaxFailures(value);

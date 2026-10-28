@@ -71,7 +71,7 @@ describe("SelectDateFormatFieldComponent", () => {
         expect(await harness.getPatternErrorMessage()).toBe("Pattern is required");
     });
 
-    it("should accept a pattern in Rust's regex syntax, which kamu-cli compiles it with", async () => {
+    it("should accept a pattern in Rust's regex syntax, which the backend compiles", async () => {
         await harness.selectKind(EventTimeSourceKind.FROM_PATH);
         await harness.setPattern("(?i)data-(\\d{4}-\\d{2}-\\d{2})");
 

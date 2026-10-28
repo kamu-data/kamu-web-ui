@@ -147,7 +147,7 @@ describe("AddPollingSourceComponent", () => {
             return requireValue(step === "first" ? navigations.at(0) : navigations.at(-1));
         }
 
-        it("should keep Next disabled while the URL is not one kamu-cli fetches, and say why", async () => {
+        it("should keep Next disabled while the URL is not one the backend fetches, and say why", async () => {
             const url = await loader.getHarness(InputFieldHarness.with({ dataTestId: "fetch-url" }));
             const fetchNavigation = await navigation("first");
 

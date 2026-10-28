@@ -117,7 +117,7 @@ describe("Cron expression validator", () => {
             },
         },
         { expression: "30 9 3 * MON", expectedResult: null },
-        // Checked against kamu-cli's `cron` crate, which parses these with a leading seconds field.
+        // Checked against the backend's `cron` crate, which parses these with a leading seconds field.
         { expression: "0-30/5 * * * *", expectedResult: null },
         { expression: "1-5,10-15/2 * * * *", expectedResult: null },
         { expression: "5/59 * * * *", expectedResult: null },

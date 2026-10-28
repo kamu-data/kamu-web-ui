@@ -93,7 +93,7 @@ describe("EmailsTabComponent", () => {
         expect(navigateToSettingsSpy).toHaveBeenCalledWith(AccountSettingsTabs.EMAILS);
     });
 
-    it("should show an email kamu-cli rejects under the field, stay on the form, and clear it once edited", async () => {
+    it("should show an email the backend rejects under the field, stay on the form, and clear it once edited", async () => {
         vi.spyOn(accountEmailService, "changeEmailAddress").mockReturnValue(
             of({ ok: false, fieldError: "Email address is already used by another account" } as const),
         );

@@ -1,13 +1,13 @@
 ---
 name: kamu-ui-forms-and-validation
-description: Form fields and their validation in Kamu Web UI — which validators a field needs, the validators and patterns in src/app/common/validation, how a field shows its errors with appFieldError, matching the rules kamu-cli applies, server errors shown on a field, the config-driven fields of the source event editor, and the tests every validated field gets. Use before adding or changing a form field, a validator, an appFieldError element, or a source editor config entry.
+description: Form fields and their validation in Kamu Web UI — which validators a field needs, the validators and patterns in src/app/common/validation, how a field shows its errors with appFieldError, matching the rules the backend applies, server errors shown on a field, the config-driven fields of the source event editor, and the tests every validated field gets. Use before adding or changing a form field, a validator, an appFieldError element, or a source editor config entry.
 ---
 
 # Kamu UI Forms And Validation
 
-A field that accepts a value kamu-cli rejects fails late: as a GraphQL error, a toast, or a panic when an
+A field that accepts a value the backend rejects fails late: as a GraphQL error, a toast, or a panic when an
 ingest runs (an MQTT port of `-5`). A field whose validator has no message keeps the form invalid without
-saying why. Every field therefore gets the rules kamu-cli applies, a message for each, and a test for each.
+saying why. Every field therefore gets the rules the backend applies, a message for each, and a test for each.
 
 ## Checklist for every field
 
@@ -15,14 +15,14 @@ Go through it for each field a change adds or touches.
 
 | Question | Where the answer goes |
 |---|---|
-| Is it required? Can it be blank (only spaces)? | `Validators.required`; `notBlankValidator()`, or `trim="blur"` from `NgxTrimDirectiveModule` when kamu-cli trims |
+| Is it required? Can it be blank (only spaces)? | `Validators.required`; `notBlankValidator()`, or `trim="blur"` from `NgxTrimDirectiveModule` when the backend trims |
 | Is it a number? Whole? Its smallest and largest value? | `integerInRangeValidators(min, max)` and the same `min` / `max` on the input |
-| Is it a name, key or identifier with a grammar? A length limit? | `odfNameValidators()`, `envVarKeyValidators()`, a `FormatRule` in `patterns.ts` with `formatValidator()`, `Validators.maxLength`; `maxBytesValidator(max)` where kamu-cli counts UTF-8 bytes |
-| Is it a URL? Which schemes? Does kamu-cli substitute `${{ env.NAME }}` templates in it? | `urlValidator([...schemes])`, with `{ templates: true }` for the fetch URLs kamu-cli templates |
+| Is it a name, key or identifier with a grammar? A length limit? | `odfNameValidators()`, `envVarKeyValidators()`, a `FormatRule` in `patterns.ts` with `formatValidator()`, `Validators.maxLength`; `maxBytesValidator(max)` where the backend counts UTF-8 bytes |
+| Is it a URL? Which schemes? Does the backend substitute `${{ env.NAME }}` templates in it? | `urlValidator([...schemes])`, with `{ templates: true }` for the fetch URLs the backend templates |
 | Must it differ from existing values or other entries of the list? Ignoring case? | `uniqueValueValidator(() => existing, options)`, `uniqueItemsValidator(key, options)` |
 | Does it depend on another field? | `requiredUnlessValidator`, `matchFieldsValidator`; revalidate on the sibling's changes |
-| What does kamu-cli accept? | Look it up in kamu-cli (below), then match it: never looser, and stricter only with a reason |
-| Can kamu-cli still reject it? | Map the typed error result onto the field with `setServerError` |
+| What does the backend accept? | Look it up in the backend's source (below), then match it: never looser, and stricter only with a reason |
+| Can the backend still reject it? | Map the typed error result onto the field with `setServerError` |
 | Is every error shown? | An `appFieldError` element with a `fieldLabel` equal to the visible label |
 | Is every rule tested? | One case per validator with the exact message, submit disabled while invalid, a valid value accepted |
 
@@ -33,12 +33,12 @@ each file with its spec:
 
 | File | Holds |
 |---|---|
-| `patterns.ts` | `FormatRule`s (a regex and the message shown after the label) and limits taken from kamu-cli |
+| `patterns.ts` | `FormatRule`s (a regex and the message shown after the label) and limits taken from the backend |
 | `identifier.validators.ts` | dataset and account names, variable keys |
 | `url.validators.ts`, `number.validators.ts`, `text.validators.ts` | URLs; whole numbers and ranges; blank, one ASCII character, a byte length, ASCII |
 | `collection.validators.ts` | a value not among existing ones; list entries not repeated |
-| `password.validators.ts`, `cross-field.validators.ts` | new passwords as kamu-cli checks them, matching confirmation; one of two fields required (`requiredUnless`) |
-| `cron.validators.ts` | cron expressions as kamu-cli parses them |
+| `password.validators.ts`, `cross-field.validators.ts` | new passwords as the backend checks them, matching confirmation; one of two fields required (`requiredUnless`) |
+| `cron.validators.ts` | cron expressions as the backend parses them |
 | `form-validation-errors.directive.ts`, `.types.ts` | `appFieldError` and the message for each error key |
 | `server-errors.helpers.ts` | `setServerError(control, message)`, and `FieldMutationResult<T>` for the services that return such a rejection |
 
@@ -56,21 +56,26 @@ message, checked by `formatValidator()`.
   dev mode, so every spec that renders the field fails.
 - [`src/app/form-fields.spec.ts`](../../../src/app/form-fields.spec.ts) fails for a form input that no
   `appFieldError` reports on, unless the input is listed there with the reason it needs no message.
-- A rejection kamu-cli returns as a typed result for one field (a duplicate label, a name taken) goes on that
+- A rejection the backend returns as a typed result for one field (a duplicate label, a name taken) goes on that
   field through `setServerError`; it clears on the next change. The service returns it as a
   `FieldMutationResult<T>` (`{ ok: false, fieldError }`) instead of showing a toast or emitting it through a
   subject of its own, and the component sets it on the control. When a rejection can belong to one of several
   fields, the service names the field beside the message (`WebhookFieldError` in `dataset-webhooks.service.ts`).
   A toast is for errors that belong to no field.
 
-## Matching kamu-cli
+## Matching the backend
 
-The UI checks what kamu-cli checks, so a value the form accepts is a value the server accepts. Before
-writing a rule, find kamu-cli's: names and the grammar in `src/odf/metadata/src/formats/grammar.rs`,
+The UI checks what the backend checks, so a value the form accepts is a value the server accepts. Before
+writing a rule, find the backend's in the kamu-cli repository, whose core libraries every backend
+(kamu-cli, kamu-api-server) is built on: names and the grammar in `src/odf/metadata/src/formats/grammar.rs`,
 column lengths in the Postgres migrations, input checks in the use cases under `src/domain/*/services`,
 flow limits in `src/domain/flow-system/domain`, source event fields in the ODF schemas
-(open-data-fabric repository) and in `src/infra/core/src/services/ingest`. Note what kamu-cli doesn't
+(open-data-fabric repository) and in `src/infra/core/src/services/ingest`. Note what the backend doesn't
 check at all; that is a kamu-cli issue to raise, while the UI still guards the field.
+
+A rule that depends on the backend's configuration (the minimum password length, the webhook target
+schemes of a loopback-only node) comes from `/ui-config` through `AppConfigService`, with a default that
+matches the backend's when an older backend leaves the field out.
 
 ## The source event editor
 
@@ -78,7 +83,7 @@ Its steps build controls from config files (`steps/data/*-form-data.ts`) through
 
 - An entry lists `required` and `validators`; a NUMBER entry must state its `min` (and `max`), and the
   section adds the whole-number and range validators and the input's attributes from them.
-- A TEXT entry trims its value when the field is left; `trimmed: false` keeps the spaces of a value kamu-cli uses
+- A TEXT entry trims its value when the field is left; `trimmed: false` keeps the spaces of a value the backend uses
   exactly as typed (a password, the CSV null value).
 - `dependsOn` revalidates an entry when another control of the step changes; `shownWhen` hides an entry
   without removing its control.
@@ -91,7 +96,7 @@ Its steps build controls from config files (`steps/data/*-form-data.ts`) through
 
 Each validated field gets, through the component's CDK harness (`kamu-ui-unit-tests`):
 
-- one test per validator with the exact message, using kamu-cli's boundary values (both sides of a range);
+- one test per validator with the exact message, using the backend's boundary values (both sides of a range);
 - a test that submit is disabled, or does nothing, while the form is invalid;
 - a test that a valid value is accepted and reaches the service call;
 - for a server-mapped error, a test that the stubbed result shows on the field.

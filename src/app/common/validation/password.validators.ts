@@ -10,10 +10,10 @@ import { AbstractControl, ValidationErrors, ValidatorFn } from "@angular/forms";
 import { asciiValidator } from "@common/validation/text.validators";
 import { MaybeNull } from "@interface/app.types";
 
-/** kamu-cli rejects a shorter password whatever the configured minimum says. */
+/** The backend rejects a shorter password whatever the configured minimum says. */
 export const SERVER_MIN_PASSWORD_LENGTH = 8;
 
-/** Fails with `minlength` when the value, trimmed as kamu-cli trims it, is shorter than `minLength`. */
+/** Fails with `minlength` when the value, trimmed as the backend trims it, is shorter than `minLength`. */
 export function trimmedMinLengthValidator(minLength: number): ValidatorFn {
     return (control: AbstractControl): MaybeNull<ValidationErrors> => {
         const value: unknown = control.value;
@@ -25,7 +25,7 @@ export function trimmedMinLengthValidator(minLength: number): ValidatorFn {
     };
 }
 
-/** A new password that kamu-cli accepts and that meets the configured minimum length. */
+/** A new password that the backend accepts and that meets the configured minimum length. */
 export function newPasswordValidators(configuredMinLength: number): ValidatorFn[] {
     return [trimmedMinLengthValidator(Math.max(configuredMinLength, SERVER_MIN_PASSWORD_LENGTH)), asciiValidator()];
 }

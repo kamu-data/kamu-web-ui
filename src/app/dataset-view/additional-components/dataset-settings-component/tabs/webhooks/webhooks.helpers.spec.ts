@@ -5,6 +5,7 @@
  * included in the LICENSE file.
  */
 
+import { WebhooksTexts } from "@common/tooltips/webhooks.text";
 import { WebhookSubscriptionStatus } from "@api/kamu.graphql.interface";
 
 import { WebhooksHelpers } from "src/app/dataset-view/additional-components/dataset-settings-component/tabs/webhooks/webhooks.helpers";
@@ -41,6 +42,24 @@ describe("DatasetSettingsHelpers", () => {
             expect(WebhooksHelpers.webhookStatusBadgeOptions(testCase.webhookSubscriptionStatus)).toEqual(
                 testCase.expectedOption,
             );
+        });
+    });
+
+    [
+        { loopbackTargetsOnly: false, schemes: ["https"] },
+        { loopbackTargetsOnly: true, schemes: ["http", "https"] },
+    ].forEach(({ loopbackTargetsOnly, schemes }) => {
+        it(`should accept the target URL schemes ${schemes.join(", ")} with loopbackTargetsOnly=${loopbackTargetsOnly}`, () => {
+            expect(WebhooksHelpers.targetUrlSchemes(loopbackTargetsOnly)).toEqual(schemes);
+        });
+    });
+
+    [
+        { loopbackTargetsOnly: false, hint: WebhooksTexts.TARGET_URL_HINT },
+        { loopbackTargetsOnly: true, hint: WebhooksTexts.TARGET_URL_HINT_LOOPBACK_ONLY },
+    ].forEach(({ loopbackTargetsOnly, hint }) => {
+        it(`should give the target URL hint with loopbackTargetsOnly=${loopbackTargetsOnly}`, () => {
+            expect(WebhooksHelpers.targetUrlHint(loopbackTargetsOnly)).toBe(hint);
         });
     });
 });

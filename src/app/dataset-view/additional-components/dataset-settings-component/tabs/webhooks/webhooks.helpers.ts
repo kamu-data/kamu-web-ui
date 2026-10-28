@@ -5,9 +5,20 @@
  * included in the LICENSE file.
  */
 
+import { WebhooksTexts } from "@common/tooltips/webhooks.text";
+import { UrlScheme } from "@common/validation/url.validators";
 import { WebhookSubscriptionStatus } from "@api/kamu.graphql.interface";
 
 export class WebhooksHelpers {
+    /** The schemes the backend accepts in a target URL; it checks whether the host resolves to loopback itself */
+    public static targetUrlSchemes(loopbackTargetsOnly: boolean): UrlScheme[] {
+        return loopbackTargetsOnly ? ["http", "https"] : ["https"];
+    }
+
+    public static targetUrlHint(loopbackTargetsOnly: boolean): string {
+        return loopbackTargetsOnly ? WebhooksTexts.TARGET_URL_HINT_LOOPBACK_ONLY : WebhooksTexts.TARGET_URL_HINT;
+    }
+
     public static webhookStatusBadgeOptions(status: WebhookSubscriptionStatus): {
         iconName: string;
         className: string;

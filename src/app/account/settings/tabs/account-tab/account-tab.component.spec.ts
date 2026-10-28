@@ -253,7 +253,7 @@ describe("AccountTabComponent", () => {
         expect(changeAccountUsernameSpy).not.toHaveBeenCalled();
     });
 
-    it("should show a username kamu-cli rejects under the field and stay on the page until it is changed", async () => {
+    it("should show a username the backend rejects under the field and stay on the page until it is changed", async () => {
         openPage(TEST_LOGIN, false);
         vi.spyOn(accountService, "changeAccountUsername").mockReturnValue(
             of({ ok: false, fieldError: "Account name 'new-account-username' already exists" } as const),

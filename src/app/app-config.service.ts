@@ -89,6 +89,11 @@ export class AppConfigService {
         return this.appUiConfig.semanticSearchThresholdScore;
     }
 
+    /** False when the backend does not say, which matches its default mode */
+    public get webhookLoopbackTargetsOnly(): boolean {
+        return this.appUiConfig.webhooks?.loopbackTargetsOnly ?? false;
+    }
+
     public get featureFlags(): AppUIConfigFeatureFlags {
         return this.appUiConfig.featureFlags;
     }

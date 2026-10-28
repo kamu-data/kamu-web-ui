@@ -9,9 +9,13 @@ import { TestbedHarnessEnvironment } from "@angular/cdk/testing/testbed";
 import { ComponentFixture, TestBed } from "@angular/core/testing";
 import { NonNullableFormBuilder, Validators } from "@angular/forms";
 
+import type { Mock } from "vitest";
+
 import { setComponentInput } from "@common/helpers/base-test.helpers.spec";
+import { WebhooksTexts } from "@common/tooltips/webhooks.text";
 import { urlValidator } from "@common/validation/url.validators";
 
+import { AppConfigService } from "src/app/app-config.service";
 import { WebhookFormComponent } from "src/app/dataset-view/additional-components/dataset-settings-component/tabs/webhooks/components/common/webhook-form/webhook-form.component";
 import { WebhookFormHarness } from "src/app/dataset-view/additional-components/dataset-settings-component/tabs/webhooks/components/common/webhook-form/webhook-form.harness";
 
@@ -19,6 +23,7 @@ describe("WebhookFormComponent", () => {
     let component: WebhookFormComponent;
     let fixture: ComponentFixture<WebhookFormComponent>;
     let fb: NonNullableFormBuilder;
+    let loopbackTargetsOnlySpy: Mock<() => boolean>;
 
     const EVENT_TYPE = { name: "Dataset Updated", value: "DATASET.REF.UPDATED" };
 
@@ -26,8 +31,15 @@ describe("WebhookFormComponent", () => {
         TestBed.configureTestingModule({
             imports: [WebhookFormComponent],
         });
-        fixture = TestBed.createComponent(WebhookFormComponent);
         fb = TestBed.inject(NonNullableFormBuilder);
+        loopbackTargetsOnlySpy = vi
+            .spyOn(TestBed.inject(AppConfigService), "webhookLoopbackTargetsOnly", "get")
+            .mockReturnValue(false);
+        createComponent();
+    });
+
+    function createComponent(): void {
+        fixture = TestBed.createComponent(WebhookFormComponent);
         component = fixture.componentInstance;
         setComponentInput(
             fixture,
@@ -40,7 +52,7 @@ describe("WebhookFormComponent", () => {
         );
         setComponentInput(fixture, "dropdownList", [EVENT_TYPE]);
         fixture.detectChanges();
-    });
+    }
 
     function webhookFormHarness(): Promise<WebhookFormHarness> {
         return TestbedHarnessEnvironment.harnessForFixture(fixture, WebhookFormHarness);
@@ -48,6 +60,21 @@ describe("WebhookFormComponent", () => {
 
     it("should create", () => {
         expect(component).toBeTruthy();
+    });
+
+    it("should say the target URL must be an HTTPS URL off the loopback", async () => {
+        const form = await webhookFormHarness();
+
+        expect(await form.getTargetUrlHint()).toBe(WebhooksTexts.TARGET_URL_HINT);
+    });
+
+    it("should say the target URL must be a loopback URL against a node that accepts only those", async () => {
+        fixture.destroy();
+        loopbackTargetsOnlySpy.mockReturnValue(true);
+        createComponent();
+        const form = await webhookFormHarness();
+
+        expect(await form.getTargetUrlHint()).toBe(WebhooksTexts.TARGET_URL_HINT_LOOPBACK_ONLY);
     });
 
     it("should show no errors before the fields are touched", async () => {

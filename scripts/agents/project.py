@@ -57,6 +57,7 @@ IGNORED_UPPER_TOKENS = re.compile(
 TS = ["**/*.ts"]
 SPEC = ["**/*.spec.ts"]
 COMMENTED = ["**/*.ts", "**/*.html", "**/*.scss", "**/*.js", "**/*.mjs"]
+APP_TEXT = ["src/app/**/*.ts", "src/app/**/*.html", "src/app/**/*.scss"]
 GUARD_OR_RESOLVER = ["src/app/**/*.guard.ts", "src/app/**/*.resolver.ts", "src/app/**/resolvers/*.helpers.ts"]
 
 RULES: list[tuple[re.Pattern[str], str, bool, list[str]]] = [
@@ -68,6 +69,8 @@ RULES: list[tuple[re.Pattern[str], str, bool, list[str]]] = [
     (re.compile(r"\bconstructor\s*\([^)]*\b(private|protected|public|readonly)\s+\w+\s*:"), "inject dependencies with `private foo = inject(Foo)` fields, not constructor parameters (kamu-ui-angular-style)", False, TS),
     (re.compile(r"\.navigateTo\w*\s*\(|\brouter\.navigate(ByUrl)?\s*\("), "guards return a `UrlTree` and resolvers emit a `RedirectCommand`, built by the `NavigationService` `…UrlTree()`/`…Redirect()` methods; navigating from inside a navigation cancels it (kamu-ui-routing)", False, GUARD_OR_RESOLVER),
     (re.compile(r"\b(withInterceptorsFromDi|HTTP_INTERCEPTORS)\b"), "interceptors are functional `HttpInterceptorFn`s registered with `withInterceptors([...])`; specs use `provideHttpClient()` (kamu-ui-angular-style)", False, TS),
+    # The Kamu CLI data access tab names the client users install, not the server
+    (re.compile(r"(?<!data-access-)\bkamu-cli\b", re.I), "the UI names no backend: deployments run kamu-api-server, not kamu-cli; write `the backend` (kamu-ui-prose-and-comments)", False, APP_TEXT),
     (re.compile(r"\b(plan|slice)\s+#?\d+\b|\b(jira|ticket|issue|pr)\s*#\s*\d+|\bjira\b", re.I), CITATION, True, COMMENTED),
     (re.compile(r"\b[A-Z][A-Z0-9]+-\d{2,}\b"), CITATION, True, COMMENTED),
     (re.compile(r"\b(was|were) previously\b|\bused to (be|return|have|hold|take)\b|\bno longer (exists?|returns?|used|supported|called|present)\b|\b(has|have) been (renamed|replaced|removed|moved)\b|\brenamed from\b|\bthis (change|patch|commit|PR)\b", re.I), NARRATION, True, COMMENTED),

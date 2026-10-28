@@ -93,7 +93,7 @@ describe("EditKeyValueModalComponent", () => {
     });
 
     ["failed key", "A-B", "2KEY", "KÉY"].forEach((key) => {
-        it(`should reject the key "${key}", which kamu-cli does not accept`, async () => {
+        it(`should reject the key "${key}", which the backend does not accept`, async () => {
             const modal = await openForAdding();
 
             await modal.setKey(key);

@@ -80,7 +80,7 @@ describe("DatasetCreateComponent", () => {
         return TestbedHarnessEnvironment.harnessForFixture(fixture, DatasetCreateHarness);
     }
 
-    it("should show a name kamu-cli rejects under the name field until it is changed", async () => {
+    it("should show a name the backend rejects under the name field until it is changed", async () => {
         vi.spyOn(datasetCreateService, "createEmptyDataset").mockReturnValue(
             of({ ok: false, fieldError: "Dataset with name my-dataset already exists" } as const),
         );
@@ -99,7 +99,7 @@ describe("DatasetCreateComponent", () => {
         expect(await page.isCreateDisabled()).toBe(false);
     });
 
-    it("should show a snapshot kamu-cli rejects above the form, and drop it when the editor is turned off", async () => {
+    it("should show a snapshot the backend rejects above the form, and drop it when the editor is turned off", async () => {
         vi.spyOn(datasetCreateService, "createDatasetFromSnapshot").mockReturnValue(
             of({ ok: false, fieldError: "Snapshot is invalid" } as const),
         );

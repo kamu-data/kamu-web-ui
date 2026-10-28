@@ -89,7 +89,7 @@ describe("InputFieldComponent", () => {
         expect(host.control.value).toBe("https://example.com");
     });
 
-    it("should keep the spaces around a value kamu-cli uses as typed", async () => {
+    it("should keep the spaces around a value the backend uses as typed", async () => {
         host.trimmed = false;
         fixture.detectChanges();
         host.control.setValue(" saved ");

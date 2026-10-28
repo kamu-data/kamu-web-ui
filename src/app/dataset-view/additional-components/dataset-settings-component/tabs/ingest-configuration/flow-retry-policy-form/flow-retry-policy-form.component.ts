@@ -52,7 +52,7 @@ export class FlowRetryPolicyFormComponent extends BaseComponent implements OnIni
     @Input({ required: true }) public form: FormGroup<FlowRetryPolicyFormType>;
 
     public static readonly DEFAULT_MAX_ATTEMPTS: number = 3;
-    /** A cap of the UI: kamu-cli sets no bound on the number of attempts. */
+    /** A cap of the UI: the backend sets no bound on the number of attempts. */
     public static readonly MAX_ATTEMPTS_LIMIT: number = 100;
     public readonly MAX_ATTEMPTS: number = FlowRetryPolicyFormComponent.MAX_ATTEMPTS_LIMIT;
     public static readonly DEFAULT_MIN_DELAY: TimeDeltaInput = {

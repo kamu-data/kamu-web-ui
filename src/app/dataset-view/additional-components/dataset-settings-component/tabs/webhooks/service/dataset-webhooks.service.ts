@@ -35,7 +35,7 @@ import { MaybeNull } from "@interface/app.types";
 
 import { CreateWebhookSubscriptionSuccess } from "src/app/dataset-view/additional-components/dataset-settings-component/tabs/webhooks/dataset-settings-webhooks-tab.component.types";
 
-/** A rejection kamu-cli ties to one field of the webhook form. */
+/** A rejection the backend ties to one field of the webhook form. */
 export interface WebhookFieldError {
     field: "targetUrl" | "label";
     message: string;
@@ -43,7 +43,7 @@ export interface WebhookFieldError {
 
 export type WebhookMutationResult<T> = { ok: true; value: T } | { ok: false; fieldError: MaybeNull<WebhookFieldError> };
 
-/** Every result of a create or update that kamu-cli returns instead of the subscription. */
+/** Every result of a create or update that the backend returns instead of the subscription. */
 type WebhookRejection = Pick<
     | WebhookSubscriptionDuplicateLabel
     | WebhookSubscriptionInvalidTargetUrl

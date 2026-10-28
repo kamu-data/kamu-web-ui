@@ -250,7 +250,7 @@ describe("DatasetSettingsSchedulingTabComponent", () => {
         expect(setDatasetFlowTriggerSpy).not.toHaveBeenCalled();
     });
 
-    it("should ignore 'Save' while the max failures is out of kamu-cli's range", async () => {
+    it("should ignore 'Save' while the max failures is out of the backend's range", async () => {
         const setDatasetFlowTriggerSpy = stubMethod(datasetFlowTriggerService, "setDatasetFlowTrigger");
         component.form.controls.updatesEnabled.setValue(true);
 

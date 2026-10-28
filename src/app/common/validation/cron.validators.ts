@@ -24,7 +24,7 @@ const MONTH_NAMES: Readonly<Record<string, number>> = {
     DEC: 12,
 };
 
-/** Sunday is 1, as in kamu-cli's `cron` crate. */
+/** Sunday is 1, as in the backend's `cron` crate. */
 const WEEKDAY_NAMES: Readonly<Record<string, number>> = {
     SUN: 1,
     MON: 2,
@@ -37,7 +37,7 @@ const WEEKDAY_NAMES: Readonly<Record<string, number>> = {
 
 /**
  * Fails with `invalidCronExpression`, whose value is the message, when a non-empty value is not a 5-field
- * expression kamu-cli's `cron` crate accepts. Month and day-of-week names are accepted in their own field only.
+ * expression the backend's `cron` crate accepts. Month and day-of-week names are accepted in their own field only.
  */
 export function cronValidator(control: AbstractControl): MaybeNull<ValidationErrors> {
     const cron = typeof control.value === "string" ? control.value.trim() : "";
@@ -85,7 +85,7 @@ function validatePart(
         return;
     }
 
-    // Each entry is `start`, `start-end` or `*`, optionally followed by `/step`. kamu-cli's `cron` crate requires
+    // Each entry is `start`, `start-end` or `*`, optionally followed by `/step`. The backend's `cron` crate requires
     // values within the field's bounds, a range that does not run backwards, and a step from 1 to the field's maximum.
     const values = part.split(",").flatMap((entry) => {
         const [base, stepText] = entry.split("/");

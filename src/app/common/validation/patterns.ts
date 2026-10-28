@@ -12,21 +12,21 @@ export interface FormatRule {
 }
 
 export const ValidationPatterns = {
-    /** kamu-cli `DatasetName` and `AccountName` grammar: hostname labels joined by dots. */
+    /** The backend's `DatasetName` and `AccountName` grammar: hostname labels joined by dots. */
     ODF_NAME: {
         regex: /^[A-Za-z0-9]+(-[A-Za-z0-9]+)*(\.[A-Za-z0-9]+(-[A-Za-z0-9]+)*)*$/,
         message: "may only contain letters, digits, single hyphens and dots between them",
     },
-    /** kamu-cli variable and secret key grammar. */
+    /** The backend's variable and secret key grammar. */
     ENV_VAR_KEY: {
         regex: /^[A-Za-z_][A-Za-z0-9_]*$/,
         message: "may only contain letters, digits and underscores, and can't start with a digit",
     },
 } as const satisfies Record<string, FormatRule>;
 
-/** kamu-cli stores dataset and account names in VARCHAR(100) columns. */
+/** The backend stores dataset and account names in VARCHAR(100) columns. */
 export const ODF_NAME_MAX_LENGTH = 100;
-/** kamu-cli stores variable and secret keys in a VARCHAR(200) column. */
+/** The backend stores variable and secret keys in a VARCHAR(200) column. */
 export const ENV_VAR_KEY_MAX_LENGTH = 200;
-/** kamu-cli stops a flow after at most 10 consecutive failures (`MAX_CONSECUTIVE_FAILURES_COUNT`). */
+/** The backend stops a flow after at most 10 consecutive failures (`MAX_CONSECUTIVE_FAILURES_COUNT`). */
 export const MAX_CONSECUTIVE_FAILURES = 10;

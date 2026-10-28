@@ -34,7 +34,7 @@ describe("urlValidator", () => {
         });
     });
 
-    describe("with kamu-cli templates", () => {
+    describe("with dataset variable templates", () => {
         const withTemplates = urlValidator(["http", "https"], { templates: true });
 
         [

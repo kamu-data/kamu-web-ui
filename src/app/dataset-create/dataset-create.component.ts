@@ -68,7 +68,7 @@ export class DatasetCreateComponent extends BaseComponent {
 
     public yamlTemplate = "";
     public showMonacoEditor = false;
-    /** Why kamu-cli rejected the snapshot; a rejected name of the other archetypes shows on the name field. */
+    /** Why the backend rejected the snapshot; a rejected name of the other archetypes shows on the name field. */
     public snapshotError = "";
     public owners: string[] = [];
     public archetype: ArchetypeViewType = ArchetypeViewType.DATASET_WITH_DATA;

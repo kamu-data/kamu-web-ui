@@ -19,6 +19,7 @@ import RoutingResolvers from "@common/resolvers/routing-resolvers";
 import { setServerError } from "@common/validation/server-errors.helpers";
 import { urlValidator } from "@common/validation/url.validators";
 
+import { AppConfigService } from "src/app/app-config.service";
 import { WebhookFormComponent } from "src/app/dataset-view/additional-components/dataset-settings-component/tabs/webhooks/components/common/webhook-form/webhook-form.component";
 import { EditWebhooksType } from "src/app/dataset-view/additional-components/dataset-settings-component/tabs/webhooks/components/edit-webhook/edit-webhooks.types";
 import {
@@ -29,6 +30,7 @@ import {
     DatasetWebhooksService,
     WebhookMutationResult,
 } from "src/app/dataset-view/additional-components/dataset-settings-component/tabs/webhooks/service/dataset-webhooks.service";
+import { WebhooksHelpers } from "src/app/dataset-view/additional-components/dataset-settings-component/tabs/webhooks/webhooks.helpers";
 import { NavigationService } from "src/app/services/navigation.service";
 
 @Component({
@@ -50,12 +52,16 @@ export class EditWebhookComponent extends BaseComponent implements OnInit {
     public readonly busy$ = new BehaviorSubject<boolean>(false);
 
     private fb = inject(NonNullableFormBuilder);
+    private appConfigService = inject(AppConfigService);
     private datasetWebhooksService = inject(DatasetWebhooksService);
     private navigationService = inject(NavigationService);
     private location = inject(Location);
 
     public createOrEditSubscriptionForm: FormGroup<WebhookSubscriptionFormType> = this.fb.group({
-        targetUrl: this.fb.control("", [Validators.required, urlValidator(["https"])]),
+        targetUrl: this.fb.control("", [
+            Validators.required,
+            urlValidator(WebhooksHelpers.targetUrlSchemes(this.appConfigService.webhookLoopbackTargetsOnly)),
+        ]),
         eventTypes: this.fb.control<string[]>([], [Validators.required]),
         label: this.fb.control("", [Validators.maxLength(100)]),
     });

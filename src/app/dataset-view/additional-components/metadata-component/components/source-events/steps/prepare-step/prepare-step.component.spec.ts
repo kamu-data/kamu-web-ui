@@ -82,7 +82,7 @@ describe("PrepareStepComponent", () => {
         expect(prepareForm.valid).toBe(false);
     });
 
-    it("should reject a pipe command of only spaces, which leaves kamu-cli nothing to run", async () => {
+    it("should reject a pipe command of only spaces, which leaves the backend nothing to run", async () => {
         const prepareStep = await TestbedHarnessEnvironment.harnessForFixture(fixture, PrepareStepHarness);
         await prepareStep.addPipe();
 

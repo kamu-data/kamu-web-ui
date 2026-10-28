@@ -19,7 +19,7 @@ describe("Identifier validators", () => {
     describe("odfNameValidators", () => {
         const formatError = { format: { message: ValidationPatterns.ODF_NAME.message } };
 
-        // Accepted and rejected names follow the kamu-cli grammar for DatasetName and AccountName.
+        // Accepted and rejected names follow the backend's grammar for DatasetName and AccountName.
         ["a", "my-dataset", "com.example.data", "2024-data", "A.b-C.d", "a".repeat(100)].forEach((name) => {
             it(`should accept "${name.length > 20 ? `${name.length} characters` : name}"`, () => {
                 expect(check(odfNameValidators(), name)).toBeNull();

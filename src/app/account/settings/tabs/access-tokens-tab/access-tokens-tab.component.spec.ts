@@ -261,7 +261,7 @@ describe("AccessTokensTabComponent", () => {
         expect(navigateToSettingsSpy).toHaveBeenCalledWith(AccountSettingsTabs.ACCESS_TOKENS);
     });
 
-    it("should show a name kamu-cli rejects under the name field until it is changed", async () => {
+    it("should show a name the backend rejects under the name field until it is changed", async () => {
         vi.spyOn(accessTokenService, "createAccessTokens").mockReturnValue(
             of({ ok: false, fieldError: "Access token with token-name name already exists" } as const),
         );

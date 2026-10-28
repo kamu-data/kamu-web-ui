@@ -279,7 +279,7 @@ describe("FlowRetryPolicyFormComponent", () => {
         { value: "101", message: "Max attempts must be at most 100" },
         { value: "2.5", message: "Max attempts must be a whole number" },
     ].forEach(({ value, message }) => {
-        it(`should reject "${value}" max attempts, which kamu-cli does not accept`, async () => {
+        it(`should reject "${value}" max attempts, which the backend does not accept`, async () => {
             await flowRetryPolicyFormHarness.enableRetries();
 
             await flowRetryPolicyFormHarness.setMaxAttempts(value);

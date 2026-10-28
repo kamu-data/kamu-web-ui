@@ -13,11 +13,13 @@ import { NEVER, of } from "rxjs";
 
 import { Apollo } from "apollo-angular";
 import { provideToastr } from "ngx-toastr";
+import type { Mock } from "vitest";
 
 import { setComponentInput, stubMethod } from "@common/helpers/base-test.helpers.spec";
 import { SharedTestModule } from "@common/modules/shared-test.module";
 import { WebhookSubscriptionStatus } from "@api/kamu.graphql.interface";
 
+import { AppConfigService } from "src/app/app-config.service";
 import { WebhookFormComponent } from "src/app/dataset-view/additional-components/dataset-settings-component/tabs/webhooks/components/common/webhook-form/webhook-form.component";
 import { EditWebhookComponent } from "src/app/dataset-view/additional-components/dataset-settings-component/tabs/webhooks/components/edit-webhook/edit-webhook.component";
 import { EditWebhookHarness } from "src/app/dataset-view/additional-components/dataset-settings-component/tabs/webhooks/components/edit-webhook/edit-webhook.harness";
@@ -31,6 +33,7 @@ describe("EditWebhookComponent", () => {
     let datasetWebhooksService: DatasetWebhooksService;
     let navigationService: NavigationService;
     let location: Location;
+    let loopbackTargetsOnlySpy: Mock<() => boolean>;
 
     const SUBSCRIPTION_ID = "112-32323-3232-323";
 
@@ -39,16 +42,23 @@ describe("EditWebhookComponent", () => {
             providers: [Apollo, provideToastr()],
             imports: [EditWebhookComponent, WebhookFormComponent, SharedTestModule],
         });
-        fixture = TestBed.createComponent(EditWebhookComponent);
         datasetWebhooksService = TestBed.inject(DatasetWebhooksService);
         navigationService = TestBed.inject(NavigationService);
         location = TestBed.inject(Location);
+        loopbackTargetsOnlySpy = vi
+            .spyOn(TestBed.inject(AppConfigService), "webhookLoopbackTargetsOnly", "get")
+            .mockReturnValue(false);
+        createComponent("https://mock.com");
+    });
+
+    function createComponent(targetUrl: string): void {
+        fixture = TestBed.createComponent(EditWebhookComponent);
         component = fixture.componentInstance;
         setComponentInput(fixture, "editWebhooksData", {
             datasetBasics: mockDatasetBasicsRootFragment,
             subscription: {
                 __typename: "WebhookSubscription",
-                targetUrl: "https://mock.com",
+                targetUrl,
                 status: WebhookSubscriptionStatus.Enabled,
                 eventTypes: ["DATASET.REF.UPDATED"],
                 id: SUBSCRIPTION_ID,
@@ -56,7 +66,7 @@ describe("EditWebhookComponent", () => {
             },
         });
         fixture.detectChanges();
-    });
+    }
 
     function editWebhookHarness(): Promise<EditWebhookHarness> {
         return TestbedHarnessEnvironment.harnessForFixture(fixture, EditWebhookHarness);
@@ -101,7 +111,7 @@ describe("EditWebhookComponent", () => {
 
     [
         { url: "", message: "Target URL is required" },
-        { url: "ftp://example.com", message: "Target URL must be a URL starting with https://" },
+        { url: "http://example.com", message: "Target URL must be a URL starting with https://" },
     ].forEach(({ url, message }) => {
         it(`should not update the webhook with the target URL "${url}"`, async () => {
             const updateSpy = vi.spyOn(datasetWebhooksService, "datasetWebhookUpdateSubscription");
@@ -114,6 +124,48 @@ describe("EditWebhookComponent", () => {
             await page.submit();
 
             expect(updateSpy).not.toHaveBeenCalled();
+        });
+    });
+
+    describe("against a node that accepts only loopback targets", () => {
+        beforeEach(() => {
+            fixture.destroy();
+            loopbackTargetsOnlySpy.mockReturnValue(true);
+            createComponent("http://localhost:8080/hook");
+        });
+
+        it("should update a webhook whose target URL is an http URL", async () => {
+            stubMethod(location, "back");
+            const updateSpy = vi
+                .spyOn(datasetWebhooksService, "datasetWebhookUpdateSubscription")
+                .mockReturnValue(of({ ok: true, value: true }));
+            const page = await editWebhookHarness();
+            const form = await page.getForm();
+
+            await form.setLabel("renamed");
+            expect(await form.getTargetUrlError()).toBeNull();
+            expect(await page.isSubmitDisabled()).toBe(false);
+            await page.submit();
+
+            expect(updateSpy).toHaveBeenCalledWith({
+                datasetId: mockDatasetBasicsRootFragment.id,
+                id: SUBSCRIPTION_ID,
+                input: {
+                    targetUrl: "http://localhost:8080/hook",
+                    eventTypes: ["DATASET.REF.UPDATED"],
+                    label: "renamed",
+                },
+            });
+        });
+
+        it("should reject a target URL that is not an HTTP or HTTPS URL", async () => {
+            const page = await editWebhookHarness();
+            const form = await page.getForm();
+
+            await form.setTargetUrl("ftp://localhost/hook");
+
+            expect(await form.getTargetUrlError()).toBe("Target URL must be a URL starting with http://, https://");
+            expect(await page.isSubmitDisabled()).toBe(true);
         });
     });
 
@@ -172,7 +224,7 @@ describe("EditWebhookComponent", () => {
         expect(await page.isSubmitDisabled()).toBe(false);
     });
 
-    it("should stay on the form without a field error when kamu-cli rejects the update for no field", async () => {
+    it("should stay on the form without a field error when the backend rejects the update for no field", async () => {
         const backSpy = stubMethod(location, "back");
         vi.spyOn(datasetWebhooksService, "datasetWebhookUpdateSubscription").mockReturnValue(
             of({ ok: false, fieldError: null }),

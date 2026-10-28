@@ -11,13 +11,13 @@ import { MaybeNull } from "@interface/app.types";
 
 export type UrlScheme = "http" | "https" | "ws" | "wss" | "ftp" | "ftps";
 
-/** A kamu-cli `${{ ... }}` template, which kamu-cli replaces with a dataset variable's value when it fetches. */
+/** A `${{ ... }}` template, which the backend replaces with a dataset variable's value when it fetches. */
 const TEMPLATE = /\$\{\{[^}]*\}\}/g;
 const TEMPLATE_START = "${{";
 
 export interface UrlValidatorOptions {
     /**
-     * Accept templates in the URL. A template's value is unknown until kamu-cli fetches, so only the text around the
+     * Accept templates in the URL. A template's value is unknown until the backend fetches, so only the text around the
      * templates is checked: no whitespace, an accepted scheme where the scheme is written out, and a valid host where
      * no template touches it.
      */

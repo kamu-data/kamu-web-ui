@@ -142,7 +142,7 @@ interface ArrayFieldOptions {
     buttonText: string;
 }
 
-/** `trimmed: false` keeps the spaces around a value kamu-cli uses exactly as typed, such as a password. */
+/** `trimmed: false` keeps the spaces around a value the backend uses exactly as typed, such as a password. */
 type TextLayout = ControlLayoutBase & {
     type: ControlType.TEXT;
     placeholder?: string;

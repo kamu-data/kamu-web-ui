@@ -43,4 +43,13 @@ describe("DatasetSettingsHelpers", () => {
             );
         });
     });
+
+    [
+        { loopbackTargetsOnly: false, schemes: ["https"] },
+        { loopbackTargetsOnly: true, schemes: ["http", "https"] },
+    ].forEach(({ loopbackTargetsOnly, schemes }) => {
+        it(`should accept the target URL schemes ${schemes.join(", ")} with loopbackTargetsOnly=${loopbackTargetsOnly}`, () => {
+            expect(WebhooksHelpers.targetUrlSchemes(loopbackTargetsOnly)).toEqual(schemes);
+        });
+    });
 });

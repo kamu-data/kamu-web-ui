@@ -55,9 +55,9 @@ export class EditKeyValueModalComponent extends BaseComponent implements OnInit 
 
     @Input({ required: true }) public row: MaybeNull<ViewDatasetEnvVarDataFragment>;
     @Input({ required: true }) public datasetBasics: DatasetBasicsFragment;
-    /** kamu-cli keeps at most 256 variables and 256 secrets per dataset, so one page of both holds every key. */
+    /** The backend keeps at most 256 variables and 256 secrets per dataset, so one page of both holds every key. */
     public static readonly MAX_ENTRIES = 2 * 256;
-    /** kamu-cli rejects a value over 16 KiB. */
+    /** The backend rejects a value over 16 KiB. */
     public static readonly VALUE_MAX_BYTES = 16 * 1024;
     public readonly IS_SECRET_CONTROL_TOOLTIP =
         "While both secrets and variables are stored encrypted, making value a secret ensures that is used without ever being exposed by the system in task logs and other places. Use secrets for sensitive information like API keys and auth tokens.";

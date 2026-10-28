@@ -107,7 +107,7 @@ export class AddPushSourceComponent extends BaseSourceEventComponent implements 
             this.pollingEditService.patchMergeStep(this.mergePushForm, event.merge);
         }
         if (!this.queryParamName) {
-            // kamu-cli compares source names case-sensitively.
+            // The backend compares source names case-sensitively.
             this.addPushSourceForm.controls.sourceName.addValidators(
                 uniqueValueValidator(() => this.getAllSourceNames()),
             );

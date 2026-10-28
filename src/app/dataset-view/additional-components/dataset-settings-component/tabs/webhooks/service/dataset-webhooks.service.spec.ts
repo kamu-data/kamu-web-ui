@@ -134,7 +134,7 @@ describe("DatasetWebhooksService", () => {
         expect(toastrServiceErrorSpy).not.toHaveBeenCalled();
     });
 
-    it("should report a rejected target URL as an error of the URL field, with kamu-cli's message", async () => {
+    it("should report a rejected target URL as an error of the URL field, with the backend's message", async () => {
         const dataset = requireValue(mockDatasetWebhookCreateSubscriptionMutationError.datasets.byId);
         const invalidUrl: DatasetWebhookCreateSubscriptionMutation = {
             datasets: {

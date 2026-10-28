@@ -67,7 +67,7 @@ export class BufferingBatchingRuleFormHarness extends ComponentHarness {
         return timeDeltaForm.getErrorMessage();
     }
 
-    /** The units the batching interval offers; kamu-cli caps the interval at 24 hours. */
+    /** The units the batching interval offers; the backend caps the interval at 24 hours. */
     public async getBatchingIntervalUnits(): Promise<TimeUnit[]> {
         const timeDeltaForm = await this.locatorTimeDeltaForm();
         if (!timeDeltaForm) {

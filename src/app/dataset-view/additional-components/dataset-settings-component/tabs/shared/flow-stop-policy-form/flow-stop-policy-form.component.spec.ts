@@ -90,7 +90,7 @@ describe("FlowStopPolicyFormComponent", () => {
 
     it("should have default form values", () => {
         const expectedDefaults = {
-            stopPolicyType: null,
+            stopPolicyType: FlowTriggerStopPolicyType.AFTER_CONSECUTIVE_FAILURES,
             maxFailures: FlowStopPolicyFormComponent.DEFAULT_MAX_FAILURES,
         };
 
@@ -106,8 +106,8 @@ describe("FlowStopPolicyFormComponent", () => {
         fixture.detectChanges();
 
         expect(component.stopPolicyTypeControl.disabled).toBe(false);
-        // Max failures should still be disabled until "after consecutive failures" is selected
-        expect(component.maxFailuresControl.disabled).toBe(true);
+        // "After consecutive failures" starts selected, so its max failures can be edited at once
+        expect(component.maxFailuresControl.disabled).toBe(false);
     });
 
     it("should set 'never' stop policy type via harness and reflect in form", async () => {

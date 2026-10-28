@@ -56,8 +56,9 @@ export class FlowStopPolicyFormComponent extends BaseComponent implements OnInit
 
     public static buildForm(): FormGroup<FlowStopPolicyFormType> {
         return new FormGroup<FlowStopPolicyFormType>({
+            // A flow without a saved stop policy starts on what an unset choice is saved as.
             stopPolicyType: new FormControl<MaybeNull<FlowTriggerStopPolicyType>>(
-                { value: null, disabled: true },
+                { value: FlowTriggerStopPolicyType.AFTER_CONSECUTIVE_FAILURES, disabled: true },
                 { nonNullable: true, validators: [Validators.required] },
             ),
             maxFailures: new FormControl<number>(

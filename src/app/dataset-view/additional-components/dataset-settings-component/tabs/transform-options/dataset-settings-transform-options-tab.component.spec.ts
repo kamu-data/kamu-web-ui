@@ -90,11 +90,19 @@ describe("DatasetSettingsTransformOptionsTabComponent", () => {
         const domTransformTriggerFormValue = await transformTriggerFormHarness.currentFormValue();
         expect(domTransformTriggerFormValue).toEqual({
             forNewData: {
-                batchingRuleType: null,
+                batchingRuleType: BatchingRuleType.IMMEDIATE,
                 buffering: undefined,
             },
-            forBreakingChange: null,
+            forBreakingChange: FlowTriggerBreakingChangeRule.NoAction,
         });
+    });
+
+    it("should keep 'Save' enabled once updates are turned on for a dataset with no reactive rule", () => {
+        component.form.controls.updatesEnabled.setValue(true);
+        fixture.detectChanges();
+
+        expect(component.form.status).toBe("VALID");
+        expect(getSaveButton().disabled).toBe(false);
     });
 
     it("should check form is valid when loaded with buffering batching rule", async () => {

@@ -5,6 +5,7 @@
             type="text"
             data-test-id="target-url"
             formControlName="targetUrl"
+            trim="blur"
             class="w-100 form-control"
             #targetUrl
             [readOnly]="disabled"
@@ -15,9 +16,10 @@
             fieldLabel="Target URL"
             appFieldError
             [group]="createOrEditSubscriptionForm"
+            dataTestId="target-url-error"
         ></div>
 
-        <p class="text-muted fs-12">Must be publicly reachable via HTTPS. Localhost and private Ips are not allowed</p>
+        <p class="text-muted fs-12">Must be publicly reachable via HTTPS. Localhost and private IPs are not allowed</p>
     </div>
     <div class="d-flex flex-column mt-4">
         <label for="" class="form-label">Subscribed events <span class="text-danger">*</span></label>
@@ -41,6 +43,7 @@
             appFieldError
             [fieldControl]="createOrEditSubscriptionForm.get('eventTypes')"
             [group]="createOrEditSubscriptionForm"
+            dataTestId="event-types-error"
         ></div>
     </div>
     <div class="d-flex flex-column mt-4">
@@ -51,6 +54,7 @@
             [readOnly]="disabled"
             data-test-id="webhook-label"
             formControlName="label"
+            trim="blur"
             class="w-100 form-control"
         />
         <div
@@ -59,7 +63,8 @@
             fieldLabel="Label"
             appFieldError
             [group]="createOrEditSubscriptionForm"
+            dataTestId="label-error"
         ></div>
-        <p class="text-muted fs-12">Optinal unique label to identify this webhook subscription</p>
+        <p class="text-muted fs-12">Optional unique label to identify this webhook subscription</p>
     </div>
 </form>

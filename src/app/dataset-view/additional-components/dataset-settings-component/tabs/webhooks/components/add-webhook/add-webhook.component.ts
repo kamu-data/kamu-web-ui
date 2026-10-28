@@ -14,9 +14,10 @@ import { BehaviorSubject, map, Observable } from "rxjs";
 import { BaseComponent } from "@common/components/base.component";
 import { CopyToClipboardComponent } from "@common/components/copy-to-clipboard/copy-to-clipboard.component";
 import RoutingResolvers from "@common/resolvers/routing-resolvers";
+import { setServerError } from "@common/validation/server-errors.helpers";
 import { urlValidator } from "@common/validation/url.validators";
 import { DatasetBasicsFragment } from "@api/kamu.graphql.interface";
-import { MaybeNull, MaybeUndefined } from "@interface/app.types";
+import { MaybeUndefined } from "@interface/app.types";
 
 import { WebhookFormComponent } from "src/app/dataset-view/additional-components/dataset-settings-component/tabs/webhooks/components/common/webhook-form/webhook-form.component";
 import {
@@ -24,7 +25,10 @@ import {
     SubscribedEventType,
     WebhookSubscriptionFormType,
 } from "src/app/dataset-view/additional-components/dataset-settings-component/tabs/webhooks/dataset-settings-webhooks-tab.component.types";
-import { DatasetWebhooksService } from "src/app/dataset-view/additional-components/dataset-settings-component/tabs/webhooks/service/dataset-webhooks.service";
+import {
+    DatasetWebhooksService,
+    WebhookMutationResult,
+} from "src/app/dataset-view/additional-components/dataset-settings-component/tabs/webhooks/service/dataset-webhooks.service";
 import { NavigationService } from "src/app/services/navigation.service";
 import { WebhooksService } from "src/app/services/webhooks.service";
 
@@ -75,14 +79,17 @@ export class AddWebhookComponent extends BaseComponent implements OnInit {
         this.datasetWebhooksService
             .datasetWebhookCreateSubscription(this.datasetBasics.id, this.createOrEditSubscriptionForm.getRawValue())
 
-            .subscribe((result: MaybeNull<CreateWebhookSubscriptionSuccess>) => {
-                if (result) {
+            .subscribe((result: WebhookMutationResult<CreateWebhookSubscriptionSuccess>) => {
+                if (result.ok) {
                     this.createOrEditSubscriptionForm.patchValue({
-                        targetUrl: result.input.targetUrl,
-                        eventTypes: result.input.eventTypes,
-                        label: result.input.label,
+                        targetUrl: result.value.input.targetUrl,
+                        eventTypes: result.value.input.eventTypes,
+                        label: result.value.input.label,
                     });
-                    this.secretChanged(result.secret);
+                    this.secretChanged(result.value.secret);
+                } else if (result.fieldError) {
+                    const { field, message } = result.fieldError;
+                    setServerError(this.createOrEditSubscriptionForm.controls[field], message);
                 }
             });
     }

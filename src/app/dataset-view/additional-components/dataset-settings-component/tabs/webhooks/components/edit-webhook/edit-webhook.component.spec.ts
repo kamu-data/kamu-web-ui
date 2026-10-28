@@ -59,7 +59,7 @@ describe("EditWebhookComponent", () => {
         vi.spyOn(navigationService, "navigateToWebhooks").mockImplementation(() => {});
         const datasetWebhookUpdateSubscriptionSpy = vi
             .spyOn(datasetWebhooksService, "datasetWebhookUpdateSubscription")
-            .mockReturnValue(of(true));
+            .mockReturnValue(of({ ok: true, value: true }));
 
         component.updateWebhook();
         expect(datasetWebhookUpdateSubscriptionSpy).toHaveBeenCalledTimes(1);

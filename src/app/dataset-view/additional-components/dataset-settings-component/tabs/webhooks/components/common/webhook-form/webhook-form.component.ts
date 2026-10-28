@@ -9,6 +9,7 @@ import { ChangeDetectionStrategy, Component, Input } from "@angular/core";
 import { FormGroup, FormsModule, ReactiveFormsModule } from "@angular/forms";
 
 import { NgSelectModule } from "@ng-select/ng-select";
+import { NgxTrimDirectiveModule } from "ngx-trim-directive";
 
 import { FormValidationErrorsDirective } from "@common/validation/form-validation-errors.directive";
 
@@ -25,6 +26,7 @@ import {
         ReactiveFormsModule,
         //-----//
         NgSelectModule,
+        NgxTrimDirectiveModule,
         //-----//
         FormValidationErrorsDirective,
     ],

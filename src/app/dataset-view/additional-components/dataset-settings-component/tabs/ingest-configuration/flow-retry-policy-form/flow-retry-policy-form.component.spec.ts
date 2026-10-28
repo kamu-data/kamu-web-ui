@@ -270,6 +270,6 @@ describe("FlowRetryPolicyFormComponent", () => {
 
         // Verify validation error appears in the nested TimeDelta component
         const validationError = await flowRetryPolicyFormHarness.getMinDelayValidationError();
-        expect(validationError).toEqual("Value should be between 1 to 60");
+        expect(validationError).toEqual("Value must be at most 60");
     });
 });

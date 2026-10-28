@@ -54,7 +54,7 @@ describe("AddWebhookComponent", () => {
     it("should check to add webhook", () => {
         const datasetWebhookCreateSubscriptionSpy = vi
             .spyOn(datasetWebhooksService, "datasetWebhookCreateSubscription")
-            .mockReturnValue(of(mockCreateWebhookSubscriptionSuccess));
+            .mockReturnValue(of({ ok: true, value: mockCreateWebhookSubscriptionSuccess }));
 
         component.addWebhook();
         expect(datasetWebhookCreateSubscriptionSpy).toHaveBeenCalledTimes(1);

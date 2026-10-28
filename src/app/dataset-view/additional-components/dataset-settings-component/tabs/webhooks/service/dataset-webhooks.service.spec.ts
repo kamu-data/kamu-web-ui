@@ -37,9 +37,7 @@ import {
     mockWebhookSubscriptionInput,
 } from "@api/mock/webhooks.mock";
 import { WebhooksApi } from "@api/webhooks.api";
-import { MaybeNull } from "@interface/app.types";
 
-import { CreateWebhookSubscriptionSuccess } from "src/app/dataset-view/additional-components/dataset-settings-component/tabs/webhooks/dataset-settings-webhooks-tab.component.types";
 import { DatasetWebhooksService } from "src/app/dataset-view/additional-components/dataset-settings-component/tabs/webhooks/service/dataset-webhooks.service";
 
 describe("DatasetWebhooksService", () => {
@@ -105,34 +103,35 @@ describe("DatasetWebhooksService", () => {
         expect(result).toBeNull();
     });
 
-    it("should check create dataset webhook subscription with success", () => {
+    it("should check create dataset webhook subscription with success", async () => {
         const datasetWebhookCreateSubscriptionSpy = vi
             .spyOn(webhooksApi, "datasetWebhookCreateSubscription")
             .mockReturnValue(of(mockDatasetWebhookCreateSubscriptionMutation));
+        stubMethod(toastrService, "success");
 
-        service
-            .datasetWebhookCreateSubscription(DATASET_ID, mockWebhookSubscriptionInput)
-            .subscribe((result: MaybeNull<CreateWebhookSubscriptionSuccess>) => {
-                expect(result?.input).toEqual(mockWebhookSubscriptionInput);
-            });
+        const result = await firstValueFrom(
+            service.datasetWebhookCreateSubscription(DATASET_ID, mockWebhookSubscriptionInput),
+        );
 
+        expect(result.ok && result.value.input).toEqual(mockWebhookSubscriptionInput);
         expect(datasetWebhookCreateSubscriptionSpy).toHaveBeenCalledTimes(1);
     });
 
-    it("should check create dataset webhook subscription with error", () => {
-        const datasetWebhookCreateSubscriptionSpy = vi
-            .spyOn(webhooksApi, "datasetWebhookCreateSubscription")
-            .mockReturnValue(of(mockDatasetWebhookCreateSubscriptionMutationError));
+    it("should report a duplicate label as an error of the label field, without a toast", async () => {
+        vi.spyOn(webhooksApi, "datasetWebhookCreateSubscription").mockReturnValue(
+            of(mockDatasetWebhookCreateSubscriptionMutationError),
+        );
         const toastrServiceErrorSpy = stubMethod(toastrService, "error");
 
-        service
-            .datasetWebhookCreateSubscription(DATASET_ID, mockWebhookSubscriptionInput)
-            .subscribe((result: MaybeNull<CreateWebhookSubscriptionSuccess>) => {
-                expect(result).toEqual(null);
-                expect(toastrServiceErrorSpy).toHaveBeenCalledTimes(1);
-            });
+        const result = await firstValueFrom(
+            service.datasetWebhookCreateSubscription(DATASET_ID, mockWebhookSubscriptionInput),
+        );
 
-        expect(datasetWebhookCreateSubscriptionSpy).toHaveBeenCalledTimes(1);
+        expect(result).toEqual({
+            ok: false,
+            fieldError: { field: "label", message: "A webhook with this label already exists" },
+        });
+        expect(toastrServiceErrorSpy).not.toHaveBeenCalled();
     });
 
     it("should check remove dataset webhook subscription with success", () => {
@@ -257,43 +256,40 @@ describe("DatasetWebhooksService", () => {
         expect(datasetWebhookReactivateSubscriptionSpy).toHaveBeenCalledTimes(1);
     });
 
-    it("should check update dataset webhook subscription with success", () => {
+    it("should check update dataset webhook subscription with success", async () => {
         const datasetWebhookUpdateSubscriptionSpy = vi
             .spyOn(webhooksApi, "datasetWebhookUpdateSubscription")
             .mockReturnValue(of(mockDatasetWebhookUpdateSubscriptionMutation));
         const toastrServiceSuccessSpy = stubMethod(toastrService, "success");
 
-        service
-            .datasetWebhookUpdateSubscription({
+        const result = await firstValueFrom(
+            service.datasetWebhookUpdateSubscription({
                 datasetId: DATASET_ID,
                 id: MOCK_SUBSCRIPTION_ID,
                 input: mockWebhookSubscriptionInput,
-            })
-            .subscribe((result: boolean) => {
-                expect(result).toEqual(true);
-                expect(toastrServiceSuccessSpy).toHaveBeenCalledTimes(1);
-            });
+            }),
+        );
 
+        expect(result).toEqual({ ok: true, value: true });
+        expect(toastrServiceSuccessSpy).toHaveBeenCalledTimes(1);
         expect(datasetWebhookUpdateSubscriptionSpy).toHaveBeenCalledTimes(1);
     });
 
-    it("should check update dataset webhook subscription with error", () => {
-        const datasetWebhookUpdateSubscriptionSpy = vi
-            .spyOn(webhooksApi, "datasetWebhookUpdateSubscription")
-            .mockReturnValue(of(mockDatasetWebhookUpdateSubscriptionMutationError));
+    it("should toast an update error that belongs to no field", async () => {
+        vi.spyOn(webhooksApi, "datasetWebhookUpdateSubscription").mockReturnValue(
+            of(mockDatasetWebhookUpdateSubscriptionMutationError),
+        );
         const toastrServiceErrorSpy = stubMethod(toastrService, "error");
 
-        service
-            .datasetWebhookUpdateSubscription({
+        const result = await firstValueFrom(
+            service.datasetWebhookUpdateSubscription({
                 datasetId: DATASET_ID,
                 id: MOCK_SUBSCRIPTION_ID,
                 input: mockWebhookSubscriptionInput,
-            })
-            .subscribe((result: boolean) => {
-                expect(result).toEqual(false);
-                expect(toastrServiceErrorSpy).toHaveBeenCalledTimes(1);
-            });
+            }),
+        );
 
-        expect(datasetWebhookUpdateSubscriptionSpy).toHaveBeenCalledTimes(1);
+        expect(result).toEqual({ ok: false, fieldError: null });
+        expect(toastrServiceErrorSpy).toHaveBeenCalledWith("Failed");
     });
 });

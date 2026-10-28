@@ -19,6 +19,7 @@ import { promiseWithCatch } from "@common/helpers/app.helpers";
 import RoutingResolvers from "@common/resolvers/routing-resolvers";
 import { CompactionTooltipsTexts } from "@common/tooltips/compacting.text";
 import { FormValidationErrorsDirective } from "@common/validation/form-validation-errors.directive";
+import { integerInRangeValidators } from "@common/validation/number.validators";
 import AppValues from "@common/values/app.values";
 import { DatasetBasicsFragment } from "@api/kamu.graphql.interface";
 
@@ -55,8 +56,8 @@ export class DatasetSettingsCompactingTabComponent extends BaseComponent {
     @Input(RoutingResolvers.DATASET_SETTINGS_COMPACTION_KEY) public compactingTabData: DatasetViewData;
     public hardCompactionForm = this.fb.nonNullable.group({
         sliceUnit: [SliceUnit.MB, [Validators.required]],
-        sliceSize: [300, [Validators.required, Validators.min(1)]],
-        recordsCount: [10000, [Validators.required, Validators.min(1)]],
+        sliceSize: [300, [Validators.required, ...integerInRangeValidators(1)]],
+        recordsCount: [10000, [Validators.required, ...integerInRangeValidators(1)]],
     });
     public readonly SliceUnit: typeof SliceUnit = SliceUnit;
     public readonly MAX_SLICE_SIZE_TOOLTIP = CompactionTooltipsTexts.MAX_SLICE_SIZE;

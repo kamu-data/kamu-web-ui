@@ -123,10 +123,7 @@ describe("BufferingBatchingRuleFormComponent", () => {
 
         expect(component.form.controls.maxBatchingInterval.invalid).toBe(true);
         expect(component.form.controls.maxBatchingInterval.get("every")?.errors).toEqual({
-            range: {
-                message: "Value should be between 1 to 60",
-                refValues: [100, 1, 60],
-            },
+            max: { max: 60, actual: 100 },
         });
     });
 });

@@ -15,8 +15,9 @@ import { MatTooltipModule } from "@angular/material/tooltip";
 import { NgbActiveModal } from "@ng-bootstrap/ng-bootstrap";
 
 import { BaseComponent } from "@common/components/base.component";
+import { uniqueValueValidator } from "@common/validation/collection.validators";
 import { FormValidationErrorsDirective } from "@common/validation/form-validation-errors.directive";
-import { noWhitespaceValidator } from "@common/validation/text.validators";
+import { envVarKeyValidators } from "@common/validation/identifier.validators";
 import { DatasetBasicsFragment, ViewDatasetEnvVarDataFragment } from "@api/kamu.graphql.interface";
 import { MaybeNull } from "@interface/app.types";
 
@@ -47,15 +48,23 @@ export class EditKeyValueModalComponent extends BaseComponent implements OnInit 
 
     @Input({ required: true }) public row: MaybeNull<ViewDatasetEnvVarDataFragment>;
     @Input({ required: true }) public datasetBasics: DatasetBasicsFragment;
-    public readonly KEY_MAX_LENGTH = 200;
+    /** kamu-cli keeps at most 256 variables and secrets per dataset, so one page holds every key. */
+    public static readonly MAX_ENTRIES = 256;
+    /** kamu-cli rejects a value over 16 KiB. */
+    public static readonly VALUE_MAX_LENGTH = 16 * 1024;
     public readonly IS_SECRET_CONTROL_TOOLTIP =
         "While both secrets and variables are stored encrypted, making value a secret ensures that is used without ever being exposed by the system in task logs and other places. Use secrets for sensitive information like API keys and auth tokens.";
     public keyValueForm: FormGroup<EnvAndSecretsFormType> = this.fb.nonNullable.group({
-        keyEnvVariable: ["", [Validators.required, Validators.maxLength(this.KEY_MAX_LENGTH), noWhitespaceValidator()]],
-        value: ["", [Validators.required]],
+        keyEnvVariable: [
+            "",
+            [Validators.required, ...envVarKeyValidators(), uniqueValueValidator(() => this.existingKeys)],
+        ],
+        value: ["", [Validators.required, Validators.maxLength(EditKeyValueModalComponent.VALUE_MAX_LENGTH)]],
         isSecret: [false],
     });
 
+    /** The keys the dataset has; empty when editing, since a key can't change then. */
+    private existingKeys: readonly string[] = [];
     public exposedValue: string;
     public isShowExposedValue: boolean = false;
     public readonly STUB_VALUE = "stub-value";
@@ -63,6 +72,9 @@ export class EditKeyValueModalComponent extends BaseComponent implements OnInit 
     public ngOnInit(): void {
         this.fetchExposedValue();
         this.setInitialFormValue();
+        if (!this.row) {
+            this.fetchExistingKeys();
+        }
     }
 
     public get keyControl(): AbstractControl<string> {
@@ -120,6 +132,21 @@ export class EditKeyValueModalComponent extends BaseComponent implements OnInit 
                     });
                 });
         }
+    }
+
+    private fetchExistingKeys(): void {
+        this.evnironmentVariablesService
+            .listEnvVariables({
+                accountName: this.datasetBasics.owner.accountName,
+                datasetName: this.datasetBasics.name,
+                page: 0,
+                perPage: EditKeyValueModalComponent.MAX_ENTRIES,
+            })
+            .pipe(takeUntilDestroyed(this.destroyRef))
+            .subscribe(({ nodes }) => {
+                this.existingKeys = nodes.map(({ key }) => key);
+                this.keyControl.updateValueAndValidity();
+            });
     }
 
     private setInitialFormValue(): void {

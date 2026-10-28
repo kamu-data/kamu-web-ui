@@ -17,6 +17,7 @@ import { TooltipIconComponent } from "@common/components/tooltip-icon/tooltip-ic
 import { requireValue } from "@common/helpers/app.helpers";
 import { FlowTooltipsTexts } from "@common/tooltips/flow-tooltips.text";
 import { FormValidationErrorsDirective } from "@common/validation/form-validation-errors.directive";
+import { integerInRangeValidators } from "@common/validation/number.validators";
 import {
     FlowRetryBackoffType,
     FlowRetryPolicyDataFragment,
@@ -68,7 +69,7 @@ export class FlowRetryPolicyFormComponent extends BaseComponent implements OnIni
             retriesEnabled: new FormControl<boolean>(false, { nonNullable: true, validators: [Validators.required] }),
             maxAttempts: new FormControl<number>(FlowRetryPolicyFormComponent.DEFAULT_MAX_ATTEMPTS, {
                 nonNullable: true,
-                validators: [Validators.required, Validators.min(1), Validators.max(100)],
+                validators: [Validators.required, ...integerInRangeValidators(1, 100)],
             }),
             minDelay: minDelayForm,
             backoffType: new FormControl<FlowRetryBackoffType>(FlowRetryPolicyFormComponent.DEFAULT_BACKOFF_TYPE, {

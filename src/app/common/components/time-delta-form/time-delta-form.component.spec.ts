@@ -93,7 +93,7 @@ describe("TimeDeltaFormComponent", () => {
         expect(isUntouched).toBe(false);
 
         const errorMessage = await timeDeltaHarness.getErrorMessage();
-        expect(errorMessage).toEqual("Value should be between 1 to 60");
+        expect(errorMessage).toEqual("Value must be at least 1");
     });
 
     it("should show validation error for required fields", async () => {

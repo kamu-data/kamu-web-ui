@@ -13,6 +13,7 @@ import { RouterOutlet } from "@angular/router";
 import { BaseComponent } from "@common/components/base.component";
 import { eventTypesMapper } from "@common/helpers/data.helpers";
 import RoutingResolvers from "@common/resolvers/routing-resolvers";
+import { setServerError } from "@common/validation/server-errors.helpers";
 import { urlValidator } from "@common/validation/url.validators";
 
 import { WebhookFormComponent } from "src/app/dataset-view/additional-components/dataset-settings-component/tabs/webhooks/components/common/webhook-form/webhook-form.component";
@@ -21,7 +22,10 @@ import {
     SubscribedEventType,
     WebhookSubscriptionFormType,
 } from "src/app/dataset-view/additional-components/dataset-settings-component/tabs/webhooks/dataset-settings-webhooks-tab.component.types";
-import { DatasetWebhooksService } from "src/app/dataset-view/additional-components/dataset-settings-component/tabs/webhooks/service/dataset-webhooks.service";
+import {
+    DatasetWebhooksService,
+    WebhookMutationResult,
+} from "src/app/dataset-view/additional-components/dataset-settings-component/tabs/webhooks/service/dataset-webhooks.service";
 import { NavigationService } from "src/app/services/navigation.service";
 
 @Component({
@@ -67,9 +71,12 @@ export class EditWebhookComponent extends BaseComponent implements OnInit {
                 id: this.editWebhooksData.subscription.id,
                 input: this.createOrEditSubscriptionForm.getRawValue(),
             })
-            .subscribe((result: boolean) => {
-                if (result) {
+            .subscribe((result: WebhookMutationResult<true>) => {
+                if (result.ok) {
                     this.location.back();
+                } else if (result.fieldError) {
+                    const { field, message } = result.fieldError;
+                    setServerError(this.createOrEditSubscriptionForm.controls[field], message);
                 }
             });
     }

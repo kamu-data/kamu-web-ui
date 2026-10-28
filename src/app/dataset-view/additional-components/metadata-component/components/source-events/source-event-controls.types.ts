@@ -142,7 +142,13 @@ interface ArrayFieldOptions {
     buttonText: string;
 }
 
-type TextLayout = ControlLayoutBase & { type: ControlType.TEXT; placeholder?: string; inputType?: "text" | "password" };
+/** `trimmed: false` keeps the spaces around a value kamu-cli uses exactly as typed, such as a password. */
+type TextLayout = ControlLayoutBase & {
+    type: ControlType.TEXT;
+    placeholder?: string;
+    inputType?: "text" | "password";
+    trimmed?: boolean;
+};
 type TypeaheadLayout = ControlLayoutBase & { type: ControlType.TYPEAHEAD; placeholder?: string; list: string[] };
 /** A number field states its range: the step builds its whole-number and range validators, and its input, from it. */
 type NumberLayout = ControlLayoutBase & { type: ControlType.NUMBER; placeholder?: string; min: number; max?: number };

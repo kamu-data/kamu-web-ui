@@ -13,7 +13,7 @@
     [placeholder]="placeholder"
     [formControl]="control"
     [attr.data-test-id]="dataTestId"
-    trim="blur"
+    [trim]="trimmed ? 'blur' : false"
     #input
 />
 <div

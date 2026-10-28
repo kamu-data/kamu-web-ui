@@ -70,6 +70,15 @@ describe("KeyValueFieldComponent", () => {
         expect(host.control.getRawValue()).toEqual([{ name: "Accept", value: "application/json" }]);
     });
 
+    it("should trim the name and keep the value as typed", async () => {
+        await render();
+
+        await harness.addItem();
+        await harness.setItem(0, { name: " API_KEY ", value: " a b " });
+
+        expect(host.control.getRawValue()).toEqual([{ name: "API_KEY", value: " a b " }]);
+    });
+
     it("should show the items the control holds", async () => {
         host.control.push(nameValueGroup("Accept", "text/csv"));
         await render();

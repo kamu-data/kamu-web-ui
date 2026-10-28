@@ -193,6 +193,7 @@ export const FETCH_FORM_DATA: JsonFormData<FetchControls> = {
                 label: "Username",
                 type: ControlType.TEXT,
                 placeholder: "Enter username",
+                trimmed: false,
                 tooltip: SetPollingSourceTooltipsTexts.MQTT_USERNAME,
             },
             {
@@ -202,6 +203,7 @@ export const FETCH_FORM_DATA: JsonFormData<FetchControls> = {
                 type: ControlType.TEXT,
                 inputType: "password",
                 placeholder: "Enter password",
+                trimmed: false,
                 tooltip: SetPollingSourceTooltipsTexts.MQTT_PASSWORD,
             },
             {

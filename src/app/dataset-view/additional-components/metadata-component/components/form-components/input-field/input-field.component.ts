@@ -34,4 +34,6 @@ import { TextControl } from "src/app/dataset-view/additional-components/metadata
 export class InputFieldComponent extends BaseField<TextControl> {
     @Input() public placeholder?: string;
     @Input() public inputType: "text" | "password" = "text";
+    /** Trims the value when the field is left; off for a value kamu-cli uses exactly as typed. */
+    @Input() public trimmed: boolean = true;
 }

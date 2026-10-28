@@ -78,6 +78,8 @@ Its steps build controls from config files (`steps/data/*-form-data.ts`) through
 
 - An entry lists `required` and `validators`; a NUMBER entry must state its `min` (and `max`), and the
   section adds the whole-number and range validators and the input's attributes from them.
+- A TEXT entry trims its value when the field is left; `trimmed: false` keeps the spaces of a value kamu-cli uses
+  exactly as typed (a password, the CSV null value).
 - `dependsOn` revalidates an entry when another control of the step changes; `shownWhen` hides an entry
   without removing its control.
 - Field components take their typed `control` and change nothing in the form; list fields show an error

@@ -26,6 +26,7 @@ import { textControl } from "src/app/dataset-view/additional-components/metadata
             placeholder="Enter url"
             [requiredField]="requiredField"
             [inputType]="inputType"
+            [trimmed]="trimmed"
             dataTestId="fetch-url"
         />
     `,
@@ -34,6 +35,7 @@ class TestInputFieldHostComponent {
     public control = textControl("", [Validators.required, urlValidator(["http", "https"])]);
     public requiredField = true;
     public inputType: "text" | "password" = "text";
+    public trimmed = true;
 }
 
 describe("InputFieldComponent", () => {
@@ -79,6 +81,23 @@ describe("InputFieldComponent", () => {
         expect(host.control.value).toBe("https://example.com/data.csv");
         expect(host.control.valid).toBe(true);
         expect(await harness.getErrorMessage()).toBeNull();
+    });
+
+    it("should trim the value when the field is left", async () => {
+        await harness.setValue("  https://example.com  ");
+
+        expect(host.control.value).toBe("https://example.com");
+    });
+
+    it("should keep the spaces around a value kamu-cli uses as typed", async () => {
+        host.trimmed = false;
+        fixture.detectChanges();
+        host.control.setValue(" saved ");
+        expect(await harness.getValue()).toBe(" saved ");
+
+        await harness.setValue("  typed  ");
+
+        expect(host.control.value).toBe("  typed  ");
     });
 
     it("should show the value the control holds", async () => {

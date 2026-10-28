@@ -92,6 +92,7 @@ export const READ_FORM_DATA: JsonFormData<ReadControls> = {
                 type: ControlType.TEXT,
                 tooltip: SourcesTooltipsTexts.NULL_VALUE,
                 placeholder: "Enter null value...",
+                trimmed: false,
             },
             {
                 name: "dateFormat",

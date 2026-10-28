@@ -213,12 +213,31 @@ describe("CollectionViewComponent", () => {
 
         it("should lead to the collection root", async () => {
             createWithNoEntries("/missing");
-            const openFolderSpy = stubMethod(component, "openFolder");
+            vi.spyOn(datasetService, "isHeadHashBlockChanged").mockReturnValue(of(false));
+            const navigateToDatasetViewSpy = stubMethod(TestBed.inject(NavigationService), "navigateToDatasetView");
             const notFound = await TestbedHarnessEnvironment.loader(fixture).getHarness(ValueNotFoundHarness);
 
             await notFound.runAction();
 
-            expect(openFolderSpy).toHaveBeenCalledWith("/");
+            expect(navigateToDatasetViewSpy).toHaveBeenCalledWith({
+                accountName: mockDatasetBasicsRootFragment.owner.accountName,
+                datasetName: mockDatasetBasicsRootFragment.name,
+                tab: DatasetViewTypeEnum.Overview,
+                [ProjectLinks.URL_QUERY_PARAM_PATH_PREFIX]: "/",
+            });
+        });
+
+        it("should load the collection root again even when it is cached", async () => {
+            createWithNoEntries("/missing");
+            datasetAsCollectionService.cacheEntries.set("/", []);
+            vi.spyOn(datasetService, "isHeadHashBlockChanged").mockReturnValue(of(false));
+            stubMethod(TestBed.inject(NavigationService), "navigateToDatasetView");
+            const loadCollectionDataChangeSpy = vi.spyOn(datasetAsCollectionService, "loadCollectionDataChange");
+            const notFound = await TestbedHarnessEnvironment.loader(fixture).getHarness(ValueNotFoundHarness);
+
+            await notFound.runAction();
+
+            expect(loadCollectionDataChangeSpy).toHaveBeenCalledWith({ path: "/", page: 1, headChanged: false });
         });
 
         it("should keep the empty-collection message at the root", async () => {

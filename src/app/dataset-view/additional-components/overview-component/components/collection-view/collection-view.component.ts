@@ -243,6 +243,12 @@ export class CollectionViewComponent extends UnsubscribeDestroyRefAdapter implem
         });
     }
 
+    /** Loads the root again rather than from the cache, since the page shows the last response's totalCount */
+    public openCollectionRoot(): void {
+        this.datasetAsCollectionService.cacheEntries.delete("/");
+        this.openFolder("/");
+    }
+
     public onCellEventClick(value: string, nodeType: MaybeNull<CollectionViewNode>) {
         if (nodeType !== CollectionViewNode.Folder) {
             this.click$.next(value);

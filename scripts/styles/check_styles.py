@@ -45,6 +45,10 @@ LIBRARY_CLASS = re.compile(r"\.((?:mat|mdc|cdk)-[\w-]+)")
 VAR_READ = re.compile(r"var\(\s*(--[\w-]+)")
 PROPERTY_SET = re.compile(r"(?<![\w-])(--[\w-]+)\s*:")
 TOKEN_SET = re.compile(r"(?<![\w-])(--(?:mat|mdc)-[\w-]+)\s*:")
+# A binding whose value produces classes; its expression sits inside double quotes, so the class
+# names it can produce are its single-quoted string literals
+CLASS_BINDING = re.compile(r"\[(?:ngClass|class|attr\.class)\]=\"([^\"]*)\"")
+STRING_LITERAL = re.compile(r"'([^'\n]*)'")
 
 
 @dataclass(frozen=True)
@@ -98,13 +102,15 @@ def library_sets_class(name: str, library_code: str) -> bool:
 def app_sets_class(name: str, templates: str, code: str) -> bool:
     # Only a class the app sets counts: a bare `<th mat-header-cell>` is an attribute, and the class
     # Material puts on that element is `mat-mdc-header-cell`.
-    # Expressions such as `[ngClass]`, `[class]` and `{{ }}` sit inside a double-quoted attribute, so
-    # the class names they produce are single-quoted string literals.
     escaped = re.escape(name)
     return bool(
         re.search(r"class=\"[^\"]*" + word(name), templates)
         or re.search(r"\[class\." + escaped + r"\]", templates)
-        or re.search(r"'[^'\n]*" + word(name), templates)
+        or any(
+            re.search(word(name), literal)
+            for binding in CLASS_BINDING.findall(templates)
+            for literal in STRING_LITERAL.findall(binding)
+        )
         or re.search(r"[\"'`][^\"'`\n]*" + word(name), code)
     )
 

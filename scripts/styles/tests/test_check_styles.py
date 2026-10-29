@@ -58,6 +58,14 @@ class LibraryClassTest(unittest.TestCase):
     def test_a_class_from_a_class_binding_expression_passes(self):
         self.assertEqual(messages(sources(".mat-x {}", templates="<div [class]=\"on ? 'mat-x big' : ''\">")), [])
 
+    def test_a_string_in_another_binding_does_not_count(self):
+        found = messages(sources(".mat-header-cell {}", templates="<th [attr.title]=\"'Name'\" mat-header-cell>"))
+        self.assertEqual(found, ["`.mat-header-cell` is set by neither Material, the CDK nor the app"])
+
+    def test_a_key_of_another_binding_does_not_count(self):
+        found = messages(sources(".cdk-x {}", templates="<div [style]=\"{'cdk-x': 1}\">"))
+        self.assertEqual(found, ["`.cdk-x` is set by neither Material, the CDK nor the app"])
+
     def test_a_class_set_from_code_passes(self):
         self.assertEqual(messages(sources(".mat-foo {}", code="panelClass: 'menu mat-foo'")), [])
 

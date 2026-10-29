@@ -129,9 +129,9 @@ The first run needs the Playwright browser: `npx playwright install chromium`.
 `npm run visual -- compare` builds the merge-base with `master` and the working tree, captures
 screenshots and computed styles of the scenarios in `e2e/` against a seeded local kamu backend,
 and reports what changed on screen. Run it for style work and for Material, Bootstrap or
-ng-select upgrades. It needs Google Chrome, [uv](https://docs.astral.sh/uv/), a kamu build whose schema
-matches the app (`KAMU_BIN=<path to kamu-cli>`), and docker or podman for the profile with
-published data. Baselines are cached in `~/.cache/kamu-ui-visual/`, outside the repository. How
+ng-select upgrades. It needs Google Chrome, [uv](https://docs.astral.sh/uv/), a kamu backend whose
+schema matches the app (kamu-cli or kamu-api-server: from PATH, `--bin`, `--release` or `--image`),
+and docker or podman for kamu-api-server, images and the profile with published data. Baselines are cached in `~/.cache/kamu-ui-visual/`, outside the repository. How
 to read the report and add scenarios:
 [`kamu-ui-visual-checks`](.claude/skills/kamu-ui-visual-checks/SKILL.md).
 

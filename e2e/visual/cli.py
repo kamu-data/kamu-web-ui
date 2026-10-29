@@ -20,7 +20,7 @@ from pathlib import Path
 from e2e.fixtures.inventory import InventoryError, check_inventory, check_scenario_datasets, load_inventory
 from e2e.fixtures.profiles import PROFILES
 from e2e.fixtures.seed import ADMIN
-from e2e.visual.backend import backend_id, schema_mismatches
+from e2e.visual.backend import FLAVORS, BackendChoice, schema_mismatches
 from e2e.visual.cache import (
     REPO,
     Lock,
@@ -79,9 +79,21 @@ class Side:
             self.browser = build(self.src, cache / "builds" / sha, cache / "builds" / f"{sha}.log")
 
 
-def workspace_for(profile, cache: Path) -> tuple[Path, str]:
-    backend = backend_id(cache) if profile.uses_local_backend else "image"
-    return cache / "workspaces" / f"{profile.name}-{profile.data_id()}-{backend}", backend
+def backend_from(args, cache: Path) -> BackendChoice:
+    return BackendChoice(args.backend, cache, args.release, args.image, args.bin, args.migrations)
+
+
+def new_run_dir(cache: Path, prefix: str = "") -> Path:
+    """A fresh folder under runs/, named by the time; a run started in the same second gets a suffix."""
+    base = cache / "runs" / f"{prefix}{timestamp()}"
+    for n in range(1, 100):
+        run_dir = base if n == 1 else base.with_name(f"{base.name}-{n}")
+        try:
+            run_dir.mkdir(parents=True)
+            return run_dir
+        except FileExistsError:
+            continue
+    raise RuntimeError(f"cannot create a run folder next to {base}")
 
 
 async def compare_command(args) -> None:
@@ -91,8 +103,7 @@ async def compare_command(args) -> None:
     selection = select_scenarios(SCENARIOS, entries, args.tier, args.unrated, args.only)
     if not selection:
         raise RuntimeError("no scenario selected: rate catalogue entries, or pass --unrated")
-    run_dir = cache / "runs" / timestamp()
-    run_dir.mkdir(parents=True)
+    run_dir = new_run_dir(cache)
     started = time.monotonic()
 
     def log(line: str) -> None:
@@ -102,21 +113,23 @@ async def compare_command(args) -> None:
 
     base = Side(args.base or git("merge-base", "HEAD", "master"), cache, run_dir)
     head = Side(args.head, cache, run_dir)
-    log(f"base {base.label}, head {head.label}, run {run_dir}")
+    backend = backend_from(args, cache)
+    log(f"base {base.label}, head {head.label}, backend {backend.kind}, run {run_dir}")
     extra_roots = utility_roots(base.src)
     chrome = chrome_major(CHROME)
+    # Once per run: the kit may be edited while a long run goes on
+    kit = kit_hash()
     browser = Browser(CHROME, CDP_PORT)
     sections = []
 
     for profile_name, scenarios in selection.items():
         profile = PROFILES[profile_name]
-        workspace, backend = workspace_for(profile, cache)
-        prepared = profile.prepare(workspace, run_dir)
         names = [sc.name for sc in scenarios]
+        data_id, backend_id = profile.data_id(backend), profile.backend_id(backend)
         key_parts = [
-            profile.data_id(),
-            backend,
-            kit_hash(),
+            data_id,
+            backend_id,
+            kit,
             chrome,
             "production",
             ",".join(names),
@@ -125,22 +138,24 @@ async def compare_command(args) -> None:
         baseline = cache / "baselines" / f"{base.label}-{profile_name}-{short_hash(*key_parts)}"
         profile_dir = run_dir / profile_name
         profile_dir.mkdir()
-        key = {"base": base.label, "profile": profile_name, "data": profile.data_id(), "backend": backend}
-        key |= {"kit": kit_hash(), "chrome": chrome}
+        key = {"base": base.label, "profile": profile_name, "data": data_id, "backend": backend_id}
+        key |= {"kit": kit, "chrome": chrome}
         (profile_dir / "key.json").write_text(json.dumps(key, indent=2))
 
-        server = prepared.start()
+        running = profile.open(backend, cache, run_dir)
+        log(f"[{profile_name}] {running.describe}")
+        server = running.server
         served: list[Served] = []
         try:
             mismatches = schema_mismatches(server.api_url, {"base": base.src, "head": head.src})
             if mismatches:
                 raise RuntimeError(
                     f"the {profile_name} backend does not serve the schema the app's GraphQL documents need "
-                    "(set KAMU_BIN to a matching kamu build):\n  " + "\n  ".join(mismatches)
+                    "(choose a matching build with --bin, --release or --image):\n  " + "\n  ".join(mismatches)
                 )
 
             base_target, head_target = (
-                Target(f"http://localhost:{UI_PORTS[side]}", server.api_url, profile.account, prepared.now, extra_roots)
+                Target(f"http://localhost:{UI_PORTS[side]}", server.api_url, profile.account, running.now, extra_roots)
                 for side in ("base", "head")
             )
             served.append(Served(base.browser, UI_PORTS["base"], server.api_url))
@@ -223,17 +238,15 @@ async def probe_command(args) -> None:
     cache = cache_dir()
     _lock = Lock(cache)
     profile = PROFILES[args.profile]
-    run_dir = cache / "runs" / f"probe-{timestamp()}"
-    run_dir.mkdir(parents=True)
+    run_dir = new_run_dir(cache, "probe-")
     browser_dir = Path(args.build).resolve() if args.build else build(REPO, run_dir / "build", run_dir / "build.log")
-    workspace, _ = workspace_for(profile, cache)
-    prepared = profile.prepare(workspace, run_dir)
-    server = prepared.start()
+    running = profile.open(backend_from(args, cache), cache, run_dir)
+    server = running.server
     served = Served(browser_dir, UI_PORTS["head"], server.api_url)
     chrome = await Chrome.launch(run_dir / ".chrome-profile", CDP_PORT, CHROME)
     try:
         cdp = await chrome.open_page()
-        target = Target(f"http://localhost:{UI_PORTS['head']}", server.api_url, profile.account, prepared.now)
+        target = Target(f"http://localhost:{UI_PORTS['head']}", server.api_url, profile.account, running.now)
         s = Session(cdp, target)
         await s.init()
         await s.log_in()
@@ -285,9 +298,21 @@ def cache_command(args) -> None:
 def parser() -> argparse.ArgumentParser:
     p = argparse.ArgumentParser(
         prog="npm run visual --",
-        description="Visual comparison of Kamu Web UI builds. Env: KAMU_BIN (kamu build, default: kamu on "
-        "PATH), KAMU_VISUAL_CACHE (default ~/.cache/kamu-ui-visual), CHROME_BIN (default google-chrome).",
+        description="Visual comparison of Kamu Web UI builds. Env: KAMU_VISUAL_CACHE (default "
+        "~/.cache/kamu-ui-visual), CHROME_BIN (default google-chrome).",
     )
+
+    def backend_options(command: argparse.ArgumentParser) -> None:
+        group = command.add_argument_group("backend", "default: the backend kind's binary on the shell's PATH")
+        group.add_argument("--backend", choices=sorted(FLAVORS), default="cli", help="kamu-cli or kamu-api-server")
+        build = group.add_mutually_exclusive_group()
+        build.add_argument("--release", metavar="VERSION", help="a GitHub release, downloaded into the cache")
+        build.add_argument("--image", metavar="TAG|REF", help="a published image: a tag of the kind's image, or a ref")
+        build.add_argument("--bin", metavar="PATH", help="a local build")
+        group.add_argument(
+            "--migrations", metavar="DIR", help="api-server: Postgres migrations instead of the published ones"
+        )
+
     commands = p.add_subparsers(dest="command", required=True)
 
     c = commands.add_parser("compare", help="capture the base (cached) and the head, then compare them")
@@ -296,12 +321,14 @@ def parser() -> argparse.ArgumentParser:
     c.add_argument("--tier", choices=["smoke", "full"], default="full", help="full includes smoke")
     c.add_argument("--unrated", action="store_true", help="also run catalogue entries without a tier")
     c.add_argument("--only", help="only scenarios whose name contains this text, or one of a comma-separated list")
+    backend_options(c)
     c.set_defaults(run=lambda a: asyncio.run(compare_command(a)))
 
     pr = commands.add_parser("probe", help="print the text and components of pages, and save screenshots")
     pr.add_argument("paths", nargs="+")
     pr.add_argument("--profile", choices=sorted(PROFILES), default="seed")
     pr.add_argument("--build", help="an existing build's browser folder (default: build the working tree)")
+    backend_options(pr)
     pr.set_defaults(run=lambda a: asyncio.run(probe_command(a)))
 
     cv = commands.add_parser("coverage", help="routes, catalogue entries and components no scenario covers")

@@ -1,5 +1,5 @@
-# Template for <ws>/.kamu/.kamuconfig, shared by the `seed` and `empty` profiles; the ${...}
-# placeholders are filled when the workspace is built.
+# The node config of the `seed` and `empty` profiles: <ws>/.kamu/.kamuconfig for kamu-cli, the base of
+# kamu-api-server's config.yaml. The ${...} placeholders are filled with fresh keys for each node.
 # Account ids are random per workspace: kamu 0.271 fails to register predefined accounts that set
 # privateKey (UNIQUE accounts.resource_id).
 kind: CLIConfig
@@ -9,6 +9,8 @@ content:
     # Without a signing key, kamu 0.271 answers /query with 501.
     privateKey: ${IDENTITY_PRIVATE_KEY}
   engine:
+    # A server in a fresh container pulls the engine image on its first transform
+    startTimeout: 5m
     datafusionEmbedded:
       # One partition: "select *" returns rows in the same order every time (data tab, query).
       batchQuery:

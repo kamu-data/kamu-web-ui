@@ -28,10 +28,13 @@ changed and why. Unexpected changes are regressions to fix, not to explain.
 
 - Google Chrome (`CHROME_BIN` to override), [uv](https://docs.astral.sh/uv/) (it installs the kit's
   Python dependencies from `e2e/pyproject.toml`), and docker or podman for the `with-data-mt` profile.
-- A kamu build whose GraphQL schema matches the app: `KAMU_BIN=<path to kamu-cli>`. Before
-  capturing, the run validates every `.graphql` document of both trees against the schema the
-  backend serves and stops on a mismatch; an older build makes pages hang on "Loading…" instead.
-  Fix it by building or pointing at a newer kamu, never by skipping the check.
+- A backend whose GraphQL schema matches the app. `--backend cli` (default) or `--backend
+  api-server` picks kamu-cli or kamu-api-server; `--bin <path>`, `--release <version>` or
+  `--image <tag or ref>` picks the build, otherwise the binary on the shell's PATH is used.
+  kamu-api-server runs on Postgres and S3 (rustfs) in containers; its releases exist for Linux
+  x86_64 only. Before capturing, the run validates every `.graphql` document of both trees against
+  the schema the backend serves and stops on a mismatch; an older build makes pages hang on
+  "Loading…" instead. Fix it by choosing a newer build, never by skipping the check.
 
 ## Commands
 

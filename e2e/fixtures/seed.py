@@ -3,9 +3,10 @@
 # Use of this software is governed by the Business Source License
 # included in the LICENSE file.
 
-"""Builds the workspaces of the `seed` and `empty` data profiles.
+"""The content of the `seed` and `empty` data profiles, and the settings of the node that serves it.
 
-Everything the API server needs later lives inside the workspace:
+Content is created through the API of a running server, so any backend takes it. A local kamu-cli
+build keeps it in a workspace that is reused while its sources and the build stay the same:
   .kamu/.kamuconfig     accounts, identity key, secrets encryption key
   .seed/env             KAMU_JWT_SECRET and a dummy GitHub client id and secret
   .seed/seed-info.json  what was created and when (the frozen clock follows `seededAt`)
@@ -18,7 +19,6 @@ import base64
 import json
 import re
 import secrets
-import shutil
 import string
 import subprocess
 import time
@@ -26,26 +26,26 @@ import urllib.request
 from datetime import UTC, datetime
 from pathlib import Path
 
+import yaml
+
 from e2e.fixtures.inventory import OUTCOMES, SEED, dataset_kind, load_inventory, snapshot_text
-from e2e.visual.backend import kamu_binary, start_local
+from e2e.visual.backend import Server, start_workspace_server
 
 ADMIN = {"login": "kamu", "password": "kamu.dev"}
+# The server refuses to start without GitHub OAuth settings; nothing logs in through GitHub
+DUMMY_GITHUB = {"clientId": "dummy", "clientSecret": "dummy"}
 
 
 def log(*parts) -> None:
-    print("[seed]", *parts)
+    print("[seed]", *parts, flush=True)
 
 
 def _alnum(n: int) -> str:
     return "".join(secrets.choice(string.ascii_letters + string.digits) for _ in range(n))
 
 
-def _init_workspace(ws: Path) -> None:
-    """A multi-tenant workspace with the accounts and secrets and no datasets."""
-    shutil.rmtree(ws, ignore_errors=True)
-    ws.mkdir(parents=True)
-    subprocess.run([kamu_binary(), "init", "--multi-tenant"], cwd=ws, capture_output=True, check=True)
-    (ws / ".seed").mkdir()
+def node_settings() -> tuple[dict, dict]:
+    """kamu-cli's config (kamuconfig.yaml with fresh keys) and the environment its API server needs."""
     values = {
         # kamu 0.271 parses it as multibase: "f" + hex
         "IDENTITY_PRIVATE_KEY": "f" + secrets.token_hex(32),
@@ -57,27 +57,75 @@ def _init_workspace(ws: Path) -> None:
             raise RuntimeError(f"kamuconfig.yaml: unknown placeholder {match.group(1)}")
         return values[match.group(1)]
 
-    template = (SEED / "kamuconfig.yaml").read_text()
-    (ws / ".kamu" / ".kamuconfig").write_text(re.sub(r"\$\{(\w+)\}", fill, template))
-    jwt_secret = base64.b64encode(secrets.token_bytes(32)).decode()
-    (ws / ".seed" / "env").write_text(
-        f"KAMU_JWT_SECRET={jwt_secret}\nKAMU_AUTH_GITHUB_CLIENT_ID=dummy\nKAMU_AUTH_GITHUB_CLIENT_SECRET=dummy\n"
-    )
+    config = yaml.safe_load(re.sub(r"\$\{(\w+)\}", fill, (SEED / "kamuconfig.yaml").read_text()))
+    env = {
+        "KAMU_JWT_SECRET": base64.b64encode(secrets.token_bytes(32)).decode(),
+        "KAMU_AUTH_GITHUB_CLIENT_ID": DUMMY_GITHUB["clientId"],
+        "KAMU_AUTH_GITHUB_CLIENT_SECRET": DUMMY_GITHUB["clientSecret"],
+    }
+    return config, env
 
 
-def build_empty_workspace(ws: Path) -> None:
-    """The `empty` profile: accounts only."""
-    _init_workspace(ws)
-    info = {"seededAt": datetime.now(UTC).isoformat()}
+def api_server_config(cli_config: dict, env: dict) -> dict:
+    """The same node as kamu-api-server's config: its accounts are a password provider's."""
+    content = dict(cli_config["content"])
+    accounts = content.pop("auth")["users"]["predefined"]
+    content["auth"] = {
+        "jwtSecret": env["KAMU_JWT_SECRET"],
+        "providers": [{"kind": "password", "accounts": accounts}, {"kind": "github", **DUMMY_GITHUB}],
+    }
+    return content
+
+
+def init_workspace(binary: Path, ws: Path) -> None:
+    """A multi-tenant workspace with the accounts and secrets and no datasets."""
+    ws.mkdir(parents=True)
+    subprocess.run([binary, "init", "--multi-tenant"], cwd=ws, capture_output=True, check=True)
+    (ws / ".seed").mkdir()
+    config, env = node_settings()
+    (ws / ".kamu" / ".kamuconfig").write_text(yaml.safe_dump(config, sort_keys=False))
+    (ws / ".seed" / "env").write_text("".join(f"{name}={value}\n" for name, value in env.items()))
+
+
+def workspace_env(ws: Path) -> dict:
+    return dict(line.split("=", 1) for line in (ws / ".seed" / "env").read_text().splitlines() if "=" in line)
+
+
+def fill(profile: str, server: Server) -> dict:
+    """Creates a profile's content on a running server; returns what was created, with `seededAt`."""
+    if profile == "empty":
+        return {"seededAt": datetime.now(UTC).isoformat()}
+    inventory = load_inventory()
+    arriving = {run["arrive"] for run in inventory["flowRuns"] if "arrive" in run}
+    for dataset in inventory["datasets"]:
+        for file in dataset.get("data", []):
+            if file not in arriving:
+                server.place(SEED / file)
+    seeder = Seeder(server.api_url, server.place, inventory)
+    seeder.seed()
+    created = seeder.created
+    log(f"{len(created['datasets'])} datasets, {len(created['flows'])} flow runs, seeded at {created['seededAt']}")
+    return created
+
+
+def build_workspace(profile: str, binary: Path, ws: Path, port: int) -> None:
+    """A profile's workspace for a local kamu-cli build, filled through a temporary server on `port`;
+    nothing is scheduled, so the workspace stays as it is afterwards."""
+    init_workspace(binary, ws)
+    server = start_workspace_server(binary, ws, port, ws / ".seed" / "api-server.seed.log", workspace_env(ws))
+    try:
+        info = fill(profile, server)
+    finally:
+        server.stop()
     (ws / ".seed" / "seed-info.json").write_text(json.dumps(info, indent=2))
 
 
 class Seeder:
     """Creates what the inventory lists through the API of a running server, as the admin."""
 
-    def __init__(self, api_url: str, ws: Path, inventory: dict):
+    def __init__(self, api_url: str, place, inventory: dict):
         self.api = api_url
-        self.ws = ws
+        self.place = place
         self.inventory = inventory
         self.token: str | None = None
         self.created: dict = {
@@ -189,7 +237,8 @@ class Seeder:
 
     def run_flow(self, dataset: str, kind: str, expected: str) -> None:
         flow_id = self.trigger(dataset, kind)
-        for _ in range(240):
+        # A first transform in a fresh container waits for the engine image to be pulled
+        for _ in range(1200):
             flow = next((f for f in self.flows_of(dataset) if f["flowId"] == flow_id), None)
             if flow and flow["status"] == "FINISHED":
                 outcome = (flow.get("outcome") or {}).get("__typename")
@@ -217,7 +266,7 @@ class Seeder:
                 self.push_ingest(dataset["name"], dataset["pushes"])
         for run in self.inventory["flowRuns"]:
             if "arrive" in run:
-                shutil.copy(SEED / run["arrive"], self.ws / "seed-data" / Path(run["arrive"]).name)
+                self.place(SEED / run["arrive"])
                 continue
             for _ in range(run.get("times", 1)):
                 self.run_flow(run["dataset"], run["flow"], OUTCOMES[run["outcome"]])
@@ -342,25 +391,3 @@ class Seeder:
                 f"pause {webhook['label']}:",
                 data["datasets"]["byId"]["webhooks"]["subscription"]["pause"]["__typename"],
             )
-
-
-def build_seed_workspace(ws: Path, port: int) -> None:
-    """The `seed` profile: everything created through the API of a temporary server on `port`; nothing
-    is scheduled, so the workspace stays as it is afterwards."""
-    _init_workspace(ws)
-    (ws / "seed-data").mkdir()
-    inventory = load_inventory()
-    arriving = {run["arrive"] for run in inventory["flowRuns"] if "arrive" in run}
-    for dataset in inventory["datasets"]:
-        for file in dataset.get("data", []):
-            if file not in arriving:
-                shutil.copy(SEED / file, ws / "seed-data" / Path(file).name)
-    server = start_local(ws, port, ws / ".seed" / "api-server.seed.log")
-    seeder = Seeder(server.api_url, ws, inventory)
-    try:
-        seeder.seed()
-    finally:
-        server.stop()
-    (ws / ".seed" / "seed-info.json").write_text(json.dumps(seeder.created, indent=2))
-    created = seeder.created
-    log(f"{len(created['datasets'])} datasets, {len(created['flows'])} flow runs, seeded at {created['seededAt']}")

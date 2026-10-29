@@ -26,9 +26,9 @@ import urllib.request
 from datetime import UTC, datetime
 from pathlib import Path
 
+from e2e.fixtures.inventory import OUTCOMES, SEED, dataset_kind, load_inventory, snapshot_text
 from e2e.visual.backend import kamu_binary, start_local
 
-SEED = Path(__file__).parent / "seed"
 ADMIN = {"login": "kamu", "password": "kamu.dev"}
 
 
@@ -73,11 +73,12 @@ def build_empty_workspace(ws: Path) -> None:
 
 
 class Seeder:
-    """Creates the `seed` profile's content through the API of a running server, as the admin."""
+    """Creates what the inventory lists through the API of a running server, as the admin."""
 
-    def __init__(self, api_url: str, ws: Path):
+    def __init__(self, api_url: str, ws: Path, inventory: dict):
         self.api = api_url
         self.ws = ws
+        self.inventory = inventory
         self.token: str | None = None
         self.created: dict = {
             "datasets": {},
@@ -123,14 +124,15 @@ class Seeder:
             "byName"
         ]["id"]
 
-    def create_from_snapshot(self, file: str, visibility: str = "PUBLIC") -> str:
+    def create_from_snapshot(self, dataset: dict) -> str:
         data = self.gql(
             """mutation($s: String!, $v: DatasetVisibility!) { datasets {
                 createFromSnapshot(snapshot: $s, snapshotFormat: YAML, datasetVisibility: $v) {
                 __typename message ... on CreateDatasetResultSuccess { dataset { id name } } } } }""",
-            {"s": (SEED / file).read_text(), "v": visibility},
+            {"s": snapshot_text(dataset), "v": dataset.get("visibility", "PUBLIC")},
         )
-        result = self.expect(data["datasets"]["createFromSnapshot"], "CreateDatasetResultSuccess", f"create {file}")
+        what = f"create {dataset['name']}"
+        result = self.expect(data["datasets"]["createFromSnapshot"], "CreateDatasetResultSuccess", what)
         self.created["datasets"][result["dataset"]["name"]] = result["dataset"]["id"]
         return result["dataset"]["id"]
 
@@ -145,7 +147,16 @@ class Seeder:
         self.created["datasets"][name] = result["dataset"]["id"]
         return result["dataset"]["id"]
 
-    def push_ingest(self, name: str, records: list[dict]) -> None:
+    def push_ingest(self, name: str, count: int) -> None:
+        """`count` commits of one record each, so the metadata commit navigator has pages."""
+        records = [
+            {
+                "event_time": f"2021-01-{k + 1:02d}T00:00:00Z",
+                "id": k + 1,
+                "payload": {"name": f"n{k + 1}", "score": (k + 1) * 7},
+            }
+            for k in range(count)
+        ]
         for record in records:
             request = urllib.request.Request(
                 f"{self.api}/{ADMIN['login']}/{name}/ingest",
@@ -154,6 +165,7 @@ class Seeder:
                 method="POST",
             )
             urllib.request.urlopen(request).close()
+        log(f"{name}: {count} push ingests")
 
     def trigger(self, dataset: str, kind: str) -> str:
         field = "triggerIngestFlow" if kind == "ingest" else "triggerTransformFlow"
@@ -191,144 +203,41 @@ class Seeder:
 
     def seed(self) -> None:
         self.login()
-        alice, bob = self.account_id("alice"), self.account_id("bob")
-
-        for i in range(1, 15):
-            self.create_from_snapshot(f"extra{i}.yaml")
-        for file in ("push.yaml", "root.yaml", "deriv.yaml", "broken.yaml", "idle.yaml"):
-            self.create_from_snapshot(file)
-        self.create_from_snapshot("private.yaml", "PRIVATE")
+        datasets = self.inventory["datasets"]
+        for dataset in datasets:
+            kind = dataset_kind(dataset)
+            if kind == "snapshot":
+                self.create_from_snapshot(dataset)
+            else:
+                self.create_archetype(kind, dataset["name"])
         log("datasets created:", len(self.created["datasets"]))
 
-        # nested-events: 12 push commits, so the metadata commit navigator has pages
-        self.push_ingest(
-            "nested-events",
-            [
-                {
-                    "event_time": f"2021-01-{k + 1:02d}T00:00:00Z",
-                    "id": k + 1,
-                    "payload": {"name": f"n{k + 1}", "score": (k + 1) * 7},
-                }
-                for k in range(12)
-            ],
-        )
-        log("nested-events: 12 push ingests")
+        for dataset in datasets:
+            if dataset.get("pushes"):
+                self.push_ingest(dataset["name"], dataset["pushes"])
+        for run in self.inventory["flowRuns"]:
+            if "arrive" in run:
+                shutil.copy(SEED / run["arrive"], self.ws / "seed-data" / Path(run["arrive"]).name)
+                continue
+            for _ in range(run.get("times", 1)):
+                self.run_flow(run["dataset"], run["flow"], OUTCOMES[run["outcome"]])
 
-        # Flow history. A FilesGlob ingest takes one new file per run: five runs for part1-5, a
-        # transform, part6 arrives, one more ingest, a second transform, then an ingest with nothing
-        # new. population ends with 11 rows, population-big with 6. broken-feed fails.
-        for _ in range(5):
-            self.run_flow("population", "ingest", "FlowSuccessResult")
-        self.run_flow("population-big", "transform", "FlowSuccessResult")
-        shutil.copy(SEED / "data" / "part6.csv", self.ws / "seed-data" / "part6.csv")
-        self.run_flow("population", "ingest", "FlowSuccessResult")
-        self.run_flow("population-big", "transform", "FlowSuccessResult")
-        self.run_flow("population", "ingest", "FlowSuccessResult")
-        self.run_flow("broken-feed", "ingest", "FlowFailedError")
-
-        # Environment variables and a secret
-        for key, value, is_secret in [
-            ("API_URL", "https://example.com/api", False),
-            ("REGION", "eu-west-1", False),
-            ("API_TOKEN", "s3cr3t-value", True),
-        ]:
-            data = self.gql(
-                """mutation($id: DatasetID!, $k: String!, $v: String!, $s: Boolean!) { datasets {
-                    byId(datasetId: $id) { envVars { upsertEnvVariable(key: $k, value: $v, isSecret: $s) {
-                    __typename message } } } } }""",
-                {"id": self.created["datasets"]["population"], "k": key, "v": value, "s": is_secret},
-            )
-            kind = data["datasets"]["byId"]["envVars"]["upsertEnvVariable"]["__typename"]
-            if "Created" not in kind:
-                raise RuntimeError(f"env var {key}: {kind}")
-            self.created["envVars"].append({"key": key, "isSecret": is_secret})
-
-        # Collaborators
-        for account, role in [(alice, "READER"), (bob, "EDITOR")]:
-            data = self.gql(
-                """mutation($id: DatasetID!, $a: AccountID!, $r: DatasetAccessRole!) { datasets {
-                    byId(datasetId: $id) { collaboration { setRole(accountId: $a, role: $r) {
-                    __typename message } } } } }""",
-                {"id": self.created["datasets"]["population"], "a": account, "r": role},
-            )
-            log("collaborator", role, data["datasets"]["byId"]["collaboration"]["setRole"]["__typename"])
-
-        # Access tokens
-        for name in ("ci-pipeline", "jupyter-notebook"):
-            data = self.gql(
-                """mutation($a: AccountID!, $n: String!) { accounts { byId(accountId: $a) { accessTokens {
-                    createAccessToken(tokenName: $n) { __typename message
-                    ... on CreateAccessTokenResultSuccess { token { id } } } } } } }""",
-                {"a": self.created["accountId"], "n": name},
-            )
-            result = self.expect(
-                data["accounts"]["byId"]["accessTokens"]["createAccessToken"],
-                "CreateAccessTokenResultSuccess",
-                f"token {name}",
-            )
-            self.created["accessTokens"].append({"name": name, "id": result["token"]["id"]})
-
-        # Collection: entries at the root and in a folder (the folder view has an "up" row)
-        collection = self.create_archetype("collection", "demo-collection")
-        for entry_path, dataset in [
-            ("/population", "population"),
-            ("/population-big", "population-big"),
-            ("/nested-events", "nested-events"),
-            ("/reports/broken-feed", "broken-feed"),
-            ("/reports/idle-feed", "idle-feed"),
-        ]:
-            data = self.gql(
-                """mutation($id: DatasetID!, $e: CollectionEntryInput!) { datasets { byId(datasetId: $id) {
-                    asCollection { addEntry(entry: $e) { __typename isSuccess message } } } } }""",
-                {"id": collection, "e": {"path": entry_path, "ref": self.created["datasets"][dataset]}},
-            )
-            result = data["datasets"]["byId"]["asCollection"]["addEntry"]
-            if not result["isSuccess"]:
-                raise RuntimeError(f"collection entry {entry_path}: {result['message']}")
-            self.created["collection"].append(entry_path)
-
-        # Versioned file: three versions of a small text file
-        versioned = self.create_archetype("versioned-file", "demo-file")
-        for version in range(1, 4):
-            content = base64.urlsafe_b64encode(f"Demo file, version {version}\n".encode()).decode().rstrip("=")
-            data = self.gql(
-                """mutation($id: DatasetID!, $c: Base64Usnp!) { datasets { byId(datasetId: $id) {
-                    asVersionedFile { uploadNewVersion(content: $c, contentType: "text/plain") {
-                    __typename isSuccess message } } } } }""",
-                {"id": versioned, "c": content},
-            )
-            result = data["datasets"]["byId"]["asVersionedFile"]["uploadNewVersion"]
-            if not result["isSuccess"]:
-                raise RuntimeError(f"versioned file v{version}: {result['message']}")
-            self.created["versionedFile"].append(version)
-
-        # Webhooks last: no dataset changes after this point, so no delivery is ever attempted
-        for label in ("demo-hook", "paused-hook"):
-            data = self.gql(
-                """mutation($id: DatasetID!, $i: WebhookSubscriptionInput!) { datasets { byId(datasetId: $id) {
-                    webhooks { createSubscription(input: $i) { __typename message
-                    ... on CreateWebhookSubscriptionResultSuccess { subscriptionId } } } } } }""",
-                {
-                    "id": self.created["datasets"]["population"],
-                    "i": {
-                        "targetUrl": f"https://example.com/{label}",
-                        "eventTypes": ["DATASET.REF.UPDATED"],
-                        "label": label,
-                    },
-                },
-            )
-            result = self.expect(
-                data["datasets"]["byId"]["webhooks"]["createSubscription"],
-                "CreateWebhookSubscriptionResultSuccess",
-                f"webhook {label}",
-            )
-            self.created["webhooks"][label] = result["subscriptionId"]
-        data = self.gql(
-            """mutation($id: DatasetID!, $w: WebhookSubscriptionID!) { datasets { byId(datasetId: $id) {
-                webhooks { subscription(id: $w) { pause { __typename message } } } } } }""",
-            {"id": self.created["datasets"]["population"], "w": self.created["webhooks"]["paused-hook"]},
-        )
-        log("pause paused-hook:", data["datasets"]["byId"]["webhooks"]["subscription"]["pause"]["__typename"])
+        for account in self.inventory["accounts"]:
+            for token in account.get("accessTokens", []):
+                self.create_access_token(account["name"], token)
+        for dataset in datasets:
+            for variable in dataset.get("variables", []):
+                self.set_variable(dataset["name"], variable)
+            for collaborator in dataset.get("collaborators", []):
+                self.set_role(dataset["name"], collaborator)
+            for item in dataset.get("contents", []):
+                self.add_collection_entry(dataset["name"], item)
+            for text in dataset.get("versions", []):
+                self.upload_version(dataset["name"], text)
+        # Webhooks last: no dataset changes after them, so no delivery is ever attempted
+        for dataset in datasets:
+            for webhook in dataset.get("webhooks", []):
+                self.create_webhook(dataset["name"], webhook)
 
         # Frozen: nothing waiting, running or retrying
         time.sleep(2)
@@ -339,16 +248,115 @@ class Seeder:
         log("frozen: no waiting, running or retrying flows")
         self.created["seededAt"] = datetime.now(UTC).isoformat()
 
+    def dataset_id(self, name: str) -> str:
+        return self.created["datasets"][name]
+
+    def create_access_token(self, account: str, name: str) -> None:
+        data = self.gql(
+            """mutation($a: AccountID!, $n: String!) { accounts { byId(accountId: $a) { accessTokens {
+                createAccessToken(tokenName: $n) { __typename message
+                ... on CreateAccessTokenResultSuccess { token { id } } } } } } }""",
+            {"a": self.account_id(account), "n": name},
+        )
+        result = self.expect(
+            data["accounts"]["byId"]["accessTokens"]["createAccessToken"],
+            "CreateAccessTokenResultSuccess",
+            f"token {name}",
+        )
+        self.created["accessTokens"].append({"account": account, "name": name, "id": result["token"]["id"]})
+
+    def set_variable(self, dataset: str, variable: dict) -> None:
+        is_secret = variable.get("secret", False)
+        data = self.gql(
+            """mutation($id: DatasetID!, $k: String!, $v: String!, $s: Boolean!) { datasets {
+                byId(datasetId: $id) { envVars { upsertEnvVariable(key: $k, value: $v, isSecret: $s) {
+                __typename message } } } } }""",
+            {"id": self.dataset_id(dataset), "k": variable["key"], "v": variable["value"], "s": is_secret},
+        )
+        kind = data["datasets"]["byId"]["envVars"]["upsertEnvVariable"]["__typename"]
+        if "Created" not in kind:
+            raise RuntimeError(f"variable {variable['key']} of {dataset}: {kind}")
+        self.created["envVars"].append({"dataset": dataset, "key": variable["key"], "isSecret": is_secret})
+
+    def set_role(self, dataset: str, collaborator: dict) -> None:
+        data = self.gql(
+            """mutation($id: DatasetID!, $a: AccountID!, $r: DatasetAccessRole!) { datasets {
+                byId(datasetId: $id) { collaboration { setRole(accountId: $a, role: $r) {
+                __typename message } } } } }""",
+            {"id": self.dataset_id(dataset), "a": self.account_id(collaborator["account"]), "r": collaborator["role"]},
+        )
+        result = data["datasets"]["byId"]["collaboration"]["setRole"]["__typename"]
+        log(f"{dataset}: {collaborator['account']} as {collaborator['role']}: {result}")
+
+    def add_collection_entry(self, collection: str, item: dict) -> None:
+        data = self.gql(
+            """mutation($id: DatasetID!, $e: CollectionEntryInput!) { datasets { byId(datasetId: $id) {
+                asCollection { addEntry(entry: $e) { __typename isSuccess message } } } } }""",
+            {"id": self.dataset_id(collection), "e": {"path": item["path"], "ref": self.dataset_id(item["dataset"])}},
+        )
+        result = data["datasets"]["byId"]["asCollection"]["addEntry"]
+        if not result["isSuccess"]:
+            raise RuntimeError(f"{collection} entry {item['path']}: {result['message']}")
+        self.created["collection"].append(item["path"])
+
+    def upload_version(self, name: str, text: str) -> None:
+        content = base64.urlsafe_b64encode(text.encode()).decode().rstrip("=")
+        data = self.gql(
+            """mutation($id: DatasetID!, $c: Base64Usnp!) { datasets { byId(datasetId: $id) {
+                asVersionedFile { uploadNewVersion(content: $c, contentType: "text/plain") {
+                __typename isSuccess message } } } } }""",
+            {"id": self.dataset_id(name), "c": content},
+        )
+        result = data["datasets"]["byId"]["asVersionedFile"]["uploadNewVersion"]
+        if not result["isSuccess"]:
+            raise RuntimeError(f"{name} version: {result['message']}")
+        self.created["versionedFile"].append(text)
+
+    def create_webhook(self, dataset: str, webhook: dict) -> None:
+        data = self.gql(
+            """mutation($id: DatasetID!, $i: WebhookSubscriptionInput!) { datasets { byId(datasetId: $id) {
+                webhooks { createSubscription(input: $i) { __typename message
+                ... on CreateWebhookSubscriptionResultSuccess { subscriptionId } } } } } }""",
+            {
+                "id": self.dataset_id(dataset),
+                "i": {
+                    "targetUrl": webhook["targetUrl"],
+                    "eventTypes": ["DATASET.REF.UPDATED"],
+                    "label": webhook["label"],
+                },
+            },
+        )
+        result = self.expect(
+            data["datasets"]["byId"]["webhooks"]["createSubscription"],
+            "CreateWebhookSubscriptionResultSuccess",
+            f"webhook {webhook['label']}",
+        )
+        self.created["webhooks"][webhook["label"]] = result["subscriptionId"]
+        if webhook.get("paused"):
+            data = self.gql(
+                """mutation($id: DatasetID!, $w: WebhookSubscriptionID!) { datasets { byId(datasetId: $id) {
+                    webhooks { subscription(id: $w) { pause { __typename message } } } } } }""",
+                {"id": self.dataset_id(dataset), "w": result["subscriptionId"]},
+            )
+            log(
+                f"pause {webhook['label']}:",
+                data["datasets"]["byId"]["webhooks"]["subscription"]["pause"]["__typename"],
+            )
+
 
 def build_seed_workspace(ws: Path, port: int) -> None:
     """The `seed` profile: everything created through the API of a temporary server on `port`; nothing
     is scheduled, so the workspace stays as it is afterwards."""
     _init_workspace(ws)
     (ws / "seed-data").mkdir()
-    for i in range(1, 6):
-        shutil.copy(SEED / "data" / f"part{i}.csv", ws / "seed-data" / f"part{i}.csv")
+    inventory = load_inventory()
+    arriving = {run["arrive"] for run in inventory["flowRuns"] if "arrive" in run}
+    for dataset in inventory["datasets"]:
+        for file in dataset.get("data", []):
+            if file not in arriving:
+                shutil.copy(SEED / file, ws / "seed-data" / Path(file).name)
     server = start_local(ws, port, ws / ".seed" / "api-server.seed.log")
-    seeder = Seeder(server.api_url, ws)
+    seeder = Seeder(server.api_url, ws, inventory)
     try:
         seeder.seed()
     finally:

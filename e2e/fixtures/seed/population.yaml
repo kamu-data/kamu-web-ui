@@ -8,7 +8,7 @@ content:
       fetch:
         kind: FilesGlob
         # Relative to the workspace: the seed copies data/*.csv to <ws>/seed-data/.
-        path: seed-data/part*.csv
+        path: seed-data/population-*.csv
       read:
         kind: Csv
         header: true

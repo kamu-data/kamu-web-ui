@@ -1,14 +1,13 @@
 kind: DatasetSnapshot
 version: 1
 content:
-  name: broken-feed
+  name: never-run
   kind: Root
   metadata:
     - kind: SetPollingSource
       fetch:
-        kind: Url
-        # Never exists: the seeded ingest flow fails.
-        url: file:///nonexistent/kamu-ui-capture/broken-feed.csv
+        kind: FilesGlob
+        path: seed-data/never-run*.csv
       read:
         kind: Csv
         header: true
@@ -19,7 +18,7 @@ content:
       merge:
         kind: Append
     - kind: SetInfo
-      description: Root dataset whose only ingest flow failed
-      keywords: [demo, failing]
+      description: Root dataset with a polling source and no flow runs
+      keywords: [demo, idle]
     - kind: SetVocab
       eventTimeColumn: event_time

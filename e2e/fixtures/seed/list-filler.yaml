@@ -1,7 +1,8 @@
+# Template for the filler datasets listed in inventory.yaml; ${NAME} and ${DESCRIPTION} come from there.
 kind: DatasetSnapshot
 version: 1
 content:
-  name: extra-08
+  name: ${NAME}
   kind: Root
   metadata:
     - kind: AddPushSource
@@ -15,5 +16,5 @@ content:
       merge:
         kind: Append
     - kind: SetInfo
-      description: Extra dataset 8 for pagination
-      keywords: [extra, demo]
+      description: ${DESCRIPTION}
+      keywords: [demo]

@@ -1,0 +1,219 @@
+# The `seed` profile: everything e2e/fixtures/seed.py creates, why it exists, and which catalogue
+# entries (e2e/catalogue) rely on it. The seed creates exactly what this file lists, in this order:
+# accounts (from kamuconfig.yaml), datasets, flow runs, then each dataset's variables,
+# collaborators and webhooks, webhooks last of all.
+#
+# `purpose` says what a scenario needs the artifact for; `state` what it looks like once seeded.
+# Change an artifact only together with the scenarios that rely on it.
+
+config: kamuconfig.yaml
+
+accounts:
+  - name: kamu
+    purpose: >-
+      The administrator, and the owner of every dataset. Scenarios log in as it, so the pages show
+      what an owner and an admin sees.
+    state: password `kamu.dev`; two access tokens
+    accessTokens: [ci-pipeline, jupyter-notebook]
+    entries:
+      [header-navigation, account-settings, admin-dashboard, access-tokens, login, account-flows, account-datasets]
+  - name: alice
+    purpose: A reader of `population`, listed on its access page.
+    state: password `alice.dev.pw`; owns nothing
+    entries: [collaborators]
+  - name: bob
+    purpose: An editor of `population`, listed on its access page.
+    state: password `bob.dev.pw`; owns nothing
+    entries: [collaborators]
+
+datasets:
+  - name: air-quality-readings
+    template: list-filler.yaml
+    description: Hourly fine-particle readings from the city's air sensors
+    purpose: >-
+      With the other list fillers, makes the search and account lists longer than one page. Also the
+      push source with a flat schema that the schema editor scenarios open.
+    state: no data
+    entries: [search-datasets, account-datasets, source-editors]
+  - name: bike-share-trips
+    template: list-filler.yaml
+    description: Trips taken on the city's shared bicycles
+    purpose: list filler
+    state: no data
+    entries: [search-datasets, account-datasets]
+  - name: bus-stop-locations
+    template: list-filler.yaml
+    description: Bus stops and the routes that serve them
+    purpose: list filler
+    state: no data
+    entries: [search-datasets, account-datasets]
+  - name: energy-consumption
+    template: list-filler.yaml
+    description: Electricity used by public buildings, per day
+    purpose: list filler
+    state: no data
+    entries: [search-datasets, account-datasets]
+  - name: flight-delays
+    template: list-filler.yaml
+    description: Departure delays at the regional airport
+    purpose: list filler
+    state: no data
+    entries: [search-datasets, account-datasets]
+  - name: hospital-admissions
+    template: list-filler.yaml
+    description: Daily admissions to the city's hospitals
+    purpose: list filler
+    state: no data
+    entries: [search-datasets, account-datasets]
+  - name: library-loans
+    template: list-filler.yaml
+    description: Books and media lent by public libraries
+    purpose: list filler
+    state: no data
+    entries: [search-datasets, account-datasets]
+  - name: parking-occupancy
+    template: list-filler.yaml
+    description: Free spaces in public car parks, every fifteen minutes
+    purpose: list filler
+    state: no data
+    entries: [search-datasets, account-datasets]
+  - name: rainfall-daily
+    template: list-filler.yaml
+    description: Daily rainfall at the city's weather stations
+    purpose: list filler
+    state: no data
+    entries: [search-datasets, account-datasets]
+  - name: river-levels
+    template: list-filler.yaml
+    description: Water levels measured along the river
+    purpose: list filler
+    state: no data
+    entries: [search-datasets, account-datasets]
+  - name: school-enrolment
+    template: list-filler.yaml
+    description: Pupils enrolled in each school, per term
+    purpose: list filler
+    state: no data
+    entries: [search-datasets, account-datasets]
+  - name: street-tree-census
+    template: list-filler.yaml
+    description: Trees planted along the city's streets
+    purpose: list filler
+    state: no data
+    entries: [search-datasets, account-datasets]
+  - name: traffic-counts
+    template: list-filler.yaml
+    description: Vehicles counted at major junctions, per hour
+    purpose: list filler
+    state: no data
+    entries: [search-datasets, account-datasets]
+  - name: water-usage
+    template: list-filler.yaml
+    description: Household water use by district, per month
+    purpose: list filler
+    state: no data
+    entries: [search-datasets, account-datasets]
+
+  - name: nested-events
+    manifest: nested-events.yaml
+    purpose: >-
+      A push source whose schema has a nested struct, for the schema editor; enough commits for the
+      metadata commit navigator to have pages.
+    state: 12 push ingests, one record each
+    pushes: 12
+    entries: [metadata, source-editors, collection]
+  - name: population
+    manifest: population.yaml
+    # The first five files are there when the server starts; the sixth arrives during the flow runs.
+    data:
+      - data/population-2020-01.csv
+      - data/population-2020-02.csv
+      - data/population-2020-03.csv
+      - data/population-2020-04.csv
+      - data/population-2020-05.csv
+      - data/population-2020-06.csv
+    purpose: >-
+      The dataset most scenarios open: a polling root with a description, README, license and
+      keywords, data to query, a flow history, variables and secrets, collaborators and webhooks.
+    state: 11 rows; seven successful ingest runs, the last of which found nothing new
+    variables:
+      - {key: API_URL, value: "https://example.com/api"}
+      - {key: REGION, value: eu-west-1}
+      - {key: API_TOKEN, value: s3cr3t-value, secret: true}
+    collaborators:
+      - {account: alice, role: READER}
+      - {account: bob, role: EDITOR}
+    webhooks:
+      - {label: demo-hook, targetUrl: "https://example.com/demo-hook"}
+      - {label: paused-hook, targetUrl: "https://example.com/paused-hook", paused: true}
+    entries:
+      - dataset-overview
+      - data-access
+      - metadata
+      - history
+      - lineage
+      - block
+      - dataset-data-tab
+      - global-query
+      - dataset-flows
+      - flow-details
+      - pipeline-triggers
+      - ingest-and-compaction
+      - dataset-general-settings
+      - collaborators
+      - variables-and-secrets
+      - webhooks
+      - source-editors
+      - anonymous-browsing
+      - collection
+  - name: large-cities
+    manifest: large-cities.yaml
+    purpose: A derivative of `population`, for the transformation pages and a lineage with two nodes.
+    state: the rows of `population` above 1000 people; two successful transform runs
+    entries: [metadata, lineage, pipeline-triggers, transform-editor, collection]
+  - name: failed-ingest
+    manifest: failed-ingest.yaml
+    purpose: A dataset whose only flow failed, for the failed flow pages and the triage view.
+    state: one failed ingest run (its source URL never exists)
+    entries: [dataset-flows, flow-details, account-flows, collection]
+  - name: never-run
+    manifest: never-run.yaml
+    purpose: A polling root that never ran, for the empty flow list.
+    state: no data, no flow runs
+    entries: [dataset-flows, collection]
+  - name: private-notes
+    manifest: private-notes.yaml
+    visibility: PRIVATE
+    purpose: A private dataset, so lists show the private badge to its owner and hide it from others.
+    state: no data
+    entries: [search-datasets, account-datasets, anonymous-browsing]
+  - name: city-reports
+    kind: collection
+    purpose: A collection with entries at its root and in a folder, so the folder view has an "up" row.
+    state: five entries, two of them in the `reports` folder
+    contents:
+      - {path: /population, dataset: population}
+      - {path: /large-cities, dataset: large-cities}
+      - {path: /nested-events, dataset: nested-events}
+      - {path: /reports/failed-ingest, dataset: failed-ingest}
+      - {path: /reports/never-run, dataset: never-run}
+    entries: [collection]
+  - name: release-notes
+    kind: versioned-file
+    purpose: A versioned file with a version history.
+    state: three versions of a short text file
+    versions:
+      - "Release notes, version 1\n"
+      - "Release notes, version 2\n"
+      - "Release notes, version 3\n"
+    entries: [versioned-file]
+
+# Each polling ingest takes one new file. `arrive` copies a data file into the workspace.
+flowRuns:
+  - {dataset: population, flow: ingest, outcome: success, times: 5}
+  - {dataset: large-cities, flow: transform, outcome: success}
+  - {arrive: data/population-2020-06.csv}
+  - {dataset: population, flow: ingest, outcome: success}
+  - {dataset: large-cities, flow: transform, outcome: success}
+  - {dataset: population, flow: ingest, outcome: success}
+  - {dataset: failed-ingest, flow: ingest, outcome: failed}

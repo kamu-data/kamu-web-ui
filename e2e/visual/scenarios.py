@@ -58,7 +58,7 @@ class ForceTarget:
 
 
 DS = "/kamu/population"
-DERIV = "/kamu/population-big"
+DERIV = "/kamu/large-cities"
 PUSH = "/kamu/nested-events"
 ACC = "/kamu/~select"
 ACC_ROOT = "/kamu"
@@ -256,7 +256,7 @@ def failed_flow_details(tab: str, number: int) -> Scenario:
     return Scenario(
         f"{number}-flow-details-failed-{tab}",
         "flow-details",
-        url=lambda s: f"{ACC_ROOT}/broken-feed/flow-details/{last_flow_id(s, 'broken-feed')}/{tab}",
+        url=lambda s: f"{ACC_ROOT}/failed-ingest/flow-details/{last_flow_id(s, 'failed-ingest')}/{tab}",
         wait_for="app-dataset-flow-details",
         expect_text=[FLOW_DETAILS_TEXT[tab]],
     )
@@ -431,14 +431,14 @@ SCENARIOS: list[Scenario] = [
     Scenario(
         "31-overview-collection",
         "collection",
-        url=f"{ACC_ROOT}/demo-collection",
+        url=f"{ACC_ROOT}/city-reports",
         wait_for="app-collection-view tr.mat-mdc-row",
-        expect_text=["population-big"],
+        expect_text=["large-cities"],
     ),
     Scenario(
         "32-overview-collection-row-hover",
         "collection",
-        url=f"{ACC_ROOT}/demo-collection",
+        url=f"{ACC_ROOT}/city-reports",
         wait_for="app-collection-view tr.mat-mdc-row",
         hover="app-collection-view tr.mat-mdc-row:nth-of-type(2)",
     ),
@@ -446,7 +446,7 @@ SCENARIOS: list[Scenario] = [
     Scenario(
         "33-overview-collection-folder-up-hover",
         "collection",
-        url=f"{ACC_ROOT}/demo-collection?pathPrefix=%2Freports%2F",
+        url=f"{ACC_ROOT}/city-reports?pathPrefix=%2Freports%2F",
         wait_for="app-collection-view .up-row",
         expect_text=["/reports"],
         hover="app-collection-view .up-row",
@@ -454,7 +454,7 @@ SCENARIOS: list[Scenario] = [
     Scenario(
         "34-overview-versioned-file",
         "versioned-file",
-        url=f"{ACC_ROOT}/demo-file",
+        url=f"{ACC_ROOT}/release-notes",
         wait_for="app-versioned-file-view",
         expect_text=["This node does not serve file content directly"],
     ),
@@ -509,7 +509,7 @@ SCENARIOS: list[Scenario] = [
         "lineage",
         url=f"{DS}/lineage",
         wait_for="app-lineage-graph, app-lineage",
-        expect_text=["population-big"],
+        expect_text=["large-cities"],
     ),
     Scenario(
         "43-block",
@@ -524,14 +524,14 @@ SCENARIOS: list[Scenario] = [
     Scenario(
         "44-dataset-flows-no-runs",
         "dataset-flows",
-        url=f"{ACC_ROOT}/idle-feed/flows",
+        url=f"{ACC_ROOT}/never-run/flows",
         wait_for='[data-test-id="empty-flow-runs-block"]',
         expect_text=["No flow runs"],
     ),
     Scenario(
         "45-dataset-flows-failed",
         "dataset-flows",
-        url=f"{ACC_ROOT}/broken-feed/flows",
+        url=f"{ACC_ROOT}/failed-ingest/flows",
         wait_for="app-flows-table tr.mat-mdc-row",
         expect_text=["failed"],
     ),
@@ -621,7 +621,7 @@ SCENARIOS: list[Scenario] = [
     Scenario(
         "60-schema-editor-rows",
         "source-editors",
-        url=f"{ACC_ROOT}/extra-01/add-push-source?name=default",
+        url=f"{ACC_ROOT}/air-quality-readings/add-push-source?name=default",
         wait_for="button",
         steps=schema_editor_rows,
         expect_text=["Int64"],
@@ -631,7 +631,7 @@ SCENARIOS: list[Scenario] = [
         "61-schema-editor-row-hover",
         "source-editors",
         full=True,
-        url=f"{ACC_ROOT}/extra-01/add-push-source?name=default",
+        url=f"{ACC_ROOT}/air-quality-readings/add-push-source?name=default",
         wait_for="button",
         steps=schema_editor_rows,
         hover="app-edit-schema-table tr.mat-mdc-row:nth-of-type(2) td.mat-column-type",
@@ -759,7 +759,7 @@ SCENARIOS: list[Scenario] = [
     Scenario(
         "86-overview-collection-selected-row-hover",
         "collection",
-        url=f"{ACC_ROOT}/demo-collection",
+        url=f"{ACC_ROOT}/city-reports",
         wait_for="app-collection-view tr.mat-mdc-row",
         steps=select_collection_row,
         hover="app-collection-view tr.mat-mdc-row.selected-row",

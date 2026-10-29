@@ -1,7 +1,7 @@
 kind: DatasetSnapshot
 version: 1
 content:
-  name: population-big
+  name: large-cities
   kind: Derivative
   metadata:
     - kind: SetTransform

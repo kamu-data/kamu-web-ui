@@ -17,7 +17,9 @@ import time
 from datetime import UTC, datetime
 from pathlib import Path
 
+from e2e.fixtures.inventory import InventoryError, check_inventory, check_scenario_datasets, load_inventory
 from e2e.fixtures.profiles import PROFILES
+from e2e.fixtures.seed import ADMIN
 from e2e.visual.backend import backend_id, schema_mismatches
 from e2e.visual.cache import (
     REPO,
@@ -50,6 +52,11 @@ CHROME = os.environ.get("CHROME_BIN", "google-chrome")
 def catalogue() -> dict[str, dict]:
     entries = load_catalogue(REPO / "e2e" / "catalogue", PROFILES, route_table())
     check_scenarios(SCENARIOS, entries)
+    inventory = load_inventory()
+    seeded = [sc for sc in SCENARIOS if entries[sc.entry]["profile"] == "seed"]
+    problems = check_inventory(inventory, entries) + check_scenario_datasets(inventory, seeded, ADMIN["login"])
+    if problems:
+        raise InventoryError(problems)
     return entries
 
 

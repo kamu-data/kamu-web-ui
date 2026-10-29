@@ -1,13 +1,14 @@
 kind: DatasetSnapshot
 version: 1
 content:
-  name: idle-feed
+  name: failed-ingest
   kind: Root
   metadata:
     - kind: SetPollingSource
       fetch:
-        kind: FilesGlob
-        path: seed-data/idle*.csv
+        kind: Url
+        # Never exists: the seeded ingest flow fails.
+        url: file:///nonexistent/kamu-ui-capture/failed-ingest.csv
       read:
         kind: Csv
         header: true
@@ -18,7 +19,7 @@ content:
       merge:
         kind: Append
     - kind: SetInfo
-      description: Root dataset with a polling source and no flow runs
-      keywords: [demo, idle]
+      description: Root dataset whose only ingest flow failed
+      keywords: [demo, failing]
     - kind: SetVocab
       eventTimeColumn: event_time

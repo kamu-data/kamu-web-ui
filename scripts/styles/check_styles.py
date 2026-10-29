@@ -98,10 +98,13 @@ def library_sets_class(name: str, library_code: str) -> bool:
 def app_sets_class(name: str, templates: str, code: str) -> bool:
     # Only a class the app sets counts: a bare `<th mat-header-cell>` is an attribute, and the class
     # Material puts on that element is `mat-mdc-header-cell`.
+    # Expressions such as `[ngClass]`, `[class]` and `{{ }}` sit inside a double-quoted attribute, so
+    # the class names they produce are single-quoted string literals.
     escaped = re.escape(name)
     return bool(
         re.search(r"class=\"[^\"]*" + word(name), templates)
         or re.search(r"\[class\." + escaped + r"\]", templates)
+        or re.search(r"'[^'\n]*" + word(name), templates)
         or re.search(r"[\"'`][^\"'`\n]*" + word(name), code)
     )
 

@@ -49,6 +49,15 @@ class LibraryClassTest(unittest.TestCase):
     def test_a_class_bound_in_the_template_passes(self):
         self.assertEqual(messages(sources(".cdk-x {}", templates='<div [class.cdk-x]="on">')), [])
 
+    def test_a_class_from_an_ng_class_object_passes(self):
+        self.assertEqual(messages(sources(".cdk-custom {}", templates="<div [ngClass]=\"{'cdk-custom': enabled}\">")), [])
+
+    def test_a_class_from_an_ng_class_array_passes(self):
+        self.assertEqual(messages(sources(".cdk-custom {}", templates="<div [ngClass]=\"['row', 'cdk-custom']\">")), [])
+
+    def test_a_class_from_a_class_binding_expression_passes(self):
+        self.assertEqual(messages(sources(".mat-x {}", templates="<div [class]=\"on ? 'mat-x big' : ''\">")), [])
+
     def test_a_class_set_from_code_passes(self):
         self.assertEqual(messages(sources(".mat-foo {}", code="panelClass: 'menu mat-foo'")), [])
 

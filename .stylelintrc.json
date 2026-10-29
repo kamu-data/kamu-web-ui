@@ -24,11 +24,7 @@
     "unit-allowed-list": ["px", "rem", "em", "%", "vh", "vw", "dvh", "s", "ms", "deg", "fr", "ch"],
     "at-rule-disallowed-list": ["import"],
     "function-disallowed-list": ["darken", "lighten"],
-    "selector-disallowed-list": [
-      "/\\/deep\\//",
-      "/>>>/",
-      "/\\.mat-(?!mdc-)(radio|checkbox|slide-toggle|chip|standard-chip|menu|progress-spinner|form-field|select|tab|header-cell|header-row|footer-cell|footer-row|cell|row)\\b/"
-    ],
+    "selector-disallowed-list": ["/\\/deep\\//", "/>>>/"],
     "scss/declaration-property-value-no-unknown": true,
     "scss/property-no-unknown": true,
     "scss/function-no-unknown": true,

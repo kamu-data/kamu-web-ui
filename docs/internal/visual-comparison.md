@@ -1,0 +1,251 @@
+# Visual Comparison
+
+How the kit under `e2e/` compares two builds of the UI: what it guarantees, how a run flows, how
+backends and data are set up, what a snapshot contains, what keeps it deterministic, and what was
+tried and dropped. How to run it is in [`e2e/README.md`](../../e2e/README.md); when to run it and
+how to act on a report is the [`kamu-ui-visual-checks`](../../.claude/skills/kamu-ui-visual-checks/SKILL.md)
+skill.
+
+## Purpose and guarantees
+
+A style refactoring or a library upgrade can pass lint and unit tests and still change a page.
+The kit renders the same business scenarios on two builds against the same data and reports the
+difference.
+
+- **Both sides see the same data.** Base and head are captured one after the other against one
+  running backend.
+- **Styles are the signal, pixels confirm.** For the watched elements every computed property is
+  compared exactly; a pixel difference without a style difference is captured again before it is
+  reported.
+- **Nothing is committed but sources.** Builds, data and baselines are caches outside the
+  repository, keyed by everything they depend on, and can be rebuilt at any time.
+- **Scenarios carry business meaning.** Each realises an entry of the catalogue, which a person
+  rates; unrated and dropped entries do not run by default.
+
+## Components
+
+```mermaid
+flowchart LR
+    subgraph repo[Repository]
+        cat[e2e/catalogue/*.yaml]
+        inv[e2e/fixtures/seed/inventory.yaml<br/>manifests, data]
+        scen[e2e/visual/scenarios.py]
+        app[src/ app sources]
+    end
+    cli[cli.py<br/>compare, probe, check, coverage, cache]
+    cache[cache.py<br/>git archive, ng build, keys, lock]
+    prof[fixtures/profiles.py<br/>seed, empty, with-data-mt]
+    seed[fixtures/seed.py<br/>Seeder]
+    be[backend.py, containers.py<br/>kamu-cli, kamu-api-server,<br/>Postgres, rustfs, migrations]
+    sess[session.py, cdp.py<br/>headless Chrome over CDP]
+    lib[page-lib.js<br/>snapshots, masks]
+    cap[capture.py]
+    cmp[compare.py]
+    cat --> cli
+    scen --> cli
+    inv --> seed
+    app --> cache
+    cli --> cache
+    cli --> prof
+    prof --> seed
+    prof --> be
+    seed --> be
+    cli --> cap
+    cap --> sess
+    sess --> lib
+    cli --> cmp
+```
+
+Two Node helpers under `e2e/visual/helpers/` print JSON for the Python side: the app's route table
+(read from the routing files with the TypeScript compiler) and the class selectors of
+`src/assets/styles/var.scss` (compiled with the repository's `sass`).
+
+## A compare run
+
+```mermaid
+sequenceDiagram
+    participant C as cli.py
+    participant K as cache.py
+    participant P as profile
+    participant B as backend
+    participant G as Chrome
+    C->>C: load and check catalogue, scenarios, inventory
+    C->>K: take capture.lock
+    C->>K: base: git archive, npm ci or symlinked node_modules, production build (cached by commit)
+    C->>K: head: production build of the working tree or --head
+    loop each profile with selected scenarios
+        C->>P: open(backend)
+        P->>B: start, fill (seed) or reuse a cached workspace
+        C->>B: schema check: every .graphql document of both trees
+        alt baseline cached
+            C->>C: reuse it
+        else
+            C->>G: capture base
+        end
+        C->>G: capture head
+        C->>C: compare; recapture pixel-only scenarios on head alone
+        C->>B: stop, discard containers
+    end
+    C->>C: report.md
+```
+
+Scenarios of one profile run in order in one browser tab with in-app navigation, as a user would
+move through the app: a component's styles that leak onto later pages show up there. Logged-out
+scenarios come last.
+
+## Backends
+
+A backend is a kind (kamu-cli or kamu-api-server) and a build (PATH, `--bin`, `--release`,
+`--image`). `BackendChoice` resolves the build only when a profile asks for it; `with-data-mt`
+needs the kind alone.
+
+```mermaid
+flowchart TB
+    subgraph local[kamu-cli, local build]
+        ws[(cached workspace)] --- k1[kamu system api-server]
+    end
+    subgraph cimg[kamu-cli, image]
+        k2[kamu-base container<br/>privileged, own network<br/>workspace in its file system]
+    end
+    subgraph api[kamu-api-server, local build or image]
+        srv[kamu-api-server] --> pg[(Postgres container)]
+        srv --> s3[(rustfs container<br/>buckets datasets, upload)]
+        mig[sqlx-cli-with-migrations] --> pg
+    end
+```
+
+- **kamu-cli, local build:** the only backend that keeps a workspace between runs, under
+  `workspaces/<profile>-<data id>-<build id>`.
+- **Images** run as published. The profile's content is created inside the container, in its
+  own file system, and discarded with it. They run privileged so kamu's podman can start engine
+  containers, as the deployments run them.
+- **kamu-api-server** gets a config generated from the fixtures' node settings: Postgres with a
+  raw password, `repo.repoUrl` and `uploadRepo` on S3, the accounts as a password provider and a
+  GitHub provider with dummy settings. The database is migrated first by the
+  `sqlx-cli-with-migrations` image of its kamu core version, which is read from kamu-node's
+  `Cargo.lock` at the release tag, as the Helm chart's init container does.
+- **Networks:** the containers of one server share a network of their own and reach each other
+  by name; only the ports the browser or a local build needs are published, on 127.0.0.1.
+  Engines run in the server container's network (`engine.networkNs: Host`), as the published
+  images configure their podman and the Helm chart configures kamu.
+
+Ports: API 8090 (`seed`), 8091 (`empty`), 8092 (`with-data-mt`); Postgres and S3 of an API server
+on its port plus 1000 and 1100; the served UI on 4310 (base) and 4311 (head); Chrome's debugging
+port 9233. Port 8080 is left to a developer's own server.
+
+## Data profiles and the inventory
+
+| Profile | Content | Clock |
+|---|---|---|
+| `seed` | created through the API from `inventory.yaml` | seeding time plus two hours |
+| `empty` | accounts only | the same |
+| `with-data-mt` | the published with-data image of the backend kind, pinned by digest | image creation time plus two hours |
+
+`inventory.yaml` is both the seed plan and the maintainer's inventory: every account, dataset,
+flow run, variable, collaborator, webhook, collection entry and file version, with its purpose,
+state and the catalogue entries that rely on it. `seed.py` creates exactly what it lists, in
+order; webhooks last, so no delivery is ever attempted. A polling source reads files the seed
+places in the server's `seed-data/`; one file arrives between flow runs, so a later ingest finds
+something new.
+
+The with-data images are adapted, not rebuilt: their config gets a signing key (for `/query`),
+one DataFusion partition, dummy GitHub settings, and for kamu-api-server the secrets encryption
+key under its current name.
+
+## What a snapshot holds
+
+`capture.py` runs each scenario, then `page-lib.js` in the page:
+
+1. **Masks volatile values** in text and form fields (see below), so they neither show in the
+   screenshot nor shift the layout.
+2. **Screenshot** of the full page, up to 5000 px high.
+3. **Computed styles** of every element under the roots: Material, ngb, ng-select, multiselect,
+   table, stepper, modal and pagination roots, plus every element a utility class of the
+   **base** tree's `var.scss` matches. Each element is keyed by a class-free path (tag and
+   position), so a changed class shows as a changed field rather than a different element. Its
+   style is stored as a delta against a bare element of the same tag, and `::before`/`::after`
+   against the element.
+4. **Forced states**: for the `FORCE_TARGETS` in `scenarios.py`, `:hover`, `:focus` (with
+   `:focus-visible`) and `:active` are forced through CDP and the subtree snapshotted again after
+   the transition.
+
+`compare.py` rebuilds full styles from the deltas and compares them exactly; screenshots are
+compared per pixel, ignoring channel differences up to 16. Verdicts: `same`, `changed` (styles
+differ), `pixels-only` (rechecked: `noise` if a head capture alone matches the base, else
+`confirmed`), `missing`.
+
+## Determinism
+
+| Source of variation | What keeps it out |
+|---|---|
+| The current time | the page's `Date` starts at the profile's frozen clock and restarts at every scenario; the query timer's 10 ms interval is dropped |
+| Ids, hashes, DIDs, secrets, absolute times, measured durations | masked in the page to fixed values of the same format; times relative to the clock stay |
+| Row order of an unordered query | the data tab scenarios pass an ordered query in the URL; queries run on one DataFusion partition |
+| External hosts (avatars) | Chrome resolves only localhost and Google Fonts |
+| Two captures at once | `capture.lock`: Chrome renders glyphs slightly differently under load |
+| Hover and focus left over | the mouse is parked and focus blurred before each capture; overlays left open fail the next scenario |
+| Animations and transitions | a settle delay after each scenario, longer after forced states |
+| A changing backend | nothing is scheduled; the seed waits until no flow is waiting, running or retrying |
+
+## Caches and keys
+
+| Cache | Key |
+|---|---|
+| `src/<sha>`, `builds/<sha>` | the commit |
+| `workspaces/` | profile, data id (hash of the fixtures and the seed code), build id |
+| `baselines/<base sha>-<profile>-<hash>` | data id, backend id, kit hash (the capture code under `e2e/visual`: its Python files, `page-lib.js` and the helpers, without the comparer; taken once per run), Chrome major version, production build, scenario names, utility roots |
+| `backends/<kind>-<version>` | release version, unpacked atomically |
+| `backend-ids.json` | a binary's path, mtime and size → its version and content hash |
+
+A baseline with a failed scenario is not stored. Because volatile values are masked, a baseline
+stays valid when the backend is filled afresh, as every non-workspace backend is on every run.
+
+## Consistency checks
+
+`npm run e2e-check` (CI) runs the unit tests and `visual -- check`, which needs neither a browser
+nor a backend:
+
+- catalogue entries: required fields, unique ids, known personas, profiles and tiers, routes that
+  exist in the app's route table;
+- scenarios: unique names, an existing catalogue entry each;
+- inventory: catalogue entry ids exist; every file under `fixtures/seed/` is listed and exists;
+  manifests are named after their dataset; references between artifacts resolve; every dataset a
+  `seed` scenario opens or looks up is listed (computed URLs are evaluated against a stand-in
+  session that records the lookups).
+
+## Extension points
+
+| To add | Where |
+|---|---|
+| A scenario | `SCENARIOS` in `scenarios.py`, next free number, with its catalogue entry; see the skill |
+| A fixture | `inventory.yaml` (and a manifest or data file); the seeder creates it |
+| A volatile format | `VOLATILE` in `page-lib.js`, with a fixed replacement of the same format |
+| A snapshot root | `ROOTS` in `page-lib.js`; utility classes come from `var.scss` on their own |
+| A forced state target | `FORCE_TARGETS` in `scenarios.py` |
+| A profile | `PROFILES` in `fixtures/profiles.py`: `data_id`, `backend_id`, `open` |
+| A backend kind | `FLAVORS` in `backend.py`, and a start path in `WorkspaceProfile.open` |
+
+## Failure modes
+
+| Symptom | Cause |
+|---|---|
+| The run stops before capturing, listing GraphQL errors | the backend's schema lags the app; choose a newer build |
+| Pages hang on "Loading…" in a `probe` | the same: `probe` does not run the schema check |
+| `port … is already in use` | another run, or a container left by an interrupted one; `docker ps` |
+| A transform flow fails with an engine timeout | the engine could not start or be reached inside a container: check `engine.networkNs` and the server log under `runs/<time>/backend-<profile>/` |
+| `pixels-only, confirmed` in a scenario that shows ids or times | a volatile format the masks do not know yet |
+| One profile fails and the run has no report | a failing profile aborts the run |
+
+## Rejected approaches
+
+| Approach | Why not |
+|---|---|
+| Committed baseline screenshots | Binary churn in every style change, and stale the moment the data or Chrome changes; baselines are caches keyed by what they depend on |
+| Pixels as the signal | Data and timing differences (row order, measured durations) change pixels without any style change; computed styles name the element and property that changed |
+| Comparing ids, hashes and absolute times | They differ between two fillings of the same data, so a cached baseline would break on every reseed; they are masked |
+| Running kamu containers on the host network | The machine restarted twice while kamu's podman inside a privileged container on the host network ran engine containers; each server now has a network of its own |
+| SQLite or local storage for kamu-api-server | Deployments run Postgres and S3; the kit runs the same |
+| Derived images with the data baked in | Images run as published, so what is tested is what is deployed; the data goes into the container's own file system |
+| Numbered fixtures (`extra-01`…) | Unreadable for a maintainer; the inventory names every artifact and says why it exists |
+| Parallel base and head captures | Chrome renders glyphs slightly differently under load; captures run one at a time |
+| The kit in JavaScript | Harder to read next to the Python agent harness; JavaScript stays where it must run: in the page, and where the TypeScript compiler and `sass` are needed |

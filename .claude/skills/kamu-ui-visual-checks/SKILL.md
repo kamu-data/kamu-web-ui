@@ -24,31 +24,17 @@ computed styles of the elements it watches and the screenshots.
 A run that ends with only expected changes is the evidence for the PR: say which scenarios
 changed and why. Unexpected changes are regressions to fix, not to explain.
 
-## Prerequisites
+## Running it
 
-- Google Chrome (`CHROME_BIN` to override), [uv](https://docs.astral.sh/uv/) (it installs the kit's
-  Python dependencies from `e2e/pyproject.toml`), and docker or podman for the `with-data-mt` profile.
-- A backend whose GraphQL schema matches the app. `--backend cli` (default) or `--backend
-  api-server` picks kamu-cli or kamu-api-server; `--bin <path>`, `--release <version>` or
-  `--image <tag or ref>` picks the build, otherwise the binary on the shell's PATH is used.
-  kamu-api-server runs on Postgres and S3 (rustfs) in containers; its releases exist for Linux
-  x86_64 only. Before capturing, the run validates every `.graphql` document of both trees against
-  the schema the backend serves and stops on a mismatch; an older build makes pages hang on
-  "Loading…" instead. Fix it by choosing a newer build, never by skipping the check.
+Commands, options, backends, profiles and where results land:
+[`e2e/README.md`](../../../e2e/README.md). How the kit works inside:
+[`docs/internal/visual-comparison.md`](../../../docs/internal/visual-comparison.md).
 
-## Commands
-
-| Command | Does |
-|---|---|
-| `npm run visual -- compare [--tier smoke\|full] [--base <ref>] [--head <ref>] [--only <text>] [--unrated]` | the comparison; base defaults to the merge-base with master, head to the working tree |
-| `npm run visual -- probe --profile <p> [--build <dir>] <path>...` | log in to a profile's backend, print each page's text and components, save screenshots: for writing a scenario |
-| `npm run visual -- coverage` | routes no entry claims, entries no scenario realises, components the last run never showed |
-| `npm run visual -- cache list` / `cache prune --keep <n>` | cached baselines (a full one is about 330 MB) |
-| `npm run e2e-check` | the kit's unit tests, and the catalogue, scenarios and seed inventory checked against each other and the app's routes (CI runs it) |
-
-Everything lands in `~/.cache/kamu-ui-visual/` (`KAMU_VISUAL_CACHE`), never in the repository.
-The base capture is cached by base commit, data, backend build, kit, Chrome major version and the
-scenario selection, so a second run against the same base only captures the head.
+- The backend's GraphQL schema must match the app. The run checks every `.graphql` document of
+  both trees before capturing and stops on a mismatch: choose a newer build (`--bin`,
+  `--release`, `--image`), never skip the check.
+- Long runs go in the background; one capture runs at a time (`capture.lock`).
+- After a change under `e2e/`, run `npm run e2e-check`.
 
 ## Reading the report
 
@@ -62,10 +48,9 @@ scenario selection, so a second run against the same base only captures the head
 | pixels-only, confirmed | pixels differ, styles do not | a change outside the watched elements, or text and data; look at `<scenario>.diff.png` |
 | missing / failed | the scenario did not render | fix the scenario or the page; a failed base is not cached |
 
-The style diff covers the subtrees of Material, ngb, ng-select, multiselect, table, stepper and
-modal roots, every element that a class from `src/assets/styles/var.scss` of the base matches,
-and forced `:hover`, `:focus` and `:active` states of the `FORCE_TARGETS` in
-`e2e/visual/scenarios.py`. A change elsewhere shows as pixels only.
+Which elements and states the style diff watches:
+[What a snapshot holds](../../../docs/internal/visual-comparison.md#what-a-snapshot-holds). A
+change elsewhere shows as pixels only.
 
 ## The catalogue and the tiers
 
@@ -75,16 +60,12 @@ whether the scenario runs. `tier` and `why` are set by a person who knows the bu
 never generated: an agent drafting an entry leaves both empty and asks. `--unrated` runs unrated
 entries too, for checking the kit itself.
 
-## Data profiles
+## Fixtures
 
-| Profile | Data | Notes |
-|---|---|---|
-| `seed` | `e2e/fixtures/seed.py` builds it through the API from `e2e/fixtures/seed/` | accounts `kamu` (admin, `kamu.dev`), `alice`, `bob`; nothing is scheduled, so it never changes |
-| `empty` | accounts only | empty states |
-| `with-data-mt` | kamu-cli's published image of real datasets and organizations, pinned by digest in `e2e/fixtures/profiles.py` | run with a config that adds a signing key (for `/query`) and one query partition; read-only |
-
-Workspaces are cached by their sources and the kamu build; ids and hashes differ between two
-builds of a workspace, so both sides of a comparison always use the same one.
+`e2e/fixtures/seed/inventory.yaml` lists every artifact of the `seed` profile with its purpose,
+state and the catalogue entries that rely on it; the seed creates exactly what it lists. A scenario
+that needs new data gets an inventory entry (and a manifest or data file), never data made up
+inside the scenario. Changing an artifact means checking the scenarios its `entries` name.
 
 ## Adding a scenario
 
@@ -96,12 +77,16 @@ builds of a workspace, so both sides of a comparison always use the same one.
    the data access modal show whether a component's styles leak. Logged-out (`phase: "anon"`)
    scenarios come last.
 5. A scenario that must not change the backend switches controls without saving. Opening the
-   rotate-secret page does rotate the secret; its scenario masks the new one.
-6. Run `compare --only <name>` twice: the second run must show it the same.
+   rotate-secret page does rotate the secret; the masks hide the new one.
+6. A page that shows a value differing between two seedings (an id, a hash, a time in a new
+   format) needs a mask in `page-lib.js`, not a looser comparison.
+7. Run `compare --only <name>` twice: the second run must show it the same. With an image
+   backend each run seeds afresh, so this also proves the masks.
 
 ## Checking the kit itself
 
-A change under `e2e/visual` changes the cache key, so the next run captures the base again. A new
+A change to the capture code under `e2e/visual` changes the cache key, so the next run captures
+the base again; the comparer is not part of the key. A new
 check or a change to the comparer gets tests for input it must accept as well as input it must
 reject, and a run against two commits with a known difference: it must report that difference and
 nothing else.

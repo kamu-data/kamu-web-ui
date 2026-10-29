@@ -163,6 +163,7 @@ change invalidates what it says.
 | Cutting a release | [`DEVELOPER.md`](DEVELOPER.md#release-procedure) |
 | Packages that must be upgraded together | [`update-dependecies.md`](update-dependecies.md) |
 | How the agent harness works: hooks, skills, harness lints, adding a skill or guarded path | [`docs/internal/agent-harness.md`](docs/internal/agent-harness.md) |
+| How the visual comparison kit works: run flow, backends, profiles and the inventory, snapshots, determinism, cache keys, rejected approaches | [`docs/internal/visual-comparison.md`](docs/internal/visual-comparison.md) |
 
 ## Documentation classes
 

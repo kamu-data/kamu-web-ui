@@ -15,8 +15,8 @@ import hashlib
 import subprocess
 
 from scripts.agents import project
-from scripts.agents.command_policy import drop_redirects, lex, segments, selects_node
 from scripts.agents.common import ROOT, locked_state, matches, now, runtime_state_dir
+from scripts.agents.command_policy import drop_redirects, lex, segments, selects_node
 
 STATE = ROOT / ".claude" / "state" / "lint.json"
 CODEX_STATE = runtime_state_dir("codex") / "lint.json"

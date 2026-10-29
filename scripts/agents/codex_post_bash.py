@@ -15,8 +15,7 @@ import sys
 from scripts.agents.bash_edits import call_key, changed_paths, check_changed, moves_working_tree, snapshot, take_pending
 from scripts.agents.codex_pre_bash import STATE_DIR
 from scripts.agents.common import additional_context, emit, read_payload, run_safely, tool_failed
-from scripts.agents.lint_ledger import CODEX_STATE as LINT_STATE
-from scripts.agents.lint_ledger import is_lint_input, is_whole_lint_run, note_lint_input_edit, record_green
+from scripts.agents.lint_ledger import CODEX_STATE as LINT_STATE, is_lint_input, is_whole_lint_run, note_lint_input_edit, record_green
 from scripts.agents.post_edit import report
 from scripts.agents.skill_ledger import CODEX_LOAD_WITH, CODEX_STATE, reader_key, record, skills_read_by
 

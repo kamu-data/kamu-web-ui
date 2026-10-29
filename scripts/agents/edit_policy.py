@@ -32,10 +32,7 @@ def generated_decision(paths: list[str]) -> Decision | None:
                 break
     if not hits:
         return None
-    return (
-        "deny",
-        "Generated files are never edited by hand (AGENTS.md, 'Documentation classes'):\n" + "\n".join(hits),
-    )
+    return ("deny", "Generated files are never edited by hand (AGENTS.md, 'Documentation classes'):\n" + "\n".join(hits))
 
 
 def memory_decision(text: str) -> Decision | None:

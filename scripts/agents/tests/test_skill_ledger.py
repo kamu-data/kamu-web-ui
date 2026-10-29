@@ -10,15 +10,7 @@ from pathlib import Path
 from unittest import mock
 
 from scripts.agents.common import ROOT
-from scripts.agents.skill_ledger import (
-    EXPIRY_SECONDS,
-    forget_session,
-    governing_skills,
-    loaded,
-    missing_skills,
-    record,
-    skills_read_by,
-)
+from scripts.agents.skill_ledger import EXPIRY_SECONDS, forget_session, governing_skills, loaded, missing_skills, record, skills_read_by
 
 STYLE = "kamu-ui-angular-style"
 GRAPHQL = "kamu-ui-graphql-api"
@@ -62,9 +54,8 @@ class LedgerTest(unittest.TestCase):
         self.dir.cleanup()
 
     def test_edit_is_refused_until_the_skill_is_loaded(self):
-        self.assertEqual(
-            missing_skills([self.path], "s/main", self.state), {"src/app/api/gql/account/x.graphql": [GRAPHQL]}
-        )
+        self.assertEqual(missing_skills([self.path], "s/main", self.state),
+                         {"src/app/api/gql/account/x.graphql": [GRAPHQL]})
         record({GRAPHQL}, "s/main", self.state)
         self.assertEqual(missing_skills([self.path], "s/main", self.state), {})
 

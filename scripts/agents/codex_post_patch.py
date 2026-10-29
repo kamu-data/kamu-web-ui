@@ -11,8 +11,7 @@ import sys
 
 from scripts.agents.codex_common import patch_files, patch_text
 from scripts.agents.common import additional_context, emit, read_payload, repo_relative, run_safely
-from scripts.agents.lint_ledger import CODEX_STATE as LINT_STATE
-from scripts.agents.lint_ledger import is_lint_input, note_lint_input_edit
+from scripts.agents.lint_ledger import CODEX_STATE as LINT_STATE, is_lint_input, note_lint_input_edit
 from scripts.agents.post_edit import check_edit, report
 
 

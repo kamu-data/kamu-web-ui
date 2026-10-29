@@ -46,39 +46,20 @@ class StopReminderTest(unittest.TestCase):
 
 class LintRunTest(unittest.TestCase):
     def test_only_a_whole_lint_run_counts_as_green(self):
-        for command in [
-            "npm run lint",
-            "npm run lint-and-fix",
-            "nvm use >/dev/null && npm run lint",
-            '. "$NVM_DIR/nvm.sh" && nvm use >/dev/null && npm run lint',
-            "source ~/.nvm/nvm.sh && nvm use && npm run lint-and-fix",
-            "npm run lint > /tmp/lint.log 2>&1",
-        ]:
+        for command in ["npm run lint", "npm run lint-and-fix", "nvm use >/dev/null && npm run lint",
+                        '. "$NVM_DIR/nvm.sh" && nvm use >/dev/null && npm run lint',
+                        "source ~/.nvm/nvm.sh && nvm use && npm run lint-and-fix",
+                        "npm run lint > /tmp/lint.log 2>&1"]:
             with self.subTest(command=command):
                 self.assertTrue(lint_ledger.is_whole_lint_run(command))
-        for command in [
-            "npm run lint | grep error",
-            "npm run lint || true",
-            "npx eslint .",
-            "npx eslint src/app/app.component.ts",
-            "npm run lint &",
-            "nvm use || npm run lint",
-            ". ./other.sh && npm run lint",
-            "npm run lint -- src/app",
-            "npm run lint ||",
-            "npm run stylelint",
-        ]:
+        for command in ["npm run lint | grep error", "npm run lint || true", "npx eslint .",
+                        "npx eslint src/app/app.component.ts", "npm run lint &", "nvm use || npm run lint", ". ./other.sh && npm run lint",
+                        "npm run lint -- src/app", "npm run lint ||", "npm run stylelint"]:
             with self.subTest(command=command):
                 self.assertFalse(lint_ledger.is_whole_lint_run(command))
 
     def test_lint_inputs(self):
-        for rel in [
-            "src/app/app.component.ts",
-            "src/main.ts",
-            "eslint.config.mjs",
-            "tsconfig.spec.json",
-            "package.json",
-        ]:
+        for rel in ["src/app/app.component.ts", "src/main.ts", "eslint.config.mjs", "tsconfig.spec.json", "package.json"]:
             with self.subTest(rel=rel):
                 self.assertTrue(lint_ledger.is_lint_input(rel))
         for rel in ["src/app/app.component.html", "AGENTS.md", "scripts/agents/common.py", None]:

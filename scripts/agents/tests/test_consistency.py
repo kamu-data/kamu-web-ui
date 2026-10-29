@@ -41,18 +41,12 @@ class HarnessConsistencyTest(unittest.TestCase):
         for entry in sorted((ROOT / CODEX_SKILLS_DIR).iterdir()):
             expected = f"../../{SKILLS_DIR}/{entry.name}"
             if not entry.is_symlink():
-                errors.append(
-                    f"{CODEX_SKILLS_DIR}/{entry.name}: must be a relative symlink to `{expected}`, not a real file"
-                )
+                errors.append(f"{CODEX_SKILLS_DIR}/{entry.name}: must be a relative symlink to `{expected}`, not a real file")
             elif os.readlink(entry) != expected:
-                errors.append(
-                    f"{CODEX_SKILLS_DIR}/{entry.name}: must link to `{expected}`, links to `{os.readlink(entry)}`"
-                )
+                errors.append(f"{CODEX_SKILLS_DIR}/{entry.name}: must link to `{expected}`, links to `{os.readlink(entry)}`")
             codex.add(entry.name)
         for name in sorted(skills - codex):
-            errors.append(
-                f"{CODEX_SKILLS_DIR}/{name}: missing symlink (`ln -s ../../{SKILLS_DIR}/{name} {CODEX_SKILLS_DIR}/{name}`)"
-            )
+            errors.append(f"{CODEX_SKILLS_DIR}/{name}: missing symlink (`ln -s ../../{SKILLS_DIR}/{name} {CODEX_SKILLS_DIR}/{name}`)")
 
         routed = {skill for skill, _ in routing_table()}
         for name in sorted(skills - routed):
@@ -64,12 +58,8 @@ class HarnessConsistencyTest(unittest.TestCase):
     def test_routing_table_guarded_paths_match_hook_policy(self):
         table = [(skill, paths) for skill, paths in routing_table() if paths]
         rules = [(rule["skill"], rule["paths"]) for rule in policy()["skills"]]
-        self.assertEqual(
-            table,
-            rules,
-            "The 'Guarded paths' column in AGENTS.md must list the same rules, in the "
-            "same order, as .claude/hooks/governed_paths.json",
-        )
+        self.assertEqual(table, rules, "The 'Guarded paths' column in AGENTS.md must list the same rules, in the "
+                                       "same order, as .claude/hooks/governed_paths.json")
 
     def test_doc_links_resolve(self):
         errors = []

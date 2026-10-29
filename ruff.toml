@@ -7,7 +7,15 @@
 line-length = 120
 target-version = "py312"
 
+[format]
+# scripts/agents mirrors kamu-cli's copy module by module; formatting it would bury the real divergence
+exclude = ["scripts/agents/**"]
+
 [lint]
 select = ["E", "F", "W", "I", "B", "UP"]
 # The formatter owns line length; what it cannot wrap (long strings in rule tables) stays as is
 ignore = ["E501"]
+
+[lint.per-file-ignores]
+# Import order as in kamu-cli's copy, for the same reason
+"scripts/agents/**" = ["I"]

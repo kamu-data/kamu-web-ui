@@ -30,23 +30,12 @@ class BashEditsTest(unittest.TestCase):
         self.assertEqual(changed_paths(before, after), ["b.ts", "new.ts"])
 
     def test_git_commands_that_rewrite_the_tree_are_recognised(self):
-        for command in [
-            "git switch master",
-            "git -C sub pull",
-            "cd x && git stash pop",
-            "FOO=1 git checkout main",
-            "git rebase origin/master",
-            "git reset --soft HEAD~1",
-        ]:
+        for command in ["git switch master", "git -C sub pull", "cd x && git stash pop",
+                        "FOO=1 git checkout main", "git rebase origin/master", "git reset --soft HEAD~1"]:
             with self.subTest(command=command):
                 self.assertTrue(moves_working_tree(command))
-        for command in [
-            "git status",
-            "git diff HEAD",
-            "npm run prettier",
-            "sed -i 's/a/b/' x.ts",
-            "echo 'git switch' > notes.txt",
-        ]:
+        for command in ["git status", "git diff HEAD", "npm run prettier", "sed -i 's/a/b/' x.ts",
+                        "echo 'git switch' > notes.txt"]:
             with self.subTest(command=command):
                 self.assertFalse(moves_working_tree(command))
 
@@ -88,11 +77,8 @@ class BashEditHookTest(unittest.TestCase):
     def test_typescript_written_through_the_shell_is_formatted_and_checked(self):
         for client in CLIENTS:
             with self.subTest(client=client):
-                result = self.harness.shell_write(
-                    client,
-                    "printf ... > example.spec.ts",
-                    {"example.spec.ts": self.harness.ts('it.only("x",()=>{expect(1).toBe(1)})')},
-                )
+                result = self.harness.shell_write(client, "printf ... > example.spec.ts",
+                                                  {"example.spec.ts": self.harness.ts('it.only("x",()=>{expect(1).toBe(1)})')})
                 self.assertEqual(result.returncode, 2)
                 self.assertIn("focused or disabled tests", result.stderr)
                 self.assertIn('it.only("x", () => {', (self.harness.root / "example.spec.ts").read_text())
@@ -106,9 +92,8 @@ class BashEditHookTest(unittest.TestCase):
     def test_files_brought_in_by_git_are_not_judged(self):
         for client in CLIENTS:
             with self.subTest(client=client):
-                result = self.harness.shell_write(
-                    client, "git switch other", {"example.spec.ts": self.harness.ts('it.only("x", () => {});')}
-                )
+                result = self.harness.shell_write(client, "git switch other",
+                                                  {"example.spec.ts": self.harness.ts('it.only("x", () => {});')})
                 self.assertEqual((result.returncode, result.stderr), (0, ""))
 
     def test_a_guarded_path_written_without_its_skill_gets_a_reminder(self):
@@ -124,9 +109,8 @@ class BashEditHookTest(unittest.TestCase):
             with self.subTest(client=client):
                 rel = "src/app/api/kamu.graphql.interface.ts"
                 (self.harness.root / rel).parent.mkdir(parents=True, exist_ok=True)
-                result = self.harness.shell_write(
-                    client, "npm run gql-codegen", {rel: f"/** Offset that was previously incorporated ({client}) */\n"}
-                )
+                result = self.harness.shell_write(client, "npm run gql-codegen",
+                                                  {rel: f"/** Offset that was previously incorporated ({client}) */\n"})
                 self.assertEqual((result.returncode, result.stderr), (0, ""))
 
     def test_subagent_node_commands_must_select_the_pinned_version(self):
@@ -137,9 +121,8 @@ class BashEditHookTest(unittest.TestCase):
         sub = self.harness.invoke("claude", "PreToolUse", "npm run lint", agent_id="agent-1")
         self.assertIn('"deny"', sub.stdout)
         self.assertIn("nvm use", sub.stdout)
-        selected = self.harness.invoke(
-            "claude", "PreToolUse", '. "$NVM_DIR/nvm.sh" && nvm use && npm run lint', agent_id="agent-1"
-        )
+        selected = self.harness.invoke("claude", "PreToolUse", '. "$NVM_DIR/nvm.sh" && nvm use && npm run lint',
+                                       agent_id="agent-1")
         self.assertNotIn('"deny"', selected.stdout)
         codex = self.harness.invoke("codex", "PreToolUse", "npm run lint")
         self.assertIn('"deny"', codex.stdout)
@@ -187,32 +170,14 @@ class BashHookHarness:
     def invoke(self, client, event, command, agent_id=None):
         config, pre, post = CLIENTS[client]
         module = pre if event == "PreToolUse" else post
-        hook = next(
-            h
-            for group in json.loads(config.read_text())["hooks"][event]
-            for h in group["hooks"]
-            if module in h["command"]
-        )
-        payload = {
-            "session_id": "test",
-            "tool_use_id": f"call-{self.calls}",
-            "hook_event_name": event,
-            "tool_name": "Bash",
-            "tool_input": {"command": command},
-            "tool_response": None,
-        }
+        hook = next(h for group in json.loads(config.read_text())["hooks"][event]
+                    for h in group["hooks"] if module in h["command"])
+        payload = {"session_id": "test", "tool_use_id": f"call-{self.calls}", "hook_event_name": event,
+                   "tool_name": "Bash", "tool_input": {"command": command}, "tool_response": None}
         if agent_id:
             payload["agent_id"] = agent_id
-        return subprocess.run(
-            hook["command"],
-            shell=True,
-            cwd=self.root,
-            input=json.dumps(payload),
-            text=True,
-            capture_output=True,
-            timeout=60,
-            env=self.env,
-        )
+        return subprocess.run(hook["command"], shell=True, cwd=self.root, input=json.dumps(payload),
+                              text=True, capture_output=True, timeout=60, env=self.env)
 
     def shell_write(self, client, command, files):
         """Bracket a simulated command that writes `files` with the client's two Bash hooks."""

@@ -86,31 +86,70 @@ class DiscardTest(unittest.TestCase):
 
 class ApprovalTest(unittest.TestCase):
     def test_history_and_publishing_commands_ask(self):
-        for command in ["git commit -m x", "git push origin master", "git merge x", "git rebase master",
-                        "git tag v1.0", "git cherry-pick abc", "git reset --soft HEAD~1", "git branch -D x",
-                        "npm version patch", "npm run release-minor", "nvm use && npm run release-patch",
-                        "npm publish"]:
+        for command in [
+            "git commit -m x",
+            "git push origin master",
+            "git merge x",
+            "git rebase master",
+            "git tag v1.0",
+            "git cherry-pick abc",
+            "git reset --soft HEAD~1",
+            "git branch -D x",
+            "npm version patch",
+            "npm run release-minor",
+            "nvm use && npm run release-patch",
+            "npm publish",
+        ]:
             with self.subTest(command=command):
                 self.assertEqual(verdict(command), ("ask", "approval"))
 
     def test_creating_or_switching_a_branch_asks(self):
-        for command in ["git switch master", "git switch -c chore/1-x", "git switch -", "git checkout main",
-                        "git checkout -b feature/860-x", "git checkout -B x origin/x", "git checkout --orphan x",
-                        "git checkout src/app/app.component.ts", "git branch chore/1-x", "git branch x origin/master",
-                        "git branch -c x y", "git branch --track x origin/x", "git worktree add ../wt master",
-                        "git worktree add -b x ../wt", "git fetch && git switch -c x origin/master",
-                        "git switch 'unterminated", "git branch 'unterminated", "git branch -v feature/audit",
-                        "git branch --color x", "git branch --sort=refname x", "git branch --format='%(refname)' x",
-                        "git branch --no-column x", "git branch --sort refname x", "git checkout -bfeature/audit",
-                        "git checkout -Bfix/x origin/x"]:
+        for command in [
+            "git switch master",
+            "git switch -c chore/1-x",
+            "git switch -",
+            "git checkout main",
+            "git checkout -b feature/860-x",
+            "git checkout -B x origin/x",
+            "git checkout --orphan x",
+            "git checkout src/app/app.component.ts",
+            "git branch chore/1-x",
+            "git branch x origin/master",
+            "git branch -c x y",
+            "git branch --track x origin/x",
+            "git worktree add ../wt master",
+            "git worktree add -b x ../wt",
+            "git fetch && git switch -c x origin/master",
+            "git switch 'unterminated",
+            "git branch 'unterminated",
+            "git branch -v feature/audit",
+            "git branch --color x",
+            "git branch --sort=refname x",
+            "git branch --format='%(refname)' x",
+            "git branch --no-column x",
+            "git branch --sort refname x",
+            "git checkout -bfeature/audit",
+            "git checkout -Bfix/x origin/x",
+        ]:
             with self.subTest(command=command):
                 self.assertEqual(verdict(command), ("ask", "approval"))
 
     def test_reading_branches_and_tracking_pass(self):
-        for command in ["git branch", "git branch -a", "git branch --show-current", "git branch -vv",
-                        "git branch -v --sort=-committerdate", "git branch --sort refname",
-                        "git branch --format '%(refname)'", "git branch --list 'chore/*'", "git branch --contains HEAD", "git branch --unset-upstream",
-                        "git branch -u origin/x", "git worktree list", "git checkout"]:
+        for command in [
+            "git branch",
+            "git branch -a",
+            "git branch --show-current",
+            "git branch -vv",
+            "git branch -v --sort=-committerdate",
+            "git branch --sort refname",
+            "git branch --format '%(refname)'",
+            "git branch --list 'chore/*'",
+            "git branch --contains HEAD",
+            "git branch --unset-upstream",
+            "git branch -u origin/x",
+            "git worktree list",
+            "git checkout",
+        ]:
             with self.subTest(command=command):
                 self.assertIsNone(verdict(command))
 
@@ -121,45 +160,89 @@ class ApprovalTest(unittest.TestCase):
 
 class NpmTest(unittest.TestCase):
     def test_dependency_changes_ask(self):
-        for command in ["npm install lodash", "npm i -D @types/node", "npm add rxjs@7", "npm uninstall marked",
-                        "npm rm marked", "npm update", "npm update @angular/core", "npx -y npm install x",
-                        "nvm use >/dev/null && npm install timekeeper"]:
+        for command in [
+            "npm install lodash",
+            "npm i -D @types/node",
+            "npm add rxjs@7",
+            "npm uninstall marked",
+            "npm rm marked",
+            "npm update",
+            "npm update @angular/core",
+            "npx -y npm install x",
+            "nvm use >/dev/null && npm install timekeeper",
+        ]:
             with self.subTest(command=command):
                 self.assertEqual(verdict(command), ("ask", "dependency"))
 
     def test_installing_the_lock_file_and_running_scripts_pass(self):
-        for command in ["npm install", "npm i", "npm ci", "npm install --no-audit", "npm run lint", "npm test",
-                        "npm run gql-codegen", "npx ng build", "npm ls @angular/core", "npm outdated"]:
+        for command in [
+            "npm install",
+            "npm i",
+            "npm ci",
+            "npm install --no-audit",
+            "npm run lint",
+            "npm test",
+            "npm run gql-codegen",
+            "npx ng build",
+            "npm ls @angular/core",
+            "npm outdated",
+        ]:
             with self.subTest(command=command):
                 self.assertIsNone(verdict(command))
 
     def test_truncated_build_output_is_denied(self):
-        for command in ["npm test 2>&1 | tail -50", "npm run lint | head", "ng build |& tail", "npx eslint . | head",
-                        "npm run build-prod | tail -40", "npm run stylelint 2>&1 | head -n 20",
-                        "npx ng test --include x | tail", "npm t | tail"]:
+        for command in [
+            "npm test 2>&1 | tail -50",
+            "npm run lint | head",
+            "ng build |& tail",
+            "npx eslint . | head",
+            "npm run build-prod | tail -40",
+            "npm run stylelint 2>&1 | head -n 20",
+            "npx ng test --include x | tail",
+            "npm t | tail",
+        ]:
             with self.subTest(command=command):
                 self.assertEqual(verdict(command), ("deny", "truncate"))
 
     def test_filtering_and_unrelated_truncation_pass(self):
-        for command in ["npm test 2>&1 | grep FAILED", "npm ls | head", "git log | head", "npm run start | tail",
-                        "ng version | head"]:
+        for command in [
+            "npm test 2>&1 | grep FAILED",
+            "npm ls | head",
+            "git log | head",
+            "npm run start | tail",
+            "ng version | head",
+        ]:
             with self.subTest(command=command):
                 self.assertIsNone(verdict(command))
 
 
 class NodeVersionTest(unittest.TestCase):
     def test_node_tools_without_a_selected_version_are_denied(self):
-        for command in ["npm run lint", "npx ng build", "ng test", "cd src && npm test", "node scripts/x.js",
-                        "npm ci && nvm use && npm test", "nvm use; npm test", "eslint src/app"]:
+        for command in [
+            "npm run lint",
+            "npx ng build",
+            "ng test",
+            "cd src && npm test",
+            "node scripts/x.js",
+            "npm ci && nvm use && npm test",
+            "nvm use; npm test",
+            "eslint src/app",
+        ]:
             with self.subTest(command=command):
                 found = node_version_verdicts(command)
                 self.assertTrue(found)
                 self.assertTrue(all(v.kind == "node-version" and v.decision[0] == "deny" for v in found))
 
     def test_selecting_the_pinned_version_first_passes(self):
-        for command in ['. "$NVM_DIR/nvm.sh" && nvm use >/dev/null && npm run lint',
-                        "source ~/.nvm/nvm.sh && nvm use && npm test && npx ng build",
-                        "git status", "ls node_modules", "python3 -m unittest", "node --version", "npm -v"]:
+        for command in [
+            '. "$NVM_DIR/nvm.sh" && nvm use >/dev/null && npm run lint',
+            "source ~/.nvm/nvm.sh && nvm use && npm test && npx ng build",
+            "git status",
+            "ls node_modules",
+            "python3 -m unittest",
+            "node --version",
+            "npm -v",
+        ]:
             with self.subTest(command=command):
                 self.assertEqual(node_version_verdicts(command), [])
 

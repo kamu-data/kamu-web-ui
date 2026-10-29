@@ -116,8 +116,10 @@ class CompareTest(unittest.TestCase):
         write_capture(self.after, "03-noise", {"a": element()}, color=(0, 0, 0))
         write_capture(self.before, "04-gone", {"a": element()})
         summary = compare(self.before, self.after, self.out)
-        self.assertEqual({k: v["verdict"] for k, v in summary.items()},
-                         {"01-same": "same", "02-styled": "changed", "03-noise": "pixels-only", "04-gone": "missing"})
+        self.assertEqual(
+            {k: v["verdict"] for k, v in summary.items()},
+            {"01-same": "same", "02-styled": "changed", "03-noise": "pixels-only", "04-gone": "missing"},
+        )
         self.assertEqual(summary["03-noise"]["pixels"], 400)
         with open(os.path.join(self.out, "report.md")) as f:
             report = f.read()

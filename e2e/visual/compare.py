@@ -158,19 +158,32 @@ def compare(before_dir: str, after_dir: str, out_dir: str, names: list[str] | No
             summary[name] = {"styleDiffs": None, "pixels": None, "verdict": "missing", "note": f"missing in {side}"}
             rows.append(f"| {name} | missing in {side} | | missing |")
             continue
-        diffs = list(diff_styles(load(os.path.join(before_dir, "styles", f"{name}.json.gz")),
-                                 load(os.path.join(after_dir, "styles", f"{name}.json.gz"))))
-        pixels, note = image_diff(os.path.join(before_dir, f"{name}.png"), os.path.join(after_dir, f"{name}.png"),
-                                  os.path.join(out_dir, f"{name}.diff.png"))
+        diffs = list(
+            diff_styles(
+                load(os.path.join(before_dir, "styles", f"{name}.json.gz")),
+                load(os.path.join(after_dir, "styles", f"{name}.json.gz")),
+            )
+        )
+        pixels, note = image_diff(
+            os.path.join(before_dir, f"{name}.png"),
+            os.path.join(after_dir, f"{name}.png"),
+            os.path.join(out_dir, f"{name}.diff.png"),
+        )
         result = verdict(len(diffs), pixels)
         summary[name] = {"styleDiffs": len(diffs), "pixels": pixels, "verdict": result, "note": note}
         rows.append(f"| {name} | {len(diffs)} | {'—' if pixels is None else pixels}{note} | {result} |")
         if diffs:
             details += report_lines(name, diffs)
     head = [
-        "# Style and screenshot comparison", "",
-        f"- before: `{before_dir}`", f"- after: `{after_dir}`", "",
-        "| scenario | style diffs | changed px | verdict |", "|---|---|---|---|", *rows, "",
+        "# Style and screenshot comparison",
+        "",
+        f"- before: `{before_dir}`",
+        f"- after: `{after_dir}`",
+        "",
+        "| scenario | style diffs | changed px | verdict |",
+        "|---|---|---|---|",
+        *rows,
+        "",
     ]
     with open(os.path.join(out_dir, "report.md"), "w") as f:
         f.write("\n".join(head + details))

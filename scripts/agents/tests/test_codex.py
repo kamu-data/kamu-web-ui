@@ -30,11 +30,14 @@ PATCH = """*** Begin Patch
 
 class CodexTest(unittest.TestCase):
     def test_patch_paths_and_added_lines(self):
-        self.assertEqual(patch_files(PATCH), {
-            "src/app/api/gql/account/account-by-name.graphql": ["added one"],
-            "docs/internal/new.md": ["# New"],
-            "old.ts": [],
-        })
+        self.assertEqual(
+            patch_files(PATCH),
+            {
+                "src/app/api/gql/account/account-by-name.graphql": ["added one"],
+                "docs/internal/new.md": ["# New"],
+                "old.ts": [],
+            },
+        )
 
     def test_codex_denies_mechanical_policy_violations_only(self):
         self.assertEqual(codex_decision(decide("git reset --hard"))[0], "deny")
@@ -45,9 +48,10 @@ class CodexTest(unittest.TestCase):
         self.assertIsNone(codex_decision(decide("git status")))
 
     def test_move_checks_both_paths_and_attributes_added_lines_to_destination(self):
-        self.assertEqual(patch_files("*** Begin Patch\n*** Update File: old.ts\n"
-                                     "*** Move to: new.ts\n@@\n+added\n*** End Patch"),
-                         {"old.ts": [], "new.ts": ["added"]})
+        self.assertEqual(
+            patch_files("*** Begin Patch\n*** Update File: old.ts\n*** Move to: new.ts\n@@\n+added\n*** End Patch"),
+            {"old.ts": [], "new.ts": ["added"]},
+        )
 
 
 class CodexHookTest(unittest.TestCase):
@@ -57,15 +61,18 @@ class CodexHookTest(unittest.TestCase):
 
     def test_shell_guard_denies_destructive_commands_and_passes_reads(self):
         self.assertEqual(self.harness.decision("Bash", "git reset --hard"), "deny")
-        self.assertIsNone(self.harness.decision(
-            "Bash", '. "$NVM_DIR/nvm.sh" && nvm use >/dev/null && npm install lodash'))
+        self.assertIsNone(
+            self.harness.decision("Bash", '. "$NVM_DIR/nvm.sh" && nvm use >/dev/null && npm install lodash')
+        )
         self.assertEqual(self.harness.decision("Bash", "npm test | tail"), "deny")
         self.assertIsNone(self.harness.decision("Bash", "git status"))
 
     def test_generated_files_cannot_be_added_deleted_or_moved(self):
-        for patch in ["*** Add File: resources/schema.graphql\n+text",
-                      "*** Delete File: src/app/api/kamu.graphql.interface.ts",
-                      "*** Update File: ordinary.txt\n*** Move to: package-lock.json"]:
+        for patch in [
+            "*** Add File: resources/schema.graphql\n+text",
+            "*** Delete File: src/app/api/kamu.graphql.interface.ts",
+            "*** Update File: ordinary.txt\n*** Move to: package-lock.json",
+        ]:
             with self.subTest(patch=patch):
                 self.assertEqual(self.harness.patch_decision(patch), "deny")
 
@@ -95,21 +102,29 @@ class CodexHookTest(unittest.TestCase):
     @unittest.skipUnless(PRETTIER_AVAILABLE, "node_modules not installed")
     def test_post_patch_formats_and_reports_added_line_violations(self):
         self.harness.write_ts("example.spec.ts", 'it.only("x",()=>{})')
-        result = self.harness.invoke("PostToolUse", "apply_patch", command=self.harness.patch(
-            '*** Add File: example.spec.ts\n+it.only("x",()=>{})'))
+        result = self.harness.invoke(
+            "PostToolUse",
+            "apply_patch",
+            command=self.harness.patch('*** Add File: example.spec.ts\n+it.only("x",()=>{})'),
+        )
         self.assertEqual(result.returncode, 2)
         self.assertIn("focused or disabled tests", result.stderr)
         self.assertIn('it.only("x", () => {})', (self.harness.root / "example.spec.ts").read_text())
 
     def test_post_patch_provides_regeneration_context(self):
-        output = self.harness.run("PostToolUse", "apply_patch", command=self.harness.patch(
-            "*** Update File: src/app/api/gql/account/account-by-name.graphql\n@@\n+text"))
+        output = self.harness.run(
+            "PostToolUse",
+            "apply_patch",
+            command=self.harness.patch("*** Update File: src/app/api/gql/account/account-by-name.graphql\n@@\n+text"),
+        )
         self.assertIn("npm run gql-codegen", output["hookSpecificOutput"]["additionalContext"])
 
     def test_stop_continues_with_a_lint_reminder(self):
-        with mock.patch.object(codex_stop, "read_payload", return_value={"session_id": "test"}), \
-                mock.patch.object(codex_stop, "stop_reminder", return_value="run npm run lint") as reminder, \
-                mock.patch.object(codex_stop, "emit") as emit:
+        with (
+            mock.patch.object(codex_stop, "read_payload", return_value={"session_id": "test"}),
+            mock.patch.object(codex_stop, "stop_reminder", return_value="run npm run lint") as reminder,
+            mock.patch.object(codex_stop, "emit") as emit,
+        ):
             self.assertEqual(codex_stop.main(), 0)
         reminder.assert_called_once()
         emit.assert_called_once_with({"decision": "block", "reason": "run npm run lint"})
@@ -130,11 +145,24 @@ class CodexHookHarness:
     def invoke(self, event, tool=None, session="test", source=None, response=None, **tool_input):
         groups = self.config[event]
         group = next(g for g in groups if tool is None or g["matcher"] == tool)
-        payload = {"session_id": session, "cwd": str(self.cwd), "hook_event_name": event,
-                   "tool_name": tool, "tool_input": tool_input, "tool_response": response,
-                   "source": source}
-        return subprocess.run(group["hooks"][0]["command"], shell=True, cwd=self.cwd,
-                              input=json.dumps(payload), text=True, capture_output=True, timeout=10)
+        payload = {
+            "session_id": session,
+            "cwd": str(self.cwd),
+            "hook_event_name": event,
+            "tool_name": tool,
+            "tool_input": tool_input,
+            "tool_response": response,
+            "source": source,
+        }
+        return subprocess.run(
+            group["hooks"][0]["command"],
+            shell=True,
+            cwd=self.cwd,
+            input=json.dumps(payload),
+            text=True,
+            capture_output=True,
+            timeout=10,
+        )
 
     def run(self, event, tool=None, **kwargs):
         result = self.invoke(event, tool, **kwargs)
@@ -153,8 +181,12 @@ class CodexHookHarness:
         return self.decision("apply_patch", self.patch(body), **kwargs)
 
     def read_skill(self, exit_code=0):
-        self.run("PostToolUse", "Bash", command="cat .agents/skills/kamu-ui-prose-and-comments/SKILL.md",
-                 response=f"Chunk ID: example\nProcess exited with code {exit_code}\nFinal output:\n")
+        self.run(
+            "PostToolUse",
+            "Bash",
+            command="cat .agents/skills/kamu-ui-prose-and-comments/SKILL.md",
+            response=f"Chunk ID: example\nProcess exited with code {exit_code}\nFinal output:\n",
+        )
 
     def write_ts(self, name, content):
         (self.root / name).write_text(f"{license_header()}\n{content}\n")

@@ -7,7 +7,10 @@ import unittest
 
 from scripts.styles.check_styles import Sources, check, strip_comments
 
-def sources(scss: str, templates: str = "", code: str = "", library_code: str = "", library_styles: str = "") -> Sources:
+
+def sources(
+    scss: str, templates: str = "", code: str = "", library_code: str = "", library_styles: str = ""
+) -> Sources:
     return Sources(
         stylesheets={"a.component.scss": scss},
         templates=templates,
@@ -42,7 +45,9 @@ class LibraryClassTest(unittest.TestCase):
         self.assertEqual(messages(sources(".cdk-x {}", templates='<div [class.cdk-x]="on">')), [])
 
     def test_a_class_from_an_ng_class_object_passes(self):
-        self.assertEqual(messages(sources(".cdk-custom {}", templates="<div [ngClass]=\"{'cdk-custom': enabled}\">")), [])
+        self.assertEqual(
+            messages(sources(".cdk-custom {}", templates="<div [ngClass]=\"{'cdk-custom': enabled}\">")), []
+        )
 
     def test_a_class_from_an_ng_class_array_passes(self):
         self.assertEqual(messages(sources(".cdk-custom {}", templates="<div [ngClass]=\"['row', 'cdk-custom']\">")), [])
@@ -86,13 +91,18 @@ class CustomPropertyReadTest(unittest.TestCase):
     def test_a_property_another_stylesheet_defines_passes(self):
         src = Sources(
             {"a.scss": ".a { color: var(--accent); }", "b.scss": ":root { --accent: red; }"},
-            "", "", "", "",
+            "",
+            "",
+            "",
+            "",
         )
         self.assertEqual(messages(src), [])
 
     def test_a_property_the_theme_defines_passes(self):
         theme = ".mat-mdc-radio-button{--mat-radio-disabled-label-color:#0006}"
-        self.assertEqual(messages(sources(".a { color: var(--mat-radio-disabled-label-color); }", library_styles=theme)), [])
+        self.assertEqual(
+            messages(sources(".a { color: var(--mat-radio-disabled-label-color); }", library_styles=theme)), []
+        )
 
     def test_a_property_a_template_binds_passes(self):
         self.assertEqual(messages(sources(".a { width: var(--w); }", templates='<div [style.--w]="w">')), [])
@@ -105,13 +115,17 @@ class CustomPropertyReadTest(unittest.TestCase):
 class TokenOverrideTest(unittest.TestCase):
     def test_a_token_material_no_longer_reads_is_reported(self):
         self.assertEqual(
-            messages(sources(":host { --mat-checkbox-old-size: 4px; }", library_code="var(--mat-checkbox-state-layer-size)")),
+            messages(
+                sources(":host { --mat-checkbox-old-size: 4px; }", library_code="var(--mat-checkbox-state-layer-size)")
+            ),
             ["`--mat-checkbox-old-size` sets a token that Material no longer reads"],
         )
 
     def test_a_token_material_reads_passes(self):
         library = "var(--mat-checkbox-state-layer-size, 40px)"
-        self.assertEqual(messages(sources(":host { --mat-checkbox-state-layer-size: 32px; }", library_code=library)), [])
+        self.assertEqual(
+            messages(sources(":host { --mat-checkbox-state-layer-size: 32px; }", library_code=library)), []
+        )
 
     def test_app_properties_are_not_tokens(self):
         self.assertEqual(messages(sources(":root { --row-height: 4px; } .a { height: var(--row-height); }")), [])
@@ -119,7 +133,9 @@ class TokenOverrideTest(unittest.TestCase):
 
 class StripCommentsTest(unittest.TestCase):
     def test_urls_keep_their_double_slash(self):
-        self.assertEqual(strip_comments('a { background: url("http://x/y.png"); }'), 'a { background: url("http://x/y.png"); }')
+        self.assertEqual(
+            strip_comments('a { background: url("http://x/y.png"); }'), 'a { background: url("http://x/y.png"); }'
+        )
 
     def test_protocol_relative_urls_keep_their_double_slash(self):
         self.assertEqual(strip_comments("a { background: url(//cdn/x.png); }"), "a { background: url(//cdn/x.png); }")

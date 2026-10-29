@@ -30,7 +30,9 @@ def added_lines(old: str, new: str) -> list[str]:
 
 def head_version(rel: str) -> str | None:
     try:
-        return subprocess.run(["git", "show", f"HEAD:{rel}"], cwd=ROOT, capture_output=True, text=True, check=True).stdout
+        return subprocess.run(
+            ["git", "show", f"HEAD:{rel}"], cwd=ROOT, capture_output=True, text=True, check=True
+        ).stdout
     except (subprocess.CalledProcessError, OSError):
         return None
 
@@ -88,7 +90,11 @@ def prettier(path: Path) -> str | None:
     try:
         result = subprocess.run(
             [str(project.PRETTIER), "--write", "--log-level", "warn", str(path)],
-            cwd=ROOT, capture_output=True, text=True, timeout=60, env=project.node_env(),
+            cwd=ROOT,
+            capture_output=True,
+            text=True,
+            timeout=60,
+            env=project.node_env(),
         )
     except (OSError, subprocess.TimeoutExpired) as e:
         return str(e)

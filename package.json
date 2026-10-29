@@ -21,6 +21,8 @@
     "release-major": "npm version major -m \"Release v%s\"",
     "release-minor": "npm version minor -m \"Release v%s\"",
     "release-patch": "npm version patch -m \"Release v%s\"",
+    "ruff": "uv run --project e2e ruff check scripts e2e && uv run --project e2e ruff format --check scripts e2e",
+    "ruff-fix": "uv run --project e2e ruff check --fix scripts e2e && uv run --project e2e ruff format scripts e2e",
     "start": "ng serve --watch",
     "start:no-watch": "ng serve --watch=false",
     "stylelint": "stylelint '**/*.scss'",

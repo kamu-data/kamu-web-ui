@@ -17,3 +17,4 @@ __screenshots__/
 .claude/worktrees/
 .spec
 __pycache__/
+.venv/

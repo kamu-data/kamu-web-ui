@@ -14,10 +14,15 @@ def main() -> int:
     payload = read_payload()
     if payload.get("source") in {"clear", "compact"} and payload.get("session_id"):
         forget_session(payload["session_id"], CODEX_STATE)
-    emit(additional_context("SessionStart", contract(
-        "a shell read of its SKILL.md (for example `cat .agents/skills/<skill>/SKILL.md`)",
-        "require explicit user authorization in AGENTS.md",
-    )))
+    emit(
+        additional_context(
+            "SessionStart",
+            contract(
+                "a shell read of its SKILL.md (for example `cat .agents/skills/<skill>/SKILL.md`)",
+                "require explicit user authorization in AGENTS.md",
+            ),
+        )
+    )
     return 0
 
 

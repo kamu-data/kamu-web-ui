@@ -16,8 +16,8 @@ from __future__ import annotations
 import re
 from pathlib import Path
 
-from scripts.agents.common import ROOT, load_state, locked_state, matches, now, policy, repo_relative, runtime_state_dir
 from scripts.agents.command_policy import lex, segments
+from scripts.agents.common import ROOT, load_state, locked_state, matches, now, policy, repo_relative, runtime_state_dir
 
 EXPIRY_SECONDS = 14 * 24 * 3600
 SKILL_FILE = re.compile(r"(?:^|/)\.(?:claude|agents)/skills/([^/]+)/SKILL\.md$")

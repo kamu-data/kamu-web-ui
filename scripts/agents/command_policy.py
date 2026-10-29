@@ -67,9 +67,22 @@ BRANCH_REASON = (
 # Flags that make `git branch <name>` act on the name instead of creating it. Output modifiers
 # such as `-v`, `--color`, `--sort` or `--format` are not here: with a name, git still creates it.
 BRANCH_LISTING = {
-    "-a", "--all", "-r", "--remotes", "-l", "--list", "--show-current",
-    "--contains", "--no-contains", "--merged", "--no-merged", "--points-at",
-    "-u", "--set-upstream-to", "--unset-upstream", "--edit-description",
+    "-a",
+    "--all",
+    "-r",
+    "--remotes",
+    "-l",
+    "--list",
+    "--show-current",
+    "--contains",
+    "--no-contains",
+    "--merged",
+    "--no-merged",
+    "--points-at",
+    "-u",
+    "--set-upstream-to",
+    "--unset-upstream",
+    "--edit-description",
 }
 BRANCH_CREATE = {"-c", "-C", "--copy", "-t", "--track", "--no-track"}
 # Output options of `git branch` whose value may follow as a separate argument.
@@ -167,7 +180,19 @@ def unwrap(argv: list[str], env: dict[str, str]) -> list[str]:
                     argv = shlex.split(argv.pop(0)) + argv
                 elif tok == "--":
                     break
-        elif head in {"sudo", "doas", "nohup", "exec", "command", "builtin", "setsid", "stdbuf", "ionice", "nice", "time"}:
+        elif head in {
+            "sudo",
+            "doas",
+            "nohup",
+            "exec",
+            "command",
+            "builtin",
+            "setsid",
+            "stdbuf",
+            "ionice",
+            "nice",
+            "time",
+        }:
             argv = argv[1:]
             while argv and argv[0].startswith("-"):
                 tok = argv.pop(0)
@@ -286,9 +311,14 @@ def judge_git(args: list[str]) -> Verdict | None:
     if sub == "checkout-index" and (flags & {"-f", "--force"} or short("f")):
         return discard()
     moves_head = sub == "reset" and (
-        flags & {"--soft", "--mixed", "--keep", "--merge"} or any(a.startswith(("HEAD~", "HEAD^", "origin/")) for a in rest)
+        flags & {"--soft", "--mixed", "--keep", "--merge"}
+        or any(a.startswith(("HEAD~", "HEAD^", "origin/")) for a in rest)
     )
-    if sub in GIT_ASK or moves_head or (sub == "branch" and flags & {"-D", "-d", "--delete", "-f", "--force", "-m", "-M"}):
+    if (
+        sub in GIT_ASK
+        or moves_head
+        or (sub == "branch" and flags & {"-D", "-d", "--delete", "-f", "--force", "-m", "-M"})
+    ):
         if sub == "tag" and (not rest or flags & {"-l", "--list"}):
             return None
         return Verdict(("ask", APPROVAL_REASON.format(sub=sub)), "approval")
@@ -319,7 +349,11 @@ def node_version_verdicts(command: str) -> list[Verdict]:
             continue
         if argv[:2] == ["nvm", "use"] and sep == "&&":
             selected = True
-        elif argv[0].rsplit("/", 1)[-1] in project.NODE_TOOLS and not selected and argv[1:] not in (["--version"], ["-v"]):
+        elif (
+            argv[0].rsplit("/", 1)[-1] in project.NODE_TOOLS
+            and not selected
+            and argv[1:] not in (["--version"], ["-v"])
+        ):
             cmd = " ".join(argv)
             found.append(Verdict(("deny", NODE_VERSION_REASON.format(cmd=cmd)), "node-version"))
     return found
@@ -404,7 +438,10 @@ def verdicts(command: str, depth: int = 0) -> list[Verdict]:
 def fallback(command: str) -> list[Verdict]:
     """Unlexable input (e.g. unbalanced quotes): scan the raw text, erring towards refusal."""
     found = []
-    if re.search(r"\bgit\s+(reset\s+--hard|clean\s+-\w*f|checkout\s+(--|\.)|stash(\s+(push|save|drop|clear))?\s*($|[;&|]))", command):
+    if re.search(
+        r"\bgit\s+(reset\s+--hard|clean\s+-\w*f|checkout\s+(--|\.)|stash(\s+(push|save|drop|clear))?\s*($|[;&|]))",
+        command,
+    ):
         found.append(Verdict(("deny", DISCARD_REASON.format(cmd="git ...")), "discard"))
     if re.search(r"\bgit\s+(commit|push|merge|rebase)\b", command):
         found.append(Verdict(("ask", APPROVAL_REASON.format(sub="...")), "approval"))

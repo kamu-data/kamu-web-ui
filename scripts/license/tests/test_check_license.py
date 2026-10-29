@@ -50,8 +50,16 @@ class HasHeaderTest(unittest.TestCase):
 
 class ScopeTest(unittest.TestCase):
     def test_scripts_config_and_styles_are_in_scope(self):
-        for rel in ["e2e/visual/cli.mjs", "update-changelog.js", "eslint.config.mjs", "vitest-base.config.ts",
-                    "scripts/agents/common.py", "e2e/run.sh", "src/styles.scss", "src/app/a/a.component.scss"]:
+        for rel in [
+            "e2e/visual/cli.mjs",
+            "update-changelog.js",
+            "eslint.config.mjs",
+            "vitest-base.config.ts",
+            "scripts/agents/common.py",
+            "e2e/run.sh",
+            "src/styles.scss",
+            "src/app/a/a.component.scss",
+        ]:
             with self.subTest(rel=rel):
                 self.assertTrue(in_scope(rel))
 
@@ -59,7 +67,12 @@ class ScopeTest(unittest.TestCase):
         self.assertFalse(in_scope("src/app/a/a.component.ts"))
 
     def test_generated_files_and_other_kinds_are_out_of_scope(self):
-        for rel in ["src/app/editor/generated/monaco-version.js", "package.json", "README.md", "e2e/catalogue/query.yaml"]:
+        for rel in [
+            "src/app/editor/generated/monaco-version.js",
+            "package.json",
+            "README.md",
+            "e2e/catalogue/query.yaml",
+        ]:
             with self.subTest(rel=rel):
                 self.assertFalse(in_scope(rel))
 

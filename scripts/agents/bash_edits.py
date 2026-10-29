@@ -41,7 +41,10 @@ def snapshot(root: Path = ROOT) -> Snapshot:
     try:
         listed = subprocess.run(
             ["git", "ls-files", "--cached", "--others", "--exclude-standard", "-z"],
-            cwd=root, capture_output=True, text=True, check=False,
+            cwd=root,
+            capture_output=True,
+            text=True,
+            check=False,
         )
     except OSError:
         return {}
@@ -133,9 +136,13 @@ def check_changed(paths: list[str], reader: str, skills_state: Path, load_with: 
         notes += n
     missing = missing_skills([rel for rel in paths if not is_generated(rel)], reader, skills_state)
     if missing:
-        lines = ["Changed through the shell without the governing skill loaded (AGENTS.md, 'What to load for which task'):"]
+        lines = [
+            "Changed through the shell without the governing skill loaded (AGENTS.md, 'What to load for which task'):"
+        ]
         for rel, skills in missing.items():
             how = "; ".join(load_with.format(skill=s) for s in skills)
-            lines.append(f"- {rel} needs {', '.join(f'`{s}`' for s in skills)} — load with {how}, then re-check the change")
+            lines.append(
+                f"- {rel} needs {', '.join(f'`{s}`' for s in skills)} — load with {how}, then re-check the change"
+            )
         notes.append("\n".join(lines))
     return list(dict.fromkeys(problems)), list(dict.fromkeys(notes))

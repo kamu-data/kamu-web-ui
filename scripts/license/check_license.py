@@ -60,7 +60,10 @@ def source_files(root: Path) -> list[str]:
     """Tracked files and new ones git does not ignore."""
     out = subprocess.run(
         ["git", "ls-files", "--cached", "--others", "--exclude-standard"],
-        cwd=root, capture_output=True, text=True, check=True,
+        cwd=root,
+        capture_output=True,
+        text=True,
+        check=True,
     ).stdout
     return sorted(rel for rel in out.splitlines() if (root / rel).is_file())
 

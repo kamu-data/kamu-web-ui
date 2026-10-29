@@ -21,16 +21,25 @@ class AddedTextTest(unittest.TestCase):
         self.assertEqual(added_lines(old, new), ["c"])
 
     def test_banned_constructs_are_flagged(self):
-        for line in ["    console.log(x);", "    // eslint-disable-next-line @typescript-eslint/no-explicit-any",
-                     "/* eslint-disable */", "    standalone: true,",
-                     "    constructor(private http: HttpClient) {}",
-                     "    public constructor(private readonly api: DatasetApi, x: number) {}"]:
+        for line in [
+            "    console.log(x);",
+            "    // eslint-disable-next-line @typescript-eslint/no-explicit-any",
+            "/* eslint-disable */",
+            "    standalone: true,",
+            "    constructor(private http: HttpClient) {}",
+            "    public constructor(private readonly api: DatasetApi, x: number) {}",
+        ]:
             with self.subTest(line=line):
                 self.assertTrue(flagged(line))
 
     def test_focused_and_disabled_specs_are_flagged_in_specs_only(self):
-        for line in ['describe.only("X", () => {', '    it.only("works", () => {', '    it.skip("later", () => {',
-                     'describe.skip("X", () => {', '    test.only("works", () => {']:
+        for line in [
+            'describe.only("X", () => {',
+            '    it.only("works", () => {',
+            '    it.skip("later", () => {',
+            'describe.skip("X", () => {',
+            '    test.only("works", () => {',
+        ]:
             with self.subTest(line=line):
                 self.assertTrue(flagged(line, "src/app/x.component.spec.ts"))
                 self.assertFalse(flagged(line, "src/app/x.component.ts"))
@@ -39,51 +48,89 @@ class AddedTextTest(unittest.TestCase):
                 self.assertFalse(flagged(line, "src/app/x.component.spec.ts"))
 
     def test_guards_and_resolvers_must_not_navigate(self):
-        for rel in ["src/app/auth/guards/admin.guard.ts", "src/app/dataset-view/resolvers/dataset-view.resolver.ts",
-                    "src/app/dataset-view/resolvers/dataset-access.helpers.ts"]:
-            for line in ["        navigationService.navigateToPageNotFound();", "    this.navigationService.navigateToHome();",
-                         "    void router.navigate([ProjectLinks.URL_HOME]);", "    router.navigateByUrl(url);"]:
+        for rel in [
+            "src/app/auth/guards/admin.guard.ts",
+            "src/app/dataset-view/resolvers/dataset-view.resolver.ts",
+            "src/app/dataset-view/resolvers/dataset-access.helpers.ts",
+        ]:
+            for line in [
+                "        navigationService.navigateToPageNotFound();",
+                "    this.navigationService.navigateToHome();",
+                "    void router.navigate([ProjectLinks.URL_HOME]);",
+                "    router.navigateByUrl(url);",
+            ]:
                 with self.subTest(rel=rel, line=line):
                     self.assertTrue(flagged(line, rel))
-        for line in ["        return navigationService.pageNotFoundRedirect();", "    return navigationService.homeUrlTree();"]:
+        for line in [
+            "        return navigationService.pageNotFoundRedirect();",
+            "    return navigationService.homeUrlTree();",
+        ]:
             with self.subTest(line=line):
                 self.assertFalse(flagged(line, "src/app/dataset-view/resolvers/dataset-view.resolver.ts"))
         self.assertFalse(flagged("        navigationService.navigateToHome();", "src/app/x.component.ts"))
-        self.assertFalse(flagged("        navigationService.navigateToHome();", "src/app/common/helpers/app.helpers.ts"))
-        self.assertFalse(flagged("        navigationService.navigateToHome();", "src/app/auth/guards/admin.guard.spec.ts"))
+        self.assertFalse(
+            flagged("        navigationService.navigateToHome();", "src/app/common/helpers/app.helpers.ts")
+        )
+        self.assertFalse(
+            flagged("        navigationService.navigateToHome();", "src/app/auth/guards/admin.guard.spec.ts")
+        )
 
     def test_class_interceptors_are_flagged(self):
-        for line in ["    provideHttpClient(withInterceptorsFromDi()),", "    { provide: HTTP_INTERCEPTORS, useClass: X, multi: true },"]:
+        for line in [
+            "    provideHttpClient(withInterceptorsFromDi()),",
+            "    { provide: HTTP_INTERCEPTORS, useClass: X, multi: true },",
+        ]:
             with self.subTest(line=line):
                 self.assertTrue(flagged(line, "src/app/x.component.spec.ts"))
         self.assertFalse(flagged("    provideHttpClient(withInterceptors([authInterceptor])),", "src/main.ts"))
 
     def test_comments_must_not_cite_plans_or_narrate_history(self):
-        for line in ["// see plan 7 item 3", "// fixes KAMU-123", "    // per issue #860",
-                     " * This used to be a Subject", "// renamed from DatasetsComponent", "// this change adds retries",
-                     "<!-- was previously a table -->", "    /* no longer used by flows */"]:
+        for line in [
+            "// see plan 7 item 3",
+            "// fixes KAMU-123",
+            "    // per issue #860",
+            " * This used to be a Subject",
+            "// renamed from DatasetsComponent",
+            "// this change adds retries",
+            "<!-- was previously a table -->",
+            "    /* no longer used by flows */",
+        ]:
             with self.subTest(line=line):
                 self.assertTrue(flagged(line))
         self.assertTrue(flagged("<!-- see JIRA-12 -->", "src/app/x.component.html"))
         self.assertTrue(flagged("// renamed from foo", "src/app/x.component.scss"))
 
     def test_app_text_never_names_kamu_cli(self):
-        for line in ["/** kamu-cli rejects a value over 16 KiB. */", '    it("should show a name kamu-cli rejects", async () => {',
-                     "<!-- as Kamu-CLI parses it -->"]:
+        for line in [
+            "/** kamu-cli rejects a value over 16 KiB. */",
+            '    it("should show a name kamu-cli rejects", async () => {',
+            "<!-- as Kamu-CLI parses it -->",
+        ]:
             with self.subTest(line=line):
                 self.assertTrue(flagged(line, "src/app/x.component.ts") or flagged(line, "src/app/x.component.html"))
-        for line in ['import { DataAccessKamuCliTabComponent } from "src/app/data-access-panel/data-access-modal/tabs/data-access-kamu-cli-tab/data-access-kamu-cli-tab.component";',
-                     '    selector: "app-data-access-kamu-cli-tab",', '        name: "Kamu CLI",',
-                     "/** The backend rejects a value over 16 KiB. */"]:
+        for line in [
+            'import { DataAccessKamuCliTabComponent } from "src/app/data-access-panel/data-access-modal/tabs/data-access-kamu-cli-tab/data-access-kamu-cli-tab.component";',
+            '    selector: "app-data-access-kamu-cli-tab",',
+            '        name: "Kamu CLI",',
+            "/** The backend rejects a value over 16 KiB. */",
+        ]:
             with self.subTest(line=line):
                 self.assertFalse(flagged(line, "src/app/x.component.ts"))
         self.assertFalse(flagged("# kamu-cli build", "scripts/agents/project.py"))
 
     def test_legitimate_text_passes(self):
-        for line in ["        //-----//", "// UTF-8 bytes, SHA-256 digest, ISO-8601 dates", "// Step 1: load the plan",
-                     'const url = "http://host/plan 7";', "    console.error(e);", "    standalone: false,",
-                     "    private api = inject(DatasetApi);", "    constructor() {", "const plan = new Plan(7);",
-                     "// it's a large, but default tab, so don't load it lazily"]:
+        for line in [
+            "        //-----//",
+            "// UTF-8 bytes, SHA-256 digest, ISO-8601 dates",
+            "// Step 1: load the plan",
+            'const url = "http://host/plan 7";',
+            "    console.error(e);",
+            "    standalone: false,",
+            "    private api = inject(DatasetApi);",
+            "    constructor() {",
+            "const plan = new Plan(7);",
+            "// it's a large, but default tab, so don't load it lazily",
+        ]:
             with self.subTest(line=line):
                 self.assertFalse(flagged(line))
 
@@ -93,7 +140,9 @@ class AddedTextTest(unittest.TestCase):
 
     def test_nudges_name_the_follow_up_command(self):
         self.assertIn("gql-codegen", nudges("src/app/api/gql/account/account-by-name.graphql", ["x"])[0])
-        self.assertIn("build-prod", nudges("src/app/dataset-view/dataset-view-routing.ts", ["        loadChildren: () =>"])[0])
+        self.assertIn(
+            "build-prod", nudges("src/app/dataset-view/dataset-view-routing.ts", ["        loadChildren: () =>"])[0]
+        )
         self.assertEqual(nudges("src/app/dataset-view/dataset-view-routing.ts", ["        path: x,"]), [])
         self.assertIn("npm install", nudges("package.json", ['"x": "1"'])[0])
         self.assertEqual(nudges("src/app/app.component.ts", ["x"]), [])
@@ -130,8 +179,15 @@ class LicenseTest(unittest.TestCase):
 
     def test_new_stylesheets_scripts_and_configs_need_the_header(self):
         self.file.write_text(".a {}\n")
-        for rel in ["src/new.scss", "src/app/x/x.component.scss", "e2e/visual/new.mjs", "scripts/new.py",
-                    "e2e/run.sh", "new.config.ts", "src/new-entry.ts"]:
+        for rel in [
+            "src/new.scss",
+            "src/app/x/x.component.scss",
+            "e2e/visual/new.mjs",
+            "scripts/new.py",
+            "e2e/run.sh",
+            "new.config.ts",
+            "src/new-entry.ts",
+        ]:
             with self.subTest(rel=rel):
                 self.assertIn("npm run check-license", check_license(rel, self.file)[0])
         self.file.write_text(LICENSE_HEADER + "\n\n.a {}\n")
@@ -151,8 +207,12 @@ class LicenseTest(unittest.TestCase):
 
     def test_committed_generated_and_out_of_scope_files_are_exempt(self):
         self.file.write_text("export const x = 1;\n")
-        for rel in ["src/app/app.component.ts", "src/app/api/kamu.graphql.interface.ts",
-                    "src/app/editor/generated/monaco-version.ts", "README.md"]:
+        for rel in [
+            "src/app/app.component.ts",
+            "src/app/api/kamu.graphql.interface.ts",
+            "src/app/editor/generated/monaco-version.ts",
+            "README.md",
+        ]:
             with self.subTest(rel=rel):
                 self.assertEqual(check_license(rel, self.file), [])
 

@@ -18,10 +18,16 @@ PRETTIER_AVAILABLE = PRETTIER.exists()
 
 def make_scratch_repo(root: Path) -> None:
     for package in ("agents", "license"):
-        shutil.copytree(ROOT / "scripts" / package, root / "scripts" / package,
-                        ignore=shutil.ignore_patterns("__pycache__", "tests"))
-    shutil.copytree(ROOT / "scripts" / "agents" / "tests", root / "scripts" / "agents" / "tests",
-                    ignore=shutil.ignore_patterns("__pycache__"))
+        shutil.copytree(
+            ROOT / "scripts" / package,
+            root / "scripts" / package,
+            ignore=shutil.ignore_patterns("__pycache__", "tests"),
+        )
+    shutil.copytree(
+        ROOT / "scripts" / "agents" / "tests",
+        root / "scripts" / "agents" / "tests",
+        ignore=shutil.ignore_patterns("__pycache__"),
+    )
     shutil.copytree(ROOT / ".claude" / "hooks", root / ".claude" / "hooks")
     header = root / LICENSE_HEADER_FILE.relative_to(ROOT)
     header.parent.mkdir(parents=True)

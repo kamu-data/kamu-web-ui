@@ -12,7 +12,8 @@ from scripts.agents.common import policy
 
 def contract(load_with: str = "the Skill tool", command_approval: str = "ask every time") -> str:
     guarded = "\n".join(
-        f"  - {', '.join(r['paths'])} → `{r['skill']}`" + (" (in addition to any match above)" if r.get("baseline") else "")
+        f"  - {', '.join(r['paths'])} → `{r['skill']}`"
+        + (" (in addition to any match above)" if r.get("baseline") else "")
         for r in policy()["skills"]
     )
     generated = "\n".join(f"  - {', '.join(r['paths'])} → `{r['command']}`" for r in policy()["generated"])

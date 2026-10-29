@@ -15,6 +15,7 @@ import shutil
 import signal
 import sys
 import time
+import traceback
 from datetime import UTC, datetime
 from pathlib import Path
 
@@ -121,9 +122,8 @@ async def compare_command(args) -> None:
     # Once per run: the kit may be edited while a long run goes on
     kit = kit_hash()
     browser = Browser(CHROME, CDP_PORT)
-    sections = []
 
-    for profile_name, scenarios in selection.items():
+    async def compare_profile(profile_name: str, scenarios: list) -> str:
         profile = PROFILES[profile_name]
         names = [sc.name for sc in scenarios]
         data_id, backend_id = profile.data_id(backend), profile.backend_id(backend)
@@ -194,17 +194,35 @@ async def compare_command(args) -> None:
                 await capture(rescenarios, head_target, browser, again, log)
                 second = compare(str(base_dir), str(again), str(profile_dir / "recheck-diff"), pixels_only)
                 recheck = {name: "noise" if second[name]["verdict"] == "same" else "confirmed" for name in pixels_only}
-            sections.append(profile_section(profile_name, summary, recheck, failures, diff_dir))
+            return profile_section(profile_name, summary, recheck, failures, diff_dir)
         finally:
             for s in served:
                 s.stop()
             server.stop()
+
+    sections, failed = [], []
+    for profile_name, scenarios in selection.items():
+        try:
+            sections.append(await compare_profile(profile_name, scenarios))
+        except Exception as e:
+            # The other profiles still run and are reported; the run fails at the end
+            log(f"[{profile_name}] failed: {e}")
+            with open(run_dir / "run.log", "a") as f:
+                f.write(traceback.format_exc())
+            failed.append(profile_name)
+            sections.append(failed_section(profile_name, e))
 
     minutes = round((time.monotonic() - started) / 60)
     report_file = run_dir / "report.md"
     header = ["# Visual comparison", "", f"- base: {base.label}", f"- head: {head.label}", f"- {minutes} min", ""]
     report_file.write_text("\n".join(header + sections))
     log(f"report: {report_file}")
+    if failed:
+        raise RuntimeError(f"{len(failed)} of {len(selection)} profiles failed: {', '.join(failed)}")
+
+
+def failed_section(profile: str, error: Exception) -> str:
+    return "\n".join([f"## {profile}", "", "The profile failed:", "", "```", str(error), "```", ""])
 
 
 def profile_section(profile: str, summary: dict, recheck: dict, failures: list[str], diff_dir: Path) -> str:

@@ -234,7 +234,7 @@ nor a backend:
 | `port … is already in use` | another run, or a container left by an interrupted one; `docker ps` |
 | A transform flow fails with an engine timeout | the engine could not start or be reached inside a container: check `engine.networkNs` and the server log under `runs/<time>/backend-<profile>/` |
 | `pixels-only, confirmed` in a scenario that shows ids or times | a volatile format the masks do not know yet |
-| One profile fails and the run has no report | a failing profile aborts the run |
+| A profile's section in `report.md` says it failed, and the run exits with an error | its backend did not start, the schema check failed, or a capture broke; the other profiles are still compared, and the traceback is in `run.log` |
 
 ## Rejected approaches
 

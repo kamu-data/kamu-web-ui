@@ -5,9 +5,10 @@
  * included in the LICENSE file.
  */
 
-// The app's route table, read statically from the routing files with the TypeScript compiler:
-// `path` values (string literals, templates, enum members and static constants), `children`, and
-// `loadChildren` imports followed into the routes they load.
+// Prints the app's route table as a JSON array: `node routes.mjs <repo root>`. Read statically from
+// the routing files with the TypeScript compiler: `path` values (string literals, templates, enum
+// members and static constants), `children`, and `loadChildren` imports followed into the routes
+// they load.
 import fs from "node:fs";
 import path from "node:path";
 
@@ -105,7 +106,7 @@ function lazyTarget(lazy, file) {
  * Every route pattern, as the full path below the app root (`:accountName/:datasetName/history`),
  * starting from `src/app/app-routing.ts`.
  */
-export function routeTable(root) {
+function routeTable(root) {
   const values = constants(path.join(root, "src/app"));
   const out = new Set();
 
@@ -154,3 +155,5 @@ export function routeTable(root) {
   if (/path:\s*"\*\*"/.test(fs.readFileSync(appRouting, "utf8"))) out.add("**");
   return [...out].sort();
 }
+
+console.log(JSON.stringify(routeTable(path.resolve(process.argv[2] ?? "."))));

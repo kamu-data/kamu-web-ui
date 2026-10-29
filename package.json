@@ -31,8 +31,8 @@
     "test": "ng test --no-progress --no-watch",
     "test-coverage": "ng test --no-progress --no-watch --coverage",
     "version": "node update-changelog.js && git add CHANGELOG.md LICENSE.txt",
-    "visual": "node e2e/visual/cli.mjs",
-    "visual-test": "python3 -m unittest discover -q -s e2e/visual/tests -t ."
+    "visual": "uv run --project e2e python -m e2e.visual",
+    "visual-test": "uv run --project e2e python -m unittest discover -q -s e2e/visual/tests -t ."
   },
   "private": true,
   "dependencies": {

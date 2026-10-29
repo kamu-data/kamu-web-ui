@@ -26,8 +26,8 @@ changed and why. Unexpected changes are regressions to fix, not to explain.
 
 ## Prerequisites
 
-- Google Chrome (`CHROME_BIN` to override), Python 3 with Pillow, and docker or podman for the
-  `with-data-mt` profile.
+- Google Chrome (`CHROME_BIN` to override), [uv](https://docs.astral.sh/uv/) (it installs the kit's
+  Python dependencies from `e2e/pyproject.toml`), and docker or podman for the `with-data-mt` profile.
 - A kamu build whose GraphQL schema matches the app: `KAMU_BIN=<path to kamu-cli>`. Before
   capturing, the run validates every `.graphql` document of both trees against the schema the
   backend serves and stops on a mismatch; an older build makes pages hang on "Loading…" instead.
@@ -62,7 +62,7 @@ scenario selection, so a second run against the same base only captures the head
 The style diff covers the subtrees of Material, ngb, ng-select, multiselect, table, stepper and
 modal roots, every element that a class from `src/assets/styles/var.scss` of the base matches,
 and forced `:hover`, `:focus` and `:active` states of the `FORCE_TARGETS` in
-`e2e/visual/scenarios.mjs`. A change elsewhere shows as pixels only.
+`e2e/visual/scenarios.py`. A change elsewhere shows as pixels only.
 
 ## The catalogue and the tiers
 
@@ -76,9 +76,9 @@ entries too, for checking the kit itself.
 
 | Profile | Data | Notes |
 |---|---|---|
-| `seed` | `e2e/fixtures/seed.mjs` builds it through the API from `e2e/fixtures/seed/` | accounts `kamu` (admin, `kamu.dev`), `alice`, `bob`; nothing is scheduled, so it never changes |
+| `seed` | `e2e/fixtures/seed.py` builds it through the API from `e2e/fixtures/seed/` | accounts `kamu` (admin, `kamu.dev`), `alice`, `bob`; nothing is scheduled, so it never changes |
 | `empty` | accounts only | empty states |
-| `with-data-mt` | kamu-cli's published image of real datasets and organizations, pinned by digest in `e2e/fixtures/profiles.mjs` | run with a config that adds a signing key (for `/query`) and one query partition; read-only |
+| `with-data-mt` | kamu-cli's published image of real datasets and organizations, pinned by digest in `e2e/fixtures/profiles.py` | run with a config that adds a signing key (for `/query`) and one query partition; read-only |
 
 Workspaces are cached by their sources and the kamu build; ids and hashes differ between two
 builds of a workspace, so both sides of a comparison always use the same one.
@@ -88,7 +88,7 @@ builds of a workspace, so both sides of a comparison always use the same one.
 1. Find or draft the catalogue entry (empty `tier` and `why`, then ask for the rating).
 2. Probe the page: `npm run visual -- probe --profile seed /kamu/population/history`.
 3. Append the scenario to `SCENARIOS` with the next free number; never renumber, the name is the
-   comparison key. Give it `waitFor` and `expectText`, so an empty or broken page fails loudly.
+   comparison key. Give it `wait_for` and `expect_text`, so an empty or broken page fails loudly.
 4. Mind the order: scenarios share one tab per profile, and pages after account flows and after
    the data access modal show whether a component's styles leak. Logged-out (`phase: "anon"`)
    scenarios come last.

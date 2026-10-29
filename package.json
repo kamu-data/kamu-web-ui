@@ -9,6 +9,7 @@
     "build:stats": "ng build --stats-json",
     "check-license": "python3 -m unittest discover -q -s scripts/license/tests -t . && python3 scripts/license/check_license.py",
     "check-styles": "python3 -m unittest discover -q -s scripts/styles/tests -t . && python3 scripts/styles/check_styles.py",
+    "e2e-check": "uv run --project e2e python -m unittest discover -q -s e2e/visual/tests -t . && uv run --project e2e python -m e2e.visual check",
     "gql-codegen": "graphql-codegen --config gql-codegen.yml",
     "gql-update-schema": "curl https://raw.githubusercontent.com/kamu-data/kamu-cli/master/resources/schema.gql > resources/schema.graphql",
     "lint": "eslint .",
@@ -31,8 +32,7 @@
     "test": "ng test --no-progress --no-watch",
     "test-coverage": "ng test --no-progress --no-watch --coverage",
     "version": "node update-changelog.js && git add CHANGELOG.md LICENSE.txt",
-    "visual": "uv run --project e2e python -m e2e.visual",
-    "visual-test": "uv run --project e2e python -m unittest discover -q -s e2e/visual/tests -t ."
+    "visual": "uv run --project e2e python -m e2e.visual"
   },
   "private": true,
   "dependencies": {

@@ -21,7 +21,7 @@ jobs:
       - run: npm run stylelint
       - run: npm run check-styles
       - run: npm run check-license
-      - run: npm run visual-test
+      - run: npm run e2e-check
       - run: npm run ruff
       # Skills, AGENTS.md and design docs are what this checks, so it runs on documentation-only changes too
       - run: npm run lint-harness

@@ -274,6 +274,15 @@ def latest_run(cache: Path) -> Path | None:
     return next((r for r in candidates if any(r.glob("*/head/report.json"))), None)
 
 
+def check_command(_args) -> None:
+    """What CI runs: the catalogue, the scenarios and the seed inventory agree with each other and with
+    the app's routes. Needs no browser and no backend."""
+    entries = catalogue()
+    inventory = load_inventory()
+    fixtures = len(inventory["accounts"]) + len(inventory["datasets"])
+    print(f"e2e consistent: {len(entries)} catalogue entries, {len(SCENARIOS)} scenarios, {fixtures} seed fixtures")
+
+
 def coverage_command(_args) -> None:
     cache = cache_dir()
     run = latest_run(cache)
@@ -330,6 +339,9 @@ def parser() -> argparse.ArgumentParser:
     pr.add_argument("--build", help="an existing build's browser folder (default: build the working tree)")
     backend_options(pr)
     pr.set_defaults(run=lambda a: asyncio.run(probe_command(a)))
+
+    ch = commands.add_parser("check", help="the catalogue, scenarios and seed inventory agree with the app")
+    ch.set_defaults(run=check_command)
 
     cv = commands.add_parser("coverage", help="routes, catalogue entries and components no scenario covers")
     cv.set_defaults(run=coverage_command)

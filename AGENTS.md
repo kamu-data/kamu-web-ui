@@ -72,12 +72,12 @@ The hooks resolve the pinned version for their own formatting runs.
 | `scripts/styles/` | `npm run check-styles` (runs its tests first) |
 | A new script, config or stylesheet, or `scripts/license/` | `npm run check-license` (runs its tests first) |
 | Styles that can change what users see, or a Material, Bootstrap or ng-select upgrade | `npm run visual -- compare` (`kamu-ui-visual-checks`) |
-| `e2e/` | `npm run lint`, `npm run visual-test`, and a `compare` run of what changed |
+| `e2e/` | `npm run lint`, `npm run e2e-check`, and a `compare` run of what changed |
 | `scripts/agents/`, `.claude/`, `.codex/`, skills, `AGENTS.md`, `CLAUDE.md`, `docs/internal/` | `npm run lint-harness` |
 | Any Python file (`scripts/`, `e2e/`) | `npm run ruff` (`npm run ruff-fix` formats and fixes); needs [uv](https://docs.astral.sh/uv/) |
 
 - CI (`.github/workflows/build.yaml`) runs `prettier-check`, `lint`, `stylelint`, `check-styles`,
-  `check-license`, `visual-test`, `ruff`, `lint-harness`, `test`, `build` and `build-prod`; the full set
+  `check-license`, `e2e-check`, `ruff`, `lint-harness`, `test`, `build` and `build-prod`; the full set
   before a PR is the same list.
 - Treat lint errors as errors to fix. Do not silence them with `eslint-disable` or
   `stylelint-disable` comments: a pragma hides the problem instead of resolving it. If a rule

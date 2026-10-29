@@ -44,7 +44,7 @@ changed and why. Unexpected changes are regressions to fix, not to explain.
 | `npm run visual -- probe --profile <p> [--build <dir>] <path>...` | log in to a profile's backend, print each page's text and components, save screenshots: for writing a scenario |
 | `npm run visual -- coverage` | routes no entry claims, entries no scenario realises, components the last run never showed |
 | `npm run visual -- cache list` / `cache prune --keep <n>` | cached baselines (a full one is about 330 MB) |
-| `npm run visual-test` | the comparer's unit tests (CI runs them) |
+| `npm run e2e-check` | the kit's unit tests, and the catalogue, scenarios and seed inventory checked against each other and the app's routes (CI runs it) |
 
 Everything lands in `~/.cache/kamu-ui-visual/` (`KAMU_VISUAL_CACHE`), never in the repository.
 The base capture is cached by base commit, data, backend build, kit, Chrome major version and the

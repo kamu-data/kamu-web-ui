@@ -16,9 +16,9 @@ from pathlib import Path
 
 from scripts.agents.common import ROOT, matches
 
-# The header eslint's `license-header/header` rule enforces; this file is its single source
+# The header eslint's `license-header/header` rule and `npm run check-styles` enforce; this file is its single source
 LICENSE_HEADER_FILE = ROOT / "src" / "docs" / "license-header-template.js"
-LICENSE_SCOPE = ["src/app/**/*.ts"]
+LICENSE_SCOPE = ["src/app/**/*.ts", "src/**/*.scss"]
 LICENSE_EXEMPT = ["src/app/api/kamu.graphql.interface.ts", "src/app/editor/generated/**"]
 
 # Node tools run on the version `.nvmrc` pins, resolved through nvm

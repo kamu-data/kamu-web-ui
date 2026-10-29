@@ -1,3 +1,10 @@
+/**
+ * Copyright Kamu Data, Inc. and contributors. All rights reserved.
+ *
+ * Use of this software is governed by the Business Source License
+ * included in the LICENSE file.
+ */
+
 .pdf-viewer-header {
     padding: 10px;
     background: #f5f5f5;
@@ -17,7 +24,6 @@
     }
 }
 
-/* stylelint-disable-next-line selector-id-pattern */
 #editorStamp,
 #editorStampButton,
 #secondaryToolbarToggle,

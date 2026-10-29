@@ -1,3 +1,10 @@
+/**
+ * Copyright Kamu Data, Inc. and contributors. All rights reserved.
+ *
+ * Use of this software is governed by the Business Source License
+ * included in the LICENSE file.
+ */
+
 @use "var" as *;
 
 .webhook-icon {
@@ -78,7 +85,7 @@ p {
 .method {
     padding: 0 6px;
     border-radius: 4px;
-    font-weight: bold;
+    font-weight: 700;
     font-size: 0.875rem;
     color: white;
 }

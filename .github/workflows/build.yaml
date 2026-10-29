@@ -16,6 +16,7 @@ jobs:
       - run: npm run prettier-check
       - run: npm run lint
       - run: npm run stylelint
+      - run: npm run check-styles
 
   test:
     name: Test

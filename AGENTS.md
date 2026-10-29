@@ -64,14 +64,15 @@ The hooks resolve the pinned version for their own formatting runs.
 
 | You touched | Run before handing back |
 |---|---|
-| Any `.ts`, `.html`, `.scss` under `src/` | Formatting is automatic (a hook runs prettier on each edited file); then `npm run lint`, `npm run stylelint`, and the specs of what changed (`npm test -- --include <path>`) |
+| Any `.ts`, `.html`, `.scss` under `src/` | Formatting is automatic (a hook runs prettier on each edited file); then `npm run lint`, `npm run stylelint`, `npm run check-styles`, and the specs of what changed (`npm test -- --include <path>`) |
 | Routes, lazy `import()` targets, `angular.json`, dependencies | Also `npm run build-prod`, and read its chunk tables (`kamu-ui-routing`) |
 | `.graphql` documents | `npm run gql-codegen`; keep the regenerated `src/app/api/kamu.graphql.interface.ts` |
 | The backend schema moved | `npm run gql-update-schema`, then `npm run gql-codegen`; review both diffs |
 | `package.json` | `npm install`, then `npm run lint`, `npm test`, `npm run build-prod` |
+| `scripts/styles/` | `npm run check-styles` (runs its tests first) |
 | `scripts/agents/`, `.claude/`, `.codex/`, skills, `AGENTS.md`, `CLAUDE.md`, `docs/internal/` | `npm run lint-harness` |
 
-- CI (`.github/workflows/build.yaml`) runs `prettier-check`, `lint`, `stylelint`, `test`,
+- CI (`.github/workflows/build.yaml`) runs `prettier-check`, `lint`, `stylelint`, `check-styles`, `test`,
   `build` and `build-prod`; the full set before a PR is the same list.
 - Treat lint errors as errors to fix. Do not silence them with `eslint-disable` or
   `stylelint-disable` comments: a pragma hides the problem instead of resolving it. If a rule

@@ -1,3 +1,10 @@
+/**
+ * Copyright Kamu Data, Inc. and contributors. All rights reserved.
+ *
+ * Use of this software is governed by the Business Source License
+ * included in the LICENSE file.
+ */
+
 @use "@angular/material" as mat;
 
 $app-primary: #f1f1f1;
@@ -488,7 +495,7 @@ $app-color-tooltip-border: #ced4da;
     width: 100%;
     padding: 8px;
     overflow: hidden;
-    color: var(--color-fg-default);
+    color: $app-color-fg-default;
     text-align: left;
     cursor: pointer;
     background-color: $app-color-canvas-overlay;

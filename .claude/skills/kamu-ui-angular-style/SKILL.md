@@ -241,11 +241,14 @@ code added itself, or a third-party callback triggers none of them.
 - What no token covers (Material internals such as the checkbox box size) and third-party markup
   (`ngb-pagination`, `ng-select`, `angular2-multiselect`) get a specific global class in
   `src/assets/styles/components/`, which the template puts on the element.
-- Check that a Material class still exists before styling it, or before deleting a rule as dead:
-  search every bundle in `node_modules/@angular/material/fesm2022`, not only the component's
-  own, since shared chunks set some classes (`mdc-form-field` comes from
-  `_internal-form-field-chunk.mjs`). Pre-MDC names (`.mat-radio-label`,
-  `.mat-slide-toggle-ripple`) match nothing.
+- A stylesheet starts with the license header, as a `.ts` file does.
+- `npm run check-styles` rejects what stylelint cannot see: a `.mat-*`, `.mdc-*` or `.cdk-*`
+  class that neither Material, the CDK nor a template sets (pre-MDC names such as
+  `.mat-radio-label` match nothing), a `var(--x)` that nothing defines (the browser drops the
+  declaration), and a `--mat-*` token Material no longer reads. It searches every Material
+  bundle, since shared chunks set some classes (`mdc-form-field` comes from
+  `_internal-form-field-chunk.mjs`), so use it rather than searching by hand before styling a
+  Material class or deleting a rule as dead.
 
 ### Lints and suppressions
 

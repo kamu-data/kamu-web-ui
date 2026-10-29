@@ -1,3 +1,10 @@
+/**
+ * Copyright Kamu Data, Inc. and contributors. All rights reserved.
+ *
+ * Use of this software is governed by the Business Source License
+ * included in the LICENSE file.
+ */
+
 @use "var" as *;
 
 table {
@@ -97,6 +104,11 @@ table {
                 visibility: visible;
             }
 
+            > td.mat-column-type > .type-view-row > .action-buttons > .drag-handle:not(.drag-handle-disabled) {
+                opacity: 1;
+                display: block;
+            }
+
             &:not(.row-editable) {
                 background-color: rgb(0 0 0 / 2%);
             }
@@ -121,12 +133,15 @@ table {
         max-height: 48px;
         margin-top: 12px !important;
     }
-}
 
-.dynamic-table {
     table {
         width: 100%;
         table-layout: auto;
+    }
+
+    td,
+    tr {
+        overflow: visible !important;
     }
 
     .truncate-cell-name {
@@ -173,16 +188,6 @@ table {
     pointer-events: none;
 }
 
-.dynamic-table
-    tr:hover
-    > td.mat-column-type
-    > .type-view-row
-    > .action-buttons
-    > .drag-handle:not(.drag-handle-disabled) {
-    opacity: 1;
-    display: block;
-}
-
 .cdk-drag-preview {
     box-shadow:
         0 5px 5px -3px rgb(0 0 0 / 20%),
@@ -196,13 +201,6 @@ table {
 
 .cdk-drop-list-dragging tr:not(.cdk-drag-placeholder) {
     transition: transform 0.2s cubic-bezier(0, 0, 0.2, 1);
-}
-
-.dynamic-table {
-    td,
-    tr {
-        overflow: visible !important;
-    }
 }
 
 .nested-struct-container {

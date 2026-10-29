@@ -2,8 +2,8 @@
   "extends": ["stylelint-config-standard-scss"],
   "plugins": ["stylelint-scss"],
   "rules": {
-    "selector-id-pattern": null,
-    "scss/percent-placeholder-pattern": null,
+    "selector-id-pattern": "^[a-z][a-z0-9]*(-[a-z0-9]+)*$",
+    "scss/percent-placeholder-pattern": "^[a-z][a-z0-9]*(-[a-z0-9]+)*(__[a-z0-9]+(-[a-z0-9]+)*)?$",
     "selector-class-pattern": null,
     "no-descending-specificity": null,
     "declaration-block-no-redundant-longhand-properties": [true, { "ignoreShorthands": ["grid-template"] }],
@@ -13,6 +13,37 @@
       {
         "ignore": ["default-namespace"]
       }
-    ]
-  }
+    ],
+    "font-weight-notation": "numeric",
+    "selector-max-id": 1,
+    "selector-max-universal": 1,
+    "selector-max-compound-selectors": 4,
+    "selector-no-qualifying-type": [true, { "ignore": ["attribute", "class"] }],
+    "no-duplicate-selectors": true,
+    "no-unknown-animations": true,
+    "unit-allowed-list": ["px", "rem", "em", "%", "vh", "vw", "dvh", "s", "ms", "deg", "fr", "ch"],
+    "at-rule-disallowed-list": ["import"],
+    "function-disallowed-list": ["darken", "lighten"],
+    "selector-disallowed-list": ["/\\/deep\\//", "/>>>/"],
+    "scss/declaration-property-value-no-unknown": true,
+    "scss/property-no-unknown": true,
+    "scss/function-no-unknown": true,
+    "scss/no-duplicate-dollar-variables": true,
+    "scss/no-duplicate-mixins": true,
+    "scss/no-unused-private-members": true,
+    "scss/at-use-no-redundant-alias": true,
+    "scss/at-root-no-redundant": true,
+    "scss/dimension-no-non-numeric-values": true,
+    "scss/comment-no-empty": true,
+    "scss/declaration-nested-properties": "never",
+    "scss/selector-no-redundant-nesting-selector": true
+  },
+  "overrides": [
+    {
+      "files": ["**/pdf-viewer/pdf-viewer-content.component.scss"],
+      "rules": {
+        "selector-id-pattern": "^[a-z][a-zA-Z0-9]*$"
+      }
+    }
+  ]
 }

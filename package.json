@@ -18,6 +18,7 @@
     "stylelint": "stylelint '**/*.scss'",
     "stylelint:windows": "stylelint \"**/*.scss\"",
     "stylelint-fix": "stylelint '**/*.scss' --fix",
+    "check-styles": "python3 -m unittest discover -q -s scripts/styles/tests -t . && python3 scripts/styles/check_styles.py",
     "prettier": "prettier --write '**/*.{ts,scss,js,html,spec.ts}'",
     "prettier-check": "prettier --check '**/*.{ts,scss,js,html,spec.ts}'",
     "gql-update-schema": "curl https://raw.githubusercontent.com/kamu-data/kamu-cli/master/resources/schema.gql > resources/schema.graphql",

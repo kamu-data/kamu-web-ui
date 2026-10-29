@@ -60,7 +60,8 @@ def check_license(rel: str, path: Path) -> list[str]:
         return []
     if content.startswith(LICENSE_HEADER):
         return []
-    return [f"{rel}: new files start with the license header from src/docs/license-header-template.js (eslint `license-header/header`)"]
+    check = "npm run check-styles" if rel.endswith(".scss") else "eslint `license-header/header`"
+    return [f"{rel}: new files start with the license header from src/docs/license-header-template.js ({check})"]
 
 
 def prettier(path: Path) -> str | None:

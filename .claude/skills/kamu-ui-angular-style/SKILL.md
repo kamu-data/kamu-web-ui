@@ -252,6 +252,8 @@ code added itself, or a third-party callback triggers none of them.
   bundle, since shared chunks set some classes (`mdc-form-field` comes from
   `_internal-form-field-chunk.mjs`), so use it rather than searching by hand before styling a
   Material class or deleting a rule as dead.
+- A style change that can reach other pages (globals, shared components, Material overrides) is
+  checked with `npm run visual -- compare` before the PR (`kamu-ui-visual-checks`).
 
 ### Lints and suppressions
 

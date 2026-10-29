@@ -34,7 +34,7 @@ SELECT_NODE = '. "$NVM_DIR/nvm.sh" && nvm use >/dev/null &&'
 
 # Same file set as `npm run prettier`; `.prettierignore` still applies to explicit paths
 PRETTIER = ROOT / "node_modules" / ".bin" / "prettier"
-FORMATTED = ["**/*.ts", "**/*.html", "**/*.scss", "**/*.js"]
+FORMATTED = ["**/*.ts", "**/*.html", "**/*.scss", "**/*.js", "**/*.mjs"]
 
 # The lint gate: a green run of one of these, alone on the command line, clears the Stop reminder
 LINT_COMMAND = "npm run lint"

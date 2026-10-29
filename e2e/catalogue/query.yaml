@@ -1,0 +1,37 @@
+capability: Query
+entries:
+  - id: dataset-data-tab
+    journey: Query a dataset from its data tab and see the rows
+    persona: reader
+    routes: [":accountName/:datasetName/data"]
+    states: [query results, run options menu]
+    profile: seed
+    tier:
+    why:
+
+  - id: global-query
+    journey: Write SQL across datasets and page through a large result
+    persona: reader
+    routes: [v/query]
+    states: [results, load more closed and opened]
+    profile: seed
+    tier:
+    why:
+
+  - id: query-explainer
+    journey: Verify a query commitment someone shared
+    persona: anonymous
+    routes: [v/query-explainer]
+    states: [empty verification form]
+    profile: seed
+    tier:
+    why:
+
+  - id: published-data-query
+    journey: Query a real dataset's data tab
+    persona: anonymous
+    routes: [":accountName/:datasetName/data"]
+    states: [query results over real data]
+    profile: with-data-mt
+    tier:
+    why:

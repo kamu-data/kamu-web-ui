@@ -1,0 +1,97 @@
+capability: Operate pipelines
+entries:
+  - id: create-dataset
+    journey: Start a new dataset
+    persona: owner
+    routes: [v/new-dataset]
+    states: [new dataset form with its selects]
+    profile: seed
+    tier:
+    why:
+
+  - id: create-first-dataset
+    journey: On a node with no data, start the first dataset
+    persona: owner
+    routes: [v/new-dataset]
+    states: [new dataset form]
+    profile: empty
+    tier:
+    why:
+
+  - id: dataset-flows
+    journey: Check a dataset's flow runs, filter them, and set up notification channels
+    persona: owner
+    routes: [":accountName/:datasetName/flows"]
+    states: [flows table, options menu, filter dropdown, no runs, a failed run, webhook channels]
+    profile: seed
+    tier:
+    why:
+
+  - id: flow-details
+    journey: Investigate one flow run, failed or successful
+    persona: owner
+    routes:
+      - ":accountName/:datasetName/flow-details/:flow-id"
+      - ":accountName/:datasetName/flow-details/:flow-id/summary"
+      - ":accountName/:datasetName/flow-details/:flow-id/history"
+      - ":accountName/:datasetName/flow-details/:flow-id/logs"
+      - ":accountName/:datasetName/flow-details/:flow-id/usage"
+      - ":accountName/:datasetName/flow-details/:flow-id/admin"
+    states: [every tab of a failed run, summary of a successful run]
+    profile: seed
+    tier:
+    why:
+
+  - id: account-flows
+    journey: Triage the flows of all of an account's datasets
+    persona: owner
+    routes: [":accountName/~select/flows"]
+    states: [processes, triage and custom filters, activity, order switched off]
+    profile: seed
+    tier:
+    why:
+
+  - id: empty-account-flows
+    journey: An account with no datasets shows no flows
+    persona: owner
+    routes: [":accountName/~select/flows"]
+    states: [empty processes view]
+    profile: empty
+    tier:
+    why:
+
+  - id: pipeline-triggers
+    journey: Schedule a dataset's ingest or transform and set when it stops
+    persona: owner
+    routes: [":accountName/:datasetName/settings/scheduling", ":accountName/:datasetName/settings/transform"]
+    states: [trigger forms off, switched on with nested options disabled]
+    profile: seed
+    tier:
+    why:
+
+  - id: ingest-and-compaction
+    journey: Configure ingest retries and compact a dataset
+    persona: owner
+    routes: [":accountName/:datasetName/settings/ingest-configuration", ":accountName/:datasetName/settings/compaction"]
+    states: [ingest configuration form, compaction form]
+    profile: seed
+    tier:
+    why:
+
+  - id: source-editors
+    journey: Define how a root dataset gets its data, schema included
+    persona: owner
+    routes: [":accountName/:datasetName/add-polling-source", ":accountName/:datasetName/add-push-source"]
+    states: [polling source stepper, schema editor rows, row hovered, nested struct]
+    profile: seed
+    tier:
+    why:
+
+  - id: transform-editor
+    journey: Write the SQL transformation of a derivative dataset
+    persona: owner
+    routes: [":accountName/:datasetName/set-transform"]
+    states: [transform editor]
+    profile: seed
+    tier:
+    why:

@@ -71,10 +71,13 @@ The hooks resolve the pinned version for their own formatting runs.
 | `package.json` | `npm install`, then `npm run lint`, `npm test`, `npm run build-prod` |
 | `scripts/styles/` | `npm run check-styles` (runs its tests first) |
 | A new script, config or stylesheet, or `scripts/license/` | `npm run check-license` (runs its tests first) |
+| Styles that can change what users see, or a Material, Bootstrap or ng-select upgrade | `npm run visual -- compare` (`kamu-ui-visual-checks`) |
+| `e2e/` | `npm run lint`, `npm run visual-test`, and a `compare` run of what changed |
 | `scripts/agents/`, `.claude/`, `.codex/`, skills, `AGENTS.md`, `CLAUDE.md`, `docs/internal/` | `npm run lint-harness` |
 
 - CI (`.github/workflows/build.yaml`) runs `prettier-check`, `lint`, `stylelint`, `check-styles`,
-  `check-license`, `test`, `build` and `build-prod`; the full set before a PR is the same list.
+  `check-license`, `visual-test`, `test`, `build` and `build-prod`; the full set before a PR is the
+  same list.
 - Treat lint errors as errors to fix. Do not silence them with `eslint-disable` or
   `stylelint-disable` comments: a pragma hides the problem instead of resolving it. If a rule
   seems genuinely wrong for a case, ask before suppressing it.
@@ -141,6 +144,7 @@ in addition to that match (an api class needs both `kamu-ui-graphql-api` and
 | Routes and the lazy bundle split, guards and resolvers wiring, `ProjectLinks`, `RoutingResolvers` | `kamu-ui-routing` | `src/app/**/*routing*.ts`, `src/app/project-links.ts`, `src/app/common/resolvers/routing-resolvers.ts` |
 | Form fields and validators: which rules a field needs, `appFieldError`, matching the backend, server errors on a field, source editor config entries | `kamu-ui-forms-and-validation` | `src/app/common/validation/**` |
 | Changelog, release, npm dependency updates | `kamu-ui-release-dependency-workflows` | `CHANGELOG.md`, `package.json`, `update-dependecies.md` |
+| Visual comparison of builds: when to run it, the business catalogue, data profiles, scenarios, the baseline cache | `kamu-ui-visual-checks` | `e2e/**` |
 | Comments and any prose in docs, skills or sub-agent prompts | `kamu-ui-prose-and-comments` | `AGENTS.md`, `CLAUDE.md`, `DEVELOPER.md`, `docs/**/*.md`, `.claude/skills/**`, `.claude/agents/**` |
 | Adding a new routed page, tab or settings section end to end | `kamu-ui-adding-a-page` | |
 | GitHub through `gh`: PR descriptions, editing PRs and issues, screenshots, known `gh` failures and their workarounds | `kamu-ui-github-operations` | |

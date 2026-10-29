@@ -1,0 +1,89 @@
+capability: Inspect a dataset
+entries:
+  - id: dataset-overview
+    journey: Open a dataset and read its description, README, license and details
+    persona: reader
+    routes: [":accountName/:datasetName"]
+    states: [overview chips, README, license, details, additional options menu]
+    profile: seed
+    tier:
+    why:
+
+  - id: collection
+    journey: Browse a collection's entries and folders, and select an entry
+    persona: reader
+    routes: [":accountName/:datasetName"]
+    states: [entries table, folder view with an up row, hovered and selected rows]
+    profile: seed
+    tier:
+    why:
+
+  - id: versioned-file
+    journey: Open a versioned file and see its versions
+    persona: reader
+    routes: [":accountName/:datasetName"]
+    states: [versioned file view]
+    profile: seed
+    tier:
+    why:
+
+  - id: data-access
+    journey: Find out how to access a dataset from outside the UI
+    persona: reader
+    routes: [":accountName/:datasetName"]
+    states: [data access modal, link tab]
+    profile: seed
+    tier:
+    why:
+
+  - id: metadata
+    journey: Read a dataset's schema, sources, license, watermark and transformation
+    persona: reader
+    routes:
+      - ":accountName/:datasetName/metadata"
+      - ":accountName/:datasetName/metadata/schema"
+      - ":accountName/:datasetName/metadata/polling-source"
+      - ":accountName/:datasetName/metadata/push-sources"
+      - ":accountName/:datasetName/metadata/license"
+      - ":accountName/:datasetName/metadata/watermark"
+      - ":accountName/:datasetName/metadata/transformation"
+    states: [every metadata tab, commit navigator pagination]
+    profile: seed
+    tier:
+    why:
+
+  - id: history
+    journey: Follow what happened to a dataset over time
+    persona: reader
+    routes: [":accountName/:datasetName/history"]
+    states: [history timeline, pagination]
+    profile: seed
+    tier:
+    why:
+
+  - id: lineage
+    journey: See where a dataset's data comes from and where it goes
+    persona: reader
+    routes: [":accountName/:datasetName/lineage"]
+    states: [lineage graph]
+    profile: seed
+    tier:
+    why:
+
+  - id: block
+    journey: Open one metadata block to audit its content
+    persona: reader
+    routes: [":accountName/:datasetName/block/:blockHash"]
+    states: [block page]
+    profile: seed
+    tier:
+    why:
+
+  - id: published-dataset-pages
+    journey: Read a real, large dataset's overview, history and lineage
+    persona: anonymous
+    routes: [":accountName/:datasetName", ":accountName/:datasetName/lineage"]
+    states: [overview of real data, lineage across organizations]
+    profile: with-data-mt
+    tier:
+    why:

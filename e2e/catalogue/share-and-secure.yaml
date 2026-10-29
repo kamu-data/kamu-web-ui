@@ -1,0 +1,50 @@
+capability: Share and secure
+entries:
+  - id: dataset-general-settings
+    journey: Rename, reset, change the visibility of or delete a dataset
+    persona: owner
+    routes: [":accountName/:datasetName/settings", ":accountName/:datasetName/settings/general"]
+    states: [general settings with reset options]
+    profile: seed
+    tier:
+    why:
+
+  - id: collaborators
+    journey: See and change who can read or edit a dataset
+    persona: owner
+    routes: [":accountName/:datasetName/settings/access"]
+    states: [collaborator table with roles]
+    profile: seed
+    tier:
+    why:
+
+  - id: variables-and-secrets
+    journey: Keep a dataset's environment variables and secrets
+    persona: owner
+    routes: [":accountName/:datasetName/settings/variables-and-secrets"]
+    states: [variables table with a masked secret]
+    profile: seed
+    tier:
+    why:
+
+  - id: webhooks
+    journey: Subscribe other systems to a dataset's changes, edit a subscription, rotate its secret
+    persona: owner
+    routes:
+      - ":accountName/:datasetName/settings/webhooks"
+      - ":accountName/:datasetName/settings/webhooks/new"
+      - ":accountName/:datasetName/settings/webhooks/:webhookId"
+      - ":accountName/:datasetName/settings/webhooks/rotate-secret/:webhookId"
+    states: [enabled and paused subscriptions, new and edit forms, rotated secret]
+    profile: seed
+    tier:
+    why:
+
+  - id: access-tokens
+    journey: Create and revoke access tokens for tools and scripts
+    persona: owner
+    routes: [v/settings, v/settings/access-tokens]
+    states: [tokens table, revoke confirmation dialog]
+    profile: seed
+    tier:
+    why:

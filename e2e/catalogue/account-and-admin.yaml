@@ -1,0 +1,37 @@
+capability: Account and admin
+entries:
+  - id: header-navigation
+    journey: Move around the app from the header, on wide and narrow screens
+    persona: reader
+    routes: [v/search]
+    states: [user menu open, header below the md breakpoint, collapsed menu open]
+    profile: seed
+    tier:
+    why:
+
+  - id: account-settings
+    journey: Manage one's own emails, account name, storage and password
+    persona: owner
+    routes: [v/settings/emails, v/settings/account, v/settings/storage, v/settings/security]
+    states: [every account settings tab]
+    profile: seed
+    tier:
+    why:
+
+  - id: admin-dashboard
+    journey: An administrator checks the node
+    persona: admin
+    routes: [v/admin-dashboard]
+    states: [admin dashboard]
+    profile: seed
+    tier:
+    why:
+
+  - id: organization-settings
+    journey: Manage an organization's settings
+    persona: admin
+    routes: [":accountName/~select/settings"]
+    states: [organization settings tab]
+    profile: with-data-mt
+    tier:
+    why:

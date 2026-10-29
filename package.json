@@ -16,8 +16,8 @@
     "lint-harness": "python3 -m unittest discover -s scripts/agents/tests -t .",
     "ng": "ng",
     "postinstall": "node scripts/set-monaco-version.js",
-    "prettier": "prettier --write '**/*.{ts,scss,js,html,spec.ts}'",
-    "prettier-check": "prettier --check '**/*.{ts,scss,js,html,spec.ts}'",
+    "prettier": "prettier --write '**/*.{ts,scss,js,mjs,html,spec.ts}'",
+    "prettier-check": "prettier --check '**/*.{ts,scss,js,mjs,html,spec.ts}'",
     "release-major": "npm version major -m \"Release v%s\"",
     "release-minor": "npm version minor -m \"Release v%s\"",
     "release-patch": "npm version patch -m \"Release v%s\"",
@@ -28,7 +28,9 @@
     "stylelint:windows": "stylelint \"**/*.scss\"",
     "test": "ng test --no-progress --no-watch",
     "test-coverage": "ng test --no-progress --no-watch --coverage",
-    "version": "node update-changelog.js && git add CHANGELOG.md LICENSE.txt"
+    "version": "node update-changelog.js && git add CHANGELOG.md LICENSE.txt",
+    "visual": "node e2e/visual/cli.mjs",
+    "visual-test": "python3 -m unittest discover -q -s e2e/visual/tests -t ."
   },
   "private": true,
   "dependencies": {

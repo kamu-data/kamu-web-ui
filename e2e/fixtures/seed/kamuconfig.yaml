@@ -1,0 +1,31 @@
+# Template for <ws>/.kamu/.kamuconfig, shared by the `seed` and `empty` profiles; the ${...}
+# placeholders are filled when the workspace is built.
+# Account ids are random per workspace: kamu 0.271 fails to register predefined accounts that set
+# privateKey (UNIQUE accounts.resource_id).
+kind: CLIConfig
+version: 1
+content:
+  identity:
+    # Without a signing key, kamu 0.271 answers /query with 501.
+    privateKey: ${IDENTITY_PRIVATE_KEY}
+  engine:
+    datafusionEmbedded:
+      # One partition: "select *" returns rows in the same order every time (data tab, query).
+      batchQuery:
+        datafusion.execution.target_partitions: "1"
+  secretsEncryption:
+    enabled: true
+    encryptionKey: ${SECRETS_ENCRYPTION_KEY}
+  auth:
+    users:
+      predefined:
+        - accountName: kamu
+          password: kamu.dev
+          email: kamu@example.com
+          properties: [Admin]
+        - accountName: alice
+          password: alice.dev.pw
+          email: alice@example.com
+        - accountName: bob
+          password: bob.dev.pw
+          email: bob@example.com

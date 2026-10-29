@@ -18,6 +18,7 @@ jobs:
       - run: npm run stylelint
       - run: npm run check-styles
       - run: npm run check-license
+      - run: npm run visual-test
 
   test:
     name: Test

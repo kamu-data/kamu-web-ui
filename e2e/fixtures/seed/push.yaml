@@ -1,0 +1,27 @@
+kind: DatasetSnapshot
+version: 1
+content:
+  name: nested-events
+  kind: Root
+  metadata:
+    - kind: AddPushSource
+      sourceName: default
+      read:
+        kind: NdJson
+        schema:
+          fields:
+            - {name: event_time, type: {kind: Timestamp, unit: Millisecond, timezone: UTC}}
+            - {name: id, type: {kind: Int64}}
+            - name: payload
+              type:
+                kind: Struct
+                fields:
+                  - {name: name, type: {kind: String}}
+                  - {name: score, type: {kind: Int64}}
+      merge:
+        kind: Append
+    - kind: SetInfo
+      description: Push dataset with nested struct
+      keywords: [demo, nested]
+    - kind: SetVocab
+      eventTimeColumn: event_time

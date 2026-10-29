@@ -57,7 +57,8 @@ triggers `.github/workflows/release.yaml`.
 - After any dependency change: `npm run lint`, `npm test`, `npm run build-prod` — the production
   build catches library incompatibilities the dev build does not. After a Material, CDK or
   Bootstrap upgrade, also `npm run check-styles`: it reports the classes and tokens our styles
-  still name that the new version dropped.
+  still name that the new version dropped, and `npm run visual -- compare` (`kamu-ui-visual-checks`),
+  which shows what the upgrade changed on screen.
 
 ## Agent checklist
 

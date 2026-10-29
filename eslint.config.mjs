@@ -290,6 +290,30 @@ export default [
       "@angular-eslint/template/cyclomatic-complexity": ["error", { maxComplexity: 10 }],
     },
   },
+  // The visual comparison scripts: Node modules, plus page-lib.js, which runs in the page
+  {
+    files: ["e2e/**/*.mjs", "e2e/**/*.js"],
+    languageOptions: {
+      ecmaVersion: "latest",
+      sourceType: "module",
+      globals: Object.fromEntries(
+        [
+          ...["process", "console", "fetch", "URL", "Buffer", "WebSocket", "AbortSignal", "performance"],
+          ...["setTimeout", "clearTimeout", "setInterval"],
+          ...["window", "document", "getComputedStyle", "location", "scrollX", "scrollY"],
+        ].map((name) => [name, "readonly"]),
+      ),
+    },
+    rules: {
+      "no-undef": "error",
+      "no-unused-vars": ["error", { caughtErrors: "none" }],
+      "no-unreachable": "error",
+      "no-dupe-keys": "error",
+      "no-empty": ["error", { allowEmptyCatch: true }],
+      "prefer-const": "error",
+      eqeqeq: "error",
+    },
+  },
   // License header plugin for specific files
   {
     files: ["src/app/**/*.ts"],

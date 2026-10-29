@@ -1,3 +1,10 @@
+/**
+ * Copyright Kamu Data, Inc. and contributors. All rights reserved.
+ *
+ * Use of this software is governed by the Business Source License
+ * included in the LICENSE file.
+ */
+
 fieldset {
     &.fieldset-border {
         border: 1px solid #dee2e6;
@@ -9,7 +16,7 @@ fieldset {
     legend {
         &.fieldset-border {
             font-size: 12px;
-            font-weight: bold;
+            font-weight: 700;
             width: auto;
             padding: 0 10px;
             position: relative;

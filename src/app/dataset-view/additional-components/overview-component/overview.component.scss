@@ -1,3 +1,10 @@
+/**
+ * Copyright Kamu Data, Inc. and contributors. All rights reserved.
+ *
+ * Use of this software is governed by the Business Source License
+ * included in the LICENSE file.
+ */
+
 @use "material-overrides" as overrides;
 
 mat-chip.mat-mdc-standard-chip {
@@ -32,9 +39,9 @@ mat-chip.mat-mdc-standard-chip {
     border-radius: 3px;
     background:
         linear-gradient(to right, #000 50%, #fff 70%) top/15px 1px repeat-x,
-        /* top */ linear-gradient(#000 50%, #fff 70%) right/1px 15px repeat-y,
-        /* right */ linear-gradient(to right, #000 50%, #fff 70%) bottom/15px 1px repeat-x,
-        /* bottom */ linear-gradient(#000 50%, #fff 70%) left/1px 15px repeat-y; /* left */
+        linear-gradient(#000 50%, #fff 70%) right/1px 15px repeat-y,
+        linear-gradient(to right, #000 50%, #fff 70%) bottom/15px 1px repeat-x,
+        linear-gradient(#000 50%, #fff 70%) left/1px 15px repeat-y;
 
     &:hover {
         cursor: pointer;

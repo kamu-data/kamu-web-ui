@@ -45,6 +45,15 @@ const fragmentSliceRestrictions = [
   },
 ];
 
+// Component styles stay encapsulated: without emulation a component's rules apply app-wide, and
+// stylelint and check-styles assume every component stylesheet is scoped to its own template
+const encapsulationRestrictions = [
+  {
+    selector: "MemberExpression[object.name='ViewEncapsulation'][property.name=/^(None|ShadowDom)$/]",
+    message: "Keep the default emulated encapsulation; put shared styles in src/assets/styles instead.",
+  },
+];
+
 // Form rules live in @common/validation, where each validator has its message and its spec: a bare
 // Validators.pattern carries no message of its own
 const formValidationRestrictions = [
@@ -142,6 +151,7 @@ export default [
         ...fragmentSliceRestrictions,
         ...urlParamRestrictions,
         ...formValidationRestrictions,
+        ...encapsulationRestrictions,
       ],
 
       // Spec files share one module cache: a spec imported by another runs its tests inside that
@@ -170,6 +180,7 @@ export default [
         "error",
         ...fragmentSliceRestrictions,
         ...formValidationRestrictions,
+        ...encapsulationRestrictions,
         {
           selector: "CallExpression:matches([callee.property.name='setInput'], [callee.property.value='setInput'])",
           message:

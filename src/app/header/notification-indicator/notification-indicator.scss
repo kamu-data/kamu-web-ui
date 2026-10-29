@@ -1,3 +1,10 @@
+/**
+ * Copyright Kamu Data, Inc. and contributors. All rights reserved.
+ *
+ * Use of this software is governed by the Business Source License
+ * included in the LICENSE file.
+ */
+
 .notification-indicator {
     .mail-status {
         position: absolute;
@@ -10,7 +17,7 @@
         color: #fff;
         background-image: linear-gradient(#54a3ff, #006eed);
         background-clip: padding-box;
-        border: 2px solid var(--color-header-bg);
+        border: 2px solid #1c1c1c;
         border-radius: 50%;
     }
 }

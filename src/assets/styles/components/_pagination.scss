@@ -1,3 +1,10 @@
+/**
+ * Copyright Kamu Data, Inc. and contributors. All rights reserved.
+ *
+ * Use of this software is governed by the Business Source License
+ * included in the LICENSE file.
+ */
+
 ngb-pagination.app-pagination {
     .page-item .page-link {
         font-size: 14px;
@@ -7,7 +14,7 @@ ngb-pagination.app-pagination {
         align-items: center;
         border-radius: 6px;
 
-        & span {
+        span {
             display: none;
         }
     }

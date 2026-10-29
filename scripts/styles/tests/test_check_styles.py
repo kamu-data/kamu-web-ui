@@ -112,6 +112,9 @@ class StripCommentsTest(unittest.TestCase):
     def test_urls_keep_their_double_slash(self):
         self.assertEqual(strip_comments('a { background: url("http://x/y.png"); }'), 'a { background: url("http://x/y.png"); }')
 
+    def test_protocol_relative_urls_keep_their_double_slash(self):
+        self.assertEqual(strip_comments("a { background: url(//cdn/x.png); }"), "a { background: url(//cdn/x.png); }")
+
     def test_line_and_block_comments_go(self):
         self.assertEqual(strip_comments("a {} // note\n/* block\n */b {}"), "a {} \nb {}")
 

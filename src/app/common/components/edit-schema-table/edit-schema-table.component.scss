@@ -104,11 +104,9 @@ table {
                 visibility: visible;
             }
 
-            > td.mat-column-type > .type-view-row > .action-buttons {
-                > .drag-handle:not(.drag-handle-disabled) {
-                    opacity: 1;
-                    display: block;
-                }
+            > td.mat-column-type > .type-view-row > .action-buttons > .drag-handle:not(.drag-handle-disabled) {
+                opacity: 1;
+                display: block;
             }
 
             &:not(.row-editable) {

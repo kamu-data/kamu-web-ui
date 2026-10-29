@@ -123,6 +123,14 @@ class LicenseTest(unittest.TestCase):
         self.file.write_text(LICENSE_HEADER + "\n\nexport const x = 1;\n")
         self.assertEqual(check_license("src/app/new-thing.ts", self.file), [])
 
+    def test_new_stylesheets_need_the_header(self):
+        self.file.write_text(".a {}\n")
+        for rel in ["src/new.scss", "src/assets/styles/_new.scss", "src/app/x/x.component.scss"]:
+            with self.subTest(rel=rel):
+                self.assertIn("npm run check-styles", check_license(rel, self.file)[0])
+        self.file.write_text(LICENSE_HEADER + "\n\n.a {}\n")
+        self.assertEqual(check_license("src/app/x/x.component.scss", self.file), [])
+
     def test_committed_generated_and_out_of_scope_files_are_exempt(self):
         self.file.write_text("export const x = 1;\n")
         for rel in ["src/app/app.component.ts", "src/app/api/kamu.graphql.interface.ts",

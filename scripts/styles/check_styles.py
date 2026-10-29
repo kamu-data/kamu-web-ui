@@ -38,7 +38,9 @@ LIBRARY_STYLE_GLOBS = [
 # Generated from column names (`matColumnDef`), so no bundle or template spells them out
 DYNAMIC_CLASS_PREFIXES = ("mat-column-",)
 
-COMMENT = re.compile(r"/\*.*?\*/|(?<![:\"'])//[^\n]*", re.S)
+# A `//` comment starts a line or follows whitespace or a block delimiter; elsewhere (`url(//x)`,
+# `"http://x"`) the slashes are part of a value
+COMMENT = re.compile(r"/\*.*?\*/|(?<![^\s;{}])//[^\n]*", re.S)
 LIBRARY_CLASS = re.compile(r"\.((?:mat|mdc|cdk)-[\w-]+)")
 VAR_READ = re.compile(r"var\(\s*(--[\w-]+)")
 PROPERTY_SET = re.compile(r"(?<![\w-])(--[\w-]+)\s*:")

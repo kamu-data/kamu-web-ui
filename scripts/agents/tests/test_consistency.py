@@ -1,3 +1,8 @@
+# Copyright Kamu Data, Inc. and contributors. All rights reserved.
+#
+# Use of this software is governed by the Business Source License
+# included in the LICENSE file.
+
 """Keeps the agent harness consistent: skills, their Codex symlinks, the AGENTS.md routing table,
 the hooks' policy file, and links between docs. Port of kamu-cli's `agent_harness.rs` repo lints."""
 

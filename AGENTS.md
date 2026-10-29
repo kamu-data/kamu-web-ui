@@ -70,10 +70,11 @@ The hooks resolve the pinned version for their own formatting runs.
 | The backend schema moved | `npm run gql-update-schema`, then `npm run gql-codegen`; review both diffs |
 | `package.json` | `npm install`, then `npm run lint`, `npm test`, `npm run build-prod` |
 | `scripts/styles/` | `npm run check-styles` (runs its tests first) |
+| A new script, config or stylesheet, or `scripts/license/` | `npm run check-license` (runs its tests first) |
 | `scripts/agents/`, `.claude/`, `.codex/`, skills, `AGENTS.md`, `CLAUDE.md`, `docs/internal/` | `npm run lint-harness` |
 
-- CI (`.github/workflows/build.yaml`) runs `prettier-check`, `lint`, `stylelint`, `check-styles`, `test`,
-  `build` and `build-prod`; the full set before a PR is the same list.
+- CI (`.github/workflows/build.yaml`) runs `prettier-check`, `lint`, `stylelint`, `check-styles`,
+  `check-license`, `test`, `build` and `build-prod`; the full set before a PR is the same list.
 - Treat lint errors as errors to fix. Do not silence them with `eslint-disable` or
   `stylelint-disable` comments: a pragma hides the problem instead of resolving it. If a rule
   seems genuinely wrong for a case, ask before suppressing it.
@@ -113,6 +114,12 @@ issue.
 Angular and TypeScript style lives in the `kamu-ui-angular-style` skill and test conventions in
 `kamu-ui-unit-tests`; the edit hook requires them before the first edit they govern (see the
 table below).
+
+Every source file starts with the license header from `src/docs/license-header-template.js`:
+TypeScript, stylesheets, scripts and config files. Python and shell files carry the same text as
+`#` lines; a `#!` line may come first. Empty files are exempt, and generated files carry what their
+generator writes. eslint's `license-header/header` rule checks TypeScript under `src/app`,
+`npm run check-license` everything else, and the post-edit hook checks each new file.
 
 ## What to load for which task
 

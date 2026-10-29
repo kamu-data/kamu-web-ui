@@ -1,3 +1,8 @@
+# Copyright Kamu Data, Inc. and contributors. All rights reserved.
+#
+# Use of this software is governed by the Business Source License
+# included in the LICENSE file.
+
 """Codex SessionStart: refresh skill requirements and inject the repository contract."""
 
 from scripts.agents.common import additional_context, emit, read_payload, run_safely

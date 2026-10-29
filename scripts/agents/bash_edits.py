@@ -1,3 +1,8 @@
+# Copyright Kamu Data, Inc. and contributors. All rights reserved.
+#
+# Use of this software is governed by the Business Source License
+# included in the LICENSE file.
+
 """Run the post-edit checks over the files a shell command changed.
 
 A shell write declares nothing: `sed -i`, a heredoc, `mv`, a Python one-liner and a script are

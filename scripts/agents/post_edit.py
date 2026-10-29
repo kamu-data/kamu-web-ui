@@ -1,3 +1,8 @@
+# Copyright Kamu Data, Inc. and contributors. All rights reserved.
+#
+# Use of this software is governed by the Business Source License
+# included in the LICENSE file.
+
 """Checks run after an agent edits files: format with prettier, then judge only the text it added.
 
 Only added lines are judged, so existing code that predates a rule never blocks an
@@ -12,6 +17,7 @@ from pathlib import Path
 
 from scripts.agents import project
 from scripts.agents.common import ROOT, matches, repo_relative
+from scripts.license.check_license import has_header, in_scope
 
 LICENSE_HEADER = project.LICENSE_HEADER_FILE.read_text().strip()
 
@@ -51,16 +57,27 @@ def check_lines(rel: str, lines: list[str]) -> list[str]:
     return problems
 
 
+def ignored(rel: str) -> bool:
+    """Whether git ignores the file: local material that `npm run check-license` never sees either."""
+    try:
+        return subprocess.run(["git", "check-ignore", "-q", rel], cwd=ROOT, check=False).returncode == 0
+    except OSError:
+        return False
+
+
 def check_license(rel: str, path: Path) -> list[str]:
-    if not matches(rel, project.LICENSE_SCOPE) or matches(rel, project.LICENSE_EXEMPT) or head_version(rel) is not None:
+    by_eslint = matches(rel, project.ESLINT_LICENSE_SCOPE)
+    if not (by_eslint or in_scope(rel)) or matches(rel, project.LICENSE_EXEMPT) or head_version(rel) is not None:
+        return []
+    if ignored(rel):
         return []
     try:
         content = path.read_text()
     except OSError:
         return []
-    if content.startswith(LICENSE_HEADER):
+    if has_header(rel, content, LICENSE_HEADER):
         return []
-    check = "npm run check-styles" if rel.endswith(".scss") else "eslint `license-header/header`"
+    check = "eslint `license-header/header`" if by_eslint else "npm run check-license"
     return [f"{rel}: new files start with the license header from src/docs/license-header-template.js ({check})"]
 
 

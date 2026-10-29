@@ -1,3 +1,8 @@
+# Copyright Kamu Data, Inc. and contributors. All rights reserved.
+#
+# Use of this software is governed by the Business Source License
+# included in the LICENSE file.
+
 """Codex PreToolUse(apply_patch): deny generated files and guarded paths without their skill."""
 
 from __future__ import annotations

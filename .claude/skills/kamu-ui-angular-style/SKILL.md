@@ -229,8 +229,8 @@ code added itself, or a third-party callback triggers none of them.
 - Imports use the path aliases `@common/*`, `@api/*`, `@interface/*`, `@env/*`; everything
   else is imported as `src/app/...`. Relative imports only for siblings in the same feature
   folder.
-- Every new file under `src/app` starts with the license header from
-  `src/docs/license-header-template.js` (eslint enforces it; the hook checks new files).
+- Every new file starts with the license header from `src/docs/license-header-template.js`
+  ([AGENTS.md, "Code style and tests"](../../../AGENTS.md#code-style-and-tests)).
 - Feature-gated UI uses the `appFeatureFlag="area.feature"` directive; the flag list comes from
   the runtime app config through `FeatureFlagsService`.
 
@@ -245,7 +245,6 @@ code added itself, or a third-party callback triggers none of them.
 - What no token covers (Material internals such as the checkbox box size) and third-party markup
   (`ngb-pagination`, `ng-select`, `angular2-multiselect`) get a specific global class in
   `src/assets/styles/components/`, which the template puts on the element.
-- A stylesheet starts with the license header, as a `.ts` file does.
 - `npm run check-styles` rejects what stylelint cannot see: a `.mat-*`, `.mdc-*` or `.cdk-*`
   class that neither Material, the CDK nor a template sets (pre-MDC names such as
   `.mat-radio-label` match nothing), a `var(--x)` that nothing defines (the browser drops the

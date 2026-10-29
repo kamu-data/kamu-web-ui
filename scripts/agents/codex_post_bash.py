@@ -1,3 +1,8 @@
+# Copyright Kamu Data, Inc. and contributors. All rights reserved.
+#
+# Use of this software is governed by the Business Source License
+# included in the LICENSE file.
+
 """Codex PostToolUse(Bash): record skill loads, then check the files the command changed.
 
 Codex loads a skill by reading its SKILL.md, so the load is recorded from the command text.

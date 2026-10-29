@@ -1,3 +1,8 @@
+# Copyright Kamu Data, Inc. and contributors. All rights reserved.
+#
+# Use of this software is governed by the Business Source License
+# included in the LICENSE file.
+
 """Judge a shell command line before an agent runs it.
 
 The line is lexed the way a POSIX shell would split it, every simple command is unwrapped

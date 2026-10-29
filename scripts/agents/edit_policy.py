@@ -1,3 +1,8 @@
+# Copyright Kamu Data, Inc. and contributors. All rights reserved.
+#
+# Use of this software is governed by the Business Source License
+# included in the LICENSE file.
+
 """Judge a file write before an agent makes it: generated files, memory, governed paths."""
 
 from __future__ import annotations

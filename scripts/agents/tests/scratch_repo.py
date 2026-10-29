@@ -1,3 +1,8 @@
+# Copyright Kamu Data, Inc. and contributors. All rights reserved.
+#
+# Use of this software is governed by the Business Source License
+# included in the LICENSE file.
+
 """A throwaway git repository wired like this one, for running hooks exactly as configured."""
 
 import os
@@ -12,7 +17,10 @@ PRETTIER_AVAILABLE = PRETTIER.exists()
 
 
 def make_scratch_repo(root: Path) -> None:
-    shutil.copytree(ROOT / "scripts" / "agents", root / "scripts" / "agents",
+    for package in ("agents", "license"):
+        shutil.copytree(ROOT / "scripts" / package, root / "scripts" / package,
+                        ignore=shutil.ignore_patterns("__pycache__", "tests"))
+    shutil.copytree(ROOT / "scripts" / "agents" / "tests", root / "scripts" / "agents" / "tests",
                     ignore=shutil.ignore_patterns("__pycache__"))
     shutil.copytree(ROOT / ".claude" / "hooks", root / ".claude" / "hooks")
     header = root / LICENSE_HEADER_FILE.relative_to(ROOT)

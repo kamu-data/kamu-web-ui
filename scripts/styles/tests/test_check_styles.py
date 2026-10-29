@@ -1,13 +1,15 @@
+# Copyright Kamu Data, Inc. and contributors. All rights reserved.
+#
+# Use of this software is governed by the Business Source License
+# included in the LICENSE file.
+
 import unittest
 
 from scripts.styles.check_styles import Sources, check, strip_comments
 
-HEADER = "/**\n * Licensed.\n */"
-
-
 def sources(scss: str, templates: str = "", code: str = "", library_code: str = "", library_styles: str = "") -> Sources:
     return Sources(
-        stylesheets={"a.component.scss": f"{HEADER}\n\n{scss}"},
+        stylesheets={"a.component.scss": scss},
         templates=templates,
         code=code,
         library_code=library_code,
@@ -16,17 +18,7 @@ def sources(scss: str, templates: str = "", code: str = "", library_code: str = 
 
 
 def messages(src: Sources) -> list[str]:
-    return [finding.message for finding in check(src, HEADER)]
-
-
-class LicenseTest(unittest.TestCase):
-    def test_a_stylesheet_without_the_header_is_reported(self):
-        src = Sources({"a.scss": ".a {}"}, "", "", "", "")
-        self.assertEqual(len(messages(src)), 1)
-        self.assertIn("license header", messages(src)[0])
-
-    def test_a_stylesheet_with_the_header_passes(self):
-        self.assertEqual(messages(sources(".a {}")), [])
+    return [finding.message for finding in check(src)]
 
 
 class LibraryClassTest(unittest.TestCase):
@@ -93,7 +85,7 @@ class CustomPropertyReadTest(unittest.TestCase):
 
     def test_a_property_another_stylesheet_defines_passes(self):
         src = Sources(
-            {"a.scss": f"{HEADER}\n.a {{ color: var(--accent); }}", "b.scss": f"{HEADER}\n:root {{ --accent: red; }}"},
+            {"a.scss": ".a { color: var(--accent); }", "b.scss": ":root { --accent: red; }"},
             "", "", "", "",
         )
         self.assertEqual(messages(src), [])

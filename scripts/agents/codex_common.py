@@ -1,3 +1,8 @@
+# Copyright Kamu Data, Inc. and contributors. All rights reserved.
+#
+# Use of this software is governed by the Business Source License
+# included in the LICENSE file.
+
 """Codex payload helpers. Codex PreToolUse hooks cannot ask, so adapters only deny.
 
 Mapping of shared verdicts: denials stay denials. Decisions that need user authorization stay in

@@ -23,6 +23,8 @@ from e2e.visual.cdp import Cdp, Chrome
 
 PAGE_LIB = (Path(__file__).parent / "page-lib.js").read_text(encoding="utf8")
 VIEWPORT = {"width": 1440, "height": 900}
+# Seconds before a GraphQL request outside the page gives up
+GQL_TIMEOUT = 120
 ERROR_TEXT = re.compile(r"page not found|something went wrong", re.I)
 
 
@@ -50,7 +52,7 @@ def gql(api_url: str, query: str, variables: dict | None = None, token: str | No
         headers["authorization"] = f"Bearer {token}"
     body = json.dumps({"query": query, "variables": variables or {}}).encode()
     request = urllib.request.Request(f"{api_url}/graphql", data=body, headers=headers, method="POST")
-    with urllib.request.urlopen(request) as response:
+    with urllib.request.urlopen(request, timeout=GQL_TIMEOUT) as response:
         result = json.load(response)
     if result.get("errors"):
         raise RuntimeError(f"GraphQL: {json.dumps(result['errors'])[:400]}")

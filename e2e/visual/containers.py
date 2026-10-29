@@ -23,6 +23,7 @@ import shutil
 import subprocess
 import tempfile
 import time
+import urllib.error
 import urllib.request
 from pathlib import Path
 
@@ -32,6 +33,8 @@ MIGRATIONS_IMAGE = "ghcr.io/kamu-data/sqlx-cli-with-migrations"
 # Where the migrations image keeps the migrations of its kamu core version
 IMAGE_MIGRATIONS = "/migrations/postgres"
 DB = {"user": "kamu", "password": "kamu", "name": "kamu"}
+# Seconds before a request to a registry or GitHub gives up
+NETWORK_TIMEOUT = 30
 # Inside the network
 POSTGRES_PORT = 5432
 S3_PORT = 9000
@@ -106,7 +109,7 @@ class Container:
         args = ["create", "--network", network]
         args += ["--name", name] if name else []
         args += [arg for host, inside in (publish or {}).items() for arg in ("-p", f"127.0.0.1:{host}:{inside}")]
-        args += [arg for name, value in env.items() for arg in ("-e", f"{name}={value}")]
+        args += [arg for variable, value in env.items() for arg in ("-e", f"{variable}={value}")]
         args += ["-w", workdir] if workdir else []
         args += ["--privileged"] if privileged else []
         args += ["--entrypoint", entrypoint] if entrypoint else []
@@ -128,6 +131,10 @@ class Container:
         )
         return state.stdout.strip() == "true"
 
+    def log_tail(self, lines: int = 15) -> str:
+        logs = subprocess.run([self.runtime, "logs", "--tail", str(lines), self.id], capture_output=True, text=True)
+        return (logs.stdout + logs.stderr).strip()
+
     def remove(self, log_file: Path | None = None) -> None:
         if log_file:
             logs = subprocess.run([self.runtime, "logs", self.id], capture_output=True, text=True)
@@ -135,18 +142,22 @@ class Container:
         subprocess.run([self.runtime, "rm", "-f", self.id], capture_output=True)
 
 
-def _wait(what: str, ready, container: Container, seconds: float = 60) -> None:
-    """Waits until `ready()`; removes the container when it never is."""
-    deadline = time.monotonic() + seconds
-    while time.monotonic() < deadline:
-        if not container.running():
-            container.remove()
-            raise RuntimeError(f"{what} exited")
-        if ready():
-            return
-        time.sleep(0.5)
-    container.remove()
-    raise RuntimeError(f"{what} did not become ready in {seconds:.0f} s")
+def _start(what: str, container: Container, ready, seconds: float = 60) -> None:
+    """Starts the container and waits until `ready()`. On any failure, an interruption included, the
+    container is removed; the error carries the end of its log."""
+    try:
+        container.start()
+        deadline = time.monotonic() + seconds
+        while time.monotonic() < deadline:
+            if not container.running():
+                raise RuntimeError(f"{what} exited:\n{container.log_tail()}")
+            if ready():
+                return
+            time.sleep(0.5)
+        raise RuntimeError(f"{what} did not become ready in {seconds:.0f} s:\n{container.log_tail()}")
+    except BaseException:
+        container.remove()
+        raise
 
 
 def create_network(runtime: str, name: str) -> str:
@@ -162,14 +173,13 @@ def remove_network(runtime: str, name: str) -> None:
 def start_postgres(runtime: str, network: str, name: str, host_port: int) -> Container:
     env = {"POSTGRES_USER": DB["user"], "POSTGRES_PASSWORD": DB["password"], "POSTGRES_DB": DB["name"]}
     pg = Container(runtime, POSTGRES_IMAGE, [], env, network, name, {host_port: POSTGRES_PORT})
-    pg.start()
 
     # TCP only: the server that initdb runs first listens on the socket alone
     def ready() -> bool:
         check = ["pg_isready", "-h", "127.0.0.1", "-p", str(POSTGRES_PORT), "-U", DB["user"]]
         return subprocess.run([runtime, "exec", pg.id, *check], capture_output=True).returncode == 0
 
-    _wait("Postgres", ready, pg)
+    _start("Postgres", pg, ready)
     return pg
 
 
@@ -194,11 +204,12 @@ def run_migrations(runtime: str, network: str, postgres: str, tag: str, override
 
 def migrations_tag(core_version: str) -> str:
     """The newest migrations image of a kamu core version: tags are `<core version>.<n>`."""
-    token = json.load(urllib.request.urlopen(f"https://ghcr.io/token?scope=repository:{_ghcr_name()}:pull"))["token"]
+    token_url = f"https://ghcr.io/token?scope=repository:{_ghcr_name()}:pull"
+    token = json.load(urllib.request.urlopen(token_url, timeout=NETWORK_TIMEOUT))["token"]
     request = urllib.request.Request(
         f"https://ghcr.io/v2/{_ghcr_name()}/tags/list?n=10000", headers={"Authorization": f"Bearer {token}"}
     )
-    tags = json.load(urllib.request.urlopen(request))["tags"]
+    tags = json.load(urllib.request.urlopen(request, timeout=NETWORK_TIMEOUT))["tags"]
     builds = sorted(int(t.rsplit(".", 1)[1]) for t in tags if re.fullmatch(re.escape(core_version) + r"\.\d+", t))
     if not builds:
         raise RuntimeError(f"no {MIGRATIONS_IMAGE} image for kamu core {core_version}")
@@ -214,7 +225,6 @@ def start_rustfs(runtime: str, network: str, name: str, port: int, buckets: list
     env = {"RUSTFS_ACCESS_KEY": S3_KEYS["access"], "RUSTFS_SECRET_KEY": S3_KEYS["secret"]}
     command = ["server", "--address", f"0.0.0.0:{S3_PORT}", "/data"]
     s3 = Container(runtime, RUSTFS_IMAGE, command, env, network, name, {port: S3_PORT})
-    s3.start()
 
     def ready() -> bool:
         try:
@@ -226,7 +236,7 @@ def start_rustfs(runtime: str, network: str, name: str, port: int, buckets: list
         except OSError:
             return False
 
-    _wait("rustfs", ready, s3)
+    _start("rustfs", s3, ready)
     try:
         for bucket in buckets:
             # Health answers before storage is ready; until then requests get 503
@@ -238,7 +248,7 @@ def start_rustfs(runtime: str, network: str, name: str, port: int, buckets: list
                     if e.code != 503 or attempt == 59:
                         raise
                     time.sleep(0.5)
-    except Exception:
+    except BaseException:
         s3.remove()
         raise
     return s3
@@ -276,4 +286,4 @@ def _create_bucket(host: str, bucket: str) -> None:
     request = urllib.request.Request(
         f"http://{host}/{bucket}", method="PUT", headers={**headers, "authorization": authorization}
     )
-    urllib.request.urlopen(request).close()
+    urllib.request.urlopen(request, timeout=NETWORK_TIMEOUT).close()

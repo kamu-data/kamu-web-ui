@@ -182,14 +182,13 @@ async def switch_channel_toggle_on(s) -> None:
     await s.must_wait_for("app-flows-table tr.mat-row td.mat-cell")
 
 
-async def mask_rotated_secret(s) -> None:
-    masked = await s.eval(r"""(() => { let n = 0;
-        for (const el of document.querySelectorAll("app-dataset-settings-webhooks-tab input, app-dataset-settings-webhooks-tab *")) {
-            if (el.tagName === "INPUT" && /^[0-9a-f]{32,}$/.test(el.value)) { el.value = "0".repeat(el.value.length); n++; }
-            else if (el.children.length === 0 && /^\s*[0-9a-f]{32,}\s*$/.test(el.textContent)) { el.textContent = el.textContent.replace(/[0-9a-f]/g, "0"); n++; }
-        } return n; })()""")
-    if not masked:
-        raise RuntimeError("rotate-secret: no secret found to mask")
+async def expect_rotated_secret(s) -> None:
+    """The page shows the new secret; the snapshot masks hide its value."""
+    shown = await s.eval(r"""[...document.querySelectorAll("app-dataset-settings-webhooks-tab input, app-dataset-settings-webhooks-tab *")]
+        .some((el) => (el.tagName === "INPUT" ? /^[0-9a-f]{32,}$/.test(el.value)
+            : el.children.length === 0 && /^\s*[0-9a-f]{32,}\s*$/.test(el.textContent)))""")
+    if not shown:
+        raise RuntimeError("rotate-secret: no secret shown")
 
 
 def switch_on_with_nested_disabled(trigger: str, options: list[str], radio: str):
@@ -583,13 +582,13 @@ SCENARIOS: list[Scenario] = [
         expect_value=["demo-hook"],
     ),
     # Opening this page rotates paused-hook's secret (a mutation, invisible on every other page) and
-    # shows the new random one: replace it with zeros of the same length
+    # shows the new random one, which the snapshot masks hide
     Scenario(
         "56-settings-webhook-rotate-secret",
         "webhooks",
         url=lambda s: f"{DS}/settings/webhooks/rotate-secret/{webhook_id(s, 'paused-hook')}",
         wait_for="app-dataset-settings-webhooks-tab",
-        steps=mask_rotated_secret,
+        steps=expect_rotated_secret,
         expect_text=["secret"],
     ),
     # Disabled nested fieldsets under an enabled radio: switch the trigger on (not saved), then pick the

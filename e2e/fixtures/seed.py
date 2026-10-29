@@ -34,6 +34,8 @@ from e2e.visual.backend import Server, start_workspace_server
 ADMIN = {"login": "kamu", "password": "kamu.dev"}
 # The server refuses to start without GitHub OAuth settings; nothing logs in through GitHub
 DUMMY_GITHUB = {"clientId": "dummy", "clientSecret": "dummy"}
+# Seconds before a GraphQL request to the server gives up: a hung server must not hang the seed
+GQL_TIMEOUT = 120
 
 
 def log(*parts) -> None:
@@ -144,7 +146,7 @@ class Seeder:
             headers["authorization"] = f"Bearer {self.token}"
         body = json.dumps({"query": query, "variables": variables or {}}).encode()
         request = urllib.request.Request(f"{self.api}/graphql", data=body, headers=headers, method="POST")
-        with urllib.request.urlopen(request) as response:
+        with urllib.request.urlopen(request, timeout=GQL_TIMEOUT) as response:
             result = json.load(response)
         if result.get("errors"):
             raise RuntimeError(f"GraphQL: {json.dumps(result['errors'])[:600]}\n{query[:200]}")
@@ -212,7 +214,7 @@ class Seeder:
                 headers={"authorization": f"Bearer {self.token}", "content-type": "application/x-ndjson"},
                 method="POST",
             )
-            urllib.request.urlopen(request).close()
+            urllib.request.urlopen(request, timeout=GQL_TIMEOUT).close()
         log(f"{name}: {count} push ingests")
 
     def trigger(self, dataset: str, kind: str) -> str:

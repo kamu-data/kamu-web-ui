@@ -128,14 +128,21 @@ class Cdp:
         await self._ws.close()
 
     async def _read(self) -> None:
-        async for raw in self._ws:
-            message = json.loads(raw)
-            if "id" in message and message["id"] in self._pending:
-                future, method = self._pending.pop(message["id"])
-                if "error" in message:
-                    future.set_exception(RuntimeError(f"{method}: {message['error']['message']}"))
-                else:
-                    future.set_result(message.get("result", {}))
-            elif "method" in message:
-                for fn in self._listeners.get(message["method"], []):
-                    fn(message.get("params", {}))
+        try:
+            async for raw in self._ws:
+                message = json.loads(raw)
+                if "id" in message and message["id"] in self._pending:
+                    future, method = self._pending.pop(message["id"])
+                    if "error" in message:
+                        future.set_exception(RuntimeError(f"{method}: {message['error']['message']}"))
+                    else:
+                        future.set_result(message.get("result", {}))
+                elif "method" in message:
+                    for fn in self._listeners.get(message["method"], []):
+                        fn(message.get("params", {}))
+        finally:
+            # A closed connection (Chrome gone) answers nothing more: fail the calls still waiting
+            for future, method in self._pending.values():
+                if not future.done():
+                    future.set_exception(RuntimeError(f"{method}: the browser connection closed"))
+            self._pending.clear()

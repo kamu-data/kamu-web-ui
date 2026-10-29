@@ -110,7 +110,7 @@ class WorkspaceProfile:
             server = start_api_server(backend, self.api_port, api_server_config(config, env), log_dir)
         try:
             info = fill(self.name, server)
-        except Exception:
+        except BaseException:
             server.stop()
             raise
         return Running(server, _frozen_clock(info["seededAt"]), backend.describe())

@@ -12,6 +12,7 @@ import asyncio
 import json
 import os
 import shutil
+import signal
 import sys
 import time
 from datetime import UTC, datetime
@@ -242,9 +243,10 @@ async def probe_command(args) -> None:
     browser_dir = Path(args.build).resolve() if args.build else build(REPO, run_dir / "build", run_dir / "build.log")
     running = profile.open(backend_from(args, cache), cache, run_dir)
     server = running.server
-    served = Served(browser_dir, UI_PORTS["head"], server.api_url)
-    chrome = await Chrome.launch(run_dir / ".chrome-profile", CDP_PORT, CHROME)
+    served, chrome = None, None
     try:
+        served = Served(browser_dir, UI_PORTS["head"], server.api_url)
+        chrome = await Chrome.launch(run_dir / ".chrome-profile", CDP_PORT, CHROME)
         cdp = await chrome.open_page()
         target = Target(f"http://localhost:{UI_PORTS['head']}", server.api_url, profile.account, running.now)
         s = Session(cdp, target)
@@ -261,8 +263,10 @@ async def probe_command(args) -> None:
             await s.screenshot(run_dir / f"probe-{i:02d}.png")
         await cdp.close()
     finally:
-        await chrome.close()
-        served.stop()
+        if chrome:
+            await chrome.close()
+        if served:
+            served.stop()
         server.stop()
     print(f"screenshots: {run_dir}")
 
@@ -355,6 +359,8 @@ def parser() -> argparse.ArgumentParser:
 
 def main() -> int:
     args = parser().parse_args()
+    # A plain `kill` unwinds like Ctrl+C, so the backend's containers and processes are stopped
+    signal.signal(signal.SIGTERM, lambda *_: sys.exit(143))
     try:
         args.run(args)
     except Exception as e:

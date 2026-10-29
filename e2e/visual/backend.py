@@ -16,11 +16,13 @@ import json
 import os
 import platform
 import re
+import shlex
 import shutil
 import socket
 import subprocess
 import tarfile
 import time
+import urllib.error
 import urllib.request
 from dataclasses import dataclass
 from pathlib import Path
@@ -155,12 +157,16 @@ def _download_release(flavor: Flavor, version: str, cache: Path) -> Path:
         partial.mkdir(parents=True)
         archive = partial / f"{stem}.tar.gz"
         try:
-            urllib.request.urlretrieve(url, archive)
+            with urllib.request.urlopen(url, timeout=containers.NETWORK_TIMEOUT) as response, open(archive, "wb") as f:
+                shutil.copyfileobj(response, f)
+            with tarfile.open(archive) as tar:
+                tar.extractall(partial, filter="data")
         except urllib.error.HTTPError as e:
             shutil.rmtree(partial)
             raise RuntimeError(f"no {flavor.binary} release {version}: {url}: {e.code}") from e
-        with tarfile.open(archive) as tar:
-            tar.extractall(partial, filter="data")
+        except BaseException:
+            shutil.rmtree(partial)
+            raise
         archive.unlink()
         # The extraction filter drops the executable bit
         (partial / stem / flavor.binary).chmod(0o755)
@@ -285,7 +291,7 @@ def _process(command: list, cwd: Path, env: dict, port: int, log_file: Path) -> 
 
     try:
         wait_for_api(api_url, lambda: proc.poll() is None, log_file)
-    except Exception:
+    except BaseException:
         stop()
         raise
     return Server(api_url, stop, place)
@@ -314,7 +320,7 @@ def start_container_server(
     check_port(port)
     runtime = container_runtime()
     own_network = None if network else containers.create_network(runtime, f"kamu-visual-{port}")
-    script = " && ".join([*(" ".join(step) for step in before), "exec " + " ".join(command)])
+    script = " && ".join([*(shlex.join(step) for step in before), "exec " + shlex.join(command)])
     try:
         container = Container(
             runtime,
@@ -327,7 +333,7 @@ def start_container_server(
             privileged=True,
             entrypoint="sh",
         )
-    except Exception:
+    except BaseException:
         if own_network:
             containers.remove_network(runtime, own_network)
         raise
@@ -347,7 +353,7 @@ def start_container_server(
             container.copy_in(source, target)
         container.start()
         wait_for_api(api_url, container.running, log_file)
-    except Exception:
+    except BaseException:
         stop()
         raise
     return Server(api_url, stop, place)
@@ -356,14 +362,17 @@ def start_container_server(
 def kamu_core_version(api_server_version: str) -> str:
     """The kamu core a kamu-api-server release is built on, from kamu-node's Cargo.lock at its tag."""
     url = f"https://raw.githubusercontent.com/kamu-data/kamu-node/v{api_server_version}/Cargo.lock"
+    hint = "pass --migrations <kamu-cli checkout>/migrations/postgres"
     try:
-        lock = urllib.request.urlopen(url).read().decode()
+        lock = urllib.request.urlopen(url, timeout=containers.NETWORK_TIMEOUT).read().decode()
     except OSError as e:
         raise RuntimeError(
-            f"cannot tell which kamu core kamu-api-server {api_server_version} uses ({url}: {e}); "
-            "pass --migrations <kamu-cli checkout>/migrations/postgres"
+            f"cannot tell which kamu core kamu-api-server {api_server_version} uses ({url}: {e}); {hint}"
         ) from e
-    return re.search(r'name = "kamu"\nversion = "([^"]+)"', lock).group(1)
+    found = re.search(r'name = "kamu"\nversion = "([^"]+)"', lock)
+    if not found:
+        raise RuntimeError(f"{url} names no kamu crate; {hint}")
+    return found.group(1)
 
 
 def start_api_server(backend: Backend, port: int, config: dict, run_dir: Path) -> Server:
@@ -434,7 +443,7 @@ def start_api_server(backend: Backend, port: int, config: dict, run_dir: Path) -
             server = start_container_server(
                 backend.image, command, workdir, files, env, port, log_file, network=network
             )
-    except Exception:
+    except BaseException:
         stop_services()
         raise
 

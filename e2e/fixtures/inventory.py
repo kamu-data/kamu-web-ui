@@ -67,6 +67,12 @@ def check_inventory(inventory: dict, entry_ids, seed: Path = SEED) -> list[str]:
 
     for dataset in inventory["datasets"]:
         where = dataset["name"]
+        for file in dataset.get("data", []):
+            if not (seed / file).is_file():
+                problems.append(f"{where}: no file {file}")
+        for collaborator in dataset.get("collaborators", []):
+            if collaborator["account"] not in accounts:
+                problems.append(f"{where}: collaborator {collaborator['account']} is not a listed account")
         kind = dataset_kind(dataset)
         if kind not in KINDS:
             problems.append(f"{where}: kind must be one of {', '.join(KINDS)}")
@@ -85,12 +91,6 @@ def check_inventory(inventory: dict, entry_ids, seed: Path = SEED) -> list[str]:
         content = yaml.safe_load(snapshot_text(dataset, seed))["content"]
         if content["name"] != where:
             problems.append(f"{where}: the snapshot names {content['name']}")
-        for file in dataset.get("data", []):
-            if not (seed / file).is_file():
-                problems.append(f"{where}: no file {file}")
-        for collaborator in dataset.get("collaborators", []):
-            if collaborator["account"] not in accounts:
-                problems.append(f"{where}: collaborator {collaborator['account']} is not a listed account")
     for dataset in inventory["datasets"]:
         for item in dataset.get("contents", []):
             if item["dataset"] not in datasets:

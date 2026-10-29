@@ -69,6 +69,11 @@ class InventoryTest(unittest.TestCase):
         inventory["flowRuns"].append({"dataset": "gone", "flow": "ingest", "outcome": "success"})
         self.assertEqual(len(self.problems(inventory)), 3)
 
+    def test_references_are_checked_on_every_kind_of_dataset(self):
+        inventory = copy.deepcopy(self.inventory)
+        self.dataset(inventory, "city-reports")["collaborators"] = [{"account": "carol", "role": "READER"}]
+        self.assertEqual(self.problems(inventory), ["city-reports: collaborator carol is not a listed account"])
+
     def test_a_missing_purpose(self):
         inventory = copy.deepcopy(self.inventory)
         del self.dataset(inventory, "private-notes")["purpose"]

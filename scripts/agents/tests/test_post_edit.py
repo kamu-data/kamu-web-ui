@@ -195,7 +195,7 @@ class LicenseTest(unittest.TestCase):
 
     def test_ignored_files_are_exempt(self):
         self.file.write_text("export const x = 1;\n")
-        self.assertEqual(check_license(".spec/tools/x.mjs", self.file), [])
+        self.assertEqual(check_license("dist/x.mjs", self.file), [])
         self.assertTrue(check_license("e2e/visual/x.mjs", self.file))
 
     def test_python_and_shell_take_the_hash_form(self):

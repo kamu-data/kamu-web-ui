@@ -129,8 +129,56 @@
     return all.filter((el) => !all.some((o) => o !== el && o.contains(el)));
   }
 
+  // Values that differ between two seedings of the same data: ids, hashes, secrets and absolute times.
+  // Each becomes a fixed value of the same format, so a cached baseline stays valid after a reseed.
+  // Longer formats come first; the formats are the app's (AppValues) and ISO 8601.
+  const MONTH = "(?:Jan|Feb|Mar|Apr|May|Jun|Jul|Aug|Sep|Oct|Nov|Dec)";
+  const zeroed = (text) => text.replace(/[0-9a-zA-Z]/g, "0");
+  const VOLATILE = [
+    [/\bdid:[a-z]+:[0-9a-zA-Z]+/g, (m) => m.replace(/[^:]+$/, zeroed)],
+    [/\b[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}\b/g, zeroed],
+    [/\b[0-9a-f]{32,}\b/g, zeroed],
+    [
+      new RegExp(`\\b${MONTH} \\d{1,2}(?:st|nd|rd|th) \\d{4} \\d{1,2}:\\d{2}:\\d{2} [AP]M GMT[+-]\\d{2}:\\d{2}`, "g"),
+      () => "Jan 1st 2000 1:00:00 AM GMT+00:00",
+    ],
+    [/\b\d{4}-\d{2}-\d{2}, \d{1,2}:\d{2}:\d{2} [AP]M/g, () => "2000-01-01, 1:00:00 AM"],
+    [/\b\d{1,2}\/\d{1,2}\/\d{2}, \d{1,2}:\d{2}:\d{2} [AP]M/g, () => "1/1/00, 1:00:00 AM"],
+    [/\b\d{4}-\d{2}-\d{2}[T ]\d{2}:\d{2}:\d{2}(?:\.\d+)?(?:Z|[+-]\d{2}:?\d{2})?/g, (m) => m.replace(/\d/g, "0")],
+    [new RegExp(`\\b\\d{2} ${MONTH} \\d{4}\\b`, "g"), () => "01 Jan 2000"],
+    // Measured durations; times relative to the frozen clock ("2 hours ago") stay
+    [/\b(?:less than )?(?:a|an|\d+) (?:second|minute)s?\b(?! ago)/g, () => "1 second"],
+  ];
+  // Components that show a fragment of a volatile value no pattern can recognise
+  const VOLATILE_COMPONENTS = "app-display-hash";
+
+  function masked(text) {
+    return VOLATILE.reduce((t, [pattern, replace]) => t.replace(pattern, replace), text);
+  }
+
   window.__cap = {
     path,
+    // Masks volatile values in text and form fields; returns how many it changed
+    mask() {
+      let n = 0;
+      const walker = document.createTreeWalker(document.body, window.NodeFilter.SHOW_TEXT);
+      for (let node = walker.nextNode(); node; node = walker.nextNode()) {
+        const inComponent = node.parentElement?.closest(VOLATILE_COMPONENTS);
+        const text = inComponent ? node.data.replace(/[0-9a-f]/g, "0") : masked(node.data);
+        if (text !== node.data) {
+          node.data = text;
+          n++;
+        }
+      }
+      for (const field of document.querySelectorAll("input, textarea")) {
+        const value = masked(field.value);
+        if (value !== field.value) {
+          field.value = value;
+          n++;
+        }
+      }
+      return n;
+    },
     snapAll() {
       const out = {};
       for (const root of topRoots()) snapSubtree(root, out);

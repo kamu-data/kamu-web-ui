@@ -64,6 +64,10 @@ ACC = "/kamu/~select"
 ACC_ROOT = "/kamu"
 # What encodeURIComponent leaves as is, so URLs read as the app writes them
 URI_COMPONENT_SAFE = "!'()*"
+# The data tab's default query has no order, and the backend returns rows in the order of its data files,
+# whose names change with every seeding
+DATA_TAB_QUERY = "select * from 'kamu/population' order by offset desc"
+DATA_TAB = f"{DS}/data?sqlQuery={quote(DATA_TAB_QUERY, safe=URI_COMPONENT_SAFE)}"
 # 11 x 11 rows: more than the 50-row page, so "load more" offers its options
 CROSS_JOIN = (
     "select a.city, b.city as other_city, a.population from 'kamu/population' a "
@@ -413,7 +417,7 @@ SCENARIOS: list[Scenario] = [
     Scenario(
         "29-xmenu-query-run-options",
         "dataset-data-tab",
-        url=f"{DS}/data",
+        url=DATA_TAB,
         wait_for='app-query-and-result-sections [data-test-id="searchAdditionalButtons"]:not([disabled])',
         steps=open_query_run_options,
         after=close_overlay,
@@ -461,7 +465,7 @@ SCENARIOS: list[Scenario] = [
     Scenario(
         "35-data-tab",
         "dataset-data-tab",
-        url=f"{DS}/data",
+        url=DATA_TAB,
         wait_for="app-query-and-result-sections app-dynamic-table",
         expect_text=["city1"],
     ),

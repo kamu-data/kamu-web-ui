@@ -295,7 +295,7 @@ def parser() -> argparse.ArgumentParser:
     c.add_argument("--head", help="head commit (default: the working tree)")
     c.add_argument("--tier", choices=["smoke", "full"], default="full", help="full includes smoke")
     c.add_argument("--unrated", action="store_true", help="also run catalogue entries without a tier")
-    c.add_argument("--only", help="only scenarios whose name contains this text")
+    c.add_argument("--only", help="only scenarios whose name contains this text, or one of a comma-separated list")
     c.set_defaults(run=lambda a: asyncio.run(compare_command(a)))
 
     pr = commands.add_parser("probe", help="print the text and components of pages, and save screenshots")

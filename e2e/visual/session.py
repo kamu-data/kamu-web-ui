@@ -337,6 +337,7 @@ async def run_scenarios(scenarios, target: Target, browser: Browser, out_dir: Pa
                 if sc.expect_path and not entry["url"].startswith(sc.expect_path):
                     raise RuntimeError(f"ended on {entry['url']}, expected {sc.expect_path}")
                 entry["components"] = await s.eval("window.__cap.components()")
+                entry["masked"] = await s.eval("window.__cap.mask()")
                 await capture(s, sc, entry)
                 if sc.after:
                     await sc.after(s)

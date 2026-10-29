@@ -135,7 +135,8 @@
   const MONTH = "(?:Jan|Feb|Mar|Apr|May|Jun|Jul|Aug|Sep|Oct|Nov|Dec)";
   const zeroed = (text) => text.replace(/[0-9a-zA-Z]/g, "0");
   const VOLATILE = [
-    [/\bdid:[a-z]+:[0-9a-zA-Z]+/g, (m) => m.replace(/[^:]+$/, zeroed)],
+    // Whole, or shortened to its ends ("did:odf:fed...6b65ae4")
+    [/\bdid:[a-z]+:[0-9a-zA-Z]+(?:(?:\.\.\.|…)[0-9a-zA-Z]+)?/g, (m) => m.replace(/[^:]+$/, zeroed)],
     [/\b[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}\b/g, zeroed],
     [/\b[0-9a-f]{32,}\b/g, zeroed],
     [
@@ -143,6 +144,8 @@
       () => "Jan 1st 2000 1:00:00 AM GMT+00:00",
     ],
     [/\b\d{4}-\d{2}-\d{2}, \d{1,2}:\d{2}:\d{2} [AP]M/g, () => "2000-01-01, 1:00:00 AM"],
+    // The date range pickers' inputs (MY_MOMENT_FORMATS)
+    [/\b\d{4}-\d{2}-\d{2}, \d{1,2}:\d{2} [AP]M/g, () => "2000-01-01, 1:00 AM"],
     [/\b\d{1,2}\/\d{1,2}\/\d{2}, \d{1,2}:\d{2}:\d{2} [AP]M/g, () => "1/1/00, 1:00:00 AM"],
     [/\b\d{4}-\d{2}-\d{2}[T ]\d{2}:\d{2}:\d{2}(?:\.\d+)?(?:Z|[+-]\d{2}:?\d{2})?/g, (m) => m.replace(/\d/g, "0")],
     [new RegExp(`\\b\\d{2} ${MONTH} \\d{4}\\b`, "g"), () => "01 Jan 2000"],

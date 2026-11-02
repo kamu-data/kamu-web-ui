@@ -16,6 +16,7 @@ import signal
 import sys
 import time
 import traceback
+from contextlib import redirect_stdout
 from datetime import UTC, datetime
 from pathlib import Path
 
@@ -42,6 +43,7 @@ from e2e.visual.catalogue import check_scenarios, load_catalogue, select_scenari
 from e2e.visual.cdp import Chrome
 from e2e.visual.compare import compare
 from e2e.visual.coverage import coverage_report
+from e2e.visual.progress import CaptureProgress, StampedOutput, Timings
 from e2e.visual.scenarios import SCENARIOS
 from e2e.visual.serve import Served
 from e2e.visual.session import Browser, Session, Target
@@ -69,16 +71,16 @@ def timestamp() -> str:
 class Side:
     """One side of a comparison: its source tree and its production build."""
 
-    def __init__(self, ref: str | None, cache: Path, run_dir: Path):
+    def __init__(self, ref: str | None, cache: Path, run_dir: Path, log=print):
         if ref is None:
             self.label = f"working tree on {git('rev-parse', '--short', 'HEAD')}"
             self.src = REPO
-            self.browser = build(REPO, run_dir / "head-build", run_dir / "build-head.log")
+            self.browser = build(REPO, run_dir / "head-build", run_dir / "build-head.log", log)
         else:
             sha = git("rev-parse", f"{ref}^{{commit}}")
             self.label = sha[:12]
             self.src = source_of(sha, cache)
-            self.browser = build(self.src, cache / "builds" / sha, cache / "builds" / f"{sha}.log")
+            self.browser = build(self.src, cache / "builds" / sha, cache / "builds" / f"{sha}.log", log)
 
 
 def backend_from(args, cache: Path) -> BackendChoice:
@@ -107,21 +109,24 @@ async def compare_command(args) -> None:
         raise RuntimeError("no scenario selected: rate catalogue entries, or pass --unrated")
     run_dir = new_run_dir(cache)
     started = time.monotonic()
+    with redirect_stdout(StampedOutput(sys.stdout, run_dir / "run.log", started)):
+        await compare_run(args, cache, selection, run_dir, started)
 
-    def log(line: str) -> None:
-        print(line, flush=True)
-        with open(run_dir / "run.log", "a") as f:
-            f.write(line + "\n")
 
-    base = Side(args.base or git("merge-base", "HEAD", "master"), cache, run_dir)
-    head = Side(args.head, cache, run_dir)
+async def compare_run(args, cache: Path, selection: dict, run_dir: Path, started: float) -> None:
+    # Stdout is a StampedOutput here: what is printed is stamped and kept in run.log
+    log = print
+    log(f"run {run_dir}")
+    base = Side(args.base or git("merge-base", "HEAD", "master"), cache, run_dir, log)
+    head = Side(args.head, cache, run_dir, log)
     backend = backend_from(args, cache)
-    log(f"base {base.label}, head {head.label}, backend {backend.kind}, run {run_dir}")
+    log(f"base {base.label}, head {head.label}, backend {backend.kind}")
     extra_roots = utility_roots(base.src)
     chrome = chrome_major(CHROME)
     # Once per run: the kit may be edited while a long run goes on
     kit = kit_hash()
     browser = Browser(CHROME, CDP_PORT)
+    timings = Timings(cache / "timings.json")
 
     async def compare_profile(profile_name: str, scenarios: list) -> str:
         profile = PROFILES[profile_name]
@@ -143,6 +148,9 @@ async def compare_command(args) -> None:
         key |= {"kit": kit, "chrome": chrome}
         (profile_dir / "key.json").write_text(json.dumps(key, indent=2))
 
+        log(
+            f"[{profile_name}] profile {list(selection).index(profile_name) + 1}/{len(selection)}: starting the backend"
+        )
         running = profile.open(backend, cache, run_dir)
         log(f"[{profile_name}] {running.describe}")
         server = running.server
@@ -166,19 +174,19 @@ async def compare_command(args) -> None:
             if (baseline / "report.json").exists():
                 log(f"[{profile_name}] base: cached baseline {baseline}")
             else:
-                log(f"[{profile_name}] base: capturing {len(names)} scenarios")
                 partial = baseline.with_name(baseline.name + ".partial")
                 shutil.rmtree(partial, ignore_errors=True)
-                report = await capture(scenarios, base_target, browser, partial, log)
+                progress = CaptureProgress(f"[{profile_name}] base", profile_name, names, timings, log)
+                report = await capture(scenarios, base_target, browser, partial, progress)
                 failures += [f"base {r['name']}: {r['error']}" for r in report if r.get("ok") is False]
                 # A baseline with failed scenarios is not reused: the next run captures it again
                 if not failures:
                     partial.rename(baseline)
             base_dir = baseline if baseline.exists() else baseline.with_name(baseline.name + ".partial")
 
-            log(f"[{profile_name}] head: capturing {len(names)} scenarios")
             head_dir = profile_dir / "head"
-            report = await capture(scenarios, head_target, browser, head_dir, log)
+            progress = CaptureProgress(f"[{profile_name}] head", profile_name, names, timings, log)
+            report = await capture(scenarios, head_target, browser, head_dir, progress)
             failures += [f"head {r['name']}: {r['error']}" for r in report if r.get("ok") is False]
 
             diff_dir = profile_dir / "diff"
@@ -191,7 +199,9 @@ async def compare_command(args) -> None:
                 log(f"[{profile_name}] recheck: {', '.join(pixels_only)}")
                 again = profile_dir / "recheck"
                 rescenarios = [sc for sc in scenarios if sc.name in pixels_only]
-                await capture(rescenarios, head_target, browser, again, log)
+                recheck_names = [sc.name for sc in rescenarios]
+                progress = CaptureProgress(f"[{profile_name}] recheck", profile_name, recheck_names, timings, log)
+                await capture(rescenarios, head_target, browser, again, progress)
                 second = compare(str(base_dir), str(again), str(profile_dir / "recheck-diff"), pixels_only)
                 recheck = {name: "noise" if second[name]["verdict"] == "same" else "confirmed" for name in pixels_only}
             return profile_section(profile_name, summary, recheck, failures, diff_dir)

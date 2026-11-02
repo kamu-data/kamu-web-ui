@@ -46,8 +46,8 @@ async def forced_snapshots(s) -> dict:
     return out
 
 
-async def capture(scenarios, target: Target, browser: Browser, out_dir: Path, log=print) -> list[dict]:
-    """Captures `scenarios` in order; returns the report, also written to `<out_dir>/report.json`."""
+async def capture(scenarios, target: Target, browser: Browser, out_dir: Path, done=None) -> list[dict]:
+    """Captures `scenarios` in order, telling `done` of each; returns the report, also written to `<out_dir>/report.json`."""
     (out_dir / "styles").mkdir(parents=True, exist_ok=True)
 
     async def snapshot(s, sc, entry) -> None:
@@ -59,6 +59,6 @@ async def capture(scenarios, target: Target, browser: Browser, out_dir: Path, lo
         data = json.dumps({"defaults": defaults, "elements": elements}).encode()
         (out_dir / "styles" / f"{sc.name}.json.gz").write_bytes(gzip.compress(data))
 
-    report = await run_scenarios(scenarios, target, browser, out_dir, snapshot, log)
+    report = await run_scenarios(scenarios, target, browser, out_dir, snapshot, done)
     (out_dir / "report.json").write_text(json.dumps(report, indent=2))
     return report

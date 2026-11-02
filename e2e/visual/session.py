@@ -20,6 +20,7 @@ from typing import Any
 from urllib.parse import urlparse
 
 from e2e.visual.cdp import Cdp, Chrome
+from e2e.visual.progress import status_line
 
 PAGE_LIB = (Path(__file__).parent / "page-lib.js").read_text(encoding="utf8")
 VIEWPORT = {"width": 1440, "height": 900}
@@ -267,8 +268,9 @@ class Session:
         await self.goto_full("/v/search")
 
 
-async def run_scenarios(scenarios, target: Target, browser: Browser, out_dir: Path, capture, log=print) -> list[dict]:
-    """Runs `scenarios` in order in one tab. `capture(session, scenario, entry)` does the per-scenario work.
+async def run_scenarios(scenarios, target: Target, browser: Browser, out_dir: Path, capture, done=None) -> list[dict]:
+    """Runs `scenarios` in order in one tab. `capture(session, scenario, entry)` does the per-scenario work,
+    and `done(entry)` hears of each finished scenario (default: prints its status line).
     Logged-out scenarios (`phase="anon"`) come last: the first one clears the session. Returns one report
     entry per scenario, then `{"consoleErrors": [...]}`."""
     chrome = await Chrome.launch(out_dir / ".chrome-profile", browser.cdp_port, browser.binary)
@@ -284,6 +286,7 @@ async def run_scenarios(scenarios, target: Target, browser: Browser, out_dir: Pa
         anon = False
         for sc in scenarios:
             entry = {"name": sc.name, "ok": True}
+            started = time.monotonic()
             try:
                 if sc.phase == "anon" and not anon:
                     await s.logout()
@@ -355,8 +358,11 @@ async def run_scenarios(scenarios, target: Target, browser: Browser, out_dir: Pa
             finally:
                 if sc.viewport:
                     await s.set_viewport(VIEWPORT)
-            status = "ok  " if entry["ok"] else "FAIL"
-            log(f"{status} {sc.name} {entry.get('elements', '')} {entry.get('error', '')}".rstrip())
+            entry["seconds"] = round(time.monotonic() - started, 1)
+            if done:
+                done(entry)
+            else:
+                print(status_line(entry), flush=True)
             report.append(entry)
         report.append({"consoleErrors": s.console_errors})
         return report

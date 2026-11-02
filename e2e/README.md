@@ -17,8 +17,16 @@ npm ci                                   # once; the kit builds the app with the
 npm run visual -- compare --tier smoke   # merge-base with master against the working tree
 ```
 
-The run prints the path of `report.md`. Nothing is written to the repository; everything goes to
-`~/.cache/kamu-ui-visual/` (`KAMU_VISUAL_CACHE` to move it).
+Each line the run prints starts with the time since it started. A capture logs every scenario with
+its position and, once a previous run has timed the scenarios, an estimate of what is left:
+
+```text
+5:55 [seed] head: capturing 86 scenarios, ~19 min
+6:16 [seed] head 1/86 ok   01-dataset-create-fresh 731, ~18 min left
+```
+
+The run ends with the path of `report.md`. Nothing is written to the repository; everything goes
+to `~/.cache/kamu-ui-visual/` (`KAMU_VISUAL_CACHE` to move it).
 
 ## Prerequisites
 
@@ -92,6 +100,7 @@ Accounts: `kamu` (admin, password `kamu.dev`), `alice`, `bob`.
 | `src/`, `builds/` | sources of base commits (extracted with `git archive`) and their production builds |
 | `workspaces/` | seeded workspaces of a local kamu-cli build |
 | `backends/` | downloaded releases |
+| `timings.json` | how long each scenario took, for the estimates |
 
 ## Layout
 

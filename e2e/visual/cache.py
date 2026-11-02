@@ -90,13 +90,14 @@ def source_of(sha: str, directory: Path) -> Path:
     return src
 
 
-def build(src: Path, out: Path, log_file: Path) -> Path:
+def build(src: Path, out: Path, log_file: Path, log=print) -> Path:
     """A production build of `src` in `out`; returns its `browser` folder."""
     browser = out / "browser"
     if (browser / "index.html").exists():
+        log(f"cached build {out}")
         return browser
     shutil.rmtree(out, ignore_errors=True)
-    print(f"building {'the working tree' if src == REPO else src} (production)")
+    log(f"building {'the working tree' if src == REPO else src} (production)")
     _run(["npx", "ng", "build", "--configuration", "production", "--output-path", str(out)], src, log_file)
     return browser
 

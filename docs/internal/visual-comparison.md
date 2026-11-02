@@ -196,6 +196,7 @@ differ), `pixels-only` (rechecked: `noise` if a head capture alone matches the b
 | `baselines/<base sha>-<profile>-<hash>` | data id, backend id, kit hash (the capture code under `e2e/visual`: its Python files, `page-lib.js` and the helpers, without the comparer; taken once per run), Chrome major version, production build, scenario names, utility roots |
 | `backends/<kind>-<version>` | release version, unpacked atomically |
 | `backend-ids.json` | a binary's path, mtime and size → its version and content hash |
+| `timings.json` | `<profile>/<scenario>` → seconds its last capture took, for the progress estimates; not part of any key |
 
 A baseline with a failed scenario is not stored. Because volatile values are masked, a baseline
 stays valid when the backend is filled afresh, as every non-workspace backend is on every run.

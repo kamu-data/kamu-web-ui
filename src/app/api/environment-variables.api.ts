@@ -16,6 +16,8 @@ import { updateCacheHelper } from "@common/helpers/apollo-cache.helper";
 import { mutationData } from "@common/helpers/apollo-error.helpers";
 import { noCacheFetchPolicy } from "@common/helpers/data.helpers";
 import {
+    CreateEnvVariableGQL,
+    CreateEnvVariableMutation,
     DeleteEnvVariableGQL,
     DeleteEnvVariableMutation,
     ExposedEnvVariableValueGQL,
@@ -31,6 +33,7 @@ import {
 })
 export class EnvironmentVariablesApi {
     private listEnvVariablesGQL = inject(ListEnvVariablesGQL);
+    private createEnvVariableGQL = inject(CreateEnvVariableGQL);
     private upsertEnvVariableGQL = inject(UpsertEnvVariableGQL);
     private deleteEnvVariableGQL = inject(DeleteEnvVariableGQL);
     private exposedEnvVariableValueGQL = inject(ExposedEnvVariableValueGQL);
@@ -48,6 +51,32 @@ export class EnvironmentVariablesApi {
                 return result.data;
             }),
         );
+    }
+
+    public createEnvironmentVariable(params: {
+        accountId: string;
+        datasetId: string;
+        key: string;
+        value: string;
+        isSecret: boolean;
+    }): Observable<CreateEnvVariableMutation> {
+        return this.createEnvVariableGQL
+            .mutate({
+                variables: {
+                    datasetId: params.datasetId,
+                    key: params.key,
+                    value: params.value,
+                    isSecret: params.isSecret,
+                },
+                update: (cache) => {
+                    updateCacheHelper(cache, {
+                        accountId: params.accountId,
+                        datasetId: params.datasetId,
+                        fieldNames: ["envVars"],
+                    });
+                },
+            })
+            .pipe(first(), mutationData());
     }
 
     public upsertEnvironmentVariable(params: {

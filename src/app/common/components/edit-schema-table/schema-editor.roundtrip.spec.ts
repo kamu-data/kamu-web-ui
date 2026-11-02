@@ -33,7 +33,11 @@ import {
 import { registerMatSvgIcons, setComponentInput } from "@common/helpers/base-test.helpers.spec";
 import { SharedTestModule } from "@common/modules/shared-test.module";
 import { DatasetApi } from "@api/dataset.api";
-import { DataSchemaFormat, DatasetBlocksSchemaByEventTypeQuery, MetadataEventType } from "@api/kamu.graphql.interface";
+import {
+    DataSchemaFormat,
+    DatasetBlocksSchemaByEventTypeQuery,
+    MetadataProjectionEventType,
+} from "@api/kamu.graphql.interface";
 import { DataSchemaField, OdfTypes } from "@interface/dataset-schema.interface";
 
 import { mockSetPollingSourceEvent } from "src/app/dataset-block/metadata-block/components/event-details/mock.events";
@@ -188,7 +192,9 @@ describe("Schema editor round-trip (Load → Edit → Serialize)", () => {
             TestBed.inject(DestroyRef),
         );
 
-        expect(spy).toHaveBeenCalledWith(expect.objectContaining({ eventTypes: [MetadataEventType.SetPollingSource] }));
+        expect(spy).toHaveBeenCalledWith(
+            expect.objectContaining({ eventTypes: [MetadataProjectionEventType.SetPollingSource] }),
+        );
         expect(schemaControl.value).toEqual(NESTED_SCHEMA_FIELDS);
     });
 

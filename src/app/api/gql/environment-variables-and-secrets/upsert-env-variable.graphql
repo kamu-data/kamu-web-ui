@@ -3,19 +3,16 @@ mutation upsertEnvVariable($datasetId: DatasetID!, $key: String!, $value: String
     byId(datasetId: $datasetId) {
       envVars {
         upsertEnvVariable(key: $key, value: $value, isSecret: $isSecret) {
-          ... on UpsertDatasetEnvVarUpToDate {
-            message
-          }
+          __typename
+          message
 
           ... on UpsertDatasetEnvVarResultCreated {
-            message
             envVar {
               ...ViewDatasetEnvVarData
             }
           }
 
           ... on UpsertDatasetEnvVarResultUpdated {
-            message
             envVar {
               ...ViewDatasetEnvVarData
             }

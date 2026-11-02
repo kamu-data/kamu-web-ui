@@ -73,8 +73,8 @@ import {
     GetDatasetSchemaQuery,
     GetMetadataBlockGQL,
     GetMetadataBlockQuery,
-    MetadataEventType,
     MetadataManifestFormat,
+    MetadataProjectionEventType,
     RenameDatasetGQL,
     RenameDatasetMutation,
     SetVisibilityDatasetGQL,
@@ -142,7 +142,7 @@ export class DatasetApi {
     public getBlocksByEventType(params: {
         accountName: string;
         datasetName: string;
-        eventTypes: [MetadataEventType];
+        eventTypes: MetadataProjectionEventType[];
         encoding: MetadataManifestFormat;
     }): Observable<DatasetBlocksEncodedByEventTypeQuery> {
         return this.datasetBlocksEncodedByEventTypeGQL
@@ -165,7 +165,7 @@ export class DatasetApi {
     public getSchemaFieldsByEventType(params: {
         accountName: string;
         datasetName: string;
-        eventTypes: [MetadataEventType];
+        eventTypes: MetadataProjectionEventType[];
     }): Observable<DatasetBlocksSchemaByEventTypeQuery> {
         return this.datasetBlocksSchemaByEventTypeGQL
             .watch({

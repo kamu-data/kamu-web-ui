@@ -1,7 +1,7 @@
 query datasetBlocksSchemaByEventType(
   $accountName: AccountName!
   $datasetName: DatasetName!
-  $eventTypes: [MetadataEventType!]!
+  $eventTypes: [MetadataProjectionEventType!]!
 ) {
   datasets {
     byOwnerAndName(accountName: $accountName, datasetName: $datasetName) {

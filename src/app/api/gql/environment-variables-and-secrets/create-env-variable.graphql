@@ -1,0 +1,18 @@
+mutation createEnvVariable($datasetId: DatasetID!, $key: String!, $value: String!, $isSecret: Boolean!) {
+  datasets {
+    byId(datasetId: $datasetId) {
+      envVars {
+        createEnvVariable(key: $key, value: $value, isSecret: $isSecret) {
+          __typename
+          message
+
+          ... on CreateDatasetEnvVarResultCreated {
+            envVar {
+              ...ViewDatasetEnvVarData
+            }
+          }
+        }
+      }
+    }
+  }
+}

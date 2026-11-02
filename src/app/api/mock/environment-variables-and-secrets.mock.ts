@@ -6,6 +6,7 @@
  */
 
 import {
+    CreateEnvVariableMutation,
     DatasetKind,
     DeleteEnvVariableMutation,
     ExposedEnvVariableValueQuery,
@@ -24,6 +25,10 @@ export const MOCK_UPSERT_ENV_VAR_CREATED_MESSAGE = "Created";
 export const MOCK_UPSERT_ENV_VAR_UPDATED_MESSAGE = "Updated";
 export const MOCK_UPSERT_ENV_VAR_UP_TO_DATE_MESSAGE = "Dataset env var is up to date";
 export const MOCK_EXPOSED_ENV_VAR_VALUE = "value-10";
+export const MOCK_ENV_VAR_ALREADY_EXISTS_MESSAGE = "Environment variable with 'mock-key' key already exists";
+export const MOCK_ENV_VAR_INVALID_KEY_MESSAGE = "Invalid variable name 'mock-key'";
+export const MOCK_ENV_VAR_VALUE_TOO_LONG_MESSAGE = "Value of 'mock-key' is 16385 bytes long, the limit is 16384";
+export const MOCK_ENV_VAR_TOO_MANY_ENTRIES_MESSAGE = "A dataset can have at most 256 variables";
 
 export const mockListEnvVariablesQuery: ListEnvVariablesQuery = {
     datasets: {
@@ -139,6 +144,92 @@ export const mockUpsertEnvVariableMutationUpToDate: UpsertEnvVariableMutation = 
                 upsertEnvVariable: {
                     message: MOCK_UPSERT_ENV_VAR_UP_TO_DATE_MESSAGE,
                     __typename: "UpsertDatasetEnvVarUpToDate",
+                },
+                __typename: "DatasetEnvVarsMut",
+            },
+            __typename: "DatasetMut",
+        },
+        __typename: "DatasetsMut",
+    },
+};
+
+export const mockCreateEnvVariableMutationCreated: CreateEnvVariableMutation = {
+    datasets: {
+        byId: {
+            envVars: {
+                createEnvVariable: {
+                    message: MOCK_UPSERT_ENV_VAR_CREATED_MESSAGE,
+                    envVar: {
+                        key: MOCK_VAR_KEY,
+                        value: MOCK_VAR_VALUE,
+                        isSecret: false,
+                        __typename: "ViewDatasetEnvVar",
+                    },
+                    __typename: "CreateDatasetEnvVarResultCreated",
+                },
+                __typename: "DatasetEnvVarsMut",
+            },
+            __typename: "DatasetMut",
+        },
+        __typename: "DatasetsMut",
+    },
+};
+
+export const mockCreateEnvVariableMutationAlreadyExists: CreateEnvVariableMutation = {
+    datasets: {
+        byId: {
+            envVars: {
+                createEnvVariable: {
+                    message: MOCK_ENV_VAR_ALREADY_EXISTS_MESSAGE,
+                    __typename: "CreateDatasetEnvVarResultAlreadyExists",
+                },
+                __typename: "DatasetEnvVarsMut",
+            },
+            __typename: "DatasetMut",
+        },
+        __typename: "DatasetsMut",
+    },
+};
+
+export const mockCreateEnvVariableMutationInvalidKey: CreateEnvVariableMutation = {
+    datasets: {
+        byId: {
+            envVars: {
+                createEnvVariable: {
+                    message: MOCK_ENV_VAR_INVALID_KEY_MESSAGE,
+                    __typename: "DatasetEnvVarInvalidKey",
+                },
+                __typename: "DatasetEnvVarsMut",
+            },
+            __typename: "DatasetMut",
+        },
+        __typename: "DatasetsMut",
+    },
+};
+
+export const mockCreateEnvVariableMutationTooManyEntries: CreateEnvVariableMutation = {
+    datasets: {
+        byId: {
+            envVars: {
+                createEnvVariable: {
+                    message: MOCK_ENV_VAR_TOO_MANY_ENTRIES_MESSAGE,
+                    __typename: "DatasetEnvVarTooManyEntries",
+                },
+                __typename: "DatasetEnvVarsMut",
+            },
+            __typename: "DatasetMut",
+        },
+        __typename: "DatasetsMut",
+    },
+};
+
+export const mockUpsertEnvVariableMutationValueTooLong: UpsertEnvVariableMutation = {
+    datasets: {
+        byId: {
+            envVars: {
+                upsertEnvVariable: {
+                    message: MOCK_ENV_VAR_VALUE_TOO_LONG_MESSAGE,
+                    __typename: "DatasetEnvVarValueTooLong",
                 },
                 __typename: "DatasetEnvVarsMut",
             },

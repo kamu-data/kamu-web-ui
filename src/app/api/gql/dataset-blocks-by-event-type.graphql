@@ -1,7 +1,7 @@
 query datasetBlocksEncodedByEventType(
   $accountName: AccountName!
   $datasetName: DatasetName!
-  $eventTypes: [MetadataEventType!]!
+  $eventTypes: [MetadataProjectionEventType!]!
   $encoding: MetadataManifestFormat!
 ) {
   datasets {

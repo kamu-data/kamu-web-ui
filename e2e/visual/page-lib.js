@@ -33,7 +33,7 @@
     "app-load-more",
     ".header-link",
     "mat-progress-bar",
-    "app-modal-dialog",
+    "modal-dialog",
     ...(window.__capExtraRoots ?? []),
   ].join(",");
 

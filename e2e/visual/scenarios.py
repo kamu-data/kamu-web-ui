@@ -237,11 +237,11 @@ async def select_collection_row(s) -> None:
 
 async def open_revoke_dialog(s) -> None:
     await s.click("app-access-tokens-tab .revoke-token-button")
-    await s.must_wait_for('app-modal-dialog [data-test-id="noButton"]')
+    await s.must_wait_for('modal-dialog [data-test-id="noButton"]')
 
 
 async def cancel_revoke_dialog(s) -> None:
-    await s.click('app-modal-dialog [data-test-id="noButton"]')
+    await s.click('modal-dialog [data-test-id="noButton"]')
     await s.settle(0.8)
     if await s.exists("ngb-modal-window"):
         raise RuntimeError("the revoke dialog did not close")
@@ -474,7 +474,7 @@ SCENARIOS: list[Scenario] = [
         "metadata",
         url=f"{DS}/metadata/polling-source",
         wait_for="app-metadata-polling-source-tab",
-        expect_text=["seed-data/part*.csv"],
+        expect_text=["seed-data/population-*.csv"],
     ),
     Scenario(
         "37-metadata-license",

@@ -42,6 +42,7 @@ from e2e.visual.capture import capture
 from e2e.visual.catalogue import check_scenarios, load_catalogue, select_scenarios
 from e2e.visual.cdp import Chrome
 from e2e.visual.compare import compare
+from e2e.visual.containers import remove_leftovers
 from e2e.visual.coverage import coverage_report
 from e2e.visual.progress import CaptureProgress, StampedOutput, Timings
 from e2e.visual.scenarios import SCENARIOS
@@ -100,9 +101,17 @@ def new_run_dir(cache: Path, prefix: str = "") -> Path:
     raise RuntimeError(f"cannot create a run folder next to {base}")
 
 
+def take_lock(cache: Path) -> Lock:
+    """The capture lock; holding it, the containers an interrupted run left behind can go."""
+    lock = Lock(cache)
+    if left := remove_leftovers():
+        print(f"removed {left} containers an interrupted run left behind", flush=True)
+    return lock
+
+
 async def compare_command(args) -> None:
     cache = cache_dir()
-    _lock = Lock(cache)
+    _lock = take_lock(cache)
     entries = catalogue()
     selection = select_scenarios(SCENARIOS, entries, args.tier, args.unrated, args.only)
     if not selection:
@@ -265,7 +274,7 @@ def profile_section(profile: str, summary: dict, recheck: dict, failures: list[s
 
 async def probe_command(args) -> None:
     cache = cache_dir()
-    _lock = Lock(cache)
+    _lock = take_lock(cache)
     profile = PROFILES[args.profile]
     run_dir = new_run_dir(cache, "probe-")
     browser_dir = Path(args.build).resolve() if args.build else build(REPO, run_dir / "build", run_dir / "build.log")

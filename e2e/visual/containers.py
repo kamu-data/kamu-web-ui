@@ -35,6 +35,9 @@ IMAGE_MIGRATIONS = "/migrations/postgres"
 DB = {"user": "kamu", "password": "kamu", "name": "kamu"}
 # Seconds before a request to a registry or GitHub gives up
 NETWORK_TIMEOUT = 30
+# On every container and network the kit creates: a run killed before it could clean up leaves them
+# behind, and the next run finds and removes them by it
+LABEL = "kamu-ui-visual"
 # Inside the network
 POSTGRES_PORT = 5432
 S3_PORT = 9000
@@ -83,7 +86,7 @@ def image_id(runtime: str, image: str) -> str:
 
 
 def run_in_image(runtime: str, image: str, *command: str) -> str:
-    return _run(runtime, "run", "--rm", "--entrypoint", command[0], image, *command[1:])
+    return _run(runtime, "run", "--rm", "--label", LABEL, "--entrypoint", command[0], image, *command[1:])
 
 
 class Container:
@@ -106,7 +109,7 @@ class Container:
         """`publish` maps host ports, bound on 127.0.0.1, to the container's ports."""
         ensure_image(runtime, image)
         self.runtime = runtime
-        args = ["create", "--network", network]
+        args = ["create", "--label", LABEL, "--network", network]
         args += ["--name", name] if name else []
         args += [arg for host, inside in (publish or {}).items() for arg in ("-p", f"127.0.0.1:{host}:{inside}")]
         args += [arg for variable, value in env.items() for arg in ("-e", f"{variable}={value}")]
@@ -162,12 +165,27 @@ def _start(what: str, container: Container, ready, seconds: float = 60) -> None:
 
 def create_network(runtime: str, name: str) -> str:
     subprocess.run([runtime, "network", "rm", "-f", name], capture_output=True)
-    _run(runtime, "network", "create", name)
+    _run(runtime, "network", "create", "--label", LABEL, name)
     return name
 
 
 def remove_network(runtime: str, name: str) -> None:
     subprocess.run([runtime, "network", "rm", "-f", name], capture_output=True)
+
+
+def remove_leftovers() -> int:
+    """Removes the containers and networks an earlier run left behind; returns how many containers.
+    Only safe while holding the capture lock, when no other run can own them."""
+    try:
+        runtime = container_runtime()
+    except RuntimeError:
+        return 0
+    found = _run(runtime, "ps", "-aq", "--filter", f"label={LABEL}").split()
+    if found:
+        subprocess.run([runtime, "rm", "-f", *found], capture_output=True)
+    for network in _run(runtime, "network", "ls", "-q", "--filter", f"label={LABEL}").split():
+        subprocess.run([runtime, "network", "rm", "-f", network], capture_output=True)
+    return len(found)
 
 
 def start_postgres(runtime: str, network: str, name: str, host_port: int) -> Container:
@@ -191,7 +209,7 @@ def run_migrations(runtime: str, network: str, postgres: str, tag: str, override
     mounts = ["-v", f"{override.resolve()}:/override:ro"] if override else []
     source = "/override" if override else IMAGE_MIGRATIONS
     url = f"postgres://{DB['user']}:{DB['password']}@{postgres}:{POSTGRES_PORT}/{DB['name']}"
-    command = [runtime, "run", "--rm", "--network", network, "-e", f"DB_CONNECTION_STRING={url}"]
+    command = [runtime, "run", "--rm", "--label", LABEL, "--network", network, "-e", f"DB_CONNECTION_STRING={url}"]
     result = subprocess.run(
         [*command, *mounts, "--entrypoint", "/scripts/run-db-migrations.sh", image, source],
         capture_output=True,

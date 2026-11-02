@@ -19,8 +19,8 @@ import {
     DatasetBlocksEncodedByEventTypeQuery,
     DatasetBlocksSchemaByEventTypeQuery,
     DatasetSystemTimeBlockByHashQuery,
-    MetadataEventType,
     MetadataManifestFormat,
+    MetadataProjectionEventType,
     ReadStepCsvDataFragment,
 } from "@api/kamu.graphql.interface";
 import { mockGetMetadataBlockQuery, TEST_BLOCK_HASH, TEST_DATASET_ID } from "@api/mock/dataset.mock";
@@ -141,7 +141,7 @@ describe("BlockService", () => {
                 .subscribe((fields) => (result = fields));
 
             expect(spy).toHaveBeenCalledWith(
-                expect.objectContaining({ eventTypes: [MetadataEventType.SetPollingSource] }),
+                expect.objectContaining({ eventTypes: [MetadataProjectionEventType.SetPollingSource] }),
             );
             expect(result).toEqual(expected);
         });
@@ -230,7 +230,7 @@ describe("BlockService", () => {
                 .subscribe((fields) => (result = fields));
 
             expect(spy).toHaveBeenCalledWith(
-                expect.objectContaining({ eventTypes: [MetadataEventType.AddPushSource] }),
+                expect.objectContaining({ eventTypes: [MetadataProjectionEventType.AddPushSource] }),
             );
             expect(result).toEqual(expected);
         });
@@ -371,7 +371,7 @@ describe("BlockService", () => {
                     accountName: mockDatasetInfo.accountName,
                     datasetName: mockDatasetInfo.datasetName,
                     encoding: MetadataManifestFormat.Yaml,
-                    eventTypes: [MetadataEventType.AddPushSource],
+                    eventTypes: [MetadataProjectionEventType.AddPushSource],
                 }),
             );
             expect(result).toEqual("kind: AddPushSource # source-b");

@@ -12,6 +12,8 @@ import { ApolloTestingController, ApolloTestingModule } from "apollo-angular/tes
 
 import { EnvironmentVariablesApi } from "@api/environment-variables.api";
 import {
+    CreateEnvVariableDocument,
+    CreateEnvVariableMutation,
     DeleteEnvVariableDocument,
     DeleteEnvVariableMutation,
     ExposedEnvVariableValueDocument,
@@ -23,6 +25,7 @@ import {
 } from "@api/kamu.graphql.interface";
 import { TEST_ACCOUNT_ID, TEST_ACCOUNT_NAME, TEST_DATASET_ID, TEST_DATASET_NAME } from "@api/mock/dataset.mock";
 import {
+    MOCK_ENV_VAR_ALREADY_EXISTS_MESSAGE,
     MOCK_PAGE,
     MOCK_PER_PAGE,
     MOCK_UPSERT_ENV_VAR_CREATED_MESSAGE,
@@ -30,6 +33,8 @@ import {
     MOCK_UPSERT_ENV_VAR_UPDATED_MESSAGE,
     MOCK_VAR_KEY,
     MOCK_VAR_VALUE,
+    mockCreateEnvVariableMutationAlreadyExists,
+    mockCreateEnvVariableMutationCreated,
     mockDeleteEnvVariableMutation,
     mockExposedEnvVariableValueQuery,
     mockListEnvVariablesQuery,
@@ -53,6 +58,58 @@ describe("EnvironmentVariablesApi", () => {
 
     it("should be created", () => {
         expect(service).toBeTruthy();
+    });
+
+    it("should check create environment variable", () => {
+        service
+            .createEnvironmentVariable({
+                accountId: TEST_ACCOUNT_ID,
+                datasetId: TEST_DATASET_ID,
+                key: MOCK_VAR_KEY,
+                value: MOCK_VAR_VALUE,
+                isSecret: false,
+            })
+            .subscribe((result: CreateEnvVariableMutation) => {
+                expect(result.datasets.byId?.envVars.createEnvVariable).toEqual(
+                    expect.objectContaining({
+                        __typename: "CreateDatasetEnvVarResultCreated",
+                        message: MOCK_UPSERT_ENV_VAR_CREATED_MESSAGE,
+                    }),
+                );
+            });
+
+        const op = controller.expectOne(CreateEnvVariableDocument);
+        expect(op.operation.variables).toEqual({
+            datasetId: TEST_DATASET_ID,
+            key: MOCK_VAR_KEY,
+            value: MOCK_VAR_VALUE,
+            isSecret: false,
+        });
+
+        op.flush({
+            data: mockCreateEnvVariableMutationCreated,
+        });
+    });
+
+    it("should check create environment variable with a key that is taken", () => {
+        service
+            .createEnvironmentVariable({
+                accountId: TEST_ACCOUNT_ID,
+                datasetId: TEST_DATASET_ID,
+                key: MOCK_VAR_KEY,
+                value: MOCK_VAR_VALUE,
+                isSecret: false,
+            })
+            .subscribe((result: CreateEnvVariableMutation) => {
+                expect(result.datasets.byId?.envVars.createEnvVariable).toEqual({
+                    __typename: "CreateDatasetEnvVarResultAlreadyExists",
+                    message: MOCK_ENV_VAR_ALREADY_EXISTS_MESSAGE,
+                });
+            });
+
+        controller.expectOne(CreateEnvVariableDocument).flush({
+            data: mockCreateEnvVariableMutationAlreadyExists,
+        });
     });
 
     it("should check upsert environment variable with 'Created' message ", () => {

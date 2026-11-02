@@ -1442,6 +1442,30 @@ export type CreateAccountSuccess = CreateAccountResult & {
   message: Scalars['String']['output'];
 };
 
+/** Outcome of creating an environment variable */
+export type CreateDatasetEnvVarResult = {
+  /** Human-readable outcome message */
+  message: Scalars['String']['output'];
+};
+
+/** Environment variable or secret with the given key already exists */
+export type CreateDatasetEnvVarResultAlreadyExists = CreateDatasetEnvVarResult & {
+  __typename: 'CreateDatasetEnvVarResultAlreadyExists';
+  /** Key that already exists */
+  envVarKey: Scalars['String']['output'];
+  /** Human-readable error message */
+  message: Scalars['String']['output'];
+};
+
+/** Environment variable was created */
+export type CreateDatasetEnvVarResultCreated = CreateDatasetEnvVarResult & {
+  __typename: 'CreateDatasetEnvVarResultCreated';
+  /** Created environment variable */
+  envVar: ViewDatasetEnvVar;
+  /** Human-readable outcome message */
+  message: Scalars['String']['output'];
+};
+
 /** Outcome of creating a dataset from a snapshot */
 export type CreateDatasetFromSnapshotResult = {
   /** Whether the operation succeeded */
@@ -1918,6 +1942,46 @@ export type DatasetEndpoints = {
   websocket: WebSocketProtocolDesc;
 };
 
+/** Environment variable value is empty */
+export type DatasetEnvVarEmptyValue = CreateDatasetEnvVarResult & UpsertDatasetEnvVarResult & {
+  __typename: 'DatasetEnvVarEmptyValue';
+  /** Key of the rejected environment variable */
+  envVarKey: Scalars['String']['output'];
+  /** Human-readable error message */
+  message: Scalars['String']['output'];
+};
+
+/** Environment variable key does not match `^[A-Za-z_][A-Za-z0-9_]*$` */
+export type DatasetEnvVarInvalidKey = CreateDatasetEnvVarResult & UpsertDatasetEnvVarResult & {
+  __typename: 'DatasetEnvVarInvalidKey';
+  /** Rejected key */
+  envVarKey: Scalars['String']['output'];
+  /** Human-readable error message */
+  message: Scalars['String']['output'];
+};
+
+/** Dataset already has the maximum number of variables or of secrets */
+export type DatasetEnvVarTooManyEntries = CreateDatasetEnvVarResult & UpsertDatasetEnvVarResult & {
+  __typename: 'DatasetEnvVarTooManyEntries';
+  /** Maximum number of variables, or of secrets, per dataset */
+  maxEntries: Scalars['Int']['output'];
+  /** Human-readable error message */
+  message: Scalars['String']['output'];
+};
+
+/** Environment variable value is longer than allowed */
+export type DatasetEnvVarValueTooLong = CreateDatasetEnvVarResult & UpsertDatasetEnvVarResult & {
+  __typename: 'DatasetEnvVarValueTooLong';
+  /** Length of the rejected value in bytes */
+  actualLength: Scalars['Int']['output'];
+  /** Key of the rejected environment variable */
+  envVarKey: Scalars['String']['output'];
+  /** Maximum value length in bytes */
+  maxLength: Scalars['Int']['output'];
+  /** Human-readable error message */
+  message: Scalars['String']['output'];
+};
+
 /** Environment variables of a dataset */
 export type DatasetEnvVars = {
   __typename: 'DatasetEnvVars';
@@ -1943,10 +2007,20 @@ export type DatasetEnvVarsListEnvVariablesArgs = {
 /** Mutations that manage environment variables of a dataset */
 export type DatasetEnvVarsMut = {
   __typename: 'DatasetEnvVarsMut';
+  /** Creates an environment variable, unless its key is already taken */
+  createEnvVariable: CreateDatasetEnvVarResult;
   /** Deletes an environment variable by its key */
   deleteEnvVariable: DeleteDatasetEnvVarResult;
   /** Creates or updates an environment variable, optionally as a secret */
   upsertEnvVariable: UpsertDatasetEnvVarResult;
+};
+
+
+/** Mutations that manage environment variables of a dataset */
+export type DatasetEnvVarsMutCreateEnvVariableArgs = {
+  isSecret: Scalars['Boolean']['input'];
+  key: Scalars['String']['input'];
+  value: Scalars['String']['input'];
 };
 
 
@@ -2282,7 +2356,7 @@ export type DatasetMetadata = {
   currentUpstreamDependencies: Array<DatasetAccessResult>;
   /** Current vocabulary associated with the dataset */
   currentVocab?: Maybe<SetVocab>;
-  /** Last recorded watermark */
+  /** Last recorded watermark, as of the given head or the latest block */
   currentWatermark?: Maybe<Scalars['DateTime']['output']>;
   /**
    * Blocks holding the currently effective events of the requested types,
@@ -2301,8 +2375,14 @@ export type DatasetMetadataCurrentSchemaArgs = {
 
 
 /** Metadata of a dataset and its current state derived from the metadata chain */
+export type DatasetMetadataCurrentWatermarkArgs = {
+  head?: InputMaybe<Scalars['Multihash']['input']>;
+};
+
+
+/** Metadata of a dataset and its current state derived from the metadata chain */
 export type DatasetMetadataMetadataProjectionArgs = {
-  eventTypes: Array<MetadataEventType>;
+  eventTypes: Array<MetadataProjectionEventType>;
   head?: InputMaybe<Scalars['Multihash']['input']>;
 };
 
@@ -4288,6 +4368,20 @@ export type MetadataBlockExtendedEncodedArgs = {
   encoding: MetadataManifestFormat;
 };
 
+/** Conditions selecting metadata blocks. Conditions combine with AND. */
+export type MetadataBlocksFilter = {
+  /**
+   * Only blocks whose hash starts with this prefix, in the multibase form
+   * the API returns (`f1620…`)
+   */
+  blockHashPrefix?: InputMaybe<Scalars['String']['input']>;
+  /**
+   * Only blocks whose event is one of these types. Null or empty means all
+   * types.
+   */
+  eventTypes?: InputMaybe<Array<MetadataEventType>>;
+};
+
 /** Chain of metadata blocks of a dataset */
 export type MetadataChain = {
   __typename: 'MetadataChain';
@@ -4298,7 +4392,10 @@ export type MetadataChain = {
    * in desired format
    */
   blockByHashEncoded?: Maybe<Scalars['String']['output']>;
-  /** Iterates all metadata blocks in the reverse chronological order */
+  /**
+   * Iterates metadata blocks, optionally filtered, in the reverse
+   * chronological order
+   */
   blocks: MetadataBlockConnection;
   /** Returns all named metadata block references */
   refs: Array<BlockRef>;
@@ -4320,6 +4417,7 @@ export type MetadataChainBlockByHashEncodedArgs = {
 
 /** Chain of metadata blocks of a dataset */
 export type MetadataChainBlocksArgs = {
+  filter?: InputMaybe<MetadataBlocksFilter>;
   page?: InputMaybe<Scalars['Int']['input']>;
   perPage?: InputMaybe<Scalars['Int']['input']>;
 };
@@ -4345,10 +4443,24 @@ export type MetadataChainMutCommitEventArgs = {
  */
 export type MetadataEvent = AddData | AddPushSource | DisablePollingSource | DisablePushSource | ExecuteTransform | Seed | SetAttachments | SetDataSchema | SetInfo | SetLicense | SetPollingSource | SetTransform | SetVocab;
 
-/** Type of a metadata event */
+/**
+ * Type of a metadata event, covering every member of the `MetadataEvent`
+ * union
+ */
 export enum MetadataEventType {
+  /** Event that adds a new slice of data */
+  AddData = 'ADD_DATA',
   /** Event that adds a source data can be pushed into */
   AddPushSource = 'ADD_PUSH_SOURCE',
+  /**
+   * Event that disables the polling source (reserved, not fully supported
+   * yet)
+   */
+  DisablePollingSource = 'DISABLE_POLLING_SOURCE',
+  /** Event that disables a push source (reserved, not fully supported yet) */
+  DisablePushSource = 'DISABLE_PUSH_SOURCE',
+  /** Event that records a transformation run of a derivative dataset */
+  ExecuteTransform = 'EXECUTE_TRANSFORM',
   /** Event that establishes the identity of a dataset */
   Seed = 'SEED',
   /** Event that sets attached files */
@@ -4390,6 +4502,28 @@ export type MetadataManifestUnsupportedVersion = CommitResult & CreateDatasetFro
   /** Description of the problem with the supported version range */
   message: Scalars['String']['output'];
 };
+
+/** Type of a metadata event that `metadataProjection` can project */
+export enum MetadataProjectionEventType {
+  /** Event that adds a source data can be pushed into */
+  AddPushSource = 'ADD_PUSH_SOURCE',
+  /** Event that establishes the identity of a dataset */
+  Seed = 'SEED',
+  /** Event that sets attached files */
+  SetAttachments = 'SET_ATTACHMENTS',
+  /** Event that sets the schema of the data */
+  SetDataSchema = 'SET_DATA_SCHEMA',
+  /** Event that sets the description, keywords and similar info */
+  SetInfo = 'SET_INFO',
+  /** Event that sets the license */
+  SetLicense = 'SET_LICENSE',
+  /** Event that defines a source polled for new data */
+  SetPollingSource = 'SET_POLLING_SOURCE',
+  /** Event that defines how a derivative dataset is computed */
+  SetTransform = 'SET_TRANSFORM',
+  /** Event that defines column names with special meaning */
+  SetVocab = 'SET_VOCAB'
+}
 
 /** Outcome of changing an account password */
 export type ModifyPasswordResult = {
@@ -6855,6 +6989,15 @@ export type UpdateVersionErrorInvalidExtraData = UpdateVersionResult & {
   message: Scalars['String']['output'];
 };
 
+/** Extra data cannot be updated, as the file has no versions yet */
+export type UpdateVersionErrorNoVersions = UpdateVersionResult & {
+  __typename: 'UpdateVersionErrorNoVersions';
+  /** Always false */
+  isSuccess: Scalars['Boolean']['output'];
+  /** Human-readable error message */
+  message: Scalars['String']['output'];
+};
+
 /** Update would exceed the storage quota of the account */
 export type UpdateVersionErrorQuotaExceeded = UpdateVersionResult & {
   __typename: 'UpdateVersionErrorQuotaExceeded';
@@ -7793,7 +7936,7 @@ export type GetDatasetBasicsWithPermissionsQuery = { datasets: { __typename: 'Da
 export type DatasetBlocksEncodedByEventTypeQueryVariables = Exact<{
   accountName: Scalars['AccountName']['input'];
   datasetName: Scalars['DatasetName']['input'];
-  eventTypes: Array<MetadataEventType> | MetadataEventType;
+  eventTypes: Array<MetadataProjectionEventType> | MetadataProjectionEventType;
   encoding: MetadataManifestFormat;
 }>;
 
@@ -7817,7 +7960,7 @@ export type DatasetBlocksEncodedByEventTypeQuery = { datasets: { __typename: 'Da
 export type DatasetBlocksSchemaByEventTypeQueryVariables = Exact<{
   accountName: Scalars['AccountName']['input'];
   datasetName: Scalars['DatasetName']['input'];
-  eventTypes: Array<MetadataEventType> | MetadataEventType;
+  eventTypes: Array<MetadataProjectionEventType> | MetadataProjectionEventType;
 }>;
 
 
@@ -8089,6 +8232,26 @@ export type EnginesQuery = { data: { __typename: 'DataQueries', knownEngines: Ar
       & EngineDescDataFragment
     )> } };
 
+export type CreateEnvVariableMutationVariables = Exact<{
+  datasetId: Scalars['DatasetID']['input'];
+  key: Scalars['String']['input'];
+  value: Scalars['String']['input'];
+  isSecret: Scalars['Boolean']['input'];
+}>;
+
+
+export type CreateEnvVariableMutation = { datasets: { __typename: 'DatasetsMut', byId?: { __typename: 'DatasetMut', envVars: { __typename: 'DatasetEnvVarsMut', createEnvVariable:
+          | { __typename: 'CreateDatasetEnvVarResultAlreadyExists', message: string }
+          | { __typename: 'CreateDatasetEnvVarResultCreated', message: string, envVar: (
+              { __typename: 'ViewDatasetEnvVar' }
+              & ViewDatasetEnvVarDataFragment
+            ) }
+          | { __typename: 'DatasetEnvVarEmptyValue', message: string }
+          | { __typename: 'DatasetEnvVarInvalidKey', message: string }
+          | { __typename: 'DatasetEnvVarTooManyEntries', message: string }
+          | { __typename: 'DatasetEnvVarValueTooLong', message: string }
+         } } | null } };
+
 export type DeleteEnvVariableMutationVariables = Exact<{
   datasetId: Scalars['DatasetID']['input'];
   datasetEnvVarKey: Scalars['String']['input'];
@@ -8144,6 +8307,10 @@ export type UpsertEnvVariableMutationVariables = Exact<{
 
 
 export type UpsertEnvVariableMutation = { datasets: { __typename: 'DatasetsMut', byId?: { __typename: 'DatasetMut', envVars: { __typename: 'DatasetEnvVarsMut', upsertEnvVariable:
+          | { __typename: 'DatasetEnvVarEmptyValue', message: string }
+          | { __typename: 'DatasetEnvVarInvalidKey', message: string }
+          | { __typename: 'DatasetEnvVarTooManyEntries', message: string }
+          | { __typename: 'DatasetEnvVarValueTooLong', message: string }
           | { __typename: 'UpsertDatasetEnvVarResultCreated', message: string, envVar: (
               { __typename: 'ViewDatasetEnvVar' }
               & ViewDatasetEnvVarDataFragment
@@ -12980,7 +13147,7 @@ ${DatasetPermissionsFragmentDoc}`;
     }
   }
 export const DatasetBlocksEncodedByEventTypeDocument = gql`
-    query datasetBlocksEncodedByEventType($accountName: AccountName!, $datasetName: DatasetName!, $eventTypes: [MetadataEventType!]!, $encoding: MetadataManifestFormat!) {
+    query datasetBlocksEncodedByEventType($accountName: AccountName!, $datasetName: DatasetName!, $eventTypes: [MetadataProjectionEventType!]!, $encoding: MetadataManifestFormat!) {
   datasets {
     byOwnerAndName(accountName: $accountName, datasetName: $datasetName) {
       metadata {
@@ -13012,7 +13179,7 @@ export const DatasetBlocksEncodedByEventTypeDocument = gql`
     }
   }
 export const DatasetBlocksSchemaByEventTypeDocument = gql`
-    query datasetBlocksSchemaByEventType($accountName: AccountName!, $datasetName: DatasetName!, $eventTypes: [MetadataEventType!]!) {
+    query datasetBlocksSchemaByEventType($accountName: AccountName!, $datasetName: DatasetName!, $eventTypes: [MetadataProjectionEventType!]!) {
   datasets {
     byOwnerAndName(accountName: $accountName, datasetName: $datasetName) {
       metadata {
@@ -13581,6 +13748,36 @@ export const EnginesDocument = gql`
       super(apollo);
     }
   }
+export const CreateEnvVariableDocument = gql`
+    mutation createEnvVariable($datasetId: DatasetID!, $key: String!, $value: String!, $isSecret: Boolean!) {
+  datasets {
+    byId(datasetId: $datasetId) {
+      envVars {
+        createEnvVariable(key: $key, value: $value, isSecret: $isSecret) {
+          __typename
+          message
+          ... on CreateDatasetEnvVarResultCreated {
+            envVar {
+              ...ViewDatasetEnvVarData
+            }
+          }
+        }
+      }
+    }
+  }
+}
+    ${ViewDatasetEnvVarDataFragmentDoc}`;
+
+  @Injectable({
+    providedIn: 'root'
+  })
+  export class CreateEnvVariableGQL extends Apollo.Mutation<CreateEnvVariableMutation, CreateEnvVariableMutationVariables> {
+    document = CreateEnvVariableDocument;
+    
+    constructor(apollo: Apollo.Apollo) {
+      super(apollo);
+    }
+  }
 export const DeleteEnvVariableDocument = gql`
     mutation deleteEnvVariable($datasetId: DatasetID!, $datasetEnvVarKey: String!) {
   datasets {
@@ -13666,17 +13863,14 @@ export const UpsertEnvVariableDocument = gql`
     byId(datasetId: $datasetId) {
       envVars {
         upsertEnvVariable(key: $key, value: $value, isSecret: $isSecret) {
-          ... on UpsertDatasetEnvVarUpToDate {
-            message
-          }
+          __typename
+          message
           ... on UpsertDatasetEnvVarResultCreated {
-            message
             envVar {
               ...ViewDatasetEnvVarData
             }
           }
           ... on UpsertDatasetEnvVarResultUpdated {
-            message
             envVar {
               ...ViewDatasetEnvVarData
             }
@@ -14874,6 +15068,14 @@ export const WebhookEventTypesDocument = gql`
       "AccountFieldNonUnique",
       "CreateAccountSuccess"
     ],
+    "CreateDatasetEnvVarResult": [
+      "CreateDatasetEnvVarResultAlreadyExists",
+      "CreateDatasetEnvVarResultCreated",
+      "DatasetEnvVarEmptyValue",
+      "DatasetEnvVarInvalidKey",
+      "DatasetEnvVarTooManyEntries",
+      "DatasetEnvVarValueTooLong"
+    ],
     "CreateDatasetFromSnapshotResult": [
       "CreateDatasetResultInvalidSnapshot",
       "CreateDatasetResultMissingInputs",
@@ -15201,6 +15403,7 @@ export const WebhookEventTypesDocument = gql`
     "UpdateVersionResult": [
       "UpdateVersionErrorCasFailed",
       "UpdateVersionErrorInvalidExtraData",
+      "UpdateVersionErrorNoVersions",
       "UpdateVersionErrorQuotaExceeded",
       "UpdateVersionSuccess"
     ],
@@ -15212,6 +15415,10 @@ export const WebhookEventTypesDocument = gql`
       "WebhookSubscriptionNoEventTypesProvided"
     ],
     "UpsertDatasetEnvVarResult": [
+      "DatasetEnvVarEmptyValue",
+      "DatasetEnvVarInvalidKey",
+      "DatasetEnvVarTooManyEntries",
+      "DatasetEnvVarValueTooLong",
       "UpsertDatasetEnvVarResultCreated",
       "UpsertDatasetEnvVarResultUpdated",
       "UpsertDatasetEnvVarUpToDate"

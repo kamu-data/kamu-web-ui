@@ -22,12 +22,16 @@ import { trackBusy } from "@common/helpers/app.helpers";
 import { uniqueValueValidator } from "@common/validation/collection.validators";
 import { FormValidationErrorsDirective } from "@common/validation/form-validation-errors.directive";
 import { envVarKeyValidators } from "@common/validation/identifier.validators";
+import { setServerError } from "@common/validation/server-errors.helpers";
 import { maxBytesValidator } from "@common/validation/text.validators";
 import { DatasetBasicsFragment, ViewDatasetEnvVarDataFragment } from "@api/kamu.graphql.interface";
 import { MaybeNull } from "@interface/app.types";
 
 import { EnvAndSecretsFormType } from "src/app/dataset-view/additional-components/dataset-settings-component/tabs/variables-and-secrets/components/edit-key-value-modal/edit-key-value-modal.types";
-import { DatasetEnvironmentVariablesService } from "src/app/dataset-view/additional-components/dataset-settings-component/tabs/variables-and-secrets/dataset-environment-variables.service";
+import {
+    DatasetEnvironmentVariablesService,
+    EnvVarMutationResult,
+} from "src/app/dataset-view/additional-components/dataset-settings-component/tabs/variables-and-secrets/dataset-environment-variables.service";
 
 @Component({
     selector: "app-edit-key-value-modal",
@@ -105,18 +109,25 @@ export class EditKeyValueModalComponent extends BaseComponent implements OnInit 
     }
 
     public onEditRow(): void {
-        this.evnironmentVariablesService
-            .upsertEnvVariable({
-                accountId: this.datasetBasics.owner.id,
-                datasetId: this.datasetBasics.id,
-                key: this.keyControl.value,
-                value: this.valueControl.value,
-                isSecret: this.isSecretControl.value,
-            })
-            .pipe(trackBusy(this.busy$), takeUntilDestroyed(this.destroyRef))
-            .subscribe(() => {
+        const params = {
+            accountId: this.datasetBasics.owner.id,
+            datasetId: this.datasetBasics.id,
+            key: this.keyControl.value,
+            value: this.valueControl.value,
+            isSecret: this.isSecretControl.value,
+        };
+        const save$ = this.row
+            ? this.evnironmentVariablesService.upsertEnvVariable(params)
+            : this.evnironmentVariablesService.createEnvVariable(params);
+        save$.pipe(trackBusy(this.busy$)).subscribe((result: EnvVarMutationResult) => {
+            if (result.ok) {
                 this.activeModal.close("Success");
-            });
+            } else if (result.fieldError) {
+                const { field, message } = result.fieldError;
+                setServerError(this.keyValueForm.controls[field], message);
+                this.cdr.markForCheck();
+            }
+        });
     }
 
     public toggleExposedValue(): void {
@@ -165,6 +176,8 @@ export class EditKeyValueModalComponent extends BaseComponent implements OnInit 
 
     private setInitialFormValue(): void {
         if (this.row) {
+            // The key can't change when editing, and keys saved before the naming rules still accept edits.
+            this.keyControl.clearValidators();
             this.keyValueForm.patchValue({
                 keyEnvVariable: this.row.key,
                 value: this.row.isSecret ? this.exposedValue : (this.row.value ?? ""),

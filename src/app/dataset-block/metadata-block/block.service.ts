@@ -13,7 +13,11 @@ import { map } from "rxjs/operators";
 import { requireValue } from "@common/helpers/app.helpers";
 import { extractSchemaFromReadStep } from "@common/helpers/data-schema.helpers";
 import { DatasetApi } from "@api/dataset.api";
-import { GetMetadataBlockQuery, MetadataEventType, MetadataManifestFormat } from "@api/kamu.graphql.interface";
+import {
+    GetMetadataBlockQuery,
+    MetadataManifestFormat,
+    MetadataProjectionEventType,
+} from "@api/kamu.graphql.interface";
 import { MaybeNull, MaybeNullOrUndefined, MaybeUndefined } from "@interface/app.types";
 import { DataSchemaField } from "@interface/dataset-schema.interface";
 import { DatasetInfo } from "@interface/navigation.interface";
@@ -58,7 +62,7 @@ export class BlockService {
         encoding: MetadataManifestFormat;
     }): Observable<MaybeNull<string>> {
         return this.datasetApi
-            .getBlocksByEventType({ ...params, eventTypes: [MetadataEventType.SetPollingSource] })
+            .getBlocksByEventType({ ...params, eventTypes: [MetadataProjectionEventType.SetPollingSource] })
             .pipe(
                 map((data) => {
                     const blocks = data.datasets.byOwnerAndName?.metadata.metadataProjection ?? [];
@@ -72,12 +76,14 @@ export class BlockService {
         datasetName: string;
         encoding: MetadataManifestFormat;
     }): Observable<MaybeNull<string>> {
-        return this.datasetApi.getBlocksByEventType({ ...params, eventTypes: [MetadataEventType.SetTransform] }).pipe(
-            map((data) => {
-                const blocks = data.datasets.byOwnerAndName?.metadata.metadataProjection ?? [];
-                return blocks.length ? (blocks[0].encoded?.content ?? null) : null;
-            }),
-        );
+        return this.datasetApi
+            .getBlocksByEventType({ ...params, eventTypes: [MetadataProjectionEventType.SetTransform] })
+            .pipe(
+                map((data) => {
+                    const blocks = data.datasets.byOwnerAndName?.metadata.metadataProjection ?? [];
+                    return blocks.length ? (blocks[0].encoded?.content ?? null) : null;
+                }),
+            );
     }
 
     /**
@@ -90,23 +96,26 @@ export class BlockService {
         sourceName: string;
         encoding: MetadataManifestFormat;
     }): Observable<MaybeNullOrUndefined<string>> {
-        return this.datasetApi.getBlocksByEventType({ ...params, eventTypes: [MetadataEventType.AddPushSource] }).pipe(
-            map((data) => {
-                const blocks = data.datasets.byOwnerAndName?.metadata.metadataProjection ?? [];
-                this.sourceNames = blocks.flatMap((item) =>
-                    item.event.__typename === "AddPushSource" ? [item.event.sourceName] : [],
-                );
-                if (params.sourceName) {
-                    const block = blocks.find(
-                        (item) =>
-                            item.event.__typename === "AddPushSource" && item.event.sourceName === params.sourceName,
+        return this.datasetApi
+            .getBlocksByEventType({ ...params, eventTypes: [MetadataProjectionEventType.AddPushSource] })
+            .pipe(
+                map((data) => {
+                    const blocks = data.datasets.byOwnerAndName?.metadata.metadataProjection ?? [];
+                    this.sourceNames = blocks.flatMap((item) =>
+                        item.event.__typename === "AddPushSource" ? [item.event.sourceName] : [],
                     );
-                    return block ? block.encoded?.content : undefined;
-                } else {
-                    return null;
-                }
-            }),
-        );
+                    if (params.sourceName) {
+                        const block = blocks.find(
+                            (item) =>
+                                item.event.__typename === "AddPushSource" &&
+                                item.event.sourceName === params.sourceName,
+                        );
+                        return block ? block.encoded?.content : undefined;
+                    } else {
+                        return null;
+                    }
+                }),
+            );
     }
 
     public getPollingSourceSchemaFields(params: {
@@ -114,7 +123,7 @@ export class BlockService {
         datasetName: string;
     }): Observable<DataSchemaField[]> {
         return this.datasetApi
-            .getSchemaFieldsByEventType({ ...params, eventTypes: [MetadataEventType.SetPollingSource] })
+            .getSchemaFieldsByEventType({ ...params, eventTypes: [MetadataProjectionEventType.SetPollingSource] })
             .pipe(
                 map((data) => {
                     const blocks = data.datasets.byOwnerAndName?.metadata.metadataProjection ?? [];
@@ -132,7 +141,7 @@ export class BlockService {
         sourceName: string;
     }): Observable<DataSchemaField[]> {
         return this.datasetApi
-            .getSchemaFieldsByEventType({ ...params, eventTypes: [MetadataEventType.AddPushSource] })
+            .getSchemaFieldsByEventType({ ...params, eventTypes: [MetadataProjectionEventType.AddPushSource] })
             .pipe(
                 map((data) => {
                     const blocks = data.datasets.byOwnerAndName?.metadata.metadataProjection ?? [];

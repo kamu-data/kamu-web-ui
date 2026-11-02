@@ -6,52 +6,65 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 ### Changed
+- Requires kamu-cli v0.272.0 or later: the source editors and dataset variables use API changes from that release
 - Account flows, Processes: resuming an auto-stopped process asks for confirmation, as the dataset's Flows tab does, and "Update now" refreshes the card shortly after instead of on the next poll
 ### Fixed
 - Moving straight from one dataset, account or flow to another, with back and forward or a link, shows the new one's data on every page instead of keeping the previous one's: dataset settings tabs no longer save the previous dataset's schedule, ingest or transform settings to the new dataset, and a webhook's edit form shows that webhook
-- Dataset settings, Access: back and forward between pages of collaborators show the page in the address bar
-- Push source editor: moving from one source's editor straight to another's, with back and forward, shows the second source instead of the first
-- Back and forward show what the address bar names instead of what was shown before: the page of flow runs on the dataset's Flows tab, the page of variables and secrets, the status tab and page of the account's flow runs, and the query of an earlier run in the Data tab
-- Query explainer: going from one commitment's link to another's shows the second commitment
-- Global query: running only the selected part of a script keeps the whole script in the editor instead of replacing it with that part
-- Metadata tab, polling and push sources:
-  - a CSV source without a header setting shows "Header: false" instead of an empty row, and "Infer schema: false" is shown instead of left out
-  - a newline-delimited JSON source shows its encoding, date format and timestamp format
-  - an MQTT source without a username or password leaves those rows out instead of showing them empty
-- Collection: a folder whose first entry is a dataset or a missing dataset shows as a folder and opens in place, instead of showing as that entry
-- Collection: a folder reached by a link or by back and forward lists its own entries instead of the previous folder's, "Total entries" shows the folder's count after a page load too, and scrolling a folder you return to loads its remaining entries
-- Global query: a link with a query opens that query in the editor instead of an empty one, and opening the page without a query restores the last one you ran
-- Forms: fields accept what kamu-cli accepts, and say why under the field when they don't:
+- Back and forward show what the address bar names instead of what was shown before:
+  - the page of flow runs on the dataset's Flows tab, the page of variables and secrets, the status tab and page of the account's flow runs, and the query of an earlier run in the Data tab
+  - Dataset settings, Access: going between pages of collaborators shows the page in the address bar
+  - Push source editor: moving from one source's editor straight to another's shows the second source instead of the first
+- Forms: fields accept what the backend accepts, and say why under the field when they don't:
   - polling source editor: an MQTT port outside 1–65535, a malformed fetch or node URL, a CSV separator, quote or escape longer than one character, a blank pipe command, an empty primary key, and an Ethereum source with neither chain id nor node URL are rejected before saving; a saved Zip decompress step shows in the editor again; the MQTT username and password, the CSV null value, the event time pattern and environment variable values keep their leading and trailing spaces
-  - dataset variables: adding a key the dataset already has is rejected instead of overwriting its value
-  - dataset and account names, emails, passwords, token names, webhooks, cron schedules and flow settings follow kamu-cli's rules; a name, email, label or old password kamu-cli rejects shows under its field instead of in a toast
+  - dataset variables: adding a key the dataset already has is rejected instead of overwriting its value, also when someone else added it after the dialog opened; a key or value the backend rejects shows why under its field, and too many variables shows its own message, instead of "Environment variable is not found"; a variable whose key the naming rules reject, such as `key-1`, can be edited again
+  - webhooks: on a node that accepts only loopback targets, the target URL accepts an HTTP or HTTPS localhost URL instead of rejecting it, and the hint under the field says what the node accepts
+  - dataset and account names, emails, passwords, token names, webhooks, cron schedules and flow settings follow the backend's rules; a name, email, label or old password the backend rejects shows under its field instead of in a toast
   - transform settings: turning on automatic updates no longer leaves Save disabled without a message
-- Flow process cards on the dataset's Flows tab and the account's Processes:
-  - triggering, pausing or resuming no longer refreshes the page after you have left it
-  - the buttons wait for the result of the previous action, so a second click no longer repeats it; webhook pause and resume as well
-- Dataset Flows tab: refreshing keeps the page of flow runs you are on, and a link to a page of runs opens that page
-- Nodes that require signing in: after signing in, you return to the link you opened instead of the home page, also when signing in with GitHub
-- GitHub sign-in: a sign-in link prepared by someone else no longer signs you into their account
-- Lineage tab: the graph opens centred and zoomed out to fit, clear of the minimap and the information panel, and fits again when the window is resized
-- Lineage tab: dataset and source boxes keep their size after the window is resized or the graph redrawn, instead of shrinking around their names or, in Safari, stretching across the whole graph; arrows from sources start after the source name
-- Lineage tab: an Ethereum source without a node URL shows its chain name instead of "unknown"
 - Polling and push source editors:
   - a checked "Cache" box saves the source with caching forever, as ODF defines it, and editing a cached source shows the box checked
   - editing a source shows its saved values in every text, number and checkbox field instead of a default in some of them
   - a source can be saved after switching from a fetch kind with an event time "From path" to one without event time, instead of an unseen empty pattern blocking it
+- Metadata tab, polling and push sources:
+  - a CSV source without a header setting shows "Header: false" instead of an empty row, and "Infer schema: false" is shown instead of left out
+  - a newline-delimited JSON source shows its encoding, date format and timestamp format
+  - an MQTT source without a username or password leaves those rows out instead of showing them empty
+- History tab, block page and dataset overview: data commits show how many records they added and license commits the license name again, and the block page shows each event's details instead of the header alone
+- Flow process cards on the dataset's Flows tab and the account's Processes:
+  - triggering, pausing or resuming no longer refreshes the page after you have left it
+  - the buttons wait for the result of the previous action, so a second click no longer repeats it; webhook pause and resume as well
+- Dataset Flows tab: refreshing keeps the page of flow runs you are on, and a link to a page of runs opens that page
 - Account flows, Processes: clicking the selected flows mode again keeps it selected instead of clearing the selection and stopping the list from loading
 - Flows tables: a run whose start or finish time is missing shows its state alone or "unknown" instead of "57 years ago" or a 1970 date
-- Query explainer: an input block that can't be found no longer shows "as of" with no date, and an unknown dataset id shows as text instead of a link to the wrong account
-- Query explainer: a verification the server rejects without saying why shows an error message instead of an empty result
-- History tab, block page and dataset overview: data commits show how many records they added and license commits the license name again, and the block page shows each event's details instead of the header alone
-- Lineage tab: the graph loads again instead of failing with a query recursion error
-- License modal: an empty name shows "Name is required" instead of "Test is required"
+- Lineage tab:
+  - the graph loads again instead of failing with a query recursion error
+  - the graph opens centred and zoomed out to fit, clear of the minimap and the information panel, and fits again when the window is resized
+  - dataset and source boxes keep their size after the window is resized or the graph redrawn, instead of shrinking around their names or, in Safari, stretching across the whole graph; arrows from sources start after the source name
+  - an Ethereum source without a node URL shows its chain name instead of "unknown"
+- Global query:
+  - a link with a query opens that query in the editor instead of an empty one, and opening the page without a query restores the last one you ran
+  - running only the selected part of a script keeps the whole script in the editor instead of replacing it with that part
+- Query explainer:
+  - going from one commitment's link to another's shows the second commitment
+  - an input block that can't be found no longer shows "as of" with no date, and an unknown dataset id shows as text instead of a link to the wrong account
+  - a verification the server rejects without saying why shows an error message instead of an empty result
+- Collection:
+  - a folder whose first entry is a dataset or a missing dataset shows as a folder and opens in place, instead of showing as that entry
+  - a folder reached by a link or by back and forward lists its own entries instead of the previous folder's, "Total entries" shows the folder's count after a page load too, and scrolling a folder you return to loads its remaining entries
 - Versioned files on a node that does not serve file content directly, such as one with local storage, say that the file can't be previewed or downloaded there, instead of an empty preview, an error message and a failing download
-- Header: a page whose URL only contains "v/login" or "github_callback", such as a dataset named "login-records", shows the header again
-- Signing in again after a session expired, or from the "page not found" page, returns to the page with its query string and fragment, such as an SQL query
+- Sign-in:
+  - on nodes that require signing in, you return to the link you opened instead of the home page, also when signing in with GitHub
+  - signing in again after a session expired, or from the "page not found" page, returns to the page with its query string and fragment, such as an SQL query
+  - GitHub: a sign-in link prepared by someone else no longer signs you into their account
+- Header:
+  - Enter on an open list of search suggestions opens the selected suggestion instead of searching for "[object Object]"
+  - on narrow screens, the menu opens and closes in step with its button after a search
+  - a page whose URL only contains "v/login" or "github_callback", such as a dataset named "login-records", shows the header again
+- Styles: opening the data access panel or the account's flows no longer resizes checkboxes and dropdowns on other pages; a pressed modal button, the notification dot and the selected item of a dropdown menu show their intended colours again
+- License modal: an empty name shows "Name is required" instead of "Test is required"
 - "Run" buttons in README and query explainer SQL blocks keep `&`, `#` and `+` in the query instead of cutting it off or turning `+` into a space
 - Links with an incomplete, malformed or unknown value:
   - a malformed account or dataset name, flow id, webhook id or block hash shows "page not found" instead of an error toast, an endless load or the home page
+  - a page number that is not a number opens the first page, and a page past the last one says so and links to the last page
   - flow details without a tab opens the History tab instead of an empty page, and its unreleased tabs can no longer be opened by URL
   - rotating the secret of a webhook that does not exist shows "page not found" instead of an empty secret
   - an account named like an account tab, such as "datasets", opens instead of a blank page

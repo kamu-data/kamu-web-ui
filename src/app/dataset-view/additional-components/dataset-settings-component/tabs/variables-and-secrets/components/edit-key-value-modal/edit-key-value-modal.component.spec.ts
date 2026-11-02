@@ -17,7 +17,11 @@ import { provideToastr } from "ngx-toastr";
 
 import { requireValue } from "@common/helpers/app.helpers";
 import { setComponentInput, stubMethod } from "@common/helpers/base-test.helpers.spec";
-import { mockListEnvVariablesQuery } from "@api/mock/environment-variables-and-secrets.mock";
+import {
+    MOCK_ENV_VAR_ALREADY_EXISTS_MESSAGE,
+    MOCK_ENV_VAR_VALUE_TOO_LONG_MESSAGE,
+    mockListEnvVariablesQuery,
+} from "@api/mock/environment-variables-and-secrets.mock";
 
 import { EditKeyValueModalComponent } from "src/app/dataset-view/additional-components/dataset-settings-component/tabs/variables-and-secrets/components/edit-key-value-modal/edit-key-value-modal.component";
 import { EditKeyValueModalHarness } from "src/app/dataset-view/additional-components/dataset-settings-component/tabs/variables-and-secrets/components/edit-key-value-modal/edit-key-value-modal.harness";
@@ -166,7 +170,7 @@ describe("EditKeyValueModalComponent", () => {
     });
 
     it("should save a new variable and close", async () => {
-        const upsertSpy = vi.spyOn(evnironmentVariablesService, "upsertEnvVariable").mockReturnValue(of(undefined));
+        const createSpy = vi.spyOn(evnironmentVariablesService, "createEnvVariable").mockReturnValue(of({ ok: true }));
         const closeSpy = stubMethod(TestBed.inject(NgbActiveModal), "close");
         const modal = await openForAdding();
 
@@ -175,7 +179,7 @@ describe("EditKeyValueModalComponent", () => {
         expect(await modal.isSaveDisabled()).toBe(false);
         await modal.save();
 
-        expect(upsertSpy).toHaveBeenCalledWith({
+        expect(createSpy).toHaveBeenCalledWith({
             accountId: mockDatasetBasicsRootFragment.owner.id,
             datasetId: mockDatasetBasicsRootFragment.id,
             key: "API_KEY",
@@ -186,7 +190,7 @@ describe("EditKeyValueModalComponent", () => {
     });
 
     it("should save a new secret with its value hidden", async () => {
-        const upsertSpy = vi.spyOn(evnironmentVariablesService, "upsertEnvVariable").mockReturnValue(of(undefined));
+        const createSpy = vi.spyOn(evnironmentVariablesService, "createEnvVariable").mockReturnValue(of({ ok: true }));
         stubMethod(TestBed.inject(NgbActiveModal), "close");
         const modal = await openForAdding();
 
@@ -196,11 +200,11 @@ describe("EditKeyValueModalComponent", () => {
         await modal.setValue("s3cret");
         await modal.save();
 
-        expect(upsertSpy).toHaveBeenCalledWith(expect.objectContaining({ key: "API_TOKEN", isSecret: true }));
+        expect(createSpy).toHaveBeenCalledWith(expect.objectContaining({ key: "API_TOKEN", isSecret: true }));
     });
 
     it("should not save while the form is invalid", async () => {
-        const upsertSpy = vi.spyOn(evnironmentVariablesService, "upsertEnvVariable");
+        const createSpy = vi.spyOn(evnironmentVariablesService, "createEnvVariable");
         const modal = await openForAdding();
 
         await modal.setKey("A-B");
@@ -208,7 +212,39 @@ describe("EditKeyValueModalComponent", () => {
         await modal.save();
 
         expect(await modal.isSaveDisabled()).toBe(true);
-        expect(upsertSpy).not.toHaveBeenCalled();
+        expect(createSpy).not.toHaveBeenCalled();
+    });
+
+    it("should show a key the backend reports as taken on the key field, and stay open", async () => {
+        vi.spyOn(evnironmentVariablesService, "createEnvVariable").mockReturnValue(
+            of({ ok: false, fieldError: { field: "keyEnvVariable", message: MOCK_ENV_VAR_ALREADY_EXISTS_MESSAGE } }),
+        );
+        const closeSpy = stubMethod(TestBed.inject(NgbActiveModal), "close");
+        const modal = await openForAdding();
+
+        await modal.setKey("API_KEY");
+        await modal.setValue("value-1");
+        await modal.save();
+
+        expect(await modal.getKeyError()).toBe(MOCK_ENV_VAR_ALREADY_EXISTS_MESSAGE);
+        expect(closeSpy).not.toHaveBeenCalled();
+
+        await modal.setKey("API_KEY_2");
+        expect(await modal.getKeyError()).toBeNull();
+    });
+
+    it("should stay open without a field error when the backend rejects the variable as a whole", async () => {
+        vi.spyOn(evnironmentVariablesService, "createEnvVariable").mockReturnValue(of({ ok: false, fieldError: null }));
+        const closeSpy = stubMethod(TestBed.inject(NgbActiveModal), "close");
+        const modal = await openForAdding();
+
+        await modal.setKey("API_KEY");
+        await modal.setValue("value-1");
+        await modal.save();
+
+        expect(await modal.getKeyError()).toBeNull();
+        expect(await modal.getValueError()).toBeNull();
+        expect(closeSpy).not.toHaveBeenCalled();
     });
 
     it("should keep Save disabled until the existing keys have loaded", async () => {
@@ -227,7 +263,7 @@ describe("EditKeyValueModalComponent", () => {
     });
 
     it("should keep Save disabled while the variable is being saved", async () => {
-        const upsertSpy = vi.spyOn(evnironmentVariablesService, "upsertEnvVariable").mockReturnValue(NEVER);
+        const createSpy = vi.spyOn(evnironmentVariablesService, "createEnvVariable").mockReturnValue(NEVER);
         const modal = await openForAdding();
 
         await modal.setKey("API_KEY");
@@ -236,7 +272,7 @@ describe("EditKeyValueModalComponent", () => {
         await modal.save();
 
         expect(await modal.isSaveDisabled()).toBe(true);
-        expect(upsertSpy).toHaveBeenCalledTimes(1);
+        expect(createSpy).toHaveBeenCalledTimes(1);
     });
 
     it("should fill the form from the variable being edited, with an empty value for a missing one", async () => {
@@ -251,7 +287,7 @@ describe("EditKeyValueModalComponent", () => {
     });
 
     it("should save an edited variable under its key", async () => {
-        const upsertSpy = vi.spyOn(evnironmentVariablesService, "upsertEnvVariable").mockReturnValue(of(undefined));
+        const upsertSpy = vi.spyOn(evnironmentVariablesService, "upsertEnvVariable").mockReturnValue(of({ ok: true }));
         stubMethod(TestBed.inject(NgbActiveModal), "close");
         setComponentInput(fixture, "row", { ...requireValue(existingVariables.nodes[0]), key: "API_KEY" });
         fixture.detectChanges();
@@ -263,6 +299,36 @@ describe("EditKeyValueModalComponent", () => {
         expect(upsertSpy).toHaveBeenCalledWith(
             expect.objectContaining({ key: "API_KEY", value: "value-2", isSecret: false }),
         );
+    });
+
+    it("should save an edited variable whose key the naming rules reject", async () => {
+        const upsertSpy = vi.spyOn(evnironmentVariablesService, "upsertEnvVariable").mockReturnValue(of({ ok: true }));
+        stubMethod(TestBed.inject(NgbActiveModal), "close");
+        setComponentInput(fixture, "row", { ...requireValue(existingVariables.nodes[0]), key: "key-1" });
+        fixture.detectChanges();
+        const modal = await TestbedHarnessEnvironment.harnessForFixture(fixture, EditKeyValueModalHarness);
+
+        await modal.setValue("value-2");
+        expect(await modal.getKeyError()).toBeNull();
+        await modal.save();
+
+        expect(upsertSpy).toHaveBeenCalledWith(expect.objectContaining({ key: "key-1", value: "value-2" }));
+    });
+
+    it("should show a value the backend rejects on the value field of an edited variable", async () => {
+        vi.spyOn(evnironmentVariablesService, "upsertEnvVariable").mockReturnValue(
+            of({ ok: false, fieldError: { field: "value", message: MOCK_ENV_VAR_VALUE_TOO_LONG_MESSAGE } }),
+        );
+        const closeSpy = stubMethod(TestBed.inject(NgbActiveModal), "close");
+        setComponentInput(fixture, "row", requireValue(existingVariables.nodes[0]));
+        fixture.detectChanges();
+        const modal = await TestbedHarnessEnvironment.harnessForFixture(fixture, EditKeyValueModalHarness);
+
+        await modal.setValue("value-2");
+        await modal.save();
+
+        expect(await modal.getValueError()).toBe(MOCK_ENV_VAR_VALUE_TOO_LONG_MESSAGE);
+        expect(closeSpy).not.toHaveBeenCalled();
     });
 
     it("should show the exposed value of a secret being edited, and keep it a secret", async () => {

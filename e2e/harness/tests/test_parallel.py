@@ -5,8 +5,8 @@
 
 import unittest
 
-from e2e.visual.parallel import split
-from e2e.visual.scenarios import Scenario
+from e2e.harness.parallel import split
+from e2e.scenarios import Scenario
 
 
 def names(parts):

@@ -5,8 +5,8 @@
  * included in the LICENSE file.
  */
 
-// Injected into the page: class-free DOM paths, computed-style snapshots and small DOM helpers.
-// `window.__capExtraRoots` (a selector list, set by the session before this runs) adds snapshot roots.
+// Injected into the page: class-free DOM paths, computed-style snapshots and the masks.
+// `window.__capExtraRoots` (a selector list, set before this runs) adds snapshot roots.
 (() => {
   if (window.__cap) return;
   const ROOTS = [
@@ -205,31 +205,6 @@
       const out = {};
       snapSubtree(target.parentElement ?? target, out);
       return out;
-    },
-    components() {
-      const tags = new Set();
-      for (const el of document.querySelectorAll("*")) {
-        const tag = el.tagName.toLowerCase();
-        if (tag.includes("-")) tags.add(tag);
-      }
-      return [...tags].sort();
-    },
-    text() {
-      return document.body.innerText.replace(/\s+/g, " ").trim();
-    },
-    clickText(sel, text) {
-      const el = [...document.querySelectorAll(sel)].find((e) => e.innerText.trim() === text);
-      if (!el) return false;
-      el.scrollIntoView({ block: "center" });
-      el.click();
-      return true;
-    },
-    click(sel) {
-      const el = document.querySelector(sel);
-      if (!el) return false;
-      el.scrollIntoView({ block: "center" });
-      el.click();
-      return true;
     },
   };
 })();

@@ -12,10 +12,7 @@ from __future__ import annotations
 import json
 from pathlib import Path
 
-from e2e.visual.cache import git, node_json
-
-# Changes here alter every capture
-KIT = ("e2e/visual/", "e2e/fixtures/")
+from e2e.harness.cache import HELPERS, git, node_json
 
 
 def changed_files(base_sha: str, head_ref: str | None) -> list[str]:
@@ -61,14 +58,15 @@ def chains(scenarios) -> list[set[str]]:
     return list({id(g): g for g in groups.values()}.values())
 
 
-def affected(selection: dict[str, list], changed: list[str], head_src: Path, records: Records):
-    """The part of `selection` the change can alter, and a sentence saying why."""
+def affected(selection: dict[str, list], changed: list[str], head_src: Path, records: Records, kit: tuple[str, ...]):
+    """The part of `selection` the change can alter, and a sentence saying why. A changed file under one
+    of the `kit` prefixes (the run's own code and data) selects everything."""
     if not changed:
         return {}, "base and head do not differ"
-    kit = [f for f in changed if f.startswith(KIT)]
-    if kit:
-        return selection, f"the capture code or fixtures changed ({kit[0]})"
-    impact = node_json("impact.mjs", str(head_src), *changed)
+    kit_changes = [f for f in changed if f.startswith(kit)]
+    if kit_changes:
+        return selection, f"the capture code or fixtures changed ({kit_changes[0]})"
+    impact = node_json(HELPERS / "impact.mjs", str(head_src), *changed)
     if impact["all"]:
         return selection, impact["all"]
     selectors = set(impact["selectors"])

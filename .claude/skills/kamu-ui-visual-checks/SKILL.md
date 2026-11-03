@@ -73,7 +73,7 @@ inside the scenario. Changing an artifact means checking the scenarios its `entr
 ## Adding a scenario
 
 1. Find or draft the catalogue entry (empty `tier` and `why`, then ask for the rating).
-2. Probe the page: `npm run visual -- probe --profile seed /kamu/population/history`.
+2. Probe the page: `npm run e2e -- probe --profile seed /kamu/population/history`.
 3. Append the scenario to `SCENARIOS` with the next free number; never renumber, the name is the
    comparison key. Give it `wait_for` and `expect_text`, so an empty or broken page fails loudly.
 4. Mind the order: scenarios share one tab per profile, and pages after account flows and after
@@ -83,14 +83,16 @@ inside the scenario. Changing an artifact means checking the scenarios its `entr
 5. A scenario that must not change the backend switches controls without saving. Opening the
    rotate-secret page does rotate the secret; the masks hide the new one.
 6. A page that shows a value differing between two seedings (an id, a hash, a time in a new
-   format) needs a mask in `page-lib.js`, not a looser comparison.
+   format) needs a mask in `e2e/visual/snapshot.js`, not a looser comparison.
 7. Run `compare --only <name>` twice: the second run must show it the same. With an image
    backend each run seeds afresh, so this also proves the masks.
 
 ## Checking the kit itself
 
-A change to the capture code under `e2e/visual` changes the cache key, so the next run captures
-the base again; the comparer is not part of the key. A new
+A change to a file that decides what a capture records (`CAPTURE_FILES` in
+`e2e/visual/capture.py`) changes the cache key, so the next run captures the base again; the
+comparer, the cache and the commands are not part of the key. A new file under `e2e/` goes into
+`CAPTURE_FILES` or `OUTSIDE_CAPTURE`; `npm run e2e-check` refuses one in neither. A new
 check or a change to the comparer gets tests for input it must accept as well as input it must
 reject, and a run against two commits with a known difference: it must report that difference and
 nothing else.

@@ -10,7 +10,7 @@ import time
 import unittest
 from pathlib import Path
 
-from e2e.visual.progress import CaptureProgress, StampedOutput, Timings, about, clock
+from e2e.harness.progress import CaptureProgress, StampedOutput, Timings, about, clock
 
 
 class FormatTest(unittest.TestCase):

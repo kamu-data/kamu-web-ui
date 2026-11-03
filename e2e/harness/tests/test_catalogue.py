@@ -5,8 +5,8 @@
 
 import unittest
 
-from e2e.visual.catalogue import select_scenarios
-from e2e.visual.scenarios import Scenario
+from e2e.harness.catalogue import select_scenarios
+from e2e.scenarios import Scenario
 
 ENTRIES = {
     "a": {"profile": "seed", "tier": "smoke"},

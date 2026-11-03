@@ -12,7 +12,7 @@ from pathlib import Path
 import yaml
 
 from e2e.fixtures.inventory import SEED, check_inventory, check_scenario_datasets, load_inventory
-from e2e.visual.scenarios import Scenario, dataset_info
+from e2e.scenarios import Scenario, dataset_info
 
 CATALOGUE = SEED.parent.parent / "catalogue"
 ENTRIES = {e["id"] for file in CATALOGUE.glob("*.yaml") for e in yaml.safe_load(file.read_text())["entries"]}

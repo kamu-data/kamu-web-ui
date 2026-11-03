@@ -9,9 +9,9 @@ import unittest
 from pathlib import Path
 from unittest.mock import patch
 
-from e2e.visual.cache import node_json
-from e2e.visual.impact import Records, affected, chains
-from e2e.visual.scenarios import Scenario
+from e2e.harness.cache import HELPERS, node_json
+from e2e.harness.impact import Records, affected, chains
+from e2e.scenarios import Scenario
 
 SCENARIOS = [
     Scenario("01-list", "a"),
@@ -39,8 +39,10 @@ class AffectedTest(unittest.TestCase):
         self.dir.cleanup()
 
     def pick(self, changed, impact):
-        with patch("e2e.visual.impact.node_json", return_value=impact):
-            return affected(self.selection, changed, Path("."), self.records)
+        with patch("e2e.harness.impact.node_json", return_value=impact):
+            return affected(
+                self.selection, changed, Path("."), self.records, ("e2e/harness/session.py", "e2e/fixtures/")
+            )
 
     def test_a_component_selects_the_scenarios_that_showed_it(self):
         picked, reason = self.pick(["src/app/x.scss"], {"all": None, "selectors": ["app-settings"]})
@@ -67,7 +69,7 @@ class AffectedTest(unittest.TestCase):
         )
         self.assertEqual(picked, self.selection)
         self.assertIn("every page", reason)
-        picked, reason = self.pick(["e2e/visual/session.py"], {})
+        picked, reason = self.pick(["e2e/harness/session.py"], {})
         self.assertEqual(picked, self.selection)
         self.assertIn("capture code", reason)
 
@@ -122,7 +124,7 @@ class ImpactHelperTest(unittest.TestCase):
         cls.dir.cleanup()
 
     def impact(self, *changed):
-        return node_json("impact.mjs", self.dir.name, *changed)
+        return node_json(HELPERS / "impact.mjs", self.dir.name, *changed)
 
     def test_a_template_or_stylesheet_reaches_its_component_only(self):
         for rel in ("src/app/list/list.component.html", "src/app/list/list.component.scss"):

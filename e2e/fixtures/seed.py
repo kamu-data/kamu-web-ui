@@ -29,7 +29,7 @@ from pathlib import Path
 import yaml
 
 from e2e.fixtures.inventory import OUTCOMES, SEED, dataset_kind, load_inventory, snapshot_text
-from e2e.visual.backend import Server, start_workspace_server
+from e2e.harness.backend import Server, start_workspace_server
 
 ADMIN = {"login": "kamu", "password": "kamu.dev"}
 # The server refuses to start without GitHub OAuth settings; nothing logs in through GitHub

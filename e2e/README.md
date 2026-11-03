@@ -1,7 +1,8 @@
 # End-to-end kit
 
-Tools that run the built app in a real browser against a real kamu backend. Today that is the
-**visual comparison**: it builds two versions of the UI, opens the same business scenarios in both
+Tools that run the built app in a real browser against a real kamu backend. The shared parts
+(backends, data profiles, builds, Chrome, the scenarios and the catalogue) serve any kind of run;
+today the one kind is the **visual comparison**: it builds two versions of the UI, opens the same business scenarios in both
 against the same data, and reports what changed on screen — computed styles first, pixels to
 confirm. Use it for style work and for Material, Bootstrap or ng-select upgrades, where lint and
 unit tests see nothing.
@@ -42,12 +43,12 @@ to `~/.cache/kamu-ui-visual/` (`KAMU_VISUAL_CACHE` to move it).
 | Command | Does |
 |---|---|
 | `npm run visual -- compare` | builds base and head, captures both, compares; see the options below |
-| `npm run visual -- probe [--profile <p>] [--build <dir>] <path>...` | logs in to a profile's backend and prints each page's text and components, with screenshots: for writing a scenario |
-| `npm run visual -- coverage` | routes no catalogue entry claims, entries no scenario realises, components the last run never showed |
-| `npm run visual -- check` | the catalogue, scenarios and seed inventory agree with each other and with the app's routes |
-| `npm run visual -- cache list` | every cache entry with its size and last use, and the total |
-| `npm run visual -- cache prune [--dry-run]` | applies the retention below now; `--keep-runs`, `--older-than <days>`, `--max <size>`, `--no-images` override it |
-| `npm run visual -- cache clear [<kind>]` | removes every entry, or every `run`, `baseline`, `build`, `workspace`, `release` or `image` |
+| `npm run e2e -- probe [--profile <p>] [--build <dir>] <path>...` | logs in to a profile's backend and prints each page's text and components, with screenshots: for writing a scenario |
+| `npm run e2e -- coverage` | routes no catalogue entry claims, entries no scenario realises, components the last run never showed |
+| `npm run e2e -- check` | the catalogue, scenarios and seed inventory agree with each other and with the app's routes |
+| `npm run e2e -- cache list` | every cache entry with its size and last use, and the total |
+| `npm run e2e -- cache prune [--dry-run]` | applies the retention below now; `--keep-runs`, `--older-than <days>`, `--max <size>`, `--no-images` override it |
+| `npm run e2e -- cache clear [<kind>]` | removes every entry, or every `run`, `baseline`, `build`, `workspace`, `release` or `image` |
 | `npm run e2e-check` | the kit's unit tests and `check`; CI runs it |
 
 `compare` options:
@@ -127,8 +128,12 @@ build exists.
 |---|---|
 | [`catalogue/`](catalogue/) | the business catalogue: what users rely on, one file per capability ([fields](catalogue/README.md)) |
 | [`fixtures/`](fixtures/) | data profiles, the seed and its inventory |
-| [`visual/`](visual/) | the kit: CLI, browser session, capture, comparison, backends |
-| `visual/page-lib.js` | runs in the page: snapshots, masking of volatile values |
-| `visual/helpers/` | Node helpers: the app's route table, the utility classes of `var.scss`, the components a change reaches |
-| `visual/tests/` | unit tests (`npm run e2e-check`) |
+| [`scenarios.py`](scenarios.py) | the scenarios, in run order, each realising a catalogue entry |
+| [`harness/`](harness/) | what every kind of run shares: the `e2e` commands, backends and containers, builds and the cache, Chrome and the session, parallel workers, the selection of scenarios a change reaches, progress |
+| `harness/page-lib.js` | runs in every page: the DOM helpers scenarios use |
+| `harness/helpers/` | Node helpers: the app's route table, the components a change reaches |
+| [`visual/`](visual/) | the visual comparison: `compare`, capture, comparison |
+| `visual/snapshot.js` | runs in the page: snapshots, masking of volatile values |
+| `visual/helpers/` | Node helper: the utility classes of `var.scss` |
+| `*/tests/` | unit tests (`npm run e2e-check`) |
 | `pyproject.toml`, `uv.lock` | the kit's pinned Python dependencies |

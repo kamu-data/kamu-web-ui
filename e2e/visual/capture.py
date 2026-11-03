@@ -10,10 +10,89 @@ from __future__ import annotations
 
 import gzip
 import json
+from dataclasses import dataclass
 from pathlib import Path
 
-from e2e.visual.scenarios import FORCE_TARGETS
-from e2e.visual.session import Browser, Target, run_scenarios
+from e2e.harness.cache import REPO, files_hash, node_json
+from e2e.harness.session import Browser, Target, run_scenarios
+
+HERE = Path(__file__).parent
+SNAPSHOT_JS = (HERE / "snapshot.js").read_text(encoding="utf8")
+
+# The files under e2e/ that decide what a capture records; their hash is part of the baseline key. The
+# data id and the backend id cover the rest of what the pages show.
+CAPTURE_FILES = [
+    "fixtures/profiles.py",
+    "harness/backend.py",
+    "harness/cdp.py",
+    "harness/containers.py",
+    "harness/page-lib.js",
+    "harness/parallel.py",
+    "harness/serve.py",
+    "harness/session.py",
+    "scenarios.py",
+    "visual/capture.py",
+    "visual/helpers/utility-roots.mjs",
+    "visual/snapshot.js",
+]
+# The rest of the kit, which a cached baseline does not depend on; a test makes every file one or the other
+OUTSIDE_CAPTURE = [
+    "fixtures/inventory.py",
+    "fixtures/seed.py",
+    "harness/cache.py",
+    "harness/catalogue.py",
+    "harness/cli.py",
+    "harness/coverage.py",
+    "harness/helpers/impact.mjs",
+    "harness/helpers/routes.mjs",
+    "harness/impact.py",
+    "harness/progress.py",
+    "harness/retention.py",
+    "visual/cli.py",
+    "visual/compare.py",
+]
+
+
+def capture_hash() -> str:
+    return files_hash(CAPTURE_FILES)
+
+
+def utility_roots(src: Path) -> list[str]:
+    """The class selectors the tree's global utility stylesheet compiles to, as snapshot roots."""
+    return node_json(HERE / "helpers" / "utility-roots.mjs", str(src), str(REPO / "node_modules"))
+
+
+def page_script(extra_roots: list[str]) -> str:
+    """What a capture injects into each page: the snapshot code, with `extra_roots` as more roots."""
+    return f"window.__capExtraRoots = {json.dumps(extra_roots)};\n{SNAPSHOT_JS}"
+
+
+@dataclass
+class ForceTarget:
+    """Elements whose :hover / :focus / :active states are snapshotted: the ripple and state-layer
+    overrides, and the pressed look of buttons, only show in these states."""
+
+    selector: str
+    states: list[str]
+    max: int = 3
+
+
+FORCE_TARGETS: list[ForceTarget] = [
+    ForceTarget(".mdc-checkbox", ["hover"]),
+    ForceTarget("input.mdc-checkbox__native-control", ["focus"]),
+    ForceTarget(".mat-mdc-radio-button .mdc-radio", ["hover"]),
+    ForceTarget("input.mdc-radio__native-control", ["focus"]),
+    ForceTarget("button.mdc-switch", ["hover", "focus"]),
+    ForceTarget(".mat-mdc-menu-item", ["hover", "focus"]),
+    ForceTarget(".page-link", ["hover", "focus"]),
+    ForceTarget(".mat-button-toggle-button", ["hover", "focus"]),
+    ForceTarget(".mat-mdc-chip", ["hover"]),
+    ForceTarget("tr.mat-mdc-row", ["hover"], max=2),
+    ForceTarget(".up-row", ["hover"], max=1),
+    ForceTarget(".modal__btn", ["hover", "focus", "active"]),
+    ForceTarget(".btn", ["active"], max=2),
+    ForceTarget(".mat-mdc-button-base", ["active"], max=2),
+]
 
 # :focus also forces :focus-visible, which is what Material's focus indicators use; :active also forces
 # :focus, as a mouse press focuses the button, so a pressed look nested in :focus shows as users see it
@@ -51,6 +130,7 @@ async def capture(scenarios, target: Target, browser: Browser, out_dir: Path, do
     (out_dir / "styles").mkdir(parents=True, exist_ok=True)
 
     async def snapshot(s, sc, entry) -> None:
+        entry["masked"] = await s.eval("window.__cap.mask()")
         # Masking and the full-page screenshot reflow the page under a hovering mouse, which can start a
         # fade on another element
         await s.transitions_done()

@@ -13,7 +13,7 @@ import re
 from collections import Counter
 from pathlib import Path
 
-from e2e.visual.cache import REPO
+from e2e.harness.cache import REPO
 
 SELECTOR = re.compile(r"""selector:\s*["'`](app-[\w-]+)["'`]""")
 

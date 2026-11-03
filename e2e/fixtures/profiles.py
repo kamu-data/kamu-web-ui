@@ -28,7 +28,7 @@ from e2e.fixtures.seed import (
     node_settings,
     workspace_env,
 )
-from e2e.visual.backend import (
+from e2e.harness.backend import (
     CONTAINER_ENGINE_NETWORK,
     Backend,
     BackendChoice,
@@ -37,8 +37,8 @@ from e2e.visual.backend import (
     start_container_server,
     start_workspace_server,
 )
-from e2e.visual.containers import container_runtime, ensure_image, image_created, run_in_image
-from e2e.visual.retention import touch
+from e2e.harness.containers import container_runtime, ensure_image, image_created, run_in_image
+from e2e.harness.retention import touch
 
 HERE = Path(__file__).parent
 TWO_HOURS = 2 * 3600 * 1000

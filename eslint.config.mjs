@@ -290,7 +290,7 @@ export default [
       "@angular-eslint/template/cyclomatic-complexity": ["error", { maxComplexity: 10 }],
     },
   },
-  // The visual comparison scripts: Node modules, plus page-lib.js, which runs in the page
+  // The e2e kit's scripts: Node helpers, plus page-lib.js and snapshot.js, which run in the page
   {
     files: ["e2e/**/*.mjs", "e2e/**/*.js"],
     languageOptions: {

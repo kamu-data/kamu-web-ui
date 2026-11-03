@@ -27,8 +27,8 @@ import urllib.error
 import urllib.request
 from pathlib import Path
 
-from e2e.visual.cache import cache_dir
-from e2e.visual.retention import note_image
+from e2e.harness.cache import cache_dir
+from e2e.harness.retention import note_image
 
 POSTGRES_IMAGE = "docker.io/library/postgres:17.6"
 RUSTFS_IMAGE = "docker.io/rustfs/rustfs:1.0.0-alpha.90"

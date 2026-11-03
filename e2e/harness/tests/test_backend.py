@@ -9,8 +9,8 @@ from pathlib import Path
 from unittest import mock
 
 from e2e.fixtures.seed import api_server_config, node_settings
-from e2e.visual import backend
-from e2e.visual.backend import FLAVORS, BackendChoice, _download_release, _version
+from e2e.harness import backend
+from e2e.harness.backend import FLAVORS, BackendChoice, _download_release, _version
 
 
 class VersionTest(unittest.TestCase):

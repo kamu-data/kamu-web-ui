@@ -21,7 +21,7 @@ from typing import TYPE_CHECKING
 from urllib.parse import quote
 
 if TYPE_CHECKING:
-    from e2e.visual.session import Session
+    from e2e.harness.session import Session
 
 Step = Callable[["Session"], Awaitable[None]]
 
@@ -47,16 +47,6 @@ class Scenario:
     settle: float = 1.2
     # The earlier scenario whose leaking styles this one checks: the two always run together
     follows: str | None = None
-
-
-@dataclass
-class ForceTarget:
-    """Elements whose :hover / :focus / :active states are snapshotted: the ripple and state-layer
-    overrides, and the pressed look of buttons, only show in these states."""
-
-    selector: str
-    states: list[str]
-    max: int = 3
 
 
 DS = "/kamu/population"
@@ -780,7 +770,7 @@ SCENARIOS: list[Scenario] = [
         steps=select_collection_row,
         hover="app-collection-view tr.mat-mdc-row.selected-row",
     ),
-    # A confirmation dialog, cancelled afterwards: its buttons are FORCE_TARGETS with a held :active
+    # A confirmation dialog, cancelled afterwards: its buttons are among the capture's FORCE_TARGETS, with a held :active
     Scenario(
         "87-modal-dialog",
         "access-tokens",
@@ -913,21 +903,4 @@ SCENARIOS: list[Scenario] = [
         wait_for="app-settings-tab",
         expect_text=["Delete account"],
     ),
-]
-
-FORCE_TARGETS: list[ForceTarget] = [
-    ForceTarget(".mdc-checkbox", ["hover"]),
-    ForceTarget("input.mdc-checkbox__native-control", ["focus"]),
-    ForceTarget(".mat-mdc-radio-button .mdc-radio", ["hover"]),
-    ForceTarget("input.mdc-radio__native-control", ["focus"]),
-    ForceTarget("button.mdc-switch", ["hover", "focus"]),
-    ForceTarget(".mat-mdc-menu-item", ["hover", "focus"]),
-    ForceTarget(".page-link", ["hover", "focus"]),
-    ForceTarget(".mat-button-toggle-button", ["hover", "focus"]),
-    ForceTarget(".mat-mdc-chip", ["hover"]),
-    ForceTarget("tr.mat-mdc-row", ["hover"], max=2),
-    ForceTarget(".up-row", ["hover"], max=1),
-    ForceTarget(".modal__btn", ["hover", "focus", "active"]),
-    ForceTarget(".btn", ["active"], max=2),
-    ForceTarget(".mat-mdc-button-base", ["active"], max=2),
 ]

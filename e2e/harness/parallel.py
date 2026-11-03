@@ -3,10 +3,10 @@
 # Use of this software is governed by the Business Source License
 # included in the LICENSE file.
 
-"""Captures in parallel processes: a side's scenarios are split into shards, and each shard is captured
-by a process of its own with its own Chrome, then the shards are merged into one capture folder. The
-split depends only on the scenario names and the shard count, so base and head always run the same
-shards in the same order."""
+"""Scenario runs in parallel processes: the scenarios are split into shards, each shard is run by a
+process of its own with its own Chrome, then the shards' output is merged into one folder. The split
+depends only on the scenario names and the shard count, so two runs of the same scenarios (the base
+and the head of a comparison) always run the same shards in the same order."""
 
 from __future__ import annotations
 
@@ -19,9 +19,8 @@ import threading
 from concurrent.futures import ProcessPoolExecutor
 from pathlib import Path
 
-from e2e.visual.capture import capture
-from e2e.visual.impact import chains
-from e2e.visual.session import Browser, Target
+from e2e.harness.impact import chains
+from e2e.harness.session import Browser, Target
 
 # Shards a side is split into, whatever the number of workers: the split is part of the baseline key,
 # so a cached base stays valid however loaded the machine is
@@ -52,12 +51,12 @@ def split(scenarios: list, count: int) -> list[list]:
     return [sorted(part, key=lambda sc: order[sc.name]) for part in parts]
 
 
-def _capture_shard(names: list[str], target: Target, binary: str, cdp_port: int, out_dir: Path, events) -> list[dict]:
+def _run_shard(work, names: list[str], target: Target, binary: str, cdp_port: int, out_dir: Path, events) -> list[dict]:
     """In a worker process: the scenarios are looked up by name, as their steps cannot be sent across."""
-    from e2e.visual.scenarios import SCENARIOS
+    from e2e.scenarios import SCENARIOS
 
     by_name = {sc.name: sc for sc in SCENARIOS}
-    return asyncio.run(capture([by_name[n] for n in names], target, Browser(binary, cdp_port), out_dir, events.put))
+    return asyncio.run(work([by_name[n] for n in names], target, Browser(binary, cdp_port), out_dir, events.put))
 
 
 def _merge(parts: list[Path], out_dir: Path, reports: list[list[dict]], scenarios: list) -> list[dict]:
@@ -94,11 +93,12 @@ class Pool:
         self.executor.shutdown(wait=True, cancel_futures=True)
         self.manager.shutdown()
 
-    async def capture(
-        self, scenarios: list, target: Target, out_dir: Path, done, shards: int | None = None
+    async def run(
+        self, work, scenarios: list, target: Target, out_dir: Path, done, shards: int | None = None
     ) -> list[dict]:
-        """Like `capture.capture`, in `shards` (default `SHARDS`) run by the workers; `done` hears of each
-        scenario as its shard finishes it."""
+        """`work(scenarios, target, browser, out_dir, done)`, a module-level coroutine function that returns
+        a report, run on `shards` (default `SHARDS`) by the workers; `done` hears of each scenario as its
+        shard finishes it. Returns the merged report."""
         loop = asyncio.get_running_loop()
         if self.ports is None:
             self.ports = asyncio.Queue()
@@ -115,18 +115,18 @@ class Pool:
         parts = split(scenarios, shards or SHARDS)
         dirs = [out_dir / f"shard-{i}" for i in range(len(parts))]
 
-        async def run(part: list, part_dir: Path) -> list[dict]:
+        async def run_part(part: list, part_dir: Path) -> list[dict]:
             port = await self.ports.get()
             try:
                 names = [sc.name for sc in part]
                 return await loop.run_in_executor(
-                    self.executor, _capture_shard, names, target, self.binary, port, part_dir, events
+                    self.executor, _run_shard, work, names, target, self.binary, port, part_dir, events
                 )
             finally:
                 self.ports.put_nowait(port)
 
         try:
-            reports = await asyncio.gather(*(run(part, d) for part, d in zip(parts, dirs, strict=True)))
+            reports = await asyncio.gather(*(run_part(part, d) for part, d in zip(parts, dirs, strict=True)))
         finally:
             events.put(None)
             await asyncio.to_thread(forwarder.join)

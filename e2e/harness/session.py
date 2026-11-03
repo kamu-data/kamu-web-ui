@@ -14,13 +14,12 @@ import re
 import signal
 import time
 import urllib.request
-from dataclasses import dataclass, field
+from dataclasses import dataclass
 from pathlib import Path
 from typing import Any
-from urllib.parse import urlparse
 
-from e2e.visual.cdp import Cdp, Chrome
-from e2e.visual.progress import status_line
+from e2e.harness.cdp import Cdp, Chrome
+from e2e.harness.progress import status_line
 
 PAGE_LIB = (Path(__file__).parent / "page-lib.js").read_text(encoding="utf8")
 VIEWPORT = {"width": 1440, "height": 900}
@@ -34,7 +33,7 @@ def clock_shim(now: int) -> str:
     the same minute however long the run has taken. It runs, because debounce timers need it."""
     return f"""(() => {{
     const base = {now}; let t0 = performance.now(); const RD = Date;
-    window.__capResetClock = () => {{ t0 = performance.now(); }};
+    window.__e2eResetClock = () => {{ t0 = performance.now(); }};
     class D extends RD {{
         constructor(...a) {{ if (a.length === 0) super(base + (performance.now() - t0)); else super(...a); }}
         static now() {{ return base + (performance.now() - t0); }}
@@ -72,14 +71,14 @@ def login(api_url: str, account: dict) -> str:
 
 @dataclass
 class Target:
-    """Where a session points: the served app, its API, who logs in, the frozen clock (epoch ms), and the
-    selectors page-lib.js snapshots besides its own roots."""
+    """Where a session points: the served app, its API, who logs in, the frozen clock (epoch ms), and a
+    script injected after page-lib.js, for what the run records in the page."""
 
     app_url: str
     api_url: str
     account: dict
     now: int
-    extra_roots: list[str] = field(default_factory=list)
+    page_script: str = ""
 
 
 @dataclass
@@ -94,7 +93,7 @@ class Session:
     def __init__(self, cdp: Cdp, target: Target):
         self.cdp = cdp
         self.target = target
-        self.lib_source = f"window.__capExtraRoots = {json.dumps(target.extra_roots)};\n{PAGE_LIB}"
+        self.lib_source = f"{PAGE_LIB}\n{target.page_script}"
         self.inflight: set[str] = set()
         self.last_net = time.monotonic()
         self.console_errors: list[str] = []
@@ -193,14 +192,14 @@ class Session:
             raise RuntimeError(f"waitFor timed out: {selector}")
 
     async def click(self, selector: str) -> None:
-        if not await self.eval(f"window.__cap.click({json.dumps(selector)})"):
+        if not await self.eval(f"window.__e2e.click({json.dumps(selector)})"):
             raise RuntimeError(f"click: no element {selector}")
         await asyncio.sleep(0.2)
         await self.idle()
 
     async def click_text(self, selector: str, text: str) -> None:
         """Clicks the first element matching `selector` whose trimmed innerText equals `text`."""
-        if not await self.eval(f"window.__cap.clickText({json.dumps(selector)}, {json.dumps(text)})"):
+        if not await self.eval(f"window.__e2e.clickText({json.dumps(selector)}, {json.dumps(text)})"):
             raise RuntimeError(f'clickText: no {selector} with text "{text}"')
         await asyncio.sleep(0.2)
         await self.idle()
@@ -313,23 +312,32 @@ async def run_scenarios(scenarios, target: Target, browser: Browser, out_dir: Pa
                     raise RuntimeError("stale overlay from the previous scenario")
                 if sc.viewport:
                     await s.set_viewport(sc.viewport)
-                await s.eval("window.__capResetClock?.()")
+                await s.eval("window.__e2eResetClock?.()")
                 url = sc.url(s) if callable(sc.url) else sc.url
                 entry["requested"] = url
                 if sc.full:
                     await s.goto_full(url)
                 elif url:
+                    here = "location.pathname + location.search"
+                    before = await s.eval(here)
                     await s.goto_app(url)
+                    # A failed navigation puts the previous URL back; a redirect leads elsewhere, or to the
+                    # expected path, which may be the previous one
+                    stuck = f"{here} === {json.dumps(before)} && {json.dumps(url)} !== {json.dumps(before)}"
+                    if sc.expect_path:
+                        stuck += f" && !location.pathname.startsWith({json.dumps(sc.expect_path)})"
+                    # A page busy with its own navigation can drop the popstate: try once more
+                    if await s.eval(stuck):
+                        entry["retried"] = True
+                        await s.goto_app(url)
                     # Once Monaco's AMD loader is on the page (data tab, query page), a lazy chunk loaded
                     # by in-app navigation fails ("Can only have one anonymous define call per script
                     # file") and the router stays where it was: reload instead
-                    pathname = urlparse(url).path
-                    stuck = await s.eval(
-                        f"!location.pathname.startsWith({json.dumps(pathname)}) "
-                        '&& typeof window.define === "function" && !!window.define.amd'
-                    )
-                    if stuck:
-                        entry["fullReload"] = "in-app navigation failed after Monaco's AMD loader"
+                    if await s.eval(stuck):
+                        amd = await s.eval('typeof window.define === "function" && !!window.define.amd')
+                        entry["fullReload"] = (
+                            "in-app navigation failed after Monaco's AMD loader" if amd else "in-app navigation failed"
+                        )
                         await s.goto_full(url)
                 if sc.wait_for:
                     await s.must_wait_for(sc.wait_for)
@@ -340,7 +348,7 @@ async def run_scenarios(scenarios, target: Target, browser: Browser, out_dir: Pa
                     await s.hover(sc.hover)
                 await s.lib()
                 entry["url"] = await s.eval("location.pathname + location.search")
-                text = await s.eval("window.__cap.text()")
+                text = await s.eval("window.__e2e.text()")
                 entry["text"] = text[:200]
                 if not sc.allow_error_text and ERROR_TEXT.search(text):
                     raise RuntimeError("error page rendered")
@@ -357,8 +365,7 @@ async def run_scenarios(scenarios, target: Target, browser: Browser, out_dir: Pa
                         raise RuntimeError(f"missing input value: {value}")
                 if sc.expect_path and not entry["url"].startswith(sc.expect_path):
                     raise RuntimeError(f"ended on {entry['url']}, expected {sc.expect_path}")
-                entry["components"] = await s.eval("window.__cap.components()")
-                entry["masked"] = await s.eval("window.__cap.mask()")
+                entry["components"] = await s.eval("window.__e2e.components()")
                 await capture(s, sc, entry)
                 if sc.after:
                     await sc.after(s)

@@ -37,9 +37,9 @@ from graphql import (
     validate,
 )
 
-from e2e.visual import containers
-from e2e.visual.containers import Container, container_runtime
-from e2e.visual.retention import touch
+from e2e.harness import containers
+from e2e.harness.containers import Container, container_runtime
+from e2e.harness.retention import touch
 
 # Where a developer's own kamu server listens
 RESERVED_API_PORT = 8080

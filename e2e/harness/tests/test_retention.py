@@ -8,7 +8,7 @@ import tempfile
 import unittest
 from pathlib import Path
 
-from e2e.visual.retention import DAY, Entry, entries, note_image, parse_size, plan, stale_images, touch
+from e2e.harness.retention import DAY, Entry, entries, note_image, parse_size, plan, stale_images, touch
 
 NOW = 1_000 * DAY
 

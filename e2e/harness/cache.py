@@ -3,8 +3,8 @@
 # Use of this software is governed by the Business Source License
 # included in the LICENSE file.
 
-"""The local cache outside the repository: builds by commit, workspaces by data and backend, baselines
-by everything a capture depends on, and the lock that keeps captures one at a time."""
+"""The local cache outside the repository: sources and builds by commit, the lock that keeps runs one
+at a time, and hashing of the files a cached result depends on."""
 
 from __future__ import annotations
 
@@ -17,12 +17,11 @@ import shutil
 import subprocess
 from pathlib import Path
 
-from e2e.visual.retention import touch
+from e2e.harness.retention import touch
 
 REPO = Path(__file__).resolve().parents[2]
+E2E = REPO / "e2e"
 HELPERS = Path(__file__).parent / "helpers"
-# Files whose content decides what a capture records
-KIT_FILES = ["*.py", "page-lib.js", "helpers/*.mjs"]
 
 
 def cache_dir() -> Path:
@@ -37,14 +36,12 @@ def git(*args: str) -> str:
     return subprocess.run(["git", *args], cwd=REPO, capture_output=True, text=True, check=True).stdout.strip()
 
 
-def kit_hash() -> str:
-    """The capture code under e2e/visual; the comparer is left out, since it does not change a capture."""
+def files_hash(files: list[str]) -> str:
+    """The names and contents of `files`, paths relative to e2e/."""
     digest = hashlib.sha256()
-    visual = Path(__file__).parent
-    files = sorted({f for pattern in KIT_FILES for f in visual.glob(pattern)} - {visual / "compare.py"})
-    for file in files:
-        digest.update(file.relative_to(visual).as_posix().encode())
-        digest.update(file.read_bytes())
+    for name in sorted(files):
+        digest.update(name.encode())
+        digest.update((E2E / name).read_bytes())
     return digest.hexdigest()[:12]
 
 
@@ -117,18 +114,13 @@ def build(src: Path, out: Path, log_file: Path, log=print) -> Path:
     return browser
 
 
-def node_json(helper: str, *args: str) -> object:
-    result = subprocess.run(["node", str(HELPERS / helper), *args], capture_output=True, text=True, check=True)
+def node_json(script: Path, *args: str) -> object:
+    result = subprocess.run(["node", str(script), *args], capture_output=True, text=True, check=True)
     return json.loads(result.stdout)
 
 
 def route_table(root: Path = REPO) -> list[str]:
-    return node_json("routes.mjs", str(root))
-
-
-def utility_roots(src: Path) -> list[str]:
-    """The class selectors the tree's global utility stylesheet compiles to, as snapshot roots."""
-    return node_json("utility-roots.mjs", str(src), str(REPO / "node_modules"))
+    return node_json(HELPERS / "routes.mjs", str(root))
 
 
 def chrome_major(binary: str) -> str:

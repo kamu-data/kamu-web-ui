@@ -29,16 +29,18 @@ flowchart LR
     subgraph repo[Repository]
         cat[e2e/catalogue/*.yaml]
         inv[e2e/fixtures/seed/inventory.yaml<br/>manifests, data]
-        scen[e2e/visual/scenarios.py]
+        scen[e2e/scenarios.py]
         app[src/ app sources]
     end
-    cli[cli.py<br/>compare, probe, check, coverage, cache]
+    cli[visual/cli.py<br/>compare]
+    hcli[harness/cli.py<br/>probe, check, coverage, cache]
     cache[cache.py<br/>git archive, ng build, keys, lock]
     prof[fixtures/profiles.py<br/>seed, empty, with-data-mt]
     seed[fixtures/seed.py<br/>Seeder]
     be[backend.py, containers.py<br/>kamu-cli, kamu-api-server,<br/>Postgres, rustfs, migrations]
     sess[session.py, cdp.py<br/>headless Chrome over CDP]
-    lib[page-lib.js<br/>snapshots, masks]
+    lib[page-lib.js<br/>DOM helpers]
+    snap[snapshot.js<br/>snapshots, masks]
     cap[capture.py]
     par[parallel.py<br/>shards, worker processes]
     imp[impact.py, helpers/impact.mjs<br/>scenarios the change reaches]
@@ -57,13 +59,21 @@ flowchart LR
     par --> cap
     cap --> sess
     sess --> lib
+    cap --> snap
+    cli --> hcli
     cli --> cmp
 ```
 
-Three Node helpers under `e2e/visual/helpers/` print JSON for the Python side: the app's route
-table (read from the routing files with the TypeScript compiler), the class selectors of
-`src/assets/styles/var.scss` (compiled with the repository's `sass`), and the components a set of
-changed files reaches (from the app's imports).
+The visual comparison (`e2e/visual`: `cli.py`, `capture.py`, `snapshot.js`, `compare.py`) is
+built on `e2e/harness`, which holds everything another kind of run would reuse: the commands that
+are not comparisons, backends and containers, the cache and builds, the Chrome session and its
+page helpers (`page-lib.js`), the worker pool, the selection, progress. The harness never imports
+`e2e/visual`: a run hands the pool its work function and the session its page script.
+
+Three Node helpers print JSON for the Python side: the app's route table (read from the routing
+files with the TypeScript compiler) and the components a set of changed files reaches (from the
+app's imports), under `e2e/harness/helpers/`; the class selectors of `src/assets/styles/var.scss`
+(compiled with the repository's `sass`), under `e2e/visual/helpers/`.
 
 ## A compare run
 
@@ -129,7 +139,7 @@ selection is kept by hand, so it follows the app as it changes:
 | `src/` outside `src/app` (global styles, `index.html`, `main.ts`), `package.json`, `angular.json`, `tsconfig*.json` | they apply to every page |
 | a stylesheet with `::ng-deep`, a component with `ViewEncapsulation.None` | its styles reach other components |
 | a deleted file, a file under `src/app` that no component owns (a `.graphql` document) | its users cannot be read any more, or not statically |
-| `e2e/visual/`, `e2e/fixtures/` | the capture itself changed |
+| a file in the capture key (below), `e2e/fixtures/` | the capture itself changed |
 
 A scenario never captured runs. A scenario that `follows` another runs whenever that one does: it
 is the page where the other's leaking styles would show. A changed component that no record
@@ -197,7 +207,7 @@ key under its current name.
 
 ## What a snapshot holds
 
-`capture.py` runs each scenario, then `page-lib.js` in the page:
+`capture.py` runs each scenario, then `snapshot.js` in the page:
 
 1. **Masks volatile values** in text and form fields (see below), so they neither show in the
    screenshot nor shift the layout.
@@ -210,7 +220,7 @@ key under its current name.
    against the element. A custom property (a Material token, a Monaco variable) is recorded only
    where it is set, where its value differs from the parent's: a changed token shows once, at its
    source, and in the resolved properties it changes everywhere else.
-4. **Forced states**: for the `FORCE_TARGETS` in `scenarios.py`, `:hover`, `:focus` (with
+4. **Forced states**: for the `FORCE_TARGETS` in `capture.py`, `:hover`, `:focus` (with
    `:focus-visible`) and `:active` (with `:focus`, as a mouse press focuses the button) are forced
    through CDP, and the target's parent subtree (the target, its descendants and its siblings) is
    snapshotted again after the transition.
@@ -240,7 +250,7 @@ process; `noise` if those match, else `confirmed`), `missing`.
 |---|---|
 | `src/<sha>`, `builds/<sha>` | the commit |
 | `workspaces/` | profile, data id (hash of the fixtures and the seed code), build id |
-| `baselines/<base sha>-<profile>-<hash>` | data id, backend id, kit hash (the capture code under `e2e/visual`: its Python files, `page-lib.js` and the helpers, without the comparer; taken once per run), Chrome major version, production build, scenario names, utility roots, shard count |
+| `baselines/<base sha>-<profile>-<hash>` | data id, backend id, capture hash (the files `CAPTURE_FILES` in `capture.py` lists: what decides what a capture records; taken once per run), Chrome major version, production build, scenario names, utility roots, shard count |
 | `backends/<kind>-<version>` | release version, unpacked atomically |
 | `backend-ids.json` | a binary's path, mtime and size → its version and content hash |
 | `components.json` | `<side>:<profile>/<scenario>` → the custom elements its latest successful capture showed, for the selection; not part of any key |
@@ -269,7 +279,7 @@ run ends, and a base commit's `node_modules` is installed only to build it, then
 
 ## Consistency checks
 
-`npm run e2e-check` (CI) runs the unit tests and `visual -- check`, which needs neither a browser
+`npm run e2e-check` (CI) runs the unit tests and `e2e -- check`, which needs neither a browser
 nor a backend:
 
 - catalogue entries: required fields, unique ids, known personas, profiles and tiers, routes that
@@ -286,9 +296,10 @@ nor a backend:
 |---|---|
 | A scenario | `SCENARIOS` in `scenarios.py`, next free number, with its catalogue entry; see the skill |
 | A fixture | `inventory.yaml` (and a manifest or data file); the seeder creates it |
-| A volatile format | `VOLATILE` in `page-lib.js`, with a fixed replacement of the same format |
-| A snapshot root | `ROOTS` in `page-lib.js`; utility classes come from `var.scss` on their own |
-| A forced state target | `FORCE_TARGETS` in `scenarios.py` |
+| A volatile format | `VOLATILE` in `snapshot.js`, with a fixed replacement of the same format |
+| A snapshot root | `ROOTS` in `snapshot.js`; utility classes come from `var.scss` on their own |
+| A forced state target | `FORCE_TARGETS` in `capture.py` |
+| A file under `e2e/` | `CAPTURE_FILES` or `OUTSIDE_CAPTURE` in `capture.py`; a test refuses one in neither |
 | A profile | `PROFILES` in `fixtures/profiles.py`: `data_id`, `backend_id`, `open` |
 | A backend kind | `FLAVORS` in `backend.py`, and a start path in `WorkspaceProfile.open` |
 
@@ -316,4 +327,5 @@ nor a backend:
 | Numbered fixtures (`extra-01`…) | Unreadable for a maintainer; the inventory names every artifact and says why it exists |
 | Captures one at a time | A full run took 80 minutes; with `--disable-gpu`, `--font-render-hinting=none` and `--disable-lcd-text`, eight concurrent Chromes rendered the same pixels and styles as one alone (one pixel of a data tab differed, which the recheck classes) |
 | Shards as coroutines in one Python process | The snapshot's JSON and gzip work blocks the shared event loop; four of eight browser connections dropped on unanswered keepalives, and eight captures took 2.7 times one, not one time |
+| Every kit file in the baseline key | A change to the cache, the commands or the progress output captured every base again for nothing; the key lists the files that decide a capture, and a test makes every new file take a side |
 | The kit in JavaScript | Harder to read next to the Python agent harness; JavaScript stays where it must run: in the page, and where the TypeScript compiler and `sass` are needed |

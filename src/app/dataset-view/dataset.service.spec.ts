@@ -228,6 +228,17 @@ describe("AppDatasetService", () => {
         expect(subscription$.closed).toBe(true);
     });
 
+    it("should pass the history filter to the api", () => {
+        const getDatasetHistorySpy = vi
+            .spyOn(datasetApi, "getDatasetHistory")
+            .mockReturnValue(of(mockDatasetHistoryResponse));
+        const filter = { blockHashPrefix: "f1620" };
+
+        service.getDatasetHistory(mockDatasetInfo, 10, 0, filter).subscribe();
+
+        expect(getDatasetHistorySpy).toHaveBeenCalledWith({ ...mockDatasetInfo, numRecords: 10, numPage: 0, filter });
+    });
+
     it("should check get lineage data from api", () => {
         vi.spyOn(datasetApi, "getDatasetLineage").mockReturnValue(of(mockDatasetLineageResponse));
 

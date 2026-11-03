@@ -38,6 +38,7 @@ import {
     GetDatasetLineageQuery,
     GetDatasetMainDataQuery,
     GetDatasetSchemaQuery,
+    MetadataBlocksFilter,
 } from "@api/kamu.graphql.interface";
 import { MaybeNull } from "@interface/app.types";
 import { DatasetSchema } from "@interface/dataset-schema.interface";
@@ -185,8 +186,13 @@ export class DatasetService {
         this.datasetSubsService.emitHistoryChanged(null);
     }
 
-    public getDatasetHistory(info: DatasetInfo, numRecords: number, numPage: number): Observable<DatasetHistoryUpdate> {
-        return this.datasetApi.getDatasetHistory({ ...info, numRecords, numPage }).pipe(
+    public getDatasetHistory(
+        info: DatasetInfo,
+        numRecords: number,
+        numPage: number,
+        filter?: MetadataBlocksFilter,
+    ): Observable<DatasetHistoryUpdate> {
+        return this.datasetApi.getDatasetHistory({ ...info, numRecords, numPage, filter }).pipe(
             map((data: GetDatasetHistoryQuery) => {
                 if (data.datasets.byOwnerAndName) {
                     const pageInfo: DatasetPageInfoFragment = Object.assign(

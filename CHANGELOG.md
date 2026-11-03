@@ -4,6 +4,12 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [Unreleased]
+### Added
+- Metadata block page: the block list's event type filter, hash search and page are part of the page address, so a filtered list can be shared as a link and stays filtered when opening another block from it
+### Fixed
+- Metadata block page: filtering the block list by event type or hash finds matching blocks across the whole history, not only on the page shown, and the pages count only the matching blocks; hash search now matches the start of the hash and says when the text can't be one
+
 ## [0.73.0] - 2026-11-02
 ### Changed
 - Requires kamu-cli v0.272.0 or later: the source editors and dataset variables use API changes from that release

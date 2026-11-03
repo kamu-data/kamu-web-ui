@@ -19,10 +19,19 @@ import { of } from "rxjs";
 import { ApolloTestingModule } from "apollo-angular/testing";
 import { provideToastr } from "ngx-toastr";
 
-import { registerMatSvgIcons, setComponentInput } from "@common/helpers/base-test.helpers.spec";
+import { registerMatSvgIcons, setComponentInput, stubMethod } from "@common/helpers/base-test.helpers.spec";
+import { MetadataEventType } from "@api/kamu.graphql.interface";
 import { mockMetadataBlockByHash } from "@api/mock/dataset.mock";
 
+import { SupportedEvents } from "src/app/dataset-block/metadata-block/components/event-details/supported.events";
 import { MetadataBlockComponent } from "src/app/dataset-block/metadata-block/metadata-block.component";
+import {
+    MOCK_BLOCK_PAGE_DATASET_INFO,
+    MOCK_BLOCK_PAGE_HASH,
+} from "src/app/dataset-block/metadata-block/metadata-block.mock";
+import { mockHistoryUpdate } from "src/app/dataset-view/additional-components/data-tabs.mock";
+import { DatasetService } from "src/app/dataset-view/dataset.service";
+import { NavigationService } from "src/app/services/navigation.service";
 
 describe("MetadataBlockComponent", () => {
     let component: MetadataBlockComponent;
@@ -39,9 +48,8 @@ describe("MetadataBlockComponent", () => {
                     useValue: {
                         paramMap: of(
                             convertToParamMap({
-                                accountName: "accountName",
-                                datasetName: "datasetName",
-                                blockHash: "ewrwe213123",
+                                ...MOCK_BLOCK_PAGE_DATASET_INFO,
+                                blockHash: MOCK_BLOCK_PAGE_HASH,
                             }),
                         ),
                         snapshot: {
@@ -49,9 +57,9 @@ describe("MetadataBlockComponent", () => {
                                 get: (key: string) => {
                                     switch (key) {
                                         case "accountName":
-                                            return "accountName";
+                                            return MOCK_BLOCK_PAGE_DATASET_INFO.accountName;
                                         case "datasetName":
-                                            return "datasetName";
+                                            return MOCK_BLOCK_PAGE_DATASET_INFO.datasetName;
                                     }
                                 },
                             },
@@ -68,6 +76,7 @@ describe("MetadataBlockComponent", () => {
         fixture = TestBed.createComponent(MetadataBlockComponent);
         component = fixture.componentInstance;
         loader = TestbedHarnessEnvironment.loader(fixture);
+        setComponentInput(fixture, "blockHash", MOCK_BLOCK_PAGE_HASH);
         setComponentInput(fixture, "metadata", {
             block: mockMetadataBlockByHash,
             blockAsYaml: "test yaml",
@@ -90,5 +99,57 @@ describe("MetadataBlockComponent", () => {
         await matToggle.toggle();
 
         expect(changeToggleSpy).toHaveBeenCalledTimes(1);
+    });
+
+    it("should request the page and filter the URL holds", () => {
+        const getDatasetHistorySpy = vi
+            .spyOn(TestBed.inject(DatasetService), "getDatasetHistory")
+            .mockReturnValue(of(mockHistoryUpdate));
+
+        setComponentInput(fixture, "eventTypes", "SetTransform,Unknown,Seed");
+        setComponentInput(fixture, "hashPrefix", " f1620ab ");
+        setComponentInput(fixture, "page", "3");
+        fixture.detectChanges();
+
+        expect(getDatasetHistorySpy).toHaveBeenLastCalledWith(MOCK_BLOCK_PAGE_DATASET_INFO, 10, 2, {
+            eventTypes: [MetadataEventType.SetTransform, MetadataEventType.Seed],
+            blockHashPrefix: "f1620ab",
+        });
+    });
+
+    it("should not send a hash prefix the backend can't parse", () => {
+        const getDatasetHistorySpy = vi
+            .spyOn(TestBed.inject(DatasetService), "getDatasetHistory")
+            .mockReturnValue(of(mockHistoryUpdate));
+
+        setComponentInput(fixture, "eventTypes", "Seed");
+        setComponentInput(fixture, "hashPrefix", "xyz");
+        fixture.detectChanges();
+
+        expect(getDatasetHistorySpy).toHaveBeenLastCalledWith(MOCK_BLOCK_PAGE_DATASET_INFO, 10, 0, {
+            eventTypes: [MetadataEventType.Seed],
+        });
+    });
+
+    it("should open the first page of a new filter, and keep the filter when paging", () => {
+        const navigateSpy = stubMethod(TestBed.inject(NavigationService), "navigateToMetadataBlock");
+        const filter = { eventTypes: [SupportedEvents.SetTransform], hashPrefix: "" };
+
+        component.onFilterChange(filter);
+        expect(navigateSpy).toHaveBeenLastCalledWith({
+            ...MOCK_BLOCK_PAGE_DATASET_INFO,
+            blockHash: MOCK_BLOCK_PAGE_HASH,
+            blockListFilter: filter,
+            blockListPage: 1,
+        });
+
+        setComponentInput(fixture, "eventTypes", "SetTransform");
+        component.onPageChange(3);
+        expect(navigateSpy).toHaveBeenLastCalledWith({
+            ...MOCK_BLOCK_PAGE_DATASET_INFO,
+            blockHash: MOCK_BLOCK_PAGE_HASH,
+            blockListFilter: filter,
+            blockListPage: 3,
+        });
     });
 });

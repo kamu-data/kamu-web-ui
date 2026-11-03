@@ -5,6 +5,7 @@
  * included in the LICENSE file.
  */
 
+import { enumValueOf } from "@common/helpers/app.helpers";
 import { MaybeNull, MaybeNullOrUndefined, MaybeUndefined } from "@interface/app.types";
 
 // Each format matches what the API accepts for the scalar, and is never stricter than it:
@@ -54,6 +55,15 @@ export function positiveIntegerFromParam(param: MaybeNullOrUndefined<string>): M
     }
     const value = Number(param);
     return value >= 1 && Number.isSafeInteger(value) ? value : null;
+}
+
+/** The members of `enumObject` a comma-separated URL parameter names, in its order, without unknown or repeated values */
+export function enumListFromParam<E extends Record<string, string>>(
+    enumObject: E,
+    param: MaybeNullOrUndefined<string>,
+): Array<E[keyof E]> {
+    const members = (param ?? "").split(",").flatMap((value) => enumValueOf(enumObject, value) ?? []);
+    return [...new Set(members)];
 }
 
 /** Whether the path of `url` is `/<path>` or a page below it; the query string and fragment do not count */

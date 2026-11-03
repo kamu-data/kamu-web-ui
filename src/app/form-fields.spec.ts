@@ -44,6 +44,8 @@ const INPUTS_WITHOUT_MESSAGE: Record<string, string> = {
         "a select that always holds a format",
     "./dataset-view/additional-components/metadata-component/components/source-events/steps/prepare-step/prepare-step.component.html subPath":
         "optional, and the backend accepts any path",
+    "./dataset-block/metadata-block/components/block-navigation/block-navigation.component.html eventTypes":
+        "a multiselect of fixed options, where none selected means every type",
 };
 
 /**

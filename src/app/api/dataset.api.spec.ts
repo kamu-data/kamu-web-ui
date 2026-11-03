@@ -63,6 +63,7 @@ import {
     GetDatasetSchemaQuery,
     GetMetadataBlockDocument,
     GetMetadataBlockQuery,
+    MetadataEventType,
     RenameDatasetDocument,
     RenameDatasetMutation,
     UpdateReadmeDocument,
@@ -239,6 +240,40 @@ describe("DatasetApi", () => {
         const op = controller.expectOne(GetDatasetHistoryDocument);
         expect(op.operation.variables.accountName).toEqual(TEST_LOGIN);
         expect(op.operation.variables.datasetName).toEqual(TEST_DATASET_NAME);
+
+        op.flush({
+            data: mockDatasetHistoryResponse,
+        });
+
+        tick();
+
+        expect(subscription$.closed).toEqual(true);
+
+        flush();
+    }));
+
+    it("should send the dataset history filter", fakeAsync(() => {
+        const subscription$ = service
+            .getDatasetHistory({
+                accountName: TEST_LOGIN,
+                datasetName: TEST_DATASET_NAME,
+                numRecords: 20,
+                numPage: 1,
+                filter: { eventTypes: [MetadataEventType.SetTransform], blockHashPrefix: "f1620" },
+            })
+            .subscribe((res: GetDatasetHistoryQuery) => {
+                expect(res.datasets.byOwnerAndName?.metadata.chain.blocks.totalCount).toEqual(
+                    mockDatasetHistoryResponse.datasets.byOwnerAndName?.metadata.chain.blocks.totalCount,
+                );
+            });
+
+        const op = controller.expectOne(GetDatasetHistoryDocument);
+        expect(op.operation.variables.accountName).toEqual(TEST_LOGIN);
+        expect(op.operation.variables.datasetName).toEqual(TEST_DATASET_NAME);
+        expect(op.operation.variables.filter).toEqual({
+            eventTypes: [MetadataEventType.SetTransform],
+            blockHashPrefix: "f1620",
+        });
 
         op.flush({
             data: mockDatasetHistoryResponse,

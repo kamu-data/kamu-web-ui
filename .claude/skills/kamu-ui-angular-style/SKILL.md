@@ -218,6 +218,10 @@ code added itself, or a third-party callback triggers none of them.
   `.api.ts`, `.guard.ts`, `.resolver.ts`, `.pipe.ts`, `.directive.ts`, `.helpers.ts`,
   `.model.ts`, `.types.ts`, `.interface.ts`, `.constants.ts`, `.text.ts`, `.values.ts`,
   `.harness.ts`, `.mock.ts`.
+- A component, service, directive, pipe or api file declares only its class. Interfaces, type
+  aliases and enums go in the feature's `.types.ts` (or `.model.ts`, where the feature already
+  has one), exported, even when only that class uses them. Existing class files that declare
+  types move them when next edited.
 - Route segments and URL parameter names: `ProjectLinks` (`src/app/project-links.ts`, owned by
   `kamu-ui-routing`). App-wide constants: `AppValues` (`@common/values/app.values`). Error
   messages: `ErrorTexts` (`@common/values/errors.text`). Tooltip and longer UI texts: a

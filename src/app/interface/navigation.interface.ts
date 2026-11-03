@@ -8,6 +8,7 @@
 import { isRecord } from "@common/helpers/app.helpers";
 import { FlowProcessEffectiveState } from "@api/kamu.graphql.interface";
 
+import { BlockListFilter } from "src/app/dataset-block/metadata-block/metadata-block.types";
 import { FlowDetailsTabs } from "src/app/dataset-flow/dataset-flow-details/dataset-flow-details.types";
 import { FlowsCategoryUnion } from "src/app/dataset-view/additional-components/flows-component/flows.helpers";
 
@@ -49,6 +50,8 @@ export interface MetadataBlockNavigationParams {
     accountName: string;
     datasetName: string;
     blockHash: string;
+    blockListFilter?: BlockListFilter;
+    blockListPage?: number;
 }
 
 export interface FlowDetailsNavigationParams {

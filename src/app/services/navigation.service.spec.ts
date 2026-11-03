@@ -21,6 +21,7 @@ import {
     ProcessCardFilterMode,
 } from "src/app/account/additional-components/account-flows-tab/account-flows-tab.types";
 import { AccountSettingsTabs } from "src/app/account/settings/account-settings.constants";
+import { SupportedEvents } from "src/app/dataset-block/metadata-block/components/event-details/supported.events";
 import { FlowDetailsTabs } from "src/app/dataset-flow/dataset-flow-details/dataset-flow-details.types";
 import { SettingsTabsEnum } from "src/app/dataset-view/additional-components/dataset-settings-component/dataset-settings.model";
 import { MetadataTabs } from "src/app/dataset-view/additional-components/metadata-component/metadata.constants";
@@ -116,6 +117,28 @@ describe("NavigationService", () => {
                 service.metadataBlockUrlTree({ accountName: "kamu", datasetName: "ds", blockHash: "f1620abc" }),
             ),
         ).toEqual(`/kamu/ds/${ProjectLinks.URL_BLOCK}/f1620abc`);
+    });
+
+    it("should keep the block list filter and page in the metadata block URL", () => {
+        const url = service.metadataBlockUrlTree({
+            accountName: "kamu",
+            datasetName: "ds",
+            blockHash: "f1620abc",
+            blockListFilter: { eventTypes: [SupportedEvents.SetTransform, SupportedEvents.Seed], hashPrefix: "f16" },
+            blockListPage: 2,
+        });
+        expect(url.queryParamMap.get(ProjectLinks.URL_QUERY_PARAM_EVENT_TYPES)).toEqual("SetTransform,Seed");
+        expect(url.queryParamMap.get(ProjectLinks.URL_QUERY_PARAM_HASH_PREFIX)).toEqual("f16");
+        expect(url.queryParamMap.get(ProjectLinks.URL_QUERY_PARAM_PAGE)).toEqual("2");
+
+        const unfiltered = service.metadataBlockUrlTree({
+            accountName: "kamu",
+            datasetName: "ds",
+            blockHash: "f1620abc",
+            blockListFilter: { eventTypes: [], hashPrefix: "" },
+            blockListPage: 1,
+        });
+        expect(router.serializeUrl(unfiltered)).toEqual(`/kamu/ds/${ProjectLinks.URL_BLOCK}/f1620abc`);
     });
 
     it("should navigate to a metadata tab, the watermark tab by default", () => {

@@ -27,6 +27,9 @@ import urllib.error
 import urllib.request
 from pathlib import Path
 
+from e2e.visual.cache import cache_dir
+from e2e.visual.retention import note_image
+
 POSTGRES_IMAGE = "docker.io/library/postgres:17.6"
 RUSTFS_IMAGE = "docker.io/rustfs/rustfs:1.0.0-alpha.90"
 MIGRATIONS_IMAGE = "ghcr.io/kamu-data/sqlx-cli-with-migrations"
@@ -63,7 +66,9 @@ def _run(runtime: str, *args: str) -> str:
 def ensure_image(runtime: str, image: str) -> None:
     """Pulls a public image anonymously when it is not present: stored registry credentials, even stale
     ones, would otherwise be sent and refused."""
+    cache = cache_dir()
     if subprocess.run([runtime, "image", "inspect", image], capture_output=True).returncode == 0:
+        note_image(cache, image, pulled=False)
         return
     with tempfile.TemporaryDirectory(prefix="kamu-visual-registry-") as config:
         auth_file = Path(config) / "auth.json"
@@ -71,6 +76,7 @@ def ensure_image(runtime: str, image: str) -> None:
         env = {**os.environ, "DOCKER_CONFIG": config, "REGISTRY_AUTH_FILE": str(auth_file)}
         print(f"pulling {image}", flush=True)
         subprocess.run([runtime, "pull", "-q", image], env=env, check=True, stdout=subprocess.DEVNULL)
+    note_image(cache, image, pulled=True)
 
 
 def image_created(runtime: str, image: str) -> int:

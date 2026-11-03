@@ -21,7 +21,7 @@ from datetime import UTC, datetime
 from pathlib import Path
 
 from e2e.fixtures.inventory import InventoryError, check_inventory, check_scenario_datasets, load_inventory
-from e2e.fixtures.profiles import PROFILES
+from e2e.fixtures.profiles import PROFILES, WithDataProfile
 from e2e.fixtures.seed import ADMIN
 from e2e.visual.backend import FLAVORS, BackendChoice, schema_mismatches
 from e2e.visual.cache import (
@@ -30,9 +30,9 @@ from e2e.visual.cache import (
     build,
     cache_dir,
     chrome_major,
+    drop_modules,
     git,
     kit_hash,
-    list_baselines,
     route_table,
     short_hash,
     source_of,
@@ -41,11 +41,24 @@ from e2e.visual.cache import (
 from e2e.visual.catalogue import check_scenarios, load_catalogue, select_scenarios
 from e2e.visual.cdp import Chrome
 from e2e.visual.compare import compare
-from e2e.visual.containers import remove_leftovers
+from e2e.visual.containers import POSTGRES_IMAGE, RUSTFS_IMAGE, container_runtime, remove_leftovers
 from e2e.visual.coverage import coverage_report
 from e2e.visual.impact import Records, affected, changed_files
 from e2e.visual.parallel import DEFAULT_JOBS, Pool
 from e2e.visual.progress import CaptureProgress, StampedOutput, Timings
+from e2e.visual.retention import (
+    DEFAULT_MAX,
+    KEEP_RUNS,
+    MAX_AGE_DAYS,
+    entries,
+    max_bytes,
+    parse_size,
+    plan,
+    remove,
+    remove_image,
+    stale_images,
+    touch,
+)
 from e2e.visual.scenarios import SCENARIOS
 from e2e.visual.serve import Served
 from e2e.visual.session import Session, Target
@@ -83,8 +96,10 @@ class Side:
         else:
             sha = self.sha = git("rev-parse", f"{ref}^{{commit}}")
             self.label = sha[:12]
-            self.src = source_of(sha, cache)
-            self.browser = build(self.src, cache / "builds" / sha, cache / "builds" / f"{sha}.log", log)
+            out = cache / "builds" / sha
+            self.src = source_of(sha, cache, with_modules=not (out / "browser" / "index.html").exists())
+            self.browser = build(self.src, out, cache / "builds" / f"{sha}.log", log)
+            drop_modules(self.src)
 
 
 def backend_from(args, cache: Path) -> BackendChoice:
@@ -120,12 +135,12 @@ async def compare_command(args) -> None:
     if not selection:
         raise RuntimeError("no scenario selected: rate catalogue entries, or pass --unrated")
     run_dir = new_run_dir(cache)
-    started = time.monotonic()
+    started, since = time.monotonic(), time.time()
     with redirect_stdout(StampedOutput(sys.stdout, run_dir / "run.log", started)):
-        await compare_run(args, cache, selection, run_dir, started)
+        await compare_run(args, cache, selection, run_dir, started, since)
 
 
-async def compare_run(args, cache: Path, selection: dict, run_dir: Path, started: float) -> None:
+async def compare_run(args, cache: Path, selection: dict, run_dir: Path, started: float, since: float) -> None:
     # Stdout is a StampedOutput here: what is printed is stamped and kept in run.log
     log = print
     log(f"run {run_dir}")
@@ -216,6 +231,7 @@ async def compare_run(args, cache: Path, selection: dict, run_dir: Path, started
 
             if (baseline / "report.json").exists():
                 log(f"[{profile_name}] base: cached baseline {baseline}")
+                touch(baseline)
                 await capture_head()
             else:
                 await asyncio.gather(capture_base(), capture_head())
@@ -260,6 +276,8 @@ async def compare_run(args, cache: Path, selection: dict, run_dir: Path, started
         )
     finally:
         await asyncio.to_thread(pool.close)
+        # The working tree's build is served for this run only
+        shutil.rmtree(run_dir / "head-build", ignore_errors=True)
     sections = [section for section, _ in results]
     failed = [name for name, (_, ok) in zip(selection, results, strict=True) if not ok]
 
@@ -269,6 +287,7 @@ async def compare_run(args, cache: Path, selection: dict, run_dir: Path, started
     header += [f"- {selected} scenarios: {reason}", f"- {minutes} min", ""]
     report_file.write_text("\n".join(header + sections))
     log(f"report: {report_file}")
+    prune_cache(cache, since, log)
     if failed:
         raise RuntimeError(f"{len(failed)} of {len(selection)} profiles failed: {', '.join(failed)}")
 
@@ -338,6 +357,7 @@ async def probe_command(args) -> None:
         if served:
             served.stop()
         server.stop()
+        shutil.rmtree(run_dir / "build", ignore_errors=True)
     print(f"screenshots: {run_dir}")
 
 
@@ -366,16 +386,70 @@ def coverage_command(_args) -> None:
     print(f"coverage: {report_file}")
 
 
+def pinned_images() -> set[str]:
+    """Images a run may need without pulling them again: the profiles' pins and the services'."""
+    return {i.image for i in WithDataProfile.IMAGES.values()} | {POSTGRES_IMAGE, RUSTFS_IMAGE}
+
+
+def prune_cache(
+    cache: Path,
+    since: float,
+    log=print,
+    keep_runs: int = KEEP_RUNS,
+    max_age_days: float = MAX_AGE_DAYS,
+    ceiling: int | None = None,
+    images: bool = True,
+    dry_run: bool = False,
+) -> None:
+    """Deletes what the retention rules drop; `since` protects everything used from then on."""
+    now = time.time()
+    doomed = plan(entries(cache), now, since, keep_runs, max_age_days, max_bytes() if ceiling is None else ceiling)
+    verb = "would remove" if dry_run else "removed"
+    # A built commit's node_modules, from before builds dropped their own
+    for modules in (cache / "src").glob("*/node_modules") if (cache / "src").exists() else []:
+        built = cache / "builds" / modules.parent.name / "browser" / "index.html"
+        if built.exists() and not modules.is_symlink():
+            if not dry_run:
+                drop_modules(modules.parent)
+            log(f"cache: {verb} node_modules of {modules.parent.name}")
+    for entry in doomed:
+        if not dry_run:
+            remove(entry)
+        log(f"cache: {verb} {entry.kind} {entry.name} ({entry.size / 2**20:.0f} MB)")
+    if images:
+        stale = stale_images(cache, now, max_age_days, pinned_images())
+        runtime = container_runtime() if stale else None
+        for image in stale:
+            if dry_run or remove_image(cache, runtime, image):
+                log(f"cache: {verb} image {image}")
+
+
 def cache_command(args) -> None:
-    baselines = list_baselines(cache_dir())
+    cache = cache_dir()
     if args.action == "list":
-        for b in baselines:
-            when = datetime.fromtimestamp(b["mtime"], UTC).strftime("%Y-%m-%d %H:%M")
-            print(f"{b['mb']} MB\t{when}\t{b['name']}")
+        found = sorted(entries(cache), key=lambda e: (e.kind, -e.last_use))
+        for e in found:
+            when = datetime.fromtimestamp(e.last_use, UTC).strftime("%Y-%m-%d %H:%M")
+            print(f"{e.kind:9s} {e.size / 2**20:8.0f} MB  {when}  {e.name}")
+        print(f"total {sum(e.size for e in found) / 2**30:.1f} GB, ceiling {max_bytes() / 2**30:.1f} GB")
+        return
+    _lock = take_lock(cache)
+    if args.action == "prune":
+        ceiling = parse_size(args.max) if args.max else None
+        prune_cache(
+            cache, time.time(), print, args.keep_runs, args.older_than, ceiling, not args.no_images, args.dry_run
+        )
     else:
-        for b in baselines[args.keep :]:
-            shutil.rmtree(b["dir"])
-            print(f"removed {b['name']} ({b['mb']} MB)")
+        for entry in entries(cache):
+            if args.kind in (None, entry.kind):
+                remove(entry)
+                print(f"removed {entry.kind} {entry.name}")
+        if args.kind in (None, "image"):
+            known = stale_images(cache, float("inf"), 0, set())
+            runtime = container_runtime() if known else None
+            for image in known:
+                if remove_image(cache, runtime, image):
+                    print(f"removed image {image}")
 
 
 def parser() -> argparse.ArgumentParser:
@@ -422,9 +496,27 @@ def parser() -> argparse.ArgumentParser:
     cv = commands.add_parser("coverage", help="routes, catalogue entries and components no scenario covers")
     cv.set_defaults(run=coverage_command)
 
-    ca = commands.add_parser("cache", help="cached baselines")
-    ca.add_argument("action", choices=["list", "prune"])
-    ca.add_argument("--keep", type=int, default=3, help="prune: how many of the newest to keep")
+    ca = commands.add_parser("cache", help="what the cache holds; prune it or clear it")
+    ca.add_argument("action", choices=["list", "prune", "clear"])
+    ca.add_argument(
+        "kind",
+        nargs="?",
+        choices=["run", "baseline", "build", "workspace", "release", "image"],
+        help="clear: only this kind",
+    )
+    ca.add_argument("--keep-runs", type=int, default=KEEP_RUNS, help=f"prune: newest runs kept (default {KEEP_RUNS})")
+    ca.add_argument(
+        "--older-than",
+        type=float,
+        default=MAX_AGE_DAYS,
+        metavar="DAYS",
+        help=f"prune: entries unused for longer (default {MAX_AGE_DAYS})",
+    )
+    ca.add_argument(
+        "--max", metavar="SIZE", help=f"prune: size ceiling (default KAMU_VISUAL_CACHE_MAX or {DEFAULT_MAX})"
+    )
+    ca.add_argument("--no-images", action="store_true", help="prune: leave the Docker images the kit pulled")
+    ca.add_argument("--dry-run", action="store_true", help="prune: list what would go")
     ca.set_defaults(run=cache_command)
     return p
 

@@ -39,6 +39,7 @@ from graphql import (
 
 from e2e.visual import containers
 from e2e.visual.containers import Container, container_runtime
+from e2e.visual.retention import touch
 
 # Where a developer's own kamu server listens
 RESERVED_API_PORT = 8080
@@ -172,6 +173,7 @@ def _download_release(flavor: Flavor, version: str, cache: Path) -> Path:
         (partial / stem / flavor.binary).chmod(0o755)
         shutil.rmtree(folder, ignore_errors=True)
         partial.rename(folder)
+    touch(folder)
     return binary
 
 

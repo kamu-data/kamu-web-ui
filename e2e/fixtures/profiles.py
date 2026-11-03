@@ -38,6 +38,7 @@ from e2e.visual.backend import (
     start_workspace_server,
 )
 from e2e.visual.containers import container_runtime, ensure_image, image_created, run_in_image
+from e2e.visual.retention import touch
 
 HERE = Path(__file__).parent
 TWO_HOURS = 2 * 3600 * 1000
@@ -127,6 +128,7 @@ class WorkspaceProfile:
             build_workspace(self.name, backend.binary, partial, self.api_port)
             shutil.rmtree(ws, ignore_errors=True)
             partial.rename(ws)
+        touch(ws)
         info = json.loads((ws / ".seed" / "seed-info.json").read_text())
         log_file = log_dir / "api-server.log"
         server = start_workspace_server(backend.binary, ws, self.api_port, log_file, workspace_env(ws))

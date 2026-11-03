@@ -45,7 +45,9 @@ to `~/.cache/kamu-ui-visual/` (`KAMU_VISUAL_CACHE` to move it).
 | `npm run visual -- probe [--profile <p>] [--build <dir>] <path>...` | logs in to a profile's backend and prints each page's text and components, with screenshots: for writing a scenario |
 | `npm run visual -- coverage` | routes no catalogue entry claims, entries no scenario realises, components the last run never showed |
 | `npm run visual -- check` | the catalogue, scenarios and seed inventory agree with each other and with the app's routes |
-| `npm run visual -- cache list` / `cache prune --keep <n>` | the cached baselines (a full one is about 330 MB) |
+| `npm run visual -- cache list` | every cache entry with its size and last use, and the total |
+| `npm run visual -- cache prune [--dry-run]` | applies the retention below now; `--keep-runs`, `--older-than <days>`, `--max <size>`, `--no-images` override it |
+| `npm run visual -- cache clear [<kind>]` | removes every entry, or every `run`, `baseline`, `build`, `workspace`, `release` or `image` |
 | `npm run e2e-check` | the kit's unit tests and `check`; CI runs it |
 
 `compare` options:
@@ -110,6 +112,14 @@ Accounts: `kamu` (admin, password `kamu.dev`), `alice`, `bob`.
 | `backends/` | downloaded releases |
 | `timings.json` | how long each scenario took, for the estimates |
 | `components.json` | the components each scenario showed at its last capture, for the selection |
+| `images.json` | the Docker images the kit pulled, with their last use |
+
+Every `compare` ends with a prune: it keeps the newest 10 runs, removes baselines, builds,
+workspaces, releases and the kit's own Docker images unused for 14 days (pinned images stay), and
+then, while the cache is over `KAMU_VISUAL_CACHE_MAX` (default `10G`), the least recently used,
+runs first. Nothing the running compare used is removed. A run keeps its results only, about
+15 MB: the working tree's build is deleted at its end, and a base commit's `node_modules` once its
+build exists.
 
 ## Layout
 

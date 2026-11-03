@@ -249,6 +249,24 @@ differ), `pixels-only` (rechecked: `noise` if a head capture alone matches the b
 A baseline with a failed scenario is not stored. Because volatile values are masked, a baseline
 stays valid when the backend is filled afresh, as every non-workspace backend is on every run.
 
+### Retention
+
+`retention.py` decides what stays. An entry (a run, a baseline, a commit's sources and build
+together, a workspace, a release) is marked used (`.used`) whenever a run reuses it, and a Docker
+image is recorded in `images.json` when the kit pulls it, so images the kit did not pull are never
+touched. The prune at the end of every `compare` and `cache prune` apply, in order:
+
+| Rule | Default |
+|---|---|
+| Keep whatever was used since the running compare started | always |
+| Remove unfinished entries (`*.partial`) | always |
+| Keep the newest runs | 10 |
+| Remove entries and the kit's images unused for longer, except pinned images | 14 days |
+| While the total is over the ceiling, remove the least recently used, runs first | `KAMU_VISUAL_CACHE_MAX`, 10G |
+
+What is never reused is not kept at all: the working tree's build lives in the run folder until the
+run ends, and a base commit's `node_modules` is installed only to build it, then deleted.
+
 ## Consistency checks
 
 `npm run e2e-check` (CI) runs the unit tests and `visual -- check`, which needs neither a browser

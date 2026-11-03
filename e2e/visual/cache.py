@@ -17,6 +17,8 @@ import shutil
 import subprocess
 from pathlib import Path
 
+from e2e.visual.retention import touch
+
 REPO = Path(__file__).resolve().parents[2]
 HELPERS = Path(__file__).parent / "helpers"
 # Files whose content decides what a capture records
@@ -68,26 +70,37 @@ def _run(cmd: list[str], cwd: Path, log_file: Path) -> None:
         raise RuntimeError(f"{' '.join(cmd)} failed in {cwd}; see {log_file}")
 
 
-def source_of(sha: str, directory: Path) -> Path:
+def source_of(sha: str, directory: Path, with_modules: bool = True) -> Path:
     """The source of commit `sha` in `<cache>/src/<sha>`, extracted with `git archive` (no worktree, no
-    branch). Its node_modules is the working tree's when the lock files match, else `npm ci`."""
+    branch). `with_modules` adds its node_modules for a build: the working tree's when the lock files
+    match, else `npm ci`; they are dropped again after the build."""
     src = directory / "src" / sha
-    if (src / ".extracted").exists():
-        return src
-    shutil.rmtree(src, ignore_errors=True)
-    src.mkdir(parents=True)
     log_file = directory / "src" / f"{sha}.log"
-    archive = subprocess.Popen(["git", "archive", sha], cwd=REPO, stdout=subprocess.PIPE)
-    subprocess.run(["tar", "-x", "-C", str(src)], stdin=archive.stdout, check=True)
-    if archive.wait():
-        raise RuntimeError(f"git archive {sha} failed")
-    if (src / "package-lock.json").read_bytes() == (REPO / "package-lock.json").read_bytes():
-        (src / "node_modules").symlink_to(REPO / "node_modules")
-    else:
-        _run(["npm", "ci"], src, log_file)
-    _run(["node", "scripts/set-monaco-version.js"], src, log_file)
-    (src / ".extracted").touch()
+    if not (src / ".extracted").exists():
+        shutil.rmtree(src, ignore_errors=True)
+        src.mkdir(parents=True)
+        archive = subprocess.Popen(["git", "archive", sha], cwd=REPO, stdout=subprocess.PIPE)
+        subprocess.run(["tar", "-x", "-C", str(src)], stdin=archive.stdout, check=True)
+        if archive.wait():
+            raise RuntimeError(f"git archive {sha} failed")
+        (src / ".extracted").touch()
+    touch(src)
+    if with_modules and not (src / "node_modules").exists():
+        if (src / "package-lock.json").read_bytes() == (REPO / "package-lock.json").read_bytes():
+            (src / "node_modules").symlink_to(REPO / "node_modules")
+        else:
+            _run(["npm", "ci"], src, log_file)
+        _run(["node", "scripts/set-monaco-version.js"], src, log_file)
     return src
+
+
+def drop_modules(src: Path) -> None:
+    """node_modules of a source tree whose build is done: hundreds of megabytes nothing reads again."""
+    modules = src / "node_modules"
+    if modules.is_symlink():
+        modules.unlink()
+    elif modules.exists():
+        shutil.rmtree(modules)
 
 
 def build(src: Path, out: Path, log_file: Path, log=print) -> Path:
@@ -95,10 +108,12 @@ def build(src: Path, out: Path, log_file: Path, log=print) -> Path:
     browser = out / "browser"
     if (browser / "index.html").exists():
         log(f"cached build {out}")
+        touch(out)
         return browser
     shutil.rmtree(out, ignore_errors=True)
     log(f"building {'the working tree' if src == REPO else src} (production)")
     _run(["npx", "ng", "build", "--configuration", "production", "--output-path", str(out)], src, log_file)
+    touch(out)
     return browser
 
 
@@ -119,15 +134,3 @@ def utility_roots(src: Path) -> list[str]:
 def chrome_major(binary: str) -> str:
     version = subprocess.run([binary, "--version"], capture_output=True, text=True, check=True).stdout
     return re.search(r"(\d+)\.", version).group(1)
-
-
-def list_baselines(directory: Path) -> list[dict]:
-    """Cached baselines, newest first, with their size in MB."""
-    base = directory / "baselines"
-    if not base.exists():
-        return []
-    out = []
-    for d in base.iterdir():
-        size = sum(f.stat().st_size for f in d.rglob("*") if f.is_file())
-        out.append({"name": d.name, "dir": d, "mtime": d.stat().st_mtime, "mb": round(size / 1e6)})
-    return sorted(out, key=lambda b: b["mtime"], reverse=True)

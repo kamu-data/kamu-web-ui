@@ -1,0 +1,27 @@
+query getDatasetMetadataAsOf($accountName: AccountName!, $datasetName: DatasetName!, $head: Multihash!) {
+  datasets {
+    byOwnerAndName(accountName: $accountName, datasetName: $datasetName) {
+      ...DatasetBasics
+      metadata {
+        currentWatermark(head: $head)
+        metadataProjection(
+          eventTypes: [SET_DATA_SCHEMA, SET_POLLING_SOURCE, ADD_PUSH_SOURCE, SET_TRANSFORM, SET_LICENSE]
+          head: $head
+        ) {
+          event {
+            __typename
+            ... on SetDataSchema {
+              schema(format: ODF_JSON) {
+                ...DataSchemaInfo
+              }
+            }
+            ...SetPollingSourceEvent
+            ...AddPushSourceEvent
+            ...DatasetTransform
+            ...License
+          }
+        }
+      }
+    }
+  }
+}

@@ -11,6 +11,7 @@ import { FlowProcessEffectiveState } from "@api/kamu.graphql.interface";
 import { BlockListFilter } from "src/app/dataset-block/metadata-block/metadata-block.types";
 import { FlowDetailsTabs } from "src/app/dataset-flow/dataset-flow-details/dataset-flow-details.types";
 import { FlowsCategoryUnion } from "src/app/dataset-view/additional-components/flows-component/flows.helpers";
+import { CommitStepMode } from "src/app/dataset-view/additional-components/metadata-component/metadata.types";
 
 /** History state of the Data tab: the offset range its first query selects. */
 export interface DatasetOffsetRangeState {
@@ -40,6 +41,8 @@ export interface DatasetNavigationParams {
     pathPrefix?: string;
     version?: string;
     fragment?: string;
+    head?: string;
+    steps?: CommitStepMode;
 }
 export interface DatasetInfo {
     accountName: string;

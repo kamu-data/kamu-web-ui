@@ -302,16 +302,8 @@ export class DatasetService {
         if (data.datasets.byOwnerAndName) {
             const metadataSummary: DatasetMetadataSummaryFragment = data.datasets.byOwnerAndName;
 
-            const pageInfo: DatasetPageInfoFragment = {
-                __typename: "PageBasedInfo",
-                hasNextPage: false,
-                hasPreviousPage: false,
-                totalPages: 1,
-                currentPage: 1,
-            };
             const metadataSchemaUpdate: MetadataSchemaUpdate = {
                 schema,
-                pageInfo,
                 metadataSummary,
             };
             this.datasetSubsService.emitMetadataSchemaChanged(metadataSchemaUpdate);

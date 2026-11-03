@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [Unreleased]
 ### Added
 - Metadata block page: the block list's event type filter, hash search and page are part of the page address, so a filtered list can be shared as a link and stays filtered when opening another block from it
+- Metadata tab: step back through earlier commits and see the schema, sources, transformation, license and watermark as they were at that block
+  - the arrows step between commits that changed the metadata, or through every block when "All blocks" is picked
+  - the commit and the step mode are part of the page address, so a view of an earlier commit can be shared as a link
+  - an earlier commit shows no edit buttons; "Go to latest" returns to the current metadata
 ### Fixed
 - Metadata block page: filtering the block list by event type or hash finds matching blocks across the whole history, not only on the page shown, and the pages count only the matching blocks; hash search now matches the start of the hash and says when the text can't be one
 - Account flows: a flow run whose dataset can't be found shows without links to that dataset instead of logging errors, and its tile no longer links to a broken address

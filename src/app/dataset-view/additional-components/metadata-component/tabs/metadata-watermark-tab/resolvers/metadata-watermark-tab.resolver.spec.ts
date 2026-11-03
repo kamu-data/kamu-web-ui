@@ -15,9 +15,10 @@ import { Apollo } from "apollo-angular";
 import { expectPageNotFoundRedirect, runResolver } from "@common/helpers/base-test.helpers.spec";
 import { DatasetBasicsFragment } from "@api/kamu.graphql.interface";
 
-import { mockOverviewUpdate } from "src/app/dataset-view/additional-components/data-tabs.mock";
+import { mockMetadataRootUpdate } from "src/app/dataset-view/additional-components/data-tabs.mock";
+import { latestMetadataSnapshot } from "src/app/dataset-view/additional-components/metadata-component/metadata-snapshot.helpers";
+import { MetadataTabData } from "src/app/dataset-view/additional-components/metadata-component/metadata.types";
 import { metadataWatermarkTabResolverFn } from "src/app/dataset-view/additional-components/metadata-component/tabs/metadata-watermark-tab/resolvers/metadata-watermark-tab.resolver";
-import { DatasetOverviewTabData } from "src/app/dataset-view/dataset-view.interface";
 import { DatasetService } from "src/app/dataset-view/dataset.service";
 import { DatasetSubscriptionsService } from "src/app/dataset-view/dataset.subscriptions.service";
 import {
@@ -39,21 +40,21 @@ describe("metadataWatermarkTabResolverFn", () => {
         vi.spyOn(datasetSubsService, "permissionsChanges", "get").mockReturnValue(
             of(mockFullPowerDatasetPermissionsFragment),
         );
-        vi.spyOn(datasetSubsService, "overviewChanges", "get").mockReturnValue(of(mockOverviewUpdate));
+        vi.spyOn(datasetSubsService, "metadataSchemaChanges", "get").mockReturnValue(of(mockMetadataRootUpdate));
     });
 
-    function resolve(datasetBasics: DatasetBasicsFragment): Promise<DatasetOverviewTabData | RedirectCommand> {
+    function resolve(datasetBasics: DatasetBasicsFragment): Promise<MetadataTabData | RedirectCommand> {
         vi.spyOn(datasetService, "datasetChanges", "get").mockReturnValue(of(datasetBasics));
         return runResolver(metadataWatermarkTabResolverFn);
     }
 
-    it("should resolve the overview for a root dataset", async () => {
+    it("should resolve the latest metadata for a root dataset", async () => {
         const data = await resolve(mockDatasetBasicsRootFragment);
 
         expect(data).toEqual({
             datasetBasics: mockDatasetBasicsRootFragment,
             datasetPermissions: mockFullPowerDatasetPermissionsFragment,
-            overviewUpdate: mockOverviewUpdate,
+            snapshot: latestMetadataSnapshot(mockMetadataRootUpdate.metadataSummary),
         });
     });
 

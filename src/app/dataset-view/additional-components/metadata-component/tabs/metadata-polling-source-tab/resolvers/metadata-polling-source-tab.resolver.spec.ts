@@ -19,7 +19,8 @@ import {
     mockMetadataDerivedUpdate,
     mockMetadataRootUpdate,
 } from "src/app/dataset-view/additional-components/data-tabs.mock";
-import { MetadataTabData } from "src/app/dataset-view/additional-components/metadata-component/metadata.constants";
+import { latestMetadataSnapshot } from "src/app/dataset-view/additional-components/metadata-component/metadata-snapshot.helpers";
+import { MetadataTabData } from "src/app/dataset-view/additional-components/metadata-component/metadata.types";
 import { metadataPollingSourceTabResolverFn } from "src/app/dataset-view/additional-components/metadata-component/tabs/metadata-polling-source-tab/resolvers/metadata-polling-source-tab.resolver";
 import { DatasetService } from "src/app/dataset-view/dataset.service";
 import { MetadataSchemaUpdate } from "src/app/dataset-view/dataset.subscriptions.interface";
@@ -54,13 +55,13 @@ describe("metadataPollingSourceTabResolverFn", () => {
         return runResolver(metadataPollingSourceTabResolverFn);
     }
 
-    it("should resolve the metadata summary for a root dataset", async () => {
+    it("should resolve the latest metadata for a root dataset", async () => {
         const data = await resolve(mockDatasetBasicsRootFragment, mockMetadataRootUpdate);
 
         expect(data).toEqual({
             datasetBasics: mockDatasetBasicsRootFragment,
             datasetPermissions: mockFullPowerDatasetPermissionsFragment,
-            metadataSummary: mockMetadataRootUpdate.metadataSummary,
+            snapshot: latestMetadataSnapshot(mockMetadataRootUpdate.metadataSummary),
         });
     });
 

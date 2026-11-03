@@ -1,0 +1,24 @@
+query datasetChainBlockPositions(
+  $accountName: AccountName!
+  $datasetName: DatasetName!
+  $page: Int
+  $perPage: Int
+  $filter: MetadataBlocksFilter
+) {
+  datasets {
+    byOwnerAndName(accountName: $accountName, datasetName: $datasetName) {
+      metadata {
+        chain {
+          blocks(page: $page, perPage: $perPage, filter: $filter) {
+            nodes {
+              ...ChainBlockPosition
+            }
+            pageInfo {
+              hasNextPage
+            }
+          }
+        }
+      }
+    }
+  }
+}

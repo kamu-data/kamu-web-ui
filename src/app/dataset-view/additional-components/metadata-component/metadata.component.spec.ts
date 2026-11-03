@@ -5,25 +5,36 @@
  * included in the LICENSE file.
  */
 
+import { TestbedHarnessEnvironment } from "@angular/cdk/testing/testbed";
 import { provideHttpClient } from "@angular/common/http";
 import { provideHttpClientTesting } from "@angular/common/http/testing";
-import { ChangeDetectorRef } from "@angular/core";
 import { ComponentFixture, TestBed } from "@angular/core/testing";
 import { RouterModule } from "@angular/router";
 
 import { HIGHLIGHT_OPTIONS_PROVIDER } from "@common/helpers/app.helpers";
-import { registerMatSvgIcons, setComponentInput } from "@common/helpers/base-test.helpers.spec";
-import { SharedTestModule } from "@common/modules/shared-test.module";
-import { DatasetKind } from "@api/kamu.graphql.interface";
-
 import {
-    mockDerivedOverviewUpdate,
-    mockMetadataDerivedUpdate,
-    mockMetadataRootUpdate,
-} from "src/app/dataset-view/additional-components/data-tabs.mock";
+    findElementByDataTestId,
+    registerMatSvgIcons,
+    setComponentInput,
+} from "@common/helpers/base-test.helpers.spec";
+import { SharedTestModule } from "@common/modules/shared-test.module";
+import { mockOlderBlock } from "@api/mock/dataset.mock";
+
+import { mockDerivedOverviewUpdate } from "src/app/dataset-view/additional-components/data-tabs.mock";
+import { CommitNavigatorHarness } from "src/app/dataset-view/additional-components/metadata-component/components/commit-navigator/commit-navigator.harness";
 import { MetadataComponent } from "src/app/dataset-view/additional-components/metadata-component/metadata.component";
 import { MetadataTabs } from "src/app/dataset-view/additional-components/metadata-component/metadata.constants";
-import { DatasetSubscriptionsService } from "src/app/dataset-view/dataset.subscriptions.service";
+import {
+    atOlderCommit,
+    mockCommitNeighbours,
+    mockLatestDerivedSnapshot,
+    mockLatestRootSnapshot,
+} from "src/app/dataset-view/additional-components/metadata-component/metadata.mock";
+import {
+    CommitStepMode,
+    MetadataSnapshot,
+} from "src/app/dataset-view/additional-components/metadata-component/metadata.types";
+import { DatasetViewTypeEnum } from "src/app/dataset-view/dataset-view.interface";
 import {
     mockDatasetBasicsDerivedFragment,
     mockDatasetBasicsRootFragment,
@@ -31,73 +42,103 @@ import {
 } from "src/app/search/mock.data";
 
 describe("MetadataComponent", () => {
-    let component: MetadataComponent;
     let fixture: ComponentFixture<MetadataComponent>;
-    let datasetSubsService: DatasetSubscriptionsService;
 
     beforeEach(async () => {
         await TestBed.configureTestingModule({
             imports: [SharedTestModule, MetadataComponent, RouterModule],
             providers: [HIGHLIGHT_OPTIONS_PROVIDER, provideHttpClient(), provideHttpClientTesting()],
-        })
-
-            .compileComponents();
+        }).compileComponents();
 
         registerMatSvgIcons();
-
-        datasetSubsService = TestBed.inject(DatasetSubscriptionsService);
-
         fixture = TestBed.createComponent(MetadataComponent);
-        component = fixture.componentInstance;
-        datasetSubsService.emitMetadataSchemaChanged(mockMetadataDerivedUpdate);
+        setComponentInput(fixture, "activeTab", MetadataTabs.Schema);
+    });
+
+    function show(snapshot: MetadataSnapshot, isRoot: boolean): void {
         setComponentInput(fixture, "datasetMetadataTabData", {
-            datasetBasics: mockDatasetBasicsDerivedFragment,
+            datasetBasics: isRoot ? mockDatasetBasicsRootFragment : mockDatasetBasicsDerivedFragment,
             datasetPermissions: mockFullPowerDatasetPermissionsFragment,
             overviewUpdate: mockDerivedOverviewUpdate,
         });
-        setComponentInput(fixture, "activeTab", MetadataTabs.Schema);
+        setComponentInput(fixture, "commitData", {
+            snapshot,
+            neighbours: mockCommitNeighbours,
+            steps: CommitStepMode.MetadataChanges,
+        });
         fixture.detectChanges();
+    }
+
+    it("should show the sections a derivative dataset has", () => {
+        show(mockLatestDerivedSnapshot, false);
+
+        expect(findElementByDataTestId(fixture, `metadata-menu-${MetadataTabs.Transformation}`)).toBeDefined();
+        expect(findElementByDataTestId(fixture, `metadata-menu-${MetadataTabs.PollingSource}`)).toBeUndefined();
+        expect(findElementByDataTestId(fixture, `metadata-menu-${MetadataTabs.Watermark}`)).toBeUndefined();
     });
 
-    it("should create", () => {
-        expect(component).toBeTruthy();
+    it("should show the sections a root dataset has", () => {
+        show(mockLatestRootSnapshot, true);
+
+        expect(findElementByDataTestId(fixture, `metadata-menu-${MetadataTabs.PollingSource}`)).toBeDefined();
+        expect(findElementByDataTestId(fixture, `metadata-menu-${MetadataTabs.Watermark}`)).toBeDefined();
+        expect(findElementByDataTestId(fixture, `metadata-menu-${MetadataTabs.Transformation}`)).toBeUndefined();
     });
 
-    it("should check #ngOnInit and associated properties for derived dataset", () => {
-        // Derived dataset mocked by default
-        expect(component.datasetMetadataTabData.datasetBasics.kind).toEqual(DatasetKind.Derivative);
-        expect(component.currentState).toBeDefined();
-        expect(component.currentTransform).toBeTruthy();
-        expect(component.currentPollingSource).toBeFalsy();
+    it("should keep the shown commit in the section links", () => {
+        show(atOlderCommit(mockLatestRootSnapshot), true);
+
+        const link = findElementByDataTestId(fixture, `metadata-menu-${MetadataTabs.License}`);
+        expect(link?.getAttribute("href")).toEqual(
+            `/${mockDatasetBasicsRootFragment.owner.accountName}/${mockDatasetBasicsRootFragment.name}/${DatasetViewTypeEnum.Metadata}/${MetadataTabs.License}?head=${mockOlderBlock.blockHash}`,
+        );
     });
 
-    it("should check #ngOnInit and associated properties for root dataset", () => {
-        component.currentState = mockMetadataRootUpdate;
-        component.datasetMetadataTabData.datasetBasics = mockDatasetBasicsRootFragment;
-        fixture.debugElement.injector.get(ChangeDetectorRef).markForCheck();
-        fixture.detectChanges();
+    it("should say an older commit has no metadata, without the links to add a source", () => {
+        show(
+            {
+                ...atOlderCommit(mockLatestRootSnapshot),
+                schema: null,
+                license: null,
+                watermark: null,
+                pollingSource: null,
+                pushSources: [],
+            },
+            true,
+        );
 
-        expect(component.currentTransform).toBeFalsy();
-        expect(component.currentPollingSource).toBeTruthy();
+        expect(findElementByDataTestId(fixture, "no-metadata-at-commit")).toBeDefined();
+        expect(findElementByDataTestId(fixture, "needs-data-source")).toBeUndefined();
+        expect(findElementByDataTestId(fixture, `metadata-menu-${MetadataTabs.Schema}`)).toBeUndefined();
     });
 
-    it("should check default values for properties and permissions when no state is defined yet", () => {
-        component.currentState = undefined;
-        fixture.debugElement.injector.get(ChangeDetectorRef).markForCheck();
-        fixture.detectChanges();
+    it("should show the license of an older commit that has no source yet", () => {
+        show({ ...atOlderCommit(mockLatestRootSnapshot), schema: null, pollingSource: null, pushSources: [] }, true);
 
-        expect(component.currentPage).toEqual(1);
-        expect(component.totalPages).toEqual(1);
-        expect(component.latestBlockHash).toEqual("");
-        expect(component.latestBlockSystemTime).toEqual("");
-        expect(component.currentPollingSource).toBeUndefined();
-        expect(component.currentTransform).toBeUndefined();
+        expect(findElementByDataTestId(fixture, `metadata-menu-${MetadataTabs.License}`)).toBeDefined();
+        expect(findElementByDataTestId(fixture, "no-metadata-at-commit")).toBeUndefined();
+        expect(findElementByDataTestId(fixture, "needs-data-source")).toBeUndefined();
     });
 
-    it("should check page change", () => {
-        const pageNumber = 1;
-        const pageChangeEmitSpy = vi.spyOn(component.pageChangeEmit, "emit").mockImplementation(() => {});
-        component.onPageChange(pageNumber);
-        expect(pageChangeEmitSpy).toHaveBeenCalledWith(pageNumber);
+    it("should ask for a source at the latest commit, beside the metadata it already has", () => {
+        show({ ...mockLatestRootSnapshot, pollingSource: null, pushSources: [] }, true);
+
+        expect(findElementByDataTestId(fixture, "needs-data-source")).toBeDefined();
+        expect(findElementByDataTestId(fixture, `metadata-menu-${MetadataTabs.License}`)).toBeDefined();
+    });
+
+    it("should only ask for a transformation when a derivative dataset has no metadata yet", () => {
+        show({ ...mockLatestDerivedSnapshot, schema: null, license: null, watermark: null, transform: null }, false);
+
+        expect(findElementByDataTestId(fixture, "needs-data-source")).toBeDefined();
+        expect(findElementByDataTestId(fixture, `metadata-menu-${MetadataTabs.Schema}`)).toBeUndefined();
+    });
+
+    it("should show the navigator at the shown commit", async () => {
+        show(atOlderCommit(mockLatestRootSnapshot), true);
+
+        const navigator = await TestbedHarnessEnvironment.loader(fixture).getHarness(CommitNavigatorHarness);
+        expect(await navigator.isLatest()).toBe(false);
+        expect(await navigator.getLabel()).toContain(mockOlderBlock.blockHash.slice(-8));
     });
 });

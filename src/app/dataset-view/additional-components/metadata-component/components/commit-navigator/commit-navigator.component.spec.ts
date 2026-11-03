@@ -5,45 +5,99 @@
  * included in the LICENSE file.
  */
 
+import { TestbedHarnessEnvironment } from "@angular/cdk/testing/testbed";
+import { formatDate } from "@angular/common";
 import { ComponentFixture, TestBed } from "@angular/core/testing";
+import { provideRouter } from "@angular/router";
 
-import { emitClickOnElementByDataTestId, setComponentInput } from "@common/helpers/base-test.helpers.spec";
+import { registerMatSvgIcons, setComponentInput, stubMethod } from "@common/helpers/base-test.helpers.spec";
+import AppValues from "@common/values/app.values";
+import { mockOlderBlock } from "@api/mock/dataset.mock";
 
 import { CommitNavigatorComponent } from "src/app/dataset-view/additional-components/metadata-component/components/commit-navigator/commit-navigator.component";
+import { CommitNavigatorHarness } from "src/app/dataset-view/additional-components/metadata-component/components/commit-navigator/commit-navigator.harness";
+import { MetadataTabs } from "src/app/dataset-view/additional-components/metadata-component/metadata.constants";
+import {
+    atOlderCommit,
+    mockLatestRootCommitData,
+    mockLatestRootSnapshot,
+} from "src/app/dataset-view/additional-components/metadata-component/metadata.mock";
+import {
+    CommitStepMode,
+    MetadataCommitData,
+} from "src/app/dataset-view/additional-components/metadata-component/metadata.types";
+import { DatasetViewTypeEnum } from "src/app/dataset-view/dataset-view.interface";
+import ProjectLinks from "src/app/project-links";
+import { mockDatasetBasicsRootFragment } from "src/app/search/mock.data";
+import { NavigationService } from "src/app/services/navigation.service";
 
 describe("CommitNavigatorComponent", () => {
-    let component: CommitNavigatorComponent;
+    const DATASET_URL = `/${mockDatasetBasicsRootFragment.owner.accountName}/${mockDatasetBasicsRootFragment.name}`;
+    const LICENSE_URL = `${DATASET_URL}/${DatasetViewTypeEnum.Metadata}/${MetadataTabs.License}`;
     let fixture: ComponentFixture<CommitNavigatorComponent>;
-    const INITIAL_PAGE_INDEX = 2;
-    const INITIAL_LIMIT = 3;
-    const INITIAL_TOTAL = 30;
+    let harness: CommitNavigatorHarness;
+
+    const olderCommitData: MetadataCommitData = {
+        snapshot: atOlderCommit(mockLatestRootSnapshot),
+        neighbours: { older: null, newer: {} },
+        steps: CommitStepMode.AllBlocks,
+    };
 
     beforeEach(async () => {
-        await TestBed.configureTestingModule({
+        TestBed.configureTestingModule({
             imports: [CommitNavigatorComponent],
-        }).compileComponents();
-
+            providers: [provideRouter([])],
+        });
+        registerMatSvgIcons();
         fixture = TestBed.createComponent(CommitNavigatorComponent);
-        component = fixture.componentInstance;
-        setComponentInput(fixture, "pageIndex", INITIAL_PAGE_INDEX);
-        setComponentInput(fixture, "limit", INITIAL_LIMIT);
-        setComponentInput(fixture, "total", INITIAL_TOTAL);
+        setComponentInput(fixture, "datasetBasics", mockDatasetBasicsRootFragment);
+        setComponentInput(fixture, "section", MetadataTabs.License);
+        setComponentInput(fixture, "commitData", mockLatestRootCommitData);
         fixture.detectChanges();
+        harness = await TestbedHarnessEnvironment.harnessForFixture(fixture, CommitNavigatorHarness);
     });
 
-    it("should create", () => {
-        expect(component).toBeTruthy();
+    it("should show the latest commit with a step to the older one", async () => {
+        const latestBlock = mockLatestRootSnapshot.block;
+
+        expect(await harness.isLatest()).toBe(true);
+        expect(await harness.getLabel()).toEqual(latestBlock.blockHash.slice(-8));
+        expect(await harness.getBlockDescription()).toEqual(
+            `Block ${latestBlock.blockHash} · ${formatDate(latestBlock.systemTime, AppValues.DISPLAY_TIME_FORMAT, "en-US")}`,
+        );
+        expect(await harness.getBlockUrl()).toEqual(
+            `${DATASET_URL}/${ProjectLinks.URL_BLOCK}/${latestBlock.blockHash}`,
+        );
+        expect(await harness.getOlderCommitUrl()).toEqual(`${LICENSE_URL}?head=${mockOlderBlock.blockHash}`);
+        expect(await harness.getNewerCommitUrl()).toBeNull();
+        expect(await harness.getLatestCommitUrl()).toBeNull();
+        expect(await harness.getStepMode()).toEqual("Metadata changes");
     });
 
-    it("should change page backward", () => {
-        const pageChangeSpy = vi.spyOn(component.pageChange, "emit").mockImplementation(() => {});
-        emitClickOnElementByDataTestId(fixture, "backward-link");
-        expect(pageChangeSpy).toHaveBeenCalledWith(INITIAL_PAGE_INDEX - 1);
+    it("should lead an older commit back to the latest one, keeping the step mode", async () => {
+        setComponentInput(fixture, "commitData", olderCommitData);
+
+        expect(await harness.isLatest()).toBe(false);
+        expect(await harness.getLabel()).toEqual(mockOlderBlock.blockHash.slice(-8));
+        expect(await harness.getOlderCommitUrl()).toBeNull();
+        expect(await harness.getNewerCommitUrl()).toEqual(`${LICENSE_URL}?steps=all`);
+        expect(await harness.getLatestCommitUrl()).toEqual(`${LICENSE_URL}?steps=all`);
+        expect(await harness.getStepMode()).toEqual("All blocks");
     });
 
-    it("should change page forward", () => {
-        const pageChangeSpy = vi.spyOn(component.pageChange, "emit").mockImplementation(() => {});
-        emitClickOnElementByDataTestId(fixture, "forward-link");
-        expect(pageChangeSpy).toHaveBeenCalledWith(INITIAL_PAGE_INDEX + 1);
+    it("should switch the step mode at the same commit", async () => {
+        const navigateSpy = stubMethod(TestBed.inject(NavigationService), "navigateToDatasetView");
+        setComponentInput(fixture, "commitData", olderCommitData);
+
+        await harness.selectStepMode("Metadata changes");
+
+        expect(navigateSpy).toHaveBeenCalledWith({
+            accountName: mockDatasetBasicsRootFragment.owner.accountName,
+            datasetName: mockDatasetBasicsRootFragment.name,
+            tab: DatasetViewTypeEnum.Metadata,
+            section: MetadataTabs.License,
+            head: mockOlderBlock.blockHash,
+            steps: CommitStepMode.MetadataChanges,
+        });
     });
 });

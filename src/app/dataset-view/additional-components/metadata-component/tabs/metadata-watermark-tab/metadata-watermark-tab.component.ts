@@ -20,8 +20,8 @@ import { DatasetBasicsFragment } from "@api/kamu.graphql.interface";
 import { MaybeNullOrUndefined } from "@interface/app.types";
 
 import { MetadataTabs } from "src/app/dataset-view/additional-components/metadata-component/metadata.constants";
+import { MetadataTabData } from "src/app/dataset-view/additional-components/metadata-component/metadata.types";
 import { EditWatermarkModalComponent } from "src/app/dataset-view/additional-components/overview-component/components/edit-watermark-modal/edit-watermark-modal.component";
-import { DatasetOverviewTabData } from "src/app/dataset-view/dataset-view.interface";
 import { NavigationService } from "src/app/services/navigation.service";
 
 @Component({
@@ -37,13 +37,13 @@ import { NavigationService } from "src/app/services/navigation.service";
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class MetadataWatermarkTabComponent {
-    @Input(RoutingResolvers.METADATA_WATERMARK_TAB_KEY) public datasetMetadataTabData: DatasetOverviewTabData;
+    @Input(RoutingResolvers.METADATA_WATERMARK_TAB_KEY) public datasetMetadataTabData: MetadataTabData;
 
     private ngbModalService = inject(NgbModal);
     private navigationService = inject(NavigationService);
 
     public get watermark(): MaybeNullOrUndefined<string> {
-        return this.datasetMetadataTabData.overviewUpdate.overview.metadata.currentWatermark;
+        return this.datasetMetadataTabData.snapshot.watermark;
     }
 
     public get datasetBasics(): DatasetBasicsFragment {
@@ -51,7 +51,10 @@ export class MetadataWatermarkTabComponent {
     }
 
     public get canEditWatermark(): boolean {
-        return this.datasetMetadataTabData.datasetPermissions.permissions.metadata.canCommit;
+        return (
+            this.datasetMetadataTabData.snapshot.isLatest &&
+            this.datasetMetadataTabData.datasetPermissions.permissions.metadata.canCommit
+        );
     }
 
     public onEditWatermark(): void {

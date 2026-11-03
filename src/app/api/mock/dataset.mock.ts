@@ -8,11 +8,14 @@
 import { Edge } from "@swimlane/ngx-graph";
 
 import {
+    ChainBlockPositionFragment,
     CompareChainsStatus,
     DataBatchFormat,
     DataSchemaFormat,
+    DatasetBlockPositionQuery,
     DatasetByAccountAndDatasetNameQuery,
     DatasetByIdQuery,
+    DatasetChainBlockPositionsQuery,
     DatasetKind,
     DatasetListDownstreamsQuery,
     DatasetPushSyncStatusesQuery,
@@ -20,12 +23,15 @@ import {
     DatasetSearchOverviewFragment,
     GetDatasetBasicsWithPermissionsQuery,
     GetDatasetDataSqlRunQuery,
+    GetDatasetMetadataAsOfQuery,
     GetMetadataBlockQuery,
     MetadataBlockFragment,
 } from "@api/kamu.graphql.interface";
 import { TEST_LOGIN } from "@api/mock/auth.mock";
+import { MaybeNull } from "@interface/app.types";
 import { DatasetsAccountResponse } from "@interface/dataset.interface";
 
+import { mockMetadataRootPushSourceUpdate } from "src/app/dataset-view/additional-components/data-tabs.mock";
 import {
     LineageGraphDatasetNode,
     LineageGraphNode,
@@ -33,7 +39,9 @@ import {
     LineageNodeAccess,
 } from "src/app/dataset-view/additional-components/lineage-component/lineage-model";
 import {
+    mockDatasetBasicsRootFragment,
     mockFullPowerDatasetPermissionsFragment,
+    mockMetadataCurrentLicense,
     mockOwnerFieldsWithAvatar,
     mockPublicDatasetVisibility,
 } from "src/app/search/mock.data";
@@ -549,3 +557,95 @@ export const MOCK_LINKS: Edge[] = [
         target: "didodfz4k88e8h7woj2Njge7MpGneHHEo8nuSA6npPrAroFpETcukCenC",
     },
 ];
+
+export const mockOlderBlock: ChainBlockPositionFragment = {
+    __typename: "MetadataBlockExtended",
+    blockHash: "f1620a1b2c3d4e5f60718293a4b5c6d7e8f9011223344556677889900aabbccddeeff",
+    systemTime: "2022-08-01T10:00:00+00:00",
+    sequenceNumber: 2,
+};
+
+/** The answer to a block lookup by hash; `null` when the chain has no such block */
+export function mockDatasetBlockPositionQuery(block: MaybeNull<ChainBlockPositionFragment>): DatasetBlockPositionQuery {
+    return {
+        datasets: {
+            __typename: "Datasets",
+            byOwnerAndName: {
+                ...mockDatasetBasicsRootFragment,
+                metadata: {
+                    __typename: "DatasetMetadata",
+                    chain: { __typename: "MetadataChain", blockByHash: block },
+                },
+            },
+        },
+    };
+}
+
+export const mockGetDatasetMetadataAsOfQuery: GetDatasetMetadataAsOfQuery = {
+    datasets: {
+        __typename: "Datasets",
+        byOwnerAndName: {
+            ...mockDatasetBasicsRootFragment,
+            metadata: {
+                __typename: "DatasetMetadata",
+                currentWatermark: "2022-07-30T00:00:00+00:00",
+                metadataProjection: [
+                    {
+                        __typename: "MetadataBlockExtended",
+                        event: {
+                            __typename: "SetDataSchema",
+                            schema: {
+                                __typename: "DataSchema",
+                                format: DataSchemaFormat.OdfJson,
+                                content: '{"fields":[{"name":"offset","type":{"kind":"UInt64"}}]}',
+                            },
+                        },
+                    },
+                    {
+                        __typename: "MetadataBlockExtended",
+                        event: mockMetadataCurrentLicense,
+                    },
+                    ...mockMetadataRootPushSourceUpdate.metadataSummary.metadata.currentPushSources.map((source) => ({
+                        __typename: "MetadataBlockExtended" as const,
+                        event: source,
+                    })),
+                ],
+            },
+        },
+    },
+};
+
+export function mockChainBlockPositionsQuery(
+    nodes: ChainBlockPositionFragment[],
+    hasNextPage: boolean = false,
+): DatasetChainBlockPositionsQuery {
+    return {
+        datasets: {
+            __typename: "Datasets",
+            byOwnerAndName: {
+                __typename: "Dataset",
+                metadata: {
+                    __typename: "DatasetMetadata",
+                    chain: {
+                        __typename: "MetadataChain",
+                        blocks: {
+                            __typename: "MetadataBlockConnection",
+                            nodes,
+                            pageInfo: { __typename: "PageBasedInfo", hasNextPage },
+                        },
+                    },
+                },
+            },
+        },
+    };
+}
+
+/** A block at the given position, for building chains in navigator tests */
+export function mockBlockAt(sequenceNumber: number): ChainBlockPositionFragment {
+    return {
+        __typename: "MetadataBlockExtended",
+        blockHash: `f1620${sequenceNumber.toString(16).padStart(64, "0")}`,
+        systemTime: "2022-08-01T10:00:00+00:00",
+        sequenceNumber,
+    };
+}

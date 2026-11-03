@@ -27,6 +27,7 @@ import { AccountSettingsTabs } from "src/app/account/settings/account-settings.c
 import { FlowDetailsTabs } from "src/app/dataset-flow/dataset-flow-details/dataset-flow-details.types";
 import { SettingsTabsEnum } from "src/app/dataset-view/additional-components/dataset-settings-component/dataset-settings.model";
 import { MetadataTabs } from "src/app/dataset-view/additional-components/metadata-component/metadata.constants";
+import { CommitStepMode } from "src/app/dataset-view/additional-components/metadata-component/metadata.types";
 import { DatasetViewTypeEnum } from "src/app/dataset-view/dataset-view.interface";
 import ProjectLinks, { SourceEventEditor } from "src/app/project-links";
 
@@ -178,6 +179,9 @@ export class NavigationService {
                     page: params.page === 1 ? undefined : params.page,
                     pathPrefix: params.pathPrefix,
                     version: params.version,
+                    [ProjectLinks.URL_QUERY_PARAM_HEAD]: params.head,
+                    [ProjectLinks.URL_QUERY_PARAM_STEPS]:
+                        params.steps === CommitStepMode.AllBlocks ? params.steps : undefined,
                 },
                 fragment: params.fragment,
             },

@@ -22,7 +22,7 @@ import { MaybeNullOrUndefined } from "@interface/app.types";
 
 import { EnginePropertyComponent } from "src/app/dataset-block/metadata-block/components/event-details/components/common/engine-property/engine-property.component";
 import { SqlQueryViewerComponent } from "src/app/dataset-block/metadata-block/components/event-details/components/common/sql-query-viewer/sql-query-viewer.component";
-import { MetadataTabData } from "src/app/dataset-view/additional-components/metadata-component/metadata.constants";
+import { MetadataTabData } from "src/app/dataset-view/additional-components/metadata-component/metadata.types";
 import { NavigationService } from "src/app/services/navigation.service";
 
 @Component({
@@ -51,12 +51,13 @@ export class MetadataTransformationTabComponent {
     public readonly DEFAULT_AVATAR_URL = AppValues.DEFAULT_AVATAR_URL;
 
     public get transformation(): MaybeNullOrUndefined<DatasetTransformFragment> {
-        return this.datasetMetadataTabData.metadataSummary.metadata.currentTransform;
+        return this.datasetMetadataTabData.snapshot.transform;
     }
 
     public get canEditSetTransform(): boolean {
         return (
             this.datasetMetadataTabData.datasetBasics.kind === DatasetKind.Derivative &&
+            this.datasetMetadataTabData.snapshot.isLatest &&
             !isNil(this.transformation) &&
             this.datasetMetadataTabData.datasetPermissions.permissions.metadata.canCommit
         );

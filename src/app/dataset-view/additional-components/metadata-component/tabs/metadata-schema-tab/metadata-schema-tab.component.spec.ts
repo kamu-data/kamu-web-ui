@@ -11,9 +11,16 @@ import { ComponentFixture, TestBed } from "@angular/core/testing";
 
 import { provideToastr } from "ngx-toastr";
 
-import { registerMatSvgIcons, setComponentInput } from "@common/helpers/base-test.helpers.spec";
+import {
+    findElementByDataTestId,
+    registerMatSvgIcons,
+    setComponentInput,
+} from "@common/helpers/base-test.helpers.spec";
 
-import { mockDerivedOverviewUpdate } from "src/app/dataset-view/additional-components/data-tabs.mock";
+import {
+    atOlderCommit,
+    mockLatestDerivedSnapshot,
+} from "src/app/dataset-view/additional-components/metadata-component/metadata.mock";
 import { MetadataSchemaTabComponent } from "src/app/dataset-view/additional-components/metadata-component/tabs/metadata-schema-tab/metadata-schema-tab.component";
 import { mockDatasetBasicsDerivedFragment, mockFullPowerDatasetPermissionsFragment } from "src/app/search/mock.data";
 
@@ -32,7 +39,7 @@ describe("MetadataSchemaTabComponent", () => {
         setComponentInput(fixture, "datasetMetadataTabData", {
             datasetBasics: mockDatasetBasicsDerivedFragment,
             datasetPermissions: mockFullPowerDatasetPermissionsFragment,
-            overviewUpdate: mockDerivedOverviewUpdate,
+            snapshot: mockLatestDerivedSnapshot,
         });
 
         fixture.detectChanges();
@@ -40,5 +47,17 @@ describe("MetadataSchemaTabComponent", () => {
 
     it("should create", () => {
         expect(component).toBeTruthy();
+    });
+
+    it("should show the schema as of an older commit without the edit button", () => {
+        setComponentInput(fixture, "datasetMetadataTabData", {
+            datasetBasics: mockDatasetBasicsDerivedFragment,
+            datasetPermissions: mockFullPowerDatasetPermissionsFragment,
+            snapshot: atOlderCommit(mockLatestDerivedSnapshot),
+        });
+        fixture.detectChanges();
+
+        expect(component.schema).toEqual(mockLatestDerivedSnapshot.schema);
+        expect(findElementByDataTestId(fixture, "edit-schema")).toBeUndefined();
     });
 });

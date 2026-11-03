@@ -12,16 +12,20 @@ import { catchError, of } from "rxjs";
 
 import { DatasetKind } from "@api/kamu.graphql.interface";
 
-import { MetadataTabData } from "src/app/dataset-view/additional-components/metadata-component/metadata.constants";
-import { requestMetadataTabData } from "src/app/dataset-view/additional-components/metadata-component/resolver/metadata-tab-data.helpers";
+import { MetadataTabData } from "src/app/dataset-view/additional-components/metadata-component/metadata.types";
+import {
+    requestMetadataTabData,
+    schemaTabIfMissingAtCommit,
+} from "src/app/dataset-view/additional-components/metadata-component/resolver/metadata-tab-data.helpers";
 import { pageNotFoundIf } from "src/app/dataset-view/resolvers/dataset-tab-data.helpers";
 import { NavigationService } from "src/app/services/navigation.service";
 
-export const metadataTransformationTabResolverFn: ResolveFn<MetadataTabData> = () => {
+export const metadataTransformationTabResolverFn: ResolveFn<MetadataTabData> = (route) => {
     const navigationService = inject(NavigationService);
 
-    return requestMetadataTabData().pipe(
+    return requestMetadataTabData(route).pipe(
         pageNotFoundIf((data) => data.datasetBasics.kind === DatasetKind.Root),
+        schemaTabIfMissingAtCommit(route, (data) => !data.snapshot.transform),
         catchError(() => of(navigationService.pageNotFoundRedirect())),
     );
 };

@@ -9,10 +9,19 @@ import { provideHttpClient } from "@angular/common/http";
 import { provideHttpClientTesting } from "@angular/common/http/testing";
 import { ComponentFixture, TestBed } from "@angular/core/testing";
 
-import { registerMatSvgIcons, setComponentInput } from "@common/helpers/base-test.helpers.spec";
+import { provideToastr } from "ngx-toastr";
+
+import {
+    findElementByDataTestId,
+    registerMatSvgIcons,
+    setComponentInput,
+} from "@common/helpers/base-test.helpers.spec";
 import { SharedTestModule } from "@common/modules/shared-test.module";
 
-import { mockMetadataRootUpdate } from "src/app/dataset-view/additional-components/data-tabs.mock";
+import {
+    atOlderCommit,
+    mockLatestRootPushSourceSnapshot,
+} from "src/app/dataset-view/additional-components/metadata-component/metadata.mock";
 import { MetadataPushSourcesTabComponent } from "src/app/dataset-view/additional-components/metadata-component/tabs/metadata-push-sources-tab/metadata-push-sources-tab.component";
 import { mockDatasetBasicsRootFragment, mockFullPowerDatasetPermissionsFragment } from "src/app/search/mock.data";
 import { NavigationService } from "src/app/services/navigation.service";
@@ -25,7 +34,7 @@ describe("MetadataPushSourcesTabComponent", () => {
     beforeEach(() => {
         TestBed.configureTestingModule({
             imports: [MetadataPushSourcesTabComponent, SharedTestModule],
-            providers: [provideHttpClient(), provideHttpClientTesting()],
+            providers: [provideToastr(), provideHttpClient(), provideHttpClientTesting()],
         });
         registerMatSvgIcons();
         fixture = TestBed.createComponent(MetadataPushSourcesTabComponent);
@@ -34,7 +43,7 @@ describe("MetadataPushSourcesTabComponent", () => {
         setComponentInput(fixture, "datasetMetadataTabData", {
             datasetBasics: mockDatasetBasicsRootFragment,
             datasetPermissions: mockFullPowerDatasetPermissionsFragment,
-            metadataSummary: mockMetadataRootUpdate.metadataSummary,
+            snapshot: mockLatestRootPushSourceSnapshot,
         });
 
         fixture.detectChanges();
@@ -48,10 +57,7 @@ describe("MetadataPushSourcesTabComponent", () => {
         const navigateToAddPollingSourceSpy = vi
             .spyOn(navigationService, "navigateToAddPushSource")
             .mockImplementation(() => {});
-        component.datasetMetadataTabData.datasetBasics = mockDatasetBasicsRootFragment;
-
         const sourceName = "mockName";
-        fixture.detectChanges();
 
         component.navigateToEditAddPushSource(sourceName);
         expect(navigateToAddPollingSourceSpy).toHaveBeenCalledWith(
@@ -61,5 +67,19 @@ describe("MetadataPushSourcesTabComponent", () => {
             },
             sourceName,
         );
+    });
+
+    it("should hide the edit buttons as of an older commit", () => {
+        expect(findElementByDataTestId(fixture, "edit-source-link")).toBeDefined();
+
+        setComponentInput(fixture, "datasetMetadataTabData", {
+            datasetBasics: mockDatasetBasicsRootFragment,
+            datasetPermissions: mockFullPowerDatasetPermissionsFragment,
+            snapshot: atOlderCommit(mockLatestRootPushSourceSnapshot),
+        });
+        fixture.detectChanges();
+
+        expect(findElementByDataTestId(fixture, "source-name-0")).toBeDefined();
+        expect(findElementByDataTestId(fixture, "edit-source-link")).toBeUndefined();
     });
 });

@@ -10,10 +10,17 @@ import { provideHttpClientTesting } from "@angular/common/http/testing";
 import { ComponentFixture, TestBed } from "@angular/core/testing";
 
 import { HIGHLIGHT_OPTIONS_PROVIDER } from "@common/helpers/app.helpers";
-import { registerMatSvgIcons, setComponentInput } from "@common/helpers/base-test.helpers.spec";
+import {
+    findElementByDataTestId,
+    registerMatSvgIcons,
+    setComponentInput,
+} from "@common/helpers/base-test.helpers.spec";
 import { SharedTestModule } from "@common/modules/shared-test.module";
 
-import { mockMetadataDerivedUpdate } from "src/app/dataset-view/additional-components/data-tabs.mock";
+import {
+    atOlderCommit,
+    mockLatestDerivedSnapshot,
+} from "src/app/dataset-view/additional-components/metadata-component/metadata.mock";
 import { MetadataTransformationTabComponent } from "src/app/dataset-view/additional-components/metadata-component/tabs/metadata-transformation-tab/metadata-transformation-tab.component";
 import { mockDatasetBasicsDerivedFragment, mockFullPowerDatasetPermissionsFragment } from "src/app/search/mock.data";
 
@@ -31,7 +38,7 @@ describe("MetadataTransformationTabComponent", () => {
         setComponentInput(fixture, "datasetMetadataTabData", {
             datasetBasics: structuredClone(mockDatasetBasicsDerivedFragment),
             datasetPermissions: structuredClone(mockFullPowerDatasetPermissionsFragment),
-            metadataSummary: mockMetadataDerivedUpdate.metadataSummary,
+            snapshot: mockLatestDerivedSnapshot,
         });
         registerMatSvgIcons();
         fixture.detectChanges();
@@ -39,5 +46,19 @@ describe("MetadataTransformationTabComponent", () => {
 
     it("should create", () => {
         expect(component).toBeTruthy();
+    });
+
+    it("should hide the edit button as of an older commit", () => {
+        expect(findElementByDataTestId(fixture, "edit-transformation-link")).toBeDefined();
+
+        setComponentInput(fixture, "datasetMetadataTabData", {
+            datasetBasics: mockDatasetBasicsDerivedFragment,
+            datasetPermissions: mockFullPowerDatasetPermissionsFragment,
+            snapshot: atOlderCommit(mockLatestDerivedSnapshot),
+        });
+        fixture.detectChanges();
+
+        expect(findElementByDataTestId(fixture, "dataset-name-button-0")).toBeDefined();
+        expect(findElementByDataTestId(fixture, "edit-transformation-link")).toBeUndefined();
     });
 });

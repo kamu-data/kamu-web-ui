@@ -23,8 +23,8 @@ import RoutingResolvers from "@common/resolvers/routing-resolvers";
 import { MaybeNull } from "@interface/app.types";
 import { DataSchemaField, DatasetSchema } from "@interface/dataset-schema.interface";
 
+import { MetadataTabData } from "src/app/dataset-view/additional-components/metadata-component/metadata.types";
 import { SchemaViewMode } from "src/app/dataset-view/additional-components/metadata-component/tabs/metadata-schema-tab/metadata-schema-tab.component.types";
-import { DatasetOverviewTabData } from "src/app/dataset-view/dataset-view.interface";
 
 @Component({
     selector: "app-metadata-schema-tab",
@@ -44,7 +44,7 @@ import { DatasetOverviewTabData } from "src/app/dataset-view/dataset-view.interf
     styleUrls: ["./metadata-schema-tab.component.scss"],
 })
 export class MetadataSchemaTabComponent {
-    @Input(RoutingResolvers.METADATA_SCHEMA_TAB_KEY) public datasetMetadataTabData: DatasetOverviewTabData;
+    @Input(RoutingResolvers.METADATA_SCHEMA_TAB_KEY) public datasetMetadataTabData: MetadataTabData;
 
     private modalService = inject(ModalService);
 
@@ -52,11 +52,15 @@ export class MetadataSchemaTabComponent {
     public readonly SchemaViewMode: typeof SchemaViewMode = SchemaViewMode;
 
     public get schema(): MaybeNull<DatasetSchema> {
-        return this.datasetMetadataTabData.overviewUpdate.schema;
+        return this.datasetMetadataTabData.snapshot.schema;
     }
 
     public get canEditSchema(): boolean {
-        return !isNil(this.schema) && this.datasetMetadataTabData.datasetPermissions.permissions.metadata.canCommit;
+        return (
+            !isNil(this.schema) &&
+            this.datasetMetadataTabData.snapshot.isLatest &&
+            this.datasetMetadataTabData.datasetPermissions.permissions.metadata.canCommit
+        );
     }
 
     public inferTableSchema(schema: DataSchemaField[]): string[] {

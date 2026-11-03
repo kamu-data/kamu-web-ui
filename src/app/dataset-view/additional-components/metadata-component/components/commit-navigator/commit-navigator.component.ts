@@ -5,54 +5,69 @@
  * included in the LICENSE file.
  */
 
-import { SlicePipe } from "@angular/common";
-import { ChangeDetectionStrategy, Component, EventEmitter, Input, OnChanges, Output } from "@angular/core";
+import { DatePipe, SlicePipe } from "@angular/common";
+import { ChangeDetectionStrategy, Component, inject, Input } from "@angular/core";
 import { MatIconModule } from "@angular/material/icon";
+import { MatTooltipModule } from "@angular/material/tooltip";
+import { RouterLink } from "@angular/router";
+
+import { enumValueOf } from "@common/helpers/app.helpers";
+import { DatasetLinkPipe } from "@common/pipes/dataset-link.pipe";
+import { MetadataBlockLinkPipe } from "@common/pipes/metadata-block-link.pipe";
+import AppValues from "@common/values/app.values";
+import { DatasetBasicsFragment } from "@api/kamu.graphql.interface";
+
+import { MetadataTabs } from "src/app/dataset-view/additional-components/metadata-component/metadata.constants";
+import {
+    CommitStepMode,
+    MetadataCommitData,
+} from "src/app/dataset-view/additional-components/metadata-component/metadata.types";
+import { DatasetViewTypeEnum } from "src/app/dataset-view/dataset-view.interface";
+import { NavigationService } from "src/app/services/navigation.service";
 
 @Component({
-    selector: "app-custom-pagination",
-    templateUrl: "commit-navigator.component.html",
-    styleUrls: ["commit-navigator.component.scss"],
+    selector: "app-commit-navigator",
+    templateUrl: "./commit-navigator.component.html",
+    styleUrls: ["./commit-navigator.component.scss"],
     changeDetection: ChangeDetectionStrategy.OnPush,
     imports: [
         //-----//
+        DatePipe,
+        RouterLink,
         SlicePipe,
         //-----//
         MatIconModule,
+        MatTooltipModule,
+        //-----//
+        DatasetLinkPipe,
+        MetadataBlockLinkPipe,
     ],
 })
-export class CommitNavigatorComponent implements OnChanges {
-    @Input({ required: true }) public date = "";
-    @Input({ required: true }) public hash = "";
-    @Input({ required: true }) public pageIndex: number; // current offset
-    @Input({ required: true }) public limit: number; // record per page
-    @Input({ required: true }) public total: number; // total records
-    @Input() public range = 5;
-    @Output() public pageChange: EventEmitter<number> = new EventEmitter<number>();
-    public totalPageNo: number[] = [];
-    public totalSizeOfPages: number = 0;
+export class CommitNavigatorComponent {
+    @Input({ required: true }) public datasetBasics: DatasetBasicsFragment;
+    @Input({ required: true }) public commitData: MetadataCommitData;
+    @Input({ required: true }) public section: MetadataTabs;
 
-    public ngOnChanges() {
-        this.totalSizeOfPages = this.total / this.limit;
-        this.totalSizeOfPages = Math.ceil(this.totalSizeOfPages);
+    public readonly CommitStepMode: typeof CommitStepMode = CommitStepMode;
+    public readonly DatasetViewTypeEnum: typeof DatasetViewTypeEnum = DatasetViewTypeEnum;
+    public readonly DISPLAY_TIME_FORMAT = AppValues.DISPLAY_TIME_FORMAT;
 
-        this.totalPageNo = [];
-        for (let i = 1; i <= this.totalSizeOfPages; i++) {
-            this.totalPageNo.push(i);
+    private navigationService = inject(NavigationService);
+
+    public onStepModeChange(event: Event): void {
+        const steps =
+            event.target instanceof HTMLSelectElement ? enumValueOf(CommitStepMode, event.target.value) : undefined;
+        if (!steps) {
+            return;
         }
-    }
-
-    public pageChangeBackward() {
-        if (this.pageIndex > 0) {
-            this.pageIndex = this.pageIndex - 1;
-        }
-        this.pageChange.emit(this.pageIndex);
-    }
-
-    public pageChangeForward() {
-        if (this.pageIndex < this.totalSizeOfPages) {
-            this.pageIndex = this.pageIndex + 1;
-        }
-        this.pageChange.emit(this.pageIndex);
+        const snapshot = this.commitData.snapshot;
+        this.navigationService.navigateToDatasetView({
+            accountName: this.datasetBasics.owner.accountName,
+            datasetName: this.datasetBasics.name,
+            tab: DatasetViewTypeEnum.Metadata,
+            section: this.section,
+            head: snapshot.isLatest ? undefined : snapshot.block.blockHash,
+            steps,
+        });
     }
 }

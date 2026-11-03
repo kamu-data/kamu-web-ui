@@ -160,10 +160,6 @@
               {
                 "id": "editSchema",
                 "developmentState": "mockup"
-              },
-              {
-                "id": "pagination",
-                "developmentState": "mockup"
               }
             ]
           },

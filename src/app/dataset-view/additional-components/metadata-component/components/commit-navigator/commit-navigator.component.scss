@@ -7,6 +7,87 @@
 
 @use "var" as *;
 
-.date {
-    height: 33px;
+.commit-navigator {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 8px 12px;
+    margin-bottom: 4px;
+    font-size: 13px;
+}
+
+.commit-pager {
+    display: inline-flex;
+    align-items: stretch;
+    height: 28px;
+    border: 1px solid $app-color-border-default;
+    border-radius: 6px;
+    overflow: hidden;
+
+    &__step {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        width: 26px;
+        color: $app-color-accent-fg;
+
+        mat-icon {
+            width: 18px;
+            height: 18px;
+            font-size: 18px;
+        }
+
+        &:hover {
+            background: $app-alice-blue;
+        }
+
+        &--disabled {
+            color: $app-color-border-default;
+
+            &:hover {
+                background: none;
+            }
+        }
+    }
+
+    &__label {
+        display: inline-flex;
+        align-items: center;
+        padding: 0 8px;
+        border-left: 1px solid $app-color-border-default;
+        border-right: 1px solid $app-color-border-default;
+        color: $app-color-fg-default;
+        white-space: nowrap;
+        text-decoration: none;
+
+        &:hover {
+            background: $app-alice-blue;
+            text-decoration: none;
+        }
+    }
+}
+
+.latest-badge {
+    padding: 1px 8px;
+    border: 1px solid $app-dark-sea-green;
+    border-radius: 10px;
+    color: $app-color-fg-muted;
+    font-size: 12px;
+}
+
+.step-mode {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    margin: 0 0 0 auto;
+    white-space: nowrap;
+
+    &__label {
+        color: $app-color-fg-muted;
+    }
+
+    select {
+        width: 150px;
+        font-size: 13px;
+    }
 }

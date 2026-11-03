@@ -877,13 +877,6 @@ export const mockMetadataRootUpdate: MetadataSchemaUpdate = {
             },
         ],
     },
-    pageInfo: {
-        __typename: "PageBasedInfo",
-        hasNextPage: false,
-        hasPreviousPage: false,
-        totalPages: 1,
-        currentPage: 1,
-    },
     metadataSummary: {
         __typename: "Dataset",
         metadata: {
@@ -1069,13 +1062,6 @@ export const mockMetadataRootPushSourceUpdate: MetadataSchemaUpdate = {
                 },
             },
         ],
-    },
-    pageInfo: {
-        __typename: "PageBasedInfo",
-        hasNextPage: false,
-        hasPreviousPage: false,
-        totalPages: 1,
-        currentPage: 1,
     },
     metadataSummary: {
         __typename: "Dataset",
@@ -1417,13 +1403,6 @@ export const mockMetadataDerivedUpdate: MetadataSchemaUpdate = {
                 },
             },
         },
-    },
-    pageInfo: {
-        __typename: "PageBasedInfo",
-        hasNextPage: false,
-        hasPreviousPage: false,
-        totalPages: 1,
-        currentPage: 1,
     },
 };
 

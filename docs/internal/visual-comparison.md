@@ -73,6 +73,7 @@ sequenceDiagram
     C->>K: take capture.lock
     C->>K: base: git archive, npm ci or symlinked node_modules, production build (cached by commit)
     C->>K: head: production build of the working tree or --head
+    C->>C: select: changed files → components (impact.mjs) → scenarios that showed them
     loop each profile with selected scenarios
         C->>P: open(backend)
         P->>B: start, fill (seed) or reuse a cached workspace
@@ -92,6 +93,29 @@ sequenceDiagram
 Scenarios of one profile run in order in one browser tab with in-app navigation, as a user would
 move through the app: a component's styles that leak onto later pages show up there. Logged-out
 scenarios come last.
+
+### Selecting by the change
+
+Without `--all` or `--only`, a run covers the scenarios the change can alter. Nothing about the
+selection is kept by hand, so it follows the app as it changes:
+
+| Step | Source |
+|---|---|
+| Changed files | `git diff` between base and head, with untracked files for the working tree |
+| Files to components | `helpers/impact.mjs`: a component's own `.ts`, template or stylesheet reaches that component; any other file reaches the components importing it, through files that are not components, read from the imports on every run |
+| Components to scenarios | `components.json`: the custom elements each scenario showed at its latest successful capture of either side, rewritten by every capture |
+
+| Selects every scenario | Why |
+|---|---|
+| `src/` outside `src/app` (global styles, `index.html`, `main.ts`), `package.json`, `angular.json`, `tsconfig*.json` | they apply to every page |
+| a stylesheet with `::ng-deep`, a component with `ViewEncapsulation.None` | its styles reach other components |
+| a deleted file, a file under `src/app` that no component owns (a `.graphql` document) | its users cannot be read any more, or not statically |
+| `e2e/visual/`, `e2e/fixtures/` | the capture itself changed |
+
+A scenario never captured runs. A scenario that `follows` another runs whenever that one does: it
+is the page where the other's leaking styles would show. A changed component that no record
+contains selects nothing and is named in the report: a component new to a page arrives through its
+parent's template, whose change selects that page.
 
 ## Backends
 
@@ -197,6 +221,7 @@ differ), `pixels-only` (rechecked: `noise` if a head capture alone matches the b
 | `baselines/<base sha>-<profile>-<hash>` | data id, backend id, kit hash (the capture code under `e2e/visual`: its Python files, `page-lib.js` and the helpers, without the comparer; taken once per run), Chrome major version, production build, scenario names, utility roots |
 | `backends/<kind>-<version>` | release version, unpacked atomically |
 | `backend-ids.json` | a binary's path, mtime and size → its version and content hash |
+| `components.json` | `<side>:<profile>/<scenario>` → the custom elements its latest successful capture showed, for the selection; not part of any key |
 | `timings.json` | `<profile>/<scenario>` → seconds its last capture took, for the progress estimates; not part of any key |
 
 A baseline with a failed scenario is not stored. Because volatile values are masked, a baseline

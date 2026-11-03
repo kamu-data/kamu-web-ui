@@ -57,7 +57,14 @@ to `~/.cache/kamu-ui-visual/` (`KAMU_VISUAL_CACHE` to move it).
 | `--tier smoke\|full` | `full` (which includes `smoke`) |
 | `--unrated` | also run catalogue entries nobody has rated yet |
 | `--only <text>[,<text>…]` | only scenarios whose name contains one of the parts |
+| `--all` | every scenario of the tier, not only those the change reaches (below) |
 | backend options | see below; `probe` takes them too |
+
+By default `compare` runs only the scenarios the change between base and head can alter: the
+changed files lead, through the app's imports, to components, and a scenario runs when its last
+capture showed one of them. Global styles, the build setup, styles that leave their component and
+the kit itself select every scenario; so does a scenario never captured before. The report's header
+says what was selected and why. `--all` runs everything, as before a PR.
 
 ## Backends
 
@@ -101,6 +108,7 @@ Accounts: `kamu` (admin, password `kamu.dev`), `alice`, `bob`.
 | `workspaces/` | seeded workspaces of a local kamu-cli build |
 | `backends/` | downloaded releases |
 | `timings.json` | how long each scenario took, for the estimates |
+| `components.json` | the components each scenario showed at its last capture, for the selection |
 
 ## Layout
 

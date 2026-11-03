@@ -55,15 +55,21 @@ def load_catalogue(directory: Path, profiles, routes: list[str]) -> dict[str, di
 
 
 def check_scenarios(scenarios, entries: dict[str, dict]) -> None:
-    """Raises unless every scenario names an existing entry and every name is unique."""
+    """Raises unless every scenario names an existing entry, every name is unique, and a scenario
+    follows an earlier one of the same profile."""
     problems: list[str] = []
     names: set[str] = set()
+    profile_of: dict[str, str] = {}
     for sc in scenarios:
         if sc.name in names:
             problems.append(f"{sc.name}: duplicate name")
         names.add(sc.name)
         if sc.entry not in entries:
             problems.append(f"{sc.name}: no catalogue entry {sc.entry}")
+            continue
+        profile_of[sc.name] = entries[sc.entry].get("profile")
+        if sc.follows and profile_of.get(sc.follows) != profile_of[sc.name]:
+            problems.append(f"{sc.name}: follows {sc.follows}, which is not an earlier scenario of its profile")
     if problems:
         raise CatalogueError("scenarios", problems)
 

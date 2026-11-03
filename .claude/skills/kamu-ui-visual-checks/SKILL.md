@@ -21,8 +21,10 @@ computed styles of the elements it watches and the screenshots.
 | Template restructuring of a shared component | `compare --tier smoke` |
 | A new page or tab | add its scenario and catalogue entry (below), then `compare --only <name>` |
 
-A run that ends with only expected changes is the evidence for the PR: say which scenarios
-changed and why. Unexpected changes are regressions to fix, not to explain.
+While working, `compare` runs only the scenarios the change reaches (the report's header says
+which and why); before the PR, run `compare --all`. A run that ends with only expected changes is
+the evidence for the PR: say which scenarios changed and why. Unexpected changes are regressions to
+fix, not to explain.
 
 ## Running it
 
@@ -74,7 +76,8 @@ inside the scenario. Changing an artifact means checking the scenarios its `entr
 3. Append the scenario to `SCENARIOS` with the next free number; never renumber, the name is the
    comparison key. Give it `wait_for` and `expect_text`, so an empty or broken page fails loudly.
 4. Mind the order: scenarios share one tab per profile, and pages after account flows and after
-   the data access modal show whether a component's styles leak. Logged-out (`phase: "anon"`)
+   the data access modal show whether a component's styles leak. A scenario that checks another
+   one's leaks names it in `follows`, so the two always run together. Logged-out (`phase: "anon"`)
    scenarios come last.
 5. A scenario that must not change the backend switches controls without saving. Opening the
    rotate-secret page does rotate the secret; the masks hide the new one.

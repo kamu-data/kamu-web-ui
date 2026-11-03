@@ -44,6 +44,7 @@ from e2e.visual.cdp import Chrome
 from e2e.visual.compare import compare
 from e2e.visual.containers import remove_leftovers
 from e2e.visual.coverage import coverage_report
+from e2e.visual.impact import Records, affected, changed_files
 from e2e.visual.progress import CaptureProgress, StampedOutput, Timings
 from e2e.visual.scenarios import SCENARIOS
 from e2e.visual.serve import Served
@@ -74,11 +75,12 @@ class Side:
 
     def __init__(self, ref: str | None, cache: Path, run_dir: Path, log=print):
         if ref is None:
+            self.sha = None
             self.label = f"working tree on {git('rev-parse', '--short', 'HEAD')}"
             self.src = REPO
             self.browser = build(REPO, run_dir / "head-build", run_dir / "build-head.log", log)
         else:
-            sha = git("rev-parse", f"{ref}^{{commit}}")
+            sha = self.sha = git("rev-parse", f"{ref}^{{commit}}")
             self.label = sha[:12]
             self.src = source_of(sha, cache)
             self.browser = build(self.src, cache / "builds" / sha, cache / "builds" / f"{sha}.log", log)
@@ -130,6 +132,13 @@ async def compare_run(args, cache: Path, selection: dict, run_dir: Path, started
     head = Side(args.head, cache, run_dir, log)
     backend = backend_from(args, cache)
     log(f"base {base.label}, head {head.label}, backend {backend.kind}")
+    records = Records(cache / "components.json")
+    if args.all or args.only:
+        reason = "--only" if args.only else "--all"
+    else:
+        selection, reason = affected(selection, changed_files(base.sha, head.sha), head.src, records)
+    selected = sum(len(scenarios) for scenarios in selection.values())
+    log(f"{selected} scenarios selected: {reason}")
     extra_roots = utility_roots(base.src)
     chrome = chrome_major(CHROME)
     # Once per run: the kit may be edited while a long run goes on
@@ -187,6 +196,7 @@ async def compare_run(args, cache: Path, selection: dict, run_dir: Path, started
                 shutil.rmtree(partial, ignore_errors=True)
                 progress = CaptureProgress(f"[{profile_name}] base", profile_name, names, timings, log)
                 report = await capture(scenarios, base_target, browser, partial, progress)
+                records.update("base", profile_name, report)
                 failures += [f"base {r['name']}: {r['error']}" for r in report if r.get("ok") is False]
                 # A baseline with failed scenarios is not reused: the next run captures it again
                 if not failures:
@@ -196,6 +206,7 @@ async def compare_run(args, cache: Path, selection: dict, run_dir: Path, started
             head_dir = profile_dir / "head"
             progress = CaptureProgress(f"[{profile_name}] head", profile_name, names, timings, log)
             report = await capture(scenarios, head_target, browser, head_dir, progress)
+            records.update("head", profile_name, report)
             failures += [f"head {r['name']}: {r['error']}" for r in report if r.get("ok") is False]
 
             diff_dir = profile_dir / "diff"
@@ -233,7 +244,8 @@ async def compare_run(args, cache: Path, selection: dict, run_dir: Path, started
 
     minutes = round((time.monotonic() - started) / 60)
     report_file = run_dir / "report.md"
-    header = ["# Visual comparison", "", f"- base: {base.label}", f"- head: {head.label}", f"- {minutes} min", ""]
+    header = ["# Visual comparison", "", f"- base: {base.label}", f"- head: {head.label}"]
+    header += [f"- {selected} scenarios: {reason}", f"- {minutes} min", ""]
     report_file.write_text("\n".join(header + sections))
     log(f"report: {report_file}")
     if failed:
@@ -371,6 +383,7 @@ def parser() -> argparse.ArgumentParser:
     c.add_argument("--tier", choices=["smoke", "full"], default="full", help="full includes smoke")
     c.add_argument("--unrated", action="store_true", help="also run catalogue entries without a tier")
     c.add_argument("--only", help="only scenarios whose name contains this text, or one of a comma-separated list")
+    c.add_argument("--all", action="store_true", help="every selected scenario, not only those the change reaches")
     backend_options(c)
     c.set_defaults(run=lambda a: asyncio.run(compare_command(a)))
 

@@ -200,7 +200,7 @@
       const tags = new Set();
       for (const el of document.querySelectorAll("*")) {
         const tag = el.tagName.toLowerCase();
-        if (tag.startsWith("app-")) tags.add(tag);
+        if (tag.includes("-")) tags.add(tag);
       }
       return [...tags].sort();
     },

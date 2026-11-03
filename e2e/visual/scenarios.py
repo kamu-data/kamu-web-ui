@@ -45,6 +45,8 @@ class Scenario:
     # "anon": logged out; these come last
     phase: str | None = None
     settle: float = 1.2
+    # The earlier scenario whose leaking styles this one checks: the two always run together
+    follows: str | None = None
 
 
 @dataclass
@@ -311,6 +313,7 @@ SCENARIOS: list[Scenario] = [
         url="/v/search",
         wait_for="mat-checkbox",
         expect_text=["dataset(s) found"],
+        follows="07-data-access-modal-link",
     ),
     Scenario(
         "09-settings-general", "dataset-general-settings", url=f"{DS}/settings/general", wait_for="mat-radio-button"
@@ -403,12 +406,19 @@ SCENARIOS: list[Scenario] = [
         wait_for="app-flows-table, mat-button-toggle-group",
     ),
     # After account flows: its unscoped ng-select rule has leaked, if any
-    Scenario("25-dataset-create-after-flows", "create-dataset", url="/v/new-dataset", wait_for="ng-select"),
+    Scenario(
+        "25-dataset-create-after-flows",
+        "create-dataset",
+        url="/v/new-dataset",
+        wait_for="ng-select",
+        follows="23-account-flows-processes-custom",
+    ),
     Scenario(
         "26-webhook-form-after-flows",
         "webhooks",
         url=f"{DS}/settings/webhooks/new",
         wait_for="app-webhook-form, form",
+        follows="23-account-flows-processes-custom",
     ),
     Scenario("27-access-tokens", "access-tokens", url="/v/settings/access-tokens", wait_for="app-access-tokens-tab"),
     Scenario("28-search-page2", "search-datasets", url="/v/search?page=2", wait_for="app-dataset-list-item"),

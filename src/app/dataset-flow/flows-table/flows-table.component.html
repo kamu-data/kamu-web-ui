@@ -19,20 +19,29 @@
                     @if (element.status !== FlowStatus.Finished) {
                         <img [src]="flowStatusAnimationSrc(element.status)" class="dynamic-icon" />
                     }
-                    <a
-                        [routerLink]="
-                            {
-                                accountName: datasetById(element.datasetId).owner.accountName,
-                                datasetName: datasetById(element.datasetId).name,
-                                flowId: element.flowId,
-                                tab: FlowDetailsTabs.HISTORY,
-                            } | flowDetailsLink
-                        "
-                        class="fw-500 description-link text-dark"
-                    >
-                        {{ flowTypeDescription(element) }}
-                        <span>{{ descriptionDatasetFlowEndOfMessage(element) }}</span>
-                    </a>
+                    @let dataset = datasetById(element.datasetId);
+                    @if (dataset) {
+                        <a
+                            [routerLink]="
+                                {
+                                    accountName: dataset.owner.accountName,
+                                    datasetName: dataset.name,
+                                    flowId: element.flowId,
+                                    tab: FlowDetailsTabs.HISTORY,
+                                } | flowDetailsLink
+                            "
+                            class="fw-500 description-link text-dark"
+                            data-test-id="flow-description-link"
+                        >
+                            {{ flowTypeDescription(element) }}
+                            <span>{{ descriptionDatasetFlowEndOfMessage(element) }}</span>
+                        </a>
+                    } @else {
+                        <span class="fw-500 text-dark" data-test-id="flow-description-text">
+                            {{ flowTypeDescription(element) }}
+                            <span>{{ descriptionDatasetFlowEndOfMessage(element) }}</span>
+                        </span>
+                    }
                     <div class="d-flex flex-row truncate-sub-message pe-4">
                         <div
                             [title]="descriptionDatasetFlowSubMessage(element)"
@@ -116,16 +125,22 @@
             </th>
             <td mat-cell *matCellDef="let element">
                 <div class="d-flex align-items-center ps-3">
-                    <a
-                        [routerLink]="
-                            {
-                                accountName: datasetById(element.datasetId).owner.accountName,
-                                datasetName: datasetById(element.datasetId).name,
-                            } | datasetLink
-                        "
-                        class="text-small"
-                        >{{ datasetById(element.datasetId).name }}</a
-                    >
+                    @let dataset = datasetById(element.datasetId);
+                    @if (dataset) {
+                        <a
+                            [routerLink]="
+                                {
+                                    accountName: dataset.owner.accountName,
+                                    datasetName: dataset.name,
+                                } | datasetLink
+                            "
+                            class="text-small"
+                            data-test-id="flow-dataset-link"
+                            >{{ dataset.name }}</a
+                        >
+                    } @else {
+                        <span class="text-small text-muted" data-test-id="flow-dataset-unknown">-</span>
+                    }
                 </div>
             </td>
         </ng-container>
@@ -140,20 +155,23 @@
                     <mat-icon class="mat-icon-svg-size" svgIcon="show-options" />
                 </button>
                 <mat-menu #tableOptions="matMenu" xPosition="before" [hasBackdrop]="true">
-                    <a
-                        mat-menu-item
-                        [routerLink]="
-                            {
-                                accountName: datasetById(element.datasetId).owner.accountName,
-                                datasetName: datasetById(element.datasetId).name,
-                                flowId: element.flowId,
-                                tab: FlowDetailsTabs.HISTORY,
-                            } | flowDetailsLink
-                        "
-                    >
-                        Details
-                    </a>
-                    <mat-divider />
+                    @let dataset = datasetById(element.datasetId);
+                    @if (dataset) {
+                        <a
+                            mat-menu-item
+                            [routerLink]="
+                                {
+                                    accountName: dataset.owner.accountName,
+                                    datasetName: dataset.name,
+                                    flowId: element.flowId,
+                                    tab: FlowDetailsTabs.HISTORY,
+                                } | flowDetailsLink
+                            "
+                        >
+                            Details
+                        </a>
+                        <mat-divider />
+                    }
                     <button
                         type="button"
                         (click)="abortFlow(element)"

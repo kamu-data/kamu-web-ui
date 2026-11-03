@@ -8,7 +8,7 @@
             [ngClass]="tileWidgetClass(node)"
             target="_blank"
             [attr.data-test-id]="'tile-element-' + i"
-            [href]="getTileItemLink(node)"
+            [attr.href]="getTileItemLink(node)"
         >
             <ng-template #popContent>
                 <div class="fs-12 text-muted">
@@ -20,7 +20,7 @@
                     @if (displayAlias) {
                         <span class="fs-12 fw-bold">Alias:</span>
                         <span class="fs-12">
-                            {{ datasetAliasByDescription(node) }}
+                            {{ datasetAliasByDescription(node) ?? "-" }}
                         </span>
                         <br />
                     }

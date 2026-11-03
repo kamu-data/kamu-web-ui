@@ -136,4 +136,16 @@ describe("TileBaseWidgetComponent", () => {
         const tileElement = getElementByDataTestId(fixture, "tile-element-0", HTMLAnchorElement);
         expect(tileElement.href.includes("kamu/account.tokens.transfers/flow-details/414/history")).toBe(true);
     });
+
+    it(`should leave a tile without a link when its dataset is unknown`, () => {
+        setComponentInput(fixture, "nodes", [
+            { ...structuredClone(mockFlowItemWidgetDataFragments[0]), datasetId: "did:odf:unknown" },
+        ]);
+        fixture.detectChanges();
+
+        expect(component.datasetAliasByDescription(component.nodes[0])).toBeNull();
+        expect(component.getTileItemLink(component.nodes[0])).toBeNull();
+        const tileElement = getElementByDataTestId(fixture, "tile-element-0", HTMLAnchorElement);
+        expect(tileElement.hasAttribute("href")).toBe(false);
+    });
 });

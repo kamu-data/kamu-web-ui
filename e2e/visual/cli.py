@@ -169,7 +169,7 @@ async def compare_run(args, cache: Path, selection: dict, run_dir: Path, started
             if mismatches:
                 raise RuntimeError(
                     f"the {profile_name} backend does not serve the schema the app's GraphQL documents need "
-                    "(choose a matching build with --bin, --release or --image):\n  " + "\n  ".join(mismatches)
+                    f"({profile.schema_hint}):\n  " + "\n  ".join(mismatches)
                 )
 
             base_target, head_target = (

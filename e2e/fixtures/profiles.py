@@ -76,6 +76,9 @@ class WorkspaceProfile:
     other backend is filled afresh in containers that are discarded afterwards; the snapshots mask the
     ids, hashes and times that differ between two fillings."""
 
+    # What to do when the backend lacks part of the app's schema
+    schema_hint = "choose a matching build with --bin, --release or --image"
+
     def __init__(self, name: str, api_port: int):
         self.name = name
         self.api_port = api_port
@@ -148,17 +151,18 @@ class WithDataProfile:
 
     name = "with-data-mt"
     api_port = 8092
+    schema_hint = "pin a newer latest-with-data-mt digest in WithDataProfile.IMAGES; the build options do not apply"
     account = {"login": "kamu", "password": "kamu.dev"}
     # The release workflows only tag `latest-with-data-mt`: each digest pins one build of it
     IMAGES = {
         "cli": PublishedImage(
-            "ghcr.io/kamu-data/kamu-base@sha256:1dde7d0ff65dca505172eb2b9283dd68b74a2e2f22ed5fc544febc79cd7725dc",
+            "ghcr.io/kamu-data/kamu-base@sha256:dcea87d4d02b5d5cdc55e4624f3cf00c0fc9672e5f184bc3333e8f6ef60b715d",
             WORKSPACE,
             f"{WORKSPACE}/.kamu/.kamuconfig",
             ["kamu", "system", "api-server", "--address", "0.0.0.0", "--http-port"],
         ),
         "api-server": PublishedImage(
-            "ghcr.io/kamu-data/kamu-api-server@sha256:a47bde35dfb734b85e33e6707c412c0102dc710fe897d4a6d4d432f72015e890",
+            "ghcr.io/kamu-data/kamu-api-server@sha256:03a5355586801ad3b9f4dc363d0f3b1560c754532bb5dc6137f40a24301c3918",
             "/opt/kamu",
             "/opt/kamu/config.yaml",
             ["/opt/kamu/kamu-api-server", "--multi-tenant", "run", "--address", "0.0.0.0", "--http-port"],

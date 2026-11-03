@@ -1,73 +1,72 @@
 @let snapshot = commitData.snapshot;
 @let neighbours = commitData.neighbours;
 <nav class="commit-navigator" aria-label="Commit navigation">
-    <ul class="pagination mb-0">
-        <li class="page-item" [class.disabled]="!neighbours.older">
-            @if (neighbours.older; as older) {
-                <a
-                    class="page-link"
-                    title="Go to an older commit"
-                    data-test-id="older-commit-link"
-                    [routerLink]="
-                        {
-                            accountName: datasetBasics.owner.accountName,
-                            datasetName: datasetBasics.name,
-                            tab: DatasetViewTypeEnum.Metadata,
-                            section: section,
-                            head: older.head,
-                            steps: commitData.steps,
-                        } | datasetLink
-                    "
-                    ><mat-icon class="pt-1">navigate_before</mat-icon></a
-                >
-            } @else {
-                <span class="page-link" data-test-id="older-commit-disabled"
-                    ><mat-icon class="pt-1">navigate_before</mat-icon></span
-                >
-            }
-        </li>
-        <li class="page-item">
-            <span class="page-link date" data-test-id="commit-label"
-                >As of {{ snapshot.block.systemTime | date: DISPLAY_TIME_FORMAT }}
-                <a
-                    data-test-id="commit-hash-link"
-                    [matTooltip]="snapshot.block.blockHash"
-                    [routerLink]="
-                        {
-                            accountName: datasetBasics.owner.accountName,
-                            datasetName: datasetBasics.name,
-                            blockHash: snapshot.block.blockHash,
-                        } | metadataBlockLink
-                    "
-                    >{{ snapshot.block.blockHash | slice: -8 }}</a
-                ></span
+    <div class="commit-pager">
+        @if (neighbours.older; as older) {
+            <a
+                class="commit-pager__step"
+                title="Older commit"
+                aria-label="Older commit"
+                data-test-id="older-commit-link"
+                [routerLink]="
+                    {
+                        accountName: datasetBasics.owner.accountName,
+                        datasetName: datasetBasics.name,
+                        tab: DatasetViewTypeEnum.Metadata,
+                        section: section,
+                        head: older.head,
+                        steps: commitData.steps,
+                    } | datasetLink
+                "
+                ><mat-icon>navigate_before</mat-icon></a
             >
-        </li>
-        <li class="page-item" [class.disabled]="!neighbours.newer">
-            @if (neighbours.newer; as newer) {
-                <a
-                    class="page-link"
-                    title="Go to a newer commit"
-                    data-test-id="newer-commit-link"
-                    [routerLink]="
-                        {
-                            accountName: datasetBasics.owner.accountName,
-                            datasetName: datasetBasics.name,
-                            tab: DatasetViewTypeEnum.Metadata,
-                            section: section,
-                            head: newer.head,
-                            steps: commitData.steps,
-                        } | datasetLink
-                    "
-                    ><mat-icon class="pt-1">navigate_next</mat-icon></a
-                >
-            } @else {
-                <span class="page-link" data-test-id="newer-commit-disabled"
-                    ><mat-icon class="pt-1">navigate_next</mat-icon></span
-                >
-            }
-        </li>
-    </ul>
+        } @else {
+            <span class="commit-pager__step commit-pager__step--disabled" data-test-id="older-commit-disabled"
+                ><mat-icon>navigate_before</mat-icon></span
+            >
+        }
+
+        @let commitDescription =
+            snapshot.block.blockHash + " · " + (snapshot.block.systemTime | date: DISPLAY_TIME_FORMAT);
+        <a
+            class="commit-pager__label font-monospace"
+            data-test-id="commit-label"
+            [matTooltip]="commitDescription"
+            [attr.aria-label]="'Block ' + commitDescription"
+            [routerLink]="
+                {
+                    accountName: datasetBasics.owner.accountName,
+                    datasetName: datasetBasics.name,
+                    blockHash: snapshot.block.blockHash,
+                } | metadataBlockLink
+            "
+            >{{ snapshot.block.blockHash | slice: -8 }}</a
+        >
+
+        @if (neighbours.newer; as newer) {
+            <a
+                class="commit-pager__step"
+                title="Newer commit"
+                aria-label="Newer commit"
+                data-test-id="newer-commit-link"
+                [routerLink]="
+                    {
+                        accountName: datasetBasics.owner.accountName,
+                        datasetName: datasetBasics.name,
+                        tab: DatasetViewTypeEnum.Metadata,
+                        section: section,
+                        head: newer.head,
+                        steps: commitData.steps,
+                    } | datasetLink
+                "
+                ><mat-icon>navigate_next</mat-icon></a
+            >
+        } @else {
+            <span class="commit-pager__step commit-pager__step--disabled" data-test-id="newer-commit-disabled"
+                ><mat-icon>navigate_next</mat-icon></span
+            >
+        }
+    </div>
 
     @if (snapshot.isLatest) {
         <span class="latest-badge" data-test-id="latest-commit-badge">Latest</span>
@@ -89,7 +88,7 @@
     }
 
     <label class="step-mode">
-        <span class="text-muted me-2">Step through</span>
+        <span class="step-mode__label">Step through</span>
         <select class="form-select form-select-sm" data-test-id="commit-step-mode" (change)="onStepModeChange($event)">
             <option
                 [value]="CommitStepMode.MetadataChanges"

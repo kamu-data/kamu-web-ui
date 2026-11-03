@@ -7,7 +7,7 @@
 
 import { TestBed } from "@angular/core/testing";
 
-import { firstValueFrom, of } from "rxjs";
+import { firstValueFrom, of, throwError } from "rxjs";
 
 import { Apollo } from "apollo-angular";
 
@@ -15,6 +15,7 @@ import { DatasetApi } from "@api/dataset.api";
 import {
     mockBlockAt,
     mockChainBlockPositionsQuery,
+    mockDatasetBlockPositionQuery,
     mockGetDatasetMetadataAsOfQuery,
     mockOlderBlock,
 } from "@api/mock/dataset.mock";
@@ -76,6 +77,7 @@ describe("MetadataSnapshotService", () => {
         });
 
         it("should request the metadata as of an older block", async () => {
+            vi.spyOn(datasetApi, "getBlockPosition").mockReturnValue(of(mockDatasetBlockPositionQuery(mockOlderBlock)));
             vi.spyOn(datasetApi, "getDatasetMetadataAsOf").mockReturnValue(of(mockGetDatasetMetadataAsOfQuery));
 
             const snapshot = await firstValueFrom(service.requestSnapshot(mockDatasetInfo, mockOlderBlock.blockHash));
@@ -83,6 +85,29 @@ describe("MetadataSnapshotService", () => {
             expect(snapshot?.block).toEqual(mockOlderBlock);
             expect(snapshot?.latestBlock).toEqual(mockLatestRootSnapshot.block);
             expect(snapshot?.isLatest).toBe(false);
+        });
+
+        // The backend fails the as-of fields for a block the chain does not have
+        it("should emit no snapshot for a block the chain does not have, without reading as of it", async () => {
+            vi.spyOn(datasetApi, "getBlockPosition").mockReturnValue(of(mockDatasetBlockPositionQuery(null)));
+            const asOfSpy = vi.spyOn(datasetApi, "getDatasetMetadataAsOf");
+
+            const snapshot = await firstValueFrom(service.requestSnapshot(mockDatasetInfo, mockOlderBlock.blockHash));
+
+            expect(snapshot).toBeNull();
+            expect(asOfSpy).not.toHaveBeenCalled();
+        });
+
+        it("should emit no snapshot for a hash the backend cannot read", async () => {
+            vi.spyOn(datasetApi, "getBlockPosition").mockReturnValue(
+                throwError(() => new Error('Failed to parse "Multihash"')),
+            );
+            const asOfSpy = vi.spyOn(datasetApi, "getDatasetMetadataAsOf");
+
+            const snapshot = await firstValueFrom(service.requestSnapshot(mockDatasetInfo, mockOlderBlock.blockHash));
+
+            expect(snapshot).toBeNull();
+            expect(asOfSpy).not.toHaveBeenCalled();
         });
     });
 

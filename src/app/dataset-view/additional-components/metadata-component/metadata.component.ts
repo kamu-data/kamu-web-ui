@@ -79,7 +79,24 @@ export class MetadataComponent {
         return this.datasetMetadataTabData.datasetBasics.kind === DatasetKind.Root;
     }
 
+    /** Whether the shown commit has no metadata of any kind the sections show */
     public get hasNoMetadata(): boolean {
+        const snapshot = this.snapshot;
+        return (
+            !snapshot.schema &&
+            !snapshot.license &&
+            !snapshot.watermark &&
+            !snapshot.pollingSource &&
+            !snapshot.pushSources.length &&
+            !snapshot.transform
+        );
+    }
+
+    /** Whether the latest commit lacks what feeds the dataset: a source for a root, a transformation for a derivative */
+    public get needsDataSource(): boolean {
+        if (!this.snapshot.isLatest) {
+            return false;
+        }
         return this.isRoot
             ? !this.snapshot.pollingSource && !this.snapshot.pushSources.length
             : !this.snapshot.transform;

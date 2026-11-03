@@ -33,6 +33,7 @@ import {
     DatasetAsVersionedFileByVersionQuery,
     DatasetAsVersionedFileDocument,
     DatasetAsVersionedFileQuery,
+    DatasetBlockPositionDocument,
     DatasetByAccountAndDatasetNameDocument,
     DatasetByAccountAndDatasetNameQuery,
     DatasetByIdDocument,
@@ -82,6 +83,7 @@ import {
     mockBlockAt,
     mockChainBlockPositionsQuery,
     mockDatasetBasicsWithPermissionQuery,
+    mockDatasetBlockPositionQuery,
     mockDatasetByAccountAndDatasetNameQuery,
     mockDatasetByIdQuery,
     mockDatasetDataSqlRunResponse,
@@ -293,6 +295,40 @@ describe("DatasetApi", () => {
 
         flush();
     }));
+
+    it("should look a block up by its hash", async () => {
+        const response = mockDatasetBlockPositionQuery(mockOlderBlock);
+        const result = firstValueFrom(
+            service.getBlockPosition({
+                accountName: TEST_LOGIN,
+                datasetName: TEST_DATASET_NAME,
+                blockHash: mockOlderBlock.blockHash,
+            }),
+        );
+
+        const op = controller.expectOne(DatasetBlockPositionDocument);
+        expect(op.operation.variables).toEqual({
+            accountName: TEST_LOGIN,
+            datasetName: TEST_DATASET_NAME,
+            blockHash: mockOlderBlock.blockHash,
+        });
+        op.flush({ data: response });
+
+        const data = await result;
+        expect(data.datasets.byOwnerAndName?.metadata.chain.blockByHash).toEqual(mockOlderBlock);
+    });
+
+    it("should fail looking a block up by a hash the backend cannot parse", async () => {
+        const result = firstValueFrom(
+            service.getBlockPosition({ accountName: TEST_LOGIN, datasetName: TEST_DATASET_NAME, blockHash: "f1620ab" }),
+        );
+
+        controller
+            .expectOne(DatasetBlockPositionDocument)
+            .graphqlErrors([{ message: "Failed to parse \"Multihash\": Value 'f1620ab' is not a valid multihash" }]);
+
+        await expect(result).rejects.toThrowError("is not a valid multihash");
+    });
 
     it("should read the metadata as of a block", fakeAsync(() => {
         const subscription$ = service

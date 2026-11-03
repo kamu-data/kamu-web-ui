@@ -94,10 +94,43 @@ describe("MetadataComponent", () => {
         );
     });
 
-    it("should say an older commit has no metadata, without the links to add it", () => {
-        show({ ...atOlderCommit(mockLatestRootSnapshot), pollingSource: null, pushSources: [] }, true);
+    it("should say an older commit has no metadata, without the links to add a source", () => {
+        show(
+            {
+                ...atOlderCommit(mockLatestRootSnapshot),
+                schema: null,
+                license: null,
+                watermark: null,
+                pollingSource: null,
+                pushSources: [],
+            },
+            true,
+        );
 
         expect(findElementByDataTestId(fixture, "no-metadata-at-commit")).toBeDefined();
+        expect(findElementByDataTestId(fixture, "needs-data-source")).toBeUndefined();
+        expect(findElementByDataTestId(fixture, `metadata-menu-${MetadataTabs.Schema}`)).toBeUndefined();
+    });
+
+    it("should show the license of an older commit that has no source yet", () => {
+        show({ ...atOlderCommit(mockLatestRootSnapshot), schema: null, pollingSource: null, pushSources: [] }, true);
+
+        expect(findElementByDataTestId(fixture, `metadata-menu-${MetadataTabs.License}`)).toBeDefined();
+        expect(findElementByDataTestId(fixture, "no-metadata-at-commit")).toBeUndefined();
+        expect(findElementByDataTestId(fixture, "needs-data-source")).toBeUndefined();
+    });
+
+    it("should ask for a source at the latest commit, beside the metadata it already has", () => {
+        show({ ...mockLatestRootSnapshot, pollingSource: null, pushSources: [] }, true);
+
+        expect(findElementByDataTestId(fixture, "needs-data-source")).toBeDefined();
+        expect(findElementByDataTestId(fixture, `metadata-menu-${MetadataTabs.License}`)).toBeDefined();
+    });
+
+    it("should only ask for a transformation when a derivative dataset has no metadata yet", () => {
+        show({ ...mockLatestDerivedSnapshot, schema: null, license: null, watermark: null, transform: null }, false);
+
+        expect(findElementByDataTestId(fixture, "needs-data-source")).toBeDefined();
         expect(findElementByDataTestId(fixture, `metadata-menu-${MetadataTabs.Schema}`)).toBeUndefined();
     });
 

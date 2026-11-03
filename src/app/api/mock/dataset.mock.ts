@@ -12,6 +12,7 @@ import {
     CompareChainsStatus,
     DataBatchFormat,
     DataSchemaFormat,
+    DatasetBlockPositionQuery,
     DatasetByAccountAndDatasetNameQuery,
     DatasetByIdQuery,
     DatasetChainBlockPositionsQuery,
@@ -27,6 +28,7 @@ import {
     MetadataBlockFragment,
 } from "@api/kamu.graphql.interface";
 import { TEST_LOGIN } from "@api/mock/auth.mock";
+import { MaybeNull } from "@interface/app.types";
 import { DatasetsAccountResponse } from "@interface/dataset.interface";
 
 import { mockMetadataRootPushSourceUpdate } from "src/app/dataset-view/additional-components/data-tabs.mock";
@@ -563,6 +565,22 @@ export const mockOlderBlock: ChainBlockPositionFragment = {
     sequenceNumber: 2,
 };
 
+/** The answer to a block lookup by hash; `null` when the chain has no such block */
+export function mockDatasetBlockPositionQuery(block: MaybeNull<ChainBlockPositionFragment>): DatasetBlockPositionQuery {
+    return {
+        datasets: {
+            __typename: "Datasets",
+            byOwnerAndName: {
+                ...mockDatasetBasicsRootFragment,
+                metadata: {
+                    __typename: "DatasetMetadata",
+                    chain: { __typename: "MetadataChain", blockByHash: block },
+                },
+            },
+        },
+    };
+}
+
 export const mockGetDatasetMetadataAsOfQuery: GetDatasetMetadataAsOfQuery = {
     datasets: {
         __typename: "Datasets",
@@ -571,10 +589,6 @@ export const mockGetDatasetMetadataAsOfQuery: GetDatasetMetadataAsOfQuery = {
             metadata: {
                 __typename: "DatasetMetadata",
                 currentWatermark: "2022-07-30T00:00:00+00:00",
-                chain: {
-                    __typename: "MetadataChain",
-                    blockByHash: mockOlderBlock,
-                },
                 metadataProjection: [
                     {
                         __typename: "MetadataBlockExtended",

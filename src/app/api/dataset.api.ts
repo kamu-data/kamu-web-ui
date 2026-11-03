@@ -34,6 +34,8 @@ import {
     DatasetAsVersionedFileByVersionGQL,
     DatasetAsVersionedFileByVersionQuery,
     DatasetAsVersionedFileQuery,
+    DatasetBlockPositionGQL,
+    DatasetBlockPositionQuery,
     DatasetBlocksEncodedByEventTypeGQL,
     DatasetBlocksEncodedByEventTypeQuery,
     DatasetBlocksSchemaByEventTypeGQL,
@@ -130,6 +132,7 @@ export class DatasetApi {
     private createDatasetAsCollectionGQL = inject(CreateDatasetAsCollectionGQL);
     private createDatasetAsVersionedFileGQL = inject(CreateDatasetAsVersionedFileGQL);
     private datasetMetadataAsOfGQL = inject(GetDatasetMetadataAsOfGQL);
+    private datasetBlockPositionGQL = inject(DatasetBlockPositionGQL);
     private datasetChainBlockPositionsGQL = inject(DatasetChainBlockPositionsGQL);
 
     public createDatasetAsCollection(params: {
@@ -360,6 +363,20 @@ export class DatasetApi {
                     return result.data;
                 }),
             );
+    }
+
+    public getBlockPosition(params: {
+        accountName: string;
+        datasetName: string;
+        blockHash: string;
+    }): Observable<DatasetBlockPositionQuery> {
+        return this.datasetBlockPositionGQL.watch({ variables: { ...params } }).valueChanges.pipe(
+            completeDataOrError(),
+            first(),
+            map((result: ObservableQuery.Result<DatasetBlockPositionQuery, "complete">) => {
+                return result.data;
+            }),
+        );
     }
 
     public getDatasetMetadataAsOf(params: {

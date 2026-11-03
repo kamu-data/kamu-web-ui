@@ -20,7 +20,7 @@ import {
 } from "@common/helpers/base-test.helpers.spec";
 import { DatasetApi } from "@api/dataset.api";
 import { DatasetBasicsFragment } from "@api/kamu.graphql.interface";
-import { mockGetDatasetMetadataAsOfQuery, mockOlderBlock } from "@api/mock/dataset.mock";
+import { mockDatasetBlockPositionQuery, mockGetDatasetMetadataAsOfQuery, mockOlderBlock } from "@api/mock/dataset.mock";
 
 import { mockMetadataRootUpdate } from "src/app/dataset-view/additional-components/data-tabs.mock";
 import { latestMetadataSnapshot } from "src/app/dataset-view/additional-components/metadata-component/metadata-snapshot.helpers";
@@ -92,7 +92,9 @@ describe("metadataPushSourcesTabResolverFn", () => {
         if (asOf.datasets.byOwnerAndName) {
             asOf.datasets.byOwnerAndName.metadata.metadataProjection = [];
         }
-        vi.spyOn(TestBed.inject(DatasetApi), "getDatasetMetadataAsOf").mockReturnValue(of(asOf));
+        const datasetApi = TestBed.inject(DatasetApi);
+        vi.spyOn(datasetApi, "getBlockPosition").mockReturnValue(of(mockDatasetBlockPositionQuery(mockOlderBlock)));
+        vi.spyOn(datasetApi, "getDatasetMetadataAsOf").mockReturnValue(of(asOf));
         vi.spyOn(datasetService, "datasetChanges", "get").mockReturnValue(of(mockDatasetBasicsRootFragment));
         vi.spyOn(datasetSubsService, "metadataSchemaChanges", "get").mockReturnValue(of(mockMetadataRootUpdate));
 

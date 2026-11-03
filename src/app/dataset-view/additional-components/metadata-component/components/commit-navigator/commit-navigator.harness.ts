@@ -17,7 +17,6 @@ export class CommitNavigatorHarness extends ComponentHarness {
     private static readonly OLDER_LINK_TEST_ID = "older-commit-link";
     private static readonly NEWER_LINK_TEST_ID = "newer-commit-link";
     private static readonly LABEL_TEST_ID = "commit-label";
-    private static readonly HASH_LINK_TEST_ID = "commit-hash-link";
     private static readonly LATEST_BADGE_TEST_ID = "latest-commit-badge";
     private static readonly LATEST_LINK_TEST_ID = "latest-commit-link";
     private static readonly STEP_MODE_TEST_ID = "commit-step-mode";
@@ -29,7 +28,6 @@ export class CommitNavigatorHarness extends ComponentHarness {
         `[data-test-id="${CommitNavigatorHarness.NEWER_LINK_TEST_ID}"]`,
     );
     private readonly locatorLabel = this.locatorFor(`[data-test-id="${CommitNavigatorHarness.LABEL_TEST_ID}"]`);
-    private readonly locatorHashLink = this.locatorFor(`[data-test-id="${CommitNavigatorHarness.HASH_LINK_TEST_ID}"]`);
     private readonly locatorLatestBadge = this.locatorForOptional(
         `[data-test-id="${CommitNavigatorHarness.LATEST_BADGE_TEST_ID}"]`,
     );
@@ -50,6 +48,7 @@ export class CommitNavigatorHarness extends ComponentHarness {
         return link ? link.getAttribute("href") : null;
     }
 
+    /** The short hash of the shown block */
     public async getLabel(): Promise<string> {
         const label = await this.locatorLabel();
         const text = await label.text();
@@ -57,8 +56,14 @@ export class CommitNavigatorHarness extends ComponentHarness {
     }
 
     public async getBlockUrl(): Promise<MaybeNull<string>> {
-        const link = await this.locatorHashLink();
-        return link.getAttribute("href");
+        const label = await this.locatorLabel();
+        return label.getAttribute("href");
+    }
+
+    /** The full hash and commit time of the shown block, as its tooltip and accessible name give them */
+    public async getBlockDescription(): Promise<MaybeNull<string>> {
+        const label = await this.locatorLabel();
+        return label.getAttribute("aria-label");
     }
 
     public async isLatest(): Promise<boolean> {

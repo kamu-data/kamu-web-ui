@@ -6,6 +6,52 @@
             [section]="activeTab"
         />
 
+        @if (needsDataSource) {
+            @if (isRoot) {
+                <h3 class="text-center mt-4" data-test-id="needs-data-source">
+                    There is no source yet. Need to add
+                    <a
+                        class="add-link"
+                        [routerLink]="
+                            {
+                                accountName: datasetMetadataTabData.datasetBasics.owner.accountName,
+                                datasetName: datasetMetadataTabData.datasetBasics.name,
+                            } | sourceEventEditorLink: SourceEventEditor.AddPollingSource
+                        "
+                    >
+                        Polling source event</a
+                    >
+                    or
+                    <a
+                        class="add-link"
+                        [routerLink]="
+                            {
+                                accountName: datasetMetadataTabData.datasetBasics.owner.accountName,
+                                datasetName: datasetMetadataTabData.datasetBasics.name,
+                            } | sourceEventEditorLink: SourceEventEditor.AddPushSource
+                        "
+                    >
+                        Push source event</a
+                    >
+                </h3>
+            } @else {
+                <h3 class="text-center" data-test-id="needs-data-source">
+                    There is no transformation yet. Need to add
+                    <a
+                        class="add-link"
+                        [routerLink]="
+                            {
+                                accountName: datasetMetadataTabData.datasetBasics.owner.accountName,
+                                datasetName: datasetMetadataTabData.datasetBasics.name,
+                            } | sourceEventEditorLink: SourceEventEditor.SetTransform
+                        "
+                    >
+                        SetTransform event</a
+                    >
+                </h3>
+            }
+        }
+
         @if (!hasNoMetadata) {
             <div class="container-details">
                 <div class="sidebar mt-3">
@@ -48,54 +94,10 @@
                     </div>
                 </div>
             </div>
-        } @else {
-            @if (!snapshot.isLatest) {
-                <h3 class="text-center mt-4" data-test-id="no-metadata-at-commit">
-                    There is no metadata as of this commit
-                </h3>
-            } @else if (isRoot) {
-                <h3 class="text-center mt-4">
-                    There is no metadata. Need to add
-                    <a
-                        class="add-link"
-                        [routerLink]="
-                            {
-                                accountName: datasetMetadataTabData.datasetBasics.owner.accountName,
-                                datasetName: datasetMetadataTabData.datasetBasics.name,
-                            } | sourceEventEditorLink: SourceEventEditor.AddPollingSource
-                        "
-                    >
-                        Polling source event</a
-                    >
-                    or
-                    <a
-                        class="add-link"
-                        [routerLink]="
-                            {
-                                accountName: datasetMetadataTabData.datasetBasics.owner.accountName,
-                                datasetName: datasetMetadataTabData.datasetBasics.name,
-                            } | sourceEventEditorLink: SourceEventEditor.AddPushSource
-                        "
-                    >
-                        Push source event</a
-                    >
-                </h3>
-            } @else {
-                <h3 class="text-center">
-                    There is no metadata. Need to add
-                    <a
-                        class="add-link"
-                        [routerLink]="
-                            {
-                                accountName: datasetMetadataTabData.datasetBasics.owner.accountName,
-                                datasetName: datasetMetadataTabData.datasetBasics.name,
-                            } | sourceEventEditorLink: SourceEventEditor.SetTransform
-                        "
-                    >
-                        SetTransform event</a
-                    >
-                </h3>
-            }
+        } @else if (!snapshot.isLatest) {
+            <h3 class="text-center mt-4" data-test-id="no-metadata-at-commit">
+                There is no metadata as of this commit
+            </h3>
         }
     </div>
 </div>

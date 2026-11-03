@@ -7,7 +7,7 @@
 
 import { inject, Injectable } from "@angular/core";
 
-import { EMPTY, expand, forkJoin, map, Observable, of, reduce, switchMap, take } from "rxjs";
+import { catchError, EMPTY, expand, forkJoin, map, Observable, of, reduce, switchMap, take } from "rxjs";
 
 import { DatasetApi } from "@api/dataset.api";
 import { ChainBlockPositionFragment, MetadataEventType } from "@api/kamu.graphql.interface";
@@ -46,7 +46,7 @@ export class MetadataSnapshotService {
 
     /**
      * The metadata as of `head`, or the latest metadata when `head` is missing.
-     * Emits `null` when the chain has no block with that hash.
+     * Emits `null` when the chain has no block with that hash, or the backend cannot read it as one.
      */
     public requestSnapshot(info: DatasetInfo, head: MaybeUndefined<string>): Observable<MaybeNull<MetadataSnapshot>> {
         return this.datasetSubsService.metadataSchemaChanges.pipe(
@@ -56,9 +56,16 @@ export class MetadataSnapshotService {
                 if (!head || head === latest.block.blockHash) {
                     return of(latest);
                 }
-                return this.datasetApi
-                    .getDatasetMetadataAsOf({ ...info, head })
-                    .pipe(map((data) => metadataSnapshotAt(data, latest.latestBlock)));
+                // The as-of fields fail for a block the chain does not have, so the block is checked first
+                return this.requestBlock(info, head).pipe(
+                    switchMap((block) =>
+                        block
+                            ? this.datasetApi
+                                  .getDatasetMetadataAsOf({ ...info, head })
+                                  .pipe(map((data) => metadataSnapshotAt(data, block, latest.latestBlock)))
+                            : of(null),
+                    ),
+                );
             }),
         );
     }
@@ -112,6 +119,13 @@ export class MetadataSnapshotService {
 
     private stepTo(block: ChainBlockPositionFragment, snapshot: MetadataSnapshot): CommitStep {
         return block.blockHash === snapshot.latestBlock.blockHash ? {} : { head: block.blockHash };
+    }
+
+    private requestBlock(info: DatasetInfo, blockHash: string): Observable<MaybeNull<ChainBlockPositionFragment>> {
+        return this.datasetApi.getBlockPosition({ ...info, blockHash }).pipe(
+            map((data) => data.datasets.byOwnerAndName?.metadata.chain.blockByHash ?? null),
+            catchError(() => of(null)),
+        );
     }
 
     private requestBlockAt(info: DatasetInfo, page: number): Observable<MaybeNull<ChainBlockPositionFragment>> {

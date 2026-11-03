@@ -3,11 +3,6 @@ query getDatasetMetadataAsOf($accountName: AccountName!, $datasetName: DatasetNa
     byOwnerAndName(accountName: $accountName, datasetName: $datasetName) {
       ...DatasetBasics
       metadata {
-        chain {
-          blockByHash(hash: $head) {
-            ...ChainBlockPosition
-          }
-        }
         currentWatermark(head: $head)
         metadataProjection(
           eventTypes: [SET_DATA_SCHEMA, SET_POLLING_SOURCE, ADD_PUSH_SOURCE, SET_TRANSFORM, SET_LICENSE]

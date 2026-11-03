@@ -7933,6 +7933,21 @@ export type GetDatasetBasicsWithPermissionsQuery = { datasets: { __typename: 'Da
       & DatasetPermissionsFragment
     ) | null } };
 
+export type DatasetBlockPositionQueryVariables = Exact<{
+  accountName: Scalars['AccountName']['input'];
+  datasetName: Scalars['DatasetName']['input'];
+  blockHash: Scalars['Multihash']['input'];
+}>;
+
+
+export type DatasetBlockPositionQuery = { datasets: { __typename: 'Datasets', byOwnerAndName?: (
+      { __typename: 'Dataset', metadata: { __typename: 'DatasetMetadata', chain: { __typename: 'MetadataChain', blockByHash?: (
+            { __typename: 'MetadataBlockExtended' }
+            & ChainBlockPositionFragment
+          ) | null } } }
+      & DatasetBasicsFragment
+    ) | null } };
+
 export type DatasetBlocksEncodedByEventTypeQueryVariables = Exact<{
   accountName: Scalars['AccountName']['input'];
   datasetName: Scalars['DatasetName']['input'];
@@ -8155,10 +8170,7 @@ export type GetDatasetMetadataAsOfQueryVariables = Exact<{
 
 
 export type GetDatasetMetadataAsOfQuery = { datasets: { __typename: 'Datasets', byOwnerAndName?: (
-      { __typename: 'Dataset', metadata: { __typename: 'DatasetMetadata', currentWatermark?: string | null, chain: { __typename: 'MetadataChain', blockByHash?: (
-            { __typename: 'MetadataBlockExtended' }
-            & ChainBlockPositionFragment
-          ) | null }, metadataProjection: Array<{ __typename: 'MetadataBlockExtended', event:
+      { __typename: 'Dataset', metadata: { __typename: 'DatasetMetadata', currentWatermark?: string | null, metadataProjection: Array<{ __typename: 'MetadataBlockExtended', event:
             | { __typename: 'AddData' }
             | (
               { __typename: 'AddPushSource' }
@@ -13214,6 +13226,34 @@ ${DatasetPermissionsFragmentDoc}`;
       super(apollo);
     }
   }
+export const DatasetBlockPositionDocument = gql`
+    query datasetBlockPosition($accountName: AccountName!, $datasetName: DatasetName!, $blockHash: Multihash!) {
+  datasets {
+    byOwnerAndName(accountName: $accountName, datasetName: $datasetName) {
+      ...DatasetBasics
+      metadata {
+        chain {
+          blockByHash(hash: $blockHash) {
+            ...ChainBlockPosition
+          }
+        }
+      }
+    }
+  }
+}
+    ${DatasetBasicsFragmentDoc}
+${ChainBlockPositionFragmentDoc}`;
+
+  @Injectable({
+    providedIn: 'root'
+  })
+  export class DatasetBlockPositionGQL extends Apollo.Query<DatasetBlockPositionQuery, DatasetBlockPositionQueryVariables> {
+    document = DatasetBlockPositionDocument;
+    
+    constructor(apollo: Apollo.Apollo) {
+      super(apollo);
+    }
+  }
 export const DatasetBlocksEncodedByEventTypeDocument = gql`
     query datasetBlocksEncodedByEventType($accountName: AccountName!, $datasetName: DatasetName!, $eventTypes: [MetadataProjectionEventType!]!, $encoding: MetadataManifestFormat!) {
   datasets {
@@ -13604,11 +13644,6 @@ export const GetDatasetMetadataAsOfDocument = gql`
     byOwnerAndName(accountName: $accountName, datasetName: $datasetName) {
       ...DatasetBasics
       metadata {
-        chain {
-          blockByHash(hash: $head) {
-            ...ChainBlockPosition
-          }
-        }
         currentWatermark(head: $head)
         metadataProjection(
           eventTypes: [SET_DATA_SCHEMA, SET_POLLING_SOURCE, ADD_PUSH_SOURCE, SET_TRANSFORM, SET_LICENSE]
@@ -13632,7 +13667,6 @@ export const GetDatasetMetadataAsOfDocument = gql`
   }
 }
     ${DatasetBasicsFragmentDoc}
-${ChainBlockPositionFragmentDoc}
 ${DataSchemaInfoFragmentDoc}
 ${SetPollingSourceEventFragmentDoc}
 ${AddPushSourceEventFragmentDoc}

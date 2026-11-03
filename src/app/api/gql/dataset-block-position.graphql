@@ -1,0 +1,14 @@
+query datasetBlockPosition($accountName: AccountName!, $datasetName: DatasetName!, $blockHash: Multihash!) {
+  datasets {
+    byOwnerAndName(accountName: $accountName, datasetName: $datasetName) {
+      ...DatasetBasics
+      metadata {
+        chain {
+          blockByHash(hash: $blockHash) {
+            ...ChainBlockPosition
+          }
+        }
+      }
+    }
+  }
+}

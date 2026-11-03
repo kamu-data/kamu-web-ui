@@ -14,7 +14,7 @@ import { Apollo } from "apollo-angular";
 
 import { expectPageNotFoundRedirect, expectRedirectTo, routeSnapshot } from "@common/helpers/base-test.helpers.spec";
 import { DatasetApi } from "@api/dataset.api";
-import { mockGetDatasetMetadataAsOfQuery, mockOlderBlock } from "@api/mock/dataset.mock";
+import { mockDatasetBlockPositionQuery, mockGetDatasetMetadataAsOfQuery, mockOlderBlock } from "@api/mock/dataset.mock";
 
 import { mockMetadataRootUpdate } from "src/app/dataset-view/additional-components/data-tabs.mock";
 import { MetadataTabs } from "src/app/dataset-view/additional-components/metadata-component/metadata.constants";
@@ -78,6 +78,7 @@ describe("requestMetadataTabData", () => {
     });
 
     it("should emit the metadata as of the block in the head", async () => {
+        vi.spyOn(datasetApi, "getBlockPosition").mockReturnValue(of(mockDatasetBlockPositionQuery(mockOlderBlock)));
         const asOfSpy = vi
             .spyOn(datasetApi, "getDatasetMetadataAsOf")
             .mockReturnValue(of(mockGetDatasetMetadataAsOfQuery));
@@ -97,6 +98,7 @@ describe("requestMetadataTabData", () => {
     });
 
     it("should use the first head when the parameter repeats", async () => {
+        vi.spyOn(datasetApi, "getBlockPosition").mockReturnValue(of(mockDatasetBlockPositionQuery(mockOlderBlock)));
         const asOfSpy = vi
             .spyOn(datasetApi, "getDatasetMetadataAsOf")
             .mockReturnValue(of(mockGetDatasetMetadataAsOfQuery));
@@ -121,11 +123,19 @@ describe("requestMetadataTabData", () => {
     });
 
     it("should redirect to the latest metadata for a head the chain does not have", async () => {
-        const unknownBlock = structuredClone(mockGetDatasetMetadataAsOfQuery);
-        if (unknownBlock.datasets.byOwnerAndName) {
-            unknownBlock.datasets.byOwnerAndName.metadata.chain.blockByHash = null;
-        }
-        vi.spyOn(datasetApi, "getDatasetMetadataAsOf").mockReturnValue(of(unknownBlock));
+        vi.spyOn(datasetApi, "getBlockPosition").mockReturnValue(of(mockDatasetBlockPositionQuery(null)));
+        const asOfSpy = vi.spyOn(datasetApi, "getDatasetMetadataAsOf");
+
+        const data = await request(licenseRoute({ [ProjectLinks.URL_QUERY_PARAM_HEAD]: mockOlderBlock.blockHash }));
+
+        expectRedirectTo(data, `${METADATA_URL}/${MetadataTabs.License}`);
+        expect(asOfSpy).not.toHaveBeenCalled();
+    });
+
+    it("should redirect to the latest metadata for a head the backend cannot read as a block hash", async () => {
+        vi.spyOn(datasetApi, "getBlockPosition").mockReturnValue(
+            throwError(() => new Error('Failed to parse "Multihash"')),
+        );
 
         const data = await request(licenseRoute({ [ProjectLinks.URL_QUERY_PARAM_HEAD]: mockOlderBlock.blockHash }));
 

@@ -11,7 +11,6 @@ import {
     DatasetMetadataSummaryFragment,
     GetDatasetMetadataAsOfQuery,
 } from "@api/kamu.graphql.interface";
-import { MaybeNull } from "@interface/app.types";
 
 import { MetadataSnapshot } from "src/app/dataset-view/additional-components/metadata-component/metadata.types";
 
@@ -39,16 +38,13 @@ export function latestMetadataSnapshot(metadataSummary: DatasetMetadataSummaryFr
     };
 }
 
-/** The snapshot as of the block the query asked for, or `null` when the chain has no such block */
+/** The snapshot as of `block`, from the metadata the query read as of it */
 export function metadataSnapshotAt(
     data: GetDatasetMetadataAsOfQuery,
+    block: ChainBlockPositionFragment,
     latestBlock: ChainBlockPositionFragment,
-): MaybeNull<MetadataSnapshot> {
-    const metadata = data.datasets.byOwnerAndName?.metadata;
-    const block = metadata?.chain.blockByHash;
-    if (!metadata || !block) {
-        return null;
-    }
+): MetadataSnapshot {
+    const metadata = requireValue(data.datasets.byOwnerAndName, "Dataset not found").metadata;
 
     const snapshot: MetadataSnapshot = {
         block,

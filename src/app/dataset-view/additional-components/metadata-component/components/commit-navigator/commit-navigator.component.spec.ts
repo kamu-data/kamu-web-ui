@@ -6,10 +6,12 @@
  */
 
 import { TestbedHarnessEnvironment } from "@angular/cdk/testing/testbed";
+import { formatDate } from "@angular/common";
 import { ComponentFixture, TestBed } from "@angular/core/testing";
 import { provideRouter } from "@angular/router";
 
 import { registerMatSvgIcons, setComponentInput, stubMethod } from "@common/helpers/base-test.helpers.spec";
+import AppValues from "@common/values/app.values";
 import { mockOlderBlock } from "@api/mock/dataset.mock";
 
 import { CommitNavigatorComponent } from "src/app/dataset-view/additional-components/metadata-component/components/commit-navigator/commit-navigator.component";
@@ -59,7 +61,10 @@ describe("CommitNavigatorComponent", () => {
         const latestBlock = mockLatestRootSnapshot.block;
 
         expect(await harness.isLatest()).toBe(true);
-        expect(await harness.getLabel()).toContain(latestBlock.blockHash.slice(-8));
+        expect(await harness.getLabel()).toEqual(latestBlock.blockHash.slice(-8));
+        expect(await harness.getBlockDescription()).toEqual(
+            `Block ${latestBlock.blockHash} · ${formatDate(latestBlock.systemTime, AppValues.DISPLAY_TIME_FORMAT, "en-US")}`,
+        );
         expect(await harness.getBlockUrl()).toEqual(
             `${DATASET_URL}/${ProjectLinks.URL_BLOCK}/${latestBlock.blockHash}`,
         );
@@ -73,7 +78,7 @@ describe("CommitNavigatorComponent", () => {
         setComponentInput(fixture, "commitData", olderCommitData);
 
         expect(await harness.isLatest()).toBe(false);
-        expect(await harness.getLabel()).toContain(mockOlderBlock.blockHash.slice(-8));
+        expect(await harness.getLabel()).toEqual(mockOlderBlock.blockHash.slice(-8));
         expect(await harness.getOlderCommitUrl()).toBeNull();
         expect(await harness.getNewerCommitUrl()).toEqual(`${LICENSE_URL}?steps=all`);
         expect(await harness.getLatestCommitUrl()).toEqual(`${LICENSE_URL}?steps=all`);

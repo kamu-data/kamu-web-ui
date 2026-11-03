@@ -29,7 +29,11 @@ describe("metadata snapshot helpers", () => {
     });
 
     it("should build the snapshot as of a block from the projected events", () => {
-        const snapshot = metadataSnapshotAt(mockGetDatasetMetadataAsOfQuery, mockLatestRootSnapshot.latestBlock);
+        const snapshot = metadataSnapshotAt(
+            mockGetDatasetMetadataAsOfQuery,
+            mockOlderBlock,
+            mockLatestRootSnapshot.latestBlock,
+        );
 
         expect(snapshot).toEqual({
             block: mockOlderBlock,
@@ -45,9 +49,9 @@ describe("metadata snapshot helpers", () => {
     });
 
     it("should mark the snapshot as of the latest block as latest", () => {
-        const snapshot = metadataSnapshotAt(mockGetDatasetMetadataAsOfQuery, mockOlderBlock);
+        const snapshot = metadataSnapshotAt(mockGetDatasetMetadataAsOfQuery, mockOlderBlock, mockOlderBlock);
 
-        expect(snapshot?.isLatest).toBe(true);
+        expect(snapshot.isLatest).toBe(true);
     });
 
     it("should mark a block committed after the loaded latest one as latest", () => {
@@ -57,17 +61,8 @@ describe("metadata snapshot helpers", () => {
             sequenceNumber: mockOlderBlock.sequenceNumber - 1,
         };
 
-        const snapshot = metadataSnapshotAt(mockGetDatasetMetadataAsOfQuery, loadedLatest);
+        const snapshot = metadataSnapshotAt(mockGetDatasetMetadataAsOfQuery, mockOlderBlock, loadedLatest);
 
-        expect(snapshot?.isLatest).toBe(true);
-    });
-
-    it("should give no snapshot for a block the chain does not have", () => {
-        const unknownBlock = structuredClone(mockGetDatasetMetadataAsOfQuery);
-        if (unknownBlock.datasets.byOwnerAndName) {
-            unknownBlock.datasets.byOwnerAndName.metadata.chain.blockByHash = null;
-        }
-
-        expect(metadataSnapshotAt(unknownBlock, mockLatestRootSnapshot.latestBlock)).toBeNull();
+        expect(snapshot.isLatest).toBe(true);
     });
 });

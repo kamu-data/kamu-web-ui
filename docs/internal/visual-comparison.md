@@ -188,10 +188,12 @@ key under its current name.
    **base** tree's `var.scss` matches. Each element is keyed by a class-free path (tag and
    position), so a changed class shows as a changed field rather than a different element. Its
    style is stored as a delta against a bare element of the same tag, and `::before`/`::after`
-   against the element.
+   against the element. A custom property (a Material token, a Monaco variable) is recorded only
+   where it is set, where its value differs from the parent's: a changed token shows once, at its
+   source, and in the resolved properties it changes everywhere else.
 4. **Forced states**: for the `FORCE_TARGETS` in `scenarios.py`, `:hover`, `:focus` (with
-   `:focus-visible`) and `:active` are forced through CDP and the subtree snapshotted again after
-   the transition.
+   `:focus-visible`) and `:active` are forced through CDP and the target's parent subtree (the
+   target, its descendants and its siblings) snapshotted again after the transition.
 
 `compare.py` rebuilds full styles from the deltas and compares them exactly; screenshots are
 compared per pixel, ignoring channel differences up to 16. Verdicts: `same`, `changed` (styles

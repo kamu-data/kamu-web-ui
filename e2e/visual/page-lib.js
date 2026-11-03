@@ -56,12 +56,19 @@
 
   const VOLATILE_CLASS = /^(ng-tns-|cdk-(focused|mouse-focused|keyboard-focused|program-focused|touch-focused))/;
 
+  // A custom property is kept where it is set: where its value differs from the parent's (for a
+  // pseudo-element, from its element's). Its inherited copies on every descendant would make up most
+  // of a snapshot and say nothing the resolved properties do not
   function styleOf(el, pseudo) {
     const cs = getComputedStyle(el, pseudo);
+    const from = pseudo ? el : el.parentElement;
+    const inherited = from ? getComputedStyle(from) : null;
     const out = {};
     for (let i = 0; i < cs.length; i++) {
       const p = cs[i];
-      out[p] = cs.getPropertyValue(p);
+      const value = cs.getPropertyValue(p);
+      if (inherited && p.startsWith("--") && inherited.getPropertyValue(p) === value) continue;
+      out[p] = value;
     }
     return out;
   }
@@ -90,7 +97,8 @@
   function delta(full, base) {
     const out = {};
     for (const [k, v] of Object.entries(full)) if (base[k] !== v) out[k] = v;
-    for (const k of Object.keys(base)) if (!(k in full)) out[k] = null;
+    // A custom property missing here is inherited, not removed
+    for (const k of Object.keys(base)) if (!(k in full) && !k.startsWith("--")) out[k] = null;
     return out;
   }
 
@@ -191,9 +199,11 @@
     defaults() {
       return defaults;
     },
+    // A forced state reaches the element, its descendants and its siblings (input:focus ~ .ripple):
+    // its parent's subtree, not the whole root around it
     snapFor(target) {
       const out = {};
-      snapSubtree(target.closest(ROOTS) ?? target, out);
+      snapSubtree(target.parentElement ?? target, out);
       return out;
     },
     components() {

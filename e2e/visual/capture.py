@@ -60,7 +60,8 @@ async def capture(scenarios, target: Target, browser: Browser, out_dir: Path, do
         entry["elements"] = len(elements)
         defaults = await s.eval("window.__cap.defaults()")
         data = json.dumps({"defaults": defaults, "elements": elements}).encode()
-        (out_dir / "styles" / f"{sc.name}.json.gz").write_bytes(gzip.compress(data))
+        # Level 9 takes seconds on a heavy page for a few percent less
+        (out_dir / "styles" / f"{sc.name}.json.gz").write_bytes(gzip.compress(data, compresslevel=6))
 
     report = await run_scenarios(scenarios, target, browser, out_dir, snapshot, done)
     (out_dir / "report.json").write_text(json.dumps(report, indent=2))

@@ -184,7 +184,8 @@ differ), `pixels-only` (rechecked: `noise` if a head capture alone matches the b
 | External hosts (avatars) | Chrome resolves only localhost and Google Fonts |
 | Two captures at once | `capture.lock`: Chrome renders glyphs slightly differently under load |
 | Hover and focus left over | the mouse is parked and focus blurred before each capture; overlays left open fail the next scenario |
-| Animations and transitions | a settle delay after each scenario, longer after forced states |
+| Animations and transitions | a settle delay after each scenario; after a hover or a forced state and around the screenshot, a wait until no transition or finite animation runs, so a loaded machine does not catch a fade halfway |
+| A hover moved by a reflow | the screenshot captures beyond the viewport, which resizes it, only for pages taller than the viewport |
 | A changing backend | nothing is scheduled; the seed waits until no flow is waiting, running or retrying |
 
 ## Caches and keys

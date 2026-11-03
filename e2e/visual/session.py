@@ -223,7 +223,21 @@ class Session:
         if not point:
             raise RuntimeError(f"hover: no element {selector}")
         await self.cdp.send("Input.dispatchMouseEvent", {"type": "mouseMoved", "x": point["x"], "y": point["y"]})
-        await asyncio.sleep(0.5)
+        await self.transitions_done()
+
+    async def transitions_done(self, limit: float = 5) -> None:
+        """Waits until no CSS transition or finite animation runs, so a snapshot never catches a fade
+        halfway, however loaded the machine is. Endless animations (spinners) do not count."""
+        await asyncio.sleep(0.05)
+        deadline = time.monotonic() + limit
+        while time.monotonic() < deadline:
+            running = await self.eval(
+                'document.getAnimations().some((a) => a.playState === "running"'
+                " && a.effect?.getComputedTiming().endTime !== Infinity)"
+            )
+            if not running:
+                return
+            await asyncio.sleep(0.1)
 
     async def settle(self, seconds: float = 1.2, park_mouse: bool = True) -> None:
         await self.eval("document.activeElement && document.activeElement.blur && document.activeElement.blur()")
@@ -240,7 +254,9 @@ class Session:
             "Page.captureScreenshot",
             {
                 "format": "png",
-                "captureBeyondViewport": True,
+                # Capturing beyond the viewport resizes it and reflows the page under a hovering mouse:
+                # only for pages taller than the viewport
+                "captureBeyondViewport": height > self.viewport["height"],
                 "clip": {
                     "x": 0,
                     "y": 0,

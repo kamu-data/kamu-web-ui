@@ -8,7 +8,6 @@
 
 from __future__ import annotations
 
-import asyncio
 import gzip
 import json
 from pathlib import Path
@@ -32,14 +31,14 @@ async def forced_snapshots(s) -> dict:
                     "CSS.forcePseudoState", {"nodeId": node_id, "forcedPseudoClasses": FORCED_CLASSES[state]}
                 )
                 # State layers fade in over 75-150 ms; read them once the transition is over
-                await asyncio.sleep(0.35)
+                await s.transitions_done()
                 obj = (await s.cdp.send("DOM.resolveNode", {"nodeId": node_id}))["object"]
                 result = await s.cdp.send(
                     "Runtime.callFunctionOn",
                     {"objectId": obj["objectId"], "functionDeclaration": SNAP_FOR, "returnByValue": True},
                 )
                 await s.cdp.send("CSS.forcePseudoState", {"nodeId": node_id, "forcedPseudoClasses": []})
-                await asyncio.sleep(0.35)
+                await s.transitions_done()
                 value = json.loads(result["result"]["value"])
                 for element_path, record in value["snap"].items():
                     out[f"{state}@{value['key']}|{element_path}"] = record
@@ -51,7 +50,11 @@ async def capture(scenarios, target: Target, browser: Browser, out_dir: Path, do
     (out_dir / "styles").mkdir(parents=True, exist_ok=True)
 
     async def snapshot(s, sc, entry) -> None:
+        # Masking and the full-page screenshot reflow the page under a hovering mouse, which can start a
+        # fade on another element
+        await s.transitions_done()
         await s.screenshot(out_dir / f"{sc.name}.png")
+        await s.transitions_done()
         elements = await s.eval("window.__cap.snapAll()")
         elements.update(await forced_snapshots(s))
         entry["elements"] = len(elements)

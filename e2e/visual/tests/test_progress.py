@@ -66,6 +66,16 @@ class ProgressTest(unittest.TestCase):
         progress({"name": "01-a", "ok": True, "elements": 1, "seconds": 120})
         self.assertEqual(self.lines[-1], "[seed] base 1/3 ok   01-a 1, ~4 min left")
 
+    def test_scenarios_finishing_out_of_order_with_parallel_workers(self):
+        self.file.write_text(json.dumps({"seed/01-a": 120, "seed/02-b": 120, "seed/03-c": 120}))
+        progress = CaptureProgress(
+            "[seed] head", "seed", ["01-a", "02-b", "03-c"], Timings(self.file), self.lines.append, workers=3
+        )
+        self.assertEqual(self.lines[-1], "[seed] head: capturing 3 scenarios, ~2 min")
+        progress({"name": "03-c", "ok": True, "elements": 1, "seconds": 100})
+        self.assertEqual(self.lines[-1], "[seed] head 1/3 ok   03-c 1, ~2 min left")
+        self.assertEqual(json.loads(self.file.read_text())["seed/03-c"], 100)
+
     def test_an_unreadable_file_is_no_history(self):
         self.file.write_text("{not json")
         self.assertIsNone(Timings(self.file).estimate(["seed/01-a"]))

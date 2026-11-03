@@ -7,4 +7,6 @@ import sys
 
 from e2e.visual.cli import main
 
-sys.exit(main())
+# Worker processes import this module too; only the command runs the CLI
+if __name__ == "__main__":
+    sys.exit(main())

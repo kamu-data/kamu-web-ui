@@ -58,6 +58,7 @@ to `~/.cache/kamu-ui-visual/` (`KAMU_VISUAL_CACHE` to move it).
 | `--unrated` | also run catalogue entries nobody has rated yet |
 | `--only <text>[,<text>…]` | only scenarios whose name contains one of the parts |
 | `--all` | every scenario of the tier, not only those the change reaches (below) |
+| `--jobs <n>` | capture processes: a quarter of the cores, at most 8 |
 | backend options | see below; `probe` takes them too |
 
 By default `compare` runs only the scenarios the change between base and head can alter: the
@@ -118,6 +119,6 @@ Accounts: `kamu` (admin, password `kamu.dev`), `alice`, `bob`.
 | [`fixtures/`](fixtures/) | data profiles, the seed and its inventory |
 | [`visual/`](visual/) | the kit: CLI, browser session, capture, comparison, backends |
 | `visual/page-lib.js` | runs in the page: snapshots, masking of volatile values |
-| `visual/helpers/` | Node helpers: the app's route table, the utility classes of `var.scss` |
+| `visual/helpers/` | Node helpers: the app's route table, the utility classes of `var.scss`, the components a change reaches |
 | `visual/tests/` | unit tests (`npm run e2e-check`) |
 | `pyproject.toml`, `uv.lock` | the kit's pinned Python dependencies |

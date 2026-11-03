@@ -12,8 +12,8 @@ A style refactoring or a library upgrade can pass lint and unit tests and still 
 The kit renders the same business scenarios on two builds against the same data and reports the
 difference.
 
-- **Both sides see the same data.** Base and head are captured one after the other against one
-  running backend.
+- **Both sides see the same data.** Base and head are captured against one running backend per
+  profile, split into the same shards.
 - **Styles are the signal, pixels confirm.** For the watched elements every computed property is
   compared exactly; a pixel difference without a style difference is captured again before it is
   reported.
@@ -40,6 +40,8 @@ flowchart LR
     sess[session.py, cdp.py<br/>headless Chrome over CDP]
     lib[page-lib.js<br/>snapshots, masks]
     cap[capture.py]
+    par[parallel.py<br/>shards, worker processes]
+    imp[impact.py, helpers/impact.mjs<br/>scenarios the change reaches]
     cmp[compare.py]
     cat --> cli
     scen --> cli
@@ -50,15 +52,18 @@ flowchart LR
     prof --> seed
     prof --> be
     seed --> be
-    cli --> cap
+    cli --> imp
+    cli --> par
+    par --> cap
     cap --> sess
     sess --> lib
     cli --> cmp
 ```
 
-Two Node helpers under `e2e/visual/helpers/` print JSON for the Python side: the app's route table
-(read from the routing files with the TypeScript compiler) and the class selectors of
-`src/assets/styles/var.scss` (compiled with the repository's `sass`).
+Three Node helpers under `e2e/visual/helpers/` print JSON for the Python side: the app's route
+table (read from the routing files with the TypeScript compiler), the class selectors of
+`src/assets/styles/var.scss` (compiled with the repository's `sass`), and the components a set of
+changed files reaches (from the app's imports).
 
 ## A compare run
 
@@ -70,29 +75,43 @@ sequenceDiagram
     participant B as backend
     participant G as Chrome
     C->>C: load and check catalogue, scenarios, inventory
-    C->>K: take capture.lock
+    C->>K: take capture.lock (one compare at a time; it runs its own workers)
     C->>K: base: git archive, npm ci or symlinked node_modules, production build (cached by commit)
     C->>K: head: production build of the working tree or --head
     C->>C: select: changed files → components (impact.mjs) → scenarios that showed them
-    loop each profile with selected scenarios
+    par each profile with selected scenarios, at once
         C->>P: open(backend)
         P->>B: start, fill (seed) or reuse a cached workspace
         C->>B: schema check: every .graphql document of both trees
         alt baseline cached
-            C->>C: reuse it
+            C->>C: reuse it, capture head in shards
         else
-            C->>G: capture base
+            C->>G: capture base and head in shards, at once
         end
-        C->>G: capture head
         C->>C: compare; recapture pixel-only scenarios on head alone
         C->>B: stop, discard containers
     end
     C->>C: report.md
 ```
 
-Scenarios of one profile run in order in one browser tab with in-app navigation, as a user would
-move through the app: a component's styles that leak onto later pages show up there. Logged-out
-scenarios come last.
+Scenarios of one shard run in order in one browser tab with in-app navigation, as a user would
+move through the app: a component's styles that leak onto later pages of the shard show up there.
+Logged-out scenarios come last in each shard.
+
+### Shards and workers
+
+`parallel.py` captures a side in shards: the scenarios, with each `follows` chain kept together,
+dealt round-robin in list order into `--jobs` shards (default: a quarter of the cores, at most 8).
+The split depends only on the scenario names and the shard count, and the shard count is part of
+the baseline key, so base and head always run the same shards. Every shard of every side and
+profile goes to one pool of `--jobs` worker processes, each with its own Chrome on its own CDP
+port; the profiles' backends and UI servers are started first and shared by their shards. A worker
+reports each finished scenario through a queue, for the progress lines, and the shards' folders
+are merged into the usual capture layout.
+
+Worker processes, not coroutines in one interpreter: in one process, the snapshots' JSON and gzip
+work blocks the event loop, and with eight captures the browsers' websocket keepalives went
+unanswered and four of the eight connections dropped.
 
 ### Selecting by the change
 
@@ -208,7 +227,7 @@ differ), `pixels-only` (rechecked: `noise` if a head capture alone matches the b
 | Ids, hashes, DIDs, secrets, absolute times, measured durations | masked in the page to fixed values of the same format; times relative to the clock stay |
 | Row order of an unordered query | the data tab scenarios pass an ordered query in the URL; queries run on one DataFusion partition |
 | External hosts (avatars) | Chrome resolves only localhost and Google Fonts |
-| Two captures at once | `capture.lock`: Chrome renders glyphs slightly differently under load |
+| Captures at once | each worker has its own Chrome, profile folder and CDP port; Chrome runs without GPU, font hinting and LCD text, and eight concurrent captures matched a sequential one; `capture.lock` keeps a second `compare` out |
 | Hover and focus left over | the mouse is parked and focus blurred before each capture; overlays left open fail the next scenario |
 | Animations and transitions | a settle delay after each scenario; after a hover or a forced state and around the screenshot, a wait until no transition or finite animation runs, so a loaded machine does not catch a fade halfway |
 | A hover moved by a reflow | the screenshot captures beyond the viewport, which resizes it, only for pages taller than the viewport |
@@ -220,7 +239,7 @@ differ), `pixels-only` (rechecked: `noise` if a head capture alone matches the b
 |---|---|
 | `src/<sha>`, `builds/<sha>` | the commit |
 | `workspaces/` | profile, data id (hash of the fixtures and the seed code), build id |
-| `baselines/<base sha>-<profile>-<hash>` | data id, backend id, kit hash (the capture code under `e2e/visual`: its Python files, `page-lib.js` and the helpers, without the comparer; taken once per run), Chrome major version, production build, scenario names, utility roots |
+| `baselines/<base sha>-<profile>-<hash>` | data id, backend id, kit hash (the capture code under `e2e/visual`: its Python files, `page-lib.js` and the helpers, without the comparer; taken once per run), Chrome major version, production build, scenario names, utility roots, shard count |
 | `backends/<kind>-<version>` | release version, unpacked atomically |
 | `backend-ids.json` | a binary's path, mtime and size → its version and content hash |
 | `components.json` | `<side>:<profile>/<scenario>` → the custom elements its latest successful capture showed, for the selection; not part of any key |
@@ -276,5 +295,6 @@ nor a backend:
 | SQLite or local storage for kamu-api-server | Deployments run Postgres and S3; the kit runs the same |
 | Derived images with the data baked in | Images run as published, so what is tested is what is deployed; the data goes into the container's own file system |
 | Numbered fixtures (`extra-01`…) | Unreadable for a maintainer; the inventory names every artifact and says why it exists |
-| Parallel base and head captures | Chrome renders glyphs slightly differently under load; captures run one at a time |
+| Captures one at a time | A full run took 80 minutes; with `--disable-gpu`, `--font-render-hinting=none` and `--disable-lcd-text`, eight concurrent Chromes rendered the same pixels and styles as one alone (one pixel of a data tab differed, which the recheck classes) |
+| Shards as coroutines in one Python process | The snapshot's JSON and gzip work blocks the shared event loop; four of eight browser connections dropped on unanswered keepalives, and eight captures took 2.7 times one, not one time |
 | The kit in JavaScript | Harder to read next to the Python agent harness; JavaScript stays where it must run: in the page, and where the TypeScript compiler and `sass` are needed |

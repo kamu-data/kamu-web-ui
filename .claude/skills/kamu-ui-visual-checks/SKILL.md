@@ -35,7 +35,8 @@ Commands, options, backends, profiles and where results land:
 - The backend's GraphQL schema must match the app. The run checks every `.graphql` document of
   both trees before capturing and stops on a mismatch: choose a newer build (`--bin`,
   `--release`, `--image`), never skip the check.
-- Long runs go in the background; one capture runs at a time (`capture.lock`).
+- Long runs go in the background. One `compare` runs at a time (`capture.lock`); it captures in
+  `--jobs` processes itself.
 - After a change under `e2e/`, run `npm run e2e-check`.
 
 ## Reading the report

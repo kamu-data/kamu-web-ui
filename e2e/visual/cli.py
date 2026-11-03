@@ -38,19 +38,20 @@ from e2e.visual.cache import (
     source_of,
     utility_roots,
 )
-from e2e.visual.capture import capture
 from e2e.visual.catalogue import check_scenarios, load_catalogue, select_scenarios
 from e2e.visual.cdp import Chrome
 from e2e.visual.compare import compare
 from e2e.visual.containers import remove_leftovers
 from e2e.visual.coverage import coverage_report
 from e2e.visual.impact import Records, affected, changed_files
+from e2e.visual.parallel import DEFAULT_JOBS, Pool
 from e2e.visual.progress import CaptureProgress, StampedOutput, Timings
 from e2e.visual.scenarios import SCENARIOS
 from e2e.visual.serve import Served
-from e2e.visual.session import Browser, Session, Target
+from e2e.visual.session import Session, Target
 
-UI_PORTS = {"base": 4310, "head": 4311}
+# Base and head of the first profile; each further profile takes the next two
+UI_PORT = 4310
 CDP_PORT = 9233
 CHROME = os.environ.get("CHROME_BIN", "google-chrome")
 
@@ -143,10 +144,11 @@ async def compare_run(args, cache: Path, selection: dict, run_dir: Path, started
     chrome = chrome_major(CHROME)
     # Once per run: the kit may be edited while a long run goes on
     kit = kit_hash()
-    browser = Browser(CHROME, CDP_PORT)
     timings = Timings(cache / "timings.json")
+    pool = Pool(args.jobs, CHROME)
+    log(f"{args.jobs} capture processes")
 
-    async def compare_profile(profile_name: str, scenarios: list) -> str:
+    async def compare_profile(index: int, profile_name: str, scenarios: list) -> str:
         profile = PROFILES[profile_name]
         names = [sc.name for sc in scenarios]
         data_id, backend_id = profile.data_id(backend), profile.backend_id(backend)
@@ -158,59 +160,69 @@ async def compare_run(args, cache: Path, selection: dict, run_dir: Path, started
             "production",
             ",".join(names),
             ",".join(extra_roots),
+            # The shards decide which scenarios share a tab, so both sides need the same split
+            f"shards={args.jobs}",
         ]
         baseline = cache / "baselines" / f"{base.label}-{profile_name}-{short_hash(*key_parts)}"
         profile_dir = run_dir / profile_name
         profile_dir.mkdir()
         key = {"base": base.label, "profile": profile_name, "data": data_id, "backend": backend_id}
-        key |= {"kit": kit, "chrome": chrome}
+        key |= {"kit": kit, "chrome": chrome, "shards": args.jobs}
         (profile_dir / "key.json").write_text(json.dumps(key, indent=2))
 
-        log(
-            f"[{profile_name}] profile {list(selection).index(profile_name) + 1}/{len(selection)}: starting the backend"
-        )
-        running = profile.open(backend, cache, run_dir)
+        log(f"[{profile_name}] starting the backend")
+        running = await asyncio.to_thread(profile.open, backend, cache, run_dir)
         log(f"[{profile_name}] {running.describe}")
         server = running.server
         served: list[Served] = []
         try:
-            mismatches = schema_mismatches(server.api_url, {"base": base.src, "head": head.src})
+            trees = {"base": base.src, "head": head.src}
+            mismatches = await asyncio.to_thread(schema_mismatches, server.api_url, trees)
             if mismatches:
                 raise RuntimeError(
                     f"the {profile_name} backend does not serve the schema the app's GraphQL documents need "
                     f"({profile.schema_hint}):\n  " + "\n  ".join(mismatches)
                 )
 
+            # Each profile serves both builds on ports of its own, pointed at its backend
+            ports = {"base": UI_PORT + 2 * index, "head": UI_PORT + 2 * index + 1}
             base_target, head_target = (
-                Target(f"http://localhost:{UI_PORTS[side]}", server.api_url, profile.account, running.now, extra_roots)
+                Target(f"http://localhost:{ports[side]}", server.api_url, profile.account, running.now, extra_roots)
                 for side in ("base", "head")
             )
-            served.append(Served(base.browser, UI_PORTS["base"], server.api_url))
-            served.append(Served(head.browser, UI_PORTS["head"], server.api_url))
+            served.append(Served(base.browser, ports["base"], server.api_url))
+            served.append(Served(head.browser, ports["head"], server.api_url))
+
+            def progress(side: str, side_names: list[str]) -> CaptureProgress:
+                return CaptureProgress(f"[{profile_name}] {side}", profile_name, side_names, timings, log, args.jobs)
 
             failures = []
+            partial = baseline.with_name(baseline.name + ".partial")
+            head_dir = profile_dir / "head"
+
+            async def capture_base() -> None:
+                shutil.rmtree(partial, ignore_errors=True)
+                report = await pool.capture(scenarios, base_target, partial, progress("base", names))
+                records.update("base", profile_name, report)
+                failures.extend(f"base {r['name']}: {r['error']}" for r in report if r.get("ok") is False)
+                # A baseline with failed scenarios is not reused: the next run captures it again
+                if not any(r.get("ok") is False for r in report):
+                    partial.rename(baseline)
+
+            async def capture_head() -> None:
+                report = await pool.capture(scenarios, head_target, head_dir, progress("head", names))
+                records.update("head", profile_name, report)
+                failures.extend(f"head {r['name']}: {r['error']}" for r in report if r.get("ok") is False)
+
             if (baseline / "report.json").exists():
                 log(f"[{profile_name}] base: cached baseline {baseline}")
+                await capture_head()
             else:
-                partial = baseline.with_name(baseline.name + ".partial")
-                shutil.rmtree(partial, ignore_errors=True)
-                progress = CaptureProgress(f"[{profile_name}] base", profile_name, names, timings, log)
-                report = await capture(scenarios, base_target, browser, partial, progress)
-                records.update("base", profile_name, report)
-                failures += [f"base {r['name']}: {r['error']}" for r in report if r.get("ok") is False]
-                # A baseline with failed scenarios is not reused: the next run captures it again
-                if not failures:
-                    partial.rename(baseline)
-            base_dir = baseline if baseline.exists() else baseline.with_name(baseline.name + ".partial")
-
-            head_dir = profile_dir / "head"
-            progress = CaptureProgress(f"[{profile_name}] head", profile_name, names, timings, log)
-            report = await capture(scenarios, head_target, browser, head_dir, progress)
-            records.update("head", profile_name, report)
-            failures += [f"head {r['name']}: {r['error']}" for r in report if r.get("ok") is False]
+                await asyncio.gather(capture_base(), capture_head())
+            base_dir = baseline if baseline.exists() else partial
 
             diff_dir = profile_dir / "diff"
-            summary = compare(str(base_dir), str(head_dir), str(diff_dir))
+            summary = await asyncio.to_thread(compare, str(base_dir), str(head_dir), str(diff_dir))
 
             # Pixel-only differences are rechecked: the scenarios are captured again on head alone
             pixels_only = [name for name, s in summary.items() if s["verdict"] == "pixels-only"]
@@ -219,10 +231,12 @@ async def compare_run(args, cache: Path, selection: dict, run_dir: Path, started
                 log(f"[{profile_name}] recheck: {', '.join(pixels_only)}")
                 again = profile_dir / "recheck"
                 rescenarios = [sc for sc in scenarios if sc.name in pixels_only]
-                recheck_names = [sc.name for sc in rescenarios]
-                progress = CaptureProgress(f"[{profile_name}] recheck", profile_name, recheck_names, timings, log)
-                await capture(rescenarios, head_target, browser, again, progress)
-                second = compare(str(base_dir), str(again), str(profile_dir / "recheck-diff"), pixels_only)
+                await pool.capture(
+                    rescenarios, head_target, again, progress("recheck", [sc.name for sc in rescenarios])
+                )
+                second = await asyncio.to_thread(
+                    compare, str(base_dir), str(again), str(profile_dir / "recheck-diff"), pixels_only
+                )
                 recheck = {name: "noise" if second[name]["verdict"] == "same" else "confirmed" for name in pixels_only}
             return profile_section(profile_name, summary, recheck, failures, diff_dir)
         finally:
@@ -230,17 +244,24 @@ async def compare_run(args, cache: Path, selection: dict, run_dir: Path, started
                 s.stop()
             server.stop()
 
-    sections, failed = [], []
-    for profile_name, scenarios in selection.items():
+    async def profile_or_failure(index: int, profile_name: str, scenarios: list) -> tuple[str, bool]:
         try:
-            sections.append(await compare_profile(profile_name, scenarios))
+            return await compare_profile(index, profile_name, scenarios), True
         except Exception as e:
             # The other profiles still run and are reported; the run fails at the end
             log(f"[{profile_name}] failed: {e}")
             with open(run_dir / "run.log", "a") as f:
                 f.write(traceback.format_exc())
-            failed.append(profile_name)
-            sections.append(failed_section(profile_name, e))
+            return failed_section(profile_name, e), False
+
+    try:
+        results = await asyncio.gather(
+            *(profile_or_failure(i, name, scenarios) for i, (name, scenarios) in enumerate(selection.items()))
+        )
+    finally:
+        await asyncio.to_thread(pool.close)
+    sections = [section for section, _ in results]
+    failed = [name for name, (_, ok) in zip(selection, results, strict=True) if not ok]
 
     minutes = round((time.monotonic() - started) / 60)
     report_file = run_dir / "report.md"
@@ -294,10 +315,10 @@ async def probe_command(args) -> None:
     server = running.server
     served, chrome = None, None
     try:
-        served = Served(browser_dir, UI_PORTS["head"], server.api_url)
+        served = Served(browser_dir, UI_PORT, server.api_url)
         chrome = await Chrome.launch(run_dir / ".chrome-profile", CDP_PORT, CHROME)
         cdp = await chrome.open_page()
-        target = Target(f"http://localhost:{UI_PORTS['head']}", server.api_url, profile.account, running.now)
+        target = Target(f"http://localhost:{UI_PORT}", server.api_url, profile.account, running.now)
         s = Session(cdp, target)
         await s.init()
         await s.log_in()
@@ -384,6 +405,7 @@ def parser() -> argparse.ArgumentParser:
     c.add_argument("--unrated", action="store_true", help="also run catalogue entries without a tier")
     c.add_argument("--only", help="only scenarios whose name contains this text, or one of a comma-separated list")
     c.add_argument("--all", action="store_true", help="every selected scenario, not only those the change reaches")
+    c.add_argument("--jobs", type=int, default=DEFAULT_JOBS, help=f"capture processes (default {DEFAULT_JOBS})")
     backend_options(c)
     c.set_defaults(run=lambda a: asyncio.run(compare_command(a)))
 

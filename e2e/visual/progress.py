@@ -58,22 +58,33 @@ class Timings:
 
 
 class CaptureProgress:
-    """Called with each scenario's report entry as it finishes; logs `<label> n/N <status>, ~m min left`."""
+    """Called with each scenario's report entry as it finishes, in any order; logs
+    `<label> n/N <status>, ~m min left`, the time left shared among `workers` running at once."""
 
-    def __init__(self, label: str, profile: str, names: list[str], timings: Timings, log: Callable[[str], None]):
-        self.label, self.timings, self.log = label, timings, log
-        self.keys = [f"{profile}/{name}" for name in names]
+    def __init__(
+        self, label: str, profile: str, names: list[str], timings: Timings, log: Callable[[str], None], workers: int = 1
+    ):
+        self.label, self.profile, self.timings, self.log, self.workers = label, profile, timings, log, workers
+        self.pending = list(names)
+        self.total = len(names)
         self.taken: list[float] = []
-        estimate = about(timings.estimate(self.keys))
-        log(f"{label}: capturing {len(names)} scenarios" + (f", {estimate}" if estimate else ""))
+        estimate = about(self.left(timings.estimate(self.keys(names))))
+        log(f"{label}: capturing {self.total} scenarios" + (f", {estimate}" if estimate else ""))
+
+    def keys(self, names: list[str]) -> list[str]:
+        return [f"{self.profile}/{name}" for name in names]
+
+    def left(self, seconds: float | None) -> float | None:
+        return None if seconds is None else seconds / max(1, min(self.workers, len(self.pending)))
 
     def __call__(self, entry: dict) -> None:
-        n = len(self.taken)
+        if entry["name"] in self.pending:
+            self.pending.remove(entry["name"])
         self.taken.append(entry["seconds"])
-        self.timings.record(self.keys[n], entry["seconds"])
-        rest = self.keys[n + 1 :]
-        left = about(self.timings.estimate(rest, sum(self.taken) / len(self.taken))) if rest else ""
-        line = f"{self.label} {n + 1}/{len(self.keys)} {status_line(entry)}"
+        self.timings.record(f"{self.profile}/{entry['name']}", entry["seconds"])
+        mean = sum(self.taken) / len(self.taken)
+        left = about(self.left(self.timings.estimate(self.keys(self.pending), mean))) if self.pending else ""
+        line = f"{self.label} {len(self.taken)}/{self.total} {status_line(entry)}"
         self.log(line + (f", {left} left" if left else ""))
 
 

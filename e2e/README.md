@@ -60,7 +60,7 @@ to `~/.cache/kamu-ui-visual/` (`KAMU_VISUAL_CACHE` to move it).
 | `--unrated` | also run catalogue entries nobody has rated yet |
 | `--only <text>[,<text>…]` | only scenarios whose name contains one of the parts |
 | `--all` | every scenario of the tier, not only those the change reaches (below) |
-| `--jobs <n>` | capture processes: a quarter of the cores, at most 8 |
+| `--jobs <n>` | capture processes: a quarter of the cores free when the run starts, at most 8 |
 | backend options | see below; `probe` takes them too |
 
 By default `compare` runs only the scenarios the change between base and head can alter: the

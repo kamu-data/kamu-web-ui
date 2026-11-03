@@ -47,7 +47,7 @@ Commands, options, backends, profiles and where results land:
 |---|---|---|
 | same | no style diff, no changed pixel | none |
 | changed | computed styles differ | the signal: read the element and property list; expected or a regression |
-| pixels-only, rechecked as noise | the head capture alone matched the base | none |
+| pixels-only, rechecked as noise | both sides captured again, one after the other, matched | none |
 | pixels-only, confirmed | pixels differ, styles do not | a change outside the watched elements, or text and data; look at `<scenario>.diff.png` |
 | missing / failed | the scenario did not render | fix the scenario or the page; a failed base is not cached |
 

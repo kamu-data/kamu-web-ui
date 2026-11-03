@@ -44,7 +44,7 @@ from e2e.visual.compare import compare
 from e2e.visual.containers import POSTGRES_IMAGE, RUSTFS_IMAGE, container_runtime, remove_leftovers
 from e2e.visual.coverage import coverage_report
 from e2e.visual.impact import Records, affected, changed_files
-from e2e.visual.parallel import DEFAULT_JOBS, Pool
+from e2e.visual.parallel import SHARDS, Pool, default_jobs
 from e2e.visual.progress import CaptureProgress, StampedOutput, Timings
 from e2e.visual.retention import (
     DEFAULT_MAX,
@@ -160,8 +160,9 @@ async def compare_run(args, cache: Path, selection: dict, run_dir: Path, started
     # Once per run: the kit may be edited while a long run goes on
     kit = kit_hash()
     timings = Timings(cache / "timings.json")
+    args.jobs = args.jobs or default_jobs()
     pool = Pool(args.jobs, CHROME)
-    log(f"{args.jobs} capture processes")
+    log(f"{args.jobs} capture processes, load {os.getloadavg()[0]:.1f} on {os.cpu_count()} cores")
 
     async def compare_profile(index: int, profile_name: str, scenarios: list) -> str:
         profile = PROFILES[profile_name]
@@ -176,13 +177,13 @@ async def compare_run(args, cache: Path, selection: dict, run_dir: Path, started
             ",".join(names),
             ",".join(extra_roots),
             # The shards decide which scenarios share a tab, so both sides need the same split
-            f"shards={args.jobs}",
+            f"shards={SHARDS}",
         ]
         baseline = cache / "baselines" / f"{base.label}-{profile_name}-{short_hash(*key_parts)}"
         profile_dir = run_dir / profile_name
         profile_dir.mkdir()
         key = {"base": base.label, "profile": profile_name, "data": data_id, "backend": backend_id}
-        key |= {"kit": kit, "chrome": chrome, "shards": args.jobs}
+        key |= {"kit": kit, "chrome": chrome, "shards": SHARDS}
         (profile_dir / "key.json").write_text(json.dumps(key, indent=2))
 
         log(f"[{profile_name}] starting the backend")
@@ -240,18 +241,19 @@ async def compare_run(args, cache: Path, selection: dict, run_dir: Path, started
             diff_dir = profile_dir / "diff"
             summary = await asyncio.to_thread(compare, str(base_dir), str(head_dir), str(diff_dir))
 
-            # Pixel-only differences are rechecked: the scenarios are captured again on head alone
+            # Pixel-only differences are rechecked: both sides captured again, one after the other in one
+            # process, as either side's first capture may have run on a loaded machine
             pixels_only = [name for name, s in summary.items() if s["verdict"] == "pixels-only"]
             recheck = {}
             if pixels_only:
                 log(f"[{profile_name}] recheck: {', '.join(pixels_only)}")
-                again = profile_dir / "recheck"
                 rescenarios = [sc for sc in scenarios if sc.name in pixels_only]
-                await pool.capture(
-                    rescenarios, head_target, again, progress("recheck", [sc.name for sc in rescenarios])
-                )
+                renames = [sc.name for sc in rescenarios]
+                again_base, again_head = profile_dir / "recheck-base", profile_dir / "recheck-head"
+                await pool.capture(rescenarios, base_target, again_base, progress("recheck base", renames), shards=1)
+                await pool.capture(rescenarios, head_target, again_head, progress("recheck head", renames), shards=1)
                 second = await asyncio.to_thread(
-                    compare, str(base_dir), str(again), str(profile_dir / "recheck-diff"), pixels_only
+                    compare, str(again_base), str(again_head), str(profile_dir / "recheck-diff"), pixels_only
                 )
                 recheck = {name: "noise" if second[name]["verdict"] == "same" else "confirmed" for name in pixels_only}
             return profile_section(profile_name, summary, recheck, failures, diff_dir)
@@ -479,7 +481,7 @@ def parser() -> argparse.ArgumentParser:
     c.add_argument("--unrated", action="store_true", help="also run catalogue entries without a tier")
     c.add_argument("--only", help="only scenarios whose name contains this text, or one of a comma-separated list")
     c.add_argument("--all", action="store_true", help="every selected scenario, not only those the change reaches")
-    c.add_argument("--jobs", type=int, default=DEFAULT_JOBS, help=f"capture processes (default {DEFAULT_JOBS})")
+    c.add_argument("--jobs", type=int, help="capture processes (default: a quarter of the free cores, at most 8)")
     backend_options(c)
     c.set_defaults(run=lambda a: asyncio.run(compare_command(a)))
 

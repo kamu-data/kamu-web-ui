@@ -23,12 +23,22 @@ from e2e.visual.capture import capture
 from e2e.visual.impact import chains
 from e2e.visual.session import Browser, Target
 
-# Two captures per four cores: Chrome, the page and the backend each want one
-DEFAULT_JOBS = max(1, min(8, (os.cpu_count() or 4) // 4))
+# Shards a side is split into, whatever the number of workers: the split is part of the baseline key,
+# so a cached base stays valid however loaded the machine is
+SHARDS = 8
+
+
+def default_jobs() -> int:
+    """One capture per four cores the machine has free now (Chrome, the page and the backend each
+    want one), at most 8: an overloaded machine shades glyphs differently."""
+    free = (os.cpu_count() or 4) - os.getloadavg()[0]
+    return max(1, min(8, int(free) // 4))
+
+
 FIRST_CDP_PORT = 9240
 
 
-def shards(scenarios: list, count: int) -> list[list]:
+def split(scenarios: list, count: int) -> list[list]:
     """`scenarios` dealt round-robin into at most `count` shards, keeping each in list order. A
     scenario that `follows` another stays in its shard, right after the scenarios before it."""
     group_of = {name: min(group) for group in chains(scenarios) for name in group}
@@ -84,8 +94,11 @@ class Pool:
         self.executor.shutdown(wait=True, cancel_futures=True)
         self.manager.shutdown()
 
-    async def capture(self, scenarios: list, target: Target, out_dir: Path, done) -> list[dict]:
-        """Like `capture.capture`, in shards; `done` hears of each scenario as its shard finishes it."""
+    async def capture(
+        self, scenarios: list, target: Target, out_dir: Path, done, shards: int | None = None
+    ) -> list[dict]:
+        """Like `capture.capture`, in `shards` (default `SHARDS`) run by the workers; `done` hears of each
+        scenario as its shard finishes it."""
         loop = asyncio.get_running_loop()
         if self.ports is None:
             self.ports = asyncio.Queue()
@@ -99,7 +112,7 @@ class Pool:
 
         forwarder = threading.Thread(target=forward, daemon=True)
         forwarder.start()
-        parts = shards(scenarios, self.jobs)
+        parts = split(scenarios, shards or SHARDS)
         dirs = [out_dir / f"shard-{i}" for i in range(len(parts))]
 
         async def run(part: list, part_dir: Path) -> list[dict]:

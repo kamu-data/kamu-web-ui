@@ -88,7 +88,7 @@ sequenceDiagram
         else
             C->>G: capture base and head in shards, at once
         end
-        C->>C: compare; recapture pixel-only scenarios on head alone
+        C->>C: compare; recapture pixel-only scenarios on both sides, one after the other, in one process
         C->>B: stop, discard containers
     end
     C->>C: report.md
@@ -101,13 +101,13 @@ Logged-out scenarios come last in each shard.
 ### Shards and workers
 
 `parallel.py` captures a side in shards: the scenarios, with each `follows` chain kept together,
-dealt round-robin in list order into `--jobs` shards (default: a quarter of the cores, at most 8).
-The split depends only on the scenario names and the shard count, and the shard count is part of
-the baseline key, so base and head always run the same shards. Every shard of every side and
-profile goes to one pool of `--jobs` worker processes, each with its own Chrome on its own CDP
-port; the profiles' backends and UI servers are started first and shared by their shards. A worker
-reports each finished scenario through a queue, for the progress lines, and the shards' folders
-are merged into the usual capture layout.
+dealt round-robin in list order into 8 shards. The split depends only on the scenario names and
+the shard count, which is part of the baseline key, so base and head always run the same shards
+and a cached base stays valid however many workers run. Every shard of every side and profile goes
+to one pool of `--jobs` worker processes (default: a quarter of the cores free when the run starts,
+at most 8), each with its own Chrome on its own CDP port; the profiles' backends and UI servers are
+started first and shared by their shards. A worker reports each finished scenario through a queue,
+for the progress lines, and the shards' folders are merged into the usual capture layout.
 
 Worker processes, not coroutines in one interpreter: in one process, the snapshots' JSON and gzip
 work blocks the event loop, and with eight captures the browsers' websocket keepalives went
@@ -217,8 +217,8 @@ key under its current name.
 
 `compare.py` rebuilds full styles from the deltas and compares them exactly; screenshots are
 compared per pixel, ignoring channel differences up to 16. Verdicts: `same`, `changed` (styles
-differ), `pixels-only` (rechecked: `noise` if a head capture alone matches the base, else
-`confirmed`), `missing`.
+differ), `pixels-only` (rechecked: both sides are captured again, one after the other in one
+process; `noise` if those match, else `confirmed`), `missing`.
 
 ## Determinism
 
@@ -228,7 +228,7 @@ differ), `pixels-only` (rechecked: `noise` if a head capture alone matches the b
 | Ids, hashes, DIDs, secrets, absolute times, measured durations | masked in the page to fixed values of the same format; times relative to the clock stay |
 | Row order of an unordered query | the data tab scenarios pass an ordered query in the URL; queries run on one DataFusion partition |
 | External hosts (avatars) | Chrome resolves only localhost and Google Fonts |
-| Captures at once | each worker has its own Chrome, profile folder and CDP port; Chrome runs without GPU, font hinting and LCD text, and eight concurrent captures matched a sequential one; `capture.lock` keeps a second `compare` out |
+| Captures at once | each worker has its own Chrome, profile folder and CDP port; Chrome runs without GPU, font hinting and LCD text, and eight concurrent captures matched a sequential one while the machine had cores to spare. An overloaded machine shades glyphs slightly differently, so `--jobs` defaults to a quarter of the cores free when the run starts, the run logs the load, and the recheck captures both sides again in one process; `capture.lock` keeps a second `compare` out |
 | Hover and focus left over | the mouse is parked and focus blurred before each capture; overlays left open fail the next scenario |
 | Animations and transitions | a settle delay after each scenario; after a hover or a forced state and around the screenshot, a wait until no transition or finite animation runs, so a loaded machine does not catch a fade halfway |
 | A hover moved by a reflow | the screenshot captures beyond the viewport, which resizes it, only for pages taller than the viewport |

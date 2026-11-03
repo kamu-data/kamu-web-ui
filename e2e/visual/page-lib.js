@@ -22,6 +22,7 @@
     ".mat-mdc-menu-panel",
     "ngb-pagination",
     "ul.pagination",
+    "app-commit-navigator",
     "ng-select",
     "ng-dropdown-panel",
     "angular2-multiselect",

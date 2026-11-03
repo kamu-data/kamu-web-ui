@@ -368,7 +368,8 @@ SCENARIOS: list[Scenario] = [
         "19-metadata-commit-navigator",
         "metadata",
         url=f"{PUSH}/metadata",
-        wait_for="app-commit-navigator ul.pagination, ul.pagination",
+        # The pager, or on commits before it the pagination component
+        wait_for="app-commit-navigator .commit-pager, app-commit-navigator ul.pagination",
     ),
     Scenario(
         "20-schema-editor-nested",

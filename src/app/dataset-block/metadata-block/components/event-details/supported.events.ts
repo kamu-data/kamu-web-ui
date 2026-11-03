@@ -5,6 +5,8 @@
  * included in the LICENSE file.
  */
 
+import { MetadataEventType } from "@api/kamu.graphql.interface";
+
 export enum SupportedEvents {
     AddData = "AddData",
     ExecuteTransform = "ExecuteTransform",
@@ -18,6 +20,21 @@ export enum SupportedEvents {
     AddPushSource = "AddPushSource",
     SetDataSchema = "SetDataSchema",
 }
+
+/** The API's name of each event type, for filtering blocks by it. */
+export const SUPPORTED_EVENT_API_TYPES: Record<SupportedEvents, MetadataEventType> = {
+    [SupportedEvents.AddData]: MetadataEventType.AddData,
+    [SupportedEvents.ExecuteTransform]: MetadataEventType.ExecuteTransform,
+    [SupportedEvents.Seed]: MetadataEventType.Seed,
+    [SupportedEvents.SetAttachments]: MetadataEventType.SetAttachments,
+    [SupportedEvents.SetInfo]: MetadataEventType.SetInfo,
+    [SupportedEvents.SetLicense]: MetadataEventType.SetLicense,
+    [SupportedEvents.SetPollingSource]: MetadataEventType.SetPollingSource,
+    [SupportedEvents.SetTransform]: MetadataEventType.SetTransform,
+    [SupportedEvents.SetVocab]: MetadataEventType.SetVocab,
+    [SupportedEvents.AddPushSource]: MetadataEventType.AddPushSource,
+    [SupportedEvents.SetDataSchema]: MetadataEventType.SetDataSchema,
+};
 
 export interface EventPropertyLogo {
     name: string;

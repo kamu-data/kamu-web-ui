@@ -1,16 +1,16 @@
-<div class="container-section">
+<div class="container-section" [formGroup]="filterForm">
     <div class="text-center mb-4 position-relative align-items-center">
         <input
             class="form-control placeholder-padding-left d-inline custom-border"
             type="text"
-            name="search-hash"
-            [(ngModel)]="searchHash"
+            formControlName="hashPrefix"
             autocomplete="off"
             placeholder="Search by hash"
             data-test-id="searchHash"
+            #hashInput
         />
         <mat-icon class="mat-icon-svg-size search-icon" svgIcon="search" />
-        @if (searchHash) {
+        @if (filterForm.controls.hashPrefix.value) {
             <mat-icon
                 (click)="refreshSearch()"
                 class="fs-5 d-inline position-absolute close-position"
@@ -18,69 +18,93 @@
                 >close</mat-icon
             >
         }
+        <div
+            class="text-danger fs-12 text-start"
+            [input]="hashInput"
+            [group]="filterForm"
+            fieldLabel="Block hash"
+            dataTestId="searchHash-error"
+            appFieldError
+        ></div>
     </div>
     <div class="mb-4 position-relative">
         <div class="mb-4">
             <ng-select
-                [items]="dropdownList"
+                [items]="eventTypeOptions"
                 [multiple]="true"
-                bindLabel="value"
-                bindValue="id"
                 [closeOnSelect]="false"
                 [clearable]="true"
                 placeholder="Select event type"
-                [(ngModel)]="eventTypeFiltersSelected"
-            />
+                formControlName="eventTypes"
+                data-test-id="eventTypes"
+            >
+                <ng-template ng-option-tmp let-item="item">
+                    <span [attr.data-test-id]="'event-type-option-' + item">{{ item }}</span>
+                </ng-template>
+            </ng-select>
         </div>
         @if (datasetHistory) {
             <div class="d-flex flex-column gap-3">
-                @if (
-                    datasetHistory.history | eventTypeFilter: eventTypeFiltersSelected | blockHashFilter: searchHash;
-                    as result
-                ) {
-                    @for (block of result; track block.blockHash) {
-                        <div class="d-flex align-items-center justify-content-between">
-                            <div class="flex-grow-1 no-wrap d-flex flex-row">
-                                <div class="number-width d-inline-block">
-                                    <span class="d-inline-block">{{ block.sequenceNumber }} </span>
-                                </div>
-                                <div class="d-flex flex-column">
-                                    <div class="d-flex flex-row">
-                                        <a
-                                            class="ml-11 d-inline-block"
-                                            [class.fw-bold]="currentBlockHash === block.blockHash"
-                                            [routerLink]="
-                                                {
-                                                    accountName: datasetInfo.accountName,
-                                                    datasetName: datasetInfo.datasetName,
-                                                    blockHash: block.blockHash,
-                                                } | metadataBlockLink
-                                            "
-                                            >{{ block.event.__typename }}</a
-                                        >
-                                        @if (currentBlockHash === block.blockHash) {
-                                            <span class="badge-current ms-2 d-inline-block">current</span>
-                                        }
-                                    </div>
-                                    <div
-                                        [innerHTML]="highlightHash(block.blockHash, searchHash)"
-                                        data-test-id="block-hash"
-                                        class="ml-11 mt-1 fs-12 text-muted font-monospace"
+                @for (block of datasetHistory.history; track block.blockHash) {
+                    <div class="d-flex align-items-center justify-content-between">
+                        <div class="flex-grow-1 no-wrap d-flex flex-row">
+                            <div class="number-width d-inline-block">
+                                <span class="d-inline-block">{{ block.sequenceNumber }} </span>
+                            </div>
+                            <div class="d-flex flex-column">
+                                <div class="d-flex flex-row">
+                                    <a
+                                        class="ml-11 d-inline-block"
                                         [class.fw-bold]="currentBlockHash === block.blockHash"
-                                    ></div>
+                                        [routerLink]="
+                                            {
+                                                accountName: datasetInfo.accountName,
+                                                datasetName: datasetInfo.datasetName,
+                                                blockHash: block.blockHash,
+                                                blockListFilter: activeFilter,
+                                                blockListPage: datasetHistory.pageInfo.currentPage + 1,
+                                            } | metadataBlockLink
+                                        "
+                                        data-test-id="block-event-type"
+                                        >{{ block.event.__typename }}</a
+                                    >
+                                    @if (currentBlockHash === block.blockHash) {
+                                        <span class="badge-current ms-2 d-inline-block">current</span>
+                                    }
+                                </div>
+                                @let matched = matchedPrefixLength(block.blockHash);
+                                <div
+                                    data-test-id="block-hash"
+                                    class="ml-11 mt-1 fs-12 text-muted font-monospace d-flex"
+                                    [class.fw-bold]="currentBlockHash === block.blockHash"
+                                >
+                                    @if (matched) {
+                                        <span class="bg-warning" data-test-id="block-hash-match">{{
+                                            block.blockHash.slice(0, matched)
+                                        }}</span>
+                                    }
+                                    <span>{{ block.blockHash.slice(matched) }}</span>
                                 </div>
                             </div>
                         </div>
-                    } @empty {
-                        <p class="mt-4 text-center">No block matches</p>
-                    }
-                    @if (result.length) {
-                        <app-pagination
-                            [currentPage]="currentPage - 1"
-                            [pageInfo]="datasetHistory.pageInfo"
+                    </div>
+                } @empty {
+                    @if (datasetHistory.pageInfo.currentPage > 0 && datasetHistory.pageInfo.totalPages) {
+                        <app-page-past-end
+                            itemsName="blocks"
+                            [totalPages]="datasetHistory.pageInfo.totalPages"
                             (pageChangeEvent)="onPageChange($event)"
                         />
+                    } @else {
+                        <p class="mt-4 text-center" data-test-id="no-block-matches">No block matches</p>
                     }
+                }
+                @if (datasetHistory.history.length) {
+                    <app-pagination
+                        [currentPage]="datasetHistory.pageInfo.currentPage + 1"
+                        [pageInfo]="datasetHistory.pageInfo"
+                        (pageChangeEvent)="onPageChange($event)"
+                    />
                 }
             </div>
         }

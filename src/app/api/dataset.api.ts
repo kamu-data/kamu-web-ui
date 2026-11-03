@@ -73,6 +73,7 @@ import {
     GetDatasetSchemaQuery,
     GetMetadataBlockGQL,
     GetMetadataBlockQuery,
+    MetadataBlocksFilter,
     MetadataManifestFormat,
     MetadataProjectionEventType,
     RenameDatasetGQL,
@@ -251,6 +252,7 @@ export class DatasetApi {
         datasetName: string;
         numRecords: number;
         numPage: number;
+        filter?: MetadataBlocksFilter;
     }): Observable<GetDatasetHistoryQuery> {
         return this.datasetHistoryGQL
             .watch({
@@ -259,6 +261,7 @@ export class DatasetApi {
                     datasetName: params.datasetName,
                     perPage: params.numRecords,
                     page: params.numPage,
+                    filter: params.filter,
                 },
             })
             .valueChanges.pipe(

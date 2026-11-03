@@ -8080,6 +8080,7 @@ export type GetDatasetHistoryQueryVariables = Exact<{
   datasetName: Scalars['DatasetName']['input'];
   perPage?: InputMaybe<Scalars['Int']['input']>;
   page?: InputMaybe<Scalars['Int']['input']>;
+  filter?: InputMaybe<MetadataBlocksFilter>;
 }>;
 
 
@@ -13383,13 +13384,13 @@ export const DatasetHeadBlockHashDocument = gql`
     }
   }
 export const GetDatasetHistoryDocument = gql`
-    query getDatasetHistory($accountName: AccountName!, $datasetName: DatasetName!, $perPage: Int, $page: Int) {
+    query getDatasetHistory($accountName: AccountName!, $datasetName: DatasetName!, $perPage: Int, $page: Int, $filter: MetadataBlocksFilter) {
   datasets {
     byOwnerAndName(accountName: $accountName, datasetName: $datasetName) {
       ...DatasetBasics
       metadata {
         chain {
-          blocks(perPage: $perPage, page: $page) {
+          blocks(perPage: $perPage, page: $page, filter: $filter) {
             totalCount
             nodes {
               ...MetadataBlock

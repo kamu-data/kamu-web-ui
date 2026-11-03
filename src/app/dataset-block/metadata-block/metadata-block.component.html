@@ -49,7 +49,9 @@
                             [datasetHistory]="datasetHistory"
                             [currentBlockHash]="blockHash"
                             [datasetInfo]="datasetInfo"
+                            [filter]="blockListFilter"
                             (onPageChangeEmit)="onPageChange($event)"
+                            (filterChange)="onFilterChange($event)"
                         />
                     </div>
                 }

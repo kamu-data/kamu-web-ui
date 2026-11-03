@@ -3,13 +3,14 @@ query getDatasetHistory(
   $datasetName: DatasetName!
   $perPage: Int
   $page: Int
+  $filter: MetadataBlocksFilter
 ) {
   datasets {
     byOwnerAndName(accountName: $accountName, datasetName: $datasetName) {
       ...DatasetBasics
       metadata {
         chain {
-          blocks(perPage: $perPage, page: $page) {
+          blocks(perPage: $perPage, page: $page, filter: $filter) {
             totalCount
             nodes {
               ...MetadataBlock

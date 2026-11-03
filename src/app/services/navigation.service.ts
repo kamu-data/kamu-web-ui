@@ -104,13 +104,25 @@ export class NavigationService {
         );
     }
 
+    public navigateToMetadataBlock(params: MetadataBlockNavigationParams): void {
+        promiseWithCatch(this.router.navigateByUrl(this.metadataBlockUrlTree(params)));
+    }
+
+    /** The URL of a metadata block page, with the filter and page of its block list. */
     public metadataBlockUrlTree(params: MetadataBlockNavigationParams): UrlTree {
-        return this.router.createUrlTree([
-            params.accountName,
-            params.datasetName,
-            ProjectLinks.URL_BLOCK,
-            params.blockHash,
-        ]);
+        const filter = params.blockListFilter;
+        return this.router.createUrlTree(
+            [params.accountName, params.datasetName, ProjectLinks.URL_BLOCK, params.blockHash],
+            {
+                queryParams: {
+                    [ProjectLinks.URL_QUERY_PARAM_EVENT_TYPES]: filter?.eventTypes.length
+                        ? filter.eventTypes.join(",")
+                        : undefined,
+                    [ProjectLinks.URL_QUERY_PARAM_HASH_PREFIX]: filter?.hashPrefix || undefined,
+                    [ProjectLinks.URL_QUERY_PARAM_PAGE]: params.blockListPage === 1 ? undefined : params.blockListPage,
+                },
+            },
+        );
     }
 
     public navigateToAddPollingSource(params: DatasetInfo): void {

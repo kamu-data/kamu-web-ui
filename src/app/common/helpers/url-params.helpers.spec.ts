@@ -8,6 +8,7 @@
 import {
     collectionPathFromParam,
     currentLocationPath,
+    enumListFromParam,
     inAppPathFromParam,
     isFlowId,
     isMultihash,
@@ -91,6 +92,24 @@ describe("URL parameter helpers", () => {
             expect(positiveIntegerFromParam("42")).toEqual(42);
             ["abc", "0", "-1", "1.5", "1e3", " 2", "", null, undefined, "99999999999999999999"].forEach((param) => {
                 expect(positiveIntegerFromParam(param)).toBeNull();
+            });
+        });
+    });
+
+    describe("enumListFromParam", () => {
+        enum Fruit {
+            Apple = "Apple",
+            Pear = "Pear",
+        }
+
+        it("should read the known members in order, once each", () => {
+            expect(enumListFromParam(Fruit, "Pear,Apple")).toEqual([Fruit.Pear, Fruit.Apple]);
+            expect(enumListFromParam(Fruit, "Pear,Kiwi,,Pear")).toEqual([Fruit.Pear]);
+        });
+
+        it("should read nothing from a missing or empty parameter", () => {
+            [null, undefined, "", "apple"].forEach((param) => {
+                expect(enumListFromParam(Fruit, param)).toEqual([]);
             });
         });
     });

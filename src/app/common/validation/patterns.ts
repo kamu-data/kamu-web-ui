@@ -22,6 +22,11 @@ export const ValidationPatterns = {
         regex: /^[A-Za-z_][A-Za-z0-9_]*$/,
         message: "may only contain letters, digits and underscores, and can't start with a digit",
     },
+    /** The backend's `BlockHashPrefix`: the base16 multibase code `f`, then hex digits, in any case; it trims spaces. */
+    BLOCK_HASH_PREFIX: {
+        regex: /^\s*[fF][0-9a-fA-F]*\s*$/,
+        message: "must start with f followed by hex digits",
+    },
 } as const satisfies Record<string, FormatRule>;
 
 /** The backend stores dataset and account names in VARCHAR(100) columns. */

@@ -10,6 +10,7 @@ import { TestbedHarnessEnvironment } from "@angular/cdk/testing/testbed";
 import { provideHttpClient } from "@angular/common/http";
 import { provideHttpClientTesting } from "@angular/common/http/testing";
 import { ComponentFixture, TestBed } from "@angular/core/testing";
+import { MatMenuHarness } from "@angular/material/menu/testing";
 import { MatTableHarness } from "@angular/material/table/testing";
 
 import { of } from "rxjs";
@@ -20,7 +21,12 @@ import timekeeper from "timekeeper";
 
 import { ModalService } from "@common/components/modal/modal.service";
 import { requireValue } from "@common/helpers/app.helpers";
-import { registerMatSvgIcons, setComponentInput, stubMethod } from "@common/helpers/base-test.helpers.spec";
+import {
+    findAllElementsByDataTestId,
+    registerMatSvgIcons,
+    setComponentInput,
+    stubMethod,
+} from "@common/helpers/base-test.helpers.spec";
 import { SharedTestModule } from "@common/modules/shared-test.module";
 import { mockDatasetFlowsInitiatorsQuery, mockFlowSummaryDataFragments } from "@api/mock/dataset-flow.mock";
 import { ModalArgumentsInterface } from "@interface/modal.interface";
@@ -103,6 +109,44 @@ describe("FlowsTableComponent", () => {
         setComponentInput(fixture, "nodes", nextNodes);
         fixture.detectChanges();
         expect(mockFlowSummaryDataFragments).toEqual(givenNodes);
+    });
+
+    [
+        { name: "is not among the involved datasets", datasetId: "did:odf:unknown" },
+        { name: "is null", datasetId: null },
+    ].forEach(({ name, datasetId }) => {
+        it(`should render a flow without its dataset when its dataset id ${name}`, async () => {
+            setComponentInput(fixture, "tableOptions", {
+                displayColumns: ["description", "information", "creator", "dataset", "options"],
+            });
+            setComponentInput(fixture, "nodes", [
+                mockFlowSummaryDataFragments[0],
+                { ...structuredClone(mockFlowSummaryDataFragments[1]), datasetId },
+            ]);
+            fixture.detectChanges();
+
+            const table = await loader.getHarness(MatTableHarness);
+            const rows = await table.getRows();
+            expect(rows.length).toBe(2);
+
+            expect(findAllElementsByDataTestId(fixture, "flow-description-link", HTMLAnchorElement).length).toBe(1);
+            expect(findAllElementsByDataTestId(fixture, "flow-description-text", HTMLElement).length).toBe(1);
+            expect(findAllElementsByDataTestId(fixture, "flow-dataset-link", HTMLAnchorElement).length).toBe(1);
+            expect(findAllElementsByDataTestId(fixture, "flow-dataset-unknown", HTMLElement).length).toBe(1);
+
+            const menus = await loader.getAllHarnesses(MatMenuHarness);
+            await menus[0].open();
+            const knownDatasetItems = await menus[0].getItems();
+            expect(await Promise.all(knownDatasetItems.map((item) => item.getText()))).toEqual([
+                "Details",
+                "Abort flow",
+            ]);
+            await menus[0].close();
+
+            await menus[1].open();
+            const unknownDatasetItems = await menus[1].getItems();
+            expect(await Promise.all(unknownDatasetItems.map((item) => item.getText()))).toEqual(["Abort flow"]);
+        });
     });
 
     it("should check show modal window for aborting flow", () => {

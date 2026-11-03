@@ -30,7 +30,7 @@ import { ToastrService } from "ngx-toastr";
 
 import { BaseComponent } from "@common/components/base.component";
 import { ModalService } from "@common/components/modal/modal.service";
-import { promiseWithCatch, requireValue } from "@common/helpers/app.helpers";
+import { promiseWithCatch } from "@common/helpers/app.helpers";
 import { DatasetLinkPipe } from "@common/pipes/dataset-link.pipe";
 import { FlowDetailsLinkPipe } from "@common/pipes/flow-details-link.pipe";
 import { SafeHtmlPipe } from "@common/pipes/safe-html.pipe";
@@ -207,8 +207,8 @@ export class FlowsTableComponent extends BaseComponent implements OnInit, OnChan
         return FlowTableHelpers.retriesBlockText(node.status, node.taskIds.length, node.retryPolicy.maxAttempts);
     }
 
-    public datasetById(datasetId: string): DatasetBasicsFragment {
-        return requireValue(this.involvedDatasets.find((dataset) => dataset.id === datasetId));
+    public datasetById(datasetId: MaybeNullOrUndefined<string>): MaybeNull<DatasetBasicsFragment> {
+        return this.involvedDatasets.find((dataset) => dataset.id === datasetId) ?? null;
     }
 
     public abortFlow(flowElement: FlowSummaryDataWithTriggerFragment): void {

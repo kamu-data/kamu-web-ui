@@ -12,6 +12,7 @@ import { NgbPopover } from "@ng-bootstrap/ng-bootstrap";
 
 import AppValues from "@common/values/app.values";
 import { DatasetBasicsFragment, FlowItemWidgetDataFragment, FlowStatus } from "@api/kamu.graphql.interface";
+import { MaybeNull } from "@interface/app.types";
 
 import { FlowDetailsTabs } from "src/app/dataset-flow/dataset-flow-details/dataset-flow-details.types";
 import { FlowTableHelpers } from "src/app/dataset-flow/flows-table/flows-table.helpers";
@@ -72,25 +73,24 @@ export class TileBaseWidgetComponent {
         }
     }
 
-    public datasetAliasByDescription(node: FlowItemWidgetDataFragment): string {
-        if (node.datasetId) {
-            const dataset = this.involvedDatasets.find((dataset) => dataset.id === node.datasetId);
-            return dataset?.alias || "";
-        }
-        return "";
+    public datasetAliasByDescription(node: FlowItemWidgetDataFragment): MaybeNull<string> {
+        return this.involvedDatasets.find((dataset) => dataset.id === node.datasetId)?.alias ?? null;
     }
 
-    private canonicalDatasetAlias(node: FlowItemWidgetDataFragment): string {
-        const alias = this.datasetAliasByDescription(node);
+    private canonicalDatasetAlias(alias: string): string {
         if (alias.includes("/")) {
             return alias;
         }
         return `${this.DEFAULT_ADMIN_ACCOUNT_NAME}/${alias}`;
     }
 
-    public getTileItemLink(node: FlowItemWidgetDataFragment): string {
+    public getTileItemLink(node: FlowItemWidgetDataFragment): MaybeNull<string> {
+        const alias = this.datasetAliasByDescription(node);
+        if (!alias) {
+            return null;
+        }
         return encodeURI(
-            `${this.canonicalDatasetAlias(node)}/${this.URL_FLOW_DETAILS}/${node.flowId}/${FlowDetailsTabs.HISTORY}`,
+            `${this.canonicalDatasetAlias(alias)}/${this.URL_FLOW_DETAILS}/${node.flowId}/${FlowDetailsTabs.HISTORY}`,
         );
     }
 }

@@ -397,7 +397,8 @@ def start_api_server(backend: Backend, port: int, config: dict, run_dir: Path) -
 
     try:
         started.append((containers.start_postgres(runtime, network, pg_name, pg_port), run_dir / "postgres.log"))
-        tag = None if backend.migrations else containers.migrations_tag(kamu_core_version(backend.version))
+        # With migrations of its own, the image only supplies sqlx
+        tag = "latest" if backend.migrations else containers.migrations_tag(kamu_core_version(backend.version))
         print(f"migrations: {backend.migrations or f'{containers.MIGRATIONS_IMAGE}:{tag}'}", flush=True)
         containers.run_migrations(runtime, network, pg_name, tag, backend.migrations, run_dir / "migrations.log")
         rustfs = containers.start_rustfs(runtime, network, s3_name, s3_port, ["datasets", "upload"])

@@ -211,8 +211,9 @@ key under its current name.
    where it is set, where its value differs from the parent's: a changed token shows once, at its
    source, and in the resolved properties it changes everywhere else.
 4. **Forced states**: for the `FORCE_TARGETS` in `scenarios.py`, `:hover`, `:focus` (with
-   `:focus-visible`) and `:active` are forced through CDP and the target's parent subtree (the
-   target, its descendants and its siblings) snapshotted again after the transition.
+   `:focus-visible`) and `:active` (with `:focus`, as a mouse press focuses the button) are forced
+   through CDP, and the target's parent subtree (the target, its descendants and its siblings) is
+   snapshotted again after the transition.
 
 `compare.py` rebuilds full styles from the deltas and compares them exactly; screenshots are
 compared per pixel, ignoring channel differences up to 16. Verdicts: `same`, `changed` (styles

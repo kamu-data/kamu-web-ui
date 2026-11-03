@@ -15,8 +15,9 @@ from pathlib import Path
 from e2e.visual.scenarios import FORCE_TARGETS
 from e2e.visual.session import Browser, Target, run_scenarios
 
-# :focus also forces :focus-visible, which is what Material's focus indicators use
-FORCED_CLASSES = {"hover": ["hover"], "focus": ["focus", "focus-visible"], "active": ["active"]}
+# :focus also forces :focus-visible, which is what Material's focus indicators use; :active also forces
+# :focus, as a mouse press focuses the button, so a pressed look nested in :focus shows as users see it
+FORCED_CLASSES = {"hover": ["hover"], "focus": ["focus", "focus-visible"], "active": ["active", "focus"]}
 SNAP_FOR = "function () { return JSON.stringify({ key: window.__cap.path(this), snap: window.__cap.snapFor(this) }); }"
 
 

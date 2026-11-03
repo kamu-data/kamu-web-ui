@@ -158,6 +158,8 @@ async def schema_editor_nested(s) -> None:
 
 
 async def open_query_run_options(s) -> None:
+    # The editor loads lazily, after the button is ready; a fast capture would catch its loading bar
+    await s.must_wait_for("app-query-and-result-sections .monaco-editor .view-line")
     await s.click('app-query-and-result-sections [data-test-id="searchAdditionalButtons"]')
     await s.wait_for(".mat-mdc-menu-panel .select-menu-modal")
 
@@ -371,8 +373,8 @@ SCENARIOS: list[Scenario] = [
         "19-metadata-commit-navigator",
         "metadata",
         url=f"{PUSH}/metadata",
-        # The pager, or on commits before it the pagination component
-        wait_for="app-commit-navigator .commit-pager, app-commit-navigator ul.pagination",
+        # The pager, or on commits before it the pagination component, which sat outside the navigator
+        wait_for="app-commit-navigator .commit-pager, ul.pagination",
     ),
     Scenario(
         "20-schema-editor-nested",

@@ -7,6 +7,29 @@
 
 @use "var" as *;
 
+.commit-navigator {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 12px;
+}
+
 .date {
     height: 33px;
+}
+
+.latest-badge {
+    color: $app-color-fg-default;
+    font-weight: 600;
+}
+
+.step-mode {
+    display: flex;
+    align-items: center;
+    margin: 0 0 0 auto;
+    white-space: nowrap;
+
+    select {
+        width: 170px;
+    }
 }

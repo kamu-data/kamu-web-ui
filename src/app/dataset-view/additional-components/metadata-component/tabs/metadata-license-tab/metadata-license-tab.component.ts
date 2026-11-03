@@ -8,7 +8,7 @@
 import { ChangeDetectionStrategy, Component, inject, Input } from "@angular/core";
 import { MatIconModule } from "@angular/material/icon";
 
-import { catchError, from, of, take } from "rxjs";
+import { catchError, from, of, switchMap, take } from "rxjs";
 
 import { NgbModal } from "@ng-bootstrap/ng-bootstrap";
 
@@ -20,8 +20,9 @@ import { MaybeNullOrUndefined } from "@interface/app.types";
 
 import { LinkPropertyComponent } from "src/app/dataset-block/metadata-block/components/event-details/components/common/link-property/link-property.component";
 import { MetadataTabs } from "src/app/dataset-view/additional-components/metadata-component/metadata.constants";
+import { MetadataTabData } from "src/app/dataset-view/additional-components/metadata-component/metadata.types";
 import { EditLicenseModalComponent } from "src/app/dataset-view/additional-components/overview-component/components/edit-license-modal/edit-license-modal.component";
-import { DatasetOverviewTabData } from "src/app/dataset-view/dataset-view.interface";
+import { DatasetSubscriptionsService } from "src/app/dataset-view/dataset.subscriptions.service";
 import { NavigationService } from "src/app/services/navigation.service";
 
 @Component({
@@ -37,13 +38,14 @@ import { NavigationService } from "src/app/services/navigation.service";
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class MetadataLicenseTabComponent {
-    @Input(RoutingResolvers.METADATA_LICENSE_TAB_KEY) public datasetMetadataTabData: DatasetOverviewTabData;
+    @Input(RoutingResolvers.METADATA_LICENSE_TAB_KEY) public datasetMetadataTabData: MetadataTabData;
 
     private ngbModalService = inject(NgbModal);
     private navigationService = inject(NavigationService);
+    private datasetSubsService = inject(DatasetSubscriptionsService);
 
     public get license(): MaybeNullOrUndefined<LicenseFragment> {
-        return this.datasetMetadataTabData.overviewUpdate.overview.metadata.currentLicense;
+        return this.datasetMetadataTabData.snapshot.license;
     }
 
     public get datasetBasics(): DatasetBasicsFragment {
@@ -51,22 +53,30 @@ export class MetadataLicenseTabComponent {
     }
 
     public get canEditLicense(): boolean {
-        return this.datasetMetadataTabData.datasetPermissions.permissions.metadata.canCommit;
+        return (
+            this.datasetMetadataTabData.snapshot.isLatest &&
+            this.datasetMetadataTabData.datasetPermissions.permissions.metadata.canCommit
+        );
     }
 
     public onEditLicense(): void {
-        const { modalRef, instance } = openModal(this.ngbModalService, EditLicenseModalComponent);
-        instance.currentState = {
-            schema: this.datasetMetadataTabData.overviewUpdate.schema,
-            data: this.datasetMetadataTabData.overviewUpdate.content,
-            overview: this.datasetMetadataTabData.overviewUpdate.overview,
-            size: this.datasetMetadataTabData.overviewUpdate.size,
-        };
-        instance.datasetBasics = this.datasetBasics;
-        from(modalRef.result)
+        this.datasetSubsService.overviewChanges
             .pipe(
                 take(1),
-                catchError(() => of(null)),
+                switchMap((overviewUpdate) => {
+                    const { modalRef, instance } = openModal(this.ngbModalService, EditLicenseModalComponent);
+                    instance.currentState = {
+                        schema: overviewUpdate.schema,
+                        data: overviewUpdate.content,
+                        overview: overviewUpdate.overview,
+                        size: overviewUpdate.size,
+                    };
+                    instance.datasetBasics = this.datasetBasics;
+                    return from(modalRef.result).pipe(
+                        take(1),
+                        catchError(() => of(null)),
+                    );
+                }),
             )
             .subscribe(() => {
                 this.navigationService.navigateToMetadata(

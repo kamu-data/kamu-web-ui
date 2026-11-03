@@ -1,0 +1,5 @@
+fragment ChainBlockPosition on MetadataBlockExtended {
+  blockHash
+  systemTime
+  sequenceNumber
+}

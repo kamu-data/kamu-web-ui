@@ -12,6 +12,8 @@ import RoutingResolvers from "@common/resolvers/routing-resolvers";
 import { MetadataComponent } from "src/app/dataset-view/additional-components/metadata-component/metadata.component";
 import { MetadataTabs } from "src/app/dataset-view/additional-components/metadata-component/metadata.constants";
 import { metadataActiveTabResolverFn } from "src/app/dataset-view/additional-components/metadata-component/resolver/metadata-active-tab.resolver";
+import { metadataCommitResolverFn } from "src/app/dataset-view/additional-components/metadata-component/resolver/metadata-commit.resolver";
+import { metadataTabResolverFn } from "src/app/dataset-view/additional-components/metadata-component/resolver/metadata-tab.resolver";
 import { MetadataLicenseTabComponent } from "src/app/dataset-view/additional-components/metadata-component/tabs/metadata-license-tab/metadata-license-tab.component";
 import { MetadataPollingSourceTabComponent } from "src/app/dataset-view/additional-components/metadata-component/tabs/metadata-polling-source-tab/metadata-polling-source-tab.component";
 import { metadataPollingSourceTabResolverFn } from "src/app/dataset-view/additional-components/metadata-component/tabs/metadata-polling-source-tab/resolvers/metadata-polling-source-tab.resolver";
@@ -33,6 +35,7 @@ export const METADATA_ROUTES: Routes = [
         resolve: {
             [RoutingResolvers.DATASET_VIEW_METADATA_KEY]: datasetOverviewTabResolverFn,
             [RoutingResolvers.DATASET_METADATA_ACTIVE_TAB_KEY]: metadataActiveTabResolverFn,
+            [RoutingResolvers.DATASET_METADATA_COMMIT_KEY]: metadataCommitResolverFn,
         },
         children: [
             {
@@ -44,7 +47,7 @@ export const METADATA_ROUTES: Routes = [
                 path: MetadataTabs.Schema,
                 component: MetadataSchemaTabComponent,
                 resolve: {
-                    [RoutingResolvers.METADATA_SCHEMA_TAB_KEY]: datasetOverviewTabResolverFn,
+                    [RoutingResolvers.METADATA_SCHEMA_TAB_KEY]: metadataTabResolverFn,
                 },
                 runGuardsAndResolvers: "always",
                 data: {
@@ -67,7 +70,7 @@ export const METADATA_ROUTES: Routes = [
                 path: MetadataTabs.License,
                 component: MetadataLicenseTabComponent,
                 resolve: {
-                    [RoutingResolvers.METADATA_LICENSE_TAB_KEY]: datasetOverviewTabResolverFn,
+                    [RoutingResolvers.METADATA_LICENSE_TAB_KEY]: metadataTabResolverFn,
                 },
                 runGuardsAndResolvers: "always",
                 data: {

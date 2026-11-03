@@ -21,7 +21,12 @@ import {
 import { SharedTestModule } from "@common/modules/shared-test.module";
 
 import { mockDerivedOverviewUpdate } from "src/app/dataset-view/additional-components/data-tabs.mock";
+import {
+    atOlderCommit,
+    mockLatestRootSnapshotWithLicense,
+} from "src/app/dataset-view/additional-components/metadata-component/metadata.mock";
 import { MetadataLicenseTabComponent } from "src/app/dataset-view/additional-components/metadata-component/tabs/metadata-license-tab/metadata-license-tab.component";
+import { DatasetSubscriptionsService } from "src/app/dataset-view/dataset.subscriptions.service";
 import {
     mockDatasetBasicsDerivedFragment,
     mockFullPowerDatasetPermissionsFragment,
@@ -47,7 +52,7 @@ describe("MetadataLicenseTabComponent", () => {
         setComponentInput(fixture, "datasetMetadataTabData", {
             datasetBasics: mockDatasetBasicsDerivedFragment,
             datasetPermissions: mockFullPowerDatasetPermissionsFragment,
-            overviewUpdate: mockDerivedOverviewUpdate,
+            snapshot: mockLatestRootSnapshotWithLicense,
         });
 
         fixture.detectChanges();
@@ -58,6 +63,7 @@ describe("MetadataLicenseTabComponent", () => {
     });
 
     it("should check to open edit window", () => {
+        TestBed.inject(DatasetSubscriptionsService).emitOverviewChanged(mockDerivedOverviewUpdate);
         const openModalSpy = vi.spyOn(modalService, "open");
         component.onEditLicense();
         expect(openModalSpy).toHaveBeenCalledTimes(1);
@@ -72,5 +78,21 @@ describe("MetadataLicenseTabComponent", () => {
         expect(licenseSpdxId?.innerText.trim()).toEqual(mockMetadataCurrentLicense.spdxId);
         const licenseWebsiteUrl = findElementByDataTestId(fixture, "license-websiteUrl");
         expect(licenseWebsiteUrl?.innerText.trim()).toEqual(mockMetadataCurrentLicense.websiteUrl);
+    });
+
+    it("should show the license as of an older commit without the edit button", () => {
+        expect(findElementByDataTestId(fixture, "edit-license")).toBeDefined();
+
+        setComponentInput(fixture, "datasetMetadataTabData", {
+            datasetBasics: mockDatasetBasicsDerivedFragment,
+            datasetPermissions: mockFullPowerDatasetPermissionsFragment,
+            snapshot: atOlderCommit(mockLatestRootSnapshotWithLicense),
+        });
+        fixture.detectChanges();
+
+        expect(findElementByDataTestId(fixture, "license-short-name")?.innerText.trim()).toEqual(
+            mockMetadataCurrentLicense.shortName,
+        );
+        expect(findElementByDataTestId(fixture, "edit-license")).toBeUndefined();
     });
 });

@@ -47,6 +47,7 @@ export default class RoutingResolvers {
     public static readonly DATASET_SETTINGS_WEBHOOKS_KEY = "datasetSettingsWebhooksData";
 
     public static readonly DATASET_METADATA_ACTIVE_TAB_KEY = "datasetMetadataActiveTabData";
+    public static readonly DATASET_METADATA_COMMIT_KEY = "datasetMetadataCommitData";
     public static readonly METADATA_SCHEMA_TAB_KEY = "metadataSchemaTabData";
     public static readonly METADATA_LICENSE_TAB_KEY = "metadataLicenseTabData";
     public static readonly METADATA_WATERMARK_TAB_KEY = "metadataWatermarkTabData";

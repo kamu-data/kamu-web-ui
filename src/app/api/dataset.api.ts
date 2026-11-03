@@ -42,6 +42,8 @@ import {
     DatasetByAccountAndDatasetNameQuery,
     DatasetByIdGQL,
     DatasetByIdQuery,
+    DatasetChainBlockPositionsGQL,
+    DatasetChainBlockPositionsQuery,
     DatasetHeadBlockHashGQL,
     DatasetHeadBlockHashQuery,
     DatasetKind,
@@ -69,6 +71,8 @@ import {
     GetDatasetLineageQuery,
     GetDatasetMainDataGQL,
     GetDatasetMainDataQuery,
+    GetDatasetMetadataAsOfGQL,
+    GetDatasetMetadataAsOfQuery,
     GetDatasetSchemaGQL,
     GetDatasetSchemaQuery,
     GetMetadataBlockGQL,
@@ -125,6 +129,8 @@ export class DatasetApi {
     private datasetAsCollectionGQL = inject(DatasetAsCollectionGQL);
     private createDatasetAsCollectionGQL = inject(CreateDatasetAsCollectionGQL);
     private createDatasetAsVersionedFileGQL = inject(CreateDatasetAsVersionedFileGQL);
+    private datasetMetadataAsOfGQL = inject(GetDatasetMetadataAsOfGQL);
+    private datasetChainBlockPositionsGQL = inject(DatasetChainBlockPositionsGQL);
 
     public createDatasetAsCollection(params: {
         datasetAlias: string;
@@ -351,6 +357,38 @@ export class DatasetApi {
                 onlyCompleteData(),
                 first(),
                 map((result: ObservableQuery.Result<GetMetadataBlockQuery, "complete">) => {
+                    return result.data;
+                }),
+            );
+    }
+
+    public getDatasetMetadataAsOf(params: {
+        accountName: string;
+        datasetName: string;
+        head: string;
+    }): Observable<GetDatasetMetadataAsOfQuery> {
+        return this.datasetMetadataAsOfGQL.watch({ variables: { ...params } }).valueChanges.pipe(
+            onlyCompleteData(),
+            first(),
+            map((result: ObservableQuery.Result<GetDatasetMetadataAsOfQuery, "complete">) => {
+                return result.data;
+            }),
+        );
+    }
+
+    public getChainBlockPositions(params: {
+        accountName: string;
+        datasetName: string;
+        page: number;
+        perPage: number;
+        filter?: MetadataBlocksFilter;
+    }): Observable<DatasetChainBlockPositionsQuery> {
+        return this.datasetChainBlockPositionsGQL
+            .watch({ variables: { ...params }, ...noCacheFetchPolicy })
+            .valueChanges.pipe(
+                onlyCompleteData(),
+                first(),
+                map((result: ObservableQuery.Result<DatasetChainBlockPositionsQuery, "complete">) => {
                     return result.data;
                 }),
             );

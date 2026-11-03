@@ -26,7 +26,7 @@ import { LinkPropertyComponent } from "src/app/dataset-block/metadata-block/comp
 import { OrderPropertyComponent } from "src/app/dataset-block/metadata-block/components/event-details/components/common/order-property/order-property.component";
 import { StepTypePropertyComponent } from "src/app/dataset-block/metadata-block/components/event-details/components/common/step-type-property/step-type-property.component";
 import { TopicsPropertyComponent } from "src/app/dataset-block/metadata-block/components/event-details/components/common/topics-property/topics-property.component";
-import { MetadataTabData } from "src/app/dataset-view/additional-components/metadata-component/metadata.constants";
+import { MetadataTabData } from "src/app/dataset-view/additional-components/metadata-component/metadata.types";
 import { SourceEventCommonDataComponent } from "src/app/dataset-view/additional-components/metadata-component/tabs/common/source-event-common-data/source-event-common-data.component";
 import { NavigationService } from "src/app/services/navigation.service";
 
@@ -62,7 +62,7 @@ export class MetadataPollingSourceTabComponent {
     public readonly SOURCES_TOOLTIPS: typeof SourcesTooltipsTexts = SourcesTooltipsTexts;
 
     public get pollingSource(): MaybeNullOrUndefined<SetPollingSourceEventFragment> {
-        return this.datasetMetadataTabData.metadataSummary.metadata.currentPollingSource;
+        return this.datasetMetadataTabData.snapshot.pollingSource;
     }
 
     public get headers(): RequestHeaderDataFragment[] {
@@ -73,6 +73,7 @@ export class MetadataPollingSourceTabComponent {
     public get canEditSetPollingSource(): boolean {
         return (
             this.datasetMetadataTabData.datasetBasics.kind === DatasetKind.Root &&
+            this.datasetMetadataTabData.snapshot.isLatest &&
             !isNil(this.pollingSource) &&
             this.datasetMetadataTabData.datasetPermissions.permissions.metadata.canCommit
         );

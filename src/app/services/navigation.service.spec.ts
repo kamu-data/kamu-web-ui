@@ -25,6 +25,7 @@ import { SupportedEvents } from "src/app/dataset-block/metadata-block/components
 import { FlowDetailsTabs } from "src/app/dataset-flow/dataset-flow-details/dataset-flow-details.types";
 import { SettingsTabsEnum } from "src/app/dataset-view/additional-components/dataset-settings-component/dataset-settings.model";
 import { MetadataTabs } from "src/app/dataset-view/additional-components/metadata-component/metadata.constants";
+import { CommitStepMode } from "src/app/dataset-view/additional-components/metadata-component/metadata.types";
 import { DatasetViewTypeEnum } from "src/app/dataset-view/dataset-view.interface";
 import ProjectLinks, { SourceEventEditor } from "src/app/project-links";
 import { NavigationService } from "src/app/services/navigation.service";
@@ -271,6 +272,27 @@ describe("NavigationService", () => {
         {
             params: { accountName: "kamu", datasetName: "ds", tab: DatasetViewTypeEnum.Flows, webhookId: ["a", "b"] },
             expectedUrl: "/kamu/ds/flows?webhookId=a,b",
+        },
+        {
+            params: {
+                accountName: "kamu",
+                datasetName: "ds",
+                tab: DatasetViewTypeEnum.Metadata,
+                section: MetadataTabs.License,
+                head: "f1620abc",
+                steps: CommitStepMode.AllBlocks,
+            },
+            expectedUrl: "/kamu/ds/metadata/license?head=f1620abc&steps=all",
+        },
+        {
+            params: {
+                accountName: "kamu",
+                datasetName: "ds",
+                tab: DatasetViewTypeEnum.Metadata,
+                section: MetadataTabs.License,
+                steps: CommitStepMode.MetadataChanges,
+            },
+            expectedUrl: "/kamu/ds/metadata/license",
         },
     ].forEach(({ params, expectedUrl }: { params: DatasetNavigationParams; expectedUrl: string }) => {
         it(`should build the dataset URL ${expectedUrl}`, () => {

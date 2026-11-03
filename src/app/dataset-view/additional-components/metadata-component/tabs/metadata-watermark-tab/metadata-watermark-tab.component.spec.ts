@@ -12,12 +12,19 @@ import { ComponentFixture, TestBed } from "@angular/core/testing";
 import { NgbModal } from "@ng-bootstrap/ng-bootstrap";
 import { Apollo } from "apollo-angular";
 
-import { registerMatSvgIcons, setComponentInput } from "@common/helpers/base-test.helpers.spec";
+import {
+    findElementByDataTestId,
+    registerMatSvgIcons,
+    setComponentInput,
+} from "@common/helpers/base-test.helpers.spec";
 import { SharedTestModule } from "@common/modules/shared-test.module";
 
-import { mockDerivedOverviewUpdate } from "src/app/dataset-view/additional-components/data-tabs.mock";
+import {
+    atOlderCommit,
+    mockLatestRootSnapshot,
+} from "src/app/dataset-view/additional-components/metadata-component/metadata.mock";
 import { MetadataWatermarkTabComponent } from "src/app/dataset-view/additional-components/metadata-component/tabs/metadata-watermark-tab/metadata-watermark-tab.component";
-import { mockDatasetBasicsDerivedFragment, mockFullPowerDatasetPermissionsFragment } from "src/app/search/mock.data";
+import { mockDatasetBasicsRootFragment, mockFullPowerDatasetPermissionsFragment } from "src/app/search/mock.data";
 
 describe("MetadataWatermarkTabComponent", () => {
     let component: MetadataWatermarkTabComponent;
@@ -33,9 +40,9 @@ describe("MetadataWatermarkTabComponent", () => {
         modalService = TestBed.inject(NgbModal);
         component = fixture.componentInstance;
         setComponentInput(fixture, "datasetMetadataTabData", {
-            datasetBasics: mockDatasetBasicsDerivedFragment,
+            datasetBasics: mockDatasetBasicsRootFragment,
             datasetPermissions: mockFullPowerDatasetPermissionsFragment,
-            overviewUpdate: mockDerivedOverviewUpdate,
+            snapshot: mockLatestRootSnapshot,
         });
         registerMatSvgIcons();
         fixture.detectChanges();
@@ -49,5 +56,20 @@ describe("MetadataWatermarkTabComponent", () => {
         const openModalSpy = vi.spyOn(modalService, "open");
         component.onEditWatermark();
         expect(openModalSpy).toHaveBeenCalledTimes(1);
+    });
+
+    it("should show the watermark as of an older commit without the edit button", () => {
+        expect(findElementByDataTestId(fixture, "edit-watermark")).toBeDefined();
+
+        const snapshot = { ...atOlderCommit(mockLatestRootSnapshot), watermark: "2022-07-30T00:00:00+00:00" };
+        setComponentInput(fixture, "datasetMetadataTabData", {
+            datasetBasics: mockDatasetBasicsRootFragment,
+            datasetPermissions: mockFullPowerDatasetPermissionsFragment,
+            snapshot,
+        });
+        fixture.detectChanges();
+
+        expect(component.watermark).toEqual("2022-07-30T00:00:00+00:00");
+        expect(findElementByDataTestId(fixture, "edit-watermark")).toBeUndefined();
     });
 });

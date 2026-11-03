@@ -6,28 +6,14 @@
  */
 
 import { NgClass } from "@angular/common";
-import { ChangeDetectionStrategy, Component, EventEmitter, inject, Input, OnInit, Output } from "@angular/core";
-import { takeUntilDestroyed } from "@angular/core/rxjs-interop";
+import { ChangeDetectionStrategy, Component, Input } from "@angular/core";
 import { MatIconModule } from "@angular/material/icon";
 import { RouterLink, RouterOutlet } from "@angular/router";
 
-import { BaseComponent } from "@common/components/base.component";
-import { FeatureFlagDirective } from "@common/directives/feature-flag.directive";
-import { momentConvertDateToLocalWithFormat } from "@common/helpers/app.helpers";
 import { DatasetLinkPipe } from "@common/pipes/dataset-link.pipe";
 import { SourceEventEditorLinkPipe } from "@common/pipes/source-event-editor-link.pipe";
 import RoutingResolvers from "@common/resolvers/routing-resolvers";
-import AppValues from "@common/values/app.values";
-import {
-    AddPushSourceEventFragment,
-    DatasetKind,
-    DatasetMetadataSummaryFragment,
-    DatasetPageInfoFragment,
-    DatasetTransformFragment,
-    SetPollingSourceEventFragment,
-} from "@api/kamu.graphql.interface";
-import { MaybeNull, MaybeNullOrUndefined, MaybeUndefined } from "@interface/app.types";
-import { DatasetSchema } from "@interface/dataset-schema.interface";
+import { DatasetKind } from "@api/kamu.graphql.interface";
 
 import { CommitNavigatorComponent } from "src/app/dataset-view/additional-components/metadata-component/components/commit-navigator/commit-navigator.component";
 import {
@@ -35,9 +21,11 @@ import {
     MetadataMenuItem,
     MetadataTabs,
 } from "src/app/dataset-view/additional-components/metadata-component/metadata.constants";
+import {
+    MetadataCommitData,
+    MetadataSnapshot,
+} from "src/app/dataset-view/additional-components/metadata-component/metadata.types";
 import { DatasetOverviewTabData, DatasetViewTypeEnum } from "src/app/dataset-view/dataset-view.interface";
-import { MetadataSchemaUpdate } from "src/app/dataset-view/dataset.subscriptions.interface";
-import { DatasetSubscriptionsService } from "src/app/dataset-view/dataset.subscriptions.service";
 import { SourceEventEditor } from "src/app/project-links";
 
 @Component({
@@ -54,50 +42,32 @@ import { SourceEventEditor } from "src/app/project-links";
         MatIconModule,
         //-----//
         CommitNavigatorComponent,
-        FeatureFlagDirective,
         SourceEventEditorLinkPipe,
         DatasetLinkPipe,
     ],
 })
-export class MetadataComponent extends BaseComponent implements OnInit {
+export class MetadataComponent {
     @Input(RoutingResolvers.DATASET_VIEW_METADATA_KEY) public datasetMetadataTabData: DatasetOverviewTabData;
     @Input(RoutingResolvers.DATASET_METADATA_ACTIVE_TAB_KEY) public activeTab: MetadataTabs;
-    @Output() public pageChangeEmit = new EventEmitter<number>();
+    @Input(RoutingResolvers.DATASET_METADATA_COMMIT_KEY) public commitData: MetadataCommitData;
 
     public readonly METADATA_MENU_DESCRIPTORS: MetadataMenuItem[] = METADATA_TAB_MENU_ITEMS;
     public readonly MetadataTabs: typeof MetadataTabs = MetadataTabs;
     public readonly DatasetViewTypeEnum: typeof DatasetViewTypeEnum = DatasetViewTypeEnum;
-
-    public currentState?: {
-        schema: MaybeNull<DatasetSchema>;
-        metadataSummary: DatasetMetadataSummaryFragment;
-        pageInfo: DatasetPageInfoFragment;
-    };
-
     public readonly SourceEventEditor: typeof SourceEventEditor = SourceEventEditor;
 
-    private datasetSubsService = inject(DatasetSubscriptionsService);
-
-    public ngOnInit() {
-        this.datasetSubsService.metadataSchemaChanges
-            .pipe(takeUntilDestroyed(this.destroyRef))
-            .subscribe((schemaUpdate: MetadataSchemaUpdate) => {
-                this.currentState = {
-                    schema: schemaUpdate.schema,
-                    metadataSummary: schemaUpdate.metadataSummary,
-                    pageInfo: schemaUpdate.pageInfo,
-                };
-            });
+    public get snapshot(): MetadataSnapshot {
+        return this.commitData.snapshot;
     }
 
     public getVisibilityMenuItem(tab: MetadataTabs): boolean {
         switch (tab) {
             case MetadataTabs.PollingSource:
-                return Boolean(this.currentPollingSource);
+                return Boolean(this.snapshot.pollingSource);
             case MetadataTabs.PushSources:
-                return Boolean(this.currentPushSources?.length);
+                return Boolean(this.snapshot.pushSources.length);
             case MetadataTabs.Transformation:
-                return Boolean(this.currentTransform);
+                return Boolean(this.snapshot.transform);
             case MetadataTabs.Watermark:
                 return this.isRoot;
             default:
@@ -105,51 +75,13 @@ export class MetadataComponent extends BaseComponent implements OnInit {
         }
     }
 
-    public onPageChange(currentPage: number): void {
-        this.pageChangeEmit.emit(currentPage);
-    }
-
-    public get currentPage(): number {
-        return this.currentState ? this.currentState.pageInfo.currentPage + 1 : 1;
-    }
-
     public get isRoot(): boolean {
         return this.datasetMetadataTabData.datasetBasics.kind === DatasetKind.Root;
     }
 
-    public get totalPages(): number {
-        return this.currentState?.pageInfo.totalPages ?? 1;
-    }
-
-    public get latestBlockHash(): string {
-        return this.currentState ? this.currentState.metadataSummary.metadata.chain.blocks.nodes[0].blockHash : "";
-    }
-
-    public get currentPollingSource(): MaybeNullOrUndefined<SetPollingSourceEventFragment> {
-        return this.currentState?.metadataSummary.metadata.currentPollingSource;
-    }
-
-    public get currentPushSources(): MaybeNullOrUndefined<AddPushSourceEventFragment[]> {
-        return this.currentState?.metadataSummary.metadata.currentPushSources;
-    }
-
-    public get currentTransform(): MaybeNullOrUndefined<DatasetTransformFragment> {
-        return this.currentState?.metadataSummary.metadata.currentTransform;
-    }
-
-    public get latestBlockSystemTime(): string {
-        const systemTimeAsString: MaybeUndefined<string> =
-            this.currentState?.metadataSummary.metadata.chain.blocks.nodes[0].systemTime;
-        return systemTimeAsString
-            ? momentConvertDateToLocalWithFormat({
-                  date: new Date(String(systemTimeAsString)),
-                  format: AppValues.DISPLAY_DATE_FORMAT,
-                  isTextDate: true,
-              })
-            : "";
-    }
-
-    public hasAnySource(): boolean {
-        return !this.currentPollingSource && !this.currentPushSources?.length;
+    public get hasNoMetadata(): boolean {
+        return this.isRoot
+            ? !this.snapshot.pollingSource && !this.snapshot.pushSources.length
+            : !this.snapshot.transform;
     }
 }

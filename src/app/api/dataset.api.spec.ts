@@ -37,6 +37,8 @@ import {
     DatasetByAccountAndDatasetNameQuery,
     DatasetByIdDocument,
     DatasetByIdQuery,
+    DatasetChainBlockPositionsDocument,
+    DatasetChainBlockPositionsQuery,
     DatasetHeadBlockHashDocument,
     DatasetHeadBlockHashQuery,
     DatasetKind,
@@ -59,6 +61,8 @@ import {
     GetDatasetLineageQuery,
     GetDatasetMainDataDocument,
     GetDatasetMainDataQuery,
+    GetDatasetMetadataAsOfDocument,
+    GetDatasetMetadataAsOfQuery,
     GetDatasetSchemaDocument,
     GetDatasetSchemaQuery,
     GetMetadataBlockDocument,
@@ -75,6 +79,8 @@ import {
 } from "@api/kamu.graphql.interface";
 import { TEST_ACCOUNT_ID, TEST_LOGIN } from "@api/mock/auth.mock";
 import {
+    mockBlockAt,
+    mockChainBlockPositionsQuery,
     mockDatasetBasicsWithPermissionQuery,
     mockDatasetByAccountAndDatasetNameQuery,
     mockDatasetByIdQuery,
@@ -82,7 +88,9 @@ import {
     mockDatasetListDownstreamsQuery,
     mockDatasetPushSyncStatusesQuery,
     mockDatasetsByAccountNameQuery,
+    mockGetDatasetMetadataAsOfQuery,
     mockGetMetadataBlockQuery,
+    mockOlderBlock,
     TEST_ACCOUNT_NAME,
     TEST_BLOCK_HASH,
     TEST_DATASET_ID,
@@ -283,6 +291,59 @@ describe("DatasetApi", () => {
 
         expect(subscription$.closed).toEqual(true);
 
+        flush();
+    }));
+
+    it("should read the metadata as of a block", fakeAsync(() => {
+        const subscription$ = service
+            .getDatasetMetadataAsOf({
+                accountName: TEST_LOGIN,
+                datasetName: TEST_DATASET_NAME,
+                head: mockOlderBlock.blockHash,
+            })
+            .subscribe((res: GetDatasetMetadataAsOfQuery) => {
+                expect(res).toEqual(mockGetDatasetMetadataAsOfQuery);
+            });
+
+        const op = controller.expectOne(GetDatasetMetadataAsOfDocument);
+        expect(op.operation.variables).toEqual({
+            accountName: TEST_LOGIN,
+            datasetName: TEST_DATASET_NAME,
+            head: mockOlderBlock.blockHash,
+        });
+        op.flush({ data: mockGetDatasetMetadataAsOfQuery });
+        tick();
+
+        expect(subscription$.closed).toEqual(true);
+        flush();
+    }));
+
+    it("should read a page of block positions with the filter", fakeAsync(() => {
+        const response = mockChainBlockPositionsQuery([mockBlockAt(3)]);
+        const subscription$ = service
+            .getChainBlockPositions({
+                accountName: TEST_LOGIN,
+                datasetName: TEST_DATASET_NAME,
+                page: 2,
+                perPage: 1,
+                filter: { eventTypes: [MetadataEventType.SetLicense] },
+            })
+            .subscribe((res: DatasetChainBlockPositionsQuery) => {
+                expect(res).toEqual(response);
+            });
+
+        const op = controller.expectOne(DatasetChainBlockPositionsDocument);
+        expect(op.operation.variables).toEqual({
+            accountName: TEST_LOGIN,
+            datasetName: TEST_DATASET_NAME,
+            page: 2,
+            perPage: 1,
+            filter: { eventTypes: [MetadataEventType.SetLicense] },
+        });
+        op.flush({ data: response });
+        tick();
+
+        expect(subscription$.closed).toEqual(true);
         flush();
     }));
 

@@ -16,7 +16,8 @@ import { expectPageNotFoundRedirect, runResolver } from "@common/helpers/base-te
 import { DatasetBasicsFragment } from "@api/kamu.graphql.interface";
 
 import { mockMetadataDerivedUpdate } from "src/app/dataset-view/additional-components/data-tabs.mock";
-import { MetadataTabData } from "src/app/dataset-view/additional-components/metadata-component/metadata.constants";
+import { latestMetadataSnapshot } from "src/app/dataset-view/additional-components/metadata-component/metadata-snapshot.helpers";
+import { MetadataTabData } from "src/app/dataset-view/additional-components/metadata-component/metadata.types";
 import { metadataTransformationTabResolverFn } from "src/app/dataset-view/additional-components/metadata-component/tabs/metadata-transformation-tab/resolvers/metadata-transformation-tab.resolver";
 import { DatasetService } from "src/app/dataset-view/dataset.service";
 import { DatasetSubscriptionsService } from "src/app/dataset-view/dataset.subscriptions.service";
@@ -47,13 +48,13 @@ describe("metadataTransformationTabResolverFn", () => {
         return runResolver(metadataTransformationTabResolverFn);
     }
 
-    it("should resolve the metadata summary for a derivative dataset", async () => {
+    it("should resolve the latest metadata for a derivative dataset", async () => {
         const data = await resolve(mockDatasetBasicsDerivedFragment);
 
         expect(data).toEqual({
             datasetBasics: mockDatasetBasicsDerivedFragment,
             datasetPermissions: mockFullPowerDatasetPermissionsFragment,
-            metadataSummary: mockMetadataDerivedUpdate.metadataSummary,
+            snapshot: latestMetadataSnapshot(mockMetadataDerivedUpdate.metadataSummary),
         });
     });
 

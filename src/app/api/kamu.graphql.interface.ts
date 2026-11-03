@@ -8007,6 +8007,20 @@ export type DatasetByIdQuery = { datasets: { __typename: 'Datasets', byId?: (
       & DatasetBasicsFragment
     ) | null } };
 
+export type DatasetChainBlockPositionsQueryVariables = Exact<{
+  accountName: Scalars['AccountName']['input'];
+  datasetName: Scalars['DatasetName']['input'];
+  page?: InputMaybe<Scalars['Int']['input']>;
+  perPage?: InputMaybe<Scalars['Int']['input']>;
+  filter?: InputMaybe<MetadataBlocksFilter>;
+}>;
+
+
+export type DatasetChainBlockPositionsQuery = { datasets: { __typename: 'Datasets', byOwnerAndName?: { __typename: 'Dataset', metadata: { __typename: 'DatasetMetadata', chain: { __typename: 'MetadataChain', blocks: { __typename: 'MetadataBlockConnection', nodes: Array<(
+              { __typename: 'MetadataBlockExtended' }
+              & ChainBlockPositionFragment
+            )>, pageInfo: { __typename: 'PageBasedInfo', hasNextPage: boolean } } } } } | null } };
+
 export type DatasetListCollaboratorsQueryVariables = Exact<{
   datasetId: Scalars['DatasetID']['input'];
   page?: InputMaybe<Scalars['Int']['input']>;
@@ -8131,6 +8145,50 @@ export type GetDatasetMainDataQuery = { datasets: { __typename: 'Datasets', byOw
       & DatasetDataFragment
       & DatasetMetadataSummaryFragment
       & DatasetPermissionsFragment
+    ) | null } };
+
+export type GetDatasetMetadataAsOfQueryVariables = Exact<{
+  accountName: Scalars['AccountName']['input'];
+  datasetName: Scalars['DatasetName']['input'];
+  head: Scalars['Multihash']['input'];
+}>;
+
+
+export type GetDatasetMetadataAsOfQuery = { datasets: { __typename: 'Datasets', byOwnerAndName?: (
+      { __typename: 'Dataset', metadata: { __typename: 'DatasetMetadata', currentWatermark?: string | null, chain: { __typename: 'MetadataChain', blockByHash?: (
+            { __typename: 'MetadataBlockExtended' }
+            & ChainBlockPositionFragment
+          ) | null }, metadataProjection: Array<{ __typename: 'MetadataBlockExtended', event:
+            | { __typename: 'AddData' }
+            | (
+              { __typename: 'AddPushSource' }
+              & AddPushSourceEventFragment
+            )
+            | { __typename: 'DisablePollingSource' }
+            | { __typename: 'DisablePushSource' }
+            | { __typename: 'ExecuteTransform' }
+            | { __typename: 'Seed' }
+            | { __typename: 'SetAttachments' }
+            | { __typename: 'SetDataSchema', schema: (
+                { __typename: 'DataSchema' }
+                & DataSchemaInfoFragment
+              ) }
+            | { __typename: 'SetInfo' }
+            | (
+              { __typename: 'SetLicense' }
+              & LicenseFragment
+            )
+            | (
+              { __typename: 'SetPollingSource' }
+              & SetPollingSourceEventFragment
+            )
+            | (
+              { __typename: 'SetTransform' }
+              & DatasetTransformFragment
+            )
+            | { __typename: 'SetVocab' }
+           }> } }
+      & DatasetBasicsFragment
     ) | null } };
 
 export type DatasetProtocolsQueryVariables = Exact<{
@@ -9424,6 +9482,8 @@ export type AccessTokenDataFragment = { __typename: 'ViewAccessToken', id: strin
   ) };
 
 export type BlockRefDataFragment = { __typename: 'BlockRef', name: string, blockHash: string };
+
+export type ChainBlockPositionFragment = { __typename: 'MetadataBlockExtended', blockHash: string, systemTime: string, sequenceNumber: number };
 
 export type CurrentSourceFetchUrlFragment = { __typename: 'DatasetMetadata', currentPollingSource?: { __typename: 'SetPollingSource', fetch:
       | { __typename: 'FetchStepContainer' }
@@ -11089,6 +11149,13 @@ export const DatasetFlowProcessesDataFragmentDoc = gql`
 }
     ${DatasetFlowProcessDataFragmentDoc}
 ${WebhookFlowSubProcessGroupDataFragmentDoc}`;
+export const ChainBlockPositionFragmentDoc = gql`
+    fragment ChainBlockPosition on MetadataBlockExtended {
+  blockHash
+  systemTime
+  sequenceNumber
+}
+    `;
 export const DatasetDataSizeFragmentDoc = gql`
     fragment DatasetDataSize on DatasetData {
   numRecordsTotal
@@ -13247,6 +13314,37 @@ export const DatasetByIdDocument = gql`
       super(apollo);
     }
   }
+export const DatasetChainBlockPositionsDocument = gql`
+    query datasetChainBlockPositions($accountName: AccountName!, $datasetName: DatasetName!, $page: Int, $perPage: Int, $filter: MetadataBlocksFilter) {
+  datasets {
+    byOwnerAndName(accountName: $accountName, datasetName: $datasetName) {
+      metadata {
+        chain {
+          blocks(page: $page, perPage: $perPage, filter: $filter) {
+            nodes {
+              ...ChainBlockPosition
+            }
+            pageInfo {
+              hasNextPage
+            }
+          }
+        }
+      }
+    }
+  }
+}
+    ${ChainBlockPositionFragmentDoc}`;
+
+  @Injectable({
+    providedIn: 'root'
+  })
+  export class DatasetChainBlockPositionsGQL extends Apollo.Query<DatasetChainBlockPositionsQuery, DatasetChainBlockPositionsQueryVariables> {
+    document = DatasetChainBlockPositionsDocument;
+    
+    constructor(apollo: Apollo.Apollo) {
+      super(apollo);
+    }
+  }
 export const DatasetListCollaboratorsDocument = gql`
     query datasetListCollaborators($datasetId: DatasetID!, $page: Int, $perPage: Int) {
   datasets {
@@ -13495,6 +13593,57 @@ ${DatasetPermissionsFragmentDoc}`;
   })
   export class GetDatasetMainDataGQL extends Apollo.Query<GetDatasetMainDataQuery, GetDatasetMainDataQueryVariables> {
     document = GetDatasetMainDataDocument;
+    
+    constructor(apollo: Apollo.Apollo) {
+      super(apollo);
+    }
+  }
+export const GetDatasetMetadataAsOfDocument = gql`
+    query getDatasetMetadataAsOf($accountName: AccountName!, $datasetName: DatasetName!, $head: Multihash!) {
+  datasets {
+    byOwnerAndName(accountName: $accountName, datasetName: $datasetName) {
+      ...DatasetBasics
+      metadata {
+        chain {
+          blockByHash(hash: $head) {
+            ...ChainBlockPosition
+          }
+        }
+        currentWatermark(head: $head)
+        metadataProjection(
+          eventTypes: [SET_DATA_SCHEMA, SET_POLLING_SOURCE, ADD_PUSH_SOURCE, SET_TRANSFORM, SET_LICENSE]
+          head: $head
+        ) {
+          event {
+            __typename
+            ... on SetDataSchema {
+              schema(format: ODF_JSON) {
+                ...DataSchemaInfo
+              }
+            }
+            ...SetPollingSourceEvent
+            ...AddPushSourceEvent
+            ...DatasetTransform
+            ...License
+          }
+        }
+      }
+    }
+  }
+}
+    ${DatasetBasicsFragmentDoc}
+${ChainBlockPositionFragmentDoc}
+${DataSchemaInfoFragmentDoc}
+${SetPollingSourceEventFragmentDoc}
+${AddPushSourceEventFragmentDoc}
+${DatasetTransformFragmentDoc}
+${LicenseFragmentDoc}`;
+
+  @Injectable({
+    providedIn: 'root'
+  })
+  export class GetDatasetMetadataAsOfGQL extends Apollo.Query<GetDatasetMetadataAsOfQuery, GetDatasetMetadataAsOfQueryVariables> {
+    document = GetDatasetMetadataAsOfDocument;
     
     constructor(apollo: Apollo.Apollo) {
       super(apollo);

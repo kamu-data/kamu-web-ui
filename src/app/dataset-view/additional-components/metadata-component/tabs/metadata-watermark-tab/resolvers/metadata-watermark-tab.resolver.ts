@@ -9,9 +9,12 @@ import { ResolveFn } from "@angular/router";
 
 import { DatasetKind } from "@api/kamu.graphql.interface";
 
-import { DatasetOverviewTabData } from "src/app/dataset-view/dataset-view.interface";
-import { pageNotFoundIf, requestOverviewTabData } from "src/app/dataset-view/resolvers/dataset-tab-data.helpers";
+import { MetadataTabData } from "src/app/dataset-view/additional-components/metadata-component/metadata.types";
+import { requestMetadataTabData } from "src/app/dataset-view/additional-components/metadata-component/resolver/metadata-tab-data.helpers";
+import { pageNotFoundIf } from "src/app/dataset-view/resolvers/dataset-tab-data.helpers";
 
-export const metadataWatermarkTabResolverFn: ResolveFn<DatasetOverviewTabData> = () => {
-    return requestOverviewTabData().pipe(pageNotFoundIf((data) => data.datasetBasics.kind === DatasetKind.Derivative));
+export const metadataWatermarkTabResolverFn: ResolveFn<MetadataTabData> = (route) => {
+    return requestMetadataTabData(route).pipe(
+        pageNotFoundIf((data) => data.datasetBasics.kind === DatasetKind.Derivative),
+    );
 };

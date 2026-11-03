@@ -15,7 +15,7 @@ import RoutingResolvers from "@common/resolvers/routing-resolvers";
 import { AddPushSourceEventFragment, DatasetKind } from "@api/kamu.graphql.interface";
 import { MaybeNullOrUndefined } from "@interface/app.types";
 
-import { MetadataTabData } from "src/app/dataset-view/additional-components/metadata-component/metadata.constants";
+import { MetadataTabData } from "src/app/dataset-view/additional-components/metadata-component/metadata.types";
 import { SourceEventCommonDataComponent } from "src/app/dataset-view/additional-components/metadata-component/tabs/common/source-event-common-data/source-event-common-data.component";
 import { NavigationService } from "src/app/services/navigation.service";
 
@@ -39,12 +39,13 @@ export class MetadataPushSourcesTabComponent {
     private navigationService = inject(NavigationService);
 
     public get pushSources(): MaybeNullOrUndefined<AddPushSourceEventFragment[]> {
-        return this.datasetMetadataTabData.metadataSummary.metadata.currentPushSources;
+        return this.datasetMetadataTabData.snapshot.pushSources;
     }
 
     public get canEditAddPushSource(): boolean {
         return (
             this.datasetMetadataTabData.datasetBasics.kind === DatasetKind.Root &&
+            this.datasetMetadataTabData.snapshot.isLatest &&
             Boolean(this.pushSources?.length) &&
             this.datasetMetadataTabData.datasetPermissions.permissions.metadata.canCommit
         );

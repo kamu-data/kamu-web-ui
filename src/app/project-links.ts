@@ -74,6 +74,8 @@ export default class ProjectLinks {
     public static readonly URL_QUERY_PARAM_VERSION: string = "version";
     public static readonly URL_QUERY_PARAM_EVENT_TYPES: string = "eventTypes";
     public static readonly URL_QUERY_PARAM_HASH_PREFIX: string = "hashPrefix";
+    public static readonly URL_QUERY_PARAM_HEAD: string = "head";
+    public static readonly URL_QUERY_PARAM_STEPS: string = "steps";
 
     public static readonly URL_PARAM_WEBHOOK_ID: string = "webhookId";
 

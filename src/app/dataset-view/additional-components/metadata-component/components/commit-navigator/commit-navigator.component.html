@@ -1,19 +1,105 @@
-<nav aria-label="Page navigation example">
-    <ul class="pagination">
-        <li class="page-item" [class.disabled]="pageIndex === 1">
-            <a class="page-link" title="Go to previous page" data-test-id="backward-link" (click)="pageChangeBackward()"
-                ><mat-icon class="pt-1">navigate_before</mat-icon></a
-            >
+@let snapshot = commitData.snapshot;
+@let neighbours = commitData.neighbours;
+<nav class="commit-navigator" aria-label="Commit navigation">
+    <ul class="pagination mb-0">
+        <li class="page-item" [class.disabled]="!neighbours.older">
+            @if (neighbours.older; as older) {
+                <a
+                    class="page-link"
+                    title="Go to an older commit"
+                    data-test-id="older-commit-link"
+                    [routerLink]="
+                        {
+                            accountName: datasetBasics.owner.accountName,
+                            datasetName: datasetBasics.name,
+                            tab: DatasetViewTypeEnum.Metadata,
+                            section: section,
+                            head: older.head,
+                            steps: commitData.steps,
+                        } | datasetLink
+                    "
+                    ><mat-icon class="pt-1">navigate_before</mat-icon></a
+                >
+            } @else {
+                <span class="page-link" data-test-id="older-commit-disabled"
+                    ><mat-icon class="pt-1">navigate_before</mat-icon></span
+                >
+            }
         </li>
         <li class="page-item">
-            <span class="page-link date" title="You are on page as of {{ date }} {{ hash | slice: -8 }}"
-                >As of {{ date }} {{ hash | slice: -8 }}</span
+            <span class="page-link date" data-test-id="commit-label"
+                >As of {{ snapshot.block.systemTime | date: DISPLAY_TIME_FORMAT }}
+                <a
+                    data-test-id="commit-hash-link"
+                    [matTooltip]="snapshot.block.blockHash"
+                    [routerLink]="
+                        {
+                            accountName: datasetBasics.owner.accountName,
+                            datasetName: datasetBasics.name,
+                            blockHash: snapshot.block.blockHash,
+                        } | metadataBlockLink
+                    "
+                    >{{ snapshot.block.blockHash | slice: -8 }}</a
+                ></span
             >
         </li>
-        <li class="page-item" [class.disabled]="pageIndex === totalSizeOfPages">
-            <a class="page-link" title="Go to next page" data-test-id="forward-link" (click)="pageChangeForward()"
-                ><span><mat-icon class="pt-1">navigate_next</mat-icon></span></a
-            >
+        <li class="page-item" [class.disabled]="!neighbours.newer">
+            @if (neighbours.newer; as newer) {
+                <a
+                    class="page-link"
+                    title="Go to a newer commit"
+                    data-test-id="newer-commit-link"
+                    [routerLink]="
+                        {
+                            accountName: datasetBasics.owner.accountName,
+                            datasetName: datasetBasics.name,
+                            tab: DatasetViewTypeEnum.Metadata,
+                            section: section,
+                            head: newer.head,
+                            steps: commitData.steps,
+                        } | datasetLink
+                    "
+                    ><mat-icon class="pt-1">navigate_next</mat-icon></a
+                >
+            } @else {
+                <span class="page-link" data-test-id="newer-commit-disabled"
+                    ><mat-icon class="pt-1">navigate_next</mat-icon></span
+                >
+            }
         </li>
     </ul>
+
+    @if (snapshot.isLatest) {
+        <span class="latest-badge" data-test-id="latest-commit-badge">Latest</span>
+    } @else {
+        <a
+            class="latest-link"
+            data-test-id="latest-commit-link"
+            [routerLink]="
+                {
+                    accountName: datasetBasics.owner.accountName,
+                    datasetName: datasetBasics.name,
+                    tab: DatasetViewTypeEnum.Metadata,
+                    section: section,
+                    steps: commitData.steps,
+                } | datasetLink
+            "
+            >Go to latest</a
+        >
+    }
+
+    <label class="step-mode">
+        <span class="text-muted me-2">Step through</span>
+        <select class="form-select form-select-sm" data-test-id="commit-step-mode" (change)="onStepModeChange($event)">
+            <option
+                [value]="CommitStepMode.MetadataChanges"
+                [selected]="commitData.steps === CommitStepMode.MetadataChanges"
+            >
+                Metadata changes
+            </option>
+            <option [value]="CommitStepMode.AllBlocks" [selected]="commitData.steps === CommitStepMode.AllBlocks">
+                All blocks
+            </option>
+        </select>
+    </label>
 </nav>

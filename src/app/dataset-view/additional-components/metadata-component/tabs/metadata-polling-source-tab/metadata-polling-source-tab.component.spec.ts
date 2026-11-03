@@ -26,6 +26,10 @@ import {
     mockSetPollingSourceEventWithFetchStepMqtt,
 } from "src/app/dataset-block/metadata-block/components/event-details/mock.events";
 import { mockMetadataRootUpdate } from "src/app/dataset-view/additional-components/data-tabs.mock";
+import {
+    atOlderCommit,
+    mockLatestRootSnapshot,
+} from "src/app/dataset-view/additional-components/metadata-component/metadata.mock";
 import { MetadataPollingSourceTabComponent } from "src/app/dataset-view/additional-components/metadata-component/tabs/metadata-polling-source-tab/metadata-polling-source-tab.component";
 import { mockDatasetBasicsRootFragment, mockFullPowerDatasetPermissionsFragment } from "src/app/search/mock.data";
 import { NavigationService } from "src/app/services/navigation.service";
@@ -46,7 +50,7 @@ describe("MetadataPollingSourceTabComponent", () => {
         setComponentInput(fixture, "datasetMetadataTabData", {
             datasetBasics: mockDatasetBasicsRootFragment,
             datasetPermissions: mockFullPowerDatasetPermissionsFragment,
-            metadataSummary: mockMetadataRootUpdate.metadataSummary,
+            snapshot: mockLatestRootSnapshot,
         });
         registerMatSvgIcons();
         fixture.detectChanges();
@@ -73,20 +77,30 @@ describe("MetadataPollingSourceTabComponent", () => {
         }
     });
 
+    it("should hide the edit buttons as of an older commit", () => {
+        expect(findElementByDataTestId(fixture, "edit-polling-source")).toBeDefined();
+
+        setComponentInput(fixture, "datasetMetadataTabData", {
+            datasetBasics: mockDatasetBasicsRootFragment,
+            datasetPermissions: mockFullPowerDatasetPermissionsFragment,
+            snapshot: atOlderCommit(mockLatestRootSnapshot),
+        });
+        fixture.detectChanges();
+
+        expect(findElementByDataTestId(fixture, "fetch-step-url")).toBeDefined();
+        expect(findElementByDataTestId(fixture, "edit-polling-source")).toBeUndefined();
+    });
+
     describe("MQTT credentials", () => {
         function showMqttSource(fetch: FetchStepMqttDataFragment): void {
-            const metadataSummary = mockMetadataRootUpdate.metadataSummary;
             setComponentInput(fixture, "datasetMetadataTabData", {
                 datasetBasics: mockDatasetBasicsRootFragment,
                 datasetPermissions: mockFullPowerDatasetPermissionsFragment,
-                metadataSummary: {
-                    ...metadataSummary,
-                    metadata: {
-                        ...metadataSummary.metadata,
-                        currentPollingSource: {
-                            ...mockSetPollingSourceEventWithFetchStepMqtt,
-                            fetch: { ...mockFetchStepMqtt, ...fetch },
-                        },
+                snapshot: {
+                    ...mockLatestRootSnapshot,
+                    pollingSource: {
+                        ...mockSetPollingSourceEventWithFetchStepMqtt,
+                        fetch: { ...mockFetchStepMqtt, ...fetch },
                     },
                 },
             });

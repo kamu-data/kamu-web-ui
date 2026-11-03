@@ -39,7 +39,6 @@ export interface DataSqlErrorUpdate {
 export interface MetadataSchemaUpdate {
     schema: MaybeNull<DatasetSchema>;
     metadataSummary: DatasetMetadataSummaryFragment;
-    pageInfo: DatasetPageInfoFragment;
 }
 
 export interface DatasetHistoryUpdate {

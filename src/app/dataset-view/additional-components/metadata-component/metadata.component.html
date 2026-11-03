@@ -1,22 +1,12 @@
 <div class="container container-main">
     <div id="metadata-block">
-        @if (currentState) {
-            <div appFeatureFlag="dataset.panel.metadata.pagination" id="pagination-block">
-                <app-custom-pagination
-                    [hash]="latestBlockHash"
-                    [date]="latestBlockSystemTime"
-                    [pageIndex]="currentPage"
-                    [limit]="5"
-                    [total]="totalPages"
-                    (pageChange)="onPageChange($event)"
-                />
-            </div>
-        }
+        <app-commit-navigator
+            [datasetBasics]="datasetMetadataTabData.datasetBasics"
+            [commitData]="commitData"
+            [section]="activeTab"
+        />
 
-        @if (
-            !(!currentTransform && datasetMetadataTabData.datasetBasics.kind === "DERIVATIVE") &&
-            !(hasAnySource() && datasetMetadataTabData.datasetBasics.kind === "ROOT")
-        ) {
+        @if (!hasNoMetadata) {
             <div class="container-details">
                 <div class="sidebar mt-3">
                     <ul class="action-list">
@@ -30,12 +20,15 @@
                                 >
                                     <a
                                         routerLinkActive="active"
+                                        [attr.data-test-id]="'metadata-menu-' + menuItem.activeTab"
                                         [routerLink]="
                                             {
                                                 accountName: datasetMetadataTabData.datasetBasics.owner.accountName,
                                                 datasetName: datasetMetadataTabData.datasetBasics.name,
                                                 tab: DatasetViewTypeEnum.Metadata,
                                                 section: menuItem.activeTab,
+                                                head: snapshot.isLatest ? undefined : snapshot.block.blockHash,
+                                                steps: commitData.steps,
                                             } | datasetLink
                                         "
                                     >
@@ -55,50 +48,54 @@
                     </div>
                 </div>
             </div>
-        }
-        @if (hasAnySource() && datasetMetadataTabData.datasetBasics.kind === "ROOT") {
-            <h3 class="text-center mt-4">
-                There is no metadata. Need to add
-                <a
-                    class="add-link"
-                    [routerLink]="
-                        {
-                            accountName: datasetMetadataTabData.datasetBasics.owner.accountName,
-                            datasetName: datasetMetadataTabData.datasetBasics.name,
-                        } | sourceEventEditorLink: SourceEventEditor.AddPollingSource
-                    "
-                >
-                    Polling source event</a
-                >
-                or
-                <a
-                    class="add-link"
-                    [routerLink]="
-                        {
-                            accountName: datasetMetadataTabData.datasetBasics.owner.accountName,
-                            datasetName: datasetMetadataTabData.datasetBasics.name,
-                        } | sourceEventEditorLink: SourceEventEditor.AddPushSource
-                    "
-                >
-                    Push source event</a
-                >
-            </h3>
-        }
-        @if (!currentTransform && datasetMetadataTabData.datasetBasics.kind === "DERIVATIVE") {
-            <h3 class="text-center">
-                There is no metadata. Need to add
-                <a
-                    class="add-link"
-                    [routerLink]="
-                        {
-                            accountName: datasetMetadataTabData.datasetBasics.owner.accountName,
-                            datasetName: datasetMetadataTabData.datasetBasics.name,
-                        } | sourceEventEditorLink: SourceEventEditor.SetTransform
-                    "
-                >
-                    SetTransform event</a
-                >
-            </h3>
+        } @else {
+            @if (!snapshot.isLatest) {
+                <h3 class="text-center mt-4" data-test-id="no-metadata-at-commit">
+                    There is no metadata as of this commit
+                </h3>
+            } @else if (isRoot) {
+                <h3 class="text-center mt-4">
+                    There is no metadata. Need to add
+                    <a
+                        class="add-link"
+                        [routerLink]="
+                            {
+                                accountName: datasetMetadataTabData.datasetBasics.owner.accountName,
+                                datasetName: datasetMetadataTabData.datasetBasics.name,
+                            } | sourceEventEditorLink: SourceEventEditor.AddPollingSource
+                        "
+                    >
+                        Polling source event</a
+                    >
+                    or
+                    <a
+                        class="add-link"
+                        [routerLink]="
+                            {
+                                accountName: datasetMetadataTabData.datasetBasics.owner.accountName,
+                                datasetName: datasetMetadataTabData.datasetBasics.name,
+                            } | sourceEventEditorLink: SourceEventEditor.AddPushSource
+                        "
+                    >
+                        Push source event</a
+                    >
+                </h3>
+            } @else {
+                <h3 class="text-center">
+                    There is no metadata. Need to add
+                    <a
+                        class="add-link"
+                        [routerLink]="
+                            {
+                                accountName: datasetMetadataTabData.datasetBasics.owner.accountName,
+                                datasetName: datasetMetadataTabData.datasetBasics.name,
+                            } | sourceEventEditorLink: SourceEventEditor.SetTransform
+                        "
+                    >
+                        SetTransform event</a
+                    >
+                </h3>
+            }
         }
     </div>
 </div>

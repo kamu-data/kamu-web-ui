@@ -1,3 +1,10 @@
+/**
+ * Copyright Kamu Data, Inc. and contributors. All rights reserved.
+ *
+ * Use of this software is governed by the Business Source License
+ * included in the LICENSE file.
+ */
+
 // Providers the unit-test builder adds to every TestBed (the `providersFile` option in angular.json).
 
 import { EnvironmentProviders, provideCheckNoChangesConfig, Provider } from "@angular/core";

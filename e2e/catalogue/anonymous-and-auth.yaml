@@ -1,0 +1,46 @@
+capability: Anonymous use and sign-in
+entries:
+  - id: login
+    journey: Choose a login method and sign in with a password
+    persona: anonymous
+    routes: [v/login]
+    states: [login method choice, password form]
+    profile: seed
+    tier:
+    why:
+
+  - id: anonymous-browsing
+    journey: Browse public data without an account; pages that need one send the visitor away
+    persona: anonymous
+    routes: [v/search, ":accountName/:datasetName", v/new-dataset]
+    states: [logged-out header, public overview, redirect from a guarded page]
+    profile: seed
+    tier:
+    why:
+
+  - id: error-pages
+    journey: A wrong link or a refused login lands on a page that explains it
+    persona: anonymous
+    routes: [v/page-not-found, "**", v/account-whitelist-not-found, v/login-unavailable]
+    states: [not found logged in and out, unknown URL, whitelist and login unavailable pages]
+    profile: seed
+    tier:
+    why:
+
+  - id: cli-login
+    journey: Finish logging in the kamu CLI through the browser
+    persona: owner
+    routes: [v/return-to-cli]
+    states: [return to CLI page]
+    profile: seed
+    tier:
+    why:
+
+  - id: github-login
+    journey: Sign in with GitHub
+    persona: anonymous
+    routes: [github_callback]
+    states: [callback handled, signed in]
+    profile: seed
+    tier:
+    why:

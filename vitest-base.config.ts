@@ -1,3 +1,10 @@
+/**
+ * Copyright Kamu Data, Inc. and contributors. All rights reserved.
+ *
+ * Use of this software is governed by the Business Source License
+ * included in the LICENSE file.
+ */
+
 // Vitest settings the Angular unit-test builder merges into its own (the `runnerConfig` option in
 // angular.json). The browser itself comes from the builder's `browsers` option.
 

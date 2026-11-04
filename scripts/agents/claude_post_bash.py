@@ -1,3 +1,8 @@
+# Copyright Kamu Data, Inc. and contributors. All rights reserved.
+#
+# Use of this software is governed by the Business Source License
+# included in the LICENSE file.
+
 """Claude PostToolUse(Bash): prettier, added-text checks and reminders for files the command changed."""
 
 from __future__ import annotations

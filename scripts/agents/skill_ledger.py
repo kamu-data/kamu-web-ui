@@ -1,3 +1,8 @@
+# Copyright Kamu Data, Inc. and contributors. All rights reserved.
+#
+# Use of this software is governed by the Business Source License
+# included in the LICENSE file.
+
 """Record which skills a session has loaded, and refuse guarded edits until it has.
 
 A load is recorded from what the agent actually did — a Skill tool call, a Read of a

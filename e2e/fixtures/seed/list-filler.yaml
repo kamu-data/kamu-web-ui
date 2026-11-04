@@ -1,0 +1,20 @@
+# Template for the filler datasets listed in inventory.yaml; ${NAME} and ${DESCRIPTION} come from there.
+kind: DatasetSnapshot
+version: 1
+content:
+  name: ${NAME}
+  kind: Root
+  metadata:
+    - kind: AddPushSource
+      sourceName: default
+      read:
+        kind: NdJson
+        schema:
+          fields:
+            - {name: event_time, type: {kind: Timestamp, unit: Millisecond, timezone: UTC}}
+            - {name: value, type: {kind: Int64}}
+      merge:
+        kind: Append
+    - kind: SetInfo
+      description: ${DESCRIPTION}
+      keywords: [demo]

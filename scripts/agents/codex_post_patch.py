@@ -1,3 +1,8 @@
+# Copyright Kamu Data, Inc. and contributors. All rights reserved.
+#
+# Use of this software is governed by the Business Source License
+# included in the LICENSE file.
+
 """Codex PostToolUse(apply_patch): prettier and added-text checks on every patched file."""
 
 from __future__ import annotations

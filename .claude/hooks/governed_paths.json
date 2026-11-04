@@ -11,6 +11,7 @@
     },
     { "skill": "kamu-ui-forms-and-validation", "paths": ["src/app/common/validation/**"] },
     { "skill": "kamu-ui-release-dependency-workflows", "paths": ["CHANGELOG.md", "package.json", "update-dependecies.md"] },
+    { "skill": "kamu-ui-visual-checks", "paths": ["e2e/**"] },
     {
       "skill": "kamu-ui-prose-and-comments",
       "paths": ["AGENTS.md", "CLAUDE.md", "DEVELOPER.md", "docs/**/*.md", ".claude/skills/**", ".claude/agents/**"]

@@ -1,0 +1,37 @@
+capability: Discover
+entries:
+  - id: search-datasets
+    journey: Find datasets by name and narrow the results with filters, across pages
+    persona: reader
+    routes: [v/search]
+    states: [result list with chips, filter checkboxes, pagination, second page]
+    profile: seed
+    tier:
+    why:
+
+  - id: account-datasets
+    journey: Open an account and browse its datasets, across pages
+    persona: reader
+    routes: [":accountName", ":accountName/~select", ":accountName/~select/datasets"]
+    states: [account header, dataset list, pagination, second page]
+    profile: seed
+    tier:
+    why:
+
+  - id: empty-instance
+    journey: A new node with no data shows empty search results and an empty account
+    persona: owner
+    routes: [v/search, ":accountName/~select/datasets"]
+    states: [no datasets found, empty account dataset list]
+    profile: empty
+    tier:
+    why:
+
+  - id: browse-published-data
+    journey: Search a node full of real published datasets and open an organization
+    persona: anonymous
+    routes: [v/search, ":accountName"]
+    states: [many results with real names, organization account page]
+    profile: with-data-mt
+    tier:
+    why:

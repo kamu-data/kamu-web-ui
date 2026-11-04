@@ -94,15 +94,5 @@ export class MetadataPollingSourceTabComponent {
                 yesButtonText: "Ok",
             }),
         );
-        //TODO: Implement when api exists
-        // this.trackSubscription(
-        //     this.datasetCommitService
-        //         .commitEventToDataset(
-        //             this.getDatasetInfoFromUrl().accountName,
-        //             this.getDatasetInfoFromUrl().datasetName,
-        //             this.yamlEventService.buildYamlDisablePollingSourceEvent(),
-        //         )
-        //         .subscribe(),
-        // );
     }
 }

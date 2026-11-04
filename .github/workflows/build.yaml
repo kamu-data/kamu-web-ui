@@ -1,5 +1,7 @@
 name: build
-on: [push]
+on:
+  push:
+  workflow_dispatch:
 
 concurrency:
   group: ${{ github.workflow }}-${{ github.ref }}
@@ -13,10 +15,16 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       - uses: ./.github/actions/setup-node-modules
+      - uses: astral-sh/setup-uv@v6
       - run: npm run prettier-check
       - run: npm run lint
       - run: npm run stylelint
       - run: npm run check-styles
+      - run: npm run check-license
+      - run: npm run e2e-check
+      - run: npm run ruff
+      # Skills, AGENTS.md and design docs are what this checks, so it runs on documentation-only changes too
+      - run: npm run lint-harness
 
   test:
     name: Test

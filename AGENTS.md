@@ -70,10 +70,15 @@ The hooks resolve the pinned version for their own formatting runs.
 | The backend schema moved | `npm run gql-update-schema`, then `npm run gql-codegen`; review both diffs |
 | `package.json` | `npm install`, then `npm run lint`, `npm test`, `npm run build-prod` |
 | `scripts/styles/` | `npm run check-styles` (runs its tests first) |
+| A new script, config or stylesheet, or `scripts/license/` | `npm run check-license` (runs its tests first) |
+| Styles that can change what users see, or a Material, Bootstrap or ng-select upgrade | `npm run visual -- compare` (`kamu-ui-visual-checks`) |
+| `e2e/` | `npm run lint`, `npm run e2e-check`, and a `compare` run of what changed |
 | `scripts/agents/`, `.claude/`, `.codex/`, skills, `AGENTS.md`, `CLAUDE.md`, `docs/internal/` | `npm run lint-harness` |
+| Any Python file (`scripts/`, `e2e/`) | `npm run ruff` (`npm run ruff-fix` formats and fixes); needs [uv](https://docs.astral.sh/uv/) |
 
-- CI (`.github/workflows/build.yaml`) runs `prettier-check`, `lint`, `stylelint`, `check-styles`, `test`,
-  `build` and `build-prod`; the full set before a PR is the same list.
+- CI (`.github/workflows/build.yaml`) runs `prettier-check`, `lint`, `stylelint`, `check-styles`,
+  `check-license`, `e2e-check`, `ruff`, `lint-harness`, `test`, `build` and `build-prod`; the full set
+  before a PR is the same list.
 - Treat lint errors as errors to fix. Do not silence them with `eslint-disable` or
   `stylelint-disable` comments: a pragma hides the problem instead of resolving it. If a rule
   seems genuinely wrong for a case, ask before suppressing it.
@@ -114,6 +119,12 @@ Angular and TypeScript style lives in the `kamu-ui-angular-style` skill and test
 `kamu-ui-unit-tests`; the edit hook requires them before the first edit they govern (see the
 table below).
 
+Every source file starts with the license header from `src/docs/license-header-template.js`:
+TypeScript, stylesheets, scripts and config files. Python and shell files carry the same text as
+`#` lines; a `#!` line may come first. Empty files are exempt, and generated files carry what their
+generator writes. eslint's `license-header/header` rule checks TypeScript under `src/app`,
+`npm run check-license` everything else, and the post-edit hook checks each new file.
+
 ## What to load for which task
 
 ### Skills
@@ -134,6 +145,7 @@ in addition to that match (an api class needs both `kamu-ui-graphql-api` and
 | Routes and the lazy bundle split, guards and resolvers wiring, `ProjectLinks`, `RoutingResolvers` | `kamu-ui-routing` | `src/app/**/*routing*.ts`, `src/app/project-links.ts`, `src/app/common/resolvers/routing-resolvers.ts` |
 | Form fields and validators: which rules a field needs, `appFieldError`, matching the backend, server errors on a field, source editor config entries | `kamu-ui-forms-and-validation` | `src/app/common/validation/**` |
 | Changelog, release, npm dependency updates | `kamu-ui-release-dependency-workflows` | `CHANGELOG.md`, `package.json`, `update-dependecies.md` |
+| Visual comparison of builds: when to run it, the business catalogue, data profiles, scenarios, the baseline cache | `kamu-ui-visual-checks` | `e2e/**` |
 | Comments and any prose in docs, skills or sub-agent prompts | `kamu-ui-prose-and-comments` | `AGENTS.md`, `CLAUDE.md`, `DEVELOPER.md`, `docs/**/*.md`, `.claude/skills/**`, `.claude/agents/**` |
 | Adding a new routed page, tab or settings section end to end | `kamu-ui-adding-a-page` | |
 | GitHub through `gh`: PR descriptions, editing PRs and issues, screenshots, known `gh` failures and their workarounds | `kamu-ui-github-operations` | |
@@ -151,6 +163,7 @@ change invalidates what it says.
 | Cutting a release | [`DEVELOPER.md`](DEVELOPER.md#release-procedure) |
 | Packages that must be upgraded together | [`update-dependecies.md`](update-dependecies.md) |
 | How the agent harness works: hooks, skills, harness lints, adding a skill or guarded path | [`docs/internal/agent-harness.md`](docs/internal/agent-harness.md) |
+| How the visual comparison kit works: run flow, backends, profiles and the inventory, snapshots, determinism, cache keys, rejected approaches | [`docs/internal/visual-comparison.md`](docs/internal/visual-comparison.md) |
 
 ## Documentation classes
 

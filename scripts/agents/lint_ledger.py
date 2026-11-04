@@ -1,3 +1,8 @@
+# Copyright Kamu Data, Inc. and contributors. All rights reserved.
+#
+# Use of this software is governed by the Business Source License
+# included in the LICENSE file.
+
 """Remember the last green `npm run lint`, and whether its inputs changed since.
 
 The fingerprint covers HEAD plus every changed or untracked lint input (TypeScript, the eslint

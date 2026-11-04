@@ -1,3 +1,10 @@
+/**
+ * Copyright Kamu Data, Inc. and contributors. All rights reserved.
+ *
+ * Use of this software is governed by the Business Source License
+ * included in the LICENSE file.
+ */
+
 const fs = require("fs");
 const path = require("path");
 const { LICENSE_HEADER } = require("./src/docs/license-header");

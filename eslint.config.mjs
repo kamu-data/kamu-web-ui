@@ -1,3 +1,10 @@
+/**
+ * Copyright Kamu Data, Inc. and contributors. All rights reserved.
+ *
+ * Use of this software is governed by the Business Source License
+ * included in the LICENSE file.
+ */
+
 // eslint.config.js
 import angularTemplatePlugin from "@angular-eslint/eslint-plugin-template";
 import angularTemplateParser from "@angular-eslint/template-parser";
@@ -281,6 +288,30 @@ export default [
     ],
     rules: {
       "@angular-eslint/template/cyclomatic-complexity": ["error", { maxComplexity: 10 }],
+    },
+  },
+  // The e2e kit's scripts: Node helpers, plus page-lib.js and snapshot.js, which run in the page
+  {
+    files: ["e2e/**/*.mjs", "e2e/**/*.js"],
+    languageOptions: {
+      ecmaVersion: "latest",
+      sourceType: "module",
+      globals: Object.fromEntries(
+        [
+          ...["process", "console", "fetch", "URL", "Buffer", "WebSocket", "AbortSignal", "performance"],
+          ...["setTimeout", "clearTimeout", "setInterval"],
+          ...["window", "document", "getComputedStyle", "location", "scrollX", "scrollY"],
+        ].map((name) => [name, "readonly"]),
+      ),
+    },
+    rules: {
+      "no-undef": "error",
+      "no-unused-vars": ["error", { caughtErrors: "none" }],
+      "no-unreachable": "error",
+      "no-dupe-keys": "error",
+      "no-empty": ["error", { allowEmptyCatch: true }],
+      "prefer-const": "error",
+      eqeqeq: "error",
     },
   },
   // License header plugin for specific files

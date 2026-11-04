@@ -1,0 +1,19 @@
+[project]
+name = "kamu-web-ui-e2e"
+version = "0.0.0"
+description = "Visual comparison of Kamu Web UI builds and its fixtures"
+requires-python = ">=3.12"
+dependencies = [
+    "graphql-core==3.3.1",
+    "pillow==13.0.0",
+    "pyyaml==6.0.3",
+    "websockets==17.3",
+]
+
+[dependency-groups]
+dev = [
+    "ruff==0.17.3",
+]
+
+[tool.uv]
+package = false

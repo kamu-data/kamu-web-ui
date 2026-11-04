@@ -1,3 +1,8 @@
+# Copyright Kamu Data, Inc. and contributors. All rights reserved.
+#
+# Use of this software is governed by the Business Source License
+# included in the LICENSE file.
+
 """Claude SessionStart: inject the harness contract; a compacted or cleared session reloads skills.
 
 Also puts the Node version `.nvmrc` pins first on PATH for every later Bash command, through

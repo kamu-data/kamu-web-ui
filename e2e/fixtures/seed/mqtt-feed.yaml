@@ -1,0 +1,29 @@
+kind: DatasetSnapshot
+version: 1
+content:
+  name: mqtt-feed
+  kind: Root
+  metadata:
+    # Never run: the source shows the MQTT broker and its topics
+    - kind: SetPollingSource
+      fetch:
+        kind: Mqtt
+        host: mqtt.example.com
+        port: 1883
+        topics:
+          - {path: sensors/+/temperature, qos: AtLeastOnce}
+          - {path: sensors/+/humidity, qos: AtMostOnce}
+      read:
+        kind: NdJson
+        schema:
+          fields:
+            - {name: event_time, type: {kind: Timestamp, unit: Millisecond, timezone: UTC}}
+            - {name: sensor, type: {kind: String}}
+            - {name: value, type: {kind: Float64}}
+      merge:
+        kind: Append
+    - kind: SetInfo
+      description: Root dataset subscribed to MQTT topics, never run
+      keywords: [demo, mqtt]
+    - kind: SetVocab
+      eventTimeColumn: event_time

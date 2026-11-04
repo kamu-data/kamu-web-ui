@@ -1,3 +1,8 @@
+# Copyright Kamu Data, Inc. and contributors. All rights reserved.
+#
+# Use of this software is governed by the Business Source License
+# included in the LICENSE file.
+
 """Facts about this repository that the shared hook modules consult.
 
 The rest of this package tracks its kamu-cli counterpart module by module; what differs between
@@ -16,9 +21,10 @@ from pathlib import Path
 
 from scripts.agents.common import ROOT, matches
 
-# The header eslint's `license-header/header` rule and `npm run check-styles` enforce; this file is its single source
+# The header eslint's `license-header/header` rule (TypeScript under src/app) and `npm run check-license`
+# (every other source file, `scripts/license/check_license.py`) enforce; this file is its single source
 LICENSE_HEADER_FILE = ROOT / "src" / "docs" / "license-header-template.js"
-LICENSE_SCOPE = ["src/app/**/*.ts", "src/**/*.scss"]
+ESLINT_LICENSE_SCOPE = ["src/app/**/*.ts"]
 LICENSE_EXEMPT = ["src/app/api/kamu.graphql.interface.ts", "src/app/editor/generated/**"]
 
 # Node tools run on the version `.nvmrc` pins, resolved through nvm
@@ -28,7 +34,7 @@ SELECT_NODE = '. "$NVM_DIR/nvm.sh" && nvm use >/dev/null &&'
 
 # Same file set as `npm run prettier`; `.prettierignore` still applies to explicit paths
 PRETTIER = ROOT / "node_modules" / ".bin" / "prettier"
-FORMATTED = ["**/*.ts", "**/*.html", "**/*.scss", "**/*.js"]
+FORMATTED = ["**/*.ts", "**/*.html", "**/*.scss", "**/*.js", "**/*.mjs"]
 
 # The lint gate: a green run of one of these, alone on the command line, clears the Stop reminder
 LINT_COMMAND = "npm run lint"

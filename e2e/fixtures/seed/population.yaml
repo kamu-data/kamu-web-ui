@@ -1,0 +1,47 @@
+kind: DatasetSnapshot
+version: 1
+content:
+  name: population
+  kind: Root
+  metadata:
+    - kind: SetPollingSource
+      fetch:
+        kind: FilesGlob
+        # Relative to the workspace: the seed copies data/*.csv to <ws>/seed-data/.
+        path: seed-data/population-*.csv
+      read:
+        kind: Csv
+        header: true
+        schema:
+          fields:
+            - {name: event_time, type: {kind: Timestamp, unit: Millisecond, timezone: UTC}}
+            - {name: city, type: {kind: String}}
+            - {name: population, type: {kind: Int64}}
+      merge:
+        kind: Ledger
+        primaryKey:
+          - event_time
+          - city
+    - kind: SetInfo
+      description: Population root dataset
+      keywords: [demo, population, cities]
+    - kind: SetVocab
+      eventTimeColumn: event_time
+    - kind: SetLicense
+      shortName: CC-BY-4.0
+      spdxId: CC-BY-4.0
+      name: Creative Commons Attribution 4.0 International
+      websiteUrl: https://creativecommons.org/licenses/by/4.0/
+    - kind: SetAttachments
+      attachments:
+        kind: Embedded
+        items:
+          - path: README.md
+            content: |
+              # Population
+
+              Seeded demo dataset for the visual capture kit.
+
+              | city  | population |
+              |-------|------------|
+              | city1 | 1000       |

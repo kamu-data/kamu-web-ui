@@ -1,0 +1,33 @@
+kind: DatasetSnapshot
+version: 1
+content:
+  name: never-run
+  kind: Root
+  metadata:
+    - kind: SetPollingSource
+      # Event time from the file name, cached, in name order: the source tab shows each
+      fetch:
+        kind: FilesGlob
+        path: seed-data/never-run-*.csv
+        eventTime:
+          kind: FromPath
+          pattern: never-run-(\d+-\d+-\d+)\.csv
+          timestampFormat: "%Y-%m-%d"
+        cache:
+          kind: Forever
+        order: ByName
+      read:
+        kind: Csv
+        header: true
+        separator: ";"
+        schema:
+          fields:
+            - {name: event_time, type: {kind: Timestamp, unit: Millisecond, timezone: UTC}}
+            - {name: value, type: {kind: Int64}}
+      merge:
+        kind: Append
+    - kind: SetInfo
+      description: Root dataset with a polling source and no flow runs
+      keywords: [demo, idle]
+    - kind: SetVocab
+      eventTimeColumn: event_time

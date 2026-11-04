@@ -1,3 +1,10 @@
+/**
+ * Copyright Kamu Data, Inc. and contributors. All rights reserved.
+ *
+ * Use of this software is governed by the Business Source License
+ * included in the LICENSE file.
+ */
+
 // Runs before every spec file (the `setupFiles` option in angular.json), once Vitest has set up its globals.
 
 // Runs each `describe` in a sync zone and each test and hook in a ProxyZone, which `fakeAsync` needs.

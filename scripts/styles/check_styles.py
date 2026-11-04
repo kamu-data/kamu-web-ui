@@ -1,11 +1,14 @@
+# Copyright Kamu Data, Inc. and contributors. All rights reserved.
+#
+# Use of this software is governed by the Business Source License
+# included in the LICENSE file.
+
 """Checks on the app's SCSS that stylelint cannot make, because they need the templates and the
 installed Material, CDK and Bootstrap packages.
 
 Run from the repository root after `npm ci`: `npm run check-styles`. Exit status 1 lists every
 finding.
 
-- Every stylesheet under `src/` starts with the license header from
-  `src/docs/license-header-template.js`.
 - Every `.mat-*`, `.mdc-*` and `.cdk-*` class a stylesheet names is still set by Material or the
   CDK, or by the app itself. A Material release that renames a class otherwise leaves our rule
   matching nothing.
@@ -22,7 +25,6 @@ from dataclasses import dataclass
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[2]
-LICENSE_HEADER_FILE = ROOT / "src" / "docs" / "license-header-template.js"
 
 # Bundles that set classes and define or read custom properties at run time
 LIBRARY_GLOBS = [
@@ -78,14 +80,6 @@ def strip_comments(scss: str) -> str:
 def word(name: str) -> str:
     """A pattern for `name` as a whole class or property name."""
     return r"(?<![\w-])" + re.escape(name) + r"(?![\w-])"
-
-
-def check_license(sources: Sources, header: str) -> list[Finding]:
-    return [
-        Finding(file, "does not start with the license header from src/docs/license-header-template.js")
-        for file, text in sources.stylesheets.items()
-        if not text.startswith(header)
-    ]
 
 
 def library_sets_class(name: str, library_code: str) -> bool:
@@ -154,9 +148,8 @@ def check_token_overrides(sources: Sources) -> list[Finding]:
     return findings
 
 
-def check(sources: Sources, header: str) -> list[Finding]:
+def check(sources: Sources) -> list[Finding]:
     return [
-        *check_license(sources, header),
         *check_library_classes(sources),
         *check_custom_property_reads(sources),
         *check_token_overrides(sources),
@@ -185,9 +178,8 @@ def load_sources(root: Path) -> Sources:
 
 
 def main() -> int:
-    header = LICENSE_HEADER_FILE.read_text(encoding="utf8").strip()
     sources = load_sources(ROOT)
-    findings = check(sources, header)
+    findings = check(sources)
     for finding in findings:
         print(finding)
     print(f"check-styles: {len(sources.stylesheets)} stylesheets, {len(findings)} findings")

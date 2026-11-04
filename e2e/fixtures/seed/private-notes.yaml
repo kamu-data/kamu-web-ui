@@ -1,0 +1,21 @@
+kind: DatasetSnapshot
+version: 1
+content:
+  name: private-notes
+  kind: Root
+  metadata:
+    - kind: AddPushSource
+      sourceName: default
+      read:
+        kind: NdJson
+        schema:
+          fields:
+            - {name: event_time, type: {kind: Timestamp, unit: Millisecond, timezone: UTC}}
+            - {name: note, type: {kind: String}}
+      merge:
+        kind: Append
+    - kind: SetInfo
+      description: Private dataset, visible only to its owner
+      keywords: [private]
+    - kind: SetVocab
+      eventTimeColumn: event_time

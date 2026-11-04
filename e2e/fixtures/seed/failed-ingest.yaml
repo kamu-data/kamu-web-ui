@@ -1,0 +1,25 @@
+kind: DatasetSnapshot
+version: 1
+content:
+  name: failed-ingest
+  kind: Root
+  metadata:
+    - kind: SetPollingSource
+      fetch:
+        kind: Url
+        # Never exists: the seeded ingest flow fails.
+        url: file:///nonexistent/kamu-ui-capture/failed-ingest.csv
+      read:
+        kind: Csv
+        header: true
+        schema:
+          fields:
+            - {name: event_time, type: {kind: Timestamp, unit: Millisecond, timezone: UTC}}
+            - {name: value, type: {kind: Int64}}
+      merge:
+        kind: Append
+    - kind: SetInfo
+      description: Root dataset whose only ingest flow failed
+      keywords: [demo, failing]
+    - kind: SetVocab
+      eventTimeColumn: event_time

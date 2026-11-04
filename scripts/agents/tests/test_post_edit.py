@@ -1,3 +1,8 @@
+# Copyright Kamu Data, Inc. and contributors. All rights reserved.
+#
+# Use of this software is governed by the Business Source License
+# included in the LICENSE file.
+
 import tempfile
 import unittest
 from pathlib import Path
@@ -123,18 +128,31 @@ class LicenseTest(unittest.TestCase):
         self.file.write_text(LICENSE_HEADER + "\n\nexport const x = 1;\n")
         self.assertEqual(check_license("src/app/new-thing.ts", self.file), [])
 
-    def test_new_stylesheets_need_the_header(self):
+    def test_new_stylesheets_scripts_and_configs_need_the_header(self):
         self.file.write_text(".a {}\n")
-        for rel in ["src/new.scss", "src/assets/styles/_new.scss", "src/app/x/x.component.scss"]:
+        for rel in ["src/new.scss", "src/app/x/x.component.scss", "e2e/visual/new.mjs", "scripts/new.py",
+                    "e2e/run.sh", "new.config.ts", "src/new-entry.ts"]:
             with self.subTest(rel=rel):
-                self.assertIn("npm run check-styles", check_license(rel, self.file)[0])
+                self.assertIn("npm run check-license", check_license(rel, self.file)[0])
         self.file.write_text(LICENSE_HEADER + "\n\n.a {}\n")
         self.assertEqual(check_license("src/app/x/x.component.scss", self.file), [])
+
+    def test_ignored_files_are_exempt(self):
+        self.file.write_text("export const x = 1;\n")
+        self.assertEqual(check_license("dist/x.mjs", self.file), [])
+        self.assertTrue(check_license("e2e/visual/x.mjs", self.file))
+
+    def test_python_and_shell_take_the_hash_form(self):
+        hashed = "\n".join("#" + line.lstrip()[1:].rstrip() for line in LICENSE_HEADER.splitlines()[1:-1])
+        self.file.write_text("#!/bin/bash\n" + hashed + "\n\nset -e\n")
+        self.assertEqual(check_license("e2e/run.sh", self.file), [])
+        self.file.write_text(hashed + "\n\nimport sys\n")
+        self.assertEqual(check_license("scripts/new.py", self.file), [])
 
     def test_committed_generated_and_out_of_scope_files_are_exempt(self):
         self.file.write_text("export const x = 1;\n")
         for rel in ["src/app/app.component.ts", "src/app/api/kamu.graphql.interface.ts",
-                    "src/app/editor/generated/monaco-version.ts", "src/main.ts", "scripts/x.js"]:
+                    "src/app/editor/generated/monaco-version.ts", "README.md"]:
             with self.subTest(rel=rel):
                 self.assertEqual(check_license(rel, self.file), [])
 

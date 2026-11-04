@@ -1,0 +1,3 @@
+event_time,city,population
+2020-01-01T00:00:00Z,city1,1000
+2020-01-02T00:00:00Z,town1,500

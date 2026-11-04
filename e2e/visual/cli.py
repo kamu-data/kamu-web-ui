@@ -172,16 +172,18 @@ async def compare_run(args, cache: Path, selection: dict, run_dir: Path, started
                 rescenarios = [sc for sc in scenarios if sc.name in pixels_only]
                 renames = [sc.name for sc in rescenarios]
                 again_base, again_head = profile_dir / "recheck-base", profile_dir / "recheck-head"
-                await pool.run(
-                    capture, rescenarios, base_target, again_base, progress("recheck base", renames), shards=1
-                )
-                await pool.run(
-                    capture, rescenarios, head_target, again_head, progress("recheck head", renames), shards=1
-                )
+                for side, target, again in (("base", base_target, again_base), ("head", head_target, again_head)):
+                    report = await pool.run(
+                        capture, rescenarios, target, again, progress(f"recheck {side}", renames), shards=1
+                    )
+                    failures.extend(f"recheck {side} {r['name']}: {r['error']}" for r in report if r.get("ok") is False)
                 second = await asyncio.to_thread(
                     compare, str(again_base), str(again_head), str(profile_dir / "recheck-diff"), pixels_only
                 )
-                recheck = {name: "noise" if second[name]["verdict"] == "same" else "confirmed" for name in pixels_only}
+                recheck = recheck_verdicts(second)
+                failures.extend(
+                    f"recheck {name}: {second[name]['note']}" for name, v in recheck.items() if v == "failed"
+                )
             section = profile_section(profile_name, summary, recheck, failures, diff_dir)
             return section, profile_passed(summary, failures)
         finally:
@@ -236,6 +238,13 @@ async def start_backend(profile, backend, cache: Path, run_dir: Path):
         raise
 
 
+def recheck_verdicts(second: dict) -> dict[str, str]:
+    """The second comparison of pixel-only scenarios: `noise` when both sides now match, `failed` when
+    either side was not captured again, else `confirmed`."""
+    verdicts = {"same": "noise", "missing": "failed"}
+    return {name: verdicts.get(s["verdict"], "confirmed") for name, s in second.items()}
+
+
 def profile_passed(summary: dict, failures: list[str]) -> bool:
     """No scenario failed on either side, and every requested one was compared."""
     return not failures and all(s["verdict"] != "missing" for s in summary.values())
@@ -264,7 +273,7 @@ def profile_section(profile: str, summary: dict, recheck: dict, failures: list[s
     if recheck:
         lines += ["Pixel-only changes, both sides captured again one after the other:", ""]
         for name, result in recheck.items():
-            verdict = "noise (same on the recheck)" if result == "noise" else "confirmed"
+            verdict = {"noise": "noise (same on the recheck)", "failed": "recheck failed"}.get(result, "confirmed")
             lines.append(f"- {name}: {summary[name]['pixels']} px, {verdict}")
         lines.append("")
     if failures:

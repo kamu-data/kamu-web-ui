@@ -230,7 +230,8 @@ key under its current name.
 `compare.py` rebuilds full styles from the deltas and compares them exactly; screenshots are
 compared per pixel by the largest channel difference, ignoring differences up to 16. Verdicts: `same`, `changed` (styles
 differ), `pixels-only` (rechecked: both sides are captured again, one after the other in one
-process; `noise` if those match, else `confirmed`), `missing`.
+process; `noise` if those match, `failed` if either side was not captured again, which fails the run, else
+`confirmed`), `missing`.
 
 ## Determinism
 

@@ -9,7 +9,7 @@ import unittest
 from pathlib import Path
 from types import SimpleNamespace
 
-from e2e.visual.cli import profile_passed, start_backend
+from e2e.visual.cli import profile_passed, recheck_verdicts, start_backend
 
 
 class ProfilePassedTest(unittest.TestCase):
@@ -20,6 +20,19 @@ class ProfilePassedTest(unittest.TestCase):
     def test_fails_on_a_failed_or_missing_scenario(self):
         self.assertFalse(profile_passed({"01-a": {"verdict": "same"}}, ["head 01-a: missing text: A"]))
         self.assertFalse(profile_passed({"01-a": {"verdict": "missing"}}, []))
+
+
+class RecheckVerdictsTest(unittest.TestCase):
+    def test_noise_confirmed_and_a_recheck_that_did_not_capture(self):
+        second = {
+            "01-a": {"verdict": "same"},
+            "02-b": {"verdict": "pixels-only"},
+            "03-c": {"verdict": "changed"},
+            "04-d": {"verdict": "missing", "note": "missing in both"},
+        }
+        self.assertEqual(
+            recheck_verdicts(second), {"01-a": "noise", "02-b": "confirmed", "03-c": "confirmed", "04-d": "failed"}
+        )
 
 
 class StartBackendTest(unittest.TestCase):

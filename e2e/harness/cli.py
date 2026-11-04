@@ -26,7 +26,8 @@ from e2e.harness.cache import REPO, Lock, build, cache_dir, drop_modules, git, r
 from e2e.harness.catalogue import check_scenarios, load_catalogue
 from e2e.harness.cdp import Chrome
 from e2e.harness.containers import POSTGRES_IMAGE, RUSTFS_IMAGE, container_runtime, remove_leftovers
-from e2e.harness.coverage import coverage_report
+from e2e.harness.coverage import coverage_report, shown_components
+from e2e.harness.impact import Records
 from e2e.harness.retention import (
     DEFAULT_MAX,
     KEEP_RUNS,
@@ -144,13 +145,6 @@ async def probe_command(args) -> None:
     print(f"screenshots: {run_dir}")
 
 
-def latest_run(cache: Path) -> Path | None:
-    """The newest comparison run with a head capture in it."""
-    runs = cache / "runs"
-    candidates = sorted(runs.iterdir(), reverse=True) if runs.exists() else []
-    return next((r for r in candidates if any(r.glob("*/head/report.json"))), None)
-
-
 def check_command(_args) -> None:
     """What CI runs: the catalogue, the scenarios and the seed inventory agree with each other and with
     the app's routes. Needs no browser and no backend."""
@@ -162,10 +156,10 @@ def check_command(_args) -> None:
 
 def coverage_command(_args) -> None:
     cache = cache_dir()
-    run = latest_run(cache)
-    report_file = (run or cache) / "coverage.md"
+    report_file = cache / "coverage.md"
     report_file.parent.mkdir(parents=True, exist_ok=True)
-    report_file.write_text(coverage_report(catalogue(), SCENARIOS, route_table(), run))
+    shown = shown_components(Records(cache / "components.json"), SCENARIOS)
+    report_file.write_text(coverage_report(catalogue(), SCENARIOS, route_table(), shown))
     print(f"coverage: {report_file}")
 
 

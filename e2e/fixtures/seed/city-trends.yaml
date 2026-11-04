@@ -1,0 +1,23 @@
+kind: DatasetSnapshot
+version: 1
+content:
+  name: city-trends
+  kind: Derivative
+  metadata:
+    # Never run: the transform shows its temporal table
+    - kind: SetTransform
+      inputs:
+        - datasetRef: kamu/population
+          alias: population
+      transform:
+        kind: Sql
+        engine: flink
+        temporalTables:
+          - name: population
+            primaryKey: [city]
+        query: select event_time, city, population from population
+    - kind: SetInfo
+      description: Derivative with a temporal table, never run
+      keywords: [demo, temporal]
+    - kind: SetVocab
+      eventTimeColumn: event_time

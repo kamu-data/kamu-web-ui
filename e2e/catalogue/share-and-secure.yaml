@@ -13,7 +13,7 @@ entries:
     journey: See and change who can read or edit a dataset
     persona: owner
     routes: [":accountName/:datasetName/settings/access"]
-    states: [collaborator table with roles]
+    states: [collaborator table with roles, add people dialog, edit role dialog]
     profile: seed
     tier:
     why:
@@ -22,7 +22,7 @@ entries:
     journey: Keep a dataset's environment variables and secrets
     persona: owner
     routes: [":accountName/:datasetName/settings/variables-and-secrets"]
-    states: [variables table with a masked secret]
+    states: [variables table with a masked secret, add and edit dialogs]
     profile: seed
     tier:
     why:

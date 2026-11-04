@@ -1,0 +1,37 @@
+kind: DatasetSnapshot
+version: 1
+content:
+  name: container-feed
+  kind: Root
+  metadata:
+    # Never run: the source shows the container fetch's command, arguments and environment, and a
+    # prepare step's command
+    - kind: SetPollingSource
+      fetch:
+        kind: Container
+        image: docker.io/library/alpine:3.20
+        command: [sh, -c]
+        args: ["wget -qO- \"$FEED_URL\""]
+        env:
+          - {name: FEED_URL, value: "http://feeds.example.com/readings.csv"}
+          - {name: FEED_FORMAT, value: csv}
+      # The feed arrives compressed
+      prepare:
+        - kind: Pipe
+          command: [gunzip, -c]
+      read:
+        kind: Csv
+        header: true
+        schema:
+          fields:
+            - {name: event_time, type: {kind: Timestamp, unit: Millisecond, timezone: UTC}}
+            - {name: sensor, type: {kind: String}}
+            - {name: reading, type: {kind: Float64}}
+      merge:
+        kind: Snapshot
+        primaryKey: [sensor]
+    - kind: SetInfo
+      description: Root dataset fetched by a container, never run
+      keywords: [demo, container]
+    - kind: SetVocab
+      eventTimeColumn: event_time

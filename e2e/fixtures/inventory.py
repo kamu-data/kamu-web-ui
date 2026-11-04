@@ -109,6 +109,25 @@ def check_inventory(inventory: dict, entry_ids, seed: Path = SEED) -> list[str]:
     return problems
 
 
+# Every metadata event kind, so a lookup of a block by its kind finds one
+EVENTS = [
+    "AddData",
+    "AddPushSource",
+    "DisablePollingSource",
+    "DisablePushSource",
+    "ExecuteTransform",
+    "Seed",
+    "SetAttachments",
+    "SetDataSchema",
+    "SetInfo",
+    "SetLicense",
+    "SetPollingSource",
+    "SetTransform",
+    "SetVocab",
+    "SetWatermark",
+]
+
+
 class _Recorder:
     """Stands in for a session when a scenario's URL is computed: records the datasets the URL looks up
     and answers with ids of the right shape."""
@@ -123,7 +142,9 @@ class _Recorder:
         return {
             "datasets": {
                 "byOwnerAndName": {
-                    "metadata": {"chain": {"blocks": {"nodes": [{"blockHash": "0"}]}}},
+                    "metadata": {
+                        "chain": {"blocks": {"nodes": [{"blockHash": "0", "event": {"__typename": e}} for e in EVENTS]}}
+                    },
                     "webhooks": {"subscriptions": subscriptions},
                     "flows": {"runs": {"listFlows": {"nodes": [{"flowId": "0"}]}}},
                 }

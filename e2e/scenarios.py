@@ -15,6 +15,8 @@ its tier decides whether the scenario runs.
 
 from __future__ import annotations
 
+import json
+import urllib.request
 from collections.abc import Awaitable, Callable
 from dataclasses import dataclass, field
 from typing import TYPE_CHECKING
@@ -244,6 +246,135 @@ async def cancel_revoke_dialog(s) -> None:
 async def open_password_form(s) -> None:
     await s.click_text("button", "Login with Password")
     await s.must_wait_for('input[type="password"]')
+
+
+def block_hash(s, dataset: str, event: str) -> str:
+    """The newest block of `dataset` whose event is of GraphQL type `event`."""
+    data = s.gql(
+        """query($n: DatasetName!) { datasets { byOwnerAndName(accountName: "kamu", datasetName: $n) {
+            metadata { chain { blocks(page: 0, perPage: 100) { nodes { blockHash event { __typename } } } } } } } }""",
+        {"n": dataset},
+    )
+    nodes = data["datasets"]["byOwnerAndName"]["metadata"]["chain"]["blocks"]["nodes"]
+    found = next((b["blockHash"] for b in nodes if b["event"]["__typename"] == event), None)
+    if not found:
+        raise RuntimeError(f"{dataset} has no {event} block")
+    return found
+
+
+def block_scenario(number: int, slug: str, dataset: str, event: str, shows: str) -> Scenario:
+    """The block page of `dataset`'s newest `event` block, waiting for the component `shows`."""
+    return Scenario(
+        f"{number}-block-{slug}",
+        "block",
+        url=lambda s: f"{ACC_ROOT}/{dataset}/block/{block_hash(s, dataset, event)}",
+        wait_for=shows,
+        expect_text=["Block"],
+    )
+
+
+def opens(trigger: str, shown: str):
+    """Steps that click `trigger` and wait for `shown`."""
+
+    async def steps(s) -> None:
+        await s.click(trigger)
+        await s.must_wait_for(shown)
+
+    return steps
+
+
+async def close_modals(s) -> None:
+    """Closes every open ngb modal, unsaved, the way Escape does."""
+    for _ in range(3):
+        if not await s.exists("ngb-modal-window"):
+            return
+        await s.eval(
+            '[...document.querySelectorAll("ngb-modal-window")].at(-1).dispatchEvent('
+            'new KeyboardEvent("keydown", { key: "Escape", code: "Escape", bubbles: true }))'
+        )
+        await s.settle(0.8)
+    raise RuntimeError("a modal did not close")
+
+
+def modal_scenario(number: int, slug: str, entry: str, url: str, trigger: str, shown: str, **extra) -> Scenario:
+    """A dialog opened from a page and closed again without saving."""
+    return Scenario(
+        f"{number}-{slug}",
+        entry,
+        url=url,
+        wait_for=trigger,
+        steps=opens(trigger, shown),
+        after=close_modals,
+        **extra,
+    )
+
+
+def data_access_tab(number: int, tab: str, slug: str, shown: str) -> Scenario:
+    async def steps(s) -> None:
+        await s.click('[data-test-id="searchAdditionalButtons"]')
+        await s.must_wait_for("app-data-access-modal")
+        await s.click(f'[data-test-id="action-list-{tab}-tab"]')
+        await s.must_wait_for(shown)
+
+    return Scenario(
+        f"{number}-data-access-{slug}",
+        "data-access",
+        url=DS,
+        wait_for='[data-test-id="searchAdditionalButtons"]',
+        steps=steps,
+        after=close_data_access,
+    )
+
+
+def source_kind(kind: str, shown: str):
+    """Steps that pick a fetch kind in the polling source stepper, unsaved."""
+
+    async def steps(s) -> None:
+        await s.click(f'[data-test-id="radio-{kind}-control"]')
+        await s.must_wait_for(shown)
+
+    return steps
+
+
+async def log_in_again(s) -> None:
+    await s.log_in()
+
+
+async def add_data_from_url(s) -> None:
+    await opens('[data-test-id="add-more-data"]', "app-add-data-modal")(s)
+    await s.click("app-add-data-modal .source-button")
+    await s.must_wait_for("app-file-from-url-modal")
+
+
+async def edit_first_column_type(s) -> None:
+    await schema_editor_rows(s)
+    await s.click("app-edit-schema-table .edit-button")
+    await s.must_wait_for("app-type-editor")
+
+
+async def show_yaml_editor(s) -> None:
+    await s.click('[data-test-id="show-monaco-editor"]')
+    await s.must_wait_for("app-yaml-editor .monaco-editor .view-line")
+
+
+EXPLAINED_QUERY = "select city, population from 'kamu/population' order by city"
+
+
+async def explain_commitment(s) -> None:
+    """Pastes a commitment the backend signed for a query, then verifies it."""
+    body = json.dumps({"query": EXPLAINED_QUERY, "include": ["Proof"]}).encode()
+    headers = {"content-type": "application/json", "authorization": f"Bearer {s.token}"}
+    request = urllib.request.Request(f"{s.target.api_url}/query", data=body, headers=headers, method="POST")
+    with urllib.request.urlopen(request, timeout=60) as response:
+        commitment = json.load(response)
+    commitment.pop("output", None)
+    await s.eval(
+        "const area = document.querySelector('[data-test-id=\"input-textarea\"]'); "
+        f"area.value = {json.dumps(json.dumps(commitment, indent=2))}; "
+        'area.dispatchEvent(new Event("input", { bubbles: true }));'
+    )
+    await s.click('[data-test-id="verify-commitment-button"]')
+    await s.must_wait_for("app-verify-result-section", 60)
 
 
 FLOW_DETAILS_TEXT = {"summary": "FAILED", "history": "Flow", "logs": "Grafana", "usage": "Usage", "admin": "Admin"}
@@ -706,6 +837,8 @@ SCENARIOS: list[Scenario] = [
         url="/v/return-to-cli",
         wait_for="app-return-to-cli",
         expect_text=["return back to CLI"],
+        # The page ends the web session, as the CLI now holds the token: the next scenario needs it back
+        after=log_in_again,
     ),
     Scenario(
         "71-page-not-found",
@@ -779,6 +912,210 @@ SCENARIOS: list[Scenario] = [
         steps=open_revoke_dialog,
         expect_text=["Do you want to revoke a token?"],
         after=cancel_revoke_dialog,
+    ),
+    # Dialogs opened and closed again without saving
+    modal_scenario(
+        88,
+        "overview-edit-details",
+        "edit-dataset-info",
+        DS,
+        '[data-test-id="edit-dataset-details"]',
+        "app-details-modal",
+    ),
+    modal_scenario(
+        89,
+        "overview-edit-license",
+        "edit-dataset-info",
+        DS,
+        '[data-test-id="edit-dataset-license"]',
+        "app-edit-license-modal",
+    ),
+    modal_scenario(
+        90,
+        "overview-edit-watermark",
+        "edit-dataset-info",
+        PUSH,
+        '[data-test-id="edit-dataset-watermark"]',
+        "app-edit-watermark-modal",
+    ),
+    # Adding data by hand is offered on a root without a polling source
+    modal_scenario(91, "overview-add-data", "add-data", PUSH, '[data-test-id="add-more-data"]', "app-add-data-modal"),
+    Scenario(
+        "92-overview-add-data-from-url",
+        "add-data",
+        url=PUSH,
+        wait_for='[data-test-id="add-more-data"]',
+        steps=add_data_from_url,
+        after=close_modals,
+    ),
+    modal_scenario(
+        93,
+        "settings-access-add-people",
+        "collaborators",
+        f"{DS}/settings/access",
+        '[data-test-id="add-people-button"]',
+        "app-add-people-modal",
+    ),
+    modal_scenario(
+        94,
+        "settings-access-edit-collaborator",
+        "collaborators",
+        f"{DS}/settings/access",
+        "app-dataset-settings-access-tab .edit-button",
+        "app-edit-collaborator-modal",
+    ),
+    modal_scenario(
+        95,
+        "settings-secrets-add",
+        "variables-and-secrets",
+        f"{DS}/settings/variables-and-secrets",
+        "app-dataset-settings-secrets-manager-tab .add-row-button",
+        "app-edit-key-value-modal",
+    ),
+    modal_scenario(
+        96,
+        "settings-secrets-edit",
+        "variables-and-secrets",
+        f"{DS}/settings/variables-and-secrets",
+        "app-dataset-settings-secrets-manager-tab td .edit-button",
+        "app-edit-key-value-modal",
+    ),
+    # Every data access tab besides the link tab of 07
+    data_access_tab(97, "kamuCli", "kamu-cli", "app-data-access-kamu-cli-tab"),
+    data_access_tab(98, "rest", "rest", "app-data-access-rest-tab"),
+    data_access_tab(99, "sql", "sql", "app-data-access-sql-tab"),
+    data_access_tab(100, "stream", "stream", "app-data-access-stream-tab"),
+    data_access_tab(101, "code", "code", "app-data-access-code-tab"),
+    data_access_tab(102, "odata", "odata", "app-data-access-odata-tab"),
+    data_access_tab(103, "export", "export", "app-data-access-export-tab"),
+    # The block page of each event kind; 43 shows the newest block
+    block_scenario(104, "seed", "population", "Seed", "app-seed-event"),
+    block_scenario(105, "set-info", "population", "SetInfo", "app-set-info-event"),
+    block_scenario(106, "set-license", "population", "SetLicense", "app-set-license-event"),
+    block_scenario(107, "set-attachments", "population", "SetAttachments", "app-set-attachments-event"),
+    block_scenario(108, "set-vocab", "population", "SetVocab", "app-set-vocab-event"),
+    block_scenario(109, "set-data-schema", "population", "SetDataSchema", "app-set-data-schema-event"),
+    block_scenario(110, "set-polling-source", "never-run", "SetPollingSource", "app-set-polling-source-event"),
+    block_scenario(111, "set-transform", "large-cities", "SetTransform", "app-set-transform-event"),
+    block_scenario(112, "execute-transform", "large-cities", "ExecuteTransform", "app-execute-transform-event"),
+    block_scenario(113, "add-push-source", "nested-events", "AddPushSource", "app-add-push-source-event"),
+    block_scenario(114, "polling-source-container", "container-feed", "SetPollingSource", "app-command-property"),
+    # Polling sources of the other fetch kinds and options
+    Scenario(
+        "115-metadata-polling-source-files-options",
+        "metadata",
+        url=f"{ACC_ROOT}/never-run/metadata/polling-source",
+        wait_for="app-metadata-polling-source-tab app-event-time-property",
+        expect_text=["never-run-*.csv"],
+    ),
+    Scenario(
+        "116-metadata-polling-source-container",
+        "metadata",
+        url=f"{ACC_ROOT}/container-feed/metadata/polling-source",
+        wait_for="app-metadata-polling-source-tab app-env-variables-property",
+        expect_text=["FEED_URL"],
+    ),
+    Scenario(
+        "117-metadata-polling-source-mqtt",
+        "metadata",
+        url=f"{ACC_ROOT}/mqtt-feed/metadata/polling-source",
+        wait_for="app-metadata-polling-source-tab app-topics-property",
+        expect_text=["sensors/+/temperature"],
+    ),
+    # The polling source stepper on other fetch kinds, unsaved
+    Scenario(
+        "118-add-polling-source-container",
+        "source-editors",
+        url=f"{ACC_ROOT}/container-feed/add-polling-source",
+        wait_for='[data-test-id="radio-Container-control"]',
+        steps=source_kind("Container", "app-key-value-field"),
+    ),
+    Scenario(
+        "119-add-polling-source-mqtt",
+        "source-editors",
+        url=f"{ACC_ROOT}/mqtt-feed/add-polling-source",
+        wait_for='[data-test-id="radio-Mqtt-control"]',
+        steps=source_kind("Mqtt", "app-topics-field"),
+    ),
+    Scenario(
+        "120-schema-editor-type-editor",
+        "source-editors",
+        full=True,
+        url=f"{ACC_ROOT}/air-quality-readings/add-push-source?name=default",
+        wait_for="button",
+        steps=edit_first_column_type,
+    ),
+    modal_scenario(
+        121,
+        "set-transform-yaml",
+        "transform-editor",
+        f"{DERIV}/set-transform",
+        '[data-test-id="edit-button"]',
+        "app-final-yaml-modal .monaco-editor .view-line",
+    ),
+    Scenario(
+        "122-dataset-create-yaml",
+        "create-dataset",
+        url="/v/new-dataset",
+        wait_for='[data-test-id="show-monaco-editor"]',
+        steps=show_yaml_editor,
+    ),
+    # Edge states
+    Scenario(
+        "123-dataset-flows-past-end",
+        "dataset-flows",
+        url=f"{DS}/flows?page=99",
+        wait_for="app-page-past-end",
+    ),
+    Scenario(
+        "124-collection-path-not-found",
+        "collection",
+        url=f"{ACC_ROOT}/city-reports?pathPrefix=%2Fnowhere%2F",
+        wait_for="app-value-not-found",
+    ),
+    Scenario(
+        "125-versioned-file-missing-version",
+        "versioned-file",
+        url=f"{ACC_ROOT}/release-notes?version=99",
+        wait_for="app-value-not-found",
+    ),
+    Scenario(
+        "126-account-flows-upcoming-scheduled",
+        "account-flows",
+        url=f"{ACC}/flows?nav=processes&mode=upcomingScheduled",
+        wait_for="app-upcoming-scheduled-filters-view",
+    ),
+    Scenario(
+        "127-query-explainer-verified",
+        "query-explainer",
+        url="/v/query-explainer",
+        wait_for='[data-test-id="input-textarea"]',
+        steps=explain_commitment,
+    ),
+    block_scenario(128, "polling-source-ethereum", "chain-events", "SetPollingSource", "app-yaml-event-viewer"),
+    Scenario(
+        "129-metadata-polling-source-ethereum",
+        "metadata",
+        url=f"{ACC_ROOT}/chain-events/metadata/polling-source",
+        wait_for="app-metadata-polling-source-tab app-yaml-event-viewer",
+        expect_text=["Transfer(address indexed from"],
+    ),
+    block_scenario(130, "temporal-tables", "city-trends", "SetTransform", "app-temporal-tables-property"),
+    Scenario(
+        "131-block-as-yaml",
+        "block",
+        url=lambda s: f"{DS}/block/{block_hash(s, 'population', 'SetPollingSource')}",
+        wait_for='[data-test-id="yaml-toggle"]',
+        steps=opens('[data-test-id="yaml-toggle"] button', "app-yaml-view-section markdown pre"),
+    ),
+    modal_scenario(
+        132,
+        "metadata-schema-attributes",
+        "metadata",
+        # A versioned file's schema marks its content hash with extra attributes
+        f"{ACC_ROOT}/release-notes/metadata/schema",
+        '[data-test-id^="show-more-type-"]',
+        "app-attributes-schema-modal",
     ),
     # ---- Logged-out phase: the first "anon" scenario clears the session. Keep these last.
     Scenario(

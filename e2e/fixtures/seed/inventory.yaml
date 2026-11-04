@@ -71,6 +71,11 @@ datasets:
     purpose: list filler
     state: no data
     entries: [search-datasets, account-datasets]
+  - name: mqtt-feed
+    manifest: mqtt-feed.yaml
+    purpose: A polling source subscribed to MQTT topics, for the topics views.
+    state: no data, never run
+    entries: [metadata, block]
   - name: parking-occupancy
     template: list-filler.yaml
     description: Free spaces in public car parks, every fifteen minutes
@@ -121,7 +126,7 @@ datasets:
       metadata commit navigator to have pages.
     state: 12 push ingests, one record each
     pushes: 12
-    entries: [metadata, source-editors, collection]
+    entries: [metadata, source-editors, collection, block, add-data]
   - name: population
     manifest: population.yaml
     # The first five files are there when the server starts; the sixth arrives during the flow runs.
@@ -178,9 +183,11 @@ datasets:
     entries: [dataset-flows, flow-details, account-flows, collection]
   - name: never-run
     manifest: never-run.yaml
-    purpose: A polling root that never ran, for the empty flow list.
+    purpose: >-
+      A polling root that never ran, for the empty flow list; its source takes the event time from the
+      file name, caches, orders by name and reads with a separator, for those views.
     state: no data, no flow runs
-    entries: [dataset-flows, collection]
+    entries: [dataset-flows, collection, metadata, block]
   - name: private-notes
     manifest: private-notes.yaml
     visibility: PRIVATE
@@ -198,6 +205,23 @@ datasets:
       - {path: /reports/failed-ingest, dataset: failed-ingest}
       - {path: /reports/never-run, dataset: never-run}
     entries: [collection]
+  - name: container-feed
+    manifest: container-feed.yaml
+    purpose: >-
+      A polling source that runs a container and pipes its output through a command, for the command,
+      arguments, environment and prepare views.
+    state: no data, never run
+    entries: [metadata, block, source-editors]
+  - name: chain-events
+    manifest: chain-events.yaml
+    purpose: A polling source reading Ethereum logs, for the filter and event signature views.
+    state: no data, never run
+    entries: [metadata, block]
+  - name: city-trends
+    manifest: city-trends.yaml
+    purpose: A derivative whose transform joins a temporal table, for the temporal tables view.
+    state: no data, never run
+    entries: [block]
   - name: release-notes
     kind: versioned-file
     purpose: A versioned file with a version history.

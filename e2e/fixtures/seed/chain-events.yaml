@@ -1,0 +1,28 @@
+kind: DatasetSnapshot
+version: 1
+content:
+  name: chain-events
+  kind: Root
+  metadata:
+    # Never run: the source shows the Ethereum logs fetch's filter and event signature
+    - kind: SetPollingSource
+      fetch:
+        kind: EthereumLogs
+        chainId: 1
+        nodeUrl: https://eth.example.com
+        filter: address = X'5fbdb2315678afecb367f032d93f642f64180aa3' and block_number > 19000000
+        signature: Transfer(address indexed from, address indexed to, uint256 value)
+      read:
+        kind: Parquet
+        schema:
+          fields:
+            - {name: event_time, type: {kind: Timestamp, unit: Millisecond, timezone: UTC}}
+            - {name: block_number, type: {kind: UInt64}}
+            - {name: event, type: {kind: String}}
+      merge:
+        kind: Append
+    - kind: SetInfo
+      description: Root dataset reading Ethereum logs, never run
+      keywords: [demo, ethereum]
+    - kind: SetVocab
+      eventTimeColumn: event_time

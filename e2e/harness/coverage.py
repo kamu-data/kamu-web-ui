@@ -8,12 +8,11 @@ components that no scenario of the latest run showed."""
 
 from __future__ import annotations
 
-import json
 import re
 from collections import Counter
-from pathlib import Path
 
 from e2e.harness.cache import REPO
+from e2e.harness.impact import Records
 
 SELECTOR = re.compile(r"""selector:\s*["'`](app-[\w-]+)["'`]""")
 
@@ -27,16 +26,20 @@ def component_selectors() -> list[str]:
     return sorted(found)
 
 
-def shown_components(run: Path) -> set[str]:
-    """The components each profile's head capture showed in the run directory `run`."""
-    shown: set[str] = set()
-    for report in run.glob("*/head/report.json"):
-        for entry in json.loads(report.read_text()):
-            shown.update(entry.get("components", []))
-    return shown
+def shown_components(records: Records, scenarios) -> set[str] | None:
+    """The components the scenarios showed at their latest capture of head, whichever run that was;
+    None before any capture."""
+    names = {sc.name for sc in scenarios}
+    found = [
+        c
+        for key, shown in records.shown.items()
+        if key.startswith("head:") and key.split("/")[-1] in names
+        for c in shown
+    ]
+    return set(found) if records.shown else None
 
 
-def coverage_report(entries: dict[str, dict], scenarios, routes: list[str], run: Path | None) -> str:
+def coverage_report(entries: dict[str, dict], scenarios, routes: list[str], shown: set[str] | None) -> str:
     claimed = {route for entry in entries.values() for route in entry["routes"]}
     realised = {sc.entry for sc in scenarios}
     lines = ["# Visual coverage", ""]
@@ -56,9 +59,9 @@ def coverage_report(entries: dict[str, dict], scenarios, routes: list[str], run:
     lines += ["## Entries by tier", "", *[f"- {tier}: {n}" for tier, n in tiers.items()], ""]
 
     components = component_selectors()
-    if run:
-        unseen = [c for c in components if c not in shown_components(run)]
-        lines += [f"## Components no scenario showed ({len(unseen)} of {len(components)}), in {run}", ""]
+    if shown is not None:
+        unseen = [c for c in components if c not in shown]
+        lines += [f"## Components no scenario showed ({len(unseen)} of {len(components)}), at its latest capture", ""]
         lines += [f"- `{c}`" for c in unseen] or ["None."]
     else:
         lines += ["## Components", "", "No run yet: `compare` records which components each scenario shows."]

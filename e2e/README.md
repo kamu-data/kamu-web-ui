@@ -44,7 +44,7 @@ to `~/.cache/kamu-ui-visual/` (`KAMU_VISUAL_CACHE` to move it).
 |---|---|
 | `npm run visual -- compare` | builds base and head, captures both, compares; see the options below |
 | `npm run e2e -- probe [--profile <p>] [--build <dir>] <path>...` | logs in to a profile's backend and prints each page's text and components, with screenshots: for writing a scenario |
-| `npm run e2e -- coverage` | routes no catalogue entry claims, entries no scenario realises, components the last run never showed |
+| `npm run e2e -- coverage` | routes no catalogue entry claims, entries no scenario realises, components no scenario showed at its latest capture |
 | `npm run e2e -- check` | the catalogue, scenarios and seed inventory agree with each other and with the app's routes |
 | `npm run e2e -- cache list` | every cache entry with its size and last use, and the total |
 | `npm run e2e -- cache prune [--dry-run]` | applies the retention below now; `--keep-runs`, `--older-than <days>`, `--max <size>`, `--no-images` override it |

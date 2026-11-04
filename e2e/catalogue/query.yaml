@@ -22,7 +22,7 @@ entries:
     journey: Verify a query commitment someone shared
     persona: anonymous
     routes: [v/query-explainer]
-    states: [empty verification form]
+    states: [empty verification form, a verified commitment with its inputs and result]
     profile: seed
     tier:
     why:

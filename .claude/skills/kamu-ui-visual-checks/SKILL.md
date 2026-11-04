@@ -102,6 +102,10 @@ nothing else.
 - Fonts come from Google Fonts at run time; every other external host is blocked, so external
   avatars render as their alt text.
 - Some states are not reachable with the fixtures: GitHub login, running or retrying flows,
-  webhook deliveries, scheduled triggers.
+  webhook deliveries, scheduled triggers, a PDF in a versioned file (a kamu-cli workspace does
+  not serve file content), and the block page of an unsupported event (the backend cannot commit
+  `DisablePollingSource` or `DisablePushSource` yet).
+- `npm run e2e -- coverage` lists the components no scenario showed; start there when adding
+  scenarios.
 - A scenario rechecked on its own runs without the scenarios before it; one that depends on them
   shows as confirmed and needs a look.

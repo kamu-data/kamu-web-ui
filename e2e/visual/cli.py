@@ -9,6 +9,7 @@ from __future__ import annotations
 
 import argparse
 import asyncio
+import contextlib
 import json
 import os
 import shutil
@@ -84,7 +85,7 @@ async def compare_run(args, cache: Path, selection: dict, run_dir: Path, started
     pool = Pool(args.jobs, CHROME)
     log(f"{args.jobs} capture processes, load {os.getloadavg()[0]:.1f} on {os.cpu_count()} cores")
 
-    async def compare_profile(index: int, profile_name: str, scenarios: list) -> str:
+    async def compare_profile(index: int, profile_name: str, scenarios: list) -> tuple[str, bool]:
         profile = PROFILES[profile_name]
         names = [sc.name for sc in scenarios]
         data_id, backend_id = profile.data_id(backend), profile.backend_id(backend)
@@ -107,7 +108,7 @@ async def compare_run(args, cache: Path, selection: dict, run_dir: Path, started
         (profile_dir / "key.json").write_text(json.dumps(key, indent=2))
 
         log(f"[{profile_name}] starting the backend")
-        running = await asyncio.to_thread(profile.open, backend, cache, run_dir)
+        running = await start_backend(profile, backend, cache, run_dir)
         log(f"[{profile_name}] {running.describe}")
         server = running.server
         served: list[Served] = []
@@ -159,7 +160,8 @@ async def compare_run(args, cache: Path, selection: dict, run_dir: Path, started
             base_dir = baseline if baseline.exists() else partial
 
             diff_dir = profile_dir / "diff"
-            summary = await asyncio.to_thread(compare, str(base_dir), str(head_dir), str(diff_dir))
+            # By name: a scenario that failed on both sides left no files, and counts as missing
+            summary = await asyncio.to_thread(compare, str(base_dir), str(head_dir), str(diff_dir), names)
 
             # Pixel-only differences are rechecked: both sides captured again, one after the other in one
             # process, as either side's first capture may have run on a loaded machine
@@ -180,7 +182,8 @@ async def compare_run(args, cache: Path, selection: dict, run_dir: Path, started
                     compare, str(again_base), str(again_head), str(profile_dir / "recheck-diff"), pixels_only
                 )
                 recheck = {name: "noise" if second[name]["verdict"] == "same" else "confirmed" for name in pixels_only}
-            return profile_section(profile_name, summary, recheck, failures, diff_dir)
+            section = profile_section(profile_name, summary, recheck, failures, diff_dir)
+            return section, profile_passed(summary, failures)
         finally:
             for s in served:
                 s.stop()
@@ -188,7 +191,7 @@ async def compare_run(args, cache: Path, selection: dict, run_dir: Path, started
 
     async def profile_or_failure(index: int, profile_name: str, scenarios: list) -> tuple[str, bool]:
         try:
-            return await compare_profile(index, profile_name, scenarios), True
+            return await compare_profile(index, profile_name, scenarios)
         except Exception as e:
             # The other profiles still run and are reported; the run fails at the end
             log(f"[{profile_name}] failed: {e}")
@@ -215,7 +218,27 @@ async def compare_run(args, cache: Path, selection: dict, run_dir: Path, started
     log(f"report: {report_file}")
     prune_cache(cache, since, log)
     if failed:
-        raise RuntimeError(f"{len(failed)} of {len(selection)} profiles failed: {', '.join(failed)}")
+        raise RuntimeError(
+            f"{len(failed)} of {len(selection)} profiles failed or have failed scenarios: {', '.join(failed)}; "
+            f"see {report_file}"
+        )
+
+
+async def start_backend(profile, backend, cache: Path, run_dir: Path):
+    """`profile.open` in a thread. A run cancelled meanwhile waits for the start to end, then stops the
+    server, which would otherwise outlive the run and keep its port."""
+    start = asyncio.ensure_future(asyncio.to_thread(profile.open, backend, cache, run_dir))
+    try:
+        return await asyncio.shield(start)
+    except asyncio.CancelledError:
+        with contextlib.suppress(Exception):
+            (await start).server.stop()
+        raise
+
+
+def profile_passed(summary: dict, failures: list[str]) -> bool:
+    """No scenario failed on either side, and every requested one was compared."""
+    return not failures and all(s["verdict"] != "missing" for s in summary.values())
 
 
 def failed_section(profile: str, error: Exception) -> str:

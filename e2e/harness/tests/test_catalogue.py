@@ -38,6 +38,17 @@ class SelectScenariosTest(unittest.TestCase):
             {"seed": ["01-a"], "empty": ["03-c"]},
         )
 
+    def test_a_selected_scenario_brings_the_one_it_follows(self):
+        # 05 checks the leaks of 04, whose entry is dropped: 04 runs for it, in list order
+        scenarios = [*SCENARIOS, Scenario("05-after-d", "b", follows="04-d")]
+        self.assertEqual(
+            names(select_scenarios(scenarios, ENTRIES, unrated=True, only="05")), {"seed": ["04-d", "05-after-d"]}
+        )
+        self.assertEqual(
+            names(select_scenarios(scenarios, ENTRIES, "full")), {"seed": ["01-a", "02-b", "04-d", "05-after-d"]}
+        )
+        self.assertEqual(names(select_scenarios(scenarios, ENTRIES, "smoke")), {"seed": ["01-a"]})
+
 
 class CheckScenariosTest(unittest.TestCase):
     def test_accepts_a_scenario_expecting_a_text_or_an_input_value(self):

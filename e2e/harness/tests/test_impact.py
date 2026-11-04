@@ -105,6 +105,12 @@ APP = {
     ),
     "src/app/leaky/leaky.component.scss": "::ng-deep p {}",
     "src/app/leaky/leaky.component.ts": '@Component({ selector: "app-leaky", styleUrl: "./leaky.component.scss" })',
+    "src/app/auth/auth.guard.ts": "export const authGuard = () => true;",
+    "src/app/app-routing.ts": (
+        'import { PageComponent } from "./page/page.component";\n'
+        'import { authGuard } from "./auth/auth.guard";\n'
+        'export const routes = [{ path: "", component: PageComponent, canActivate: [authGuard] }];'
+    ),
 }
 
 
@@ -142,6 +148,11 @@ class ImpactHelperTest(unittest.TestCase):
 
     def test_deleted_and_unowned_files_reach_everything(self):
         self.assertIn("deleted", self.impact("src/app/gone.ts")["all"])
+
+    def test_routes_and_guards_reach_everything(self):
+        # They end at the app's configuration, which renders no component of its own
+        for rel in ("src/app/app-routing.ts", "src/app/auth/auth.guard.ts"):
+            self.assertIn("reaches no component", self.impact(rel)["all"])
 
     def test_tests_and_docs_reach_nothing(self):
         self.assertEqual(

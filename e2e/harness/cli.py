@@ -279,9 +279,7 @@ def parser() -> argparse.ArgumentParser:
         metavar="DAYS",
         help=f"prune: entries unused for longer (default {MAX_AGE_DAYS})",
     )
-    ca.add_argument(
-        "--max", metavar="SIZE", help=f"prune: size ceiling (default KAMU_E2E_CACHE_MAX or {DEFAULT_MAX})"
-    )
+    ca.add_argument("--max", metavar="SIZE", help=f"prune: size ceiling (default KAMU_E2E_CACHE_MAX or {DEFAULT_MAX})")
     ca.add_argument("--no-images", action="store_true", help="prune: leave the Docker images the kit pulled")
     ca.add_argument("--dry-run", action="store_true", help="prune: list what would go")
     ca.set_defaults(run=cache_command)

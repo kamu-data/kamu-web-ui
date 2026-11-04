@@ -59,7 +59,7 @@ to `~/.cache/kamu-ui-e2e/` (`KAMU_E2E_CACHE` to move it).
 | `--head <ref>` | the working tree, uncommitted changes included |
 | `--tier smoke\|full` | `full` (which includes `smoke`) |
 | `--unrated` | also run catalogue entries nobody has rated yet |
-| `--only <text>[,<text>…]` | only scenarios whose name contains one of the parts |
+| `--only <text>[,<text>…]` | only scenarios whose name contains one of the parts, and the scenarios they follow (`follows`) |
 | `--all` | every scenario of the tier, not only those the change reaches (below) |
 | `--jobs <n>` | capture processes: a quarter of the cores free when the run starts, at most 8 |
 | backend options | see below; `probe` takes them too |

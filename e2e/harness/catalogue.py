@@ -80,13 +80,21 @@ def check_scenarios(scenarios, entries: dict[str, dict]) -> None:
 def select_scenarios(scenarios, entries: dict[str, dict], tier: str = "full", unrated: bool = False, only=None):
     """The scenarios a run covers, grouped by profile in their list order. `tier` is `smoke` or `full`
     (which includes smoke); `unrated` also runs entries nobody has rated yet; `only`, a comma-separated
-    list, keeps the scenarios whose name contains one of its parts. `drop` entries never run."""
+    list, keeps the scenarios whose name contains one of its parts. `drop` entries never run, except as
+    the scenario a selected one `follows`: a leak check needs the page whose styles it checks."""
     tiers = ["smoke"] if tier == "smoke" else ["smoke", "full"]
     parts = only.split(",") if only else []
-    by_profile: dict[str, list] = {}
+    by_name = {sc.name: sc for sc in scenarios}
+    chosen: set[str] = set()
     for sc in scenarios:
         entry = entries[sc.entry]
         runs = entry.get("tier") in tiers or (unrated and not entry.get("tier"))
         if runs and (not parts or any(part in sc.name for part in parts)):
-            by_profile.setdefault(entry["profile"], []).append(sc)
+            while sc and sc.name not in chosen:
+                chosen.add(sc.name)
+                sc = by_name.get(sc.follows) if sc.follows else None
+    by_profile: dict[str, list] = {}
+    for sc in scenarios:
+        if sc.name in chosen:
+            by_profile.setdefault(entries[sc.entry]["profile"], []).append(sc)
     return by_profile

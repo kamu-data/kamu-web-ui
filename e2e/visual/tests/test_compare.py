@@ -9,7 +9,7 @@ import os
 import tempfile
 import unittest
 
-from e2e.visual.compare import compare, diff_styles, rebuild, short, verdict
+from e2e.visual.compare import compare, diff_styles, image_diff, rebuild, short, verdict
 
 try:
     import PIL  # noqa: F401
@@ -132,6 +132,36 @@ class CompareTest(unittest.TestCase):
             write_capture(self.before, name, {"a": element()})
             write_capture(self.after, name, {"a": element()})
         self.assertEqual(list(compare(self.before, self.after, self.out, ["02-b"])), ["02-b"])
+
+    def test_a_requested_scenario_neither_side_captured_is_missing(self):
+        write_capture(self.before, "01-a", {"a": element()})
+        write_capture(self.after, "01-a", {"a": element()})
+        summary = compare(self.before, self.after, self.out, ["01-a", "02-failed"])
+        self.assertEqual(summary["02-failed"]["verdict"], "missing")
+        self.assertEqual(summary["02-failed"]["note"], "missing in both")
+
+
+@unittest.skipUnless(HAS_PIL, "Pillow is not installed")
+class ImageDiffTest(unittest.TestCase):
+    def setUp(self):
+        self.tmp = tempfile.TemporaryDirectory()
+        self.addCleanup(self.tmp.cleanup)
+
+    def changed(self, before, after) -> int:
+        from PIL import Image
+
+        paths = [os.path.join(self.tmp.name, f) for f in ("a.png", "b.png", "d.png")]
+        Image.new("RGB", (10, 10), before).save(paths[0])
+        Image.new("RGB", (10, 10), after).save(paths[1])
+        return image_diff(*paths)[0]
+
+    def test_a_change_in_one_channel_counts_in_full(self):
+        # Luminance weighs blue at about a tenth: this change would be 11, under the threshold
+        self.assertEqual(self.changed((255, 255, 255), (255, 255, 155)), 100)
+        self.assertEqual(self.changed((0, 0, 0), (0, 0, 17)), 100)
+
+    def test_a_channel_difference_up_to_the_threshold_is_noise(self):
+        self.assertEqual(self.changed((100, 100, 100), (116, 84, 116)), 0)
 
 
 if __name__ == "__main__":

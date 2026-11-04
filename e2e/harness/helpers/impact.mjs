@@ -9,8 +9,8 @@
 // `{"all": <reason or null>, "selectors": [...]}`. A changed component, template or stylesheet reaches
 // that component; any other file reaches the components that import it, directly or through files
 // that are not components.
-// Global styles, the build setup and styles that leave their component (::ng-deep, no view
-// encapsulation) reach everything. Tests, docs and other files outside the app reach nothing.
+// Global styles, the build setup, styles that leave their component (::ng-deep, no view
+// encapsulation) and files no component imports (routes, guards, the app's setup) reach everything. Tests, docs and other files outside the app reach nothing.
 import fs from "node:fs";
 import path from "node:path";
 
@@ -27,7 +27,7 @@ const GLOBAL = [
   /^angular\.json$/,
   /^tsconfig.*\.json$/,
 ];
-const IGNORED = [/\.spec\.ts$/, /\.harness\.ts$/, /mock/i, /-test\.module\.ts$/];
+const IGNORED = [/\.spec\.ts$/, /\.harness\.ts$/, /harness\.helpers\.ts$/, /mock/i, /-test\.module\.ts$/];
 
 const tsconfig = ts.readConfigFile(path.join(root, "tsconfig.json"), ts.sys.readFile).config;
 const aliases = Object.entries(tsconfig.compilerOptions.paths ?? {}).map(([alias, [target]]) => [
@@ -91,14 +91,19 @@ for (const rel of changed) {
   const start = rel.endsWith(".ts") ? file : ownerOf.get(file);
   if (!start) result(`${rel} belongs to no component`);
   const queue = [start];
+  const walked = new Set();
   while (queue.length) {
     const next = queue.pop();
-    if (reached.has(next)) continue;
+    if (walked.has(next)) continue;
+    walked.add(next);
     reached.add(next);
     // A component's change shows wherever it is on the page, which the captures record; its parents
     // render as before
     if (!selectorOf.has(next)) queue.push(...(importers.get(next) ?? []));
   }
+  // Routes, guards and resolvers end at the app's configuration, which no component imports: what they
+  // change depends on the route, so every page may
+  if (![...walked].some((f) => selectorOf.has(f))) result(`${rel} reaches no component (routing or app setup)`);
 }
 const leaker = [...reached].find((f) => leaking.has(f));
 if (leaker) result(`${path.relative(root, leaker)} styles outside itself (ViewEncapsulation.None)`);

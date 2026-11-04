@@ -112,7 +112,10 @@ def image_diff(before: str, after: str, out_png: str) -> tuple[int | None, str]:
         note = f" (size {a.size} -> {b.size})"
         w, h = max(a.width, b.width), max(a.height, b.height)
         a, b = pad(a, w, h, Image), pad(b, w, h, Image)
-    mask = ImageChops.difference(a, b).convert("L").point(lambda v: 255 if v > PIXEL_THRESHOLD else 0)
+    # The largest channel difference: luminance would weigh a change in blue at a tenth
+    channels = ImageChops.difference(a, b).split()
+    largest = ImageChops.lighter(ImageChops.lighter(channels[0], channels[1]), channels[2])
+    mask = largest.point(lambda v: 255 if v > PIXEL_THRESHOLD else 0)
     changed = mask.histogram()[255]
     if changed:
         faded = Image.blend(b, Image.new("RGB", b.size, (255, 255, 255)), 0.6)
@@ -154,7 +157,7 @@ def compare(before_dir: str, after_dir: str, out_dir: str, names: list[str] | No
     summary, details, rows = {}, [], []
     for name in selected:
         if name not in before or name not in after:
-            side = "before" if name not in before else "after"
+            side = "both" if name not in before and name not in after else "before" if name not in before else "after"
             summary[name] = {"styleDiffs": None, "pixels": None, "verdict": "missing", "note": f"missing in {side}"}
             rows.append(f"| {name} | missing in {side} | | missing |")
             continue

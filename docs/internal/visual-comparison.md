@@ -139,10 +139,12 @@ selection is kept by hand, so it follows the app as it changes:
 | `src/` outside `src/app` (global styles, `index.html`, `main.ts`), `package.json`, `angular.json`, `tsconfig*.json` | they apply to every page |
 | a stylesheet with `::ng-deep`, a component with `ViewEncapsulation.None` | its styles reach other components |
 | a deleted file, a file under `src/app` that no component owns (a `.graphql` document) | its users cannot be read any more, or not statically |
+| a `.ts` file whose importers lead to no component: routes, guards, resolvers, interceptors, the app's setup | they end at the app's configuration, and what they change depends on the route |
 | a file in the capture key (below), `e2e/fixtures/` | the capture itself changed |
 
 A scenario never captured runs. A scenario that `follows` another runs whenever that one does: it
-is the page where the other's leaking styles would show. A changed component that no record
+is the page where the other's leaking styles would show. In the other direction, whatever selects a
+scenario, `--only` and the tiers included, also runs the one it follows. A changed component that no record
 contains selects nothing and is named in the report: a component new to a page arrives through its
 parent's template, whose change selects that page.
 
@@ -226,7 +228,7 @@ key under its current name.
    snapshotted again after the transition.
 
 `compare.py` rebuilds full styles from the deltas and compares them exactly; screenshots are
-compared per pixel, ignoring channel differences up to 16. Verdicts: `same`, `changed` (styles
+compared per pixel by the largest channel difference, ignoring differences up to 16. Verdicts: `same`, `changed` (styles
 differ), `pixels-only` (rechecked: both sides are captured again, one after the other in one
 process; `noise` if those match, else `confirmed`), `missing`.
 
@@ -314,6 +316,7 @@ nor a backend:
 | A transform flow fails with an engine timeout | the engine could not start or be reached inside a container: check `engine.networkNs` and the server log under `runs/<time>/backend-<profile>/` |
 | `pixels-only, confirmed` in a scenario that shows ids or times | a volatile format the masks do not know yet |
 | A profile's section in `report.md` says it failed, and the run exits with an error | its backend did not start, the schema check failed, or a capture broke; the other profiles are still compared, and the traceback is in `run.log` |
+| The run exits with an error, and a profile's section lists failed or missing scenarios | a scenario failed on one side or both; its error is in the section |
 
 ## Rejected approaches
 

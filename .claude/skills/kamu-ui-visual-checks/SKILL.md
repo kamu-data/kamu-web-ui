@@ -75,7 +75,8 @@ inside the scenario. Changing an artifact means checking the scenarios its `entr
 1. Find or draft the catalogue entry (empty `tier` and `why`, then ask for the rating).
 2. Probe the page: `npm run e2e -- probe --profile seed /kamu/population/history`.
 3. Append the scenario to `SCENARIOS` with the next free number; never renumber, the name is the
-   comparison key. Give it `wait_for` and `expect_text`, so an empty or broken page fails loudly.
+   comparison key. Give it `wait_for` and `expect_text` (or `expect_value` for a form), so an empty
+   or broken page fails loudly; `npm run e2e-check` refuses a scenario that expects neither.
 4. Mind the order: scenarios share one tab per profile, and pages after account flows and after
    the data access modal show whether a component's styles leak. A scenario that checks another
    one's leaks names it in `follows`, so the two always run together. Logged-out (`phase: "anon"`)

@@ -272,7 +272,7 @@ touched. The prune at the end of every `compare` and `cache prune` apply, in ord
 | Remove unfinished entries (`*.partial`) | always |
 | Keep the newest runs | 10 |
 | Remove entries and the kit's images unused for longer, except pinned images | 14 days |
-| While the total is over the ceiling, remove the least recently used, runs first | `KAMU_VISUAL_CACHE_MAX`, 10G |
+| While the total is over the ceiling, remove the least recently used, runs first | `KAMU_E2E_CACHE_MAX`, 10G |
 
 What is never reused is not kept at all: the working tree's build lives in the run folder until the
 run ends, and a base commit's `node_modules` is installed only to build it, then deleted.
@@ -284,7 +284,8 @@ nor a backend:
 
 - catalogue entries: required fields, unique ids, known personas, profiles and tiers, routes that
   exist in the app's route table;
-- scenarios: unique names, an existing catalogue entry each;
+- scenarios: unique names, an existing catalogue entry each, a `follows` that names an earlier
+  scenario of the same profile, and an `expect_text` or `expect_value` each;
 - inventory: catalogue entry ids exist; every file under `fixtures/seed/` is listed and exists;
   manifests are named after their dataset; references between artifacts resolve; every dataset a
   `seed` scenario opens or looks up is listed (computed URLs are evaluated against a stand-in

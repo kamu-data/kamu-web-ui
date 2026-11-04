@@ -254,7 +254,7 @@ def parser() -> argparse.ArgumentParser:
     p = argparse.ArgumentParser(
         prog="npm run visual --",
         description="Visual comparison of Kamu Web UI builds; probe, check, coverage and cache are under "
-        "npm run e2e. Env: KAMU_VISUAL_CACHE (default ~/.cache/kamu-ui-visual), CHROME_BIN (default google-chrome).",
+        "npm run e2e. Env: KAMU_E2E_CACHE (default ~/.cache/kamu-ui-e2e), CHROME_BIN (default google-chrome).",
     )
 
     commands = p.add_subparsers(dest="command", required=True)

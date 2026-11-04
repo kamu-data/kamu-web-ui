@@ -55,8 +55,9 @@ def load_catalogue(directory: Path, profiles, routes: list[str]) -> dict[str, di
 
 
 def check_scenarios(scenarios, entries: dict[str, dict]) -> None:
-    """Raises unless every scenario names an existing entry, every name is unique, and a scenario
-    follows an earlier one of the same profile."""
+    """Raises unless every scenario names an existing entry, every name is unique, a scenario follows an
+    earlier one of the same profile, and each expects a text or an input value, so that an empty or
+    broken page fails."""
     problems: list[str] = []
     names: set[str] = set()
     profile_of: dict[str, str] = {}
@@ -64,6 +65,8 @@ def check_scenarios(scenarios, entries: dict[str, dict]) -> None:
         if sc.name in names:
             problems.append(f"{sc.name}: duplicate name")
         names.add(sc.name)
+        if not sc.expect_text and not sc.expect_value:
+            problems.append(f"{sc.name}: no expect_text or expect_value")
         if sc.entry not in entries:
             problems.append(f"{sc.name}: no catalogue entry {sc.entry}")
             continue

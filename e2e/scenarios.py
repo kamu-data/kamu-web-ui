@@ -309,7 +309,7 @@ def modal_scenario(number: int, slug: str, entry: str, url: str, trigger: str, s
     )
 
 
-def data_access_tab(number: int, tab: str, slug: str, shown: str) -> Scenario:
+def data_access_tab(number: int, tab: str, slug: str, shown: str, **extra) -> Scenario:
     async def steps(s) -> None:
         await s.click('[data-test-id="searchAdditionalButtons"]')
         await s.must_wait_for("app-data-access-modal")
@@ -323,6 +323,7 @@ def data_access_tab(number: int, tab: str, slug: str, shown: str) -> Scenario:
         wait_for='[data-test-id="searchAdditionalButtons"]',
         steps=steps,
         after=close_data_access,
+        **extra,
     )
 
 
@@ -392,7 +393,13 @@ def failed_flow_details(tab: str, number: int) -> Scenario:
 
 SCENARIOS: list[Scenario] = [
     # Before any leaking component has loaded
-    Scenario("01-dataset-create-fresh", "create-dataset", url="/v/new-dataset", wait_for="ng-select"),
+    Scenario(
+        "01-dataset-create-fresh",
+        "create-dataset",
+        url="/v/new-dataset",
+        wait_for="ng-select",
+        expect_text=["Create a new dataset"],
+    ),
     Scenario(
         "02-search", "search-datasets", url="/v/search", wait_for="mat-checkbox", expect_text=["dataset(s) found"]
     ),
@@ -403,6 +410,7 @@ SCENARIOS: list[Scenario] = [
         wait_for='[data-test-id="openUserInfoBlock"]',
         steps=open_user_menu,
         after=close_overlay,
+        expect_text=["Signed in as"],
     ),
     Scenario(
         "04-account-datasets",
@@ -412,7 +420,11 @@ SCENARIOS: list[Scenario] = [
         expect_text=["Datasets"],
     ),
     Scenario(
-        "05-account-datasets-page2", "account-datasets", url=f"{ACC}/datasets?page=2", wait_for="app-dataset-list-item"
+        "05-account-datasets-page2",
+        "account-datasets",
+        url=f"{ACC}/datasets?page=2",
+        wait_for="app-dataset-list-item",
+        expect_text=["kamu/rainfall-daily"],
     ),
     Scenario(
         "06-overview",
@@ -428,6 +440,7 @@ SCENARIOS: list[Scenario] = [
         wait_for='[data-test-id="searchAdditionalButtons"]',
         steps=open_data_access_link_tab,
         after=close_data_access,
+        expect_text=["Share this dataset on the Web"],
     ),
     # After the data-access modal: its unscoped checkbox rules have leaked, if any
     Scenario(
@@ -439,22 +452,32 @@ SCENARIOS: list[Scenario] = [
         follows="07-data-access-modal-link",
     ),
     Scenario(
-        "09-settings-general", "dataset-general-settings", url=f"{DS}/settings/general", wait_for="mat-radio-button"
+        "09-settings-general",
+        "dataset-general-settings",
+        url=f"{DS}/settings/general",
+        wait_for="mat-radio-button",
+        expect_text=["Danger Zone"],
     ),
     Scenario(
-        "10-settings-scheduling", "pipeline-triggers", url=f"{DS}/settings/scheduling", wait_for="mat-slide-toggle"
+        "10-settings-scheduling",
+        "pipeline-triggers",
+        url=f"{DS}/settings/scheduling",
+        wait_for="mat-slide-toggle",
+        expect_text=["Cron expression accepted values"],
     ),
     Scenario(
         "11-settings-ingest-configuration",
         "ingest-and-compaction",
         url=f"{DS}/settings/ingest-configuration",
         wait_for="mat-checkbox, mat-slide-toggle",
+        expect_text=["Fetch uncacheable"],
     ),
     Scenario(
         "12-settings-compaction",
         "ingest-and-compaction",
         url=f"{DS}/settings/compaction",
         wait_for="app-dataset-settings-compacting-tab",
+        expect_text=["Hard compaction"],
     ),
     Scenario(
         "13-settings-access",
@@ -464,7 +487,11 @@ SCENARIOS: list[Scenario] = [
         expect_text=["alice"],
     ),
     Scenario(
-        "14-settings-transform", "pipeline-triggers", url=f"{DERIV}/settings/transform", wait_for="mat-slide-toggle"
+        "14-settings-transform",
+        "pipeline-triggers",
+        url=f"{DERIV}/settings/transform",
+        wait_for="mat-slide-toggle",
+        expect_text=["Process new data in batches"],
     ),
     Scenario(
         "15-settings-webhooks",
@@ -473,7 +500,13 @@ SCENARIOS: list[Scenario] = [
         wait_for="app-dataset-settings-webhooks-tab",
         expect_text=["demo-hook"],
     ),
-    Scenario("16-dataset-flows", "dataset-flows", url=f"{DS}/flows", wait_for="app-flows-table table"),
+    Scenario(
+        "16-dataset-flows",
+        "dataset-flows",
+        url=f"{DS}/flows",
+        wait_for="app-flows-table table",
+        expect_text=["Total Flow Runs"],
+    ),
     Scenario(
         "17-dataset-flows-options-menu",
         "dataset-flows",
@@ -481,6 +514,7 @@ SCENARIOS: list[Scenario] = [
         wait_for="app-flows-table td button.mat-mdc-menu-trigger",
         steps=open_flows_options_menu,
         after=close_overlay,
+        expect_text=["Abort flow"],
     ),
     Scenario(
         "18-dataset-flows-filter-dropdown",
@@ -489,6 +523,7 @@ SCENARIOS: list[Scenario] = [
         wait_for="angular2-multiselect .c-btn",
         steps=open_flows_filter,
         after=close_flows_filter,
+        expect_text=["Select All"],
     ),
     Scenario(
         "19-metadata-commit-navigator",
@@ -496,6 +531,7 @@ SCENARIOS: list[Scenario] = [
         url=f"{PUSH}/metadata",
         # The pager, or on commits before it the pagination component, which sat outside the navigator
         wait_for="app-commit-navigator .commit-pager, ul.pagination",
+        expect_text=["Step through Metadata changes"],
     ),
     Scenario(
         "20-schema-editor-nested",
@@ -503,30 +539,35 @@ SCENARIOS: list[Scenario] = [
         url=f"{PUSH}/add-push-source?name=default",
         wait_for="app-edit-schema-table, button",
         steps=schema_editor_nested,
+        expect_text=["Struct<name:String, score:Int64>"],
     ),
     Scenario(
         "21-account-flows-processes",
         "account-flows",
         url=f"{ACC}/flows?nav=processes",
         wait_for="mat-button-toggle-group",
+        expect_text=["Last attempt from"],
     ),
     Scenario(
         "22-account-flows-processes-triage",
         "account-flows",
         url=f"{ACC}/flows?nav=processes&mode=triage",
         wait_for="mat-button-toggle-group",
+        expect_text=["Last failure at"],
     ),
     Scenario(
         "23-account-flows-processes-custom",
         "account-flows",
         url=f"{ACC}/flows?nav=processes&mode=custom",
         wait_for="ng-select",
+        expect_text=["Total processes"],
     ),
     Scenario(
         "24-account-flows-activity",
         "account-flows",
         url=f"{ACC}/flows?nav=activity",
         wait_for="app-flows-table, mat-button-toggle-group",
+        expect_text=["Account flow run(s)"],
     ),
     # After account flows: its unscoped ng-select rule has leaked, if any
     Scenario(
@@ -535,6 +576,7 @@ SCENARIOS: list[Scenario] = [
         url="/v/new-dataset",
         wait_for="ng-select",
         follows="23-account-flows-processes-custom",
+        expect_text=["Create a new dataset"],
     ),
     Scenario(
         "26-webhook-form-after-flows",
@@ -542,9 +584,22 @@ SCENARIOS: list[Scenario] = [
         url=f"{DS}/settings/webhooks/new",
         wait_for="app-webhook-form, form",
         follows="23-account-flows-processes-custom",
+        expect_text=["Target URL"],
     ),
-    Scenario("27-access-tokens", "access-tokens", url="/v/settings/access-tokens", wait_for="app-access-tokens-tab"),
-    Scenario("28-search-page2", "search-datasets", url="/v/search?page=2", wait_for="app-dataset-list-item"),
+    Scenario(
+        "27-access-tokens",
+        "access-tokens",
+        url="/v/settings/access-tokens",
+        wait_for="app-access-tokens-tab",
+        expect_text=["ci-pipeline"],
+    ),
+    Scenario(
+        "28-search-page2",
+        "search-datasets",
+        url="/v/search?page=2",
+        wait_for="app-dataset-list-item",
+        expect_text=["kamu/rainfall-daily"],
+    ),
     # Menus whose content is not only mat-menu-item: they show whether the menu label tokens reach the
     # rest of the menu
     Scenario(
@@ -554,6 +609,7 @@ SCENARIOS: list[Scenario] = [
         wait_for='app-query-and-result-sections [data-test-id="searchAdditionalButtons"]:not([disabled])',
         steps=open_query_run_options,
         after=close_overlay,
+        expect_text=["New Dataset from Query"],
     ),
     Scenario(
         "30-xmenu-dataset-additional-options",
@@ -562,6 +618,7 @@ SCENARIOS: list[Scenario] = [
         wait_for='[data-test-id^="additional-options-trigger-"]:not([disabled])',
         steps=open_dataset_options,
         after=close_overlay,
+        expect_text=["Existing derivative datasets"],
     ),
     # Ids that change with every seed (block hash, flow ids, webhook ids) are looked up at run time.
     # Overview of a collection: the mat-button-toggle-group view switch and the entries table.
@@ -578,6 +635,7 @@ SCENARIOS: list[Scenario] = [
         url=f"{ACC_ROOT}/city-reports",
         wait_for="app-collection-view tr.mat-mdc-row",
         hover="app-collection-view tr.mat-mdc-row:nth-of-type(2)",
+        expect_text=["Total entries: 5"],
     ),
     # A folder: the "up" row, hovered
     Scenario(
@@ -735,6 +793,7 @@ SCENARIOS: list[Scenario] = [
         steps=switch_on_with_nested_disabled(
             "ingest-trigger-updates-enabled", ["stop-policy-never"], "stop-policy-after-consecutive-failures"
         ),
+        expect_text=["On consecutive failures"],
     ),
     Scenario(
         "58-settings-transform-immediate",
@@ -746,6 +805,7 @@ SCENARIOS: list[Scenario] = [
             ["batching-rule-immediate", "stop-policy-never"],
             "batching-rule-buffering",
         ),
+        expect_text=["Launch transform immediately"],
     ),
     # Source event editors
     Scenario(
@@ -772,6 +832,7 @@ SCENARIOS: list[Scenario] = [
         wait_for="button",
         steps=schema_editor_rows,
         hover="app-edit-schema-table tr.mat-mdc-row:nth-of-type(2) td.mat-column-type",
+        expect_text=["Add field"],
     ),
     Scenario(
         "62-set-transform",
@@ -816,6 +877,7 @@ SCENARIOS: list[Scenario] = [
         url=f"{ACC}/flows?nav=processes",
         wait_for=".order-direction-toggle button.mdc-switch",
         steps=switch_order_off,
+        expect_text=["order direction ASC"],
     ),
     Scenario(
         "68-admin-dashboard",
@@ -846,6 +908,7 @@ SCENARIOS: list[Scenario] = [
         url="/v/page-not-found",
         wait_for="app-page-not-found",
         allow_error_text=True,
+        expect_text=["Requested Page Not Found"],
     ),
     Scenario(
         "72-unknown-url",
@@ -853,14 +916,22 @@ SCENARIOS: list[Scenario] = [
         url="/v/no-such-page/here",
         wait_for="app-page-not-found",
         allow_error_text=True,
+        expect_text=["Requested Page Not Found"],
     ),
     Scenario(
         "73-account-whitelist-not-found",
         "error-pages",
         url="/v/account-whitelist-not-found",
         wait_for="app-account-whitelist-not-found",
+        expect_text=["granted by invitation"],
     ),
-    Scenario("74-login-unavailable", "error-pages", url="/v/login-unavailable", wait_for="app-login-unavailable"),
+    Scenario(
+        "74-login-unavailable",
+        "error-pages",
+        url="/v/login-unavailable",
+        wait_for="app-login-unavailable",
+        expect_text=["Sign-in is unavailable"],
+    ),
     # Query with more than 50 rows: "load more" with its options closed, then opened
     Scenario(
         "75-query-load-more-closed",
@@ -868,6 +939,7 @@ SCENARIOS: list[Scenario] = [
         url=f"/v/query?sqlQuery={quote(CROSS_JOIN, safe=URI_COMPONENT_SAFE)}",
         wait_for='[data-test-id="runSqlQueryButton"]',
         steps=run_query,
+        expect_text=["Load more data"],
     ),
     Scenario(
         "76-query-load-more-opened",
@@ -875,6 +947,7 @@ SCENARIOS: list[Scenario] = [
         url=f"/v/query?sqlQuery={quote(CROSS_JOIN, safe=URI_COMPONENT_SAFE)}",
         wait_for='[data-test-id="runSqlQueryButton"]',
         steps=open_load_more_options,
+        expect_text=["Select number of rows to load"],
     ),
     # Narrow viewports: the header below the md breakpoint, collapsed and with the menu open
     Scenario(
@@ -892,6 +965,7 @@ SCENARIOS: list[Scenario] = [
         viewport={"width": 600, "height": 900},
         wait_for='[data-test-id="appHeaderMenuButton"]',
         steps=open_header_menu,
+        expect_text=["Log out"],
     ),
     Scenario("79-account-overview", "account-datasets", url=ACC_ROOT, wait_for="app-account", expect_text=["Datasets"]),
     # A selected collection row, hovered: only `.mat-mdc-row:hover` gives it the pointer cursor
@@ -902,6 +976,7 @@ SCENARIOS: list[Scenario] = [
         wait_for="app-collection-view tr.mat-mdc-row",
         steps=select_collection_row,
         hover="app-collection-view tr.mat-mdc-row.selected-row",
+        expect_text=["Total entries: 5"],
     ),
     # A confirmation dialog, cancelled afterwards: its buttons are among the capture's FORCE_TARGETS, with a held :active
     Scenario(
@@ -921,6 +996,7 @@ SCENARIOS: list[Scenario] = [
         DS,
         '[data-test-id="edit-dataset-details"]',
         "app-details-modal",
+        expect_text=["Edit dataset details"],
     ),
     modal_scenario(
         89,
@@ -929,6 +1005,7 @@ SCENARIOS: list[Scenario] = [
         DS,
         '[data-test-id="edit-dataset-license"]',
         "app-edit-license-modal",
+        expect_text=["Edit dataset license"],
     ),
     modal_scenario(
         90,
@@ -937,9 +1014,18 @@ SCENARIOS: list[Scenario] = [
         PUSH,
         '[data-test-id="edit-dataset-watermark"]',
         "app-edit-watermark-modal",
+        expect_text=["Time zone"],
     ),
     # Adding data by hand is offered on a root without a polling source
-    modal_scenario(91, "overview-add-data", "add-data", PUSH, '[data-test-id="add-more-data"]', "app-add-data-modal"),
+    modal_scenario(
+        91,
+        "overview-add-data",
+        "add-data",
+        PUSH,
+        '[data-test-id="add-more-data"]',
+        "app-add-data-modal",
+        expect_text=["Add data from anywhere"],
+    ),
     Scenario(
         "92-overview-add-data-from-url",
         "add-data",
@@ -947,6 +1033,7 @@ SCENARIOS: list[Scenario] = [
         wait_for='[data-test-id="add-more-data"]',
         steps=add_data_from_url,
         after=close_modals,
+        expect_text=["Add file from URL"],
     ),
     modal_scenario(
         93,
@@ -955,6 +1042,7 @@ SCENARIOS: list[Scenario] = [
         f"{DS}/settings/access",
         '[data-test-id="add-people-button"]',
         "app-add-people-modal",
+        expect_text=["Add people to dataset"],
     ),
     modal_scenario(
         94,
@@ -963,6 +1051,7 @@ SCENARIOS: list[Scenario] = [
         f"{DS}/settings/access",
         "app-dataset-settings-access-tab .edit-button",
         "app-edit-collaborator-modal",
+        expect_text=["Edit role"],
     ),
     modal_scenario(
         95,
@@ -971,6 +1060,7 @@ SCENARIOS: list[Scenario] = [
         f"{DS}/settings/variables-and-secrets",
         "app-dataset-settings-secrets-manager-tab .add-row-button",
         "app-edit-key-value-modal",
+        expect_text=["Key *"],
     ),
     modal_scenario(
         96,
@@ -979,15 +1069,58 @@ SCENARIOS: list[Scenario] = [
         f"{DS}/settings/variables-and-secrets",
         "app-dataset-settings-secrets-manager-tab td .edit-button",
         "app-edit-key-value-modal",
+        expect_text=["Edit variable"],
     ),
     # Every data access tab besides the link tab of 07
-    data_access_tab(97, "kamuCli", "kamu-cli", "app-data-access-kamu-cli-tab"),
-    data_access_tab(98, "rest", "rest", "app-data-access-rest-tab"),
-    data_access_tab(99, "sql", "sql", "app-data-access-sql-tab"),
-    data_access_tab(100, "stream", "stream", "app-data-access-stream-tab"),
-    data_access_tab(101, "code", "code", "app-data-access-code-tab"),
-    data_access_tab(102, "odata", "odata", "app-data-access-odata-tab"),
-    data_access_tab(103, "export", "export", "app-data-access-export-tab"),
+    data_access_tab(
+        97,
+        "kamuCli",
+        "kamu-cli",
+        "app-data-access-kamu-cli-tab",
+        expect_text=["Pull dataset to local machine"],
+    ),
+    data_access_tab(
+        98,
+        "rest",
+        "rest",
+        "app-data-access-rest-tab",
+        expect_text=["Access last few events"],
+    ),
+    data_access_tab(
+        99,
+        "sql",
+        "sql",
+        "app-data-access-sql-tab",
+        expect_text=["Connect using FlightSQL"],
+    ),
+    data_access_tab(
+        100,
+        "stream",
+        "stream",
+        "app-data-access-stream-tab",
+        expect_text=["Stream data using WebSocket"],
+    ),
+    data_access_tab(
+        101,
+        "code",
+        "code",
+        "app-data-access-code-tab",
+        expect_text=["Feature comming soon"],
+    ),
+    data_access_tab(
+        102,
+        "odata",
+        "odata",
+        "app-data-access-odata-tab",
+        expect_text=["Service endpoint"],
+    ),
+    data_access_tab(
+        103,
+        "export",
+        "export",
+        "app-data-access-export-tab",
+        expect_text=["Download"],
+    ),
     # The block page of each event kind; 43 shows the newest block
     block_scenario(104, "seed", "population", "Seed", "app-seed-event"),
     block_scenario(105, "set-info", "population", "SetInfo", "app-set-info-event"),
@@ -1029,6 +1162,7 @@ SCENARIOS: list[Scenario] = [
         url=f"{ACC_ROOT}/container-feed/add-polling-source",
         wait_for='[data-test-id="radio-Container-control"]',
         steps=source_kind("Container", "app-key-value-field"),
+        expect_text=["Environment variables"],
     ),
     Scenario(
         "119-add-polling-source-mqtt",
@@ -1036,6 +1170,7 @@ SCENARIOS: list[Scenario] = [
         url=f"{ACC_ROOT}/mqtt-feed/add-polling-source",
         wait_for='[data-test-id="radio-Mqtt-control"]',
         steps=source_kind("Mqtt", "app-topics-field"),
+        expect_text=["Exactly Once"],
     ),
     Scenario(
         "120-schema-editor-type-editor",
@@ -1044,6 +1179,7 @@ SCENARIOS: list[Scenario] = [
         url=f"{ACC_ROOT}/air-quality-readings/add-push-source?name=default",
         wait_for="button",
         steps=edit_first_column_type,
+        expect_text=["Timestamp < Millisecond"],
     ),
     modal_scenario(
         121,
@@ -1052,6 +1188,7 @@ SCENARIOS: list[Scenario] = [
         f"{DERIV}/set-transform",
         '[data-test-id="edit-button"]',
         "app-final-yaml-modal .monaco-editor .view-line",
+        expect_text=["kind: SetTransform"],
     ),
     Scenario(
         "122-dataset-create-yaml",
@@ -1059,6 +1196,7 @@ SCENARIOS: list[Scenario] = [
         url="/v/new-dataset",
         wait_for='[data-test-id="show-monaco-editor"]',
         steps=show_yaml_editor,
+        expect_text=["Upload from file"],
     ),
     # Edge states
     Scenario(
@@ -1066,24 +1204,28 @@ SCENARIOS: list[Scenario] = [
         "dataset-flows",
         url=f"{DS}/flows?page=99",
         wait_for="app-page-past-end",
+        expect_text=["There are no flow runs on this page"],
     ),
     Scenario(
         "124-collection-path-not-found",
         "collection",
         url=f"{ACC_ROOT}/city-reports?pathPrefix=%2Fnowhere%2F",
         wait_for="app-value-not-found",
+        expect_text=["There is no folder /nowhere"],
     ),
     Scenario(
         "125-versioned-file-missing-version",
         "versioned-file",
         url=f"{ACC_ROOT}/release-notes?version=99",
         wait_for="app-value-not-found",
+        expect_text=["There is no version 99"],
     ),
     Scenario(
         "126-account-flows-upcoming-scheduled",
         "account-flows",
         url=f"{ACC}/flows?nav=processes&mode=upcomingScheduled",
         wait_for="app-upcoming-scheduled-filters-view",
+        expect_text=["Next planned after"],
     ),
     Scenario(
         "127-query-explainer-verified",
@@ -1091,6 +1233,7 @@ SCENARIOS: list[Scenario] = [
         url="/v/query-explainer",
         wait_for='[data-test-id="input-textarea"]',
         steps=explain_commitment,
+        expect_text=["Verification successful"],
     ),
     block_scenario(128, "polling-source-ethereum", "chain-events", "SetPollingSource", "app-yaml-event-viewer"),
     Scenario(
@@ -1107,6 +1250,7 @@ SCENARIOS: list[Scenario] = [
         url=lambda s: f"{DS}/block/{block_hash(s, 'population', 'SetPollingSource')}",
         wait_for='[data-test-id="yaml-toggle"]',
         steps=opens('[data-test-id="yaml-toggle"] button', "app-yaml-view-section markdown pre"),
+        expect_text=["kind: MetadataBlock"],
     ),
     modal_scenario(
         132,
@@ -1116,6 +1260,7 @@ SCENARIOS: list[Scenario] = [
         f"{ACC_ROOT}/release-notes/metadata/schema",
         '[data-test-id^="show-more-type-"]',
         "app-attributes-schema-modal",
+        expect_text=["Sequential identifier assigned"],
     ),
     # ---- Logged-out phase: the first "anon" scenario clears the session. Keep these last.
     Scenario(
@@ -1149,6 +1294,7 @@ SCENARIOS: list[Scenario] = [
         url="/v/page-not-found",
         wait_for="app-page-not-found",
         allow_error_text=True,
+        expect_text=["Requested Page Not Found"],
     ),
     # The authenticated guard sends anonymous users to the default page
     Scenario(
@@ -1167,6 +1313,7 @@ SCENARIOS: list[Scenario] = [
         url="/v/login",
         wait_for="app-login",
         steps=open_password_form,
+        expect_text=["Login to Kamu"],
     ),
     # ---- The `empty` profile: a node with accounts and no data
     Scenario(

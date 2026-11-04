@@ -244,8 +244,8 @@ def backend_options(command: argparse.ArgumentParser) -> None:
 def parser() -> argparse.ArgumentParser:
     p = argparse.ArgumentParser(
         prog="npm run e2e --",
-        description="Runs of Kamu Web UI scenarios against a kamu backend. Env: KAMU_VISUAL_CACHE (default "
-        "~/.cache/kamu-ui-visual), CHROME_BIN (default google-chrome).",
+        description="Runs of Kamu Web UI scenarios against a kamu backend. Env: KAMU_E2E_CACHE (default "
+        "~/.cache/kamu-ui-e2e), CHROME_BIN (default google-chrome).",
     )
 
     commands = p.add_subparsers(dest="command", required=True)
@@ -280,7 +280,7 @@ def parser() -> argparse.ArgumentParser:
         help=f"prune: entries unused for longer (default {MAX_AGE_DAYS})",
     )
     ca.add_argument(
-        "--max", metavar="SIZE", help=f"prune: size ceiling (default KAMU_VISUAL_CACHE_MAX or {DEFAULT_MAX})"
+        "--max", metavar="SIZE", help=f"prune: size ceiling (default KAMU_E2E_CACHE_MAX or {DEFAULT_MAX})"
     )
     ca.add_argument("--no-images", action="store_true", help="prune: leave the Docker images the kit pulled")
     ca.add_argument("--dry-run", action="store_true", help="prune: list what would go")

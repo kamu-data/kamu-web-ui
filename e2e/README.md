@@ -27,7 +27,7 @@ its position and, once a previous run has timed the scenarios, an estimate of wh
 ```
 
 The run ends with the path of `report.md`. Nothing is written to the repository; everything goes
-to `~/.cache/kamu-ui-visual/` (`KAMU_VISUAL_CACHE` to move it).
+to `~/.cache/kamu-ui-e2e/` (`KAMU_E2E_CACHE` to move it).
 
 ## Prerequisites
 
@@ -117,7 +117,7 @@ Accounts: `kamu` (admin, password `kamu.dev`), `alice`, `bob`.
 
 Every `compare` ends with a prune: it keeps the newest 10 runs, removes baselines, builds,
 workspaces, releases and the kit's own Docker images unused for 14 days (pinned images stay), and
-then, while the cache is over `KAMU_VISUAL_CACHE_MAX` (default `10G`), the least recently used,
+then, while the cache is over `KAMU_E2E_CACHE_MAX` (default `10G`), the least recently used,
 runs first. Nothing the running compare used is removed. A run keeps its results only, about
 15 MB: the working tree's build is deleted at its end, and a base commit's `node_modules` once its
 build exists.

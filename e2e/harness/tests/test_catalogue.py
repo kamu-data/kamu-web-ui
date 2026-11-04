@@ -5,7 +5,7 @@
 
 import unittest
 
-from e2e.harness.catalogue import select_scenarios
+from e2e.harness.catalogue import CatalogueError, check_scenarios, select_scenarios
 from e2e.scenarios import Scenario
 
 ENTRIES = {
@@ -37,6 +37,16 @@ class SelectScenariosTest(unittest.TestCase):
             names(select_scenarios(SCENARIOS, ENTRIES, unrated=True, only="01,03")),
             {"seed": ["01-a"], "empty": ["03-c"]},
         )
+
+
+class CheckScenariosTest(unittest.TestCase):
+    def test_accepts_a_scenario_expecting_a_text_or_an_input_value(self):
+        check_scenarios([Scenario("01-a", "a", expect_text=["A"]), Scenario("02-b", "b", expect_value=["B"])], ENTRIES)
+
+    def test_refuses_a_scenario_that_expects_nothing(self):
+        with self.assertRaises(CatalogueError) as raised:
+            check_scenarios([Scenario("01-a", "a", expect_text=["A"]), Scenario("02-b", "b")], ENTRIES)
+        self.assertEqual(raised.exception.problems, ["02-b: no expect_text or expect_value"])
 
 
 if __name__ == "__main__":

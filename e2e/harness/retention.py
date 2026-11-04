@@ -41,7 +41,7 @@ def parse_size(text: str) -> int:
 
 
 def max_bytes() -> int:
-    return parse_size(os.environ.get("KAMU_VISUAL_CACHE_MAX", DEFAULT_MAX))
+    return parse_size(os.environ.get("KAMU_E2E_CACHE_MAX", DEFAULT_MAX))
 
 
 def size_of(path: Path) -> int:

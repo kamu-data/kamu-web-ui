@@ -25,7 +25,7 @@ HELPERS = Path(__file__).parent / "helpers"
 
 
 def cache_dir() -> Path:
-    return Path(os.environ.get("KAMU_VISUAL_CACHE", Path.home() / ".cache" / "kamu-ui-visual")).resolve()
+    return Path(os.environ.get("KAMU_E2E_CACHE", Path.home() / ".cache" / "kamu-ui-e2e")).resolve()
 
 
 def short_hash(*parts: str) -> str:

@@ -40,7 +40,7 @@ DB = {"user": "kamu", "password": "kamu", "name": "kamu"}
 NETWORK_TIMEOUT = 30
 # On every container and network the kit creates: a run killed before it could clean up leaves them
 # behind, and the next run finds and removes them by it
-LABEL = "kamu-ui-visual"
+LABEL = "kamu-ui-e2e"
 # Inside the network
 POSTGRES_PORT = 5432
 S3_PORT = 9000

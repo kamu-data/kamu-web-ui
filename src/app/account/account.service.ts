@@ -7,7 +7,7 @@
 
 import { inject, Injectable } from "@angular/core";
 
-import { combineLatest, forkJoin, Observable } from "rxjs";
+import { combineLatest, Observable } from "rxjs";
 import { filter, map } from "rxjs/operators";
 
 import { ToastrService } from "ngx-toastr";
@@ -69,24 +69,6 @@ export class AccountService {
 
     public fetchAccountByName(name: string): Observable<MaybeNull<AccountFragment>> {
         return this.accountApi.fetchAccountByName(name);
-    }
-
-    public fetchMultipleAccountsByName(accountNames: string[]): Observable<Map<string, AccountFragment>> {
-        const accountObservables$: Observable<MaybeNull<AccountFragment>>[] = accountNames.map((accountName: string) =>
-            this.fetchAccountByName(accountName),
-        );
-
-        return forkJoin(accountObservables$).pipe(
-            map((accounts: MaybeNull<AccountFragment>[]) => {
-                const accountsByName = new Map<string, AccountFragment>();
-                accounts.forEach((account: MaybeNull<AccountFragment>) => {
-                    if (account) {
-                        accountsByName.set(account.accountName, account);
-                    }
-                });
-                return accountsByName;
-            }),
-        );
     }
 
     public getAccountListFlows(params: {

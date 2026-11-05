@@ -97,6 +97,7 @@ export class DatasetFlowApi {
             })
             .valueChanges.pipe(
                 completeDataOrError(),
+                first(),
                 map((result: ObservableQuery.Result<DatasetFlowsProcessesQuery, "complete">) => {
                     return result.data;
                 }),
@@ -147,6 +148,7 @@ export class DatasetFlowApi {
             })
             .valueChanges.pipe(
                 completeDataOrError(),
+                first(),
                 map((result: ObservableQuery.Result<GetDatasetFlowConfigsQuery, "complete">) => {
                     return result.data;
                 }),
@@ -213,6 +215,7 @@ export class DatasetFlowApi {
             })
             .valueChanges.pipe(
                 completeDataOrError(),
+                first(),
                 map((result: ObservableQuery.Result<GetDatasetFlowTriggerQuery, "complete">) => {
                     return result.data;
                 }),
@@ -242,6 +245,7 @@ export class DatasetFlowApi {
             })
             .valueChanges.pipe(
                 completeDataOrError(),
+                first(),
                 map((result: ObservableQuery.Result<GetDatasetListFlowsQuery, "complete">) => {
                     return result.data;
                 }),
@@ -273,6 +277,7 @@ export class DatasetFlowApi {
             .watch({ variables: { datasetId: params.datasetId, flowId: params.flowId }, ...noCacheFetchPolicy })
             .valueChanges.pipe(
                 completeDataOrError(),
+                first(),
                 map((result: ObservableQuery.Result<GetFlowByIdQuery, "complete">) => {
                     return result.data;
                 }),
@@ -301,6 +306,7 @@ export class DatasetFlowApi {
             })
             .valueChanges.pipe(
                 completeDataOrError(),
+                first(),
                 map((result: ObservableQuery.Result<DatasetFlowsInitiatorsQuery, "complete">) => {
                     return result.data;
                 }),

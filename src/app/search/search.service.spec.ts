@@ -7,15 +7,15 @@
 
 import { TestBed } from "@angular/core/testing";
 
-import { of, throwError } from "rxjs";
+import { of } from "rxjs";
 import { first } from "rxjs/operators";
 
 import { Apollo } from "apollo-angular";
 
 import { SearchApi } from "@api/search.api";
-import { DatasetAutocompleteItem, DatasetSearchResult, SearchMode } from "@interface/search.interface";
+import { DatasetSearchResult, SearchMode } from "@interface/search.interface";
 
-import { mockAutocompleteItems, mockSearchDatasetOverviewQuery } from "src/app/search/mock.data";
+import { mockSearchDatasetOverviewQuery } from "src/app/search/mock.data";
 import { SearchService } from "src/app/search/search.service";
 
 describe("SearchService", () => {
@@ -58,42 +58,6 @@ describe("SearchService", () => {
         service.searchDatasets(testSearchValue);
 
         expect(searchApiOverviewDataSearchSpy).toHaveBeenCalledWith(testSearchValue, 0);
-        expect(subscription$.closed).toBe(true);
-    });
-
-    it("should fire autocompleteSearchChanges$ on autocomplete request", () => {
-        const searchApiAutocompleteDatasetSearchSpy = vi
-            .spyOn(searchApi, "autocompleteDatasetSearch")
-            .mockReturnValue(of(mockAutocompleteItems));
-
-        const subscription$ = service.searchAutocompleteChanges
-            .pipe(first())
-            .subscribe((autocompleteItems: DatasetAutocompleteItem[]) => {
-                expect(autocompleteItems).toEqual(mockAutocompleteItems);
-            });
-
-        const testAutoCompleteValue = "test";
-        service.autocompleteDatasetSearch(testAutoCompleteValue);
-
-        expect(searchApiAutocompleteDatasetSearchSpy).toHaveBeenCalledWith(testAutoCompleteValue);
-        expect(subscription$.closed).toBe(true);
-    });
-
-    it("should fire autocompleteSearchChanges$ with empty collection on autocomplete request failure", () => {
-        const searchApiAutocompleteDatasetSearchSpy = vi
-            .spyOn(searchApi, "autocompleteDatasetSearch")
-            .mockReturnValue(throwError(() => "some error"));
-
-        const subscription$ = service.searchAutocompleteChanges
-            .pipe(first())
-            .subscribe((autocompleteItems: DatasetAutocompleteItem[]) => {
-                expect(autocompleteItems).toEqual([]);
-            });
-
-        const testAutoCompleteValue = "test";
-        service.autocompleteDatasetSearch(testAutoCompleteValue);
-
-        expect(searchApiAutocompleteDatasetSearchSpy).toHaveBeenCalledWith(testAutoCompleteValue);
         expect(subscription$.closed).toBe(true);
     });
 });

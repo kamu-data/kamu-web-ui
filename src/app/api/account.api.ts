@@ -282,6 +282,7 @@ export class AccountApi {
             })
             .valueChanges.pipe(
                 completeDataOrError(),
+                first(),
                 map((result: ObservableQuery.Result<AccountListDatasetsWithFlowsQuery, "complete">) => {
                     return result.data;
                 }),

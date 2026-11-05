@@ -5,6 +5,7 @@
  * included in the LICENSE file.
  */
 
+import { TestbedHarnessEnvironment } from "@angular/cdk/testing/testbed";
 import { ComponentFixture, fakeAsync, flush, TestBed, tick } from "@angular/core/testing";
 
 import { of, Subject, throwError } from "rxjs";
@@ -16,24 +17,41 @@ import { provideToastr } from "ngx-toastr";
 import {
     dispatchInputEvent,
     emitClickOnElementByDataTestId,
+    registerMatSvgIcons,
     setComponentInput,
 } from "@common/helpers/base-test.helpers.spec";
 import { SharedTestModule } from "@common/modules/shared-test.module";
 import AppValues from "@common/values/app.values";
+import { DatasetBasicsFragment, GetDatasetSchemaQuery } from "@api/kamu.graphql.interface";
 import { SearchApi } from "@api/search.api";
 import { DatasetAutocompleteItem, TypeNames } from "@interface/search.interface";
 
 import { SearchSectionComponent } from "src/app/dataset-view/additional-components/metadata-component/components/set-transform/components/search-section/search-section.component";
-import { mockGetDatasetSchemaQuery } from "src/app/dataset-view/additional-components/metadata-component/components/set-transform/mock.data";
-import { unavailableDatasetNode } from "src/app/dataset-view/additional-components/metadata-component/components/set-transform/set-transform.helpers";
+import { SearchSectionHarness } from "src/app/dataset-view/additional-components/metadata-component/components/set-transform/components/search-section/search-section.harness";
+import {
+    mockGetDatasetSchemaQuery,
+    mockParseSetTransformYamlType,
+} from "src/app/dataset-view/additional-components/metadata-component/components/set-transform/mock.data";
+import {
+    transformInputForm,
+    transformInputsFormArray,
+} from "src/app/dataset-view/additional-components/metadata-component/components/set-transform/set-transform.helpers";
+import {
+    TransformInputsFormArray,
+    TransformSelectedInput,
+} from "src/app/dataset-view/additional-components/metadata-component/components/set-transform/set-transform.types";
 import { DatasetService } from "src/app/dataset-view/dataset.service";
 import { mockDatasetBasicsDerivedFragment, mockDatasetInfo } from "src/app/search/mock.data";
 
 describe("SearchSectionComponent", () => {
+    const [firstInput, secondInput] = mockParseSetTransformYamlType.inputs;
+    const LOADED_DATASET = `${mockGetDatasetSchemaQuery.datasets.byId?.owner.accountName}/${mockGetDatasetSchemaQuery.datasets.byId?.name}`;
+
     let component: SearchSectionComponent;
     let fixture: ComponentFixture<SearchSectionComponent>;
     let searchApi: SearchApi;
     let datasetService: DatasetService;
+    let inputsForm: TransformInputsFormArray;
 
     beforeEach(async () => {
         await TestBed.configureTestingModule({
@@ -41,234 +59,241 @@ describe("SearchSectionComponent", () => {
             imports: [SharedTestModule, SearchSectionComponent],
         }).compileComponents();
 
-        fixture = TestBed.createComponent(SearchSectionComponent);
-        component = fixture.componentInstance;
-        setComponentInput(fixture, "inputDatasets", new Set<string>());
-        setComponentInput(fixture, "inputsViewModel", []);
-        setComponentInput(fixture, "datasetInfo", mockDatasetInfo);
         searchApi = TestBed.inject(SearchApi);
         datasetService = TestBed.inject(DatasetService);
+        registerMatSvgIcons();
+    });
+
+    function createComponent(inputs: TransformSelectedInput[]): void {
+        inputsForm = transformInputsFormArray(inputs);
+        fixture = TestBed.createComponent(SearchSectionComponent);
+        component = fixture.componentInstance;
+        setComponentInput(fixture, "inputsForm", inputsForm);
+        setComponentInput(fixture, "datasetInfo", mockDatasetInfo);
         fixture.detectChanges();
-    });
+    }
 
-    it("should create", () => {
-        expect(component).toBeTruthy();
-    });
+    function getHarness(): Promise<SearchSectionHarness> {
+        return TestbedHarnessEnvironment.harnessForFixture(fixture, SearchSectionHarness);
+    }
 
-    it("should activate search API and update view", fakeAsync(() => {
-        const MOCK_AUTOCOMPLETE_ITEM: DatasetAutocompleteItem = {
-            __typename: TypeNames.datasetType,
-            dummy: false,
-            dataset: mockDatasetBasicsDerivedFragment,
-        };
-        const searchApiAutocompleteDatasetSearchSpy = vi
-            .spyOn(searchApi, "autocompleteDatasetSearch")
-            .mockImplementation(() => of([MOCK_AUTOCOMPLETE_ITEM]));
+    function autocompleteItem(dataset: DatasetBasicsFragment): DatasetAutocompleteItem {
+        return { __typename: TypeNames.datasetType, dummy: false, dataset };
+    }
 
-        const SEARCH_QUERY = "query";
-        dispatchInputEvent(fixture, "searchInputDatasets", SEARCH_QUERY);
-        tick(AppValues.SHORT_DELAY_MS);
+    function selectEvent(dataset: DatasetBasicsFragment): NgbTypeaheadSelectItemEvent<DatasetAutocompleteItem> {
+        return { item: autocompleteItem(dataset), preventDefault: () => undefined };
+    }
 
-        expect(searchApiAutocompleteDatasetSearchSpy).toHaveBeenCalledWith(SEARCH_QUERY);
-        flush();
-    }));
+    describe("searching", () => {
+        beforeEach(() => createComponent([]));
 
-    it("should hide the edited dataset and added inputs from search results when aliases have no account prefix", fakeAsync(() => {
-        const editedDataset = { ...mockDatasetBasicsDerivedFragment, id: "edited", name: "derived", alias: "derived" };
-        const addedDataset = { ...mockDatasetBasicsDerivedFragment, id: "added", name: "cities", alias: "cities" };
-        const otherDataset = { ...mockDatasetBasicsDerivedFragment, id: "other", name: "cities-2", alias: "cities-2" };
-        setComponentInput(fixture, "datasetInfo", {
-            accountName: editedDataset.owner.accountName,
-            datasetName: editedDataset.name,
+        it("should activate search API and update view", fakeAsync(() => {
+            const searchApiAutocompleteDatasetSearchSpy = vi
+                .spyOn(searchApi, "autocompleteDatasetSearch")
+                .mockImplementation(() => of([autocompleteItem(mockDatasetBasicsDerivedFragment)]));
+
+            const SEARCH_QUERY = "query";
+            dispatchInputEvent(fixture, "searchInputDatasets", SEARCH_QUERY);
+            tick(AppValues.SHORT_DELAY_MS);
+
+            expect(searchApiAutocompleteDatasetSearchSpy).toHaveBeenCalledWith(SEARCH_QUERY);
+            flush();
+        }));
+
+        it("should hide the edited dataset and the inputs' datasets from search results", fakeAsync(() => {
+            const editedDataset = { ...mockDatasetBasicsDerivedFragment, id: "edited", name: "derived" };
+            const addedDataset = { ...mockDatasetBasicsDerivedFragment, id: "added", name: "cities" };
+            const otherDataset = { ...mockDatasetBasicsDerivedFragment, id: "other", name: "cities-2" };
+            setComponentInput(fixture, "datasetInfo", {
+                accountName: editedDataset.owner.accountName,
+                datasetName: editedDataset.name,
+            });
+            // The input is renamed, so only its dataset id still ties it to the search result
+            inputsForm.push(transformInputForm({ datasetRef: "added", alias: "renamed" }));
+            vi.spyOn(searchApi, "autocompleteDatasetSearch").mockReturnValue(
+                of([editedDataset, addedDataset, otherDataset].map(autocompleteItem)),
+            );
+
+            let results: DatasetAutocompleteItem[] = [];
+            component.search(of("cit")).subscribe((items) => (results = items));
+            tick(AppValues.SHORT_DELAY_MS);
+
+            expect(results.map((item) => item.dataset.id)).toEqual(["other"]);
+        }));
+
+        it("should offer no suggestions for a failed search and still search the next term", fakeAsync(() => {
+            const MOCK_AUTOCOMPLETE_ITEM = autocompleteItem({
+                ...mockDatasetBasicsDerivedFragment,
+                id: "other",
+                name: "cities-2",
+                alias: "cities-2",
+            });
+            const autocompleteDatasetSearchSpy = vi.spyOn(searchApi, "autocompleteDatasetSearch");
+            autocompleteDatasetSearchSpy.mockReturnValueOnce(throwError(() => new Error("Server unreachable")));
+            autocompleteDatasetSearchSpy.mockReturnValue(of([MOCK_AUTOCOMPLETE_ITEM]));
+            const text$ = new Subject<string>();
+            const results: DatasetAutocompleteItem[][] = [];
+            component.search(text$).subscribe((items) => results.push(items));
+
+            text$.next("fail");
+            tick(AppValues.SHORT_DELAY_MS);
+            expect(results).toEqual([[]]);
+
+            text$.next("cit");
+            tick(AppValues.SHORT_DELAY_MS);
+            expect(results).toEqual([[], [MOCK_AUTOCOMPLETE_ITEM]]);
+        }));
+
+        it("should clear search input", () => {
+            const SEARCH_QUERY = "query";
+            dispatchInputEvent(fixture, "searchInputDatasets", SEARCH_QUERY);
+            expect(component.searchDataset).toEqual(SEARCH_QUERY);
+
+            emitClickOnElementByDataTestId(fixture, "clear-input");
+
+            expect(component.searchDataset).toEqual("");
         });
-        setComponentInput(fixture, "inputsViewModel", [
-            { name: "cities", owner: addedDataset.owner.accountName, alias: "cities" },
-        ]);
-        vi.spyOn(searchApi, "autocompleteDatasetSearch").mockReturnValue(
-            of(
-                [editedDataset, addedDataset, otherDataset].map((dataset) => ({
-                    __typename: TypeNames.datasetType,
-                    dummy: false,
-                    dataset,
-                })),
-            ),
-        );
-
-        let results: DatasetAutocompleteItem[] = [];
-        component.search(of("cit")).subscribe((items) => (results = items));
-        tick(AppValues.SHORT_DELAY_MS);
-
-        expect(results.map((item) => item.dataset.alias)).toEqual(["cities-2"]);
-    }));
-
-    it("should offer no suggestions for a failed search and still search the next term", fakeAsync(() => {
-        const MOCK_AUTOCOMPLETE_ITEM: DatasetAutocompleteItem = {
-            __typename: TypeNames.datasetType,
-            dummy: false,
-            dataset: { ...mockDatasetBasicsDerivedFragment, id: "other", name: "cities-2", alias: "cities-2" },
-        };
-        const autocompleteDatasetSearchSpy = vi.spyOn(searchApi, "autocompleteDatasetSearch");
-        autocompleteDatasetSearchSpy.mockReturnValueOnce(throwError(() => new Error("Server unreachable")));
-        autocompleteDatasetSearchSpy.mockReturnValue(of([MOCK_AUTOCOMPLETE_ITEM]));
-        const text$ = new Subject<string>();
-        const results: DatasetAutocompleteItem[][] = [];
-        component.search(text$).subscribe((items) => results.push(items));
-
-        text$.next("fail");
-        tick(AppValues.SHORT_DELAY_MS);
-        expect(results).toEqual([[]]);
-
-        text$.next("cit");
-        tick(AppValues.SHORT_DELAY_MS);
-        expect(results).toEqual([[], [MOCK_AUTOCOMPLETE_ITEM]]);
-    }));
-
-    it("should clear search input", () => {
-        const SEARCH_QUERY = "query";
-        dispatchInputEvent(fixture, "searchInputDatasets", SEARCH_QUERY);
-        expect(component.searchDataset).toEqual(SEARCH_QUERY);
-
-        emitClickOnElementByDataTestId(fixture, "clear-input");
-
-        expect(component.searchDataset).toEqual("");
     });
 
-    it("should check select input dataset", () => {
-        const mockNgbTypeaheadSelectItemEvent: NgbTypeaheadSelectItemEvent<DatasetAutocompleteItem> = {
-            item: {
-                dataset: mockDatasetBasicsDerivedFragment,
-                dummy: false,
-                __typename: TypeNames.datasetType,
-            },
-            preventDefault: () => undefined,
-        };
-        const requestDatasetSchemaSpy = vi
-            .spyOn(datasetService, "requestDatasetSchema")
-            .mockReturnValue(of(mockGetDatasetSchemaQuery));
+    describe("adding an input", () => {
+        beforeEach(() => createComponent([]));
 
-        component.onSelectItem(mockNgbTypeaheadSelectItemEvent);
+        it("should add the selected dataset under its alias and show its schema's dataset", async () => {
+            const requestDatasetSchemaSpy = vi
+                .spyOn(datasetService, "requestDatasetSchema")
+                .mockReturnValue(of(mockGetDatasetSchemaQuery));
 
-        expect(component.inputDatasets.size).toBe(1);
-        expect(component.inputsViewModel.length).toBe(1);
-        expect(component.inputsViewModel[0].alias).toEqual(mockDatasetBasicsDerivedFragment.alias);
-        expect(requestDatasetSchemaSpy).toHaveBeenCalledTimes(1);
+            component.onSelectItem(selectEvent(mockDatasetBasicsDerivedFragment));
+            const harness = await getHarness();
+
+            expect(inputsForm.getRawValue()).toEqual([
+                { datasetRef: mockDatasetBasicsDerivedFragment.id, alias: mockDatasetBasicsDerivedFragment.alias },
+            ]);
+            expect(requestDatasetSchemaSpy).toHaveBeenCalledExactlyOnceWith(mockDatasetBasicsDerivedFragment.id);
+            expect(await harness.getAliases()).toEqual([mockDatasetBasicsDerivedFragment.alias]);
+            expect(await harness.getInputDatasets()).toEqual([LOADED_DATASET]);
+        });
+
+        it("should not add the same dataset twice", () => {
+            vi.spyOn(datasetService, "requestDatasetSchema").mockReturnValue(of(mockGetDatasetSchemaQuery));
+
+            component.onSelectItem(selectEvent(mockDatasetBasicsDerivedFragment));
+            component.onSelectItem(selectEvent(mockDatasetBasicsDerivedFragment));
+
+            expect(inputsForm.length).toBe(1);
+        });
+
+        it("should say why when the added dataset's alias repeats an input's alias", async () => {
+            vi.spyOn(datasetService, "requestDatasetSchema").mockReturnValue(of(mockGetDatasetSchemaQuery));
+            inputsForm.push(transformInputForm({ datasetRef: "other", alias: mockDatasetBasicsDerivedFragment.alias }));
+
+            component.onSelectItem(selectEvent(mockDatasetBasicsDerivedFragment));
+            const harness = await getHarness();
+
+            expect(inputsForm.valid).toBe(false);
+            expect(await harness.getAliasesError()).toEqual(
+                `Input list contains "${mockDatasetBasicsDerivedFragment.alias}" more than once`,
+            );
+        });
+
+        it("should list a selected input as unavailable when its schema fails to load", async () => {
+            vi.spyOn(datasetService, "requestDatasetSchema").mockReturnValue(throwError(() => new Error("fail")));
+
+            component.onSelectItem(selectEvent(mockDatasetBasicsDerivedFragment));
+            const harness = await getHarness();
+
+            expect(inputsForm.length).toBe(1);
+            expect(await harness.getInputDatasets()).toEqual([AppValues.SET_TRANSFORM_UNAVAILABLE_INPUT_LABEL]);
+        });
     });
 
-    it("should list a selected input as unavailable when its schema fails to load", () => {
-        const mockNgbTypeaheadSelectItemEvent: NgbTypeaheadSelectItemEvent<DatasetAutocompleteItem> = {
-            item: {
-                dataset: mockDatasetBasicsDerivedFragment,
-                dummy: false,
-                __typename: TypeNames.datasetType,
-            },
-            preventDefault: () => undefined,
-        };
-        vi.spyOn(datasetService, "requestDatasetSchema").mockReturnValue(throwError(() => new Error("fail")));
+    describe("with inputs from the event", () => {
+        let schemaResponses: Record<string, Subject<GetDatasetSchemaQuery>>;
 
-        component.onSelectItem(mockNgbTypeaheadSelectItemEvent);
+        beforeEach(() => {
+            schemaResponses = {
+                [firstInput.datasetRef]: new Subject<GetDatasetSchemaQuery>(),
+                [secondInput.datasetRef]: new Subject<GetDatasetSchemaQuery>(),
+            };
+            vi.spyOn(datasetService, "requestDatasetSchema").mockImplementation((datasetRef: string) =>
+                schemaResponses[datasetRef].asObservable(),
+            );
+            createComponent([firstInput, secondInput]);
+        });
 
-        expect(component.inputDatasets.size).toBe(1);
-        expect(component.inputsViewModel).toEqual([unavailableDatasetNode(mockDatasetBasicsDerivedFragment.alias)]);
-    });
+        it("should show each input's alias in the event's order while its dataset loads", async () => {
+            const harness = await getHarness();
 
-    it("should check delete input dataset", () => {
-        const deletedAlias = "test-account/com.youtube.playlist.featuring-kamu-data.videos.stats";
-        setComponentInput(
-            fixture,
-            "inputDatasets",
-            new Set([
-                '{"datasetRef":"did:odf:fed0176ed321fcd2fc471d4d1ab06662223be2c76b7e3d3f14c37413e0802e1dca3c1","alias":"kamu/github.stats"}',
-                `{"datasetRef":"did:odf:fed01ae1c46fe64c9d50d741989b406b89b6c40f3810e1b7bcc0ed83edc050fba2d9d","alias":"${deletedAlias}"}`,
-            ]),
-        );
-        setComponentInput(fixture, "inputsViewModel", [
-            { name: "github.stats", owner: "kamu", alias: "kamu/github.stats" },
-            {
-                name: "com.youtube.playlist.featuring-kamu-data.videos.stats",
-                owner: "test-account",
-                alias: deletedAlias,
-            },
-        ]);
-        fixture.detectChanges();
+            expect(await harness.getAliases()).toEqual([firstInput.alias, secondInput.alias]);
+            expect(await harness.getInputDatasets()).toEqual(["Loading...", "Loading..."]);
+        });
 
-        component.deleteInputDataset(deletedAlias);
+        it("should show each input's dataset once it loads, and a failed one as unavailable", async () => {
+            schemaResponses[secondInput.datasetRef].next(mockGetDatasetSchemaQuery);
+            schemaResponses[firstInput.datasetRef].error(new Error("request failed"));
+            const harness = await getHarness();
 
-        expect(component.inputDatasets.size).toBe(1);
-    });
+            expect(await harness.getInputDatasets()).toEqual([
+                AppValues.SET_TRANSFORM_UNAVAILABLE_INPUT_LABEL,
+                LOADED_DATASET,
+            ]);
+        });
 
-    it("should check deleting with same dataset name, but different account name", () => {
-        const deletedAlias = "test-account/com.youtube.playlist.featuring-kamu-data.videos.stats";
-        setComponentInput(
-            fixture,
-            "inputDatasets",
-            new Set([
-                '{"datasetRef":"did:odf:fed0176ed321fcd2fc471d4d1ab06662223be2c76b7e3d3f14c37413e0802e1dca3c1","alias":"kamu/com.youtube.playlist.featuring-kamu-data.videos.stats"}',
-                `{"datasetRef":"did:odf:fed01ae1c46fe64c9d50d741989b406b89b6c40f3810e1b7bcc0ed83edc050fba2d9d","alias":"${deletedAlias}"}`,
-            ]),
-        );
-        setComponentInput(fixture, "inputsViewModel", [
-            {
-                name: "com.youtube.playlist.featuring-kamu-data.videos.stats",
-                owner: "kamu",
-                alias: "kamu/com.youtube.playlist.featuring-kamu-data.videos.stats",
-            },
-            {
-                name: "com.youtube.playlist.featuring-kamu-data.videos.stats",
-                owner: "test-account",
-                alias: deletedAlias,
-            },
-        ]);
-        fixture.detectChanges();
+        it("should keep the alias the user types", async () => {
+            const harness = await getHarness();
 
-        component.deleteInputDataset(deletedAlias);
+            await harness.setAlias(1, "transactions");
 
-        expect(component.inputDatasets.size).toBe(1);
-        expect(component.inputsViewModel.length).toBe(1);
-    });
+            expect(inputsForm.getRawValue()).toEqual([firstInput, { ...secondInput, alias: "transactions" }]);
+            expect(await harness.getAliasError(1)).toBeNull();
+            expect(await harness.getAliasesError()).toBeNull();
+        });
 
-    it("should keep an input whose alias starts with the deleted alias", () => {
-        const keptInput =
-            '{"datasetRef":"did:odf:fed01ae1c46fe64c9d50d741989b406b89b6c40f3810e1b7bcc0ed83edc050fba2d9d","alias":"kamu/cities-2"}';
-        setComponentInput(
-            fixture,
-            "inputDatasets",
-            new Set([
-                '{"datasetRef":"did:odf:fed0176ed321fcd2fc471d4d1ab06662223be2c76b7e3d3f14c37413e0802e1dca3c1","alias":"kamu/cities"}',
-                keptInput,
-            ]),
-        );
-        setComponentInput(fixture, "inputsViewModel", [
-            { name: "cities", owner: "kamu", alias: "kamu/cities" },
-            { name: "cities-2", owner: "kamu", alias: "kamu/cities-2" },
-        ]);
-        fixture.detectChanges();
+        it("should trim the alias when the field is left", async () => {
+            const harness = await getHarness();
 
-        component.deleteInputDataset("kamu/cities");
+            await harness.setAlias(0, "  tokens  ");
 
-        expect(Array.from(component.inputDatasets)).toEqual([keptInput]);
-        expect(component.inputsViewModel).toEqual([{ name: "cities-2", owner: "kamu", alias: "kamu/cities-2" }]);
-    });
+            expect(inputsForm.controls[0].controls.alias.value).toEqual("tokens");
+        });
 
-    it("should delete an input whose alias has no account prefix", () => {
-        const keptInput =
-            '{"datasetRef":"did:odf:fed01ae1c46fe64c9d50d741989b406b89b6c40f3810e1b7bcc0ed83edc050fba2d9d","alias":"account.transactions"}';
-        setComponentInput(
-            fixture,
-            "inputDatasets",
-            new Set([
-                '{"datasetRef":"did:odf:fed0176ed321fcd2fc471d4d1ab06662223be2c76b7e3d3f14c37413e0802e1dca3c1","alias":"account.tokens.transfers"}',
-                keptInput,
-            ]),
-        );
-        setComponentInput(fixture, "inputsViewModel", [
-            { name: "account.tokens.transfers", owner: "kamu", alias: "account.tokens.transfers" },
-            { name: "account.transactions", owner: "kamu", alias: "account.transactions" },
-        ]);
-        fixture.detectChanges();
+        it("should require an alias", async () => {
+            const harness = await getHarness();
 
-        component.deleteInputDataset("account.tokens.transfers");
+            await harness.setAlias(0, "");
 
-        expect(Array.from(component.inputDatasets)).toEqual([keptInput]);
-        expect(component.inputsViewModel.map((item) => item.alias)).toEqual(["account.transactions"]);
+            expect(await harness.getAliasError(0)).toEqual("Query alias is required");
+            expect(inputsForm.valid).toBe(false);
+        });
+
+        it("should reject an alias of spaces only", async () => {
+            const harness = await getHarness();
+
+            await harness.setAlias(0, "   ");
+
+            expect(await harness.getAliasError(0)).toEqual("Query alias is required");
+            expect(inputsForm.valid).toBe(false);
+        });
+
+        it("should reject two inputs with the same alias", async () => {
+            const harness = await getHarness();
+
+            await harness.setAlias(1, firstInput.alias);
+
+            expect(await harness.getAliasesError()).toEqual(`Input list contains "${firstInput.alias}" more than once`);
+            expect(inputsForm.valid).toBe(false);
+        });
+
+        it("should delete only the chosen input and clear the duplicate it caused", async () => {
+            const harness = await getHarness();
+            await harness.setAlias(1, firstInput.alias);
+
+            await harness.deleteInput(0);
+
+            expect(inputsForm.getRawValue()).toEqual([{ ...secondInput, alias: firstInput.alias }]);
+            expect(await harness.getAliasesError()).toBeNull();
+            expect(inputsForm.valid).toBe(true);
+        });
     });
 });

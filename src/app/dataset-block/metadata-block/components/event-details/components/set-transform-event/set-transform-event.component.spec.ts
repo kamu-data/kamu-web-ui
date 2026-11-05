@@ -16,7 +16,11 @@ import { SharedTestModule } from "@common/modules/shared-test.module";
 
 import { BaseDynamicEventHarness } from "src/app/dataset-block/metadata-block/components/event-details/components/base-dynamic-event/base-dynamic-event.harness";
 import { SetTransformEventComponent } from "src/app/dataset-block/metadata-block/components/event-details/components/set-transform-event/set-transform-event.component";
-import { mockSetTransform } from "src/app/dataset-block/metadata-block/components/event-details/mock.events";
+import {
+    MOCK_PRIVATE_INPUT_DATASET_REF,
+    mockSetTransform,
+    mockSetTransformWithPrivateInput,
+} from "src/app/dataset-block/metadata-block/components/event-details/mock.events";
 
 describe("SetTransformEventComponent", () => {
     let component: SetTransformEventComponent;
@@ -42,8 +46,23 @@ describe("SetTransformEventComponent", () => {
         const harness = await TestbedHarnessEnvironment.harnessForFixture(fixture, BaseDynamicEventHarness);
 
         expect(await harness.getSectionTitles()).toEqual(["inputs", "transform"]);
+    });
+
+    it("should show the query alias the event gives the input, not the dataset's alias", async () => {
+        const harness = await TestbedHarnessEnvironment.harnessForFixture(fixture, BaseDynamicEventHarness);
+
+        expect(await harness.getPropertyText("set-transform-dataset-alias")).toEqual(mockSetTransform.inputs[0].alias);
+    });
+
+    it("should show the query alias of an input whose dataset is not accessible", async () => {
+        setComponentInput(fixture, "event", mockSetTransformWithPrivateInput);
+        const harness = await TestbedHarnessEnvironment.harnessForFixture(fixture, BaseDynamicEventHarness);
+
+        expect(await harness.getPropertyText("set-transform-datasetNotAccessible-datasetRef")).toEqual(
+            MOCK_PRIVATE_INPUT_DATASET_REF,
+        );
         expect(await harness.getPropertyText("set-transform-dataset-alias")).toEqual(
-            "kamu/covid19.quebec.case-details",
+            mockSetTransformWithPrivateInput.inputs[0].alias,
         );
     });
 });

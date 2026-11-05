@@ -58,9 +58,9 @@ export const SET_TRANSFORM_SOURCE_DESCRIPTORS: EventRowDescriptorsByField = {
         dataTestId: "set-transform-dataset-name",
     },
 
-    "SetTransform.Dataset.alias": {
+    "SetTransform.TransformInput.alias": {
         label: "Query alias:",
-        tooltip: SetTransformTooltipsTexts.DATASET_ALIAS,
+        tooltip: SetTransformTooltipsTexts.INPUT_QUERY_ALIAS,
         presentationComponent: SimplePropertyComponent,
         separateRowForValue: false,
         dataTestId: "set-transform-dataset-alias",

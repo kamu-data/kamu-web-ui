@@ -37,9 +37,10 @@
 </ng-template>
 <div class="mt-4">
     <div>
-        @if (inputsViewModel.length) {
+        @if (inputsForm.length) {
             <cdk-accordion [multi]="true" class="example-accordion mt-4">
-                @for (input of inputsViewModel; track input; let index = $index) {
+                @for (inputForm of inputsForm.controls; track inputForm; let index = $index) {
+                    @let input = datasetsByRef.get(inputForm.controls.datasetRef.value);
                     <cdk-accordion-item
                         #accordionItem="cdkAccordionItem"
                         class="example-accordion-item"
@@ -49,8 +50,13 @@
                     >
                         <div class="datatab-expanding-row">
                             <div class="datatab-expanding-row-header" (click)="accordionItem.toggle()">
-                                <div class="datatab-expanding-row-header-content pt-1">
-                                    @if (input.owner) {
+                                <div
+                                    class="datatab-expanding-row-header-content pt-1"
+                                    [attr.data-test-id]="'input-dataset-' + index"
+                                >
+                                    @if (!input) {
+                                        <span class="text-muted">Loading...</span>
+                                    } @else if (input.owner) {
                                         <div class="node-link">
                                             <a
                                                 class="node-name"
@@ -81,11 +87,33 @@
                                     <mat-icon>keyboard_arrow_up</mat-icon>
                                 }
                                 <mat-icon
-                                    (click)="$event.stopPropagation(); deleteInputDataset(input.alias)"
+                                    (click)="$event.stopPropagation(); deleteInput(index)"
                                     title="Delete input dataset"
+                                    [attr.data-test-id]="'delete-input-' + index"
                                     class="fs-5 hover mt-1 ms-1"
                                     >delete</mat-icon
                                 >
+                            </div>
+                            <div class="d-flex flex-column px-2 pb-2">
+                                <label class="form-label fs-12 mb-1" [attr.for]="'input-alias-' + index">
+                                    Query alias
+                                </label>
+                                <input
+                                    type="text"
+                                    class="form-control form-control-sm font-monospace"
+                                    trim="blur"
+                                    [id]="'input-alias-' + index"
+                                    [formControl]="inputForm.controls.alias"
+                                    [attr.data-test-id]="'input-alias-' + index"
+                                    [title]="aliasHint"
+                                />
+                                <div
+                                    class="text-danger fs-12"
+                                    appFieldError
+                                    fieldLabel="Query alias"
+                                    [fieldControl]="inputForm.controls.alias"
+                                    [dataTestId]="'input-alias-error-' + index"
+                                ></div>
                             </div>
                             <div
                                 class="example-accordion-item-body"
@@ -94,7 +122,7 @@
                                 [attr.id]="'accordion-body-' + index"
                                 [attr.aria-labelledby]="'accordion-header-' + index"
                             >
-                                @if (input.schema) {
+                                @if (input?.schema; as schema) {
                                     <div>
                                         <app-dynamic-table
                                             [hasTableHeader]="true"
@@ -106,7 +134,7 @@
                                                 },
                                                 { columnName: 'type' },
                                             ]"
-                                            [dataRows]="schemaData(input.schema)"
+                                            [dataRows]="schemaData(schema)"
                                             tableClass="font-monospace"
                                         />
                                     </div>
@@ -118,6 +146,13 @@
                     </cdk-accordion-item>
                 }
             </cdk-accordion>
+            <div
+                class="text-danger fs-12 mt-2"
+                appFieldError
+                fieldLabel="Input list"
+                [fieldControl]="inputsForm"
+                dataTestId="input-aliases-error"
+            ></div>
         } @else {
             <p class="mt-4">No datasets selected</p>
         }

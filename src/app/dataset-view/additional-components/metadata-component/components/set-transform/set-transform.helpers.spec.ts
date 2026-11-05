@@ -8,24 +8,23 @@
 import AppValues from "@common/values/app.values";
 import { GetDatasetSchemaQuery } from "@api/kamu.graphql.interface";
 
-import { mockGetDatasetSchemaQuery } from "src/app/dataset-view/additional-components/metadata-component/components/set-transform/mock.data";
 import {
-    datasetNodeFromSchemaQuery,
-    inputDatasetKey,
-    parseInputDatasetKey,
-    unavailableDatasetNode,
+    mockGetDatasetSchemaQuery,
+    mockParseSetTransformYamlType,
+} from "src/app/dataset-view/additional-components/metadata-component/components/set-transform/mock.data";
+import {
+    datasetInfoFromSchemaQuery,
+    transformInputsFormArray,
+    unavailableDatasetInfo,
 } from "src/app/dataset-view/additional-components/metadata-component/components/set-transform/set-transform.helpers";
 
-describe("datasetNodeFromSchemaQuery", () => {
-    const ALIAS = "account.tokens.portfolio.usd";
+describe("datasetInfoFromSchemaQuery", () => {
+    it("should take the owner, name and schema from the dataset", () => {
+        const info = datasetInfoFromSchemaQuery(mockGetDatasetSchemaQuery);
 
-    it("should take the owner and name from the dataset, not from the alias", () => {
-        const node = datasetNodeFromSchemaQuery(ALIAS, mockGetDatasetSchemaQuery);
-
-        expect(node.alias).toEqual(ALIAS);
-        expect(node.owner).toEqual(mockGetDatasetSchemaQuery.datasets.byId?.owner.accountName ?? "");
-        expect(node.name).toEqual(mockGetDatasetSchemaQuery.datasets.byId?.name ?? "");
-        expect(node.schema?.length).toBeGreaterThan(0);
+        expect(info.owner).toEqual(mockGetDatasetSchemaQuery.datasets.byId?.owner.accountName ?? "");
+        expect(info.name).toEqual(mockGetDatasetSchemaQuery.datasets.byId?.name ?? "");
+        expect(info.schema?.length).toBeGreaterThan(0);
     });
 
     it("should keep a dataset without a schema available", () => {
@@ -34,53 +33,60 @@ describe("datasetNodeFromSchemaQuery", () => {
             data.datasets.byId.metadata.currentSchema = null;
         }
 
-        const node = datasetNodeFromSchemaQuery(ALIAS, data);
+        const info = datasetInfoFromSchemaQuery(data);
 
-        expect(node.name).toEqual(mockGetDatasetSchemaQuery.datasets.byId?.name ?? "");
-        expect(node.schema).toBeUndefined();
+        expect(info.name).toEqual(mockGetDatasetSchemaQuery.datasets.byId?.name ?? "");
+        expect(info.schema).toBeUndefined();
     });
 
-    it("should mark a missing dataset as unavailable and keep its alias", () => {
+    it("should mark a missing dataset as unavailable", () => {
         const data: GetDatasetSchemaQuery = { datasets: { __typename: "Datasets", byId: null } };
 
-        const node = datasetNodeFromSchemaQuery(ALIAS, data);
-
-        expect(node).toEqual({ name: AppValues.SET_TRANSFORM_UNAVAILABLE_INPUT_LABEL, owner: "", alias: ALIAS });
+        expect(datasetInfoFromSchemaQuery(data)).toEqual(unavailableDatasetInfo());
     });
 });
 
-describe("unavailableDatasetNode", () => {
-    it("should label the input as unavailable, without owner or schema, and keep its alias", () => {
-        const alias = "kamu/github.stats";
-
-        expect(unavailableDatasetNode(alias)).toEqual({
-            name: AppValues.SET_TRANSFORM_UNAVAILABLE_INPUT_LABEL,
-            owner: "",
-            alias,
-        });
+describe("unavailableDatasetInfo", () => {
+    it("should label the input as unavailable, without owner or schema", () => {
+        expect(unavailableDatasetInfo()).toEqual({ name: AppValues.SET_TRANSFORM_UNAVAILABLE_INPUT_LABEL, owner: "" });
     });
 });
 
-describe("inputDatasetKey", () => {
-    const DATASET_REF = "did:odf:fed0176ed321fcd2fc471d4d1ab06662223be2c76b7e3d3f14c37413e0802e1dca3c1";
-    const ALIAS = "kamu/github.stats";
+describe("transformInputsFormArray", () => {
+    const [first, second] = mockParseSetTransformYamlType.inputs;
 
-    it("should write the dataset reference before the alias", () => {
-        expect(inputDatasetKey({ alias: ALIAS, datasetRef: DATASET_REF })).toEqual(
-            `{"datasetRef":"${DATASET_REF}","alias":"${ALIAS}"}`,
-        );
+    it("should hold the inputs in their order", () => {
+        const form = transformInputsFormArray([second, first]);
+
+        expect(form.getRawValue()).toEqual([second, first]);
+        expect(form.valid).toBe(true);
     });
 
-    it("should give the same key to an input that carries other fields", () => {
-        const eventInput = { __typename: "TransformInput", alias: ALIAS, datasetRef: DATASET_REF, extra: 1 };
+    it("should require each alias and reject a blank one", () => {
+        const form = transformInputsFormArray([first]);
+        const alias = form.controls[0].controls.alias;
 
-        expect(inputDatasetKey(eventInput)).toEqual(inputDatasetKey({ datasetRef: DATASET_REF, alias: ALIAS }));
+        alias.setValue("");
+        expect(alias.errors).toEqual({ required: true });
+
+        alias.setValue("   ");
+        expect(alias.errors).toEqual({ blank: true });
     });
 
-    it("should parse a key back into the input", () => {
-        const parsed = parseInputDatasetKey(inputDatasetKey({ datasetRef: DATASET_REF, alias: ALIAS }));
+    it("should reject two inputs with the same alias, ignoring surrounding spaces", () => {
+        const form = transformInputsFormArray([first, second]);
 
-        expect(parsed.datasetRef).toEqual(DATASET_REF);
-        expect(parsed.alias).toEqual(ALIAS);
+        form.controls[1].controls.alias.setValue(` ${first.alias} `);
+
+        expect(form.errors).toEqual({ duplicateItems: { value: first.alias } });
+    });
+
+    it("should accept the aliases once they differ again", () => {
+        const form = transformInputsFormArray([first, { ...second, alias: first.alias }]);
+        expect(form.valid).toBe(false);
+
+        form.controls[1].controls.alias.setValue("transactions");
+
+        expect(form.valid).toBe(true);
     });
 });

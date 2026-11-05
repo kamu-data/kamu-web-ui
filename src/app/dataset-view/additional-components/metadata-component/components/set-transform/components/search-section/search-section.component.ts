@@ -6,9 +6,9 @@
  */
 
 import { CdkAccordionModule } from "@angular/cdk/accordion";
-import { ChangeDetectionStrategy, ChangeDetectorRef, Component, inject, Input } from "@angular/core";
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, inject, Input, OnInit } from "@angular/core";
 import { takeUntilDestroyed } from "@angular/core/rxjs-interop";
-import { FormsModule } from "@angular/forms";
+import { FormsModule, ReactiveFormsModule } from "@angular/forms";
 import { MatIconModule } from "@angular/material/icon";
 import { RouterLink } from "@angular/router";
 
@@ -16,12 +16,15 @@ import { Observable, of, OperatorFunction } from "rxjs";
 import { catchError, debounceTime, distinctUntilChanged, map, switchMap } from "rxjs/operators";
 
 import { NgbHighlight, NgbTypeahead, NgbTypeaheadSelectItemEvent } from "@ng-bootstrap/ng-bootstrap";
+import { NgxTrimDirectiveModule } from "ngx-trim-directive";
 
 import { BaseComponent } from "@common/components/base.component";
 import { DynamicTableComponent } from "@common/components/dynamic-table/dynamic-table.component";
 import { DynamicTableDataRow } from "@common/components/dynamic-table/dynamic-table.interface";
 import { odfType2String, schemaAsDataRows } from "@common/helpers/data-schema.helpers";
 import { DatasetLinkPipe } from "@common/pipes/dataset-link.pipe";
+import { SetTransformTooltipsTexts } from "@common/tooltips/set-transform.text";
+import { FormValidationErrorsDirective } from "@common/validation/form-validation-errors.directive";
 import AppValues from "@common/values/app.values";
 import { DatasetBasicsFragment, GetDatasetSchemaQuery } from "@api/kamu.graphql.interface";
 import { SearchApi } from "@api/search.api";
@@ -30,12 +33,14 @@ import { DatasetInfo } from "@interface/navigation.interface";
 import { DatasetAutocompleteItem, TypeNames } from "@interface/search.interface";
 
 import {
-    datasetNodeFromSchemaQuery,
-    inputDatasetKey,
-    parseInputDatasetKey,
-    unavailableDatasetNode,
+    datasetInfoFromSchemaQuery,
+    transformInputForm,
+    unavailableDatasetInfo,
 } from "src/app/dataset-view/additional-components/metadata-component/components/set-transform/set-transform.helpers";
-import { DatasetNode } from "src/app/dataset-view/additional-components/metadata-component/components/set-transform/set-transform.types";
+import {
+    TransformInputDatasetInfo,
+    TransformInputsFormArray,
+} from "src/app/dataset-view/additional-components/metadata-component/components/set-transform/set-transform.types";
 import { DatasetService } from "src/app/dataset-view/dataset.service";
 
 @Component({
@@ -47,27 +52,38 @@ import { DatasetService } from "src/app/dataset-view/dataset.service";
         //-----//
         CdkAccordionModule,
         FormsModule,
+        ReactiveFormsModule,
         RouterLink,
         //-----//
         MatIconModule,
         NgbTypeahead,
         NgbHighlight,
+        NgxTrimDirectiveModule,
         //-----//
         DynamicTableComponent,
+        FormValidationErrorsDirective,
         DatasetLinkPipe,
     ],
 })
-export class SearchSectionComponent extends BaseComponent {
+export class SearchSectionComponent extends BaseComponent implements OnInit {
     public searchDataset = "";
     private readonly delayTime: number = AppValues.SHORT_DELAY_MS;
-    @Input({ required: true }) public inputDatasets: Set<string>;
+    @Input({ required: true }) public inputsForm: TransformInputsFormArray;
     @Input({ required: true }) public datasetInfo: DatasetInfo;
-    @Input({ required: true }) public inputsViewModel: DatasetNode[];
+
+    public readonly aliasHint = SetTransformTooltipsTexts.INPUT_QUERY_ALIAS;
+
+    // Keyed by dataset reference; an input missing here is still loading
+    public datasetsByRef: ReadonlyMap<string, TransformInputDatasetInfo> = new Map();
 
     public readonly cdr = inject(ChangeDetectorRef);
 
     private appSearchAPI = inject(SearchApi);
     private datasetService = inject(DatasetService);
+
+    public ngOnInit(): void {
+        this.inputsForm.controls.forEach((inputForm) => this.loadDatasetInfo(inputForm.controls.datasetRef.value));
+    }
 
     public search: OperatorFunction<string, DatasetAutocompleteItem[]> = (text$: Observable<string>) => {
         return text$.pipe(
@@ -88,11 +104,15 @@ export class SearchSectionComponent extends BaseComponent {
         );
     };
 
-    // Aliases have no account prefix in single-tenant mode, so the edited dataset is matched by owner and name
+    // Inputs are matched by dataset id, since their query aliases are the user's own names
     private isInvolvedDataset(dataset: DatasetBasicsFragment): boolean {
         const isEditedDataset =
             dataset.owner.accountName === this.datasetInfo.accountName && dataset.name === this.datasetInfo.datasetName;
-        return isEditedDataset || this.inputsViewModel.some((item: DatasetNode) => item.alias === dataset.alias);
+        return isEditedDataset || this.isInput(dataset.id);
+    }
+
+    private isInput(datasetRef: string): boolean {
+        return this.inputsForm.controls.some((inputForm) => inputForm.controls.datasetRef.value === datasetRef);
     }
 
     public formatter(x: DatasetAutocompleteItem | string): string {
@@ -101,23 +121,12 @@ export class SearchSectionComponent extends BaseComponent {
 
     public onSelectItem(event: NgbTypeaheadSelectItemEvent<DatasetAutocompleteItem>): void {
         const value = event.item;
-        const id = value.dataset.id;
-        const alias = value.dataset.alias;
-        const inputDataset = inputDatasetKey({ datasetRef: id, alias });
-        if (value.__typename !== TypeNames.allDataType && !this.inputDatasets.has(inputDataset)) {
-            this.inputDatasets.add(inputDataset);
-
-            this.datasetService
-                .requestDatasetSchema(id)
-                .pipe(
-                    map((data: GetDatasetSchemaQuery) => datasetNodeFromSchemaQuery(alias, data)),
-                    catchError(() => of(unavailableDatasetNode(alias))),
-                    takeUntilDestroyed(this.destroyRef),
-                )
-                .subscribe((node: DatasetNode) => {
-                    this.inputsViewModel = [...this.inputsViewModel, node];
-                    this.cdr.detectChanges();
-                });
+        const datasetRef = value.dataset.id;
+        if (value.__typename !== TypeNames.allDataType && !this.isInput(datasetRef)) {
+            this.inputsForm.push(transformInputForm({ datasetRef, alias: value.dataset.alias }));
+            // The default alias may repeat one the user typed; a pristine list would hide that error
+            this.inputsForm.markAsDirty();
+            this.loadDatasetInfo(datasetRef);
         }
     }
 
@@ -125,15 +134,24 @@ export class SearchSectionComponent extends BaseComponent {
         this.searchDataset = "";
     }
 
-    public deleteInputDataset(alias: string): void {
-        this.inputsViewModel = this.inputsViewModel.filter((item: DatasetNode) => item.alias !== alias);
+    public deleteInput(index: number): void {
+        this.inputsForm.removeAt(index);
+        this.inputsForm.markAsDirty();
+    }
 
-        this.inputDatasets.forEach((item) => {
-            if (parseInputDatasetKey(item).alias === alias) {
-                this.inputDatasets.delete(item);
-            }
-        });
-        this.cdr.detectChanges();
+    private loadDatasetInfo(datasetRef: string): void {
+        this.datasetService
+            .requestDatasetSchema(datasetRef)
+            .pipe(
+                map((data: GetDatasetSchemaQuery) => datasetInfoFromSchemaQuery(data)),
+                // The global Apollo error link has already reported the failure
+                catchError(() => of(unavailableDatasetInfo())),
+                takeUntilDestroyed(this.destroyRef),
+            )
+            .subscribe((info: TransformInputDatasetInfo) => {
+                this.datasetsByRef = new Map(this.datasetsByRef).set(datasetRef, info);
+                this.cdr.markForCheck();
+            });
     }
 
     public OdfTypeMapper(type: DataSchemaTypeField): string {

@@ -11,7 +11,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   - the arrows step between commits that changed the metadata, or through every block when "All blocks" is picked
   - the commit and the step mode are part of the page address, so a view of an earlier commit can be shared as a link
   - an earlier commit shows no edit buttons; "Go to latest" returns to the current metadata
+- Metadata tab, transformation editor: each input shows its query alias, the table name the queries use, and the alias can be changed; an empty alias, or one two inputs share, is reported and blocks saving
+### Changed
+- Requires kamu-cli v0.272.1 or later, which returns the query aliases of transformation inputs
 ### Fixed
+- Metadata block page and Metadata tab: a transformation input's "Query alias" shows the name the queries use instead of the input dataset's name, also for an input whose dataset is not accessible; such an input's block page also shows its id
 - Pages that fail to load because of a network or server error say so instead of claiming the page does not exist or staying blank
   - a dataset, metadata, block or webhook page that fails to load no longer shows "page not found"; only one that really doesn't exist does
   - an account page that fails to load no longer stays empty under the header

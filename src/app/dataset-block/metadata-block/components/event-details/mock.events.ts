@@ -154,7 +154,7 @@ export const mockSetTransform: DatasetTransformFragment = {
         {
             __typename: "TransformInput",
             datasetRef: "did:odf:fed0180891d1a8dd7744447baab2a269542a7185052bdfe9e60d2641449ba24f4ea22",
-            alias: "covid19.quebec.case-details",
+            alias: "case_details",
             inputDataset: {
                 __typename: "TransformInputDatasetAccessible",
                 message: "Success",
@@ -185,6 +185,26 @@ export const mockSetTransform: DatasetTransformFragment = {
         ],
         temporalTables: null,
     },
+};
+
+export const MOCK_PRIVATE_INPUT_DATASET_REF =
+    "did:odf:fed01c0a1e7bd1bb0e9a6cb7e1f1ad2a9f22a7d1d8bd3b7e1c38ae5bd1c3a4b52e8a1";
+
+/** A transform reading a dataset the viewer cannot access */
+export const mockSetTransformWithPrivateInput: DatasetTransformFragment = {
+    ...mockSetTransform,
+    inputs: [
+        {
+            __typename: "TransformInput",
+            datasetRef: MOCK_PRIVATE_INPUT_DATASET_REF,
+            alias: "private_input",
+            inputDataset: {
+                __typename: "TransformInputDatasetNotAccessible",
+                message: "Not Accessible",
+                datasetRef: MOCK_PRIVATE_INPUT_DATASET_REF,
+            },
+        },
+    ],
 };
 
 export const mockExecuteTransform: ExecuteTransformEventFragment = {

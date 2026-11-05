@@ -36,7 +36,6 @@ describe("RecentActivityFiltersViewComponent", () => {
     it("should render without changing the selected states, which the parent sets for the mode", () => {
         fixture.detectChanges();
         expect(component.dashboardFilters.selectedFlowProcessStates).toEqual([]);
-        expect(component.dashboardFilters.isFirstInitialization).toBe(false);
     });
 
     it("should check to change last attempt filter", () => {
@@ -59,8 +58,10 @@ describe("RecentActivityFiltersViewComponent", () => {
             }),
         );
         fixture.detectChanges();
+        const applySpy = vi.spyOn(component.applyFilterEmitter, "next");
         emitClickOnElementByDataTestId(fixture, "clear-from-control");
         expect(component.dashboardFilters.fromFilterDate).toEqual(undefined);
+        expect(applySpy).toHaveBeenCalledTimes(1);
     });
 
     it("should check to clear 'to' control", () => {
@@ -73,8 +74,10 @@ describe("RecentActivityFiltersViewComponent", () => {
             }),
         );
         fixture.detectChanges();
+        const applySpy = vi.spyOn(component.applyFilterEmitter, "next");
         emitClickOnElementByDataTestId(fixture, "clear-to-control");
         expect(component.dashboardFilters.toFilterDate).toEqual(undefined);
+        expect(applySpy).toHaveBeenCalledTimes(1);
     });
 
     it("should check to change quick range last attempt", () => {

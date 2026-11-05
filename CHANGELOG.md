@@ -15,6 +15,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Sign-in: on a node that requires signing in, opening the app with an expired session sometimes showed "Sign-in is unavailable" instead of the login page
 - Metadata block page: filtering the block list by event type or hash finds matching blocks across the whole history, not only on the page shown, and the pages count only the matching blocks; hash search now matches the start of the hash and says when the text can't be one
 - Account flows: a flow run whose dataset can't be found shows without links to that dataset instead of logging errors, and its tile no longer links to a broken address
+- Account flows, processes: each view's filters show what the list is filtered by, from the moment the view opens
+  - Triage: "min consecutive failures" shows 1 instead of sometimes an invalid 0, and its order field shows "Last failure at"
+  - Recent activity: the time window starts 6 hours back, and an empty "to" keeps following the current time, so new activity keeps appearing; clearing "from" or "to" updates the list right away
+  - Upcoming: the order direction toggle keeps the order picked instead of switching back to oldest first
+  - Custom: a time window with only one end filters the list, and "Reset filters" selects the states the list shows and shows the order field it uses
+  - a number of failures typed as a fraction or below the minimum is shown as the whole number used
 
 ## [0.73.0] - 2026-11-02
 ### Changed

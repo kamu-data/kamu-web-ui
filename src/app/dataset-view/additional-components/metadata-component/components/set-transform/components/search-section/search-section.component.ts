@@ -124,6 +124,8 @@ export class SearchSectionComponent extends BaseComponent implements OnInit {
         const datasetRef = value.dataset.id;
         if (value.__typename !== TypeNames.allDataType && !this.isInput(datasetRef)) {
             this.inputsForm.push(transformInputForm({ datasetRef, alias: value.dataset.alias }));
+            // The default alias may repeat one the user typed; a pristine list would hide that error
+            this.inputsForm.markAsDirty();
             this.loadDatasetInfo(datasetRef);
         }
     }

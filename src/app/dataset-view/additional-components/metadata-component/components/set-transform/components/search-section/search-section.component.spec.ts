@@ -184,6 +184,19 @@ describe("SearchSectionComponent", () => {
             expect(inputsForm.length).toBe(1);
         });
 
+        it("should say why when the added dataset's alias repeats an input's alias", async () => {
+            vi.spyOn(datasetService, "requestDatasetSchema").mockReturnValue(of(mockGetDatasetSchemaQuery));
+            inputsForm.push(transformInputForm({ datasetRef: "other", alias: mockDatasetBasicsDerivedFragment.alias }));
+
+            component.onSelectItem(selectEvent(mockDatasetBasicsDerivedFragment));
+            const harness = await getHarness();
+
+            expect(inputsForm.valid).toBe(false);
+            expect(await harness.getAliasesError()).toEqual(
+                `Input list contains "${mockDatasetBasicsDerivedFragment.alias}" more than once`,
+            );
+        });
+
         it("should list a selected input as unavailable when its schema fails to load", async () => {
             vi.spyOn(datasetService, "requestDatasetSchema").mockReturnValue(throwError(() => new Error("fail")));
 

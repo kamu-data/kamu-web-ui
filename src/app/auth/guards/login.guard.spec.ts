@@ -7,10 +7,13 @@
 
 import { TestBed } from "@angular/core/testing";
 
+import { of, Subject } from "rxjs";
+
 import { ApolloTestingModule } from "apollo-angular/testing";
 
 import { expectRedirectTo, routeSnapshot, runCanActivate } from "@common/helpers/base-test.helpers.spec";
 import { RedirectUrlTestModule } from "@common/modules/redirect-url-test.module";
+import { AuthApi } from "@api/auth.api";
 import { AccountProvider } from "@api/kamu.graphql.interface";
 import { MaybeUndefined } from "@interface/app.types";
 
@@ -131,6 +134,7 @@ describe("loginGuard", () => {
         },
     ].forEach((testCase: TestCase) => {
         it(`should ${testCase.description}`, async () => {
+            vi.spyOn(loginMethodsService, "loadSettledChanges", "get").mockReturnValue(of(undefined));
             vi.spyOn(loginMethodsService, "loginMethods", "get").mockReturnValue(testCase.loginMethods);
             vi.spyOn(loginMethodsService, "loadFailed", "get").mockReturnValue(testCase.loadFailed ?? false);
             vi.spyOn(loggedUserService, "isAuthenticated", "get").mockReturnValue(testCase.isAuthenticated);
@@ -143,6 +147,36 @@ describe("loginGuard", () => {
             } else {
                 expectRedirectTo(result, testCase.expectedRedirect);
             }
+        });
+    });
+
+    describe("while the login methods are still loading", () => {
+        let enabledLoginMethods$: Subject<AccountProvider[]>;
+
+        beforeEach(() => {
+            enabledLoginMethods$ = new Subject<AccountProvider[]>();
+            vi.spyOn(TestBed.inject(AuthApi), "readEnabledLoginMethods").mockReturnValue(enabledLoginMethods$);
+            vi.spyOn(loggedUserService, "isAuthenticated", "get").mockReturnValue(false);
+            vi.spyOn(appConfigService, "allowAnonymous", "get").mockReturnValue(false);
+            loginMethodsService.initialize().subscribe({ error: () => undefined });
+        });
+
+        it("should allow login once the loaded methods arrive", async () => {
+            const result = runCanActivate(loginGuard, routeSnapshot(), `/${ProjectLinks.URL_LOGIN}`);
+
+            enabledLoginMethods$.next([AccountProvider.Password]);
+            enabledLoginMethods$.complete();
+
+            expect(await result).toBe(true);
+        });
+
+        it("should redirect to the login-unavailable page once the load fails", async () => {
+            const result = runCanActivate(loginGuard, routeSnapshot(), `/${ProjectLinks.URL_LOGIN}`);
+
+            enabledLoginMethods$.error(new Error("Server unreachable"));
+
+            expectRedirectTo(await result, `/${ProjectLinks.URL_LOGIN_UNAVAILABLE}`);
+            expect(loginMethodsService.loadFailed).toBe(true);
         });
     });
 });

@@ -9,7 +9,7 @@ import { provideHttpClient } from "@angular/common/http";
 import { provideHttpClientTesting } from "@angular/common/http/testing";
 import { TestBed } from "@angular/core/testing";
 
-import { firstValueFrom, of, throwError } from "rxjs";
+import { firstValueFrom, of, Subject, throwError } from "rxjs";
 
 import { Apollo } from "apollo-angular";
 import { ApolloTestingModule } from "apollo-angular/testing";
@@ -69,5 +69,44 @@ describe("LoginMethodsService", () => {
 
         expect(service.loginMethods).toEqual([]);
         expect(service.loadFailed).toBe(true);
+    });
+
+    describe("loadSettledChanges", () => {
+        let enabledLoginMethods$: Subject<AccountProvider[]>;
+        let settled: boolean;
+
+        beforeEach(() => {
+            enabledLoginMethods$ = new Subject<AccountProvider[]>();
+            vi.spyOn(authApi, "readEnabledLoginMethods").mockReturnValue(enabledLoginMethods$);
+            settled = false;
+            service.loadSettledChanges.subscribe(() => (settled = true));
+            service.initialize().subscribe({ error: () => undefined });
+        });
+
+        it("should not emit while the methods are loading", () => {
+            expect(settled).toBe(false);
+        });
+
+        it("should emit once the methods are loaded", () => {
+            enabledLoginMethods$.next([AccountProvider.Password]);
+            enabledLoginMethods$.complete();
+
+            expect(settled).toBe(true);
+            expect(service.loginMethods).toEqual([AccountProvider.Password]);
+        });
+
+        it("should emit once the load fails", () => {
+            enabledLoginMethods$.error(new Error("Server unreachable"));
+
+            expect(settled).toBe(true);
+            expect(service.loadFailed).toBe(true);
+        });
+
+        it("should replay to a subscriber that arrives after the load", async () => {
+            enabledLoginMethods$.next([]);
+            enabledLoginMethods$.complete();
+
+            await expect(firstValueFrom(service.loadSettledChanges)).resolves.toBeUndefined();
+        });
     });
 });

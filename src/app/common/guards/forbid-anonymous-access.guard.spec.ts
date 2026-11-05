@@ -7,11 +7,14 @@
 
 import { TestBed } from "@angular/core/testing";
 
+import { of, Subject } from "rxjs";
+
 import { Apollo } from "apollo-angular";
 import type { Mock } from "vitest";
 
 import { forbidAnonymousAccessGuardFn } from "@common/guards/forbid-anonymous-access.guard";
 import { expectRedirectTo, routeSnapshot, runCanActivate } from "@common/helpers/base-test.helpers.spec";
+import { AuthApi } from "@api/auth.api";
 import { AccountProvider } from "@api/kamu.graphql.interface";
 import { mockAccountDetails } from "@api/mock/auth.mock";
 
@@ -45,6 +48,7 @@ describe("forbidAnonymousAccessGuardFn", () => {
     });
 
     it("should redirect to login with the requested URL when user is not logged in", async () => {
+        vi.spyOn(loginMethodsService, "loadSettledChanges", "get").mockReturnValue(of(undefined));
         vi.spyOn(loginMethodsService, "loginMethods", "get").mockReturnValue([AccountProvider.Password]);
         const maybeCurrentlyLoggedInUserSpy: Mock = vi
             .spyOn(loggedUserService, "maybeCurrentlyLoggedInUser", "get")
@@ -65,6 +69,7 @@ describe("forbidAnonymousAccessGuardFn", () => {
     ].forEach(({ description, loadFailed }) => {
         it(`should redirect to the login-unavailable page when ${description}`, async () => {
             vi.spyOn(loggedUserService, "maybeCurrentlyLoggedInUser", "get").mockReturnValue(null);
+            vi.spyOn(loginMethodsService, "loadSettledChanges", "get").mockReturnValue(of(undefined));
             vi.spyOn(loginMethodsService, "loginMethods", "get").mockReturnValue([]);
             vi.spyOn(loginMethodsService, "loadFailed", "get").mockReturnValue(loadFailed);
 
@@ -72,5 +77,21 @@ describe("forbidAnonymousAccessGuardFn", () => {
 
             expectRedirectTo(result, `/${ProjectLinks.URL_LOGIN_UNAVAILABLE}`);
         });
+    });
+
+    it("should wait for the login methods still loading before redirecting to login", async () => {
+        const enabledLoginMethods$ = new Subject<AccountProvider[]>();
+        vi.spyOn(TestBed.inject(AuthApi), "readEnabledLoginMethods").mockReturnValue(enabledLoginMethods$);
+        vi.spyOn(loggedUserService, "maybeCurrentlyLoggedInUser", "get").mockReturnValue(null);
+        loginMethodsService.initialize().subscribe();
+
+        const result = runCanActivate(forbidAnonymousAccessGuardFn, routeSnapshot(), DEEP_LINK);
+        enabledLoginMethods$.next([AccountProvider.Password]);
+        enabledLoginMethods$.complete();
+
+        expectRedirectTo(
+            await result,
+            `/${ProjectLinks.URL_LOGIN}?${ProjectLinks.URL_QUERY_PARAM_REDIRECT_URL}=${encodeURIComponent(DEEP_LINK)}`,
+        );
     });
 });

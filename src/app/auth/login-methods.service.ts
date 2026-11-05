@@ -7,7 +7,7 @@
 
 import { inject, Injectable } from "@angular/core";
 
-import { map, Observable, tap } from "rxjs";
+import { finalize, map, Observable, ReplaySubject, take, tap } from "rxjs";
 
 import { AuthApi } from "@api/auth.api";
 import { AccountProvider } from "@api/kamu.graphql.interface";
@@ -20,6 +20,7 @@ export class LoginMethodsService {
 
     private enabledLoginMethods: AccountProvider[] = [];
     private loginMethodsLoadFailed = false;
+    private loadSettled$ = new ReplaySubject<void>(1);
 
     /** Loads the enabled methods; on failure, emits the error and leaves `loadFailed` set */
     public initialize(): Observable<void> {
@@ -33,7 +34,16 @@ export class LoginMethodsService {
                 this.enabledLoginMethods = enabledLoginMethods;
                 this.loginMethodsLoadFailed = false;
             }),
+            finalize(() => this.loadSettled$.next()),
         );
+    }
+
+    /**
+     * Emits once and completes when the load has succeeded or failed. A navigation can start
+     * before then, so a guard that decides on `loginMethods` waits for it.
+     */
+    public get loadSettledChanges(): Observable<void> {
+        return this.loadSettled$.pipe(take(1));
     }
 
     public get loginMethods(): AccountProvider[] {

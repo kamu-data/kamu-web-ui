@@ -15,7 +15,6 @@ import { MaybeNull } from "@interface/app.types";
 import { DatasetInfo } from "@interface/navigation.interface";
 
 import { BlockService } from "src/app/dataset-block/metadata-block/block.service";
-import { parseInputDatasetKey } from "src/app/dataset-view/additional-components/metadata-component/components/set-transform/set-transform.helpers";
 import {
     EditSetTransformParseType,
     SetTransformEvent,
@@ -35,21 +34,17 @@ export class EditSetTransformService {
         return editFormParseValue.content.event;
     }
 
-    public parseInputDatasets(datasets: Set<string>): TransformSelectedInput[] {
-        return Array.from(datasets).map((item) => parseInputDatasetKey(item));
-    }
-
     public getEventAsYaml(info: DatasetInfo): Observable<MaybeNull<string>> {
         return this.blockService.getSetTransformBlock({ ...info, encoding: MetadataManifestFormat.Yaml });
     }
 
     public transformEventAsObject(
-        inputDatasets: Set<string>,
+        inputs: TransformSelectedInput[],
         engine: string,
         queries: TransformQueryStep[],
     ): SetTransformEvent {
         return {
-            inputs: this.parseInputDatasets(inputDatasets),
+            inputs: inputs.map(({ datasetRef, alias }) => ({ datasetRef, alias: alias.trim() })),
             transform: {
                 kind: "sql",
                 engine: engine.toLowerCase(),

@@ -16,6 +16,7 @@ import { FeatureFlagDirective } from "@common/directives/feature-flag.directive"
 import { isNil } from "@common/helpers/app.helpers";
 import { DatasetLinkPipe } from "@common/pipes/dataset-link.pipe";
 import RoutingResolvers from "@common/resolvers/routing-resolvers";
+import { SetTransformTooltipsTexts } from "@common/tooltips/set-transform.text";
 import AppValues from "@common/values/app.values";
 import { DatasetKind, DatasetTransformFragment } from "@api/kamu.graphql.interface";
 import { MaybeNullOrUndefined } from "@interface/app.types";
@@ -49,6 +50,7 @@ export class MetadataTransformationTabComponent {
 
     private navigationService = inject(NavigationService);
     public readonly DEFAULT_AVATAR_URL = AppValues.DEFAULT_AVATAR_URL;
+    public readonly INPUT_QUERY_ALIAS_TOOLTIP = SetTransformTooltipsTexts.INPUT_QUERY_ALIAS;
 
     public get transformation(): MaybeNullOrUndefined<DatasetTransformFragment> {
         return this.datasetMetadataTabData.snapshot.transform;

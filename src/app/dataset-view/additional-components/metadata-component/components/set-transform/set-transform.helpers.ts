@@ -5,44 +5,56 @@
  * included in the LICENSE file.
  */
 
+import { AbstractControl, FormArray, FormControl, FormGroup, Validators } from "@angular/forms";
+
 import { parseCurrentSchema } from "@common/helpers/app.helpers";
-import { parseJsonAs } from "@common/helpers/untyped-boundary.helpers";
+import { uniqueItemsValidator } from "@common/validation/collection.validators";
+import { notBlankValidator } from "@common/validation/text.validators";
 import AppValues from "@common/values/app.values";
 import { GetDatasetSchemaQuery } from "@api/kamu.graphql.interface";
 
 import {
-    DatasetNode,
+    TransformInputDatasetInfo,
+    TransformInputForm,
+    TransformInputsFormArray,
     TransformSelectedInput,
 } from "src/app/dataset-view/additional-components/metadata-component/components/set-transform/set-transform.types";
 
-export function datasetNodeFromSchemaQuery(alias: string, data: GetDatasetSchemaQuery): DatasetNode {
+export function datasetInfoFromSchemaQuery(data: GetDatasetSchemaQuery): TransformInputDatasetInfo {
     const dataset = data.datasets.byId;
     if (!dataset) {
-        return unavailableDatasetNode(alias);
+        return unavailableDatasetInfo();
     }
 
     const schema = parseCurrentSchema(dataset.metadata.currentSchema);
     return {
         name: dataset.name,
         owner: dataset.owner.accountName,
-        alias,
         schema: schema?.fields.length ? schema.fields : undefined,
     };
 }
 
-/** Node of an input whose dataset is missing or could not be loaded; the alias keeps it deletable. */
-export function unavailableDatasetNode(alias: string): DatasetNode {
-    return { name: AppValues.SET_TRANSFORM_UNAVAILABLE_INPUT_LABEL, owner: "", alias };
+/** Info of an input whose dataset is missing or could not be loaded */
+export function unavailableDatasetInfo(): TransformInputDatasetInfo {
+    return { name: AppValues.SET_TRANSFORM_UNAVAILABLE_INPUT_LABEL, owner: "" };
 }
 
-/**
- * Key of a transform input in the set of selected inputs. It holds only `datasetRef` and `alias`,
- * always in that order, so the same input gives the same key wherever it was built.
- */
-export function inputDatasetKey(input: TransformSelectedInput): string {
-    return JSON.stringify({ datasetRef: input.datasetRef, alias: input.alias });
+export function transformInputForm(input: TransformSelectedInput): TransformInputForm {
+    return new FormGroup({
+        datasetRef: new FormControl(input.datasetRef, { nonNullable: true }),
+        alias: new FormControl(input.alias, {
+            nonNullable: true,
+            validators: [Validators.required, notBlankValidator()],
+        }),
+    });
 }
 
-export function parseInputDatasetKey(key: string): TransformSelectedInput {
-    return parseJsonAs<TransformSelectedInput>(key);
+function aliasOf(inputForm: AbstractControl): unknown {
+    const alias: unknown = inputForm.get("alias")?.value;
+    return typeof alias === "string" ? alias.trim() : alias;
+}
+
+/** Each input's query alias names one table in the queries, so no two inputs may share it */
+export function transformInputsFormArray(inputs: TransformSelectedInput[]): TransformInputsFormArray {
+    return new FormArray(inputs.map(transformInputForm), { validators: [uniqueItemsValidator(aliasOf)] });
 }

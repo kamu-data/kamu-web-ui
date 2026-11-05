@@ -9,14 +9,16 @@ import { provideHttpClient } from "@angular/common/http";
 import { provideHttpClientTesting } from "@angular/common/http/testing";
 import { ComponentFixture, TestBed } from "@angular/core/testing";
 
-import { HIGHLIGHT_OPTIONS_PROVIDER } from "@common/helpers/app.helpers";
+import { HIGHLIGHT_OPTIONS_PROVIDER, requireValue } from "@common/helpers/app.helpers";
 import {
     findElementByDataTestId,
+    getElementByDataTestId,
     registerMatSvgIcons,
     setComponentInput,
 } from "@common/helpers/base-test.helpers.spec";
 import { SharedTestModule } from "@common/modules/shared-test.module";
 
+import { mockSetTransformWithPrivateInput } from "src/app/dataset-block/metadata-block/components/event-details/mock.events";
 import {
     atOlderCommit,
     mockLatestDerivedSnapshot,
@@ -60,5 +62,26 @@ describe("MetadataTransformationTabComponent", () => {
 
         expect(findElementByDataTestId(fixture, "dataset-name-button-0")).toBeDefined();
         expect(findElementByDataTestId(fixture, "edit-transformation-link")).toBeUndefined();
+    });
+
+    it("should show each input's query alias, not its dataset's alias", () => {
+        const input = requireValue(mockLatestDerivedSnapshot.transform).inputs[0];
+
+        expect(getElementByDataTestId(fixture, "input-query-alias-0").textContent.trim()).toEqual(input.alias);
+    });
+
+    it("should show the query alias of an input whose dataset is not accessible", () => {
+        fixture.destroy();
+        fixture = TestBed.createComponent(MetadataTransformationTabComponent);
+        setComponentInput(fixture, "datasetMetadataTabData", {
+            datasetBasics: mockDatasetBasicsDerivedFragment,
+            datasetPermissions: mockFullPowerDatasetPermissionsFragment,
+            snapshot: { ...mockLatestDerivedSnapshot, transform: mockSetTransformWithPrivateInput },
+        });
+        fixture.detectChanges();
+
+        expect(getElementByDataTestId(fixture, "input-query-alias-0").textContent.trim()).toEqual(
+            mockSetTransformWithPrivateInput.inputs[0].alias,
+        );
     });
 });

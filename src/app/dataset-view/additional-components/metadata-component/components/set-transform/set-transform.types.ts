@@ -5,6 +5,8 @@
  * included in the LICENSE file.
  */
 
+import { FormArray, FormControl, FormGroup } from "@angular/forms";
+
 import { SqlQueryStep, TransformInput } from "@api/kamu.graphql.interface";
 import { DataSchemaField } from "@interface/dataset-schema.interface";
 
@@ -39,10 +41,20 @@ export type SetTransformYamlType = SetTransformEvent & {
     kind: string;
 };
 
-export interface DatasetNode {
+/** An input in the editor: the dataset it reads and the query alias the user may change */
+export interface TransformInputFormType {
+    datasetRef: FormControl<string>;
+    alias: FormControl<string>;
+}
+
+export type TransformInputForm = FormGroup<TransformInputFormType>;
+
+/** The editor's inputs in the order the event stores them */
+export type TransformInputsFormArray = FormArray<TransformInputForm>;
+
+/** What the editor shows about an input's dataset */
+export interface TransformInputDatasetInfo {
     name: string;
-    schema?: DataSchemaField[];
     owner: string;
-    // Alias as stored in the event's inputs, with or without an account prefix
-    alias: string;
+    schema?: DataSchemaField[];
 }

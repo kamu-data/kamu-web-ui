@@ -5,6 +5,7 @@
  * included in the LICENSE file.
  */
 
+import { TestbedHarnessEnvironment } from "@angular/cdk/testing/testbed";
 import { ComponentFixture, TestBed } from "@angular/core/testing";
 import { ActivatedRoute } from "@angular/router";
 
@@ -16,7 +17,7 @@ import { provideToastr } from "ngx-toastr";
 
 import { requireValue } from "@common/helpers/app.helpers";
 import {
-    findComponentInstance,
+    emitClickOnElementByDataTestId,
     findElementByDataTestId,
     getElementByDataTestId,
     setComponentInput,
@@ -25,18 +26,13 @@ import {
 import { mockAccountDetails } from "@api/mock/auth.mock";
 
 import { LoggedUserService } from "src/app/auth/logged-user.service";
-import { SearchSectionComponent } from "src/app/dataset-view/additional-components/metadata-component/components/set-transform/components/search-section/search-section.component";
+import { SearchSectionHarness } from "src/app/dataset-view/additional-components/metadata-component/components/set-transform/components/search-section/search-section.harness";
 import {
     mockGetDatasetSchemaQuery,
     mockParseSetTransformYamlType,
     mockSetTransformEventYaml,
 } from "src/app/dataset-view/additional-components/metadata-component/components/set-transform/mock.data";
 import { SetTransformComponent } from "src/app/dataset-view/additional-components/metadata-component/components/set-transform/set-transform.component";
-import {
-    datasetNodeFromSchemaQuery,
-    inputDatasetKey,
-    unavailableDatasetNode,
-} from "src/app/dataset-view/additional-components/metadata-component/components/set-transform/set-transform.helpers";
 import { DatasetCommitService } from "src/app/dataset-view/additional-components/overview-component/services/dataset-commit.service";
 import { DatasetViewTypeEnum } from "src/app/dataset-view/dataset-view.interface";
 import { DatasetService } from "src/app/dataset-view/dataset.service";
@@ -174,7 +170,7 @@ describe("SetTransformComponent", () => {
 
         it("should init the inputs and queries from the event", () => {
             expect(component.currentSetTransformEvent).toEqual(mockParseSetTransformYamlType);
-            expect(component.inputsViewModel.length).toBe(2);
+            expect(component.inputsForm.getRawValue()).toEqual(mockParseSetTransformYamlType.inputs);
             expect(component.queries.length).toBe(4);
             expect(component.queries[0].query).toBeDefined();
         });
@@ -193,10 +189,26 @@ describe("SetTransformComponent", () => {
             });
         });
 
-        it("should key each input by the alias stored in the event", () => {
-            expect(component.inputsViewModel.map((item) => item.alias)).toEqual(
-                mockParseSetTransformYamlType.inputs.map((input) => input.alias),
-            );
+        it("should save the alias the user typed", async () => {
+            const commitEventToDatasetSpy = vi
+                .spyOn(datasetCommitService, "commitEventToDataset")
+                .mockReturnValue(of());
+            const harness = await TestbedHarnessEnvironment.harnessForFixture(fixture, SearchSectionHarness);
+
+            await harness.setAlias(0, "transfers");
+            emitClickOnElementByDataTestId(fixture, "save-button");
+
+            const event = requireValue(commitEventToDatasetSpy.mock.lastCall)[0].event;
+            expect(event).toContain("alias: transfers");
+        });
+
+        it("should not let the transform be saved while two inputs share an alias", async () => {
+            const harness = await TestbedHarnessEnvironment.harnessForFixture(fixture, SearchSectionHarness);
+
+            await harness.setAlias(1, mockParseSetTransformYamlType.inputs[0].alias);
+
+            expect(component.isInputsValid).toBe(false);
+            expect(getElementByDataTestId(fixture, "save-button", HTMLButtonElement).disabled).toBe(true);
         });
     });
 
@@ -212,26 +224,16 @@ describe("SetTransformComponent", () => {
             createComponent(mockSetTransformEventYaml);
         });
 
-        it("should show both inputs in their original order, the failed one as unavailable", () => {
-            expect(component.inputsViewModel).toEqual([
-                unavailableDatasetNode(failedInput.alias),
-                datasetNodeFromSchemaQuery(loadedInput.alias, mockGetDatasetSchemaQuery),
-            ]);
+        it("should keep every input of the event, in its order", () => {
+            expect(component.inputsForm.getRawValue()).toEqual([failedInput, loadedInput]);
         });
 
-        it("should keep every input of the event in the selected inputs", () => {
-            expect([...component.inputDatasets]).toEqual(
-                mockParseSetTransformYamlType.inputs.map((input) => inputDatasetKey(input)),
-            );
-        });
+        it("should delete the failed input", async () => {
+            const harness = await TestbedHarnessEnvironment.harnessForFixture(fixture, SearchSectionHarness);
 
-        it("should delete the failed input by its alias", () => {
-            const searchSection = findComponentInstance(fixture, SearchSectionComponent);
+            await harness.deleteInput(0);
 
-            searchSection.deleteInputDataset(failedInput.alias);
-
-            expect(searchSection.inputsViewModel.map((item) => item.alias)).toEqual([loadedInput.alias]);
-            expect([...component.inputDatasets]).toEqual([inputDatasetKey(loadedInput)]);
+            expect(component.inputsForm.getRawValue()).toEqual([loadedInput]);
         });
     });
 
@@ -240,6 +242,10 @@ describe("SetTransformComponent", () => {
 
         it("should start with a single empty query", () => {
             expect(component.queries).toEqual([{ query: "" }]);
+        });
+
+        it("should not let a transform without inputs be saved", () => {
+            expect(component.isInputsValid).toBe(false);
         });
     });
 });

@@ -20,6 +20,9 @@ enum SetTransformSection {
     TRANSFORM = "transform",
 }
 
+// Fields of an accessible input's dataset, then of an input whose dataset is not accessible
+const SHOWN_INPUT_FIELDS = ["id", "name", "datasetRef", "message"];
+
 export class SetTransformSectionBuilder extends EventSectionBuilder<DatasetTransformFragment> {
     public buildEventSections(event: DatasetTransformFragment): EventSection[] {
         const result: EventSection[] = [];
@@ -49,7 +52,7 @@ export class SetTransformSectionBuilder extends EventSectionBuilder<DatasetTrans
                                     : { fields: inputDataset, sectionType: inputDataset.__typename ?? "" };
 
                             Object.entries(fields).forEach(([key, value]) => {
-                                if (event.__typename && key !== "__typename" && ["id", "name", "alias"].includes(key)) {
+                                if (event.__typename && key !== "__typename" && SHOWN_INPUT_FIELDS.includes(key)) {
                                     rows.push(
                                         this.buildSupportedRow(
                                             event.__typename,
@@ -61,6 +64,17 @@ export class SetTransformSectionBuilder extends EventSectionBuilder<DatasetTrans
                                     );
                                 }
                             });
+                            if (event.__typename) {
+                                rows.push(
+                                    this.buildSupportedRow(
+                                        event.__typename,
+                                        SET_TRANSFORM_SOURCE_DESCRIPTORS,
+                                        item.__typename,
+                                        "alias",
+                                        item.alias,
+                                    ),
+                                );
+                            }
 
                             result.push({
                                 title: section + (numInputsParts > 1 ? `#${index + 1}` : ""),

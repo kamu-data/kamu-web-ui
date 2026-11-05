@@ -1298,7 +1298,7 @@ export const mockMetadataDerivedUpdate: MetadataSchemaUpdate = {
                     {
                         __typename: "TransformInput",
                         datasetRef: "did:odf:z4k88e8rxU6m5wCnK9idM5sGAxAGfvUgNgQbckwJ4ro78tXMLSu",
-                        alias: "alberta.case-details",
+                        alias: "alberta_cases",
                         inputDataset: {
                             message: "Success",
                             __typename: "TransformInputDatasetAccessible",

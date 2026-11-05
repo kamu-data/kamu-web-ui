@@ -21,11 +21,7 @@
         <div class="container mt-4">
             <div class="row pt-4">
                 <div class="col-lg-4 left-section">
-                    <app-search-section
-                        [inputDatasets]="inputDatasets"
-                        [inputsViewModel]="inputsViewModel"
-                        [datasetInfo]="datasetInfo"
-                    />
+                    <app-search-section [inputsForm]="inputsForm" [datasetInfo]="datasetInfo" />
                     <app-engine-section
                         [initialEngine]="currentSetTransformEvent?.transform?.engine"
                         (onEmitSelectedEngine)="onSelectEngine($event)"
@@ -43,7 +39,7 @@
         }
         <div class="d-flex justify-content-end section-buttons">
             <app-stepper-navigation
-                [validStep]="isInputDatasetsExist"
+                [validStep]="isInputsValid"
                 (saveEventEmitter)="onSaveEvent()"
                 (editYamlEmitter)="onEditYaml()"
             />

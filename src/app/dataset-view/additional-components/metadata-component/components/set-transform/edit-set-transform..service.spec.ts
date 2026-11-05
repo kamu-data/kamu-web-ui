@@ -35,31 +35,17 @@ describe("EditSetTransformService", () => {
         expect(service).toBeTruthy();
     });
 
-    it("should check #parseInputDatasets() method", () => {
-        const inputDatasets = new Set<string>([
-            '{"datasetRef":"did:odf:z4k88e8ctFydBwcEhtvaB9AuBL6L2kfGnNvS1LjPGLA51owXkxX","alias":"account.tokens.portfolio.usd"}',
-        ]);
-        const result = [
-            {
-                datasetRef: "did:odf:z4k88e8ctFydBwcEhtvaB9AuBL6L2kfGnNvS1LjPGLA51owXkxX",
-                alias: "account.tokens.portfolio.usd",
-            },
-        ] satisfies TransformSelectedInput[];
-
-        expect(service.parseInputDatasets(inputDatasets)).toEqual(result);
-    });
-
-    it("should check #transformEventAsObject() method", () => {
-        const inputDatasets = new Set<string>([
-            '{"datasetRef":"did:odf:z4k88e8ctFydBwcEhtvaB9AuBL6L2kfGnNvS1LjPGLA51owXkxX","alias":"account.tokens.portfolio.usd"}',
-        ]);
+    it("should build the event from the inputs with their aliases trimmed", () => {
+        const inputs: TransformSelectedInput[] = [
+            { datasetRef: "did:odf:z4k88e8ctFydBwcEhtvaB9AuBL6L2kfGnNvS1LjPGLA51owXkxX", alias: " portfolio " },
+        ];
         const engine = Engine.Spark;
         const queries: TransformQueryStep[] = [{ alias: "alias1", query: "query1" }];
         const result: SetTransformEvent = {
             inputs: [
                 {
                     datasetRef: "did:odf:z4k88e8ctFydBwcEhtvaB9AuBL6L2kfGnNvS1LjPGLA51owXkxX",
-                    alias: "account.tokens.portfolio.usd",
+                    alias: "portfolio",
                 },
             ],
             transform: {
@@ -68,7 +54,7 @@ describe("EditSetTransformService", () => {
                 queries,
             },
         };
-        expect(service.transformEventAsObject(inputDatasets, engine, queries)).toEqual(result);
+        expect(service.transformEventAsObject(inputs, engine, queries)).toEqual(result);
     });
 
     it("should check #parseEventFromYaml() method", () => {

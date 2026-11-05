@@ -9,12 +9,11 @@ import { ChangeDetectionStrategy, Component, inject, Input, OnInit } from "@angu
 import { takeUntilDestroyed } from "@angular/core/rxjs-interop";
 import { RouterLink } from "@angular/router";
 
-import { catchError, filter, forkJoin, from, map, of, take } from "rxjs";
+import { catchError, filter, from, of, take } from "rxjs";
 
 import { openModal } from "@common/helpers/modal.helpers";
 import { DatasetLinkPipe } from "@common/pipes/dataset-link.pipe";
 import RoutingResolvers from "@common/resolvers/routing-resolvers";
-import { GetDatasetSchemaQuery } from "@api/kamu.graphql.interface";
 import { MaybeNull } from "@interface/app.types";
 import { DatasetInfo } from "@interface/navigation.interface";
 
@@ -23,14 +22,10 @@ import { EngineSectionComponent } from "src/app/dataset-view/additional-componen
 import { QueriesSectionComponent } from "src/app/dataset-view/additional-components/metadata-component/components/set-transform/components/queries-section/queries-section.component";
 import { SearchSectionComponent } from "src/app/dataset-view/additional-components/metadata-component/components/set-transform/components/search-section/search-section.component";
 import { EditSetTransformService } from "src/app/dataset-view/additional-components/metadata-component/components/set-transform/edit-set-transform..service";
+import { transformInputsFormArray } from "src/app/dataset-view/additional-components/metadata-component/components/set-transform/set-transform.helpers";
 import {
-    datasetNodeFromSchemaQuery,
-    inputDatasetKey,
-    unavailableDatasetNode,
-} from "src/app/dataset-view/additional-components/metadata-component/components/set-transform/set-transform.helpers";
-import {
-    DatasetNode,
     SetTransformYamlType,
+    TransformInputsFormArray,
     TransformQueryStep,
 } from "src/app/dataset-view/additional-components/metadata-component/components/set-transform/set-transform.types";
 import { BaseMainEventComponent } from "src/app/dataset-view/additional-components/metadata-component/components/source-events/base-main-event.component";
@@ -57,11 +52,10 @@ export class SetTransformComponent extends BaseMainEventComponent implements OnI
     @Input(RoutingResolvers.SET_TRANSFORM_KEY) public eventYamlByHash: string;
     @Input(RoutingResolvers.DATASET_INFO_KEY) public datasetInfo: DatasetInfo;
 
-    public inputDatasets = new Set<string>();
+    public inputsForm: TransformInputsFormArray = transformInputsFormArray([]);
     public selectedEngine: string;
     public currentSetTransformEvent: MaybeNull<SetTransformYamlType>;
     public queries: TransformQueryStep[] = [];
-    public inputsViewModel: DatasetNode[] = [];
     public readonly DatasetViewTypeEnum: typeof DatasetViewTypeEnum = DatasetViewTypeEnum;
 
     private editService = inject(EditSetTransformService);
@@ -75,8 +69,8 @@ export class SetTransformComponent extends BaseMainEventComponent implements OnI
         this.selectedEngine = engine;
     }
 
-    public get isInputDatasetsExist(): boolean {
-        return !!this.inputDatasets.size;
+    public get isInputsValid(): boolean {
+        return this.inputsForm.length > 0 && this.inputsForm.valid;
     }
 
     private initQueriesSection(): void {
@@ -89,7 +83,9 @@ export class SetTransformComponent extends BaseMainEventComponent implements OnI
             } else {
                 this.queries = this.currentSetTransformEvent.transform.queries ?? [];
             }
-            this.getInputDatasetsInfo();
+            this.inputsForm = transformInputsFormArray(
+                this.currentSetTransformEvent.inputs.filter((item) => !!item.datasetRef),
+            );
         } else {
             this.initDefaultQueriesSection();
         }
@@ -99,40 +95,20 @@ export class SetTransformComponent extends BaseMainEventComponent implements OnI
         this.queries = [...this.queries, { query }];
     }
 
-    private getInputDatasetsInfo(): void {
-        const inputs = this.currentSetTransformEvent?.inputs || [];
-        const requests$ = inputs
-            .filter((item) => !!item.datasetRef)
-            .map((item) => {
-                this.inputDatasets.add(inputDatasetKey(item));
-
-                return this.datasetService.requestDatasetSchema(item.datasetRef).pipe(
-                    map((data: GetDatasetSchemaQuery) => datasetNodeFromSchemaQuery(item.alias, data)),
-                    // The global Apollo error link has already reported the failure
-                    catchError(() => of(unavailableDatasetNode(item.alias))),
-                );
-            });
-
-        if (requests$.length > 0) {
-            forkJoin(requests$)
-                .pipe(takeUntilDestroyed(this.destroyRef))
-                .subscribe((fullList: DatasetNode[]) => {
-                    this.inputsViewModel = fullList;
-                    this.cdr.detectChanges();
-                });
-        }
-    }
-
     public onEditYaml(): void {
         const { modalRef, instance } = openModal(this.modalService, FinalYamlModalComponent, { size: "lg" });
         instance.yamlTemplate =
             this.errorMessage && this.changedEventYamlByHash
                 ? this.changedEventYamlByHash
                 : this.yamlEventService.buildYamlSetTransformEvent(
-                      this.editService.transformEventAsObject(this.inputDatasets, this.selectedEngine, this.queries),
+                      this.editService.transformEventAsObject(
+                          this.inputsForm.getRawValue(),
+                          this.selectedEngine,
+                          this.queries,
+                      ),
                   );
         instance.datasetInfo = this.getDatasetInfoFromUrl();
-        instance.enabledSaveBtn = this.isInputDatasetsExist;
+        instance.enabledSaveBtn = this.isInputsValid;
 
         from(modalRef.result)
             .pipe(
@@ -151,7 +127,11 @@ export class SetTransformComponent extends BaseMainEventComponent implements OnI
                 accountName: this.getDatasetInfoFromUrl().accountName,
                 datasetName: this.getDatasetInfoFromUrl().datasetName,
                 event: this.yamlEventService.buildYamlSetTransformEvent(
-                    this.editService.transformEventAsObject(this.inputDatasets, this.selectedEngine, this.queries),
+                    this.editService.transformEventAsObject(
+                        this.inputsForm.getRawValue(),
+                        this.selectedEngine,
+                        this.queries,
+                    ),
                 ),
             })
             .pipe(filter(Boolean), takeUntilDestroyed(this.destroyRef))

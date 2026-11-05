@@ -3231,11 +3231,11 @@ export type FlowConfigCompactionInput = {
 /** Settings of an ingest flow */
 export type FlowConfigIngestInput = {
   /**
-   * Flag indicates to trigger next flow iteration right if `has_more` is
-   * true
+   * Whether to run the next ingest right away when the source has more
+   * data
    */
   fetchNextIteration: Scalars['Boolean']['input'];
-  /** Flag indicates to ignore cache during ingest step for API calls */
+  /** Whether to ignore the cache for API calls during ingest */
   fetchUncacheable: Scalars['Boolean']['input'];
 };
 
@@ -3254,7 +3254,10 @@ export type FlowConfigInputResetPropagationModeCustom = {
 
 /** Reset the dataset head to its seed block */
 export type FlowConfigInputResetPropagationModeToSeed = {
-  /** Placeholder without meaning, the value is ignored */
+  /**
+   * Placeholder without meaning: always null in responses, ignored in
+   * requests
+   */
   dummy?: InputMaybe<Scalars['String']['input']>;
 };
 
@@ -3282,7 +3285,10 @@ export type FlowConfigResetPropagationModeCustom = {
 /** Reset the dataset head to its seed block */
 export type FlowConfigResetPropagationModeToSeed = {
   __typename: 'FlowConfigResetPropagationModeToSeed';
-  /** Placeholder without meaning, always null */
+  /**
+   * Placeholder without meaning: always null in responses, ignored in
+   * requests
+   */
   dummy?: Maybe<Scalars['String']['output']>;
 };
 
@@ -4011,13 +4017,19 @@ export type FlowTriggerBatchingRuleBufferingInput = {
 /** Run the flow as soon as new input data appears */
 export type FlowTriggerBatchingRuleImmediate = {
   __typename: 'FlowTriggerBatchingRuleImmediate';
-  /** Placeholder without meaning, always true */
+  /**
+   * Placeholder without meaning: always true in responses, ignored in
+   * requests
+   */
   dummy: Scalars['Boolean']['output'];
 };
 
 /** Run the flow as soon as new input data appears */
 export type FlowTriggerBatchingRuleImmediateInput = {
-  /** Placeholder without meaning, the value is ignored */
+  /**
+   * Placeholder without meaning: always true in responses, ignored in
+   * requests
+   */
   dummy: Scalars['Boolean']['input'];
 };
 
@@ -4076,7 +4088,7 @@ export type FlowTriggerStopPolicy = FlowTriggerStopPolicyAfterConsecutiveFailure
 /** Trigger stops after a number of failed runs in a row */
 export type FlowTriggerStopPolicyAfterConsecutiveFailures = {
   __typename: 'FlowTriggerStopPolicyAfterConsecutiveFailures';
-  /** Number of failed runs in a row that stops the trigger */
+  /** Number of failed runs in a row that stops the trigger, from 1 to 10 */
   maxFailures: Scalars['Int']['output'];
 };
 
@@ -4096,13 +4108,19 @@ export type FlowTriggerStopPolicyInput =
 /** Trigger never stops because of failures */
 export type FlowTriggerStopPolicyNever = {
   __typename: 'FlowTriggerStopPolicyNever';
-  /** Placeholder without meaning, always true */
+  /**
+   * Placeholder without meaning: always true in responses, ignored in
+   * requests
+   */
   dummy: Scalars['Boolean']['output'];
 };
 
 /** Trigger never stops because of failures */
 export type FlowTriggerStopPolicyNeverInput = {
-  /** Placeholder without meaning, the value is ignored */
+  /**
+   * Placeholder without meaning: always true in responses, ignored in
+   * requests
+   */
   dummy: Scalars['Boolean']['input'];
 };
 
@@ -4372,7 +4390,7 @@ export type MetadataBlockExtendedEncodedArgs = {
 export type MetadataBlocksFilter = {
   /**
    * Only blocks whose hash starts with this prefix, in the multibase form
-   * the API returns (`f1620…`)
+   * the API returns (`f1620…`). Null or blank means any hash.
    */
   blockHashPrefix?: InputMaybe<Scalars['String']['input']>;
   /**
@@ -7134,8 +7152,9 @@ export type VersionedFileContentDownload = {
 export type VersionedFileEntry = {
   __typename: 'VersionedFileEntry';
   /**
-   * Returns encoded content in-band. Should be used for small files only and
-   * will return an error if called on large data.
+   * Returns encoded content in-band. Should be used for small files only:
+   * files over the node's in-band size limit fail with an error whose
+   * `extensions.code` is `CONTENT_TOO_LARGE`
    */
   content: Scalars['Base64Usnp']['output'];
   /** Multihash of the file content */
@@ -7144,7 +7163,10 @@ export type VersionedFileEntry = {
   contentLength: Scalars['Int']['output'];
   /** Media type of the file content */
   contentType: Scalars['String']['output'];
-  /** Returns a direct download URL */
+  /**
+   * Returns a direct download URL. When the storage cannot issue one, the
+   * URL points to the node itself and needs no extra headers
+   */
   contentUrl: VersionedFileContentDownload;
   /** Event time when this version was created */
   eventTime: Scalars['DateTime']['output'];

@@ -30,7 +30,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   - Upcoming: the order direction toggle keeps the order picked instead of switching back to oldest first
   - Custom: a time window with only one end filters the list, and "Reset filters" selects the states the list shows and shows the order field it uses
   - a number of failures typed as a fraction or below the minimum is shown as the whole number used
-- Dataset overview: when a change to the description, keywords or license is not accepted, the edit dialog stays open with what was entered and says why, instead of closing as if it had been saved
+- Dataset overview, metadata edits: the description, keywords, license and "Edit as YAML" dialogs stay open with what was entered when the change is not accepted or the request fails, and say why when the backend refuses it, instead of closing as if it had been saved; Save is disabled while the change is being saved
 - Dataset overview: a description, keyword or license is saved exactly as typed, including text with `: `, `#` or quotes, which could make the save fail
 - Metadata tab, transformation editor: when the transformation is not accepted, the editor stays open and says why, instead of going to the overview as if it had been saved
 - Metadata tab, source editors: closing "Edit as YAML" without saving no longer makes a later save, in the editor or on another dataset's page, jump to this dataset's overview before the backend has answered

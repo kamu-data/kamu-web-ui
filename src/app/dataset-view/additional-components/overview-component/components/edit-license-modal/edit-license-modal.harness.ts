@@ -22,10 +22,13 @@ export class EditLicenseModalHarness extends ComponentHarness {
     private static readonly INPUT_TEST_ID_PREFIX = "license-";
     private static readonly ERROR_TEST_ID_PREFIX = "error-message-";
     private static readonly SAVE_BUTTON_TEST_ID = "save-license";
+    private static readonly FORM_TEST_ID = "license-form";
 
     private readonly locatorSaveButton = this.locatorFor(
         `[data-test-id="${EditLicenseModalHarness.SAVE_BUTTON_TEST_ID}"]`,
     );
+
+    private readonly locatorForm = this.locatorFor(`[data-test-id="${EditLicenseModalHarness.FORM_TEST_ID}"]`);
 
     public async getValue(field: LicenseField): Promise<string> {
         const input = await this.locatorForInput(field);
@@ -53,6 +56,12 @@ export class EditLicenseModalHarness extends ComponentHarness {
     public async save(): Promise<void> {
         const button = await this.locatorSaveButton();
         await button.click();
+    }
+
+    /** Submits the form the way Enter in one of its fields does, bypassing the Save button. */
+    public async submitForm(): Promise<void> {
+        const form = await this.locatorForm();
+        await form.dispatchEvent("submit");
     }
 
     private locatorForInput(field: LicenseField): Promise<NativeInputHarness> {

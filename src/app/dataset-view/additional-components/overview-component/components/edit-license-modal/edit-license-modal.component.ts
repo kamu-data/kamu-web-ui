@@ -5,17 +5,19 @@
  * included in the LICENSE file.
  */
 
+import { AsyncPipe } from "@angular/common";
 import { Component, inject, Input, OnInit } from "@angular/core";
 import { takeUntilDestroyed } from "@angular/core/rxjs-interop";
 import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators } from "@angular/forms";
 import { MatDividerModule } from "@angular/material/divider";
 
-import { finalize } from "rxjs";
+import { BehaviorSubject } from "rxjs";
 
 import { NgbActiveModal } from "@ng-bootstrap/ng-bootstrap";
 
 import { BaseComponent } from "@common/components/base.component";
 import { DynamicTableDataRow } from "@common/components/dynamic-table/dynamic-table.interface";
+import { trackBusy } from "@common/helpers/app.helpers";
 import { FormValidationErrorsDirective } from "@common/validation/form-validation-errors.directive";
 import { notBlankValidator } from "@common/validation/text.validators";
 import { urlValidator } from "@common/validation/url.validators";
@@ -33,6 +35,7 @@ import { TemplatesYamlEventsService } from "src/app/services/templates-yaml-even
     templateUrl: "./edit-license-modal.component.html",
     imports: [
         //-----//
+        AsyncPipe,
         FormsModule,
         ReactiveFormsModule,
         //-----//
@@ -61,6 +64,7 @@ export class EditLicenseModalComponent extends BaseComponent implements OnInit {
         websiteUrl: this.fb.nonNullable.control("", [Validators.required, urlValidator(["http", "https"])]),
         spdxId: [""],
     });
+    public readonly busy$ = new BehaviorSubject<boolean>(false);
 
     public ngOnInit(): void {
         if (this.currentState?.overview.metadata.currentLicense) {
@@ -75,6 +79,9 @@ export class EditLicenseModalComponent extends BaseComponent implements OnInit {
     }
 
     public onEditLicense(): void {
+        if (!this.licenseForm.valid || this.busy$.value) {
+            return;
+        }
         this.datasetCommitService
             .commitEventToDataset({
                 accountId: this.loggedUserService.currentlyLoggedInUser.id,
@@ -82,10 +89,7 @@ export class EditLicenseModalComponent extends BaseComponent implements OnInit {
                 datasetName: this.datasetBasics.name,
                 event: this.yamlEventService.buildYamlSetLicenseEvent(this.licenseForm.getRawValue()),
             })
-            .pipe(
-                finalize(() => this.activeModal.close()),
-                takeUntilDestroyed(this.destroyRef),
-            )
-            .subscribe();
+            .pipe(trackBusy(this.busy$), takeUntilDestroyed(this.destroyRef))
+            .subscribe(() => this.activeModal.close());
     }
 }

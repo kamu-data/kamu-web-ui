@@ -10,12 +10,12 @@ import { provideHttpClient } from "@angular/common/http";
 import { provideHttpClientTesting } from "@angular/common/http/testing";
 import { ComponentFixture, TestBed } from "@angular/core/testing";
 
-import { of } from "rxjs";
+import { NEVER, of, throwError } from "rxjs";
 
 import { NgbActiveModal } from "@ng-bootstrap/ng-bootstrap";
 import { Apollo } from "apollo-angular";
 
-import { setComponentInput, stubMethod } from "@common/helpers/base-test.helpers.spec";
+import { captureUnhandledRxjsErrors, setComponentInput, stubMethod } from "@common/helpers/base-test.helpers.spec";
 import { SharedTestModule } from "@common/modules/shared-test.module";
 import { DatasetOverviewFragment } from "@api/kamu.graphql.interface";
 import { mockAccountDetails } from "@api/mock/auth.mock";
@@ -74,9 +74,11 @@ describe("EditDetailsModalComponent", () => {
 
     it("should commit the trimmed keywords it was given", async () => {
         const modal = await openModal(mockOverviewDataUpdate.overview);
-        const commitSpy = vi.spyOn(TestBed.inject(DatasetCommitService), "commitEventToDataset").mockReturnValue(of());
+        const commitSpy = vi
+            .spyOn(TestBed.inject(DatasetCommitService), "commitEventToDataset")
+            .mockReturnValue(of(true));
         const buildEventSpy = vi.spyOn(TestBed.inject(TemplatesYamlEventsService), "buildYamlSetInfoEvent");
-        stubMethod(TestBed.inject(NgbActiveModal), "close");
+        const closeSpy = stubMethod(TestBed.inject(NgbActiveModal), "close");
 
         await modal.addKeyword("  keyword1 ");
         await modal.addKeyword("KEYWORD1");
@@ -84,6 +86,37 @@ describe("EditDetailsModalComponent", () => {
         await modal.save();
 
         expect(buildEventSpy).toHaveBeenCalledWith("", ["keyword1"]);
+        expect(commitSpy).toHaveBeenCalledTimes(1);
+        expect(closeSpy).toHaveBeenCalledTimes(1);
+    });
+
+    it("should stay open with the details entered when the commit request fails", async () => {
+        const unhandledErrors = captureUnhandledRxjsErrors();
+        const modal = await openModal(mockOverviewWithSetInfo);
+        vi.spyOn(TestBed.inject(DatasetCommitService), "commitEventToDataset").mockReturnValue(
+            throwError(() => new Error("Server unreachable")),
+        );
+        const closeSpy = stubMethod(TestBed.inject(NgbActiveModal), "close");
+
+        await modal.addKeyword("keyword1");
+        await modal.save();
+
+        expect(closeSpy).not.toHaveBeenCalled();
+        expect(await modal.getKeywords()).toEqual(["mock1", "mock2", "keyword1"]);
+        expect(component.description).toBe("mock description");
+        expect(await modal.isSaveDisabled()).toBe(false);
+        await vi.waitFor(() => expect(unhandledErrors).toHaveBeenCalledWith(new Error("Server unreachable")));
+    });
+
+    it("should keep Save disabled while the details are being committed", async () => {
+        const modal = await openModal(mockOverviewDataUpdate.overview);
+        const commitSpy = vi.spyOn(TestBed.inject(DatasetCommitService), "commitEventToDataset").mockReturnValue(NEVER);
+
+        await modal.addKeyword("keyword1");
+        await modal.save();
+        await modal.save();
+
+        expect(await modal.isSaveDisabled()).toBe(true);
         expect(commitSpy).toHaveBeenCalledTimes(1);
     });
 

@@ -10,13 +10,13 @@ import { provideHttpClient } from "@angular/common/http";
 import { provideHttpClientTesting } from "@angular/common/http/testing";
 import { ComponentFixture, TestBed } from "@angular/core/testing";
 
-import { of } from "rxjs";
+import { NEVER, of, throwError } from "rxjs";
 
 import { NgbActiveModal } from "@ng-bootstrap/ng-bootstrap";
 import { Apollo } from "apollo-angular";
 
 import { requireValue } from "@common/helpers/app.helpers";
-import { setComponentInput, stubMethod } from "@common/helpers/base-test.helpers.spec";
+import { captureUnhandledRxjsErrors, setComponentInput, stubMethod } from "@common/helpers/base-test.helpers.spec";
 import { SharedTestModule } from "@common/modules/shared-test.module";
 import { mockAccountDetails } from "@api/mock/auth.mock";
 
@@ -127,7 +127,7 @@ describe("EditLicenseModalComponent", () => {
 
     ["http://example.com/license", "https://example.com/license"].forEach((url) => {
         it(`should save the license with the website URL "${url}"`, async () => {
-            const commitSpy = vi.spyOn(datasetCommitService, "commitEventToDataset").mockReturnValue(of());
+            const commitSpy = vi.spyOn(datasetCommitService, "commitEventToDataset").mockReturnValue(of(true));
             const buildEventSpy = vi.spyOn(TestBed.inject(TemplatesYamlEventsService), "buildYamlSetLicenseEvent");
             const closeSpy = stubMethod(TestBed.inject(NgbActiveModal), "close");
             const modal = await editLicenseHarness();
@@ -144,5 +144,57 @@ describe("EditLicenseModalComponent", () => {
             expect(commitSpy).toHaveBeenCalledTimes(1);
             expect(closeSpy).toHaveBeenCalledTimes(1);
         });
+    });
+
+    it("should stay open with the license entered when the commit request fails", async () => {
+        const unhandledErrors = captureUnhandledRxjsErrors();
+        vi.spyOn(datasetCommitService, "commitEventToDataset").mockReturnValue(
+            throwError(() => new Error("Server unreachable")),
+        );
+        const closeSpy = stubMethod(TestBed.inject(NgbActiveModal), "close");
+        const modal = await editLicenseHarness();
+
+        await modal.setValue("name", "My License");
+        await modal.setValue("shortName", "ML");
+        await modal.setValue("websiteUrl", "https://example.com/license");
+        await modal.save();
+
+        expect(closeSpy).not.toHaveBeenCalled();
+        expect(await modal.getValue("name")).toBe("My License");
+        expect(await modal.getValue("shortName")).toBe("ML");
+        expect(await modal.getValue("websiteUrl")).toBe("https://example.com/license");
+        expect(await modal.isSaveDisabled()).toBe(false);
+        await vi.waitFor(() => expect(unhandledErrors).toHaveBeenCalledWith(new Error("Server unreachable")));
+    });
+
+    it("should not commit an invalid license submitted from the form", async () => {
+        const commitSpy = vi.spyOn(datasetCommitService, "commitEventToDataset");
+        const modal = await editLicenseHarness();
+
+        await modal.setValue("name", "");
+        await modal.submitForm();
+
+        expect(commitSpy).not.toHaveBeenCalled();
+    });
+
+    it("should not commit the license again when the form is submitted while it is being committed", async () => {
+        const commitSpy = vi.spyOn(datasetCommitService, "commitEventToDataset").mockReturnValue(NEVER);
+        const modal = await editLicenseHarness();
+
+        await modal.save();
+        await modal.submitForm();
+
+        expect(commitSpy).toHaveBeenCalledTimes(1);
+    });
+
+    it("should keep Save disabled while the license is being committed", async () => {
+        const commitSpy = vi.spyOn(datasetCommitService, "commitEventToDataset").mockReturnValue(NEVER);
+        const modal = await editLicenseHarness();
+
+        await modal.save();
+        await modal.save();
+
+        expect(await modal.isSaveDisabled()).toBe(true);
+        expect(commitSpy).toHaveBeenCalledTimes(1);
     });
 });

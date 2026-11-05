@@ -11,7 +11,7 @@
 </div>
 
 <div class="body p-4">
-    <form [formGroup]="licenseForm" (ngSubmit)="onEditLicense()">
+    <form [formGroup]="licenseForm" (ngSubmit)="onEditLicense()" data-test-id="license-form">
         <div class="mt-4">
             <label for="license-name" class="form-label">Name <span class="text-danger">*</span></label>
             <input
@@ -87,7 +87,7 @@
         class="btn btn-success"
         data-test-id="save-license"
         (click)="onEditLicense()"
-        [disabled]="!licenseForm.valid"
+        [disabled]="!licenseForm.valid || ((busy$ | async) ?? false)"
     >
         Save
     </button>

@@ -23,11 +23,11 @@ import {
     UrlTree,
 } from "@angular/router";
 
-import { firstValueFrom, isObservable, Observable } from "rxjs";
+import { config, firstValueFrom, isObservable, Observable } from "rxjs";
 
 import { DocumentNode } from "@apollo/client/core";
 import { ApolloTestingController } from "apollo-angular/testing";
-import type { Mock, Mocked } from "vitest";
+import { onTestFinished, type Mock, type Mocked } from "vitest";
 
 import { MaybeNull, MaybeUndefined } from "@interface/app.types";
 
@@ -492,6 +492,20 @@ export function stubMethod<T extends object, K extends MethodKey<T>>(
         .spyOn(object as unknown as Record<string, () => void>, method as string)
         .mockImplementation(() => undefined);
     return spy as unknown as Mock<T[K] extends (...args: infer A) => infer R ? (...args: A) => R : never>;
+}
+
+/**
+ * Records the errors RxJS reports for a subscription without an error callback, which the app
+ * leaves to the global error handler, instead of letting them fail the test run. The mock is
+ * called after the error, from a timer, so wait for it with `vi.waitFor`.
+ */
+export function captureUnhandledRxjsErrors(): Mock<(error: unknown) => void> {
+    const onUnhandledError = vi.fn<(error: unknown) => void>();
+    config.onUnhandledError = onUnhandledError;
+    onTestFinished(() => {
+        config.onUnhandledError = null;
+    });
+    return onUnhandledError;
 }
 
 export interface QueryFailureCase {

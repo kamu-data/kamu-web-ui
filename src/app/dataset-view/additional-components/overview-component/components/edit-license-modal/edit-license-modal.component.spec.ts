@@ -14,10 +14,12 @@ import { NEVER, of, throwError } from "rxjs";
 
 import { NgbActiveModal } from "@ng-bootstrap/ng-bootstrap";
 import { Apollo } from "apollo-angular";
+import { Mock } from "vitest";
 
 import { requireValue } from "@common/helpers/app.helpers";
 import { captureUnhandledRxjsErrors, setComponentInput, stubMethod } from "@common/helpers/base-test.helpers.spec";
 import { SharedTestModule } from "@common/modules/shared-test.module";
+import { ErrorTexts } from "@common/values/errors.text";
 import { mockAccountDetails } from "@api/mock/auth.mock";
 
 import { LoggedUserService } from "src/app/auth/logged-user.service";
@@ -29,7 +31,7 @@ import {
 import { EditLicenseModalComponent } from "src/app/dataset-view/additional-components/overview-component/components/edit-license-modal/edit-license-modal.component";
 import { EditLicenseModalHarness } from "src/app/dataset-view/additional-components/overview-component/components/edit-license-modal/edit-license-modal.harness";
 import { DatasetCommitService } from "src/app/dataset-view/additional-components/overview-component/services/dataset-commit.service";
-import { mockDatasetBasicsDerivedFragment } from "src/app/search/mock.data";
+import { mockCommitEventToDatasetErrorMessage, mockDatasetBasicsDerivedFragment } from "src/app/search/mock.data";
 import { TemplatesYamlEventsService } from "src/app/services/templates-yaml-events.service";
 
 describe("EditLicenseModalComponent", () => {
@@ -59,6 +61,23 @@ describe("EditLicenseModalComponent", () => {
 
     function editLicenseHarness(): Promise<EditLicenseModalHarness> {
         return TestbedHarnessEnvironment.harnessForFixture(fixture, EditLicenseModalHarness);
+    }
+
+    /** Answers commits the way the service does when the backend refuses the event. */
+    function stubRefusedCommit(): Mock<DatasetCommitService["commitEventToDataset"]> {
+        const commitService = TestBed.inject(DatasetCommitService);
+        return vi.spyOn(commitService, "commitEventToDataset").mockImplementation(() => {
+            commitService.emitCommitEventErrorOccurred(mockCommitEventToDatasetErrorMessage);
+            return of(false);
+        });
+    }
+
+    /** Answers commits the way the service does when the backend accepts the event. */
+    function acceptCommits(spy: Mock<DatasetCommitService["commitEventToDataset"]>): void {
+        spy.mockImplementation(() => {
+            TestBed.inject(DatasetCommitService).emitCommitEventErrorOccurred("");
+            return of(true);
+        });
     }
 
     it("should create", () => {
@@ -164,6 +183,60 @@ describe("EditLicenseModalComponent", () => {
         expect(await modal.getValue("shortName")).toBe("ML");
         expect(await modal.getValue("websiteUrl")).toBe("https://example.com/license");
         expect(await modal.isSaveDisabled()).toBe(false);
+        await vi.waitFor(() => expect(unhandledErrors).toHaveBeenCalledWith(new Error("Server unreachable")));
+    });
+
+    it("should show no commit error before a save", async () => {
+        const modal = await editLicenseHarness();
+
+        expect(await modal.getCommitError()).toBeNull();
+    });
+
+    it("should stay open with the license entered and show why when the backend refuses it", async () => {
+        stubRefusedCommit();
+        const closeSpy = stubMethod(TestBed.inject(NgbActiveModal), "close");
+        const modal = await editLicenseHarness();
+
+        await modal.setValue("name", "My License");
+        await modal.setValue("shortName", "ML");
+        await modal.setValue("websiteUrl", "https://example.com/license");
+        await modal.save();
+
+        expect(closeSpy).not.toHaveBeenCalled();
+        expect(await modal.getValue("name")).toBe("My License");
+        expect(await modal.getValue("shortName")).toBe("ML");
+        expect(await modal.getValue("websiteUrl")).toBe("https://example.com/license");
+        const error = await modal.getCommitError();
+        expect(error).toContain(ErrorTexts.ERROR_METADATA_EVENT_REFUSED);
+        expect(error).toContain(mockCommitEventToDatasetErrorMessage);
+        expect(await modal.isSaveDisabled()).toBe(false);
+    });
+
+    it("should close once a save after a refused one succeeds", async () => {
+        const commitSpy = stubRefusedCommit();
+        const closeSpy = stubMethod(TestBed.inject(NgbActiveModal), "close");
+        const modal = await editLicenseHarness();
+        await modal.save();
+
+        acceptCommits(commitSpy);
+        await modal.save();
+
+        expect(commitSpy).toHaveBeenCalledTimes(2);
+        expect(closeSpy).toHaveBeenCalledTimes(1);
+        expect(await modal.getCommitError()).toBeNull();
+    });
+
+    it("should drop the refusal message when the next save fails to reach the backend", async () => {
+        const unhandledErrors = captureUnhandledRxjsErrors();
+        const commitSpy = stubRefusedCommit();
+        stubMethod(TestBed.inject(NgbActiveModal), "close");
+        const modal = await editLicenseHarness();
+        await modal.save();
+
+        commitSpy.mockReturnValue(throwError(() => new Error("Server unreachable")));
+        await modal.save();
+
+        expect(await modal.getCommitError()).toBeNull();
         await vi.waitFor(() => expect(unhandledErrors).toHaveBeenCalledWith(new Error("Server unreachable")));
     });
 

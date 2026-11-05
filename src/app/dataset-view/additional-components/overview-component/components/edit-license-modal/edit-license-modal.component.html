@@ -81,6 +81,12 @@
     </form>
 </div>
 
+@if (commitError$ | async; as message) {
+    <div class="px-4 text-danger" role="alert" data-test-id="commit-error">
+        {{ ERROR_METADATA_EVENT_REFUSED }}<br />{{ message }}
+    </div>
+}
+
 <div class="p-4 d-flex justify-content-end">
     <button
         type="button"

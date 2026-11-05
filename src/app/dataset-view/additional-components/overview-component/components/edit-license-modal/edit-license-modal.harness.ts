@@ -23,9 +23,13 @@ export class EditLicenseModalHarness extends ComponentHarness {
     private static readonly ERROR_TEST_ID_PREFIX = "error-message-";
     private static readonly SAVE_BUTTON_TEST_ID = "save-license";
     private static readonly FORM_TEST_ID = "license-form";
+    private static readonly COMMIT_ERROR_TEST_ID = "commit-error";
 
     private readonly locatorSaveButton = this.locatorFor(
         `[data-test-id="${EditLicenseModalHarness.SAVE_BUTTON_TEST_ID}"]`,
+    );
+    private readonly locatorCommitError = this.locatorForOptional(
+        `[data-test-id="${EditLicenseModalHarness.COMMIT_ERROR_TEST_ID}"]`,
     );
 
     private readonly locatorForm = this.locatorFor(`[data-test-id="${EditLicenseModalHarness.FORM_TEST_ID}"]`);
@@ -45,6 +49,16 @@ export class EditLicenseModalHarness extends ComponentHarness {
             FieldErrorHarness.with({ dataTestId: `${EditLicenseModalHarness.ERROR_TEST_ID_PREFIX}${field}` }),
         )();
         return error.getMessage();
+    }
+
+    /** The text shown when the backend refused the save, or null when none shows. */
+    public async getCommitError(): Promise<MaybeNull<string>> {
+        const error = await this.locatorCommitError();
+        if (!error) {
+            return null;
+        }
+        const text = await error.text();
+        return text.trim();
     }
 
     public async isSaveDisabled(): Promise<boolean> {

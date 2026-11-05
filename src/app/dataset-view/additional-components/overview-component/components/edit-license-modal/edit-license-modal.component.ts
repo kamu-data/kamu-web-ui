@@ -12,6 +12,7 @@ import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators } 
 import { MatDividerModule } from "@angular/material/divider";
 
 import { BehaviorSubject } from "rxjs";
+import { filter } from "rxjs/operators";
 
 import { NgbActiveModal } from "@ng-bootstrap/ng-bootstrap";
 
@@ -21,6 +22,7 @@ import { trackBusy } from "@common/helpers/app.helpers";
 import { FormValidationErrorsDirective } from "@common/validation/form-validation-errors.directive";
 import { notBlankValidator } from "@common/validation/text.validators";
 import { urlValidator } from "@common/validation/url.validators";
+import { ErrorTexts } from "@common/values/errors.text";
 import { DatasetBasicsFragment, DatasetDataSizeFragment, DatasetOverviewFragment } from "@api/kamu.graphql.interface";
 import { MaybeNull } from "@interface/app.types";
 import { DatasetSchema } from "@interface/dataset-schema.interface";
@@ -65,8 +67,15 @@ export class EditLicenseModalComponent extends BaseComponent implements OnInit {
         spdxId: [""],
     });
     public readonly busy$ = new BehaviorSubject<boolean>(false);
+    /** The backend's message when it refused the last save, or "" when it did not. */
+    public readonly commitError$ = new BehaviorSubject<string>("");
+    public readonly ERROR_METADATA_EVENT_REFUSED = ErrorTexts.ERROR_METADATA_EVENT_REFUSED;
 
     public ngOnInit(): void {
+        this.datasetCommitService.commitEventErrorOccurrences
+            .pipe(takeUntilDestroyed(this.destroyRef))
+            .subscribe((message: string) => this.commitError$.next(message));
+
         if (this.currentState?.overview.metadata.currentLicense) {
             const { name, shortName, spdxId, websiteUrl } = this.currentState.overview.metadata.currentLicense;
             this.licenseForm.patchValue({
@@ -82,6 +91,7 @@ export class EditLicenseModalComponent extends BaseComponent implements OnInit {
         if (!this.licenseForm.valid || this.busy$.value) {
             return;
         }
+        this.commitError$.next("");
         this.datasetCommitService
             .commitEventToDataset({
                 accountId: this.loggedUserService.currentlyLoggedInUser.id,
@@ -89,7 +99,7 @@ export class EditLicenseModalComponent extends BaseComponent implements OnInit {
                 datasetName: this.datasetBasics.name,
                 event: this.yamlEventService.buildYamlSetLicenseEvent(this.licenseForm.getRawValue()),
             })
-            .pipe(trackBusy(this.busy$), takeUntilDestroyed(this.destroyRef))
+            .pipe(trackBusy(this.busy$), filter(Boolean), takeUntilDestroyed(this.destroyRef))
             .subscribe(() => this.activeModal.close());
     }
 }

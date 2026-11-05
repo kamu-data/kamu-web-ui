@@ -14,12 +14,14 @@ import { MatDividerModule } from "@angular/material/divider";
 import { MatIconModule } from "@angular/material/icon";
 
 import { BehaviorSubject } from "rxjs";
+import { filter } from "rxjs/operators";
 
 import { NgbActiveModal } from "@ng-bootstrap/ng-bootstrap";
 
 import { BaseComponent } from "@common/components/base.component";
 import { DynamicTableDataRow } from "@common/components/dynamic-table/dynamic-table.interface";
 import { isEqual, trackBusy } from "@common/helpers/app.helpers";
+import { ErrorTexts } from "@common/values/errors.text";
 import { DatasetBasicsFragment, DatasetDataSizeFragment, DatasetOverviewFragment } from "@api/kamu.graphql.interface";
 import { MaybeNull } from "@interface/app.types";
 import { DatasetSchema } from "@interface/dataset-schema.interface";
@@ -54,6 +56,9 @@ export class EditDetailsModalComponent extends BaseComponent implements OnInit {
     public initialDescription = "";
     public initialKeywords: string[] = [];
     public readonly busy$ = new BehaviorSubject<boolean>(false);
+    /** The backend's message when it refused the last save, or "" when it did not. */
+    public readonly commitError$ = new BehaviorSubject<string>("");
+    public readonly ERROR_METADATA_EVENT_REFUSED = ErrorTexts.ERROR_METADATA_EVENT_REFUSED;
 
     private datasetCommitService = inject(DatasetCommitService);
     private yamlEventService = inject(TemplatesYamlEventsService);
@@ -73,6 +78,10 @@ export class EditDetailsModalComponent extends BaseComponent implements OnInit {
     }
 
     public ngOnInit(): void {
+        this.datasetCommitService.commitEventErrorOccurrences
+            .pipe(takeUntilDestroyed(this.destroyRef))
+            .subscribe((message: string) => this.commitError$.next(message));
+
         if (this.currentState?.overview.metadata.currentInfo.keywords) {
             this.initialKeywords = this.currentState.overview.metadata.currentInfo.keywords;
             this.currentState.overview.metadata.currentInfo.keywords.reduce(
@@ -91,6 +100,7 @@ export class EditDetailsModalComponent extends BaseComponent implements OnInit {
     }
 
     public commitSetInfoEvent(): void {
+        this.commitError$.next("");
         this.datasetCommitService
             .commitEventToDataset({
                 accountId: this.loggedUserService.currentlyLoggedInUser.id,
@@ -98,7 +108,7 @@ export class EditDetailsModalComponent extends BaseComponent implements OnInit {
                 datasetName: this.datasetBasics.name,
                 event: this.yamlEventService.buildYamlSetInfoEvent(this.description, this.keywords),
             })
-            .pipe(trackBusy(this.busy$), takeUntilDestroyed(this.destroyRef))
+            .pipe(trackBusy(this.busy$), filter(Boolean), takeUntilDestroyed(this.destroyRef))
             .subscribe(() => this.activeModal.close());
     }
 

@@ -18,12 +18,13 @@ import { Apollo } from "apollo-angular";
 import { ApolloTestingModule } from "apollo-angular/testing";
 
 import { requireValue } from "@common/helpers/app.helpers";
-import { registerMatSvgIcons, setComponentInput } from "@common/helpers/base-test.helpers.spec";
+import { registerMatSvgIcons, setComponentInput, stubMethod } from "@common/helpers/base-test.helpers.spec";
 import { mockAccountDetails } from "@api/mock/auth.mock";
 
 import { LoggedUserService } from "src/app/auth/logged-user.service";
 import { BlockService } from "src/app/dataset-block/metadata-block/block.service";
 import { FinalYamlModalComponent } from "src/app/dataset-view/additional-components/metadata-component/components/final-yaml-modal/final-yaml-modal.component";
+import { FinalYamlModalHarness } from "src/app/dataset-view/additional-components/metadata-component/components/final-yaml-modal/final-yaml-modal.harness";
 import { InputFieldHarness } from "src/app/dataset-view/additional-components/metadata-component/components/form-components/input-field/input-field.harness";
 import {
     mockAddPushSourceYaml,
@@ -33,7 +34,9 @@ import { AddPushSourceSection } from "src/app/dataset-view/additional-components
 import { AddPushSourceComponent } from "src/app/dataset-view/additional-components/metadata-component/components/source-events/add-push-source/add-push-source.component";
 import { StepperNavigationHarness } from "src/app/dataset-view/additional-components/metadata-component/components/stepper-navigation/stepper-navigation.harness";
 import { DatasetCommitService } from "src/app/dataset-view/additional-components/overview-component/services/dataset-commit.service";
-import { mockDatasetInfo } from "src/app/search/mock.data";
+import { DatasetViewTypeEnum } from "src/app/dataset-view/dataset-view.interface";
+import { mockCommitEventToDatasetErrorMessage, mockDatasetInfo } from "src/app/search/mock.data";
+import { NavigationService } from "src/app/services/navigation.service";
 
 const providersSection = (name: string) => {
     return [
@@ -242,5 +245,103 @@ describe("AddPushSourceComponent without query parameter name", () => {
         expect(await sourceName.getValue()).toBe("");
         expect(component.showPreprocessStep).toBe(false);
         expect(await isNextDisabled()).toBe(true);
+    });
+});
+
+describe("AddPushSourceComponent YAML editor", () => {
+    let component: AddPushSourceComponent;
+    let fixture: ComponentFixture<AddPushSourceComponent>;
+    let datasetCommitService: DatasetCommitService;
+
+    beforeEach(async () => {
+        await TestBed.configureTestingModule({
+            providers: [
+                ...providersSection(mockAddPushSourceYaml),
+                Apollo,
+                provideHttpClient(),
+                provideHttpClientTesting(),
+            ],
+            imports: [ApolloTestingModule, AddPushSourceComponent],
+        }).compileComponents();
+        registerMatSvgIcons();
+
+        datasetCommitService = TestBed.inject(DatasetCommitService);
+        vi.spyOn(TestBed.inject(LoggedUserService), "currentlyLoggedInUser", "get").mockReturnValue(mockAccountDetails);
+        fixture = TestBed.createComponent(AddPushSourceComponent);
+        component = fixture.componentInstance;
+        setComponentInput(fixture, "eventYamlByHash", mockAddPushSourceYaml);
+        setComponentInput(fixture, "queryParamName", "mockSourceName");
+        setComponentInput(fixture, "datasetInfo", mockDatasetInfo);
+        fixture.detectChanges();
+    });
+
+    afterEach(() => TestBed.inject(NgbModal).dismissAll());
+
+    /** Answers commits the way the service does: the message on a refusal, "" once the backend accepts the event. */
+    function answerCommits(accepted: boolean): void {
+        vi.spyOn(datasetCommitService, "commitEventToDataset").mockImplementation(() => {
+            datasetCommitService.emitCommitEventErrorOccurred(accepted ? "" : mockCommitEventToDatasetErrorMessage);
+            return of(accepted);
+        });
+    }
+
+    async function openYamlEditor(): Promise<FinalYamlModalHarness> {
+        component.onEditYaml();
+        return TestbedHarnessEnvironment.documentRootLoader(fixture).getHarness(FinalYamlModalHarness);
+    }
+
+    it("should go to the dataset overview once the backend accepts the event saved from the YAML editor", async () => {
+        answerCommits(true);
+        const navigateSpy = stubMethod(TestBed.inject(NavigationService), "navigateToDatasetView");
+        const yamlEditor = await openYamlEditor();
+
+        await yamlEditor.save();
+
+        await vi.waitFor(() =>
+            expect(navigateSpy).toHaveBeenCalledExactlyOnceWith({
+                accountName: "accountName",
+                datasetName: "datasetName",
+                tab: DatasetViewTypeEnum.Overview,
+            }),
+        );
+    });
+
+    it("should stay with the edited YAML when the backend refuses the event saved from the YAML editor", async () => {
+        answerCommits(false);
+        const navigateSpy = stubMethod(TestBed.inject(NavigationService), "navigateToDatasetView");
+        const yamlEditor = await openYamlEditor();
+
+        await yamlEditor.save();
+        await fixture.whenStable();
+
+        expect(navigateSpy).not.toHaveBeenCalled();
+        expect(component.errorMessage).toBe(mockCommitEventToDatasetErrorMessage);
+        expect(component.changedEventYamlByHash).toEqual(expect.any(String));
+    });
+
+    it("should not leave the editor when a save from the form follows a cancelled YAML editor", async () => {
+        answerCommits(false);
+        const navigateSpy = stubMethod(TestBed.inject(NavigationService), "navigateToDatasetView");
+        const yamlEditor = await openYamlEditor();
+        await yamlEditor.cancel();
+        await fixture.whenStable();
+
+        component.onSaveEvent();
+        await fixture.whenStable();
+
+        expect(navigateSpy).not.toHaveBeenCalled();
+        expect(component.errorMessage).toBe(mockCommitEventToDatasetErrorMessage);
+    });
+
+    it("should not navigate on commits made after the editor is gone", async () => {
+        const navigateSpy = stubMethod(TestBed.inject(NavigationService), "navigateToDatasetView");
+        const yamlEditor = await openYamlEditor();
+        await yamlEditor.cancel();
+        await fixture.whenStable();
+
+        fixture.destroy();
+        datasetCommitService.emitCommitEventErrorOccurred("");
+
+        expect(navigateSpy).not.toHaveBeenCalled();
     });
 });

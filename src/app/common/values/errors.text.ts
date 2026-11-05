@@ -18,4 +18,5 @@ export class ErrorTexts {
     public static readonly ERROR_INVALID_DEVICE_CODE =
         "The sign-in link from the command line is not valid. Run the login command again to get a new one.";
     public static readonly ERROR_WEBHOOK_DUPLICATE_LABEL = "A webhook with this label already exists";
+    public static readonly ERROR_METADATA_EVENT_REFUSED = "The changes were not saved:";
 }

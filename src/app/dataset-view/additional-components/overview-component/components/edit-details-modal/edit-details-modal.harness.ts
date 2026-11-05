@@ -10,11 +10,14 @@
 import { ComponentHarness, TestKey } from "@angular/cdk/testing";
 import { MatChipGridHarness, MatChipInputHarness } from "@angular/material/chips/testing";
 
+import { MaybeNull } from "@interface/app.types";
+
 export class EditDetailsModalHarness extends ComponentHarness {
     public static readonly hostSelector = "app-details-modal";
 
     private static readonly KEYWORD_INPUT_TEST_ID = "input-keyword";
     private static readonly SAVE_BUTTON_TEST_ID = "commit-event";
+    private static readonly COMMIT_ERROR_TEST_ID = "commit-error";
 
     private readonly locatorKeywordInput = this.locatorFor(
         MatChipInputHarness.with({ selector: `[data-test-id="${EditDetailsModalHarness.KEYWORD_INPUT_TEST_ID}"]` }),
@@ -22,6 +25,9 @@ export class EditDetailsModalHarness extends ComponentHarness {
     private readonly locatorKeywordGrid = this.locatorFor(MatChipGridHarness);
     private readonly locatorSaveButton = this.locatorFor(
         `[data-test-id="${EditDetailsModalHarness.SAVE_BUTTON_TEST_ID}"]`,
+    );
+    private readonly locatorCommitError = this.locatorForOptional(
+        `[data-test-id="${EditDetailsModalHarness.COMMIT_ERROR_TEST_ID}"]`,
     );
 
     /** Types a keyword into the chip input and ends it with Enter, as a user adds one. */
@@ -55,6 +61,16 @@ export class EditDetailsModalHarness extends ComponentHarness {
             throw new Error(`There is no keyword "${keyword}"`);
         }
         await row.remove();
+    }
+
+    /** The text shown when the backend refused the save, or null when none shows. */
+    public async getCommitError(): Promise<MaybeNull<string>> {
+        const error = await this.locatorCommitError();
+        if (!error) {
+            return null;
+        }
+        const text = await error.text();
+        return text.trim();
     }
 
     public async isSaveDisabled(): Promise<boolean> {

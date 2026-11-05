@@ -26,35 +26,22 @@ import { AddPushSourceEditFormType } from "src/app/dataset-view/additional-compo
     providedIn: "root",
 })
 export class TemplatesYamlEventsService {
-    private readonly initialSetInfoTemplate = "kind: MetadataEvent\nversion: 1\ncontent:\n  kind: SetInfo\n";
-    private readonly initialSetLicenseTemplate = "kind: MetadataEvent\nversion: 1\ncontent:\n  kind: SetLicense\n";
-    private readonly initialSetWatermarkTemplate = "kind: MetadataEvent\nversion: 1\ncontent:\n  kind: SetWatermark\n";
-    private readonly initialDisablePollingSourceTemplate =
-        "kind: MetadataEvent\nversion: 1\ncontent:\n  kind: DisablePollingSource\n";
-
-    private readonly initialTemplate = {
-        kind: "MetadataEvent",
-        version: 1,
-        content: {},
-    };
-
     public buildYamlSetInfoEvent(description: MaybeNull<string>, keywords: MaybeNull<string[]>): string {
-        let result = this.initialSetInfoTemplate;
-        if (description) result += `  description: ${description}\n`;
-        if (keywords?.length) {
-            result += `  keywords:\n`;
-            keywords.forEach((keyword: string) => (result += `    - ${keyword}\n`));
-        }
-        return result;
+        return this.metadataEventYaml({
+            kind: "SetInfo",
+            ...(description ? { description } : {}),
+            ...(keywords?.length ? { keywords } : {}),
+        });
     }
 
     public buildYamlSetLicenseEvent(params: Omit<SetLicense, "__typename">): string {
-        let result = this.initialSetLicenseTemplate;
-        result += `  name: ${params.name}\n`;
-        result += `  shortName: ${params.shortName}\n`;
-        result += `  websiteUrl: ${params.websiteUrl}\n`;
-        if (params.spdxId) result += `  spdxId: ${params.spdxId.toString()}\n`;
-        return result;
+        return this.metadataEventYaml({
+            kind: "SetLicense",
+            name: params.name,
+            shortName: params.shortName,
+            websiteUrl: params.websiteUrl,
+            ...(params.spdxId ? { spdxId: params.spdxId } : {}),
+        });
     }
 
     public buildYamlSetPollingSourceEvent(
@@ -69,15 +56,15 @@ export class TemplatesYamlEventsService {
             delete params.read.jsonKind;
         }
 
-        this.initialTemplate.content = {
+        let content: object = {
             kind: "SetPollingSource",
             ...params,
         };
 
         const schemaFields = params.read.schema;
         if (schemaFields?.length) {
-            this.initialTemplate.content = {
-                ...this.initialTemplate.content,
+            content = {
+                ...content,
                 read: {
                     ...params.read,
                     schema: schemaFieldsToObjectForm(schemaFields),
@@ -86,8 +73,8 @@ export class TemplatesYamlEventsService {
         }
 
         if (preprocessStepValue?.queries.length && preprocessStepValue.queries[0].query) {
-            this.initialTemplate.content = {
-                ...this.initialTemplate.content,
+            content = {
+                ...content,
                 preprocess: {
                     kind: PreprocessKind.SQL,
                     engine: preprocessStepValue.engine.toLowerCase(),
@@ -96,7 +83,7 @@ export class TemplatesYamlEventsService {
             };
         }
 
-        return stringify(this.initialTemplate);
+        return this.metadataEventYaml(content);
     }
 
     public buildYamlAddPushSourceEvent(
@@ -110,15 +97,15 @@ export class TemplatesYamlEventsService {
             params.read.kind = params.read.jsonKind;
             delete params.read.jsonKind;
         }
-        this.initialTemplate.content = {
+        let content: object = {
             kind: "AddPushSource",
             ...params,
         };
 
         const pushSchemaFields = params.read.schema;
         if (pushSchemaFields?.length) {
-            this.initialTemplate.content = {
-                ...this.initialTemplate.content,
+            content = {
+                ...content,
                 read: {
                     ...params.read,
                     schema: schemaFieldsToObjectForm(pushSchemaFields),
@@ -127,8 +114,8 @@ export class TemplatesYamlEventsService {
         }
 
         if (preprocessStepValue?.queries.length && preprocessStepValue.queries[0].query) {
-            this.initialTemplate.content = {
-                ...this.initialTemplate.content,
+            content = {
+                ...content,
                 preprocess: {
                     kind: PreprocessKind.SQL,
                     engine: preprocessStepValue.engine.toLowerCase(),
@@ -137,26 +124,26 @@ export class TemplatesYamlEventsService {
             };
         }
 
-        return stringify(this.initialTemplate);
+        return this.metadataEventYaml(content);
     }
 
     public buildYamlSetTransformEvent(params: SetTransformEvent): string {
-        this.initialTemplate.content = {
+        return this.metadataEventYaml({
             kind: "SetTransform",
             ...params,
-        };
-        return stringify(this.initialTemplate);
+        });
     }
 
     public buildYamlSetWatermarkEvent(dateTime: string): string {
-        let result = this.initialSetWatermarkTemplate;
-        result += `  outputWatermark: ${dateTime}`;
-        return result;
+        return this.metadataEventYaml({ kind: "SetWatermark", outputWatermark: dateTime });
     }
 
     public buildYamlDisablePollingSourceEvent(): string {
-        let result = this.initialDisablePollingSourceTemplate;
-        result += `  dummy: test`;
-        return result;
+        return this.metadataEventYaml({ kind: "DisablePollingSource", dummy: "test" });
+    }
+
+    /** Serializes the event, so text the user typed is quoted wherever YAML would read it as syntax. */
+    private metadataEventYaml(content: object): string {
+        return stringify({ kind: "MetadataEvent", version: 1, content });
     }
 }

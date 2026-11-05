@@ -9,7 +9,7 @@ import { afterNextRender, Directive, ElementRef, inject, Injector, OnInit } from
 import { takeUntilDestroyed } from "@angular/core/rxjs-interop";
 import { FormBuilder, FormControl, FormGroup } from "@angular/forms";
 
-import { catchError, combineLatest, from, of, take } from "rxjs";
+import { catchError, from, of, take } from "rxjs";
 
 import { openModal } from "@common/helpers/modal.helpers";
 import { MaybeNull } from "@interface/app.types";
@@ -80,22 +80,24 @@ export abstract class BaseSourceEventComponent extends BaseMainEventComponent im
             this.errorMessage && this.changedEventYamlByHash ? this.changedEventYamlByHash : this.buildEventYaml();
         instance.datasetInfo = this.getDatasetInfoFromUrl();
 
-        combineLatest([
-            from(modalRef.result).pipe(
+        from(modalRef.result)
+            .pipe(
                 take(1),
                 catchError(() => of(null)),
-            ),
-            this.datasetCommitService.commitEventErrorOccurrences,
-        ]).subscribe(([eventYaml, message]) => {
-            this.changedEventYamlByHash = typeof eventYaml === "string" ? eventYaml : null;
-            if (!message) {
-                this.navigationServices.navigateToDatasetView({
-                    accountName: this.getDatasetInfoFromUrl().accountName,
-                    datasetName: this.getDatasetInfoFromUrl().datasetName,
-                    tab: DatasetViewTypeEnum.Overview,
-                });
-            }
-        });
+                takeUntilDestroyed(this.destroyRef),
+            )
+            .subscribe((eventYaml: unknown) => {
+                this.changedEventYamlByHash = typeof eventYaml === "string" ? eventYaml : null;
+                // The modal closes with its YAML only once the backend has answered the commit, and a
+                // refusal has reached `errorMessage` by then.
+                if (typeof eventYaml === "string" && !this.errorMessage) {
+                    this.navigationServices.navigateToDatasetView({
+                        accountName: this.getDatasetInfoFromUrl().accountName,
+                        datasetName: this.getDatasetInfoFromUrl().datasetName,
+                        tab: DatasetViewTypeEnum.Overview,
+                    });
+                }
+            });
     }
 
     public saveSourceEvent(): void {

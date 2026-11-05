@@ -65,11 +65,17 @@
                 />
                 @if (row?.isSecret) {
                     <div class="input-group-addon pt-2 px-2 eye-icon">
-                        <a (click)="toggleExposedValue()">
+                        <button
+                            type="button"
+                            class="btn btn-link p-0 border-0"
+                            data-test-id="toggle-value-visibility"
+                            [attr.aria-label]="isShowExposedValue ? TEXTS.HIDE_VALUE : TEXTS.SHOW_VALUE"
+                            (click)="toggleExposedValue()"
+                        >
                             <mat-icon class="text-muted fs-4">{{
-                                exposedValue ? "visibility" : "visibility_off"
+                                isShowExposedValue ? "visibility" : "visibility_off"
                             }}</mat-icon>
-                        </a>
+                        </button>
                     </div>
                 }
             </div>

@@ -154,22 +154,6 @@ describe("EditKeyValueModalComponent", () => {
         expect(await modal.getKeyError()).toBe("Key can't exceed 200 characters");
     });
 
-    it("should check toggle exposed value if exist", () => {
-        component.exposedValue = "mock-value";
-        component.toggleExposedValue();
-
-        expect(component.isShowExposedValue).toEqual(true);
-        expect(component.keyValueForm.controls.value.value).toEqual("mock-value");
-    });
-
-    it("should check toggle exposed value if not exist", () => {
-        component.exposedValue = "";
-        component.toggleExposedValue();
-
-        expect(component.isShowExposedValue).toEqual(true);
-        expect(component.keyValueForm.controls.value.value).toEqual("");
-    });
-
     it("should save a new variable and close", async () => {
         const createSpy = vi.spyOn(evnironmentVariablesService, "createEnvVariable").mockReturnValue(of({ ok: true }));
         const closeSpy = stubMethod(TestBed.inject(NgbActiveModal), "close");
@@ -421,13 +405,38 @@ describe("EditKeyValueModalComponent", () => {
         expect(await modal.getValue()).toBe("exposed-value");
     });
 
-    it("should forget the exposed value when it is hidden again", () => {
-        component.exposedValue = "mock-value";
-        component.toggleExposedValue();
-        component.toggleExposedValue();
+    it("should show and hide a secret's value with the eye button, without loading it again", async () => {
+        const exposedSpy = vi
+            .spyOn(evnironmentVariablesService, "exposedEnvVariableValue")
+            .mockReturnValue(of("exposed-value"));
+        setComponentInput(fixture, "row", requireValue(existingVariables.nodes[2]));
+        fixture.detectChanges();
+        const modal = await TestbedHarnessEnvironment.harnessForFixture(fixture, EditKeyValueModalHarness);
 
-        expect(component.isShowExposedValue).toBe(false);
-        expect(component.exposedValue).toBe("");
+        expect(await modal.isValueHidden()).toBe(true);
+
+        await modal.toggleValueVisibility();
+        expect(await modal.isValueHidden()).toBe(false);
+        expect(await modal.getValue()).toBe("exposed-value");
+
+        await modal.toggleValueVisibility();
+        expect(await modal.isValueHidden()).toBe(true);
+        expect(await modal.getValue()).toBe("exposed-value");
+        expect(exposedSpy).toHaveBeenCalledTimes(1);
+    });
+
+    it("should keep the value typed for a secret when it is hidden and shown again", async () => {
+        vi.spyOn(evnironmentVariablesService, "exposedEnvVariableValue").mockReturnValue(of("exposed-value"));
+        setComponentInput(fixture, "row", requireValue(existingVariables.nodes[2]));
+        fixture.detectChanges();
+        const modal = await TestbedHarnessEnvironment.harnessForFixture(fixture, EditKeyValueModalHarness);
+
+        await modal.setValue("new-value");
+        await modal.toggleValueVisibility();
+        await modal.toggleValueVisibility();
+        await modal.toggleValueVisibility();
+
+        expect(await modal.getValue()).toBe("new-value");
     });
 
     it("should check fetch exposed value", () => {

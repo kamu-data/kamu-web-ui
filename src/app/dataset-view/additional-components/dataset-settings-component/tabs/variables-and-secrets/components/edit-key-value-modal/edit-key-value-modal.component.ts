@@ -81,14 +81,12 @@ export class EditKeyValueModalComponent extends BaseComponent implements OnInit 
     /** The keys failed to load; Save stays disabled until a retry loads them. */
     public existingKeysLoadFailed = false;
     public exposedValueLoadFailed = false;
-    public exposedValue: string;
     public isShowExposedValue: boolean = false;
-    public readonly STUB_VALUE = "stub-value";
     public readonly TEXTS = EditKeyValueModalTexts;
 
     public ngOnInit(): void {
-        this.fetchExposedValue();
         this.setInitialFormValue();
+        this.fetchExposedValue();
         if (this.row) {
             this.existingKeys = [];
         } else {
@@ -135,14 +133,9 @@ export class EditKeyValueModalComponent extends BaseComponent implements OnInit 
         });
     }
 
+    /** Only shows or hides the field: the value loads once, so what the user typed stays. */
     public toggleExposedValue(): void {
         this.isShowExposedValue = !this.isShowExposedValue;
-        if (!this.isShowExposedValue) {
-            this.exposedValue = "";
-        } else {
-            this.fetchExposedValue();
-            this.keyValueForm.patchValue({ value: this.exposedValue });
-        }
     }
 
     public fetchExposedValue(): void {
@@ -163,11 +156,8 @@ export class EditKeyValueModalComponent extends BaseComponent implements OnInit 
                     }),
                     takeUntilDestroyed(this.destroyRef),
                 )
-                .subscribe((data) => {
-                    this.exposedValue = data;
-                    this.keyValueForm.patchValue({
-                        value: this.exposedValue,
-                    });
+                .subscribe((value) => {
+                    this.keyValueForm.patchValue({ value });
                 });
         }
     }
@@ -203,7 +193,7 @@ export class EditKeyValueModalComponent extends BaseComponent implements OnInit 
             this.keyControl.clearValidators();
             this.keyValueForm.patchValue({
                 keyEnvVariable: this.row.key,
-                value: this.row.isSecret ? this.exposedValue : (this.row.value ?? ""),
+                value: this.row.isSecret ? "" : (this.row.value ?? ""),
                 isSecret: this.row.isSecret,
             });
             if (this.row.isSecret) {

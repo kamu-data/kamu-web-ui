@@ -26,6 +26,7 @@ export class EditKeyValueModalHarness extends ComponentHarness {
     private static readonly RETRY_EXISTING_KEYS_TEST_ID = "retry-existing-keys";
     private static readonly EXPOSED_VALUE_LOAD_FAILED_TEST_ID = "exposed-value-load-failed";
     private static readonly RETRY_EXPOSED_VALUE_TEST_ID = "retry-exposed-value";
+    private static readonly TOGGLE_VALUE_VISIBILITY_TEST_ID = "toggle-value-visibility";
 
     private readonly locatorKeyInput = this.locatorFor(
         NativeInputHarness.with({ dataTestId: EditKeyValueModalHarness.KEY_INPUT_TEST_ID }),
@@ -58,6 +59,9 @@ export class EditKeyValueModalHarness extends ComponentHarness {
     private readonly locatorRetryExposedValue = this.locatorFor(
         `[data-test-id="${EditKeyValueModalHarness.RETRY_EXPOSED_VALUE_TEST_ID}"]`,
     );
+    private readonly locatorToggleValueVisibility = this.locatorFor(
+        `[data-test-id="${EditKeyValueModalHarness.TOGGLE_VALUE_VISIBILITY_TEST_ID}"]`,
+    );
 
     public async setKey(key: string): Promise<void> {
         const input = await this.locatorKeyInput();
@@ -83,6 +87,11 @@ export class EditKeyValueModalHarness extends ComponentHarness {
         const input = await this.locatorValueInput();
         const type = await input.getType();
         return type === "password";
+    }
+
+    public async toggleValueVisibility(): Promise<void> {
+        const button = await this.locatorToggleValueVisibility();
+        await button.click();
     }
 
     public async setSecret(secret: boolean): Promise<void> {

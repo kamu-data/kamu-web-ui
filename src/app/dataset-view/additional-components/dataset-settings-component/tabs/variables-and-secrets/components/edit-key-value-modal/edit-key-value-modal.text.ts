@@ -10,4 +10,6 @@ export class EditKeyValueModalTexts {
         "The dataset's existing keys could not be loaded, so the variable can't be saved yet.";
     public static readonly EXPOSED_VALUE_LOAD_FAILED = "The current value could not be loaded.";
     public static readonly TRY_AGAIN = "Try again";
+    public static readonly SHOW_VALUE = "Show value";
+    public static readonly HIDE_VALUE = "Hide value";
 }

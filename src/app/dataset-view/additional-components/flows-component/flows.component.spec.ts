@@ -18,11 +18,13 @@ import { Apollo } from "apollo-angular";
 import { provideToastr } from "ngx-toastr";
 import type { Mock } from "vitest";
 
+import { environment } from "@env/environment";
 import { ModalService } from "@common/components/modal/modal.service";
 import { PagePastEndHarness } from "@common/components/page-past-end/page-past-end.harness";
 import { requireValue } from "@common/helpers/app.helpers";
 import {
     createSpyObj,
+    findElementByDataTestId,
     registerMatSvgIcons,
     setComponentInput,
     stubMethod,
@@ -146,6 +148,45 @@ describe("FlowsComponent", () => {
         const flows = await TestbedHarnessEnvironment.harnessForFixture(fixture, FlowsHarness);
 
         expect(await flows.isEmptyFlowRunsBlockVisible()).toBe(true);
+        discardPeriodicTasks();
+    }));
+
+    it("should show the flow runs of the next poll after a failed one", fakeAsync(async () => {
+        vi.spyOn(datasetFlowsService, "datasetFlowsList").mockReturnValue(of(flowsTableDataWithoutRuns()));
+        vi.spyOn(datasetFlowsService, "flowsInitiators").mockReturnValue(of([]));
+        const datasetFlowsProcessesSpy = vi.spyOn(datasetFlowsService, "datasetFlowsProcesses");
+        datasetFlowsProcessesSpy.mockReturnValueOnce(throwError(() => new Error("Server unreachable")));
+        datasetFlowsProcessesSpy.mockReturnValue(
+            of(requireValue(mockDatasetFlowsProcessesQuery.datasets.byId?.flows.processes)),
+        );
+        // The first poll runs on an interval, which the harness's own flush skips
+        fixture.detectChanges();
+        tick();
+        const flows = await TestbedHarnessEnvironment.harnessForFixture(fixture, FlowsHarness);
+        expect(await flows.isEmptyFlowRunsBlockVisible()).toBe(false);
+
+        tick(environment.delay_polling_ms);
+
+        expect(await flows.isEmptyFlowRunsBlockVisible()).toBe(true);
+        discardPeriodicTasks();
+    }));
+
+    it("should show the flow runs of a poll whose requests together outlast the polling interval", fakeAsync(() => {
+        // Each request takes more than half the interval, so the runs arrive after the next poll started
+        const requestMs = environment.delay_polling_ms * 0.6;
+        vi.spyOn(datasetFlowsService, "datasetFlowsProcesses").mockReturnValue(
+            of(requireValue(mockDatasetFlowsProcessesQuery.datasets.byId?.flows.processes)).pipe(delay(requestMs)),
+        );
+        vi.spyOn(datasetFlowsService, "datasetFlowsList").mockReturnValue(
+            of(flowsTableDataWithoutRuns()).pipe(delay(requestMs)),
+        );
+        vi.spyOn(datasetFlowsService, "flowsInitiators").mockReturnValue(of([]));
+        fixture.detectChanges();
+
+        tick(2 * requestMs);
+        fixture.detectChanges();
+
+        expect(findElementByDataTestId(fixture, "empty-flow-runs-block")).toBeDefined();
         discardPeriodicTasks();
     }));
 

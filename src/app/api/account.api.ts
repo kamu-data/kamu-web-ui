@@ -10,9 +10,8 @@ import { inject, Injectable } from "@angular/core";
 import { catchError, EMPTY, first, map, Observable } from "rxjs";
 
 import { ObservableQuery } from "@apollo/client/core";
-import { onlyCompleteData } from "apollo-angular";
 
-import { mutationData } from "@common/helpers/apollo-error.helpers";
+import { completeDataOrError, mutationData } from "@common/helpers/apollo-error.helpers";
 import { noCacheFetchPolicy } from "@common/helpers/data.helpers";
 import {
     AccountByNameGQL,
@@ -109,7 +108,7 @@ export class AccountApi {
                 ...noCacheFetchPolicy,
             })
             .valueChanges.pipe(
-                onlyCompleteData(),
+                completeDataOrError(),
                 first(),
                 map((result: ObservableQuery.Result<AccountWithEmailQuery, "complete">) => {
                     return result.data;
@@ -126,7 +125,7 @@ export class AccountApi {
                 ...noCacheFetchPolicy,
             })
             .valueChanges.pipe(
-                onlyCompleteData(),
+                completeDataOrError(),
                 first(),
                 map((result: ObservableQuery.Result<AccountStorageQuotaQuery, "complete">) => {
                     return result.data;
@@ -142,7 +141,7 @@ export class AccountApi {
                 },
             })
             .valueChanges.pipe(
-                onlyCompleteData(),
+                completeDataOrError(),
                 first(),
                 map((result: ObservableQuery.Result<AccountByNameQuery, "complete">) => {
                     return result.data.accounts.byName ?? null;
@@ -174,7 +173,7 @@ export class AccountApi {
                 },
             })
             .valueChanges.pipe(
-                onlyCompleteData(),
+                completeDataOrError(),
                 first(),
                 map((result: ObservableQuery.Result<AccountListFlowsQuery, "complete">) => {
                     return result.data;
@@ -204,7 +203,7 @@ export class AccountApi {
                 },
             })
             .valueChanges.pipe(
-                onlyCompleteData(),
+                completeDataOrError(),
                 first(),
                 map((result: ObservableQuery.Result<AccountFlowsAsCardsQuery, "complete">) => {
                     return result.data;
@@ -234,7 +233,7 @@ export class AccountApi {
                 },
             })
             .valueChanges.pipe(
-                onlyCompleteData(),
+                completeDataOrError(),
                 first(),
                 map((result: ObservableQuery.Result<AccountPrimaryCardsQuery, "complete">) => {
                     return result.data;
@@ -264,7 +263,7 @@ export class AccountApi {
                 },
             })
             .valueChanges.pipe(
-                onlyCompleteData(),
+                completeDataOrError(),
                 first(),
                 map((result: ObservableQuery.Result<AccountWebhookCardsQuery, "complete">) => {
                     return result.data;
@@ -282,7 +281,7 @@ export class AccountApi {
                 },
             })
             .valueChanges.pipe(
-                onlyCompleteData(),
+                completeDataOrError(),
                 map((result: ObservableQuery.Result<AccountListDatasetsWithFlowsQuery, "complete">) => {
                     return result.data;
                 }),

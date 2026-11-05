@@ -17,14 +17,15 @@ as bundle changes.
 
 | Phase | Defined in `src/app/app-routing.ts` | Holds |
 |---|---|---|
-| 1 | `PUBLIC_ROUTES` (passed to `provideRouter`) | Home redirect, login, sign-in unavailable (`URL_LOGIN_UNAVAILABLE`), GitHub callback, return-to-CLI, not-found pages — reachable by anyone |
+| 1 | `PUBLIC_ROUTES` (passed to `provideRouter`) | Home redirect, login, sign-in unavailable (`URL_LOGIN_UNAVAILABLE`), page load failed (`URL_PAGE_LOAD_FAILED`), GitHub callback, return-to-CLI, not-found pages — reachable by anyone |
 | 2 | `ANONYMOUS_GUARDED_ROUTES` via `provideConditionalGuardedRoutes()` | Everything else; wrapped in `forbidAnonymousAccessGuardFn` unless the runtime config sets `allowAnonymous` |
 | 3 | `provideCatchAllRoute()` | `**` → `PageNotFoundComponent`; must stay last |
 
 Router features in `main.ts`: `withComponentInputBinding()` (route data and resolver results
 arrive as component inputs), `onSameUrlNavigation: "reload"`, `KamuUrlSerializer`, which
-masks dots in account and dataset names so they survive as single path segments, and
-`KamuRouteReuseStrategy` (see "Route anatomy").
+masks dots in account and dataset names so they survive as single path segments,
+`KamuRouteReuseStrategy` (see "Route anatomy"), and `withNavigationErrorHandler` for a failed
+navigation (see the resolver rules in "Route anatomy").
 
 Inside phase 2, features hang off `:accountName` and `:accountName/:datasetName`, each through
 its own routes file:
@@ -95,7 +96,13 @@ its own routes file:
   resolvers run again; anything derived from them goes in a setter or `ngOnChanges`, never in a
   `router.events` / `NavigationEnd` handler, which runs before the router sets the new inputs.
 - A resolver that cannot produce its data redirects by emitting a `RedirectCommand`, usually
-  `navigationService.pageNotFoundRedirect()` from `map` or `catchError`. Keep `MaybeNull` out of
+  `navigationService.pageNotFoundRedirect()` from `map`, or from `catchError` for an error that
+  means "not found" (`pageNotFoundOnDatasetNotFound()` in `dataset-access.helpers.ts`). Any other
+  error propagates and fails the navigation: `pageLoadFailedOnInitialNavigation`
+  (`@common/helpers/navigation-error.helpers`, registered with `withNavigationErrorHandler`) shows
+  the page-load-failed view when the app's first page fails, and a later navigation that fails
+  leaves the user on the current page with the error link's toast. A catch-all that turns every
+  error into the 404 page tells a user whose connection dropped that the page does not exist. Keep `MaybeNull` out of
   `ResolveFn<T>` when `null` would only mean "redirected"; the router never hands a
   `RedirectCommand` to the component. A resolver built on another one passes its
   `RedirectCommand` through (`if (data instanceof RedirectCommand) return of(data);`) before its
@@ -183,7 +190,7 @@ The dev build (`npm run build`) does not optimize and its chunk sizes are not re
 | Relying on `webpackChunkName` to name chunks | Ignored by the esbuild builder; the file name decides |
 | `Number(param)`, `+param` or `numberAttribute` for a page in the URL | Each turns what the user typed into a number unchecked: `?page=abc` sent `NaN` to the API and the pager, and `?page=0` asked for page -1, which the API refused with a parse error before the app redirected home |
 | A guard that reads the URL string to decide where a route leads, such as the former account guard that redirected unless the last segment was a tab name | The URL holds user data too: an account named `datasets` passed the check and crashed the active-tab resolver. An empty-path `redirectTo` child decides it from the route config |
-| Leaving a malformed path parameter for the API to refuse | The error link shows the GraphQL input error as a toast, and the resolver then waits forever (`onlyCompleteData()` drops the failed result) or throws on partial data and lands on the home page; a flow-details URL with `abc` as the flow id did the latter |
+| Leaving a malformed path parameter for the API to refuse | The error link shows the GraphQL input error as a toast and the resolver's query fails, so the user gets a failed navigation instead of the 404 page; a flow-details URL with `abc` as the flow id threw on partial data and landed on the home page |
 | A guard or resolver that calls `navigateTo…()` and then returns `false`, `EMPTY` or `null` | Starts a second navigation from inside the first, which the router then cancels. A resolver returning `EMPTY` cancels the navigation on its own, so the 404 page appeared only because the second navigation won. A `UrlTree` or `RedirectCommand` redirects within the same navigation, and a spec can check where it leads |
 | Angular's default reuse of a component across path parameters, with each page refreshing itself on the new inputs | The router sets the new inputs only after `NavigationEnd`, and each page had to remember to react: settings forms built in `ngOnInit` kept the previous dataset's values and saved them to the new one, and the Access and History tabs reloaded from `NavigationEnd` with the previous dataset. `KamuRouteReuseStrategy` builds such pages afresh instead |
 

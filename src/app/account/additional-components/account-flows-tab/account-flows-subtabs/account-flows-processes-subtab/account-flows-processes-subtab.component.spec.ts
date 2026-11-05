@@ -244,6 +244,38 @@ describe("AccountFlowsProcessesSubtabComponent", () => {
         discardPeriodicTasks();
     }));
 
+    it("should show the cards of the next poll after a failed one", fakeAsync(async () => {
+        getAccountAllCardsSpy.mockReturnValueOnce(throwError(() => new Error("Server unreachable")));
+        getAccountAllCardsSpy.mockReturnValue(
+            of({ cards: mockAccountAllCardsWithWebhook, rollup: mockAccountFullRollup }),
+        );
+        fixture.detectChanges();
+        tick(0);
+        const processesSubtab = await loadHarness();
+        expect(await processesSubtab.isCardsBlockVisible()).toBe(false);
+
+        tick(environment.delay_polling_ms);
+
+        expect(await processesSubtab.isCardsBlockVisible()).toBe(true);
+        discardPeriodicTasks();
+    }));
+
+    it("should end the busy state of a card when the refresh after its action fails", fakeAsync(() => {
+        stubMethod(toastrService, "success");
+        vi.spyOn(datasetFlowsService, "datasetTriggerIngestFlow").mockReturnValue(of(true));
+        fixture.detectChanges();
+        tick(0);
+        getAccountAllCardsSpy.mockReturnValue(throwError(() => new Error("Server unreachable")));
+
+        component.updateNow(mockDatasetBasicsRootFragment);
+        expect(component.busyCardIds$.getValue().has(mockDatasetBasicsRootFragment.id)).toBe(true);
+        // Past the delay before the refresh and the debounce of its trigger
+        tick(component.TIMEOUT_REFRESH_FLOW + 300);
+
+        expect(component.busyCardIds$.getValue().has(mockDatasetBasicsRootFragment.id)).toBe(false);
+        discardPeriodicTasks();
+    }));
+
     it("should check to update process for card belongs the derivative dataset", fakeAsync(() => {
         const toastrSuccessSpy = stubMethod(toastrService, "success");
         const datasetTriggerTransformFlowSpy = vi

@@ -13,6 +13,7 @@ import { CombinedGraphQLErrors } from "@apollo/client/errors";
 import { Apollo } from "apollo-angular";
 import { ApolloTestingController, ApolloTestingModule } from "apollo-angular/testing";
 
+import { itFailsOnQueryErrors } from "@common/helpers/base-test.helpers.spec";
 import { AccessTokenApi } from "@api/access-token.api";
 import { AccountApi } from "@api/account.api";
 import {
@@ -150,4 +151,12 @@ describe("AccessTokenApi", () => {
         expect(subscription$.closed).toBe(true);
         flush();
     }));
+
+    itFailsOnQueryErrors([
+        {
+            method: "listing the access tokens",
+            request: () => service.listAccessTokens({ accountId: TEST_ACCOUNT_ID, page: PAGE, perPage: PER_PAGE }),
+            document: ListAccessTokensDocument,
+        },
+    ]);
 });

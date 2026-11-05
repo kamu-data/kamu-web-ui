@@ -19,7 +19,20 @@ import {
 import { takeUntilDestroyed } from "@angular/core/rxjs-interop";
 import { MatProgressBarModule } from "@angular/material/progress-bar";
 
-import { BehaviorSubject, combineLatest, map, Observable, of, startWith, Subject, switchMap, tap, timer } from "rxjs";
+import {
+    BehaviorSubject,
+    catchError,
+    combineLatest,
+    EMPTY,
+    map,
+    Observable,
+    of,
+    startWith,
+    Subject,
+    switchMap,
+    tap,
+    timer,
+} from "rxjs";
 
 import { NgbNavChangeEvent, NgbNavModule } from "@ng-bootstrap/ng-bootstrap";
 
@@ -176,7 +189,13 @@ export class AccountFlowsActivitySubtabComponent
                                 order: params.order,
                             }),
                             of([this.loggedUser]),
-                        ]);
+                        ]).pipe(
+                            // A failed poll keeps what is shown, and the next one tries again
+                            catchError(() => {
+                                this.loadingFlowsSubject$.next(false);
+                                return EMPTY;
+                            }),
+                        );
                     }),
                 ),
             ),

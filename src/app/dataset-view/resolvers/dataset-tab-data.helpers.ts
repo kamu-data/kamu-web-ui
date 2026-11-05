@@ -8,7 +8,7 @@
 import { inject } from "@angular/core";
 import { RedirectCommand } from "@angular/router";
 
-import { catchError, combineLatest, map, Observable, of, OperatorFunction } from "rxjs";
+import { combineLatest, map, Observable, OperatorFunction } from "rxjs";
 
 import { DatasetOverviewTabData } from "src/app/dataset-view/dataset-view.interface";
 import { DatasetService } from "src/app/dataset-view/dataset.service";
@@ -16,13 +16,12 @@ import { DatasetSubscriptionsService } from "src/app/dataset-view/dataset.subscr
 import { NavigationService } from "src/app/services/navigation.service";
 
 /**
- * Emits the current dataset with the user's permissions and the dataset overview, or the
- * page-not-found redirect when any of them fails. Call it from a resolver.
+ * Emits the current dataset with the user's permissions and the dataset overview, as the dataset
+ * view resolver stored them. Call it from a resolver.
  */
-export function requestOverviewTabData(): Observable<DatasetOverviewTabData | RedirectCommand> {
+export function requestOverviewTabData(): Observable<DatasetOverviewTabData> {
     const datasetService = inject(DatasetService);
     const datasetSubsService = inject(DatasetSubscriptionsService);
-    const navigationService = inject(NavigationService);
 
     return combineLatest([
         datasetService.datasetChanges,
@@ -34,7 +33,6 @@ export function requestOverviewTabData(): Observable<DatasetOverviewTabData | Re
             datasetPermissions,
             overviewUpdate,
         })),
-        catchError(() => of(navigationService.pageNotFoundRedirect())),
     );
 }
 

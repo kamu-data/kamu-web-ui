@@ -10,10 +10,9 @@ import { inject, Injectable } from "@angular/core";
 import { first, map, Observable } from "rxjs";
 
 import { ObservableQuery } from "@apollo/client/core";
-import { onlyCompleteData } from "apollo-angular";
 
 import { updateCacheHelper } from "@common/helpers/apollo-cache.helper";
-import { mutationData } from "@common/helpers/apollo-error.helpers";
+import { completeDataOrError, mutationData } from "@common/helpers/apollo-error.helpers";
 import { noCacheFetchPolicy } from "@common/helpers/data.helpers";
 import {
     CreateEnvVariableGQL,
@@ -45,7 +44,7 @@ export class EnvironmentVariablesApi {
         perPage: number;
     }): Observable<ListEnvVariablesQuery> {
         return this.listEnvVariablesGQL.watch({ variables: { ...params }, ...noCacheFetchPolicy }).valueChanges.pipe(
-            onlyCompleteData(),
+            completeDataOrError(),
             first(),
             map((result: ObservableQuery.Result<ListEnvVariablesQuery, "complete">) => {
                 return result.data;
@@ -132,7 +131,7 @@ export class EnvironmentVariablesApi {
         return this.exposedEnvVariableValueGQL
             .watch({ variables: { ...params }, ...noCacheFetchPolicy })
             .valueChanges.pipe(
-                onlyCompleteData(),
+                completeDataOrError(),
                 first(),
                 map((result: ObservableQuery.Result<ExposedEnvVariableValueQuery, "complete">) => {
                     return result.data;

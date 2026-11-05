@@ -9,10 +9,12 @@ import { TestBed } from "@angular/core/testing";
 
 import { ApolloTestingController, ApolloTestingModule } from "apollo-angular/testing";
 
+import { itFailsOnQueryErrors } from "@common/helpers/base-test.helpers.spec";
 import {
     SearchDatasetsAutocompleteDocument,
     SearchDatasetsOverviewDocument,
     SearchDatasetsOverviewQuery,
+    SemanticSearchDatasetsOverviewDocument,
 } from "@api/kamu.graphql.interface";
 import { mockAutoCompleteResponse, mockSearchOverviewResponse } from "@api/mock/search.mock";
 import { SEARCH_RESULTS_PER_PAGE, SearchApi } from "@api/search.api";
@@ -74,4 +76,22 @@ describe("SearchApi", () => {
             data: mockSearchOverviewResponse,
         });
     });
+
+    itFailsOnQueryErrors([
+        {
+            method: "searching the datasets overview",
+            request: () => service.overviewDatasetSearch(""),
+            document: SearchDatasetsOverviewDocument,
+        },
+        {
+            method: "searching the datasets overview semantically",
+            request: () => service.overviewDatasetSemanticSearch("weather"),
+            document: SemanticSearchDatasetsOverviewDocument,
+        },
+        {
+            method: "autocompleting the dataset search",
+            request: () => service.autocompleteDatasetSearch("a"),
+            document: SearchDatasetsAutocompleteDocument,
+        },
+    ]);
 });

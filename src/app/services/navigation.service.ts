@@ -254,6 +254,16 @@ export class NavigationService {
     }
 
     /**
+     * Shows the page-load-failed view in place of a page whose navigation failed, and keeps the
+     * requested URL in the address bar, so reloading the browser page requests it again.
+     */
+    public pageLoadFailedRedirect(): RedirectCommand {
+        return new RedirectCommand(this.router.createUrlTree([ProjectLinks.URL_PAGE_LOAD_FAILED]), {
+            skipLocationChange: true,
+        });
+    }
+
+    /**
      * Shows the page-not-found view from a resolver, as part of the navigation being resolved,
      * and keeps the requested URL in the address bar.
      */

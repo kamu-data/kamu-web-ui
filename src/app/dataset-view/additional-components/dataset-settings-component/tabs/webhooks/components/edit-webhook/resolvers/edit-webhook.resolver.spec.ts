@@ -97,14 +97,12 @@ describe("editWebhookResolverFn", () => {
         expectPageNotFoundRedirect(data);
     });
 
-    it("should redirect to page not found when the webhook cannot be loaded", async () => {
+    it("should propagate a failure to load the webhook", async () => {
         vi.spyOn(datasetWebhooksService, "datasetWebhookSubscriptionById").mockReturnValue(
-            throwError(() => new Error("fail")),
+            throwError(() => new Error("Server unreachable")),
         );
 
-        const data = await resolve();
-
-        expectPageNotFoundRedirect(data);
+        await expect(resolve()).rejects.toThrow("Server unreachable");
     });
 
     it("should redirect to page not found without loading the webhook when the user may not view webhooks", async () => {

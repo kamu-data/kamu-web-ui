@@ -9,7 +9,7 @@ import { provideHttpClient } from "@angular/common/http";
 import { provideHttpClientTesting } from "@angular/common/http/testing";
 import { ComponentFixture, TestBed } from "@angular/core/testing";
 
-import { of } from "rxjs";
+import { of, throwError } from "rxjs";
 
 import { ApolloTestingModule } from "apollo-angular/testing";
 import { provideToastr } from "ngx-toastr";
@@ -74,5 +74,21 @@ describe("AccountSettingsComponent", () => {
         fixture.detectChanges();
 
         expect(findElementByDataTestId(fixture, Elements.UserNameLink)).toBeFalsy();
+    });
+
+    it("should show the user signed in next after a failed request for the account", () => {
+        vi.spyOn(accountEmailService, "fetchAccountWithEmail").mockReturnValueOnce(
+            throwError(() => new Error("Server unreachable")),
+        );
+        fixture.detectChanges();
+        expect(findElementByDataTestId(fixture, Elements.UserNameLink)).toBeFalsy();
+
+        loggedUserService.changeUser(mockAccountDetails);
+        fixture.detectChanges();
+
+        const userNameLinKElement: HTMLElement = getElementByDataTestId(fixture, Elements.UserNameLink);
+        expect(userNameLinKElement.innerText).toEqual(
+            `${mockAccountDetails.displayName} (${mockAccountDetails.accountName})`,
+        );
     });
 });

@@ -8,7 +8,7 @@
 import { provideHttpClient } from "@angular/common/http";
 import { ComponentFixture, fakeAsync, flush, TestBed, tick } from "@angular/core/testing";
 
-import { of, throwError } from "rxjs";
+import { of, Subject, throwError } from "rxjs";
 
 import { NgbTypeaheadSelectItemEvent } from "@ng-bootstrap/ng-bootstrap";
 import { Apollo } from "apollo-angular";
@@ -105,6 +105,28 @@ describe("SearchAndSchemasSectionComponent", () => {
 
         expect(searchApiAutocompleteDatasetSearchSpy).toHaveBeenCalledWith(SEARCH_DATASET);
         flush();
+    }));
+
+    it("should offer no suggestions for a failed search and still search the next term", fakeAsync(() => {
+        const MOCK_AUTOCOMPLETE_ITEM: DatasetAutocompleteItem = {
+            __typename: TypeNames.datasetType,
+            dummy: false,
+            dataset: mockDatasetBasicsDerivedFragment,
+        };
+        const autocompleteDatasetSearchSpy = vi.spyOn(searchApi, "autocompleteDatasetSearch");
+        autocompleteDatasetSearchSpy.mockReturnValueOnce(throwError(() => new Error("Server unreachable")));
+        autocompleteDatasetSearchSpy.mockReturnValue(of([MOCK_AUTOCOMPLETE_ITEM]));
+        const text$ = new Subject<string>();
+        const results: (readonly DatasetAutocompleteItem[])[] = [];
+        component.search(text$).subscribe((items) => results.push(items));
+
+        text$.next("fail");
+        tick(AppValues.SHORT_DELAY_MS);
+        expect(results).toEqual([[]]);
+
+        text$.next("mockDatasetName");
+        tick(AppValues.SHORT_DELAY_MS);
+        expect(results).toEqual([[], [MOCK_AUTOCOMPLETE_ITEM]]);
     }));
 
     it("should clear search input", async () => {

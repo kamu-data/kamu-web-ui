@@ -8,7 +8,7 @@
 import { inject } from "@angular/core";
 import { RedirectCommand } from "@angular/router";
 
-import { catchError, combineLatest, first, map, Observable, of, switchMap, throwError } from "rxjs";
+import { catchError, combineLatest, first, map, Observable, of, OperatorFunction, switchMap, throwError } from "rxjs";
 
 import { DatasetNotFoundError } from "@common/values/errors";
 import { DatasetKind } from "@api/kamu.graphql.interface";
@@ -26,18 +26,25 @@ import { NavigationService } from "src/app/services/navigation.service";
 export function requestDatasetWithPermissions(datasetInfo: DatasetInfo): Observable<DatasetViewData | RedirectCommand> {
     const datasetService = inject(DatasetService);
     const datasetSubsService = inject(DatasetSubscriptionsService);
-    const navigationService = inject(NavigationService);
 
     return datasetService.requestDatasetBasicDataWithPermissions(datasetInfo).pipe(
         switchMap(() =>
             combineLatest([datasetService.datasetChanges, datasetSubsService.permissionsChanges]).pipe(first()),
         ),
         map(([datasetBasics, datasetPermissions]) => ({ datasetBasics, datasetPermissions })),
-        catchError((error: unknown) =>
-            error instanceof DatasetNotFoundError
-                ? of(navigationService.pageNotFoundRedirect())
-                : throwError(() => error),
-        ),
+        pageNotFoundOnDatasetNotFound(),
+    );
+}
+
+/**
+ * Replaces a `DatasetNotFoundError` with the page-not-found redirect; other errors propagate, so
+ * a failed request is not reported as a missing dataset. Call it from a resolver.
+ */
+export function pageNotFoundOnDatasetNotFound<T>(): OperatorFunction<T, T | RedirectCommand> {
+    const navigationService = inject(NavigationService);
+
+    return catchError((error: unknown) =>
+        error instanceof DatasetNotFoundError ? of(navigationService.pageNotFoundRedirect()) : throwError(() => error),
     );
 }
 

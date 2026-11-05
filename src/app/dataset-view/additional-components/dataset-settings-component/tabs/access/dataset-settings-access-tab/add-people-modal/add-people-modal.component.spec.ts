@@ -9,7 +9,7 @@ import { provideHttpClient } from "@angular/common/http";
 import { provideHttpClientTesting } from "@angular/common/http/testing";
 import { ComponentFixture, fakeAsync, flush, TestBed, tick } from "@angular/core/testing";
 
-import { of } from "rxjs";
+import { of, Subject, throwError } from "rxjs";
 
 import { NgbActiveModal, NgbTypeaheadSelectItemEvent } from "@ng-bootstrap/ng-bootstrap";
 import { Apollo } from "apollo-angular";
@@ -81,6 +81,26 @@ describe("AddPeopleModalComponent", () => {
         tick(AppValues.SHORT_DELAY_MS);
         expect(searchCollaboratorSpy).toHaveBeenCalledTimes(1);
         flush();
+    }));
+
+    it("should offer no accounts for a failed search and still search the next term", fakeAsync(() => {
+        const accounts = mockDatasetSearchCollaboratorQuery.search.nameLookup.nodes;
+        const searchCollaboratorSpy = vi.spyOn(datasetCollaborationsService, "searchCollaborator");
+        searchCollaboratorSpy.mockReturnValueOnce(throwError(() => new Error("Server unreachable")));
+        searchCollaboratorSpy.mockReturnValue(of(accounts));
+        const text$ = new Subject<string>();
+        const results: (readonly AccountFragment[])[] = [];
+        component.search(text$).subscribe((result) => results.push(result));
+
+        text$.next("fail");
+        tick(AppValues.SHORT_DELAY_MS);
+        expect(results).toEqual([[]]);
+        expect(component.searching).toBe(false);
+
+        text$.next("test");
+        tick(AppValues.SHORT_DELAY_MS);
+        expect(results).toEqual([[], accounts]);
+        expect(component.searching).toBe(false);
     }));
 
     it("should check save changes", () => {

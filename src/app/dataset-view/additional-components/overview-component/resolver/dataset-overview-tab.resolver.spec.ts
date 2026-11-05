@@ -7,11 +7,11 @@
 
 import { TestBed } from "@angular/core/testing";
 
-import { Observable, of, throwError } from "rxjs";
+import { of } from "rxjs";
 
 import { Apollo } from "apollo-angular";
 
-import { expectPageNotFoundRedirect, runResolver } from "@common/helpers/base-test.helpers.spec";
+import { runResolver } from "@common/helpers/base-test.helpers.spec";
 
 import { mockOverviewUpdate } from "src/app/dataset-view/additional-components/data-tabs.mock";
 import { datasetOverviewTabResolverFn } from "src/app/dataset-view/additional-components/overview-component/resolver/dataset-overview-tab.resolver";
@@ -31,24 +31,12 @@ describe("datasetOverviewTabResolverFn", () => {
         datasetSubsService = TestBed.inject(DatasetSubscriptionsService);
     });
 
-    function failingStream(): Observable<never> {
-        return throwError(() => new Error("fail"));
-    }
-
-    function mockStreams(failing?: "datasetChanges" | "permissionsChanges" | "overviewChanges"): void {
-        vi.spyOn(datasetService, "datasetChanges", "get").mockReturnValue(
-            failing === "datasetChanges" ? failingStream() : of(mockDatasetBasicsRootFragment),
-        );
-        vi.spyOn(datasetSubsService, "permissionsChanges", "get").mockReturnValue(
-            failing === "permissionsChanges" ? failingStream() : of(mockFullPowerDatasetPermissionsFragment),
-        );
-        vi.spyOn(datasetSubsService, "overviewChanges", "get").mockReturnValue(
-            failing === "overviewChanges" ? failingStream() : of(mockOverviewUpdate),
-        );
-    }
-
     it("should resolve the dataset, its permissions and the overview", async () => {
-        mockStreams();
+        vi.spyOn(datasetService, "datasetChanges", "get").mockReturnValue(of(mockDatasetBasicsRootFragment));
+        vi.spyOn(datasetSubsService, "permissionsChanges", "get").mockReturnValue(
+            of(mockFullPowerDatasetPermissionsFragment),
+        );
+        vi.spyOn(datasetSubsService, "overviewChanges", "get").mockReturnValue(of(mockOverviewUpdate));
 
         const data = await runResolver(datasetOverviewTabResolverFn);
 
@@ -56,16 +44,6 @@ describe("datasetOverviewTabResolverFn", () => {
             datasetBasics: mockDatasetBasicsRootFragment,
             datasetPermissions: mockFullPowerDatasetPermissionsFragment,
             overviewUpdate: mockOverviewUpdate,
-        });
-    });
-
-    (["datasetChanges", "permissionsChanges", "overviewChanges"] as const).forEach((failing) => {
-        it(`should redirect to page not found when ${failing} fails`, async () => {
-            mockStreams(failing);
-
-            const data = await runResolver(datasetOverviewTabResolverFn);
-
-            expectPageNotFoundRedirect(data);
         });
     });
 });

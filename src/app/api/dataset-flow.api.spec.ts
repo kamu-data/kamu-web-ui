@@ -11,12 +11,14 @@ import { Apollo } from "apollo-angular";
 import { ApolloTestingController, ApolloTestingModule } from "apollo-angular/testing";
 
 import { requireValue } from "@common/helpers/app.helpers";
+import { itFailsOnQueryErrors } from "@common/helpers/base-test.helpers.spec";
 import { DatasetFlowApi } from "@api/dataset-flow.api";
 import {
     CancelFlowRunDocument,
     CancelFlowRunMutation,
     DatasetFlowsInitiatorsDocument,
     DatasetFlowsInitiatorsQuery,
+    DatasetFlowsProcessesDocument,
     DatasetFlowType,
     DatasetPauseFlowsDocument,
     DatasetPauseFlowsMutation,
@@ -454,4 +456,46 @@ describe("DatasetFlowApi", () => {
             data: mockDatasetFlowsInitiatorsQuery,
         });
     });
+
+    itFailsOnQueryErrors([
+        {
+            method: "getting the dataset flow processes",
+            request: () => service.getDatasetFlowsProcesses({ datasetId: TEST_DATASET_ID }),
+            document: DatasetFlowsProcessesDocument,
+        },
+        {
+            method: "getting the dataset flow configs",
+            request: () =>
+                service.getDatasetFlowConfigs({ datasetId: TEST_DATASET_ID, datasetFlowType: DatasetFlowType.Ingest }),
+            document: GetDatasetFlowConfigsDocument,
+        },
+        {
+            method: "getting the dataset flow trigger",
+            request: () =>
+                service.getDatasetFlowTrigger({ datasetId: TEST_DATASET_ID, datasetFlowType: DatasetFlowType.Ingest }),
+            document: GetDatasetFlowTriggerDocument,
+        },
+        {
+            method: "listing the dataset flows",
+            request: () =>
+                service.getDatasetListFlows({
+                    datasetId: TEST_DATASET_ID,
+                    page: MOCK_PAGE,
+                    perPageTable: MOCK_PER_PAGE,
+                    perPageTiles: MOCK_PER_PAGE,
+                    filters: MOCK_FILTERS,
+                }),
+            document: GetDatasetListFlowsDocument,
+        },
+        {
+            method: "getting the flow by id",
+            request: () => service.getFlowById({ datasetId: TEST_DATASET_ID, flowId: MOCK_FLOW_ID }),
+            document: GetFlowByIdDocument,
+        },
+        {
+            method: "getting the dataset flow initiators",
+            request: () => service.getDatasetFlowsInitiators(TEST_DATASET_ID),
+            document: DatasetFlowsInitiatorsDocument,
+        },
+    ]);
 });

@@ -9,7 +9,7 @@ import { provideHttpClient } from "@angular/common/http";
 import { provideHttpClientTesting } from "@angular/common/http/testing";
 import { TestBed } from "@angular/core/testing";
 
-import { of } from "rxjs";
+import { firstValueFrom, of, throwError } from "rxjs";
 
 import { Apollo } from "apollo-angular";
 import { provideToastr } from "ngx-toastr";
@@ -73,5 +73,22 @@ describe("DatasetAsCollectionService", () => {
             expect(getDatasetAsCollectionSpy).toHaveBeenCalledTimes(1);
             expect(data.headChanged).toEqual(false);
         });
+    });
+
+    it("should load the next page requested after a failed one", async () => {
+        const PER_PAGE = 20;
+        const getDatasetAsCollectionSpy = vi.spyOn(datasetApi, "getDatasetAsCollection");
+        getDatasetAsCollectionSpy.mockReturnValueOnce(throwError(() => new Error("Server unreachable")));
+        getDatasetAsCollectionSpy.mockReturnValue(of(mockDatasetAsCollectionQuery));
+        const results: CollectionEntriesResult[] = [];
+        service.loadCollectionInfo(TEST_DATASET_ID, PER_PAGE).subscribe((data) => results.push(data));
+
+        service.loadCollectionDataChange({ path: "/", page: 1, headChanged: false });
+        expect(results).toEqual([]);
+        expect(await firstValueFrom(service.loadingCollectionChanges)).toBe(false);
+
+        service.loadCollectionDataChange({ path: "/folder", page: 1, headChanged: false });
+        expect(results.map((data) => data.path)).toEqual(["/folder"]);
+        expect(getDatasetAsCollectionSpy).toHaveBeenCalledTimes(2);
     });
 });

@@ -11,13 +11,14 @@ import { provideHttpClientTesting } from "@angular/common/http/testing";
 import { ComponentFixture, discardPeriodicTasks, fakeAsync, TestBed, tick } from "@angular/core/testing";
 import { ActivatedRoute } from "@angular/router";
 
-import { of } from "rxjs";
+import { of, throwError } from "rxjs";
 
 import { NgbNavChangeEvent } from "@ng-bootstrap/ng-bootstrap";
 import { Apollo } from "apollo-angular";
 import { provideToastr } from "ngx-toastr";
 import { Mock } from "vitest";
 
+import { environment } from "@env/environment";
 import { PagePastEndHarness } from "@common/components/page-past-end/page-past-end.harness";
 import { requireValue } from "@common/helpers/app.helpers";
 import { registerMatSvgIcons, setComponentInput, stubMethod } from "@common/helpers/base-test.helpers.spec";
@@ -146,6 +147,32 @@ describe("AccountFlowsActivitySubtabComponent", () => {
             component.accountFlowsData.activeNav,
             component.accountFlowsData.flowGroup,
         );
+        discardPeriodicTasks();
+    }));
+
+    it("should end the loading and show the flow runs of the next poll after a failed one", fakeAsync(async () => {
+        const pastEndData = structuredClone(mockFlowsTableData);
+        pastEndData.connectionDataForTable.nodes = [];
+        pastEndData.connectionDataForTable.pageInfo.currentPage = 98;
+        pastEndData.connectionDataForTable.pageInfo.totalPages = 3;
+        const getAccountListFlowsSpy = vi.spyOn(accountService, "getAccountListFlows");
+        getAccountListFlowsSpy.mockReturnValueOnce(throwError(() => new Error("Server unreachable")));
+        getAccountListFlowsSpy.mockReturnValue(of(pastEndData));
+        const loadingStates: boolean[] = [];
+        component.loadingFlows$.subscribe((loading) => loadingStates.push(loading));
+        component.refreshFlow();
+        fixture.detectChanges();
+
+        component.onSearchByFiltersChange(null);
+        tick();
+        const loader = TestbedHarnessEnvironment.loader(fixture);
+        expect(loadingStates).toEqual([false, true, false]);
+        expect(await loader.getHarnessOrNull(PagePastEndHarness)).toBeNull();
+
+        tick(environment.delay_polling_ms);
+
+        expect(await loader.getHarnessOrNull(PagePastEndHarness)).not.toBeNull();
+        expect(getAccountListFlowsSpy).toHaveBeenCalledTimes(2);
         discardPeriodicTasks();
     }));
 

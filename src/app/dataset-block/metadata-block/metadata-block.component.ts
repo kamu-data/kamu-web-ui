@@ -10,13 +10,14 @@ import { ChangeDetectionStrategy, Component, Input, OnChanges, OnInit } from "@a
 import { takeUntilDestroyed } from "@angular/core/rxjs-interop";
 import { MatSlideToggleChange, MatSlideToggleModule } from "@angular/material/slide-toggle";
 
-import { distinctUntilChanged, Observable, ReplaySubject, switchMap } from "rxjs";
+import { catchError, distinctUntilChanged, EMPTY, Observable, ReplaySubject, switchMap, throwError } from "rxjs";
 
 import { BaseDatasetDataComponent } from "@common/components/base-dataset-data.component";
 import { isEqual } from "@common/helpers/app.helpers";
 import { enumListFromParam, positiveIntegerFromParam, queryParamValue } from "@common/helpers/url-params.helpers";
 import RoutingResolvers from "@common/resolvers/routing-resolvers";
 import { ValidationPatterns } from "@common/validation/patterns";
+import { DatasetNotFoundError } from "@common/values/errors";
 import { MetadataBlocksFilter } from "@api/kamu.graphql.interface";
 import { MaybeUndefined } from "@interface/app.types";
 import { DatasetInfo } from "@interface/navigation.interface";
@@ -85,12 +86,15 @@ export class MetadataBlockComponent extends BaseDatasetDataComponent implements 
         distinctUntilChanged<BlockListRequest>(isEqual),
         // A newer page or filter cancels the request still running, so its result can't replace the newer one
         switchMap(({ page, filter }) =>
-            this.datasetService.getDatasetHistory(
-                this.getDatasetInfoFromUrl(),
-                MetadataBlockComponent.BLOCKS_PER_PAGE,
-                page,
-                filter,
-            ),
+            this.datasetService
+                .getDatasetHistory(this.getDatasetInfoFromUrl(), MetadataBlockComponent.BLOCKS_PER_PAGE, page, filter)
+                // A failed request keeps the list shown, and the next page or filter loads again; a deleted
+                // dataset still reaches the error handler, which shows the page-not-found view
+                .pipe(
+                    catchError((error: unknown) =>
+                        error instanceof DatasetNotFoundError ? throwError(() => error) : EMPTY,
+                    ),
+                ),
         ),
     );
 

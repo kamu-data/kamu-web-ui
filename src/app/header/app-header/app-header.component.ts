@@ -24,8 +24,8 @@ import { MatMenuModule } from "@angular/material/menu";
 import { MatProgressSpinnerModule } from "@angular/material/progress-spinner";
 import { ActivatedRoute, NavigationEnd, ParamMap, Router, RouterLink } from "@angular/router";
 
-import { Observable, OperatorFunction } from "rxjs";
-import { debounceTime, distinctUntilChanged, filter, finalize, switchMap, take, tap } from "rxjs/operators";
+import { Observable, of, OperatorFunction } from "rxjs";
+import { catchError, debounceTime, distinctUntilChanged, filter, finalize, switchMap, take, tap } from "rxjs/operators";
 
 import { NgbHighlight, NgbTypeahead, NgbTypeaheadSelectItemEvent } from "@ng-bootstrap/ng-bootstrap";
 
@@ -159,6 +159,8 @@ export class AppHeaderComponent extends BaseComponent implements OnInit {
             switchMap((term: string) =>
                 this.appSearchAPI.autocompleteDatasetSearch(term).pipe(
                     take(1),
+                    // A failed search offers no suggestions; the next term searches again
+                    catchError(() => of([])),
                     finalize(() => {
                         this.searching = false;
                         this.cdr.detectChanges();

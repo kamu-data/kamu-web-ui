@@ -10,6 +10,7 @@ import { TestBed } from "@angular/core/testing";
 import { Apollo } from "apollo-angular";
 import { ApolloTestingController, ApolloTestingModule } from "apollo-angular/testing";
 
+import { itFailsOnQueryErrors } from "@common/helpers/base-test.helpers.spec";
 import { EnvironmentVariablesApi } from "@api/environment-variables.api";
 import {
     CreateEnvVariableDocument,
@@ -271,4 +272,28 @@ describe("EnvironmentVariablesApi", () => {
             data: mockExposedEnvVariableValueQuery,
         });
     });
+
+    itFailsOnQueryErrors([
+        {
+            method: "listing the environment variables",
+            request: () =>
+                service.listEnvironmentVariables({
+                    accountName: TEST_ACCOUNT_NAME,
+                    datasetName: TEST_DATASET_NAME,
+                    page: MOCK_PAGE,
+                    perPage: MOCK_PER_PAGE,
+                }),
+            document: ListEnvVariablesDocument,
+        },
+        {
+            method: "exposing the environment variable value",
+            request: () =>
+                service.exposedEnvVariableValue({
+                    accountName: TEST_ACCOUNT_NAME,
+                    datasetName: TEST_DATASET_NAME,
+                    datasetEnvVarKey: MOCK_VAR_KEY,
+                }),
+            document: ExposedEnvVariableValueDocument,
+        },
+    ]);
 });

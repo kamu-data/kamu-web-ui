@@ -8,7 +8,7 @@
 import { TestBed } from "@angular/core/testing";
 import { RedirectCommand } from "@angular/router";
 
-import { of, throwError } from "rxjs";
+import { of } from "rxjs";
 
 import { Apollo } from "apollo-angular";
 
@@ -60,14 +60,6 @@ describe("metadataTransformationTabResolverFn", () => {
 
     it("should redirect to page not found for a root dataset", async () => {
         const data = await resolve(mockDatasetBasicsRootFragment);
-
-        expectPageNotFoundRedirect(data);
-    });
-
-    it("should redirect to page not found when the dataset cannot be loaded", async () => {
-        vi.spyOn(datasetService, "datasetChanges", "get").mockReturnValue(throwError(() => new Error("fail")));
-
-        const data = await runResolver(metadataTransformationTabResolverFn);
 
         expectPageNotFoundRedirect(data);
     });

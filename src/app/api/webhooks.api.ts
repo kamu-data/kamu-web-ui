@@ -10,9 +10,8 @@ import { inject, Injectable } from "@angular/core";
 import { first, map, Observable } from "rxjs";
 
 import { ObservableQuery } from "@apollo/client/core";
-import { onlyCompleteData } from "apollo-angular";
 
-import { mutationData } from "@common/helpers/apollo-error.helpers";
+import { completeDataOrError, mutationData } from "@common/helpers/apollo-error.helpers";
 import { noCacheFetchPolicy } from "@common/helpers/data.helpers";
 import {
     DatasetWebhookByIdGQL,
@@ -53,7 +52,7 @@ export class WebhooksApi {
 
     public webhookEventTypes(): Observable<WebhookEventTypesQuery> {
         return this.webhookEventTypesGQL.watch().valueChanges.pipe(
-            onlyCompleteData(),
+            completeDataOrError(),
             first(),
             map((result: ObservableQuery.Result<WebhookEventTypesQuery, "complete">) => {
                 return result.data;
@@ -65,7 +64,7 @@ export class WebhooksApi {
         return this.datasetWebhookSubscriptionsGQL
             .watch({ variables: { datasetId }, ...noCacheFetchPolicy })
             .valueChanges.pipe(
-                onlyCompleteData(),
+                completeDataOrError(),
                 first(),
                 map((result: ObservableQuery.Result<DatasetWebhookSubscriptionsQuery, "complete">) => {
                     return result.data;
@@ -139,7 +138,7 @@ export class WebhooksApi {
         return this.datasetWebhookSubscriptionByIdGQL
             .watch({ variables: { ...params }, ...noCacheFetchPolicy })
             .valueChanges.pipe(
-                onlyCompleteData(),
+                completeDataOrError(),
                 first(),
                 map((result: ObservableQuery.Result<DatasetWebhookByIdQuery, "complete">) => {
                     return result.data;

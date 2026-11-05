@@ -8,7 +8,7 @@
 import { inject } from "@angular/core";
 import { ActivatedRouteSnapshot, RedirectCommand, ResolveFn } from "@angular/router";
 
-import { catchError, map, of, switchMap } from "rxjs";
+import { map, of, switchMap } from "rxjs";
 
 import { requireValue } from "@common/helpers/app.helpers";
 
@@ -38,7 +38,6 @@ export const editWebhookResolverFn: ResolveFn<EditWebhooksType> = (route: Activa
                             ? { datasetBasics: data.datasetBasics, subscription }
                             : navigationService.pageNotFoundRedirect(),
                     ),
-                    catchError(() => of(navigationService.pageNotFoundRedirect())),
                 );
         }),
     );

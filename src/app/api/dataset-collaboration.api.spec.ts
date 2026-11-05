@@ -10,6 +10,7 @@ import { TestBed } from "@angular/core/testing";
 import { Apollo } from "apollo-angular";
 import { ApolloTestingController, ApolloTestingModule } from "apollo-angular/testing";
 
+import { itFailsOnQueryErrors } from "@common/helpers/base-test.helpers.spec";
 import { DatasetCollaborationApi } from "@api/dataset-collaboration.api";
 import {
     DatasetAccessRole,
@@ -160,4 +161,23 @@ describe("DatasetCollaborationApi", () => {
             data: mockDatasetUserRoleQuery,
         });
     });
+
+    itFailsOnQueryErrors([
+        {
+            method: "listing the collaborators",
+            request: () => service.listCollaborators({ datasetId: TEST_DATASET_ID }),
+            document: DatasetListCollaboratorsDocument,
+        },
+        {
+            method: "searching a collaborator",
+            request: () =>
+                service.searchCollaborator({ query: "bmi", filters: { byAccount: null }, page: 1, perPage: 10 }),
+            document: SearchCollaboratorDocument,
+        },
+        {
+            method: "getting the dataset user role",
+            request: () => service.getDatasetUserRole(TEST_DATASET_ID),
+            document: DatasetUserRoleDocument,
+        },
+    ]);
 });

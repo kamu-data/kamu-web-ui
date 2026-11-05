@@ -7,7 +7,7 @@
 
 import { inject, Injectable } from "@angular/core";
 
-import { BehaviorSubject, filter, map, Observable, switchMap } from "rxjs";
+import { BehaviorSubject, catchError, EMPTY, filter, map, Observable, switchMap } from "rxjs";
 
 import { requireValue, trackBusy } from "@common/helpers/app.helpers";
 import { DatasetApi } from "@api/dataset.api";
@@ -82,6 +82,8 @@ export class DatasetAsCollectionService {
                         connection: data,
                         headChanged: params.headChanged,
                     })),
+                    // A failed page keeps what is shown, and the next folder or scroll loads again
+                    catchError(() => EMPTY),
                 );
             }),
         );

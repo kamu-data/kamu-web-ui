@@ -12,7 +12,12 @@ import { of, throwError } from "rxjs";
 import { Apollo } from "apollo-angular";
 
 import { requireValue } from "@common/helpers/app.helpers";
-import { expectPageNotFoundRedirect, routeSnapshot, runResolver } from "@common/helpers/base-test.helpers.spec";
+import {
+    expectPageNotFoundRedirect,
+    routeSnapshot,
+    runResolver,
+    stubMethod,
+} from "@common/helpers/base-test.helpers.spec";
 import {
     mockGetMetadataBlockQuery,
     mockMetadataBlockByHash,
@@ -87,15 +92,13 @@ describe("blockMetadataResolverFn", () => {
         expect(emitDownstreamsCountChangedSpy).not.toHaveBeenCalled();
     });
 
-    it("should redirect to page not found when the block cannot be loaded", async () => {
-        vi.spyOn(blockService, "requestMetadataBlock").mockReturnValue(throwError(() => new Error("fail")));
-        const emitDownstreamsCountChangedSpy = vi
-            .spyOn(datasetService, "emitDownstreamsCountChanged")
-            .mockImplementation(() => {});
+    it("should propagate a failure to load the block", async () => {
+        vi.spyOn(blockService, "requestMetadataBlock").mockReturnValue(
+            throwError(() => new Error("Server unreachable")),
+        );
+        const emitDownstreamsCountChangedSpy = stubMethod(datasetService, "emitDownstreamsCountChanged");
 
-        const data = await runResolver(blockMetadataResolverFn, route);
-
-        expectPageNotFoundRedirect(data);
+        await expect(runResolver(blockMetadataResolverFn, route)).rejects.toThrow("Server unreachable");
         expect(emitDownstreamsCountChangedSpy).not.toHaveBeenCalled();
     });
 });

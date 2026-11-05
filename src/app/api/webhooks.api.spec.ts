@@ -9,6 +9,7 @@ import { fakeAsync, flush, TestBed, tick } from "@angular/core/testing";
 
 import { ApolloTestingController, ApolloTestingModule } from "apollo-angular/testing";
 
+import { itFailsOnQueryErrors } from "@common/helpers/base-test.helpers.spec";
 import {
     DatasetWebhookByIdDocument,
     DatasetWebhookByIdQuery,
@@ -253,4 +254,22 @@ describe("WebhooksApi", () => {
             data: mockDatasetWebhookRotateSecretMutation,
         });
     });
+
+    itFailsOnQueryErrors([
+        {
+            method: "getting the webhook event types",
+            request: () => service.webhookEventTypes(),
+            document: WebhookEventTypesDocument,
+        },
+        {
+            method: "listing the dataset webhook subscriptions",
+            request: () => service.datasetWebhookSubscriptions(DATASET_ID),
+            document: DatasetWebhookSubscriptionsDocument,
+        },
+        {
+            method: "getting the dataset webhook subscription by id",
+            request: () => service.datasetWebhookSubscriptionById({ datasetId: DATASET_ID, id: MOCK_SUBSCRIPTION_ID }),
+            document: DatasetWebhookByIdDocument,
+        },
+    ]);
 });

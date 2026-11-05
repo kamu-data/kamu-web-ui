@@ -11,7 +11,17 @@ import { MatDividerModule } from "@angular/material/divider";
 import { MatIconModule } from "@angular/material/icon";
 import { MatProgressSpinnerModule } from "@angular/material/progress-spinner";
 
-import { debounceTime, distinctUntilChanged, finalize, Observable, OperatorFunction, switchMap, tap } from "rxjs";
+import {
+    catchError,
+    debounceTime,
+    distinctUntilChanged,
+    finalize,
+    Observable,
+    of,
+    OperatorFunction,
+    switchMap,
+    tap,
+} from "rxjs";
 
 import { NgbActiveModal, NgbTypeahead, NgbTypeaheadSelectItemEvent } from "@ng-bootstrap/ng-bootstrap";
 
@@ -76,6 +86,8 @@ export class AddPeopleModalComponent extends BaseComponent {
                         perPage: this.DEFAULT_PER_PAGE,
                     })
                     .pipe(
+                        // A failed search offers no accounts; the next term searches again
+                        catchError(() => of([])),
                         finalize(() => {
                             this.searching = false;
                             this.cdr.detectChanges();

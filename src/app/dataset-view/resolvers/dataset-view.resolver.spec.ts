@@ -12,6 +12,7 @@ import { of, throwError } from "rxjs";
 import { Apollo } from "apollo-angular";
 
 import { expectPageNotFoundRedirect, routeSnapshot, runResolver } from "@common/helpers/base-test.helpers.spec";
+import { DatasetNotFoundError } from "@common/values/errors";
 import { TEST_ACCOUNT_NAME, TEST_DATASET_NAME } from "@api/mock/dataset.mock";
 
 import { DatasetViewTypeEnum } from "src/app/dataset-view/dataset-view.interface";
@@ -64,11 +65,21 @@ describe("datasetViewResolverFn", () => {
         });
     });
 
-    it("should redirect to page not found when the dataset cannot be loaded", async () => {
-        vi.spyOn(datasetService, "requestDatasetMainData").mockReturnValue(throwError(() => new Error("failed")));
+    it("should redirect to page not found when the dataset does not exist", async () => {
+        vi.spyOn(datasetService, "requestDatasetMainData").mockReturnValue(
+            throwError(() => new DatasetNotFoundError()),
+        );
 
         const data = await runResolver(datasetViewResolverFn, route, url);
 
         expectPageNotFoundRedirect(data);
+    });
+
+    it("should propagate any other failure to load the dataset", async () => {
+        vi.spyOn(datasetService, "requestDatasetMainData").mockReturnValue(
+            throwError(() => new Error("Server unreachable")),
+        );
+
+        await expect(runResolver(datasetViewResolverFn, route, url)).rejects.toThrow("Server unreachable");
     });
 });

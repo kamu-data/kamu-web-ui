@@ -8,6 +8,8 @@
 import { TestBed } from "@angular/core/testing";
 
 import { readSchemaOf, requireDatasetSchema } from "@common/components/edit-schema-table/schema-editor.mock";
+import { parseYamlAs } from "@common/helpers/untyped-boundary.helpers";
+import { SetLicense } from "@api/kamu.graphql.interface";
 import { DataSchemaField, OdfTypes } from "@interface/dataset-schema.interface";
 
 import {
@@ -37,6 +39,68 @@ describe("TemplatesYamlEventsService", () => {
                 `  description: mock description\n` +
                 `  keywords:\n` +
                 `    - mock-keyword\n`,
+        );
+    });
+
+    /** Text YAML would read as syntax if it were written unquoted. */
+    const TRICKY_TEXTS = [
+        "Prices: daily close",
+        "#hashtag",
+        "- starts like a list item",
+        "yes",
+        "123",
+        "null",
+        'it\'s "quoted"',
+        "first line\nsecond line",
+        "  leading and trailing spaces  ",
+        "{ looks: like a map }",
+        "[looks, like, a list]",
+        "& * ! | > % @ `",
+    ];
+
+    TRICKY_TEXTS.forEach((text) => {
+        it(`should keep ${JSON.stringify(text)} as typed in a SetInfo event`, () => {
+            const yaml = service.buildYamlSetInfoEvent(text, [text, "plain"]);
+
+            const event = parseYamlAs<{ content: { description: string; keywords: string[] } }>(yaml);
+            expect(event.content.description).toBe(text);
+            expect(event.content.keywords).toEqual([text, "plain"]);
+        });
+
+        it(`should keep ${JSON.stringify(text)} as typed in a SetLicense event`, () => {
+            const license: Omit<SetLicense, "__typename"> = {
+                name: text,
+                shortName: text,
+                websiteUrl: "https://example.com/license?a=1#b",
+                spdxId: text,
+            };
+
+            const yaml = service.buildYamlSetLicenseEvent(license);
+
+            expect(parseYamlAs<{ content: Omit<SetLicense, "__typename"> }>(yaml).content).toEqual({
+                kind: "SetLicense",
+                ...license,
+            });
+        });
+    });
+
+    it("should leave out an empty description and keyword list from a SetInfo event", () => {
+        expect(service.buildYamlSetInfoEvent("", [])).toBe(
+            "kind: MetadataEvent\nversion: 1\ncontent:\n  kind: SetInfo\n",
+        );
+    });
+
+    it("should leave out a missing license identifier from a SetLicense event", () => {
+        expect(
+            service.buildYamlSetLicenseEvent({
+                name: "MIT",
+                shortName: "MIT",
+                websiteUrl: "https://mit.edu",
+                spdxId: null,
+            }),
+        ).toBe(
+            "kind: MetadataEvent\nversion: 1\ncontent:\n  kind: SetLicense\n  name: MIT\n  shortName: MIT\n" +
+                "  websiteUrl: https://mit.edu\n",
         );
     });
 

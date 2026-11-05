@@ -27,6 +27,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   - Custom: a time window with only one end filters the list, and "Reset filters" selects the states the list shows and shows the order field it uses
   - a number of failures typed as a fraction or below the minimum is shown as the whole number used
 - Dataset overview: when a change to the description, keywords or license is not accepted, the edit dialog stays open with what was entered and says why, instead of closing as if it had been saved
+- Dataset overview: a description, keyword or license is saved exactly as typed, including text with `: `, `#` or quotes, which could make the save fail
+- Metadata tab, transformation editor: when the transformation is not accepted, the editor stays open and says why, instead of going to the overview as if it had been saved
+- Metadata tab, source editors: closing "Edit as YAML" without saving no longer makes a later save, in the editor or on another dataset's page, jump to this dataset's overview before the backend has answered
 - Dataset settings, variables and secrets: when the dataset's existing keys or a secret's current value fail to load, the add or edit dialog says so and offers "Try again", instead of leaving Save disabled or the value empty without a word
 - Dataset settings, variables and secrets: the eye button of a secret being edited only shows or hides its value; it no longer clears the field or replaces what was typed, and its icon matches whether the value is shown
 

@@ -13,9 +13,13 @@ export class FinalYamlModalHarness extends ComponentHarness {
     public static readonly hostSelector = "app-final-yaml-modal";
 
     private static readonly SAVE_BUTTON_TEST_ID = "save-event";
+    private static readonly CANCEL_BUTTON_TEST_ID = "cancel-event";
 
     private readonly locatorSaveButton = this.locatorFor(
         `[data-test-id="${FinalYamlModalHarness.SAVE_BUTTON_TEST_ID}"]`,
+    );
+    private readonly locatorCancelButton = this.locatorFor(
+        `[data-test-id="${FinalYamlModalHarness.CANCEL_BUTTON_TEST_ID}"]`,
     );
 
     public async isSaveDisabled(): Promise<boolean> {
@@ -26,6 +30,11 @@ export class FinalYamlModalHarness extends ComponentHarness {
 
     public async save(): Promise<void> {
         const button = await this.locatorSaveButton();
+        await button.click();
+    }
+
+    public async cancel(): Promise<void> {
+        const button = await this.locatorCancelButton();
         await button.click();
     }
 }

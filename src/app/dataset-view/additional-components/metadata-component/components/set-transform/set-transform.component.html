@@ -37,7 +37,7 @@
             </div>
         </div>
         @if (errorMessage) {
-            <div class="container alert alert-danger mt-4" role="alert">
+            <div class="container alert alert-danger mt-4" role="alert" data-test-id="commit-error">
                 <p class="text-danger fs-6">Error:<br />{{ errorMessage }}</p>
             </div>
         }

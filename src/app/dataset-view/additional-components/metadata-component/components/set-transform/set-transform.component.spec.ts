@@ -15,7 +15,13 @@ import { ApolloTestingModule } from "apollo-angular/testing";
 import { provideToastr } from "ngx-toastr";
 
 import { requireValue } from "@common/helpers/app.helpers";
-import { findComponentInstance, setComponentInput } from "@common/helpers/base-test.helpers.spec";
+import {
+    findComponentInstance,
+    findElementByDataTestId,
+    getElementByDataTestId,
+    setComponentInput,
+    stubMethod,
+} from "@common/helpers/base-test.helpers.spec";
 import { mockAccountDetails } from "@api/mock/auth.mock";
 
 import { LoggedUserService } from "src/app/auth/logged-user.service";
@@ -32,8 +38,10 @@ import {
     unavailableDatasetNode,
 } from "src/app/dataset-view/additional-components/metadata-component/components/set-transform/set-transform.helpers";
 import { DatasetCommitService } from "src/app/dataset-view/additional-components/overview-component/services/dataset-commit.service";
+import { DatasetViewTypeEnum } from "src/app/dataset-view/dataset-view.interface";
 import { DatasetService } from "src/app/dataset-view/dataset.service";
-import { mockDatasetInfo } from "src/app/search/mock.data";
+import { mockCommitEventToDatasetErrorMessage, mockDatasetInfo } from "src/app/search/mock.data";
+import { NavigationService } from "src/app/services/navigation.service";
 
 describe("SetTransformComponent", () => {
     let component: SetTransformComponent;
@@ -117,6 +125,38 @@ describe("SetTransformComponent", () => {
             expect(requireValue(commitEventToDatasetSpy.mock.lastCall)[0].event).toContain(
                 `engine: ${mockParseSetTransformYamlType.transform.engine}`,
             );
+        });
+
+        it("should stay on the editor and show why when the backend refuses the transform", () => {
+            vi.spyOn(datasetCommitService, "commitEventToDataset").mockImplementation(() => {
+                datasetCommitService.emitCommitEventErrorOccurred(mockCommitEventToDatasetErrorMessage);
+                return of(false);
+            });
+            const navigateSpy = stubMethod(TestBed.inject(NavigationService), "navigateToDatasetView");
+
+            component.onSaveEvent();
+
+            expect(navigateSpy).not.toHaveBeenCalled();
+            expect(getElementByDataTestId(fixture, "commit-error").textContent).toContain(
+                mockCommitEventToDatasetErrorMessage,
+            );
+        });
+
+        it("should go to the dataset overview once the backend accepts the transform", () => {
+            vi.spyOn(datasetCommitService, "commitEventToDataset").mockImplementation(() => {
+                datasetCommitService.emitCommitEventErrorOccurred("");
+                return of(true);
+            });
+            const navigateSpy = stubMethod(TestBed.inject(NavigationService), "navigateToDatasetView");
+
+            component.onSaveEvent();
+
+            expect(navigateSpy).toHaveBeenCalledExactlyOnceWith({
+                accountName: "accountName",
+                datasetName: "datasetName",
+                tab: DatasetViewTypeEnum.Overview,
+            });
+            expect(findElementByDataTestId(fixture, "commit-error")).toBeUndefined();
         });
 
         it("should check open modal window to edit event", () => {

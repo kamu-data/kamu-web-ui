@@ -9,7 +9,7 @@ import { ChangeDetectionStrategy, Component, inject, Input, OnInit } from "@angu
 import { takeUntilDestroyed } from "@angular/core/rxjs-interop";
 import { RouterLink } from "@angular/router";
 
-import { catchError, forkJoin, from, map, of, take } from "rxjs";
+import { catchError, filter, forkJoin, from, map, of, take } from "rxjs";
 
 import { openModal } from "@common/helpers/modal.helpers";
 import { DatasetLinkPipe } from "@common/pipes/dataset-link.pipe";
@@ -154,7 +154,7 @@ export class SetTransformComponent extends BaseMainEventComponent implements OnI
                     this.editService.transformEventAsObject(this.inputDatasets, this.selectedEngine, this.queries),
                 ),
             })
-            .pipe(takeUntilDestroyed(this.destroyRef))
+            .pipe(filter(Boolean), takeUntilDestroyed(this.destroyRef))
             .subscribe(() => {
                 this.navigationServices.navigateToDatasetView({
                     accountName: this.getDatasetInfoFromUrl().accountName,

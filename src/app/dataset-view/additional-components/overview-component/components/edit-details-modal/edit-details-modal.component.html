@@ -54,7 +54,7 @@
         class="btn btn-success"
         (click)="commitSetInfoEvent()"
         data-test-id="commit-event"
-        [disabled]="unmodifiedDetails"
+        [disabled]="unmodifiedDetails || ((busy$ | async) ?? false)"
     >
         Save
     </button>

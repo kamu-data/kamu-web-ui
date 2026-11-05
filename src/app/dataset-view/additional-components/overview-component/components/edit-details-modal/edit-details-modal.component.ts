@@ -5,6 +5,7 @@
  * included in the LICENSE file.
  */
 
+import { AsyncPipe } from "@angular/common";
 import { Component, inject, Input, OnInit } from "@angular/core";
 import { takeUntilDestroyed } from "@angular/core/rxjs-interop";
 import { FormsModule } from "@angular/forms";
@@ -12,13 +13,13 @@ import { MatChipInputEvent, MatChipsModule } from "@angular/material/chips";
 import { MatDividerModule } from "@angular/material/divider";
 import { MatIconModule } from "@angular/material/icon";
 
-import { finalize } from "rxjs";
+import { BehaviorSubject } from "rxjs";
 
 import { NgbActiveModal } from "@ng-bootstrap/ng-bootstrap";
 
 import { BaseComponent } from "@common/components/base.component";
 import { DynamicTableDataRow } from "@common/components/dynamic-table/dynamic-table.interface";
-import { isEqual } from "@common/helpers/app.helpers";
+import { isEqual, trackBusy } from "@common/helpers/app.helpers";
 import { DatasetBasicsFragment, DatasetDataSizeFragment, DatasetOverviewFragment } from "@api/kamu.graphql.interface";
 import { MaybeNull } from "@interface/app.types";
 import { DatasetSchema } from "@interface/dataset-schema.interface";
@@ -32,6 +33,7 @@ import { TemplatesYamlEventsService } from "src/app/services/templates-yaml-even
     templateUrl: "./edit-details-modal.component.html",
     imports: [
         //-----//
+        AsyncPipe,
         FormsModule,
         //-----//
         MatDividerModule,
@@ -51,6 +53,7 @@ export class EditDetailsModalComponent extends BaseComponent implements OnInit {
     public description = "";
     public initialDescription = "";
     public initialKeywords: string[] = [];
+    public readonly busy$ = new BehaviorSubject<boolean>(false);
 
     private datasetCommitService = inject(DatasetCommitService);
     private yamlEventService = inject(TemplatesYamlEventsService);
@@ -95,9 +98,8 @@ export class EditDetailsModalComponent extends BaseComponent implements OnInit {
                 datasetName: this.datasetBasics.name,
                 event: this.yamlEventService.buildYamlSetInfoEvent(this.description, this.keywords),
             })
-            .pipe(finalize(() => this.activeModal.close()))
-            .pipe(takeUntilDestroyed(this.destroyRef))
-            .subscribe();
+            .pipe(trackBusy(this.busy$), takeUntilDestroyed(this.destroyRef))
+            .subscribe(() => this.activeModal.close());
     }
 
     /** Adds the typed keyword, trimmed, unless it is blank or the dataset has it already in any letter case. */

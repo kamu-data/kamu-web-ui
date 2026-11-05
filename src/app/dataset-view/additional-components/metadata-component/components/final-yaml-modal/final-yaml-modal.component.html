@@ -21,7 +21,7 @@
             class="btn btn-outline-success"
             (click)="saveEvent()"
             data-test-id="save-event"
-            [disabled]="!enabledSaveBtn"
+            [disabled]="!enabledSaveBtn || ((busy$ | async) ?? false)"
         >
             Save event
         </button>

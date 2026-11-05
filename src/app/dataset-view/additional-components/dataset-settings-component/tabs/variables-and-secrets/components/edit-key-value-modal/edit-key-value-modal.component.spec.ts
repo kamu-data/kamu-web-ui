@@ -9,14 +9,14 @@ import { TestbedHarnessEnvironment } from "@angular/cdk/testing/testbed";
 import { ComponentFixture, TestBed } from "@angular/core/testing";
 import { ActivatedRoute } from "@angular/router";
 
-import { NEVER, of, Subject } from "rxjs";
+import { NEVER, of, Subject, throwError } from "rxjs";
 
 import { NgbActiveModal } from "@ng-bootstrap/ng-bootstrap";
 import { Apollo } from "apollo-angular";
 import { provideToastr } from "ngx-toastr";
 
 import { requireValue } from "@common/helpers/app.helpers";
-import { setComponentInput, stubMethod } from "@common/helpers/base-test.helpers.spec";
+import { captureUnhandledRxjsErrors, setComponentInput, stubMethod } from "@common/helpers/base-test.helpers.spec";
 import {
     MOCK_ENV_VAR_ALREADY_EXISTS_MESSAGE,
     MOCK_ENV_VAR_VALUE_TOO_LONG_MESSAGE,
@@ -25,6 +25,7 @@ import {
 
 import { EditKeyValueModalComponent } from "src/app/dataset-view/additional-components/dataset-settings-component/tabs/variables-and-secrets/components/edit-key-value-modal/edit-key-value-modal.component";
 import { EditKeyValueModalHarness } from "src/app/dataset-view/additional-components/dataset-settings-component/tabs/variables-and-secrets/components/edit-key-value-modal/edit-key-value-modal.harness";
+import { EditKeyValueModalTexts } from "src/app/dataset-view/additional-components/dataset-settings-component/tabs/variables-and-secrets/components/edit-key-value-modal/edit-key-value-modal.text";
 import { DatasetEnvironmentVariablesService } from "src/app/dataset-view/additional-components/dataset-settings-component/tabs/variables-and-secrets/dataset-environment-variables.service";
 import { mockDatasetBasicsRootFragment } from "src/app/search/mock.data";
 
@@ -153,22 +154,6 @@ describe("EditKeyValueModalComponent", () => {
         expect(await modal.getKeyError()).toBe("Key can't exceed 200 characters");
     });
 
-    it("should check toggle exposed value if exist", () => {
-        component.exposedValue = "mock-value";
-        component.toggleExposedValue();
-
-        expect(component.isShowExposedValue).toEqual(true);
-        expect(component.keyValueForm.controls.value.value).toEqual("mock-value");
-    });
-
-    it("should check toggle exposed value if not exist", () => {
-        component.exposedValue = "";
-        component.toggleExposedValue();
-
-        expect(component.isShowExposedValue).toEqual(true);
-        expect(component.keyValueForm.controls.value.value).toEqual("");
-    });
-
     it("should save a new variable and close", async () => {
         const createSpy = vi.spyOn(evnironmentVariablesService, "createEnvVariable").mockReturnValue(of({ ok: true }));
         const closeSpy = stubMethod(TestBed.inject(NgbActiveModal), "close");
@@ -262,6 +247,66 @@ describe("EditKeyValueModalComponent", () => {
         expect(await modal.isSaveDisabled()).toBe(false);
     });
 
+    it("should say the existing keys failed to load and keep Save disabled", async () => {
+        const unhandledErrors = captureUnhandledRxjsErrors();
+        vi.spyOn(evnironmentVariablesService, "listEnvVariables").mockReturnValue(
+            throwError(() => new Error("Server unreachable")),
+        );
+        setComponentInput(fixture, "row", null);
+        fixture.detectChanges();
+        const modal = await TestbedHarnessEnvironment.harnessForFixture(fixture, EditKeyValueModalHarness);
+
+        await modal.setKey("API_KEY");
+        await modal.setValue("value-1");
+
+        expect(await modal.getExistingKeysLoadError()).toBe(EditKeyValueModalTexts.EXISTING_KEYS_LOAD_FAILED);
+        expect(await modal.isSaveDisabled()).toBe(true);
+        await vi.waitFor(() => expect(unhandledErrors).toHaveBeenCalledWith(new Error("Server unreachable")));
+    });
+
+    it("should enable Save once a retry loads the existing keys, and still reject a key the dataset has", async () => {
+        captureUnhandledRxjsErrors();
+        const firstVariable = requireValue(existingVariables.nodes[0]);
+        const listSpy = vi
+            .spyOn(evnironmentVariablesService, "listEnvVariables")
+            .mockReturnValueOnce(throwError(() => new Error("Server unreachable")))
+            .mockReturnValueOnce(
+                of({ ...structuredClone(existingVariables), nodes: [{ ...firstVariable, key: "API_KEY" }] }),
+            );
+        setComponentInput(fixture, "row", null);
+        fixture.detectChanges();
+        const modal = await TestbedHarnessEnvironment.harnessForFixture(fixture, EditKeyValueModalHarness);
+
+        await modal.setKey("API_KEY_2");
+        await modal.setValue("value-1");
+        await modal.retryExistingKeys();
+
+        expect(listSpy).toHaveBeenCalledTimes(2);
+        expect(await modal.getExistingKeysLoadError()).toBeNull();
+        expect(await modal.isSaveDisabled()).toBe(false);
+
+        await modal.setKey("API_KEY");
+        expect(await modal.getKeyError()).toBe("Key already exists");
+        expect(await modal.isSaveDisabled()).toBe(true);
+    });
+
+    it("should keep saying the existing keys failed to load when a retry fails too", async () => {
+        captureUnhandledRxjsErrors();
+        vi.spyOn(evnironmentVariablesService, "listEnvVariables").mockReturnValue(
+            throwError(() => new Error("Server unreachable")),
+        );
+        setComponentInput(fixture, "row", null);
+        fixture.detectChanges();
+        const modal = await TestbedHarnessEnvironment.harnessForFixture(fixture, EditKeyValueModalHarness);
+
+        await modal.setKey("API_KEY");
+        await modal.setValue("value-1");
+        await modal.retryExistingKeys();
+
+        expect(await modal.getExistingKeysLoadError()).toBe(EditKeyValueModalTexts.EXISTING_KEYS_LOAD_FAILED);
+        expect(await modal.isSaveDisabled()).toBe(true);
+    });
+
     it("should keep Save disabled while the variable is being saved", async () => {
         const createSpy = vi.spyOn(evnironmentVariablesService, "createEnvVariable").mockReturnValue(NEVER);
         const modal = await openForAdding();
@@ -341,13 +386,88 @@ describe("EditKeyValueModalComponent", () => {
         expect(await modal.isSecretLocked()).toBe(true);
     });
 
-    it("should forget the exposed value when it is hidden again", () => {
-        component.exposedValue = "mock-value";
-        component.toggleExposedValue();
-        component.toggleExposedValue();
+    it("should say a secret's current value failed to load, and fill it in on a retry", async () => {
+        const unhandledErrors = captureUnhandledRxjsErrors();
+        vi.spyOn(evnironmentVariablesService, "exposedEnvVariableValue")
+            .mockReturnValueOnce(throwError(() => new Error("Server unreachable")))
+            .mockReturnValueOnce(of("exposed-value"));
+        setComponentInput(fixture, "row", requireValue(existingVariables.nodes[2]));
+        fixture.detectChanges();
+        const modal = await TestbedHarnessEnvironment.harnessForFixture(fixture, EditKeyValueModalHarness);
 
-        expect(component.isShowExposedValue).toBe(false);
-        expect(component.exposedValue).toBe("");
+        expect(await modal.getExposedValueLoadError()).toBe(EditKeyValueModalTexts.EXPOSED_VALUE_LOAD_FAILED);
+        expect(await modal.getValue()).toBe("");
+        await vi.waitFor(() => expect(unhandledErrors).toHaveBeenCalledWith(new Error("Server unreachable")));
+
+        await modal.retryExposedValue();
+
+        expect(await modal.getExposedValueLoadError()).toBeNull();
+        expect(await modal.getValue()).toBe("exposed-value");
+    });
+
+    it("should keep a value typed while a retry loads the secret's current value", async () => {
+        captureUnhandledRxjsErrors();
+        const retried$ = new Subject<string>();
+        vi.spyOn(evnironmentVariablesService, "exposedEnvVariableValue")
+            .mockReturnValueOnce(throwError(() => new Error("Server unreachable")))
+            .mockReturnValueOnce(retried$);
+        setComponentInput(fixture, "row", requireValue(existingVariables.nodes[2]));
+        fixture.detectChanges();
+        const modal = await TestbedHarnessEnvironment.harnessForFixture(fixture, EditKeyValueModalHarness);
+
+        await modal.retryExposedValue();
+        await modal.setValue("new-value");
+        retried$.next("exposed-value");
+
+        expect(await modal.getValue()).toBe("new-value");
+        expect(await modal.getExposedValueLoadError()).toBeNull();
+    });
+
+    it("should keep a value typed before a secret's current value has loaded", async () => {
+        const exposed$ = new Subject<string>();
+        vi.spyOn(evnironmentVariablesService, "exposedEnvVariableValue").mockReturnValue(exposed$);
+        setComponentInput(fixture, "row", requireValue(existingVariables.nodes[2]));
+        fixture.detectChanges();
+        const modal = await TestbedHarnessEnvironment.harnessForFixture(fixture, EditKeyValueModalHarness);
+
+        await modal.setValue("new-value");
+        exposed$.next("exposed-value");
+
+        expect(await modal.getValue()).toBe("new-value");
+    });
+
+    it("should show and hide a secret's value with the eye button, without loading it again", async () => {
+        const exposedSpy = vi
+            .spyOn(evnironmentVariablesService, "exposedEnvVariableValue")
+            .mockReturnValue(of("exposed-value"));
+        setComponentInput(fixture, "row", requireValue(existingVariables.nodes[2]));
+        fixture.detectChanges();
+        const modal = await TestbedHarnessEnvironment.harnessForFixture(fixture, EditKeyValueModalHarness);
+
+        expect(await modal.isValueHidden()).toBe(true);
+
+        await modal.toggleValueVisibility();
+        expect(await modal.isValueHidden()).toBe(false);
+        expect(await modal.getValue()).toBe("exposed-value");
+
+        await modal.toggleValueVisibility();
+        expect(await modal.isValueHidden()).toBe(true);
+        expect(await modal.getValue()).toBe("exposed-value");
+        expect(exposedSpy).toHaveBeenCalledTimes(1);
+    });
+
+    it("should keep the value typed for a secret when it is hidden and shown again", async () => {
+        vi.spyOn(evnironmentVariablesService, "exposedEnvVariableValue").mockReturnValue(of("exposed-value"));
+        setComponentInput(fixture, "row", requireValue(existingVariables.nodes[2]));
+        fixture.detectChanges();
+        const modal = await TestbedHarnessEnvironment.harnessForFixture(fixture, EditKeyValueModalHarness);
+
+        await modal.setValue("new-value");
+        await modal.toggleValueVisibility();
+        await modal.toggleValueVisibility();
+        await modal.toggleValueVisibility();
+
+        expect(await modal.getValue()).toBe("new-value");
     });
 
     it("should check fetch exposed value", () => {

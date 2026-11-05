@@ -22,6 +22,11 @@ export class EditKeyValueModalHarness extends ComponentHarness {
     private static readonly VALUE_ERROR_TEST_ID = "error-value";
     private static readonly SAVE_BUTTON_TEST_ID = "save-row";
     private static readonly SECRET_CHECKBOX_TEST_ID = "is-secret";
+    private static readonly EXISTING_KEYS_LOAD_FAILED_TEST_ID = "existing-keys-load-failed";
+    private static readonly RETRY_EXISTING_KEYS_TEST_ID = "retry-existing-keys";
+    private static readonly EXPOSED_VALUE_LOAD_FAILED_TEST_ID = "exposed-value-load-failed";
+    private static readonly RETRY_EXPOSED_VALUE_TEST_ID = "retry-exposed-value";
+    private static readonly TOGGLE_VALUE_VISIBILITY_TEST_ID = "toggle-value-visibility";
 
     private readonly locatorKeyInput = this.locatorFor(
         NativeInputHarness.with({ dataTestId: EditKeyValueModalHarness.KEY_INPUT_TEST_ID }),
@@ -40,6 +45,22 @@ export class EditKeyValueModalHarness extends ComponentHarness {
     );
     private readonly locatorSaveButton = this.locatorFor(
         `[data-test-id="${EditKeyValueModalHarness.SAVE_BUTTON_TEST_ID}"]`,
+    );
+
+    private readonly locatorExistingKeysLoadFailed = this.locatorForOptional(
+        `[data-test-id="${EditKeyValueModalHarness.EXISTING_KEYS_LOAD_FAILED_TEST_ID}"]`,
+    );
+    private readonly locatorRetryExistingKeys = this.locatorFor(
+        `[data-test-id="${EditKeyValueModalHarness.RETRY_EXISTING_KEYS_TEST_ID}"]`,
+    );
+    private readonly locatorExposedValueLoadFailed = this.locatorForOptional(
+        `[data-test-id="${EditKeyValueModalHarness.EXPOSED_VALUE_LOAD_FAILED_TEST_ID}"]`,
+    );
+    private readonly locatorRetryExposedValue = this.locatorFor(
+        `[data-test-id="${EditKeyValueModalHarness.RETRY_EXPOSED_VALUE_TEST_ID}"]`,
+    );
+    private readonly locatorToggleValueVisibility = this.locatorFor(
+        `[data-test-id="${EditKeyValueModalHarness.TOGGLE_VALUE_VISIBILITY_TEST_ID}"]`,
     );
 
     public async setKey(key: string): Promise<void> {
@@ -66,6 +87,11 @@ export class EditKeyValueModalHarness extends ComponentHarness {
         const input = await this.locatorValueInput();
         const type = await input.getType();
         return type === "password";
+    }
+
+    public async toggleValueVisibility(): Promise<void> {
+        const button = await this.locatorToggleValueVisibility();
+        await button.click();
     }
 
     public async setSecret(secret: boolean): Promise<void> {
@@ -108,6 +134,28 @@ export class EditKeyValueModalHarness extends ComponentHarness {
         const button = await this.locatorSaveButton();
         const disabled: unknown = await button.getProperty("disabled");
         return disabled === true;
+    }
+
+    /** The message saying the dataset's keys failed to load, or `null` when none is shown. */
+    public async getExistingKeysLoadError(): Promise<MaybeNull<string>> {
+        const message = await this.locatorExistingKeysLoadFailed();
+        return message ? message.text({ exclude: "button" }) : null;
+    }
+
+    public async retryExistingKeys(): Promise<void> {
+        const button = await this.locatorRetryExistingKeys();
+        await button.click();
+    }
+
+    /** The message saying the secret's current value failed to load, or `null` when none is shown. */
+    public async getExposedValueLoadError(): Promise<MaybeNull<string>> {
+        const message = await this.locatorExposedValueLoadFailed();
+        return message ? message.text({ exclude: "button" }) : null;
+    }
+
+    public async retryExposedValue(): Promise<void> {
+        const button = await this.locatorRetryExposedValue();
+        await button.click();
     }
 
     public async save(): Promise<void> {

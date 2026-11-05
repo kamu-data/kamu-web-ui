@@ -65,11 +65,17 @@
                 />
                 @if (row?.isSecret) {
                     <div class="input-group-addon pt-2 px-2 eye-icon">
-                        <a (click)="toggleExposedValue()">
+                        <button
+                            type="button"
+                            class="btn btn-link p-0 border-0"
+                            data-test-id="toggle-value-visibility"
+                            [attr.aria-label]="isShowExposedValue ? TEXTS.HIDE_VALUE : TEXTS.SHOW_VALUE"
+                            (click)="toggleExposedValue()"
+                        >
                             <mat-icon class="text-muted fs-4">{{
-                                exposedValue ? "visibility" : "visibility_off"
+                                isShowExposedValue ? "visibility" : "visibility_off"
                             }}</mat-icon>
-                        </a>
+                        </button>
                     </div>
                 }
             </div>
@@ -81,8 +87,34 @@
                 [group]="keyValueForm"
                 dataTestId="error-value"
             ></div>
+            @if (exposedValueLoadFailed) {
+                <div class="text-danger fs-12" data-test-id="exposed-value-load-failed">
+                    {{ TEXTS.EXPOSED_VALUE_LOAD_FAILED }}
+                    <button
+                        type="button"
+                        class="btn btn-link btn-sm p-0 align-baseline"
+                        data-test-id="retry-exposed-value"
+                        (click)="fetchExposedValue()"
+                    >
+                        {{ TEXTS.TRY_AGAIN }}
+                    </button>
+                </div>
+            }
         </div>
     </form>
+    @if (existingKeysLoadFailed) {
+        <div class="alert alert-danger mt-4 mb-0" role="alert" data-test-id="existing-keys-load-failed">
+            {{ TEXTS.EXISTING_KEYS_LOAD_FAILED }}
+            <button
+                type="button"
+                class="btn btn-link p-0 align-baseline"
+                data-test-id="retry-existing-keys"
+                (click)="fetchExistingKeys()"
+            >
+                {{ TEXTS.TRY_AGAIN }}
+            </button>
+        </div>
+    }
 </div>
 
 <div class="p-4 d-flex justify-content-end">

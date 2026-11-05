@@ -71,13 +71,13 @@ export class RecentActivityFiltersViewComponent {
 
     public clearFromControl(): void {
         this.dashboardFilters.fromFilterDate = undefined;
-        this.dashboardFilters.isFirstInitialization = false;
         this.dashboardFilters.selectedQuickRangeLastAttempt = undefined;
+        this.applyFilterEmitter.next();
     }
 
     public clearToControl(): void {
         this.dashboardFilters.toFilterDate = undefined;
-        this.dashboardFilters.isFirstInitialization = false;
+        this.applyFilterEmitter.next();
     }
 
     public onQuickRangeLastAttempt(e: RangeLastAttemptOption): void {

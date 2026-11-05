@@ -9,7 +9,11 @@ import { ComponentFixture, TestBed } from "@angular/core/testing";
 
 import timekeeper from "timekeeper";
 
-import { emitClickOnElementByDataTestId, setComponentInput } from "@common/helpers/base-test.helpers.spec";
+import {
+    emitClickOnElementByDataTestId,
+    getElementByDataTestId,
+    setComponentInput,
+} from "@common/helpers/base-test.helpers.spec";
 
 import { TriageFiltersViewComponent } from "src/app/account/additional-components/account-flows-tab/account-flows-subtabs/account-flows-processes-subtab/components/triage-filters-view/triage-filters-view.component";
 import { mockDashboardFilters } from "src/app/account/additional-components/account-flows-tab/account-flows-tab.mock";
@@ -36,7 +40,23 @@ describe("TriageFiltersViewComponent", () => {
     it("should render without changing the selected states, which the parent sets for the mode", () => {
         fixture.detectChanges();
         expect(component.dashboardFilters.selectedFlowProcessStates).toEqual([]);
-        expect(component.dashboardFilters.isFirstInitialization).toBe(false);
+    });
+
+    it("should show the number of consecutive failures the list is filtered by, once typed", async () => {
+        fixture.detectChanges();
+        await fixture.whenStable();
+        const applySpy = vi.spyOn(component.applyFilterEmitter, "next");
+        const input = getElementByDataTestId(fixture, "min-consecutive-failures", HTMLInputElement);
+
+        input.value = "0";
+        input.dispatchEvent(new Event("input"));
+        input.dispatchEvent(new Event("change"));
+        fixture.detectChanges();
+        await fixture.whenStable();
+
+        expect(component.dashboardFilters.minConsecutiveFailures).toBe(1);
+        expect(input.value).toBe("1");
+        expect(applySpy).toHaveBeenCalledTimes(1);
     });
 
     it("should check to change last attempt filter", () => {

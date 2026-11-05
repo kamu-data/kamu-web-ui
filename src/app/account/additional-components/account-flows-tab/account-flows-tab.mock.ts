@@ -22,7 +22,6 @@ export function mockDashboardFilters(overrides: Partial<DashboardFiltersOptions>
         selectedQuickRangeNextAttempt: undefined,
         selectedFlowProcessStates: [],
         minConsecutiveFailures: 0,
-        isFirstInitialization: false,
         ...overrides,
     };
 }

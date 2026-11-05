@@ -14,21 +14,28 @@ import { stripSecondsFromDateToISOString } from "@common/helpers/data.helpers";
 import {
     FlowProcessEffectiveState,
     FlowProcessFilters,
+    FlowProcessFiltersTimeRange,
     FlowProcessOrderField,
     OrderingDirection,
 } from "@api/kamu.graphql.interface";
+import { MaybeUndefined } from "@interface/app.types";
 
 import {
     DashboardFiltersOptions,
+    ORDER_BY_FIELD_LIST_TRIAGE,
     ProcessCardFilterMode,
 } from "src/app/account/additional-components/account-flows-tab/account-flows-tab.types";
-import { clampConsecutiveFailures } from "src/app/account/services/account-flows-filters.helpers";
+import {
+    clampConsecutiveFailures,
+    MIN_CONSECUTIVE_FAILURES_CUSTOM,
+    MIN_CONSECUTIVE_FAILURES_TRIAGE,
+} from "src/app/account/services/account-flows-filters.helpers";
 
 @Injectable({
     providedIn: "root",
 })
 export class AccountFlowsFiltersService {
-    private initialFilters: DashboardFiltersOptions = {
+    private readonly initialFilters: DashboardFiltersOptions = {
         fromFilterDate: undefined,
         toFilterDate: undefined,
         lastFailureDate: undefined,
@@ -41,7 +48,6 @@ export class AccountFlowsFiltersService {
         selectedQuickRangeNextAttempt: undefined,
         selectedFlowProcessStates: [],
         minConsecutiveFailures: 0,
-        isFirstInitialization: false,
     };
 
     private filtersSubject$ = new BehaviorSubject<DashboardFiltersOptions>(this.initialFilters);
@@ -80,151 +86,146 @@ export class AccountFlowsFiltersService {
         }
     }
 
-    /**
-     * Selects the default states of the mode, and for the recent activity mode
-     * lets the next request fill in its default time window.
-     * Call it before the mode's filters render: the view binds the selected states.
-     */
-    public applyModeDefaults(mode: ProcessCardFilterMode): void {
-        this.updateFilters({
-            selectedFlowProcessStates: this.defaultFlowProcessStates(mode),
-            ...(mode === ProcessCardFilterMode.RECENT_ACTIVITY ? { isFirstInitialization: true } : {}),
-        });
-    }
-
-    public setFlowProcessFilters(mode: ProcessCardFilterMode): FlowProcessFilters {
+    private modeDefaults(mode: ProcessCardFilterMode): Partial<DashboardFiltersOptions> {
+        const filters = this.currentFiltersSnapshot;
         switch (mode) {
             case ProcessCardFilterMode.RECENT_ACTIVITY: {
-                this.updateFilters({
-                    selectedOrderField: FlowProcessOrderField.LastAttemptAt,
-                    toFilterDate: this.currentFiltersSnapshot.toFilterDate ?? new Date(),
-                });
-                const sixHoursAgoDate = new Date();
-                sixHoursAgoDate.setHours(sixHoursAgoDate.getHours() - 6);
-                if (!this.currentFiltersSnapshot.fromFilterDate && this.currentFiltersSnapshot.isFirstInitialization) {
-                    this.updateFilters({ fromFilterDate: sixHoursAgoDate });
-                }
-
+                const sixHoursAgo = new Date();
+                sixHoursAgo.setHours(sixHoursAgo.getHours() - 6);
                 return {
-                    effectiveStateIn: this.currentFiltersSnapshot.selectedFlowProcessStates.length
-                        ? this.currentFiltersSnapshot.selectedFlowProcessStates
-                        : this.initialProcessFilters,
-
-                    lastAttemptBetween:
-                        this.currentFiltersSnapshot.toFilterDate && this.currentFiltersSnapshot.fromFilterDate
-                            ? {
-                                  start: stripSecondsFromDateToISOString(this.currentFiltersSnapshot.fromFilterDate),
-                                  end: stripSecondsFromDateToISOString(this.currentFiltersSnapshot.toFilterDate),
-                              }
-                            : undefined,
+                    selectedOrderField: FlowProcessOrderField.LastAttemptAt,
+                    fromFilterDate: filters.fromFilterDate ?? sixHoursAgo,
                 };
             }
             case ProcessCardFilterMode.TRIAGE: {
-                this.updateFilters({
+                const orderField = filters.selectedOrderField;
+                return {
+                    minConsecutiveFailures: clampConsecutiveFailures(
+                        filters.minConsecutiveFailures,
+                        MIN_CONSECUTIVE_FAILURES_TRIAGE,
+                    ),
                     selectedOrderField:
-                        this.currentFiltersSnapshot.selectedOrderField ?? FlowProcessOrderField.LastFailureAt,
-                    minConsecutiveFailures: clampConsecutiveFailures(
-                        this.currentFiltersSnapshot.minConsecutiveFailures,
-                        1,
-                    ),
-                });
-
+                        orderField && ORDER_BY_FIELD_LIST_TRIAGE.some((option) => option.value === orderField)
+                            ? orderField
+                            : FlowProcessOrderField.LastFailureAt,
+                };
+            }
+            case ProcessCardFilterMode.UPCOMING_SCHEDULED:
+                return { selectedOrderField: FlowProcessOrderField.NextPlannedAt, selectedOrderDirection: false };
+            case ProcessCardFilterMode.PAUSED:
+                return { selectedOrderDirection: true };
+            case ProcessCardFilterMode.CUSTOM:
                 return {
-                    effectiveStateIn: this.currentFiltersSnapshot.selectedFlowProcessStates.length
-                        ? this.currentFiltersSnapshot.selectedFlowProcessStates
-                        : [FlowProcessEffectiveState.StoppedAuto, FlowProcessEffectiveState.Failing],
-                    lastFailureSince: this.currentFiltersSnapshot.lastFailureDate
-                        ? stripSecondsFromDateToISOString(this.currentFiltersSnapshot.lastFailureDate)
-                        : undefined,
+                    selectedOrderField: filters.selectedOrderField ?? FlowProcessOrderField.LastAttemptAt,
                     minConsecutiveFailures: clampConsecutiveFailures(
-                        this.currentFiltersSnapshot.minConsecutiveFailures,
-                        1,
+                        filters.minConsecutiveFailures,
+                        MIN_CONSECUTIVE_FAILURES_CUSTOM,
                     ),
                 };
-            }
-            case ProcessCardFilterMode.UPCOMING_SCHEDULED: {
-                this.updateFilters({
-                    selectedOrderField: FlowProcessOrderField.NextPlannedAt,
-                    selectedOrderDirection: false,
-                });
-
-                return {
-                    effectiveStateIn: this.currentFiltersSnapshot.selectedFlowProcessStates.length
-                        ? this.currentFiltersSnapshot.selectedFlowProcessStates
-                        : [FlowProcessEffectiveState.Active, FlowProcessEffectiveState.Failing],
-                    nextPlannedBefore: this.currentFiltersSnapshot.nextPlannedBeforeDate
-                        ? stripSecondsFromDateToISOString(this.currentFiltersSnapshot.nextPlannedBeforeDate)
-                        : undefined,
-                    nextPlannedAfter: this.currentFiltersSnapshot.nextPlannedAfterDate
-                        ? stripSecondsFromDateToISOString(this.currentFiltersSnapshot.nextPlannedAfterDate)
-                        : stripSecondsFromDateToISOString(new Date()),
-                };
-            }
-            case ProcessCardFilterMode.PAUSED: {
-                this.updateFilters({
-                    selectedOrderDirection: true,
-                    selectedFlowProcessStates: [FlowProcessEffectiveState.PausedManual],
-                });
-                return {
-                    effectiveStateIn: [FlowProcessEffectiveState.PausedManual],
-                };
-            }
-            case ProcessCardFilterMode.CUSTOM: {
-                const minConsecutiveFailures = clampConsecutiveFailures(
-                    this.currentFiltersSnapshot.minConsecutiveFailures,
-                    0,
-                );
-                this.updateFilters({ minConsecutiveFailures });
-
-                return {
-                    effectiveStateIn: this.currentFiltersSnapshot.selectedFlowProcessStates.length
-                        ? this.currentFiltersSnapshot.selectedFlowProcessStates
-                        : this.initialProcessFilters,
-                    lastAttemptBetween:
-                        this.currentFiltersSnapshot.fromFilterDate && this.currentFiltersSnapshot.toFilterDate
-                            ? {
-                                  start: stripSecondsFromDateToISOString(this.currentFiltersSnapshot.fromFilterDate),
-                                  end: stripSecondsFromDateToISOString(this.currentFiltersSnapshot.toFilterDate),
-                              }
-                            : undefined,
-                    minConsecutiveFailures,
-                    lastFailureSince: this.currentFiltersSnapshot.lastFailureDate
-                        ? stripSecondsFromDateToISOString(this.currentFiltersSnapshot.lastFailureDate)
-                        : undefined,
-                    nextPlannedBefore: this.currentFiltersSnapshot.nextPlannedBeforeDate
-                        ? stripSecondsFromDateToISOString(this.currentFiltersSnapshot.nextPlannedBeforeDate)
-                        : undefined,
-                    nextPlannedAfter: this.currentFiltersSnapshot.nextPlannedAfterDate
-                        ? stripSecondsFromDateToISOString(this.currentFiltersSnapshot.nextPlannedAfterDate)
-                        : undefined,
-                };
-            }
             /* istanbul ignore next */
             default:
                 throw unexpectedValueError(mode, "process card filter mode");
         }
     }
 
-    public resetFilters(mode: ProcessCardFilterMode): void {
+    /**
+     * Fills in what the mode shows by default: its states, its order, the last 6 hours of the recent
+     * activity mode and the minimum failures of the triage mode, keeping the user's other choices.
+     * Call it before the mode's filters render: the views bind these filters, and building a request
+     * never changes them.
+     */
+    public applyModeDefaults(mode: ProcessCardFilterMode): void {
         this.updateFilters({
-            fromFilterDate: undefined,
-            toFilterDate: undefined,
-            lastFailureDate: undefined,
-            nextPlannedBeforeDate: undefined,
-            nextPlannedAfterDate: undefined,
-            selectedOrderDirection: true,
-            selectedOrderField: undefined,
-            selectedQuickRangeLastAttempt: undefined,
-            selectedQuickRangeLastFailure: undefined,
-            selectedQuickRangeNextAttempt: undefined,
-            selectedFlowProcessStates: [],
-            minConsecutiveFailures: mode === ProcessCardFilterMode.TRIAGE ? 1 : 0,
-            isFirstInitialization: false,
+            selectedFlowProcessStates: this.defaultFlowProcessStates(mode),
+            ...this.modeDefaults(mode),
         });
+    }
+
+    /** Clears every filter, then applies the defaults of the mode */
+    public resetFilters(mode: ProcessCardFilterMode): void {
+        this.filtersSubject$.next({ ...this.initialFilters });
+        this.applyModeDefaults(mode);
+    }
+
+    /** The request filters of the mode, read from the current filters without changing them */
+    public flowProcessFilters(mode: ProcessCardFilterMode): FlowProcessFilters {
+        const filters = this.currentFiltersSnapshot;
+        switch (mode) {
+            case ProcessCardFilterMode.RECENT_ACTIVITY:
+                return {
+                    effectiveStateIn: this.selectedStatesOr(this.initialProcessFilters),
+                    lastAttemptBetween: this.lastAttemptBetween(),
+                };
+            case ProcessCardFilterMode.TRIAGE:
+                return {
+                    effectiveStateIn: this.selectedStatesOr([
+                        FlowProcessEffectiveState.StoppedAuto,
+                        FlowProcessEffectiveState.Failing,
+                    ]),
+                    lastFailureSince: this.isoDate(filters.lastFailureDate),
+                    minConsecutiveFailures: clampConsecutiveFailures(
+                        filters.minConsecutiveFailures,
+                        MIN_CONSECUTIVE_FAILURES_TRIAGE,
+                    ),
+                };
+            case ProcessCardFilterMode.UPCOMING_SCHEDULED:
+                return {
+                    effectiveStateIn: this.selectedStatesOr([
+                        FlowProcessEffectiveState.Active,
+                        FlowProcessEffectiveState.Failing,
+                    ]),
+                    nextPlannedBefore: this.isoDate(filters.nextPlannedBeforeDate),
+                    // An empty "after" field means from now on
+                    nextPlannedAfter: stripSecondsFromDateToISOString(filters.nextPlannedAfterDate ?? new Date()),
+                };
+            case ProcessCardFilterMode.PAUSED:
+                return {
+                    effectiveStateIn: [FlowProcessEffectiveState.PausedManual],
+                };
+            case ProcessCardFilterMode.CUSTOM:
+                return {
+                    effectiveStateIn: this.selectedStatesOr(this.initialProcessFilters),
+                    lastAttemptBetween: this.lastAttemptBetween(),
+                    minConsecutiveFailures: clampConsecutiveFailures(
+                        filters.minConsecutiveFailures,
+                        MIN_CONSECUTIVE_FAILURES_CUSTOM,
+                    ),
+                    lastFailureSince: this.isoDate(filters.lastFailureDate),
+                    nextPlannedBefore: this.isoDate(filters.nextPlannedBeforeDate),
+                    nextPlannedAfter: this.isoDate(filters.nextPlannedAfterDate),
+                };
+            /* istanbul ignore next */
+            default:
+                throw unexpectedValueError(mode, "process card filter mode");
+        }
     }
 
     public updateFilters(changes: Partial<DashboardFiltersOptions>): void {
         const updatedFilters = { ...this.currentFiltersSnapshot, ...changes };
         this.filtersSubject$.next(updatedFilters);
+    }
+
+    private selectedStatesOr(fallback: FlowProcessEffectiveState[]): FlowProcessEffectiveState[] {
+        const selected = this.currentFiltersSnapshot.selectedFlowProcessStates;
+        return selected.length ? selected : fallback;
+    }
+
+    /**
+     * An empty "from" field leaves the range open at the start, an empty "to" field ends it now.
+     * Now keeps its seconds: cut to the minute, it would leave out the attempts of the current minute.
+     */
+    private lastAttemptBetween(): MaybeUndefined<FlowProcessFiltersTimeRange> {
+        const { fromFilterDate, toFilterDate } = this.currentFiltersSnapshot;
+        if (!fromFilterDate && !toFilterDate) {
+            return undefined;
+        }
+        return {
+            start: stripSecondsFromDateToISOString(fromFilterDate ?? new Date(0)),
+            end: toFilterDate ? stripSecondsFromDateToISOString(toFilterDate) : new Date().toISOString(),
+        };
+    }
+
+    private isoDate(date: MaybeUndefined<Date>): MaybeUndefined<string> {
+        return date ? stripSecondsFromDateToISOString(date) : undefined;
     }
 }

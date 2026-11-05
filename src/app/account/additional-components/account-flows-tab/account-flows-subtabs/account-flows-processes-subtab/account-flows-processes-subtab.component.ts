@@ -42,7 +42,6 @@ import {
     AccountFlowProcessCardDataFragment,
     DatasetBasicsFragment,
     FlowProcessEffectiveState,
-    FlowProcessFilters,
     FlowProcessGroupRollupDataFragment,
     FlowProcessOrderField,
 } from "@api/kamu.graphql.interface";
@@ -197,10 +196,6 @@ export class AccountFlowsProcessesSubtabComponent extends BaseComponent implemen
         this.refreshNow();
     }
 
-    private setFlowProcessFilters(mode: ProcessCardFilterMode): FlowProcessFilters {
-        return this.accountFlowsFiltersService.setFlowProcessFilters(mode);
-    }
-
     public rollupAvailabilityMapper(mode: ProcessCardFilterMode, state: FlowProcessEffectiveState): boolean {
         return rollupAvailabilityMapper(mode, state);
     }
@@ -335,7 +330,7 @@ export class AccountFlowsProcessesSubtabComponent extends BaseComponent implemen
         const nextNav = requireValue(enumValueOf(ProcessCardFilterMode, event.value), "Unknown filters mode");
         this.resetRequestParams();
         this.accountFlowsFiltersService.resetFilters(nextNav);
-        this.applyModeDefaults(nextNav);
+        this.defaultsAppliedForMode = nextNav;
         this.navigationService.navigateToOwnerView(
             this.accountName,
             AccountTabs.FLOWS,
@@ -378,7 +373,7 @@ export class AccountFlowsProcessesSubtabComponent extends BaseComponent implemen
             accountName: this.accountName,
             page: 0,
             perPage: this.processesPerPage,
-            filters: this.setFlowProcessFilters(this.accountFlowsData.datasetsFiltersMode),
+            filters: this.accountFlowsFiltersService.flowProcessFilters(this.accountFlowsData.datasetsFiltersMode),
             ordering: {
                 field: this.dashboardFiltersState.selectedOrderField ?? FlowProcessOrderField.LastAttemptAt,
                 direction: this.accountFlowsFiltersService.orderDirection,

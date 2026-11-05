@@ -22,6 +22,10 @@ import {
     RANGE_LAST_ATTEMPT_LIST,
     RangeLastAttemptOption,
 } from "src/app/account/additional-components/account-flows-tab/account-flows-tab.types";
+import {
+    clampConsecutiveFailures,
+    MIN_CONSECUTIVE_FAILURES_TRIAGE,
+} from "src/app/account/services/account-flows-filters.helpers";
 import { lastTimeRangeHelper } from "src/app/dataset-view/additional-components/flows-component/flows.helpers";
 
 @Component({
@@ -46,6 +50,8 @@ export class TriageFiltersViewComponent {
 
     public readonly RANGE_LAST_ATTEMPT_LIST = RANGE_LAST_ATTEMPT_LIST;
     public readonly ORDER_BY_FIELD_LIST_TRIAGE = ORDER_BY_FIELD_LIST_TRIAGE;
+
+    public readonly MIN_CONSECUTIVE_FAILURES = MIN_CONSECUTIVE_FAILURES_TRIAGE;
 
     public currentDateTime = new Date().toISOString();
 
@@ -80,6 +86,15 @@ export class TriageFiltersViewComponent {
     }
 
     public onDirectionToggle(): void {
+        this.applyFilterEmitter.next();
+    }
+
+    /** Shows the number the list is filtered by: a whole number, at least the minimum */
+    public onMinConsecutiveFailuresChange(): void {
+        this.dashboardFilters.minConsecutiveFailures = clampConsecutiveFailures(
+            this.dashboardFilters.minConsecutiveFailures,
+            this.MIN_CONSECUTIVE_FAILURES,
+        );
         this.applyFilterEmitter.next();
     }
 }

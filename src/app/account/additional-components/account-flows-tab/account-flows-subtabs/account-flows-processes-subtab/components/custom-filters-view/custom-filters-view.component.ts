@@ -27,6 +27,10 @@ import {
     RangeLastAttemptOption,
 } from "src/app/account/additional-components/account-flows-tab/account-flows-tab.types";
 import {
+    clampConsecutiveFailures,
+    MIN_CONSECUTIVE_FAILURES_CUSTOM,
+} from "src/app/account/services/account-flows-filters.helpers";
+import {
     lastTimeRangeHelper,
     nextTimeRangeHelper,
 } from "src/app/dataset-view/additional-components/flows-component/flows.helpers";
@@ -59,6 +63,8 @@ export class CustomFiltersViewComponent {
 
     public readonly FLOW_PROCESS_STATE_LIST = FLOW_PROCESS_STATE_LIST;
 
+    public readonly MIN_CONSECUTIVE_FAILURES = MIN_CONSECUTIVE_FAILURES_CUSTOM;
+
     public currentDateTime = new Date().toISOString();
 
     public onChangeLastAttemptFilter(): void {
@@ -86,14 +92,12 @@ export class CustomFiltersViewComponent {
 
     public clearFromControl(): void {
         this.dashboardFilters.fromFilterDate = undefined;
-        this.dashboardFilters.isFirstInitialization = false;
         this.dashboardFilters.selectedQuickRangeLastAttempt = undefined;
         this.applyFilterEmitter.next();
     }
 
     public clearToControl(): void {
         this.dashboardFilters.toFilterDate = undefined;
-        this.dashboardFilters.isFirstInitialization = false;
         this.applyFilterEmitter.next();
     }
 
@@ -138,6 +142,15 @@ export class CustomFiltersViewComponent {
     }
 
     public onDirectionToggle(): void {
+        this.applyFilterEmitter.next();
+    }
+
+    /** Shows the number the list is filtered by: a whole number, at least the minimum */
+    public onMinConsecutiveFailuresChange(): void {
+        this.dashboardFilters.minConsecutiveFailures = clampConsecutiveFailures(
+            this.dashboardFilters.minConsecutiveFailures,
+            this.MIN_CONSECUTIVE_FAILURES,
+        );
         this.applyFilterEmitter.next();
     }
 }

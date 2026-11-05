@@ -81,6 +81,8 @@ export class SearchSectionComponent extends BaseComponent {
                                 !this.isInvolvedDataset(autoCompleteItem.dataset),
                         );
                     }),
+                    // A failed search offers no suggestions; the next term searches again
+                    catchError(() => of([])),
                 );
             }),
         );

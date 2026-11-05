@@ -8,7 +8,7 @@
 import { inject } from "@angular/core";
 import { ActivatedRouteSnapshot, RedirectCommand } from "@angular/router";
 
-import { catchError, combineLatest, map, Observable, of, OperatorFunction, switchMap, take } from "rxjs";
+import { combineLatest, map, Observable, of, OperatorFunction, switchMap, take } from "rxjs";
 
 import { enumValueOf } from "@common/helpers/app.helpers";
 import { isMultihash } from "@common/helpers/url-params.helpers";
@@ -49,7 +49,7 @@ export function metadataTabFromRoute(route: ActivatedRouteSnapshot): MaybeUndefi
 /**
  * The dataset, its permissions and its metadata as of the block in the `head` query parameter.
  * A `head` that is malformed or names no block of the chain redirects to the same section
- * without it, so the page shows the latest metadata.
+ * without it, so the page shows the latest metadata. A failed request propagates.
  */
 export function requestMetadataTabData(route: ActivatedRouteSnapshot): Observable<MetadataTabData | RedirectCommand> {
     const datasetService = inject(DatasetService);
@@ -77,7 +77,6 @@ export function requestMetadataTabData(route: ActivatedRouteSnapshot): Observabl
                 .requestSnapshot(datasetInfo, head)
                 .pipe(map((snapshot) => (snapshot ? { datasetBasics, datasetPermissions, snapshot } : latestRedirect)));
         }),
-        catchError(() => of(navigationService.pageNotFoundRedirect())),
     );
 }
 

@@ -8,7 +8,7 @@
 import { TestBed } from "@angular/core/testing";
 import { RedirectCommand, Router } from "@angular/router";
 
-import { firstValueFrom, Observable, of, throwError } from "rxjs";
+import { firstValueFrom, Observable, of } from "rxjs";
 
 import { Apollo } from "apollo-angular";
 import type { Mock } from "vitest";
@@ -55,14 +55,6 @@ describe("dataset tab data helpers", () => {
                 datasetPermissions: mockFullPowerDatasetPermissionsFragment,
                 overviewUpdate: mockOverviewUpdate,
             });
-        });
-
-        it("should redirect to page not found when the dataset cannot be loaded", async () => {
-            vi.spyOn(datasetService, "datasetChanges", "get").mockReturnValue(throwError(() => new Error("fail")));
-
-            const data = await resolve();
-
-            expectPageNotFoundRedirect(data);
         });
     });
 

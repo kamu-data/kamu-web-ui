@@ -8,7 +8,7 @@
 import { inject } from "@angular/core";
 import { ActivatedRouteSnapshot, ResolveFn } from "@angular/router";
 
-import { catchError, map, of } from "rxjs";
+import { map } from "rxjs";
 
 import { requireValue } from "@common/helpers/app.helpers";
 import { DatasetInfo } from "@interface/navigation.interface";
@@ -38,6 +38,5 @@ export const blockMetadataResolverFn: ResolveFn<MetadataBlockInfo> = (route: Act
             datasetService.emitDownstreamsCountChanged(data.downstreamsCount);
             return data;
         }),
-        catchError(() => of(navigationService.pageNotFoundRedirect())),
     );
 };

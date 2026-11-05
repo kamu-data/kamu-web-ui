@@ -9,7 +9,7 @@ import { TestbedHarnessEnvironment } from "@angular/cdk/testing/testbed";
 import { provideHttpClient } from "@angular/common/http";
 import { ComponentFixture, TestBed } from "@angular/core/testing";
 
-import { of, Subject } from "rxjs";
+import { of, Subject, throwError } from "rxjs";
 
 import { Apollo } from "apollo-angular";
 import { provideToastr, ToastrService } from "ngx-toastr";
@@ -191,6 +191,24 @@ describe("VersionedFileViewComponent", () => {
             }
         },
     );
+
+    it("should load another version after the request for a version fails", () => {
+        const requestByVersionSpy = vi.spyOn(datasetAsVersionedFileService, "requestDatasetAsVersionedFileByVersion");
+        requestByVersionSpy.mockReturnValueOnce(throwError(() => new Error("Server unreachable")));
+        requestByVersionSpy.mockReturnValue(of(setMockObjectByContentType("text/plain")));
+        vi.spyOn(datasetAsVersionedFileService, "getVersionedFileContentUrl").mockReturnValue(of(MOCK_CONTENT_URL));
+        vi.spyOn(datasetAsVersionedFileService, "requestFileAsText").mockReturnValue(of("Version 2 content"));
+
+        setComponentInput(fixture, "version", 1);
+        fixture.detectChanges();
+        expect(findElementByDataTestId(fixture, "file-content-text")).toBeUndefined();
+        expect(findElementByDataTestId(fixture, "editor-progress-bar")).toBeUndefined();
+
+        setComponentInput(fixture, "version", 2);
+        fixture.detectChanges();
+        expect(findElementByDataTestId(fixture, "file-content-text")?.textContent).toBe("Version 2 content");
+        expect(requestByVersionSpy).toHaveBeenCalledTimes(2);
+    });
 
     it("should check setPreviewFileStrategy method for pdf file", async () => {
         await component.setPreviewFileStrategy(contentViewOf("application/pdf"));

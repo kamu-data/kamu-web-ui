@@ -10,6 +10,7 @@ import { ROUTES, Routes } from "@angular/router";
 
 import { AccountWhitelistNotFoundComponent } from "@common/components/account-whitelist-not-found/account-whitelist-not-found.component";
 import { LoginUnavailableComponent } from "@common/components/login-unavailable/login-unavailable.component";
+import { PageLoadFailedComponent } from "@common/components/page-load-failed/page-load-failed.component";
 import { PageNotFoundComponent } from "@common/components/page-not-found/page-not-found.component";
 import { forbidAnonymousAccessGuardFn } from "@common/guards/forbid-anonymous-access.guard";
 import { validRouteParams } from "@common/guards/valid-route-params.guard";
@@ -43,6 +44,10 @@ export const PUBLIC_ROUTES: Routes = [
     {
         path: ProjectLinks.URL_LOGIN_UNAVAILABLE,
         component: LoginUnavailableComponent,
+    },
+    {
+        path: ProjectLinks.URL_PAGE_LOAD_FAILED,
+        component: PageLoadFailedComponent,
     },
     {
         path: ProjectLinks.URL_LOGIN,

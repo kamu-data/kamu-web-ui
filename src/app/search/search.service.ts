@@ -7,7 +7,7 @@
 
 import { inject, Injectable } from "@angular/core";
 
-import { map, Observable, Subject } from "rxjs";
+import { map, Observable } from "rxjs";
 
 import {
     DatasetSearchOverviewFragment,
@@ -15,7 +15,7 @@ import {
     SemanticSearchDatasetsOverviewQuery,
 } from "@api/kamu.graphql.interface";
 import { SearchApi } from "@api/search.api";
-import { DatasetAutocompleteItem, DatasetSearchResult, SearchMode } from "@interface/search.interface";
+import { DatasetSearchResult, SearchMode } from "@interface/search.interface";
 
 import { AppConfigService } from "src/app/app-config.service";
 
@@ -25,15 +25,6 @@ export class SearchService {
     private appConfigService = inject(AppConfigService);
 
     private readonly DEFAULT_THRESHOLD_SCORE = this.appConfigService.semanticSearchThresholdScore;
-    private searchAutocomplete$: Subject<DatasetAutocompleteItem[]> = new Subject<DatasetAutocompleteItem[]>();
-
-    private emitSearchAutocompleteChanged(autocompleteData: DatasetAutocompleteItem[]) {
-        this.searchAutocomplete$.next(autocompleteData);
-    }
-
-    public get searchAutocompleteChanges(): Observable<DatasetAutocompleteItem[]> {
-        return this.searchAutocomplete$.asObservable();
-    }
 
     public searchDatasets(searchQuery: string, page = 0): Observable<DatasetSearchResult> {
         return this.searchApi.overviewDatasetSearch(searchQuery, page).pipe(
@@ -49,17 +40,6 @@ export class SearchService {
                     searchMode: SearchMode.TEXT_SEARCH,
                 };
             }),
-        );
-    }
-
-    public autocompleteDatasetSearch(searchQuery: string): void {
-        this.searchApi.autocompleteDatasetSearch(searchQuery).subscribe(
-            (data: DatasetAutocompleteItem[]) => {
-                this.emitSearchAutocompleteChanged(data);
-            },
-            () => {
-                this.emitSearchAutocompleteChanged([]);
-            },
         );
     }
 

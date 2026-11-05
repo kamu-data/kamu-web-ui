@@ -10,7 +10,7 @@ import { provideHttpClientTesting } from "@angular/common/http/testing";
 import { ComponentFixture, fakeAsync, flush, TestBed, tick } from "@angular/core/testing";
 import { ActivatedRoute, convertToParamMap, Router } from "@angular/router";
 
-import { of } from "rxjs";
+import { of, Subject, throwError } from "rxjs";
 import { first } from "rxjs/operators";
 
 import { Apollo } from "apollo-angular";
@@ -350,6 +350,30 @@ describe("AppHeaderComponent", () => {
         tick();
         expect(typeAheadInputElBlurSpy).toHaveBeenCalledWith();
         flush();
+    }));
+
+    it("should offer no suggestions for a failed search and still search the next term", fakeAsync(() => {
+        const MOCK_AUTOCOMPLETE_ITEM: DatasetAutocompleteItem = {
+            __typename: TypeNames.datasetType,
+            dummy: false,
+            dataset: mockDatasetBasicsDerivedFragment,
+        };
+        const autocompleteDatasetSearchSpy = vi.spyOn(searchApi, "autocompleteDatasetSearch");
+        autocompleteDatasetSearchSpy.mockReturnValueOnce(throwError(() => new Error("Server unreachable")));
+        autocompleteDatasetSearchSpy.mockReturnValue(of([MOCK_AUTOCOMPLETE_ITEM]));
+        const text$ = new Subject<string>();
+        const results: (readonly DatasetAutocompleteItem[])[] = [];
+        component.search(text$).subscribe((result) => results.push(result));
+
+        text$.next("fail");
+        tick(AppValues.SHORT_DELAY_MS);
+        expect(results).toEqual([[]]);
+        expect(component.searching).toBe(false);
+
+        text$.next("query");
+        tick(AppValues.SHORT_DELAY_MS);
+        expect(results).toEqual([[], [MOCK_AUTOCOMPLETE_ITEM]]);
+        expect(component.searching).toBe(false);
     }));
 
     it("should open the highlighted suggestion on Enter, not search for it", fakeAsync(() => {

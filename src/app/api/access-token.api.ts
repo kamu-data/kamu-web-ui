@@ -10,9 +10,8 @@ import { inject, Injectable } from "@angular/core";
 import { first, map, Observable } from "rxjs";
 
 import { ObservableQuery } from "@apollo/client/core";
-import { onlyCompleteData } from "apollo-angular";
 
-import { mutationData } from "@common/helpers/apollo-error.helpers";
+import { completeDataOrError, mutationData } from "@common/helpers/apollo-error.helpers";
 import { noCacheFetchPolicy } from "@common/helpers/data.helpers";
 import {
     CreateAccessTokenGQL,
@@ -42,7 +41,7 @@ export class AccessTokenApi {
                 ...noCacheFetchPolicy,
             })
             .valueChanges.pipe(
-                onlyCompleteData(),
+                completeDataOrError(),
                 first(),
                 map((result: ObservableQuery.Result<ListAccessTokensQuery, "complete">) => {
                     return result.data;

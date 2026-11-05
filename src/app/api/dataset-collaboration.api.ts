@@ -10,9 +10,8 @@ import { inject, Injectable } from "@angular/core";
 import { first, map, Observable } from "rxjs";
 
 import { ObservableQuery } from "@apollo/client/core";
-import { onlyCompleteData } from "apollo-angular";
 
-import { mutationData } from "@common/helpers/apollo-error.helpers";
+import { completeDataOrError, mutationData } from "@common/helpers/apollo-error.helpers";
 import { noCacheFetchPolicy } from "@common/helpers/data.helpers";
 import {
     DatasetAccessRole,
@@ -43,7 +42,7 @@ export class DatasetCollaborationApi {
         perPage?: number;
     }): Observable<DatasetListCollaboratorsQuery> {
         return this.datasetListCollaboratorsGQL.watch({ variables: params, ...noCacheFetchPolicy }).valueChanges.pipe(
-            onlyCompleteData(),
+            completeDataOrError(),
             first(),
 
             map((result: ObservableQuery.Result<DatasetListCollaboratorsQuery, "complete">) => {
@@ -59,7 +58,7 @@ export class DatasetCollaborationApi {
         perPage: number;
     }): Observable<SearchCollaboratorQuery> {
         return this.searchCollaboratorGQL.watch({ variables: params, ...noCacheFetchPolicy }).valueChanges.pipe(
-            onlyCompleteData(),
+            completeDataOrError(),
             first(),
             map((result: ObservableQuery.Result<SearchCollaboratorQuery, "complete">) => {
                 return result.data;
@@ -84,7 +83,7 @@ export class DatasetCollaborationApi {
 
     public getDatasetUserRole(datasetId: string): Observable<DatasetUserRoleQuery> {
         return this.datasetUserRoleGQL.watch({ variables: { datasetId }, ...noCacheFetchPolicy }).valueChanges.pipe(
-            onlyCompleteData(),
+            completeDataOrError(),
             first(),
             map((result: ObservableQuery.Result<DatasetUserRoleQuery, "complete">) => {
                 return result.data;

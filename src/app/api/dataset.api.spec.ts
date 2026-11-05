@@ -13,6 +13,7 @@ import { CombinedGraphQLErrors } from "@apollo/client/errors";
 import { ApolloTestingController, ApolloTestingModule } from "apollo-angular/testing";
 import { DocumentNode } from "graphql";
 
+import { itFailsOnQueryErrors } from "@common/helpers/base-test.helpers.spec";
 import AppValues from "@common/values/app.values";
 import { DatasetApi } from "@api/dataset.api";
 import {
@@ -34,6 +35,8 @@ import {
     DatasetAsVersionedFileDocument,
     DatasetAsVersionedFileQuery,
     DatasetBlockPositionDocument,
+    DatasetBlocksEncodedByEventTypeDocument,
+    DatasetBlocksSchemaByEventTypeDocument,
     DatasetByAccountAndDatasetNameDocument,
     DatasetByAccountAndDatasetNameQuery,
     DatasetByIdDocument,
@@ -49,6 +52,8 @@ import {
     DatasetPushSyncStatusesQuery,
     DatasetsByAccountNameDocument,
     DatasetsByAccountNameQuery,
+    DatasetsTotalCountByAccountNameDocument,
+    DatasetSystemTimeBlockByHashDocument,
     DatasetVisibility,
     DeleteDatasetDocument,
     DeleteDatasetMutation,
@@ -69,6 +74,8 @@ import {
     GetMetadataBlockDocument,
     GetMetadataBlockQuery,
     MetadataEventType,
+    MetadataManifestFormat,
+    MetadataProjectionEventType,
     RenameDatasetDocument,
     RenameDatasetMutation,
     UpdateReadmeDocument,
@@ -1057,4 +1064,163 @@ describe("DatasetApi", () => {
 
         flush();
     }));
+
+    itFailsOnQueryErrors([
+        {
+            method: "getting the blocks by event type",
+            request: () =>
+                service.getBlocksByEventType({
+                    accountName: TEST_LOGIN,
+                    datasetName: TEST_DATASET_NAME,
+                    eventTypes: [MetadataProjectionEventType.Seed],
+                    encoding: MetadataManifestFormat.Yaml,
+                }),
+            document: DatasetBlocksEncodedByEventTypeDocument,
+        },
+        {
+            method: "getting the schema fields by event type",
+            request: () =>
+                service.getSchemaFieldsByEventType({
+                    accountName: TEST_LOGIN,
+                    datasetName: TEST_DATASET_NAME,
+                    eventTypes: [MetadataProjectionEventType.AddPushSource],
+                }),
+            document: DatasetBlocksSchemaByEventTypeDocument,
+        },
+        {
+            method: "querying the dataset main data",
+            request: () => service.getDatasetMainData({ accountName: TEST_LOGIN, datasetName: TEST_DATASET_NAME }),
+            document: GetDatasetMainDataDocument,
+        },
+        {
+            method: "running an SQL query",
+            request: () => service.getDatasetDataSqlRun({ query: "test query", limit: 38 }),
+            document: GetDatasetDataSqlRunDocument,
+        },
+        {
+            method: "getting the dataset basics with permissions",
+            request: () =>
+                service.getDatasetBasicsWithPermissions({ accountName: TEST_LOGIN, datasetName: TEST_DATASET_NAME }),
+            document: GetDatasetBasicsWithPermissionsDocument,
+        },
+        {
+            method: "getting the dataset history",
+            request: () =>
+                service.getDatasetHistory({
+                    accountName: TEST_LOGIN,
+                    datasetName: TEST_DATASET_NAME,
+                    numRecords: 20,
+                    numPage: 1,
+                }),
+            document: GetDatasetHistoryDocument,
+        },
+        {
+            method: "getting the dataset lineage",
+            request: () => service.getDatasetLineage({ accountName: TEST_LOGIN, datasetName: TEST_DATASET_NAME }),
+            document: GetDatasetLineageDocument,
+        },
+        {
+            method: "fetching the datasets by account name",
+            request: () => service.fetchDatasetsByAccountName(TEST_LOGIN),
+            document: DatasetsByAccountNameDocument,
+        },
+        {
+            method: "fetching the datasets total count by account name",
+            request: () => service.fetchDatasetsTotalCountByAccountName(TEST_LOGIN),
+            document: DatasetsTotalCountByAccountNameDocument,
+        },
+        {
+            method: "getting the block by hash",
+            request: () =>
+                service.getBlockByHash({
+                    accountName: TEST_LOGIN,
+                    datasetName: TEST_DATASET_NAME,
+                    blockHash: TEST_BLOCK_HASH,
+                }),
+            document: GetMetadataBlockDocument,
+        },
+        {
+            method: "looking a block position up by its hash",
+            request: () =>
+                service.getBlockPosition({
+                    accountName: TEST_LOGIN,
+                    datasetName: TEST_DATASET_NAME,
+                    blockHash: mockOlderBlock.blockHash,
+                }),
+            document: DatasetBlockPositionDocument,
+        },
+        {
+            method: "reading the metadata as of a block",
+            request: () =>
+                service.getDatasetMetadataAsOf({
+                    accountName: TEST_LOGIN,
+                    datasetName: TEST_DATASET_NAME,
+                    head: mockOlderBlock.blockHash,
+                }),
+            document: GetDatasetMetadataAsOfDocument,
+        },
+        {
+            method: "reading a page of block positions",
+            request: () =>
+                service.getChainBlockPositions({
+                    accountName: TEST_LOGIN,
+                    datasetName: TEST_DATASET_NAME,
+                    page: 2,
+                    perPage: 1,
+                    filter: { eventTypes: [MetadataEventType.SetLicense] },
+                }),
+            document: DatasetChainBlockPositionsDocument,
+        },
+        {
+            method: "getting the dataset info by id",
+            request: () => service.getDatasetInfoById(TEST_DATASET_ID),
+            document: DatasetByIdDocument,
+        },
+        {
+            method: "getting the system time block by hash",
+            request: () => service.getSystemTimeBlockByHash(TEST_DATASET_ID, TEST_BLOCK_HASH),
+            document: DatasetSystemTimeBlockByHashDocument,
+        },
+        {
+            method: "getting the dataset info by account and dataset name",
+            request: () => service.getDatasetInfoByAccountAndDatasetName(TEST_LOGIN, TEST_DATASET_NAME),
+            document: DatasetByAccountAndDatasetNameDocument,
+        },
+        {
+            method: "fetching the head block hash",
+            request: () => service.datasetHeadBlockHash(TEST_ACCOUNT_NAME, TEST_DATASET_NAME),
+            document: DatasetHeadBlockHashDocument,
+        },
+        {
+            method: "getting the push sync statuses",
+            request: () => service.datasetPushSyncStatuses(TEST_DATASET_ID),
+            document: DatasetPushSyncStatusesDocument,
+        },
+        {
+            method: "listing the downstreams",
+            request: () => service.datasetListDownstreams(TEST_DATASET_ID),
+            document: DatasetListDownstreamsDocument,
+        },
+        {
+            method: "getting the dataset as a versioned file",
+            request: () => service.getDatasetAsVersionedFile(TEST_DATASET_ID),
+            document: DatasetAsVersionedFileDocument,
+        },
+        {
+            method: "getting the dataset as a versioned file by version",
+            request: () => service.getDatasetAsVersionedFileByVersion(TEST_DATASET_ID, 2),
+            document: DatasetAsVersionedFileByVersionDocument,
+        },
+        {
+            method: "getting the versioned file content url",
+            request: () => service.getVersionedFileContentUrl(TEST_DATASET_ID, 2),
+            document: VersionedFileContentUrlDocument,
+        },
+        {
+            method: "getting the dataset as a collection",
+            request: () =>
+                service.getDatasetAsCollection({ datasetId: TEST_DATASET_ID, pathPrefix: "", page: 0, perPage: 20 }),
+            document: DatasetAsCollectionDocument,
+        },
+    ]);
 });

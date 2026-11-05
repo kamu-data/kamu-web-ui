@@ -7,12 +7,12 @@
 
 import { inject, Injectable } from "@angular/core";
 
-import { EMPTY, Observable, of } from "rxjs";
-import { catchError, first, map } from "rxjs/operators";
+import { Observable, of } from "rxjs";
+import { first, map } from "rxjs/operators";
 
 import { ObservableQuery } from "@apollo/client/core";
-import { onlyCompleteData } from "apollo-angular";
 
+import { completeDataOrError } from "@common/helpers/apollo-error.helpers";
 import {
     AccountProvider,
     DatasetKind,
@@ -50,12 +50,11 @@ export class SearchApi {
                 errorPolicy: "all",
             })
             .valueChanges.pipe(
-                onlyCompleteData(),
+                completeDataOrError(),
                 first(),
                 map((result: ObservableQuery.Result<SearchDatasetsOverviewQuery, "complete">) => {
                     return result.data;
                 }),
-                catchError(() => EMPTY),
             );
     }
 
@@ -73,12 +72,11 @@ export class SearchApi {
                 errorPolicy: "all",
             })
             .valueChanges.pipe(
-                onlyCompleteData(),
+                completeDataOrError(),
                 first(),
                 map((result: ObservableQuery.Result<SemanticSearchDatasetsOverviewQuery, "complete">) => {
                     return result.data;
                 }),
-                catchError(() => EMPTY),
             );
     }
 
@@ -92,7 +90,7 @@ export class SearchApi {
         return this.searchDatasetsAutocompleteGQL
             .watch({ variables: { query: id, perPage }, context: { skipLoading: true } })
             .valueChanges.pipe(
-                onlyCompleteData(),
+                completeDataOrError(),
                 first(),
                 map((result: ObservableQuery.Result<SearchDatasetsAutocompleteQuery, "complete">) => {
                     const nodesList: DatasetAutocompleteItem[] = result.data.search.query.nodes.map((node) => ({

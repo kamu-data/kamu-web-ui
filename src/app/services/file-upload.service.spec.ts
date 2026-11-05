@@ -5,16 +5,17 @@
  * included in the LICENSE file.
  */
 
-import { HttpHeaders, provideHttpClient } from "@angular/common/http";
+import { HttpErrorResponse, HttpHeaders, provideHttpClient } from "@angular/common/http";
 import { HttpTestingController, provideHttpClientTesting } from "@angular/common/http/testing";
 import { TestBed } from "@angular/core/testing";
 import { provideRouter } from "@angular/router";
 
-import { first, of } from "rxjs";
+import { first, firstValueFrom, of, throwError } from "rxjs";
 
 import { Apollo } from "apollo-angular";
 
 import { SharedTestModule } from "@common/modules/shared-test.module";
+import { FileUploadError } from "@common/values/errors";
 import { mockFile, mockUploadPrepareResponse } from "@api/mock/upload-file.mock";
 
 import { AppConfigService } from "src/app/app-config.service";
@@ -69,6 +70,45 @@ describe("FileUploadService", () => {
             .subscribe((data) => {
                 expect(data).toEqual({});
             });
+    });
+
+    it("should report an unsupported file type as an upload error", async () => {
+        vi.spyOn(service, "uploadFilePrepare").mockReturnValue(of(mockUploadPrepareResponse));
+        vi.spyOn(service, "uploadPostFile").mockReturnValue(
+            throwError(() => new HttpErrorResponse({ status: 415, statusText: "Unsupported Media Type" })),
+        );
+
+        const error: unknown = await firstValueFrom(service.uploadFile(mockFile, mockDatasetBasicsRootFragment)).catch(
+            (e: unknown) => e,
+        );
+
+        expect(error).toBeInstanceOf(FileUploadError);
+        expect(error).toHaveProperty("compactMessage", expect.stringContaining("Supported file types"));
+    });
+
+    it("should report a failed upload step as a file that could not be loaded", async () => {
+        vi.spyOn(service, "uploadFilePrepare").mockReturnValue(of(mockUploadPrepareResponse));
+        vi.spyOn(service, "uploadPostFile").mockReturnValue(
+            throwError(() => new FileUploadError([new Error("File could not be loaded with POST, [object Object]")])),
+        );
+
+        const error: unknown = await firstValueFrom(service.uploadFile(mockFile, mockDatasetBasicsRootFragment)).catch(
+            (e: unknown) => e,
+        );
+
+        expect(error).toBeInstanceOf(FileUploadError);
+        expect(error).toHaveProperty("compactMessage", "File could not be loaded");
+    });
+
+    it("should pass a failed GraphQL request through unchanged", async () => {
+        const graphQLError = new Error("Server unreachable");
+        vi.spyOn(service, "uploadFilePrepare").mockReturnValue(of(mockUploadPrepareResponse));
+        vi.spyOn(service, "uploadPostFile").mockReturnValue(of({}));
+        vi.spyOn(protocolsService, "getProtocols").mockReturnValue(throwError(() => graphQLError));
+
+        await expect(firstValueFrom(service.uploadFile(mockFile, mockDatasetBasicsRootFragment))).rejects.toBe(
+            graphQLError,
+        );
     });
 
     it("should check #uploadFilePrepare", () => {

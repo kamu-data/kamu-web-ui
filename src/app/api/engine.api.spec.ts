@@ -11,7 +11,9 @@ import { TestBed } from "@angular/core/testing";
 import { Apollo } from "apollo-angular";
 import { ApolloTestingModule } from "apollo-angular/testing";
 
+import { itFailsOnQueryErrors } from "@common/helpers/base-test.helpers.spec";
 import { EngineApi } from "@api/engine.api";
+import { EnginesDocument } from "@api/kamu.graphql.interface";
 
 describe("EngineApi", () => {
     let service: EngineApi;
@@ -26,4 +28,12 @@ describe("EngineApi", () => {
     it("should be created", () => {
         expect(service).toBeTruthy();
     });
+
+    itFailsOnQueryErrors([
+        {
+            method: "getting the engines",
+            request: () => service.getEngines(),
+            document: EnginesDocument,
+        },
+    ]);
 });

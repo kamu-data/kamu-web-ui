@@ -12,7 +12,7 @@ import { firstValueFrom, of, throwError } from "rxjs";
 
 import { Apollo } from "apollo-angular";
 
-import { expectPageNotFoundRedirect, expectRedirectTo, routeSnapshot } from "@common/helpers/base-test.helpers.spec";
+import { expectRedirectTo, routeSnapshot } from "@common/helpers/base-test.helpers.spec";
 import { DatasetApi } from "@api/dataset.api";
 import { mockDatasetBlockPositionQuery, mockGetDatasetMetadataAsOfQuery, mockOlderBlock } from "@api/mock/dataset.mock";
 
@@ -142,12 +142,15 @@ describe("requestMetadataTabData", () => {
         expectRedirectTo(data, `${METADATA_URL}/${MetadataTabs.License}`);
     });
 
-    it("should redirect to page not found when the dataset cannot be loaded", async () => {
-        vi.spyOn(datasetService, "datasetChanges", "get").mockReturnValue(throwError(() => new Error("fail")));
+    it("should propagate a failure to load the metadata as of the head", async () => {
+        vi.spyOn(datasetApi, "getBlockPosition").mockReturnValue(of(mockDatasetBlockPositionQuery(mockOlderBlock)));
+        vi.spyOn(datasetApi, "getDatasetMetadataAsOf").mockReturnValue(
+            throwError(() => new Error("Server unreachable")),
+        );
 
-        const data = await request(licenseRoute({}));
-
-        expectPageNotFoundRedirect(data);
+        await expect(
+            request(licenseRoute({ [ProjectLinks.URL_QUERY_PARAM_HEAD]: mockOlderBlock.blockHash })),
+        ).rejects.toThrow("Server unreachable");
     });
 });
 

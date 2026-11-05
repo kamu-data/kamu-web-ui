@@ -13,7 +13,20 @@ import { MatChipListboxChange, MatChipsModule } from "@angular/material/chips";
 import { MatProgressBarModule } from "@angular/material/progress-bar";
 import { RouterLink } from "@angular/router";
 
-import { BehaviorSubject, combineLatest, filter, map, Observable, of, switchMap, take, tap, timer } from "rxjs";
+import {
+    BehaviorSubject,
+    catchError,
+    combineLatest,
+    EMPTY,
+    filter,
+    map,
+    Observable,
+    of,
+    switchMap,
+    take,
+    tap,
+    timer,
+} from "rxjs";
 
 import { environment } from "@env/environment";
 import { PagePastEndComponent } from "@common/components/page-past-end/page-past-end.component";
@@ -197,8 +210,15 @@ export class FlowsComponent extends FlowsTableProcessingBaseComponent implements
         filterByStatus?: MaybeNull<FlowStatus[]>,
         filterByInitiator?: MaybeNull<InitiatorFilterInput>,
     ): void {
+        // Each stage catches its own failure, so the next poll tries again with what is shown kept.
+        // A poll cancels only the processes request: the runs requested for the previous processes
+        // are cancelled by the next processes result, so a slow poll still shows its runs.
         this.flowConnectionData$ = timer(0, environment.delay_polling_ms).pipe(
-            switchMap(() => this.flowsService.datasetFlowsProcesses({ datasetId: this.flowsData.datasetBasics.id })),
+            switchMap(() =>
+                this.flowsService
+                    .datasetFlowsProcesses({ datasetId: this.flowsData.datasetBasics.id })
+                    .pipe(catchError(() => EMPTY)),
+            ),
             map((flowProcesses: DatasetFlowProcessesDataFragment): DatasetFlowProcessesDataFragment => ({
                 ...flowProcesses,
                 webhooks: {
@@ -231,7 +251,7 @@ export class FlowsComponent extends FlowsTableProcessingBaseComponent implements
                     }),
                     this.flowsService.flowsInitiators(this.flowsData.datasetBasics.id),
                     of(flowProcesses),
-                ]),
+                ]).pipe(catchError(() => EMPTY)),
             ),
 
             map(([flowsData, flowInitiators, flowProcesses]) => {

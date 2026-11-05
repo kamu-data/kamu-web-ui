@@ -21,8 +21,8 @@ import { MatIconModule, MatIconRegistry } from "@angular/material/icon";
 import { MatProgressBarModule } from "@angular/material/progress-bar";
 import { DomSanitizer, SafeUrl } from "@angular/platform-browser";
 
-import { BehaviorSubject, combineLatest, Observable, of, ReplaySubject } from "rxjs";
-import { map, startWith, switchMap, tap } from "rxjs/operators";
+import { BehaviorSubject, combineLatest, EMPTY, Observable, of, ReplaySubject } from "rxjs";
+import { catchError, map, startWith, switchMap, tap } from "rxjs/operators";
 
 import { NgbAlert } from "@ng-bootstrap/ng-bootstrap";
 import { ToastrService } from "ngx-toastr";
@@ -95,6 +95,8 @@ export class VersionedFileViewComponent extends BaseComponent implements OnInit,
                 this.requestFileDetails(dataset.id, version).pipe(
                     switchMap((details) => this.requestContentUrl(dataset.id, details)),
                     startWith(null),
+                    // A failed request leaves no file shown, and another version still loads
+                    catchError(() => EMPTY),
                     trackBusy(this.loadingFileDetails$),
                 ),
             ),

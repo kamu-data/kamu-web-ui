@@ -69,9 +69,13 @@ export class FileUploadService extends UnsubscribeDestroyRefAdapter {
                     uploadToken,
                 );
             }),
-            catchError((e: HttpErrorResponse) => {
+            catchError((e: unknown) => {
+                // A failed GraphQL request has been reported by the error link already, so it passes on unchanged
+                if (!(e instanceof HttpErrorResponse) && !(e instanceof FileUploadError)) {
+                    throw e;
+                }
                 //status 415 - Unsupported media type
-                if (e.status === 415) {
+                if (e instanceof HttpErrorResponse && e.status === 415) {
                     throw new FileUploadError([
                         new Error(
                             "File could not be loaded. Supported file types: CSV, JSON, Newline-delimited JSON, Geo JSON, Newline-delimited Geo JSON, ESRI Shapefile, Parquet",

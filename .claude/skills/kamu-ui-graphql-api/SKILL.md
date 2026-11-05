@@ -107,7 +107,7 @@ public datasetWebhookSubscriptions(datasetId: string): Observable<DatasetWebhook
     return this.datasetWebhookSubscriptionsGQL
         .watch({ variables: { datasetId }, ...noCacheFetchPolicy })
         .valueChanges.pipe(
-            onlyCompleteData(),
+            completeDataOrError(),
             first(),
             map((result: ObservableQuery.Result<DatasetWebhookSubscriptionsQuery, "complete">) => {
                 return result.data;
@@ -122,21 +122,30 @@ public datasetWebhookCreateSubscription(datasetId: string, input: WebhookSubscri
 }
 ```
 
-- Queries: `.watch(...).valueChanges.pipe(onlyCompleteData(), first(), map(...))` — one complete
-  value, then completion. `onlyCompleteData()` narrows to the `"complete"` state, where `data` is
-  the full `XxxQuery`; annotate the `map` parameter with that state, as above. The plain
-  `ObservableQuery.Result<XxxQuery>` covers the empty and partial states too, so `data` turns
-  back into `XxxQuery | undefined` and invites a cast.
+- Queries: `.watch(...).valueChanges.pipe(completeDataOrError(), first(), map(...))`
+  (`@common/helpers/apollo-error.helpers`) — one complete value, then completion, or an error when
+  the request fails. A result that carries `error` errors the observable, partial data under
+  `errorPolicy: "all"` included; the error link has already reported it. `completeDataOrError()`
+  narrows to the `"complete"` state, where `data` is the full `XxxQuery`; annotate the `map`
+  parameter with that state, as above. The plain `ObservableQuery.Result<XxxQuery>` covers the
+  empty and partial states too, so `data` turns back into `XxxQuery | undefined` and invites a
+  cast.
 - Mutations: `.mutate(...).pipe(first(), mutationData())` (`@common/helpers/apollo-error.helpers`),
   then a `map` over the `XxxMutation` when the method returns a part of it. apollo-angular types
   mutation `data` as possibly `undefined` whatever the error policy; with the default policy a
   failed mutation errors the observable instead, so `mutationData()` unwraps with a runtime check.
-- Apollo emits a failed query as a result carrying `error`, and `onlyCompleteData()` drops it: the
-  observable then neither emits nor errors, and a caller's `catchError` never runs. A query whose
-  callers react to failure uses `completeDataOrError()` (`@common/helpers/apollo-error.helpers`)
-  in its place (`getDatasetSchema`, `readEnabledLoginMethods`), and every caller handles the
-  error. Cover it with a spec that answers through `ApolloTestingController`'s `graphqlErrors()` /
-  `networkError()`; a mocked `throwError` skips the Apollo path.
+- Every caller of a query handles its error:
+  - a resolver lets it propagate, so the navigation fails; it maps to the page-not-found redirect
+    only what means "not found" (a `null` entity, `DatasetNotFoundError` through
+    `pageNotFoundOnDatasetNotFound()`), never every error;
+  - a query inside `switchMap` on a long-lived stream (a polling `timer`, a subject, a typeahead,
+    input changes) catches on the inner request, `catchError(() => EMPTY)` or a neutral value such
+    as `of([])`, so one failure does not end the outer stream. A loading flag or a "loaded" signal
+    the stream would have cleared is cleared in that catch too;
+  - a one-shot `subscribe` or `async` pipe may leave the error to the global error handler.
+- Each query method gets specs that answer it with `ApolloTestingController`'s `graphqlErrors()`
+  and `networkError()`, through `itFailsOnQueryErrors()` (`@common/helpers/base-test.helpers.spec`);
+  a mocked `throwError` skips the Apollo path.
 - Data that changes behind the UI's back (flows, statuses, lists the user just modified) uses
   `...noCacheFetchPolicy` from `@common/helpers/data.helpers`; stable data relies on the cache.
 - Background polling and other requests that must not show the global spinner pass
@@ -167,7 +176,7 @@ response fixture in `src/app/api/mock/<domain>.mock.ts` — the pattern is owned
 | Inline `gql` template literals in TypeScript | Codegen would not see them, so there would be no generated types or `Document` for tests |
 | Editing `kamu.graphql.interface.ts` to unblock a build | Overwritten by the next codegen; fix the document or the schema instead |
 | Returning `ObservableQuery.Result` / `ApolloLink.Result` from api methods | Callers would deal with Apollo envelopes; api methods return the operation data type |
-| `result.data as XxxQuery` / `as XxxMutation` in api methods | A wide `ObservableQuery.Result<XxxQuery>` annotation drops the `"complete"` narrowing `onlyCompleteData()` gives, so `data` looks optional and needs a cast; an unchecked cast also hides a stale field. The `"complete"` annotation and `mutationData()` give the full type with no assertion |
+| `result.data as XxxQuery` / `as XxxMutation` in api methods | A wide `ObservableQuery.Result<XxxQuery>` annotation drops the `"complete"` narrowing `completeDataOrError()` gives, so `data` looks optional and needs a cast; an unchecked cast also hides a stale field. The `"complete"` annotation and `mutationData()` give the full type with no assertion |
 
 ## What lives elsewhere
 

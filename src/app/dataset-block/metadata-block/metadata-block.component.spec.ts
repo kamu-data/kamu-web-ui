@@ -14,7 +14,7 @@ import { MatSlideToggleModule } from "@angular/material/slide-toggle";
 import { MatSlideToggleHarness } from "@angular/material/slide-toggle/testing";
 import { ActivatedRoute, convertToParamMap } from "@angular/router";
 
-import { of } from "rxjs";
+import { of, throwError } from "rxjs";
 
 import { ApolloTestingModule } from "apollo-angular/testing";
 import { provideToastr } from "ngx-toastr";
@@ -23,6 +23,7 @@ import { registerMatSvgIcons, setComponentInput, stubMethod } from "@common/help
 import { MetadataEventType } from "@api/kamu.graphql.interface";
 import { mockMetadataBlockByHash } from "@api/mock/dataset.mock";
 
+import { BlockNavigationHarness } from "src/app/dataset-block/metadata-block/components/block-navigation/block-navigation.harness";
 import { SupportedEvents } from "src/app/dataset-block/metadata-block/components/event-details/supported.events";
 import { MetadataBlockComponent } from "src/app/dataset-block/metadata-block/metadata-block.component";
 import {
@@ -115,6 +116,22 @@ describe("MetadataBlockComponent", () => {
             eventTypes: [MetadataEventType.SetTransform, MetadataEventType.Seed],
             blockHashPrefix: "f1620ab",
         });
+    });
+
+    it("should load the next page after the request for a page fails", async () => {
+        const getDatasetHistorySpy = vi.spyOn(TestBed.inject(DatasetService), "getDatasetHistory");
+        getDatasetHistorySpy.mockReturnValueOnce(throwError(() => new Error("Server unreachable")));
+        getDatasetHistorySpy.mockReturnValue(of(mockHistoryUpdate));
+
+        setComponentInput(fixture, "page", "2");
+        fixture.detectChanges();
+        expect(await loader.getHarnessOrNull(BlockNavigationHarness)).toBeNull();
+
+        setComponentInput(fixture, "page", "3");
+        fixture.detectChanges();
+        const blockNavigation = await loader.getHarness(BlockNavigationHarness);
+        expect(await blockNavigation.getBlockHashes()).toHaveLength(mockHistoryUpdate.history.length);
+        expect(getDatasetHistorySpy).toHaveBeenLastCalledWith(MOCK_BLOCK_PAGE_DATASET_INFO, 10, 2, {});
     });
 
     it("should not send a hash prefix the backend can't parse", () => {

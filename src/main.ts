@@ -14,6 +14,7 @@ import {
     RouteReuseStrategy,
     UrlSerializer,
     withComponentInputBinding,
+    withNavigationErrorHandler,
     withRouterConfig,
 } from "@angular/router";
 
@@ -31,6 +32,7 @@ import { createApolloErrorLink } from "@common/helpers/apollo-error.helpers";
 import { HIGHLIGHT_OPTIONS_PROVIDER, logError } from "@common/helpers/app.helpers";
 import { KamuRouteReuseStrategy } from "@common/helpers/kamu-route-reuse-strategy";
 import { KamuUrlSerializer } from "@common/helpers/kamu-url-serializer";
+import { pageLoadFailedOnInitialNavigation } from "@common/helpers/navigation-error.helpers";
 import { authInterceptor } from "@common/interceptors/auth.interceptor";
 import AppValues from "@common/values/app.values";
 
@@ -81,6 +83,7 @@ bootstrapApplication(AppComponent, {
                 onSameUrlNavigation: "reload",
             }),
             withComponentInputBinding(),
+            withNavigationErrorHandler(pageLoadFailedOnInitialNavigation),
         ),
         provideConditionalGuardedRoutes(),
         provideCatchAllRoute(),

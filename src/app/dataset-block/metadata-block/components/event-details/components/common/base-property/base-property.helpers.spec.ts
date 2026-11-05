@@ -5,7 +5,7 @@
  * included in the LICENSE file.
  */
 
-import { of, Subject } from "rxjs";
+import { of, Subject, throwError } from "rxjs";
 
 import type { Mock } from "vitest";
 
@@ -76,6 +76,17 @@ describe("datasetByIdChanges", () => {
         datasetIds$.next(FIRST_DATASET_ID);
 
         expect(emitted).toEqual([null, null]);
+    });
+
+    it("should emit null for an id whose request failed, and still resolve a later id", () => {
+        requestSpy.mockReturnValueOnce(throwError(() => new Error("Server unreachable")));
+
+        datasetIds$.next(FIRST_DATASET_ID);
+        expect(emitted).toEqual([null]);
+
+        datasetIds$.next(SECOND_DATASET_ID);
+        secondResponse$.next(mockDatasetByIdQuery);
+        expect(emitted).toEqual([null, null, mockDatasetByIdQuery.datasets.byId ?? null]);
     });
 
     it("should drop the response for an id that was replaced before it arrived", () => {

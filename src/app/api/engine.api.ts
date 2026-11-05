@@ -11,8 +11,8 @@ import { Observable } from "rxjs";
 import { first, map } from "rxjs/operators";
 
 import { ObservableQuery } from "@apollo/client/core";
-import { onlyCompleteData } from "apollo-angular";
 
+import { completeDataOrError } from "@common/helpers/apollo-error.helpers";
 import { EnginesGQL, EnginesQuery } from "@api/kamu.graphql.interface";
 
 @Injectable({
@@ -23,7 +23,7 @@ export class EngineApi {
 
     public getEngines(): Observable<EnginesQuery> {
         return this.enginesGQL.watch().valueChanges.pipe(
-            onlyCompleteData(),
+            completeDataOrError(),
             first(),
             map((result: ObservableQuery.Result<EnginesQuery, "complete">) => {
                 return result.data;

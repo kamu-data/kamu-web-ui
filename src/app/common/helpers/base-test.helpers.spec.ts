@@ -23,8 +23,10 @@ import {
     UrlTree,
 } from "@angular/router";
 
-import { firstValueFrom, isObservable } from "rxjs";
+import { firstValueFrom, isObservable, Observable } from "rxjs";
 
+import { DocumentNode } from "@apollo/client/core";
+import { ApolloTestingController } from "apollo-angular/testing";
 import type { Mock, Mocked } from "vitest";
 
 import { MaybeNull, MaybeUndefined } from "@interface/app.types";
@@ -490,4 +492,38 @@ export function stubMethod<T extends object, K extends MethodKey<T>>(
         .spyOn(object as unknown as Record<string, () => void>, method as string)
         .mockImplementation(() => undefined);
     return spy as unknown as Mock<T[K] extends (...args: infer A) => infer R ? (...args: A) => R : never>;
+}
+
+export interface QueryFailureCase {
+    /** The api method under test, as the test names read */
+    method: string;
+    request: () => Observable<unknown>;
+    document: DocumentNode;
+}
+
+/**
+ * Adds, for each api query, one test answering it with a GraphQL error and one with a network
+ * error, both expected to error the observable the method returns. Call it inside the `describe`
+ * of a spec that imports `ApolloTestingModule`.
+ */
+export function itFailsOnQueryErrors(cases: QueryFailureCase[]): void {
+    cases.forEach(({ method, request, document }) => {
+        it(`should fail ${method} on a GraphQL error`, async () => {
+            const result = firstValueFrom(request());
+
+            TestBed.inject(ApolloTestingController)
+                .expectOne(document)
+                .graphqlErrors([{ message: "Internal error" }]);
+
+            await expect(result).rejects.toThrowError("Internal error");
+        });
+
+        it(`should fail ${method} on a network error`, async () => {
+            const result = firstValueFrom(request());
+
+            TestBed.inject(ApolloTestingController).expectOne(document).networkError(new Error("Server unreachable"));
+
+            await expect(result).rejects.toThrowError("Server unreachable");
+        });
+    });
 }

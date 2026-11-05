@@ -10,9 +10,8 @@ import { inject, Injectable } from "@angular/core";
 import { first, map, Observable } from "rxjs";
 
 import { ObservableQuery } from "@apollo/client/core";
-import { onlyCompleteData } from "apollo-angular";
 
-import { mutationData } from "@common/helpers/apollo-error.helpers";
+import { completeDataOrError, mutationData } from "@common/helpers/apollo-error.helpers";
 import { noCacheFetchPolicy } from "@common/helpers/data.helpers";
 import {
     CancelFlowRunGQL,
@@ -97,7 +96,8 @@ export class DatasetFlowApi {
                 },
             })
             .valueChanges.pipe(
-                onlyCompleteData(),
+                completeDataOrError(),
+                first(),
                 map((result: ObservableQuery.Result<DatasetFlowsProcessesQuery, "complete">) => {
                     return result.data;
                 }),
@@ -147,7 +147,8 @@ export class DatasetFlowApi {
                 ...noCacheFetchPolicy,
             })
             .valueChanges.pipe(
-                onlyCompleteData(),
+                completeDataOrError(),
+                first(),
                 map((result: ObservableQuery.Result<GetDatasetFlowConfigsQuery, "complete">) => {
                     return result.data;
                 }),
@@ -213,7 +214,8 @@ export class DatasetFlowApi {
                 },
             })
             .valueChanges.pipe(
-                onlyCompleteData(),
+                completeDataOrError(),
+                first(),
                 map((result: ObservableQuery.Result<GetDatasetFlowTriggerQuery, "complete">) => {
                     return result.data;
                 }),
@@ -242,7 +244,8 @@ export class DatasetFlowApi {
                 },
             })
             .valueChanges.pipe(
-                onlyCompleteData(),
+                completeDataOrError(),
+                first(),
                 map((result: ObservableQuery.Result<GetDatasetListFlowsQuery, "complete">) => {
                     return result.data;
                 }),
@@ -273,7 +276,8 @@ export class DatasetFlowApi {
         return this.datasetFlowByIdGQL
             .watch({ variables: { datasetId: params.datasetId, flowId: params.flowId }, ...noCacheFetchPolicy })
             .valueChanges.pipe(
-                onlyCompleteData(),
+                completeDataOrError(),
+                first(),
                 map((result: ObservableQuery.Result<GetFlowByIdQuery, "complete">) => {
                     return result.data;
                 }),
@@ -301,7 +305,8 @@ export class DatasetFlowApi {
                 },
             })
             .valueChanges.pipe(
-                onlyCompleteData(),
+                completeDataOrError(),
+                first(),
                 map((result: ObservableQuery.Result<DatasetFlowsInitiatorsQuery, "complete">) => {
                     return result.data;
                 }),

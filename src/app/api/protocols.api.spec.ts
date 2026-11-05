@@ -9,6 +9,7 @@ import { fakeAsync, flush, TestBed, tick } from "@angular/core/testing";
 
 import { ApolloTestingController, ApolloTestingModule } from "apollo-angular/testing";
 
+import { itFailsOnQueryErrors } from "@common/helpers/base-test.helpers.spec";
 import { DatasetProtocolsDocument, DatasetProtocolsQuery } from "@api/kamu.graphql.interface";
 import { ProtocolsApi } from "@api/protocols.api";
 
@@ -61,4 +62,12 @@ describe("ProtocolsApi", () => {
         expect(subscription$.closed).toEqual(true);
         flush();
     }));
+
+    itFailsOnQueryErrors([
+        {
+            method: "getting the protocols",
+            request: () => service.getProtocols(mockDatasetInfo),
+            document: DatasetProtocolsDocument,
+        },
+    ]);
 });

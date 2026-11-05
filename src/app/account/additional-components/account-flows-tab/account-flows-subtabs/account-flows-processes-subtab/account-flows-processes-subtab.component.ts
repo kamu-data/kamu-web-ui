@@ -16,7 +16,9 @@ import { MatProgressBarModule } from "@angular/material/progress-bar";
 
 import {
     BehaviorSubject,
+    catchError,
     debounceTime,
+    EMPTY,
     filter,
     map,
     Observable,
@@ -168,7 +170,16 @@ export class AccountFlowsProcessesSubtabComponent extends BaseComponent implemen
         this.accountFlowsCardsData$ = triggerWithInitial$.pipe(
             switchMap(() => polling$),
             tap(() => this.cardsLoadStarted$.next()),
-            switchMap(() => this.setCardsStrategy(this.flowsMode)),
+            switchMap(() =>
+                this.setCardsStrategy(this.flowsMode).pipe(
+                    // A failed poll keeps the cards shown and still ends the load, so no busy card waits for it
+                    catchError(() => {
+                        this.loadingCardsSubject$.next(false);
+                        this.cardsLoaded$.next();
+                        return EMPTY;
+                    }),
+                ),
+            ),
 
             tap((data: CardsStrategyResult) => {
                 this.activeRollup = data.rollup;

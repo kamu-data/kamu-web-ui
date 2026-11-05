@@ -11,7 +11,7 @@ import { MatIconModule } from "@angular/material/icon";
 import { RouterLink, RouterLinkActive, RouterOutlet } from "@angular/router";
 
 import { EMPTY, Observable } from "rxjs";
-import { switchMap } from "rxjs/operators";
+import { catchError, switchMap } from "rxjs/operators";
 
 import { BaseComponent } from "@common/components/base.component";
 import { FeatureFlagDirective } from "@common/directives/feature-flag.directive";
@@ -76,7 +76,10 @@ export class AccountSettingsComponent extends BaseComponent implements OnInit {
         this.user$ = this.loggedUserService.loggedInUserChanges.pipe(
             switchMap((loggedUser) => {
                 if (loggedUser) {
-                    return this.accountEmailService.fetchAccountWithEmail(loggedUser.accountName);
+                    // A failed request leaves the stream listening for the next signed-in user
+                    return this.accountEmailService
+                        .fetchAccountWithEmail(loggedUser.accountName)
+                        .pipe(catchError(() => EMPTY));
                 } else {
                     return EMPTY;
                 }

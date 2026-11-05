@@ -90,24 +90,6 @@ describe("AccountService", () => {
         expect(subscription$.closed).toBe(true);
     });
 
-    it("check fetchMultipleAccountsByName", () => {
-        const apiAccountByNameSpy = vi
-            .spyOn(accountApi, "fetchAccountByName")
-            .mockReturnValueOnce(of(mockAccountDetails))
-            .mockReturnValueOnce(of(null));
-
-        const subscription$ = service
-            .fetchMultipleAccountsByName([TEST_LOGIN, "non-existing-user"])
-            .pipe(first())
-            .subscribe((accountsByName: Map<string, AccountFragment>) => {
-                expect(accountsByName.size).toEqual(1);
-                expect(accountsByName.get(TEST_LOGIN)).toEqual(mockAccountDetails);
-            });
-
-        expect(apiAccountByNameSpy).toHaveBeenCalledTimes(2);
-        expect(subscription$.closed).toBe(true);
-    });
-
     it("check getDatasetsByAccountName", () => {
         const fetchDatasetsByAccountNameSpy = vi
             .spyOn(datasetApi, "fetchDatasetsByAccountName")

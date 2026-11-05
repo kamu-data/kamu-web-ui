@@ -142,7 +142,12 @@ export class SearchAndSchemasSectionComponent extends BaseComponent implements O
         return text$.pipe(
             debounceTime(this.delayTime),
             distinctUntilChanged(),
-            switchMap((term: string) => this.appSearchAPI.autocompleteDatasetSearch(term)),
+            switchMap((term: string) =>
+                this.appSearchAPI.autocompleteDatasetSearch(term).pipe(
+                    // A failed search offers no suggestions; the next term searches again
+                    catchError(() => of([])),
+                ),
+            ),
         );
     };
 

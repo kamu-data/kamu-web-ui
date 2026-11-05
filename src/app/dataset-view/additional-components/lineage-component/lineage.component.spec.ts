@@ -24,7 +24,6 @@ import {
 } from "@common/helpers/base-test.helpers.spec";
 import { SharedTestModule } from "@common/modules/shared-test.module";
 
-import { AccountService } from "src/app/account/account.service";
 import { mockLineageGraphUpdate } from "src/app/dataset-view/additional-components/data-tabs.mock";
 import { LineageGraphDatasetNode } from "src/app/dataset-view/additional-components/lineage-component/lineage-model";
 import { LineageComponent } from "src/app/dataset-view/additional-components/lineage-component/lineage.component";
@@ -39,7 +38,6 @@ import { NavigationService } from "src/app/services/navigation.service";
 describe("LineageComponent", () => {
     let component: LineageComponent;
     let fixture: ComponentFixture<LineageComponent>;
-    let accountService: AccountService;
     let navigationService: NavigationService;
     let toastrService: ToastrService;
     let navigationServiceSpy: Mock;
@@ -52,14 +50,12 @@ describe("LineageComponent", () => {
             imports: [SharedTestModule, LineageComponent],
         }).compileComponents();
 
-        accountService = TestBed.inject(AccountService);
         navigationService = TestBed.inject(NavigationService);
         toastrService = TestBed.inject(ToastrService);
         datasetService = TestBed.inject(DatasetService);
         vi.spyOn(datasetService, "requestDatasetLineage").mockReturnValue(of(undefined));
         datasetSubsService = TestBed.inject(DatasetSubscriptionsService);
         vi.spyOn(TestBed.inject(LineageNodeSizeService), "whenFontsReady").mockReturnValue(of(undefined));
-        vi.spyOn(accountService, "fetchMultipleAccountsByName").mockReturnValue(of());
         navigationServiceSpy = vi.spyOn(navigationService, "navigateToDatasetView").mockImplementation(() => {});
 
         fixture = TestBed.createComponent(LineageComponent);

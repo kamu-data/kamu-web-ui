@@ -13,6 +13,7 @@ import { Apollo } from "apollo-angular";
 import { ApolloTestingController, ApolloTestingModule } from "apollo-angular/testing";
 
 import { requireValue } from "@common/helpers/app.helpers";
+import { itFailsOnQueryErrors } from "@common/helpers/base-test.helpers.spec";
 import { AccountApi } from "@api/account.api";
 import {
     AccountByNameDocument,
@@ -354,4 +355,75 @@ describe("AccountApi", () => {
             data: mockAccountFlowsWebhookCardsQuery,
         });
     });
+
+    itFailsOnQueryErrors([
+        {
+            method: "fetching the account with email",
+            request: () => service.fetchAccountWithEmail(ACCOUNT_NAME),
+            document: AccountWithEmailDocument,
+        },
+        {
+            method: "fetching the account storage quota",
+            request: () => service.fetchAccountStorageQuota(ACCOUNT_NAME),
+            document: AccountStorageQuotaDocument,
+        },
+        {
+            method: "fetching the account by name",
+            request: () => service.fetchAccountByName(TEST_LOGIN),
+            document: AccountByNameDocument,
+        },
+        {
+            method: "fetching the account list flows",
+            request: () =>
+                service.fetchAccountListFlows({
+                    accountName: ACCOUNT_NAME,
+                    page: PAGE,
+                    perPageTable: PER_PAGE,
+                    perPageTiles: PER_PAGE,
+                    filters: ACCOUNT_FILTERS,
+                }),
+            document: AccountListFlowsDocument,
+        },
+        {
+            method: "fetching the account flows as cards",
+            request: () =>
+                service.fetchAccountFlowsAsCards({
+                    accountName: ACCOUNT_NAME,
+                    page: PAGE,
+                    perPage: PER_PAGE,
+                    filters: { effectiveStateIn: [] },
+                    ordering: { direction: OrderingDirection.Asc, field: FlowProcessOrderField.EffectiveState },
+                }),
+            document: AccountFlowsAsCardsDocument,
+        },
+        {
+            method: "fetching the account primary cards",
+            request: () =>
+                service.fetchAccountPrimaryCards({
+                    accountName: ACCOUNT_NAME,
+                    page: PAGE,
+                    perPage: PER_PAGE,
+                    filters: { effectiveStateIn: [] },
+                    ordering: { direction: OrderingDirection.Asc, field: FlowProcessOrderField.EffectiveState },
+                }),
+            document: AccountPrimaryCardsDocument,
+        },
+        {
+            method: "fetching the account webhook cards",
+            request: () =>
+                service.fetchAccountWebhookCards({
+                    accountName: ACCOUNT_NAME,
+                    page: PAGE,
+                    perPage: PER_PAGE,
+                    filters: { effectiveStateIn: [] },
+                    ordering: { direction: OrderingDirection.Asc, field: FlowProcessOrderField.EffectiveState },
+                }),
+            document: AccountWebhookCardsDocument,
+        },
+        {
+            method: "listing the account datasets with flows",
+            request: () => service.accountDatasetsWithFlows(ACCOUNT_NAME),
+            document: AccountListDatasetsWithFlowsDocument,
+        },
+    ]);
 });

@@ -32,6 +32,7 @@ import { MaybeNull, MaybeUndefined } from "@interface/app.types";
 import { FeatureVisibility } from "@interface/feature-flags.interface";
 
 import { accountDatasetsResolverFn } from "src/app/account/additional-components/datasets-tab/resolver/account-datasets.resolver";
+import { accountResolverFn } from "src/app/account/resolver/account.resolver";
 import { accountSettingsAccessTokensResolverFn } from "src/app/account/settings/tabs/access-tokens-tab/resolver/account-settings-access-tokens.resolver";
 import { AppConfigService } from "src/app/app-config.service";
 import { provideCatchAllRoute, provideConditionalGuardedRoutes, PUBLIC_ROUTES } from "src/app/app-routing";
@@ -146,6 +147,7 @@ describe("Router", () => {
                 { provide: blockMetadataResolverFn, useValue: { resolve: blockMetadataResolveSpy } },
                 { provide: addPushSourceResolverFn, useValue: { resolve: addPushSourceResolveSpy } },
                 { provide: RouteReuseStrategy, useClass: KamuRouteReuseStrategy },
+                { provide: accountResolverFn, useValue: { resolve: () => of(mockAccountDetails) } },
                 {
                     provide: accountDatasetsResolverFn,
                     useValue: {

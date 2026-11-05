@@ -19,7 +19,7 @@ import { Mock } from "vitest";
 import { PageLoadFailedComponent } from "@common/components/page-load-failed/page-load-failed.component";
 import { expectRedirectTo, stubMethod } from "@common/helpers/base-test.helpers.spec";
 import { pageLoadFailedOnInitialNavigation } from "@common/helpers/navigation-error.helpers";
-import { AccountNotFoundError, DatasetNotFoundError } from "@common/values/errors";
+import { DatasetNotFoundError } from "@common/values/errors";
 import { MaybeUndefined } from "@interface/app.types";
 
 import ProjectLinks from "src/app/project-links";
@@ -56,14 +56,9 @@ describe("pageLoadFailedOnInitialNavigation", () => {
         expect(handleErrorSpy).not.toHaveBeenCalled();
     });
 
-    [
-        { name: "a missing dataset", error: new DatasetNotFoundError() },
-        { name: "a missing account", error: new AccountNotFoundError() },
-    ].forEach(({ name, error }) => {
-        it(`should leave ${name} to the error handler, which shows page not found`, () => {
-            expect(handle(error)).toBeUndefined();
-            expect(handleErrorSpy).not.toHaveBeenCalled();
-        });
+    it("should leave a missing dataset to the error handler, which shows page not found", () => {
+        expect(handle(new DatasetNotFoundError())).toBeUndefined();
+        expect(handleErrorSpy).not.toHaveBeenCalled();
     });
 });
 

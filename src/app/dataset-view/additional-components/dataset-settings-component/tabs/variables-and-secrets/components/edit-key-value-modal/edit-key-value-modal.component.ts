@@ -157,7 +157,10 @@ export class EditKeyValueModalComponent extends BaseComponent implements OnInit 
                     takeUntilDestroyed(this.destroyRef),
                 )
                 .subscribe((value) => {
-                    this.keyValueForm.patchValue({ value });
+                    // A value typed while the request ran is the user's replacement; keep it.
+                    if (!this.valueControl.dirty) {
+                        this.keyValueForm.patchValue({ value });
+                    }
                 });
         }
     }

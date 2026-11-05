@@ -405,6 +405,37 @@ describe("EditKeyValueModalComponent", () => {
         expect(await modal.getValue()).toBe("exposed-value");
     });
 
+    it("should keep a value typed while a retry loads the secret's current value", async () => {
+        captureUnhandledRxjsErrors();
+        const retried$ = new Subject<string>();
+        vi.spyOn(evnironmentVariablesService, "exposedEnvVariableValue")
+            .mockReturnValueOnce(throwError(() => new Error("Server unreachable")))
+            .mockReturnValueOnce(retried$);
+        setComponentInput(fixture, "row", requireValue(existingVariables.nodes[2]));
+        fixture.detectChanges();
+        const modal = await TestbedHarnessEnvironment.harnessForFixture(fixture, EditKeyValueModalHarness);
+
+        await modal.retryExposedValue();
+        await modal.setValue("new-value");
+        retried$.next("exposed-value");
+
+        expect(await modal.getValue()).toBe("new-value");
+        expect(await modal.getExposedValueLoadError()).toBeNull();
+    });
+
+    it("should keep a value typed before a secret's current value has loaded", async () => {
+        const exposed$ = new Subject<string>();
+        vi.spyOn(evnironmentVariablesService, "exposedEnvVariableValue").mockReturnValue(exposed$);
+        setComponentInput(fixture, "row", requireValue(existingVariables.nodes[2]));
+        fixture.detectChanges();
+        const modal = await TestbedHarnessEnvironment.harnessForFixture(fixture, EditKeyValueModalHarness);
+
+        await modal.setValue("new-value");
+        exposed$.next("exposed-value");
+
+        expect(await modal.getValue()).toBe("new-value");
+    });
+
     it("should show and hide a secret's value with the eye button, without loading it again", async () => {
         const exposedSpy = vi
             .spyOn(evnironmentVariablesService, "exposedEnvVariableValue")

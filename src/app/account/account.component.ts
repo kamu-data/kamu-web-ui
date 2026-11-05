@@ -13,7 +13,6 @@ import { MatIconModule } from "@angular/material/icon";
 import { RouterLink, RouterOutlet } from "@angular/router";
 
 import { Observable } from "rxjs";
-import { map, shareReplay } from "rxjs/operators";
 
 import { CopyToClipboardComponent } from "@common/components/copy-to-clipboard/copy-to-clipboard.component";
 import { ModalService } from "@common/components/modal/modal.service";
@@ -23,9 +22,7 @@ import { DisplayAccountNamePipe } from "@common/pipes/display-account-name.pipe"
 import { DisplayDatasetIdPipe } from "@common/pipes/display-dataset-id.pipe";
 import RoutingResolvers from "@common/resolvers/routing-resolvers";
 import AppValues from "@common/values/app.values";
-import { AccountNotFoundError } from "@common/values/errors";
 import { AccountFragment } from "@api/kamu.graphql.interface";
-import { MaybeNull } from "@interface/app.types";
 
 import { AccountTabs } from "src/app/account/account.constants";
 import { AccountService } from "src/app/account/account.service";
@@ -55,36 +52,35 @@ import ProjectLinks from "src/app/project-links";
 })
 export class AccountComponent {
     @Input(ProjectLinks.URL_PARAM_ACCOUNT_NAME) public set accountName(value: string) {
-        this.user$ = this.pipelineAccountByName(value);
         this.datasetTotalCount$ = this.accountService.getDatasetsTotalCountByAccountName(value);
     }
+    @Input(RoutingResolvers.ACCOUNT_KEY) public account: AccountFragment;
     @Input(RoutingResolvers.ACCOUNT_ACTIVE_TAB_KEY) public activeTab: AccountTabs;
     public datasetTotalCount$: Observable<number>;
 
     public readonly AccountTabs = AccountTabs;
     public readonly URL_ACCOUNT_SELECT = ProjectLinks.URL_ACCOUNT_SELECT;
     public isDropdownMenu = false;
-    public user$: Observable<AccountFragment>;
 
     private modalService = inject(ModalService);
     private accountService = inject(AccountService);
     private loggedUserService = inject(LoggedUserService);
 
-    public avatarLink(user: AccountFragment): string {
-        return user.avatarUrl ?? AppValues.DEFAULT_AVATAR_URL;
+    public avatarLink(): string {
+        return this.account.avatarUrl ?? AppValues.DEFAULT_AVATAR_URL;
     }
 
-    public isLoggedUser(user: AccountFragment): boolean {
-        return this.loggedUserService.maybeCurrentlyLoggedInUser?.accountName === user.accountName;
+    public isLoggedUser(): boolean {
+        return this.loggedUserService.maybeCurrentlyLoggedInUser?.accountName === this.account.accountName;
     }
 
-    public showFlows(user: AccountFragment): boolean {
-        return this.isLoggedUser(user) || Boolean(this.loggedUserService.maybeCurrentlyLoggedInUser?.isAdmin);
+    public showFlows(): boolean {
+        return this.isLoggedUser() || Boolean(this.loggedUserService.maybeCurrentlyLoggedInUser?.isAdmin);
     }
 
-    public showSettings(user: AccountFragment): boolean {
+    public showSettings(): boolean {
         return (
-            this.loggedUserService.maybeCurrentlyLoggedInUser?.accountName !== user.accountName &&
+            this.loggedUserService.maybeCurrentlyLoggedInUser?.accountName !== this.account.accountName &&
             Boolean(this.loggedUserService.maybeCurrentlyLoggedInUser?.isAdmin)
         );
     }
@@ -103,16 +99,6 @@ export class AccountComponent {
             this.modalService.warning({
                 message: AppValues.UNIMPLEMENTED_MESSAGE,
                 yesButtonText: "Ok",
-            }),
-        );
-    }
-
-    private pipelineAccountByName(accountName: string): Observable<AccountFragment> {
-        return this.accountService.fetchAccountByName(accountName).pipe(
-            shareReplay(),
-            map((account: MaybeNull<AccountFragment>) => {
-                if (account) return account;
-                throw new AccountNotFoundError();
             }),
         );
     }

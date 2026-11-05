@@ -20,6 +20,7 @@ import { accountDatasetsResolverFn } from "src/app/account/additional-components
 import { SettingsTabComponent } from "src/app/account/additional-components/settings-tab/settings-tab.component";
 import { accountSettingsTabGuard } from "src/app/account/guards/account-settings-tab.guard";
 import { accountActiveTabResolverFn } from "src/app/account/resolver/account-active-tab.resolver";
+import { accountResolverFn } from "src/app/account/resolver/account.resolver";
 import { authenticatedGuard } from "src/app/auth/guards/authenticated.guard";
 import ProjectLinks from "src/app/project-links";
 
@@ -28,7 +29,10 @@ export const ACCOUNT_SELECT_ROUTES: Routes = [
         path: "",
         component: AccountComponent,
         runGuardsAndResolvers: "always",
-        resolve: { [RoutingResolvers.ACCOUNT_ACTIVE_TAB_KEY]: accountActiveTabResolverFn },
+        resolve: {
+            [RoutingResolvers.ACCOUNT_KEY]: accountResolverFn,
+            [RoutingResolvers.ACCOUNT_ACTIVE_TAB_KEY]: accountActiveTabResolverFn,
+        },
         children: [
             {
                 path: "",

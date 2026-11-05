@@ -8,7 +8,7 @@
 import { ErrorHandler, inject } from "@angular/core";
 import { NavigationError, RedirectCommand, Router } from "@angular/router";
 
-import { AccountNotFoundError, DatasetNotFoundError } from "@common/values/errors";
+import { DatasetNotFoundError } from "@common/values/errors";
 import { MaybeUndefined } from "@interface/app.types";
 
 import { NavigationService } from "src/app/services/navigation.service";
@@ -25,7 +25,7 @@ export function pageLoadFailedOnInitialNavigation(navigationError: NavigationErr
     const navigationService = inject(NavigationService);
 
     const error: unknown = navigationError.error;
-    if (router.navigated || error instanceof DatasetNotFoundError || error instanceof AccountNotFoundError) {
+    if (router.navigated || error instanceof DatasetNotFoundError) {
         return undefined;
     }
     // The router passes on no error it redirects for

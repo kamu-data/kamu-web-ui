@@ -13,7 +13,6 @@ import type { Mock } from "vitest";
 import { ModalService } from "@common/components/modal/modal.service";
 import { stubMethod } from "@common/helpers/base-test.helpers.spec";
 import {
-    AccountNotFoundError,
     AuthenticationError,
     DatasetNotFoundError,
     DatasetOperationError,
@@ -83,18 +82,6 @@ describe("ErrorHandlerService", () => {
             .mockImplementation(() => {});
 
         service.handleError(new DatasetNotFoundError());
-
-        expect(toastrServiceSpy).not.toHaveBeenCalled();
-        expect(navigationServiceSpy).toHaveBeenCalledWith();
-    });
-
-    it("should show redirect to 404 page on account not found", () => {
-        const toastrServiceSpy: Mock = stubMethod(toastrService, "error");
-        const navigationServiceSpy: Mock = vi
-            .spyOn(navigationService, "navigateToPageNotFound")
-            .mockImplementation(() => {});
-
-        service.handleError(new AccountNotFoundError());
 
         expect(toastrServiceSpy).not.toHaveBeenCalled();
         expect(navigationServiceSpy).toHaveBeenCalledWith();

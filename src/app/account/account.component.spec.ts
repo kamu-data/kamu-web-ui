@@ -8,20 +8,18 @@
 import { provideHttpClient } from "@angular/common/http";
 import { provideHttpClientTesting } from "@angular/common/http/testing";
 import { ComponentFixture, TestBed } from "@angular/core/testing";
-import { ActivatedRoute } from "@angular/router";
+import { provideRouter } from "@angular/router";
 
-import { BehaviorSubject, of } from "rxjs";
+import { of } from "rxjs";
 
 import { Apollo } from "apollo-angular";
 import { provideToastr } from "ngx-toastr";
-import type { Mock } from "vitest";
 
 import { getElementByDataTestId, registerMatSvgIcons, setComponentInput } from "@common/helpers/base-test.helpers.spec";
 import AppValues from "@common/values/app.values";
 import { mockAccountDetails, TEST_AVATAR_URL, TEST_LOGIN } from "@api/mock/auth.mock";
 
 import { AccountComponent } from "src/app/account/account.component";
-import { AccountPageQueryParams } from "src/app/account/account.component.model";
 import { AccountTabs } from "src/app/account/account.constants";
 import { AccountService } from "src/app/account/account.service";
 import { LoggedUserService } from "src/app/auth/logged-user.service";
@@ -33,47 +31,23 @@ describe("AccountComponent", () => {
     let accountService: AccountService;
     let loggedUserService: LoggedUserService;
 
-    const mockQueryParams: BehaviorSubject<AccountPageQueryParams> = new BehaviorSubject<AccountPageQueryParams>({
-        tab: AccountTabs.INBOX,
-    });
-
-    const mockParams = new BehaviorSubject({
-        [ProjectLinks.URL_PARAM_ACCOUNT_NAME]: mockAccountDetails.accountName,
-    });
-
-    let fetchAccountByNameSpy: Mock;
-
     beforeEach(async () => {
         await TestBed.configureTestingModule({
             imports: [AccountComponent],
-            providers: [
-                Apollo,
-                provideHttpClient(),
-                provideToastr(),
-                {
-                    provide: ActivatedRoute,
-                    useValue: {
-                        queryParams: mockQueryParams.asObservable(),
-                    },
-                },
-                provideHttpClient(),
-                provideHttpClientTesting(),
-            ],
+            providers: [Apollo, provideRouter([]), provideHttpClient(), provideToastr(), provideHttpClientTesting()],
         }).compileComponents();
 
         registerMatSvgIcons();
 
         accountService = TestBed.inject(AccountService);
         loggedUserService = TestBed.inject(LoggedUserService);
-        fetchAccountByNameSpy = vi.spyOn(accountService, "fetchAccountByName").mockReturnValue(of(mockAccountDetails));
         vi.spyOn(loggedUserService, "loggedInUserChanges", "get").mockReturnValue(of(null));
         vi.spyOn(accountService, "getDatasetsTotalCountByAccountName").mockReturnValue(of(1));
-
-        registerMatSvgIcons();
 
         fixture = TestBed.createComponent(AccountComponent);
         component = fixture.componentInstance;
         setComponentInput(fixture, "accountName", TEST_LOGIN);
+        setComponentInput(fixture, "account", mockAccountDetails);
     });
 
     it("should create", () => {
@@ -81,23 +55,18 @@ describe("AccountComponent", () => {
     });
 
     it("should check avatar link propagation vs default", () => {
-        expect(component.avatarLink(mockAccountDetails)).toEqual(TEST_AVATAR_URL);
+        expect(component.avatarLink()).toEqual(TEST_AVATAR_URL);
 
-        expect(
-            component.avatarLink({
-                ...mockAccountDetails,
-                avatarUrl: undefined,
-            }),
-        ).toEqual(AppValues.DEFAULT_AVATAR_URL);
+        setComponentInput(fixture, "account", { ...mockAccountDetails, avatarUrl: undefined });
+        expect(component.avatarLink()).toEqual(AppValues.DEFAULT_AVATAR_URL);
     });
 
     it("should check isLoggedUser property", () => {
-        expect(component.isLoggedUser(mockAccountDetails)).toEqual(false);
+        expect(component.isLoggedUser()).toEqual(false);
 
         vi.spyOn(loggedUserService, "maybeCurrentlyLoggedInUser", "get").mockReturnValue(mockAccountDetails);
-        mockParams.next({ [ProjectLinks.URL_PARAM_ACCOUNT_NAME]: mockAccountDetails.accountName });
 
-        expect(component.isLoggedUser(mockAccountDetails)).toEqual(true);
+        expect(component.isLoggedUser()).toEqual(true);
     });
 
     it("should show the avatar image without linking to it", () => {
@@ -105,12 +74,6 @@ describe("AccountComponent", () => {
         const avatar = getElementByDataTestId(fixture, "account-avatar", HTMLImageElement);
         expect(avatar.src).toEqual(TEST_AVATAR_URL);
         expect(avatar.closest("a")).toBeNull();
-    });
-
-    it("should check API calls when account is found", () => {
-        fixture.detectChanges();
-        expect(fetchAccountByNameSpy).toHaveBeenCalledTimes(1);
-        expect(fetchAccountByNameSpy).toHaveBeenCalledWith(mockAccountDetails.accountName);
     });
 
     it("should highlight the tab the route resolved as active", () => {

@@ -38,12 +38,6 @@ export class DatasetNotFoundError extends KamuError {
     }
 }
 
-export class AccountNotFoundError extends KamuError {
-    public accept(visitor: KamuErrorVisitor): void {
-        visitor.visitAccountNotFoundError(this);
-    }
-}
-
 export abstract class KamuMultiError extends KamuError {
     public readonly errors: ReadonlyArray<GraphQLFormattedError>;
 
@@ -83,7 +77,6 @@ interface KamuErrorVisitor {
     visitSqlExecutionError(e: SqlExecutionError): void;
     visitInvalidSqlError(e: InvalidSqlError): void;
     visitDatasetNotFoundError(e: DatasetNotFoundError): void;
-    visitAccountNotFoundError(e: AccountNotFoundError): void;
     visitDatasetOperationError(e: DatasetOperationError): void;
     visitAuthenticationError(e: AuthenticationError): void;
     visitFileUploadError(e: FileUploadError): void;
@@ -102,10 +95,6 @@ export class KamuErrorHandler implements KamuErrorVisitor {
     }
 
     public visitDatasetNotFoundError(): void {
-        this.navigationService.navigateToPageNotFound();
-    }
-
-    public visitAccountNotFoundError(): void {
         this.navigationService.navigateToPageNotFound();
     }
 

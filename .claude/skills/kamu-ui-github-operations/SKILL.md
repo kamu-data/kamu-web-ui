@@ -49,12 +49,26 @@ scratch workspace and `npm start`, then prepare the state through GraphQL rather
 
 - A single-tenant workspace has the account `kamu` with password `kamu.dev`; the access token
   comes from `mutation { auth { login(loginMethod: PASSWORD, loginCredentialsJson: "{\"login\":\"kamu\",\"password\":\"kamu.dev\"}") { accessToken } } }`.
+- Datasets come from `kamu add <snapshot>.yaml`. Copy the snapshot syntax from kamu-cli's
+  `examples/` for the build being run, not from memory: the ODF format changes between versions,
+  and a remembered older form (a read step's `schema` as a list of DDL strings) is rejected.
+- Variables and secrets need `secretsEncryption` (`enabled: true` and a 32-character
+  `encryptionKey`) under `content` in the workspace's `.kamuconfig`; without it the backend
+  turns the feature off.
+- Build page URLs from the route constants, not by guessing: a dataset tab is
+  `/<account>/<dataset>/<DatasetViewTypeEnum>`, and its settings tabs add a `SettingsTabsEnum`
+  segment (`/kamu/weather/settings/variables-and-secrets`). `ProjectLinks.URL_SETTINGS`
+  (`/v/settings`) is the account's settings page.
+- To show a failed request, enable `Fetch` with a pattern on the GraphQL URL; in
+  `Fetch.requestPaused`, answer `Fetch.failRequest` (`errorReason: "ConnectionFailed"`) when the
+  `operationName` in `postData` is the one to fail, and `Fetch.continueRequest` otherwise. Start
+  failing only once the page has loaded when the page itself sends the same operation.
 - Without Puppeteer or Playwright, drive headless Chrome over the DevTools protocol
   (`google-chrome --headless=new --remote-debugging-port=9222`, and Node's built-in `WebSocket`):
   open a target, load the app origin, set `localStorage` key `access_token` (`AppValues.LOCAL_STORAGE_ACCESS_TOKEN`)
   to the token, navigate to the page, wait for it to render, then `Page.captureScreenshot`.
   `Runtime.evaluate` of `document.body.innerText` gives the rendered text to check before looking
-  at the image.
+  at the image; it leaves out input values, such as the keys in the variables table.
 - Read each image before attaching it, and stop the servers and Chrome afterwards.
 
 ### Attaching them

@@ -162,6 +162,7 @@ describe("Router", () => {
         location = TestBed.inject(Location);
         loggedUserService = TestBed.inject(LoggedUserService);
         loginMethodsService = TestBed.inject(LoginMethodsService);
+        vi.spyOn(loginMethodsService, "loadSettledChanges", "get").mockReturnValue(of(undefined));
 
         fixture = TestBed.createComponent(PageNotFoundComponent);
         router.initialNavigation();

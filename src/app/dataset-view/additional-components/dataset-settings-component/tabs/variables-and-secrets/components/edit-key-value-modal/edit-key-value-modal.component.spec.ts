@@ -9,14 +9,14 @@ import { TestbedHarnessEnvironment } from "@angular/cdk/testing/testbed";
 import { ComponentFixture, TestBed } from "@angular/core/testing";
 import { ActivatedRoute } from "@angular/router";
 
-import { NEVER, of, Subject } from "rxjs";
+import { NEVER, of, Subject, throwError } from "rxjs";
 
 import { NgbActiveModal } from "@ng-bootstrap/ng-bootstrap";
 import { Apollo } from "apollo-angular";
 import { provideToastr } from "ngx-toastr";
 
 import { requireValue } from "@common/helpers/app.helpers";
-import { setComponentInput, stubMethod } from "@common/helpers/base-test.helpers.spec";
+import { captureUnhandledRxjsErrors, setComponentInput, stubMethod } from "@common/helpers/base-test.helpers.spec";
 import {
     MOCK_ENV_VAR_ALREADY_EXISTS_MESSAGE,
     MOCK_ENV_VAR_VALUE_TOO_LONG_MESSAGE,
@@ -25,6 +25,7 @@ import {
 
 import { EditKeyValueModalComponent } from "src/app/dataset-view/additional-components/dataset-settings-component/tabs/variables-and-secrets/components/edit-key-value-modal/edit-key-value-modal.component";
 import { EditKeyValueModalHarness } from "src/app/dataset-view/additional-components/dataset-settings-component/tabs/variables-and-secrets/components/edit-key-value-modal/edit-key-value-modal.harness";
+import { EditKeyValueModalTexts } from "src/app/dataset-view/additional-components/dataset-settings-component/tabs/variables-and-secrets/components/edit-key-value-modal/edit-key-value-modal.text";
 import { DatasetEnvironmentVariablesService } from "src/app/dataset-view/additional-components/dataset-settings-component/tabs/variables-and-secrets/dataset-environment-variables.service";
 import { mockDatasetBasicsRootFragment } from "src/app/search/mock.data";
 
@@ -262,6 +263,66 @@ describe("EditKeyValueModalComponent", () => {
         expect(await modal.isSaveDisabled()).toBe(false);
     });
 
+    it("should say the existing keys failed to load and keep Save disabled", async () => {
+        const unhandledErrors = captureUnhandledRxjsErrors();
+        vi.spyOn(evnironmentVariablesService, "listEnvVariables").mockReturnValue(
+            throwError(() => new Error("Server unreachable")),
+        );
+        setComponentInput(fixture, "row", null);
+        fixture.detectChanges();
+        const modal = await TestbedHarnessEnvironment.harnessForFixture(fixture, EditKeyValueModalHarness);
+
+        await modal.setKey("API_KEY");
+        await modal.setValue("value-1");
+
+        expect(await modal.getExistingKeysLoadError()).toBe(EditKeyValueModalTexts.EXISTING_KEYS_LOAD_FAILED);
+        expect(await modal.isSaveDisabled()).toBe(true);
+        await vi.waitFor(() => expect(unhandledErrors).toHaveBeenCalledWith(new Error("Server unreachable")));
+    });
+
+    it("should enable Save once a retry loads the existing keys, and still reject a key the dataset has", async () => {
+        captureUnhandledRxjsErrors();
+        const firstVariable = requireValue(existingVariables.nodes[0]);
+        const listSpy = vi
+            .spyOn(evnironmentVariablesService, "listEnvVariables")
+            .mockReturnValueOnce(throwError(() => new Error("Server unreachable")))
+            .mockReturnValueOnce(
+                of({ ...structuredClone(existingVariables), nodes: [{ ...firstVariable, key: "API_KEY" }] }),
+            );
+        setComponentInput(fixture, "row", null);
+        fixture.detectChanges();
+        const modal = await TestbedHarnessEnvironment.harnessForFixture(fixture, EditKeyValueModalHarness);
+
+        await modal.setKey("API_KEY_2");
+        await modal.setValue("value-1");
+        await modal.retryExistingKeys();
+
+        expect(listSpy).toHaveBeenCalledTimes(2);
+        expect(await modal.getExistingKeysLoadError()).toBeNull();
+        expect(await modal.isSaveDisabled()).toBe(false);
+
+        await modal.setKey("API_KEY");
+        expect(await modal.getKeyError()).toBe("Key already exists");
+        expect(await modal.isSaveDisabled()).toBe(true);
+    });
+
+    it("should keep saying the existing keys failed to load when a retry fails too", async () => {
+        captureUnhandledRxjsErrors();
+        vi.spyOn(evnironmentVariablesService, "listEnvVariables").mockReturnValue(
+            throwError(() => new Error("Server unreachable")),
+        );
+        setComponentInput(fixture, "row", null);
+        fixture.detectChanges();
+        const modal = await TestbedHarnessEnvironment.harnessForFixture(fixture, EditKeyValueModalHarness);
+
+        await modal.setKey("API_KEY");
+        await modal.setValue("value-1");
+        await modal.retryExistingKeys();
+
+        expect(await modal.getExistingKeysLoadError()).toBe(EditKeyValueModalTexts.EXISTING_KEYS_LOAD_FAILED);
+        expect(await modal.isSaveDisabled()).toBe(true);
+    });
+
     it("should keep Save disabled while the variable is being saved", async () => {
         const createSpy = vi.spyOn(evnironmentVariablesService, "createEnvVariable").mockReturnValue(NEVER);
         const modal = await openForAdding();
@@ -339,6 +400,25 @@ describe("EditKeyValueModalComponent", () => {
 
         expect(await modal.getValue()).toBe("exposed-value");
         expect(await modal.isSecretLocked()).toBe(true);
+    });
+
+    it("should say a secret's current value failed to load, and fill it in on a retry", async () => {
+        const unhandledErrors = captureUnhandledRxjsErrors();
+        vi.spyOn(evnironmentVariablesService, "exposedEnvVariableValue")
+            .mockReturnValueOnce(throwError(() => new Error("Server unreachable")))
+            .mockReturnValueOnce(of("exposed-value"));
+        setComponentInput(fixture, "row", requireValue(existingVariables.nodes[2]));
+        fixture.detectChanges();
+        const modal = await TestbedHarnessEnvironment.harnessForFixture(fixture, EditKeyValueModalHarness);
+
+        expect(await modal.getExposedValueLoadError()).toBe(EditKeyValueModalTexts.EXPOSED_VALUE_LOAD_FAILED);
+        expect(await modal.getValue()).toBe("");
+        await vi.waitFor(() => expect(unhandledErrors).toHaveBeenCalledWith(new Error("Server unreachable")));
+
+        await modal.retryExposedValue();
+
+        expect(await modal.getExposedValueLoadError()).toBeNull();
+        expect(await modal.getValue()).toBe("exposed-value");
     });
 
     it("should forget the exposed value when it is hidden again", () => {

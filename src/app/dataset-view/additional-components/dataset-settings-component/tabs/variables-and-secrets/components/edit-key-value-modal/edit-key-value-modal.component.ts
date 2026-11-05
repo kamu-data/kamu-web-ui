@@ -13,7 +13,7 @@ import { MatDividerModule } from "@angular/material/divider";
 import { MatIconModule } from "@angular/material/icon";
 import { MatTooltipModule } from "@angular/material/tooltip";
 
-import { BehaviorSubject } from "rxjs";
+import { BehaviorSubject, tap } from "rxjs";
 
 import { NgbActiveModal } from "@ng-bootstrap/ng-bootstrap";
 
@@ -27,6 +27,7 @@ import { maxBytesValidator } from "@common/validation/text.validators";
 import { DatasetBasicsFragment, ViewDatasetEnvVarDataFragment } from "@api/kamu.graphql.interface";
 import { MaybeNull } from "@interface/app.types";
 
+import { EditKeyValueModalTexts } from "src/app/dataset-view/additional-components/dataset-settings-component/tabs/variables-and-secrets/components/edit-key-value-modal/edit-key-value-modal.text";
 import { EnvAndSecretsFormType } from "src/app/dataset-view/additional-components/dataset-settings-component/tabs/variables-and-secrets/components/edit-key-value-modal/edit-key-value-modal.types";
 import {
     DatasetEnvironmentVariablesService,
@@ -77,9 +78,13 @@ export class EditKeyValueModalComponent extends BaseComponent implements OnInit 
     public readonly busy$ = new BehaviorSubject<boolean>(false);
     /** The keys the dataset has: empty when editing, since a key can't change then; `null` until they load. */
     private existingKeys: MaybeNull<readonly string[]> = null;
+    /** The keys failed to load; Save stays disabled until a retry loads them. */
+    public existingKeysLoadFailed = false;
+    public exposedValueLoadFailed = false;
     public exposedValue: string;
     public isShowExposedValue: boolean = false;
     public readonly STUB_VALUE = "stub-value";
+    public readonly TEXTS = EditKeyValueModalTexts;
 
     public ngOnInit(): void {
         this.fetchExposedValue();
@@ -140,15 +145,24 @@ export class EditKeyValueModalComponent extends BaseComponent implements OnInit 
         }
     }
 
-    private fetchExposedValue(): void {
+    public fetchExposedValue(): void {
         if (this.row?.isSecret) {
+            this.exposedValueLoadFailed = false;
             this.evnironmentVariablesService
                 .exposedEnvVariableValue({
                     accountName: this.datasetBasics.owner.accountName,
                     datasetName: this.datasetBasics.name,
                     datasetEnvVarKey: this.row.key,
                 })
-                .pipe(takeUntilDestroyed(this.destroyRef))
+                .pipe(
+                    tap({
+                        error: () => {
+                            this.exposedValueLoadFailed = true;
+                            this.cdr.markForCheck();
+                        },
+                    }),
+                    takeUntilDestroyed(this.destroyRef),
+                )
                 .subscribe((data) => {
                     this.exposedValue = data;
                     this.keyValueForm.patchValue({
@@ -158,7 +172,8 @@ export class EditKeyValueModalComponent extends BaseComponent implements OnInit 
         }
     }
 
-    private fetchExistingKeys(): void {
+    public fetchExistingKeys(): void {
+        this.existingKeysLoadFailed = false;
         this.evnironmentVariablesService
             .listEnvVariables({
                 accountName: this.datasetBasics.owner.accountName,
@@ -166,7 +181,15 @@ export class EditKeyValueModalComponent extends BaseComponent implements OnInit 
                 page: 0,
                 perPage: EditKeyValueModalComponent.MAX_ENTRIES,
             })
-            .pipe(takeUntilDestroyed(this.destroyRef))
+            .pipe(
+                tap({
+                    error: () => {
+                        this.existingKeysLoadFailed = true;
+                        this.cdr.markForCheck();
+                    },
+                }),
+                takeUntilDestroyed(this.destroyRef),
+            )
             .subscribe(({ nodes }) => {
                 this.existingKeys = nodes.map(({ key }) => key);
                 this.keyControl.updateValueAndValidity();

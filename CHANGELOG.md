@@ -25,6 +25,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   - Upcoming: the order direction toggle keeps the order picked instead of switching back to oldest first
   - Custom: a time window with only one end filters the list, and "Reset filters" selects the states the list shows and shows the order field it uses
   - a number of failures typed as a fraction or below the minimum is shown as the whole number used
+- Dataset settings, variables and secrets: when the dataset's existing keys or a secret's current value fail to load, the add or edit dialog says so and offers "Try again", instead of leaving Save disabled or the value empty without a word
 
 ## [0.73.0] - 2026-11-02
 ### Changed

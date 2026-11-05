@@ -14,6 +14,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Fixed
 - Pages that fail to load because of a network or server error say so instead of claiming the page does not exist or staying blank
   - a dataset, metadata, block or webhook page that fails to load no longer shows "page not found"; only one that really doesn't exist does
+  - an account page that fails to load no longer stays empty under the header
   - opening the app on a page that fails to load shows "Something went wrong" with a "Try again" button, keeping the address; a page that fails while using the app keeps the current page and shows the error
   - flows, account flows, dataset search suggestions, collaborator search, collections, versioned files and the block list recover from a failed request: the next poll, search or page change loads again, and loading indicators and busy buttons no longer stay on
 - Sign-in: on a node that requires signing in, opening the app with an expired session sometimes showed "Sign-in is unavailable" instead of the login page

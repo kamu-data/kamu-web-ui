@@ -3459,7 +3459,7 @@ export type FlowDescriptionUnknown = {
 };
 
 /** Result of a flow that updates a dataset */
-export type FlowDescriptionUpdateResult = FlowDescriptionUpdateResultSuccess | FlowDescriptionUpdateResultUnknown | FlowDescriptionUpdateResultUpToDate;
+export type FlowDescriptionUpdateResult = FlowDescriptionUpdateResultSuccess | FlowDescriptionUpdateResultUpToDate;
 
 /** Dataset was updated with new data */
 export type FlowDescriptionUpdateResultSuccess = {
@@ -3472,13 +3472,6 @@ export type FlowDescriptionUpdateResultSuccess = {
   numRecords: Scalars['Int']['output'];
   /** New watermark of the dataset, null if it did not change */
   updatedWatermark?: Maybe<Scalars['DateTime']['output']>;
-};
-
-/** Dataset was updated, but the added data could not be determined */
-export type FlowDescriptionUpdateResultUnknown = {
-  __typename: 'FlowDescriptionUpdateResultUnknown';
-  /** Why the added data could not be determined */
-  message: Scalars['String']['output'];
 };
 
 /** Dataset was already up to date, nothing was added */
@@ -6594,6 +6587,20 @@ export type SetVocab = {
   systemTimeColumn?: Maybe<Scalars['String']['output']>;
 };
 
+/**
+ * Dataset head was moved by a concurrent update while the watermark was being
+ * set; nothing was committed
+ */
+export type SetWatermarkCasFailed = SetWatermarkResult & {
+  __typename: 'SetWatermarkCasFailed';
+  /** Current head block hash of the dataset, null if it has none */
+  actualHead?: Maybe<Scalars['Multihash']['output']>;
+  /** Head block hash the watermark was being set on top of */
+  expectedHead: Scalars['Multihash']['output'];
+  /** Human-readable error message */
+  message: Scalars['String']['output'];
+};
+
 /** Watermark cannot be set manually on a derivative dataset */
 export type SetWatermarkIsDerivative = SetWatermarkResult & {
   __typename: 'SetWatermarkIsDerivative';
@@ -7844,6 +7851,7 @@ export type UpdateWatermarkMutationVariables = Exact<{
 
 
 export type UpdateWatermarkMutation = { datasets: { __typename: 'DatasetsMut', byId?: { __typename: 'DatasetMut', setWatermark:
+        | { __typename: 'SetWatermarkCasFailed', message: string }
         | { __typename: 'SetWatermarkIsDerivative', message: string }
         | { __typename: 'SetWatermarkUpToDate', message: string }
         | { __typename: 'SetWatermarkUpdated', newHead: string, message: string }
@@ -8711,7 +8719,6 @@ type FlowDescriptionData_FlowDescriptionDatasetExecuteTransform_Fragment = { __t
     & SetTransformEngineDataFragment
   ), transformResult?:
     | { __typename: 'FlowDescriptionUpdateResultSuccess', numBlocks: number, numRecords: number, updatedWatermark?: string | null }
-    | { __typename: 'FlowDescriptionUpdateResultUnknown', message: string }
     | { __typename: 'FlowDescriptionUpdateResultUpToDate', uncacheable: boolean }
    | null };
 
@@ -8725,13 +8732,11 @@ type FlowDescriptionData_FlowDescriptionDatasetPollingIngest_Fragment = { __type
     & SetPollingSourceFetchDataFragment
   ), ingestResult?:
     | { __typename: 'FlowDescriptionUpdateResultSuccess', numBlocks: number, numRecords: number, updatedWatermark?: string | null }
-    | { __typename: 'FlowDescriptionUpdateResultUnknown', message: string }
     | { __typename: 'FlowDescriptionUpdateResultUpToDate', uncacheable: boolean }
    | null };
 
 type FlowDescriptionData_FlowDescriptionDatasetPushIngest_Fragment = { __typename: 'FlowDescriptionDatasetPushIngest', sourceName?: string | null, ingestResult?:
     | { __typename: 'FlowDescriptionUpdateResultSuccess', numBlocks: number, numRecords: number, updatedWatermark?: string | null }
-    | { __typename: 'FlowDescriptionUpdateResultUnknown', message: string }
     | { __typename: 'FlowDescriptionUpdateResultUpToDate', uncacheable: boolean }
    | null };
 
@@ -10715,9 +10720,6 @@ export const FlowDescriptionDataFragmentDoc = gql`
         numRecords
         updatedWatermark
       }
-      ... on FlowDescriptionUpdateResultUnknown {
-        message
-      }
     }
   }
   ... on FlowDescriptionDatasetPushIngest {
@@ -10730,9 +10732,6 @@ export const FlowDescriptionDataFragmentDoc = gql`
         numBlocks
         numRecords
         updatedWatermark
-      }
-      ... on FlowDescriptionUpdateResultUnknown {
-        message
       }
     }
   }
@@ -10748,9 +10747,6 @@ export const FlowDescriptionDataFragmentDoc = gql`
         numBlocks
         numRecords
         updatedWatermark
-      }
-      ... on FlowDescriptionUpdateResultUnknown {
-        message
       }
     }
   }
@@ -13005,6 +13001,9 @@ export const UpdateWatermarkDocument = gql`
           message
         }
         ... on SetWatermarkIsDerivative {
+          message
+        }
+        ... on SetWatermarkCasFailed {
           message
         }
       }
@@ -15380,7 +15379,6 @@ export const WebhookEventTypesDocument = gql`
     ],
     "FlowDescriptionUpdateResult": [
       "FlowDescriptionUpdateResultSuccess",
-      "FlowDescriptionUpdateResultUnknown",
       "FlowDescriptionUpdateResultUpToDate"
     ],
     "FlowEvent": [
@@ -15560,6 +15558,7 @@ export const WebhookEventTypesDocument = gql`
       "SetRoleResultSuccess"
     ],
     "SetWatermarkResult": [
+      "SetWatermarkCasFailed",
       "SetWatermarkIsDerivative",
       "SetWatermarkUpToDate",
       "SetWatermarkUpdated"

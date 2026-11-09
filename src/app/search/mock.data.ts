@@ -1109,6 +1109,19 @@ export const mockUpdateWatermarkSuccessResponse: UpdateWatermarkMutation = {
     },
 };
 
+export const mockUpdateWatermarkCasFailedResponse: UpdateWatermarkMutation = {
+    datasets: {
+        byId: {
+            __typename: "DatasetMut",
+            setWatermark: {
+                __typename: "SetWatermarkCasFailed",
+                message: "Expected head didn't match, dataset was likely updated concurrently",
+            },
+        },
+        __typename: "DatasetsMut",
+    },
+};
+
 export const mockUpdateReadmeSuccessResponse: UpdateReadmeMutation = {
     datasets: {
         byId: {

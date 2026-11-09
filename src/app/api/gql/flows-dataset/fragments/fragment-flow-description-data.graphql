@@ -14,10 +14,6 @@ fragment FlowDescriptionData on FlowDescription {
         numRecords
         updatedWatermark
       }
-
-      ... on FlowDescriptionUpdateResultUnknown {
-        message
-      }
     }
   }
 
@@ -32,10 +28,6 @@ fragment FlowDescriptionData on FlowDescription {
         numBlocks
         numRecords
         updatedWatermark
-      }
-
-      ... on FlowDescriptionUpdateResultUnknown {
-        message
       }
     }
   }
@@ -54,10 +46,6 @@ fragment FlowDescriptionData on FlowDescription {
         numBlocks
         numRecords
         updatedWatermark
-      }
-
-      ... on FlowDescriptionUpdateResultUnknown {
-        message
       }
     }
   }

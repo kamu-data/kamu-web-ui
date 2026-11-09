@@ -30,11 +30,7 @@ import {
     mockHistoryFragmentWithFinishedStatus,
     mockHistoryFragmentWithQueuedStatus,
 } from "src/app/dataset-flow/dataset-flow-details/tabs/flow-details-history-tab/flow-details-history-tab.helpers.mock";
-import {
-    mockDatasetExecuteTransformFlowDescriptionUpdateResultUnknown,
-    mockDatasetExecuteTransformFlowSummaryData,
-    mockDatasetPollingIngestFlowDescriptionUpdateResultUnknown,
-} from "src/app/dataset-flow/flows-table/flows-table.helpers.mock";
+import { mockDatasetExecuteTransformFlowSummaryData } from "src/app/dataset-flow/flows-table/flows-table.helpers.mock";
 
 describe("DatasetFlowDetailsHelpers", () => {
     function finishedTaskWithOutcome(outcome: MaybeNull<TaskOutcomeDataFragment>): FlowEventTaskChangedDataFragment {
@@ -174,24 +170,6 @@ describe("DatasetFlowDetailsHelpers", () => {
             DatasetFlowDetailsHelpers.flowEventSubMessage(
                 mockHistoryFragmentWithFinishedStatus,
                 mockDatasetExecuteTransformFlowSummaryData,
-            ),
-        ).toEqual(flowEventSubMessageResults[15]);
-    });
-
-    it(`should check flow event submessage with typename = FlowDescriptionUpdateResultUnknown and flow outcome = Success (ExecuteTransform)`, () => {
-        expect(
-            DatasetFlowDetailsHelpers.flowEventSubMessage(
-                mockHistoryFragmentWithFinishedStatus,
-                mockDatasetExecuteTransformFlowDescriptionUpdateResultUnknown,
-            ),
-        ).toEqual(flowEventSubMessageResults[15]);
-    });
-
-    it(`should check flow event submessage with typename = FlowDescriptionUpdateResultUnknown and flow outcome = Success (FlowDescriptionDatasetPollingIngest)`, () => {
-        expect(
-            DatasetFlowDetailsHelpers.flowEventSubMessage(
-                mockHistoryFragmentWithFinishedStatus,
-                mockDatasetPollingIngestFlowDescriptionUpdateResultUnknown,
             ),
         ).toEqual(flowEventSubMessageResults[15]);
     });

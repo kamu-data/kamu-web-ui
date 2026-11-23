@@ -4,6 +4,12 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [Unreleased]
+### Changed
+- Requires kamu-cli v0.273.0 or later
+### Fixed
+- Edit watermark: when the dataset was updated by someone else while the watermark was being set, the error now says so instead of showing an empty message
+
 ## [0.74.0] - 2026-11-05
 ### Added
 - Metadata block page: the block list's event type filter, hash search and page are part of the page address, so a filtered list can be shared as a link and stays filtered when opening another block from it

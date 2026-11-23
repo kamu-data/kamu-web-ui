@@ -99,6 +99,8 @@ export type Scalars = {
   TaskID: { input: string; output: string; }
   /** Name of a resource type */
   TypeName: { input: string; output: string; }
+  /** Reference to a resource type by name or by schema URI */
+  TypeRef: { input: string; output: string; }
   /** URI of a resource type schema */
   TypeUri: { input: string; output: string; }
   /** Absolute URL */
@@ -5750,6 +5752,8 @@ export type ResourceOwnerHandle = {
   id: Scalars['ResourceID']['output'];
   /** Name of the account. */
   name: Scalars['AccountName']['output'];
+  /** Type URI of the account. */
+  type: Scalars['TypeUri']['output'];
 };
 
 /**
@@ -5765,6 +5769,8 @@ export type ResourceOwnerRefInput = {
   id?: InputMaybe<Scalars['ResourceID']['input']>;
   /** Account name, used for lookup when `did` is absent */
   name?: InputMaybe<Scalars['AccountName']['input']>;
+  /** Schema URI identifying the type */
+  type?: InputMaybe<Scalars['TypeRef']['input']>;
 };
 
 /**
@@ -6587,10 +6593,7 @@ export type SetVocab = {
   systemTimeColumn?: Maybe<Scalars['String']['output']>;
 };
 
-/**
- * Dataset head was moved by a concurrent update while the watermark was being
- * set; nothing was committed
- */
+/** Dataset head moved concurrently while the watermark was being set; nothing was committed */
 export type SetWatermarkCasFailed = SetWatermarkResult & {
   __typename: 'SetWatermarkCasFailed';
   /** Current head block hash of the dataset, null if it has none */

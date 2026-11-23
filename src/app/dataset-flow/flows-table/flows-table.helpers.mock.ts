@@ -20,7 +20,6 @@ import {
     TimeUnit,
 } from "@api/kamu.graphql.interface";
 
-import { flowEventSubMessageResults } from "src/app/dataset-flow/dataset-flow-details/tabs/flow-details-history-tab/flow-details-history-tab.helpers.mock";
 import {
     mockDatasetMainDataId,
     mockOwnerFieldsWithAvatar,
@@ -125,68 +124,6 @@ export const mockDatasetExecuteTransformFlowSummaryData: FlowSummaryDataFragment
         },
         transform: mockFlowSetTransformFragment,
         __typename: "FlowDescriptionDatasetExecuteTransform",
-    },
-    flowId: "1000",
-    status: FlowStatus.Finished,
-    initiator: null,
-    outcome: {
-        __typename: "FlowSuccessResult",
-        message: "Success",
-    },
-    timing: {
-        initiatedAt: "2024-02-12T18:22:29+00:00",
-        firstAttemptScheduledAt: "2024-02-12T18:22:30+00:00",
-        scheduledAt: "2024-02-12T18:22:30+00:00",
-        awaitingExecutorSince: "2024-02-12T18:22:30+00:00",
-        runningSince: null,
-        lastAttemptFinishedAt: null,
-        __typename: "FlowTimingRecords",
-    },
-    retryPolicy: null,
-    taskIds: [],
-    __typename: "Flow",
-};
-
-export const mockDatasetExecuteTransformFlowDescriptionUpdateResultUnknown: FlowSummaryDataFragment = {
-    datasetId: "did:odf:fed0136c76cdaf8552581e8cf738df7a9d8ba169db326b5af905a8f546da4df424751",
-    description: {
-        transformResult: {
-            __typename: "FlowDescriptionUpdateResultUnknown",
-            message: flowEventSubMessageResults[15],
-        },
-        transform: mockFlowSetTransformFragment,
-        __typename: "FlowDescriptionDatasetExecuteTransform",
-    },
-    flowId: "1000",
-    status: FlowStatus.Finished,
-    initiator: null,
-    outcome: {
-        __typename: "FlowSuccessResult",
-        message: "Success",
-    },
-    timing: {
-        initiatedAt: "2024-02-12T18:22:29+00:00",
-        firstAttemptScheduledAt: "2024-02-12T18:22:30+00:00",
-        scheduledAt: "2024-02-12T18:22:30+00:00",
-        awaitingExecutorSince: "2024-02-12T18:22:30+00:00",
-        runningSince: null,
-        lastAttemptFinishedAt: null,
-        __typename: "FlowTimingRecords",
-    },
-    retryPolicy: null,
-    taskIds: [],
-    __typename: "Flow",
-};
-
-export const mockDatasetPollingIngestFlowDescriptionUpdateResultUnknown: FlowSummaryDataFragment = {
-    datasetId: "did:odf:fed0136c76cdaf8552581e8cf738df7a9d8ba169db326b5af905a8f546da4df424751",
-    description: {
-        ingestResult: {
-            __typename: "FlowDescriptionUpdateResultUnknown",
-            message: flowEventSubMessageResults[15],
-        },
-        pollingSource: mockFlowPollingSourceFragmentFetchUrl,
-        __typename: "FlowDescriptionDatasetPollingIngest",
     },
     flowId: "1000",
     status: FlowStatus.Finished,

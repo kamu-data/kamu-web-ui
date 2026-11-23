@@ -9,7 +9,7 @@ import { provideHttpClient } from "@angular/common/http";
 import { provideHttpClientTesting } from "@angular/common/http/testing";
 import { fakeAsync, flush, TestBed, tick } from "@angular/core/testing";
 
-import { Observable, of, Subscription } from "rxjs";
+import { firstValueFrom, Observable, of, Subscription } from "rxjs";
 import { first } from "rxjs/operators";
 
 import { Apollo } from "apollo-angular";
@@ -20,7 +20,7 @@ import { DatasetNotFoundError, DatasetOperationError } from "@common/values/erro
 import { DatasetApi } from "@api/dataset.api";
 import { CommitEventToDatasetMutation, UpdateReadmeMutation } from "@api/kamu.graphql.interface";
 import { TEST_ACCOUNT_ID } from "@api/mock/auth.mock";
-import { mockDatasetByAccountAndDatasetNameQuery } from "@api/mock/dataset.mock";
+import { mockDatasetByAccountAndDatasetNameQuery, TEST_WATERMARK } from "@api/mock/dataset.mock";
 import { MaybeUndefined } from "@interface/app.types";
 
 import { LoggedUserService } from "src/app/auth/logged-user.service";
@@ -34,6 +34,8 @@ import {
     mockCommitEventToDatasetResultAppendError,
     mockUpdateReadmeErrorMessage,
     mockUpdateReadmeSuccessResponse,
+    mockUpdateWatermarkCasFailedResponse,
+    mockUpdateWatermarkSuccessResponse,
 } from "src/app/search/mock.data";
 import { NavigationService } from "src/app/services/navigation.service";
 
@@ -313,6 +315,42 @@ describe("DatasetCommitService", () => {
 
         expect(subscription$.closed).toEqual(true);
     }));
+
+    function requestUpdateWatermark(): Observable<void> {
+        return commitService.updateWatermark({
+            accountId: TEST_ACCOUNT_ID,
+            datasetId: TEST_DATASET_ID,
+            watermark: TEST_WATERMARK,
+            datasetInfo: { accountName: TEST_ACCOUNT_NAME, datasetName: TEST_DATASET_NAME },
+        });
+    }
+
+    it("should check updateWatermark() method navigates to the overview on success", async () => {
+        vi.spyOn(loggedUserService, "isAuthenticated", "get").mockReturnValue(true);
+        const setWatermarkSpy = vi
+            .spyOn(datasetApi, "setWatermark")
+            .mockReturnValue(of(mockUpdateWatermarkSuccessResponse));
+
+        await firstValueFrom(requestUpdateWatermark());
+
+        expect(setWatermarkSpy).toHaveBeenCalledWith({
+            accountId: TEST_ACCOUNT_ID,
+            datasetId: TEST_DATASET_ID,
+            watermark: TEST_WATERMARK,
+        });
+        expectNavigatedToDatasetOverview();
+    });
+
+    it("should check updateWatermark() method reports a concurrent head update", async () => {
+        vi.spyOn(loggedUserService, "isAuthenticated", "get").mockReturnValue(true);
+        vi.spyOn(datasetApi, "setWatermark").mockReturnValue(of(mockUpdateWatermarkCasFailedResponse));
+
+        await expect(firstValueFrom(requestUpdateWatermark())).rejects.toThrow(DatasetOperationError);
+        await expect(firstValueFrom(requestUpdateWatermark())).rejects.toMatchObject({
+            errors: [{ message: "Expected head didn't match, dataset was likely updated concurrently" }],
+        });
+        expect(navigationServiceSpy).not.toHaveBeenCalled();
+    });
 
     it("updating readme for dataset without logged user results in exception", () => {
         vi.spyOn(loggedUserService, "isAuthenticated", "get").mockReturnValue(false);
